@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FenUp X - Şampiyonlar Ligi</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+
+    <header class="top-header">
+        <div class="logo">FenUp X</div>
+        <div class="header-right">
+            <button class="text-btn">Hakkımızda</button>
+            <div class="top-controls">
+                <div class="volume-control">
+                    <i class="fas fa-volume-up" id="mute-btn"></i>
+                    <input type="range" id="volume-slider" min="0" max="100" value="70">
+                </div>
+                <button id="fullscreen-btn" class="icon-btn"><i class="fas fa-expand"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <div id="scene-home" class="scene glass-panel">
+        <h1 class="main-title">Hoş Geldiniz</h1>
+        <div class="main-menu-grid">
+            <button id="btn-deney-modulu" class="module-btn secondary">
+                <i class="fas fa-flask"></i>
+                <span>İnteraktif Deney Modülü</span>
+                <small>Çok Yakında!</small>
+            </button>
+            <button id="btn-oyun-modulu" class="module-btn primary">
+                <i class="fas fa-trophy"></i>
+                <span>FenUp X Şampiyonlar Ligi</span>
+                <small>İnteraktif Oyun</small>
+            </button>
+        </div>
+    </div>
+
+    <div id="scene-crossroads" class="scene is-hidden glass-panel">
+        <button class="back-link btn-back-home">← Ana Menü</button>
+        <h2>Yarışma Türünü Seç</h2>
+        <div class="menu-grid">
+            <button id="btn-mode-bireysel" class="mode-btn"><i class="fas fa-user"></i><br>Bireysel Mod</button>
+            <button id="btn-mode-turnuva" class="mode-btn"><i class="fas fa-users"></i><br>Turnuva Modu</button>
+        </div>
+    </div>
+
+    <div id="scene-lobby" class="scene is-hidden glass-panel">
+        <button class="back-link btn-back-cross">← Geri</button>
+        <h3>Kura Çekimi</h3>
+        <p style="margin-bottom: 20px; color: #aaa;">Sınıf mevcudunu girin (Örn: 35)</p>
+        <input type="number" id="lobby-size" placeholder="Örn: 35" class="lobby-input">
+        <div class="btn-group">
+            <button id="btn-kura-baslat" class="action-btn">KURA ÇEK</button>
+            <button id="btn-direkt-baslat" class="action-btn secondary">HEMEN BAŞLA</button>
+        </div>
+    </div>
+
+    <div id="scene-draw" class="scene is-hidden glass-panel">
+        <div id="draw-counter">0</div>
+        <p id="draw-remaining" style="color: #00d2ff; font-size: 1.5rem; margin-top: 10px;"></p>
+        
+        <div id="draw-actions" class="is-hidden" style="margin-top: 30px;">
+            <input type="text" id="player-name-input" placeholder="Yarışmacının Adı" class="lobby-input" style="display:block; margin: 0 auto 20px auto; background: rgba(0,0,0,0.5); color: white;">
+            <button id="btn-new-draw" class="action-btn secondary">YENİDEN ÇEK</button>
+            <button id="btn-go-class" class="action-btn green">SINIF SEÇİMİNE GEÇ</button>
+        </div>
+    </div>
+
+    <div id="scene-tournament-lobby" class="scene is-hidden glass-panel">
+        <button class="back-link btn-back-cross">← Geri</button>
+        <h2 style="font-size: 3rem; color: var(--neon-blue); margin-bottom: 20px;">Turnuva Kurulumu</h2>
+        
+        <div style="display: flex; gap: 40px; width: 100%; text-align: left; flex-wrap: wrap;">
+            <div style="flex: 1; min-width: 300px;">
+                <p style="font-size: 1.5rem; margin-bottom: 10px;">Takım Sayısı Seçin:</p>
+                <select id="group-count" class="lobby-input" style="width: 100%; margin-bottom: 20px; cursor:pointer; background:rgba(0,0,0,0.8); color:#fff;">
+                    <option value="2">2 Takım</option>
+                    <option value="3">3 Takım</option>
+                    <option value="4" selected>4 Takım</option>
+                    <option value="5">5 Takım</option>
+                    <option value="6">6 Takım</option>
+                    <option value="7">7 Takım</option>
+                    <option value="8">8 Takım</option>
+                    <option value="9">9 Takım</option>
+                    <option value="10">10 Takım</option>
+                </select>
+                <div id="group-names-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;"></div>
+            </div>
+
+            <div style="flex: 1; min-width: 300px; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
+                <p style="font-size: 1.5rem; margin-bottom: 15px; color: #f59e0b;"><i class="fas fa-magic"></i> Hazır Şablonlar</p>
+                <p style="font-size: 1rem; color: #aaa; margin-bottom: 15px;">Hızlıca isim atamak için tıklayın:</p>
+                <div id="preset-names" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+            </div>
+        </div>
+
+        <button id="btn-start-tournament" class="action-btn" style="margin-top: 30px; font-size: 1.5rem; padding: 20px 50px;">TAKIMLARI KAYDET VE SINIF SEÇ</button>
+    </div>
+
+    <div id="scene-class" class="scene is-hidden glass-panel">
+        <button class="back-link btn-back-cross">← Geri</button>
+        <h2>Sınıf Seç</h2>
+        <div class="grid-3">
+            <div class="class-card" data-grade="5">5. SINIF</div>
+            <div class="class-card" data-grade="6">6. SINIF</div>
+            <div class="class-card disabled" title="Eylül 2026'da eklenecek">7. SINIF <br><small style="font-size:1rem; opacity:0.5;">(Yakında)</small></div>
+            <div class="class-card disabled" title="Eylül 2027'de eklenecek">8. SINIF <br><small style="font-size:1rem; opacity:0.5;">(Yakında)</small></div>
+        </div>
+    </div>
+
+    <div id="scene-unit" class="scene is-hidden glass-panel">
+        <button id="btn-back-class" class="back-link">← Geri</button>
+        <h2>Ünite Seç</h2>
+        <div id="unit-list" class="grid-3">
+            <div class="unit-card" data-unit="1">1. Ünite</div>
+            <div class="unit-card" data-unit="2">2. Ünite</div>
+            <div class="unit-card" data-unit="3">3. Ünite</div>
+            <div class="unit-card" data-unit="4">4. Ünite</div>
+            <div class="unit-card" data-unit="5">5. Ünite</div>
+            <div class="unit-card" data-unit="6">6. Ünite</div>
+            <div class="unit-card" data-unit="7">7. Ünite</div>
+        </div>
+    </div>
+
+    <div id="scene-rules" class="scene is-hidden glass-panel" style="max-height: 95vh; display: flex; flex-direction: column;">
+        <button id="btn-back-rules" class="back-link">← Geri</button>
+        <h2 style="font-size: 3rem; color: var(--neon-blue); margin-bottom: 15px; flex-shrink: 0;"><i class="fas fa-scroll"></i> Oyun Kuralları</h2>
+        <div id="rules-content" style="text-align: left; font-size: 1.25rem; line-height: 1.5; max-width: 800px; width: 100%; margin-bottom: 20px; background: rgba(0,0,0,0.5); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); overflow-y: auto; flex-grow: 1;">
+            </div>
+        <button id="btn-start-from-rules" class="action-btn" style="padding: 15px 40px; font-size: 1.5rem; background: linear-gradient(45deg, #22c55e, #16a34a); box-shadow: 0 0 20px rgba(34, 197, 94, 0.5); flex-shrink: 0;">OKUDUM, YARIŞMAYI BAŞLAT!</button>
+    </div>
+
+    <div id="scene-quiz" class="scene is-hidden glass-panel">
+        <div class="quiz-header" style="display: flex; justify-content: space-between; width: 100%; margin-bottom: 20px; font-size: 1.5rem;">
+            <span id="quiz-progress">Soru 1/10</span>
+            <span style="color:#00d2ff; font-weight:bold;">Süre: <span id="quiz-timer-display">40</span></span>
+            <span id="quiz-score-display">Puan: <span id="quiz-score">0</span></span>
+        </div>
+        <div class="joker-area" style="display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;">
+            <button id="joker-fifty" class="action-btn secondary" style="padding: 10px 20px; font-size:1rem;">50:50</button>
+            <button id="joker-hint" class="action-btn secondary" style="padding: 10px 20px; font-size:1rem;">İpucu</button>
+            <button id="joker-pass" class="action-btn secondary" style="padding: 10px 20px; font-size:1rem;">Pas</button>
+            <button id="joker-pause" class="action-btn secondary is-hidden" style="padding: 10px 20px; font-size:1rem;">Zamanı Durdur</button>
+        </div>
+        <p id="quiz-question" class="question-text"></p>
+        <p id="quiz-hint" class="is-hidden" style="color: #f59e0b; margin-bottom: 20px; font-size: 1.2rem;"></p>
+        <div id="options-grid">
+            <button class="answer-btn" data-choice="A">A) <span class="answer-text"></span></button>
+            <button class="answer-btn" data-choice="B">B) <span class="answer-text"></span></button>
+            <button class="answer-btn" data-choice="C">C) <span class="answer-text"></span></button>
+            <button class="answer-btn" data-choice="D">D) <span class="answer-text"></span></button>
+        </div>
+
+        <div id="blackhole-overlay" class="is-hidden" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(15, 23, 42, 0.98); z-index:50; display:flex; flex-direction:column; justify-content:center; align-items:center; border-radius:30px;">
+            <h2 class="blackhole-anim" style="color:#ef4444; font-size:4rem; margin-bottom:20px; text-shadow: 0 0 20px #ef4444;"><i class="fas fa-meteor"></i> KARA DELİK BÖLGESİ!</h2>
+            <p style="font-size:1.8rem; text-align:center; max-width:80%; margin-bottom:40px;">
+                Şu ana kadar <span id="bh-current-score" style="color:#00d2ff; font-weight:bold; font-size:2.5rem;">0</span> puan topladın.<br><br>
+                Zor sorulara geldik! Eğer devam edip soruyu <span style="color:#ef4444;">yanlış cevaplarsan</span>,<br> puanının yarısı Kara Delik tarafından yutulacak ve <span id="bh-risk-score" style="color:#ef4444; font-weight:bold;">0</span> puanla eleneceksin.
+            </p>
+            <div style="display:flex; gap:20px;">
+                <button id="btn-bh-withdraw" class="action-btn secondary" style="font-size: 1.2rem;">KASAYA KİLİTLE VE ÇEKİL</button>
+                <button id="btn-bh-continue" class="action-btn" style="background:linear-gradient(45deg, #ef4444, #991b1b); font-size: 1.5rem; box-shadow: 0 0 20px #ef4444;">RİSKİ AL VE DEVAM ET</button>
+            </div>
+        </div>
+
+        <div id="quiz-end" class="is-hidden" style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); border-radius:30px; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index: 60;">
+            <h2 id="quiz-end-title" style="font-size: 4rem; color: var(--neon-blue); margin-bottom: 10px;"></h2>
+            <p id="quiz-end-score" style="font-size: 2.5rem; margin-bottom: 10px;"></p>
+            <p id="quiz-end-time" style="font-size: 1.5rem; color: #aaa; margin-bottom: 30px;"></p>
+            <div style="display: flex; gap: 20px;">
+                <button id="btn-back-draw" class="action-btn secondary">KURA EKRANINA DÖN</button>
+                <button id="btn-show-leaderboard" class="action-btn">🏆 PUAN DURUMU</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="scene-tournament-quiz" class="scene is-hidden glass-panel full-width" style="max-width: 98vw; padding: 20px; position: relative;">
+        <div class="t-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%; font-size: 1.8rem; margin-bottom: 15px; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 10px;">
+            <div style="font-weight: bold;">Soru <span id="t-question-number" style="color:var(--neon-purple);">1/10</span> <span id="t-question-points" style="color:#22c55e; margin-left: 10px; font-size: 1.2rem;">(100 Puan)</span></div>
+            <div id="t-status-text" style="color:#f59e0b; font-weight:bold; font-size: 2.2rem; text-shadow: 0 0 15px #f59e0b; animation: pulse 1s infinite;" class="is-hidden">İLK DOĞRU YAPAN KAZANIR!</div>
+            <div style="font-weight: bold; display: flex; align-items: center; gap: 15px;">
+                <span id="t-timer-label">Süre:</span> <span id="t-timer-display" style="color:#00d2ff; font-size: 2.5rem;">45</span>
+                <button id="btn-t-skip-timer" class="action-btn" style="background:#ef4444; font-size:1.2rem; padding: 12px 20px; margin:0; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);"><i class="fas fa-forward"></i> Süreyi Bitir</button>
+            </div>
+        </div>
+        
+        <p id="t-question-text" class="question-text" style="font-size: 2rem; margin-bottom: 15px;"></p>
+        <div id="t-options-display" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-bottom: 20px; font-size: 1.3rem; text-align: left; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 20px;">
+            <div id="t-opt-A" class="t-main-opt">A) <span></span></div>
+            <div id="t-opt-B" class="t-main-opt">B) <span></span></div>
+            <div id="t-opt-C" class="t-main-opt">C) <span></span></div>
+            <div id="t-opt-D" class="t-main-opt">D) <span></span></div>
+        </div>
+
+        <div id="t-teams-container" class="is-hidden slide-up-anim"></div>
+        
+        <div class="t-controls" style="margin-top: 20px; display: flex; gap: 20px; justify-content: center;">
+            <button id="btn-t-reveal" class="action-btn is-hidden" style="background: #f59e0b;">CEVAPLARI ONAYLA</button>
+            <button id="btn-t-next" class="action-btn is-hidden" style="background: var(--neon-blue); color:#000;">SONRAKİ SORU</button>
+            <button id="btn-t-duel-start" class="action-btn is-hidden" style="background: linear-gradient(45deg, #ef4444, #f59e0b); box-shadow: 0 0 30px #ef4444;">DÜELLO MODUNU BAŞLAT!</button>
+        </div>
+
+        <div id="cards-overlay" class="is-hidden" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(15, 23, 42, 0.98); z-index:50; display:flex; flex-direction:column; justify-content:center; align-items:center; border-radius:30px;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 6rem; color: #f59e0b; margin-bottom: 20px; animation: pulse 1s infinite;"></i>
+            <h2 style="color:#f59e0b; font-size:4.5rem; margin-bottom:20px; text-shadow: 0 0 20px #f59e0b; text-align:center;">SÜRE BİTTİ!</h2>
+            <p style="font-size:2.5rem; text-align:center; margin-bottom:40px; font-weight: bold;">LÜTFEN CEVAP KARTLARINIZI KALDIRINIZ</p>
+            <button id="btn-cards-seen" class="action-btn" style="background: linear-gradient(45deg, #22c55e, #16a34a); font-size: 1.8rem; padding: 20px 40px; box-shadow: 0 0 20px #22c55e;">SINIF HAZIR, CEVAPLARI GİR</button>
+        </div>
+    </div>
+
+    <div id="scene-intermediate-leaderboard" class="scene is-hidden glass-panel">
+        <h2 style="font-size: 3.5rem; color: #f59e0b; margin-bottom: 25px;"><i class="fas fa-chart-line"></i> Mevcut Durum</h2>
+        <div id="inter-leaderboard-list" style="width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 15px;"></div>
+        <button id="btn-inter-continue" class="action-btn" style="margin-top: 35px; padding: 20px 60px;">YARIŞMAYA DEVAM ET</button>
+    </div>
+
+    <div id="scene-leaderboard" class="scene is-hidden glass-panel">
+        <h2 style="font-size: 3rem; color: var(--neon-blue); margin-bottom: 30px;">Bireysel Puan Durumu</h2>
+        <div id="leaderboard-list" style="width: 100%; max-width: 700px; max-height: 400px; overflow-y: auto;"></div>
+        <button id="btn-leaderboard-continue" class="action-btn" style="margin-top: 30px;">KURA EKRANINA DÖN</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
