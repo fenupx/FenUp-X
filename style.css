@@ -200,7 +200,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
-
 /* =========================================================
    MOBİL VE TABLET OPTİMİZASYONU (@MEDIA QUERIES)
    ========================================================= */
@@ -219,7 +218,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
         top: 0 !important;
         left: 0 !important;
         transform: none !important;
-        margin: 90px auto 30px auto !important; /* Üstteki sabit menünün altına itildi */
+        margin: 90px auto 30px auto !important; 
         width: 95vw !important;
         max-height: none !important;
     }
@@ -230,9 +229,9 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
         overflow-y: visible !important;
     }
 
-    /* 3. Üst Menü Karmaşasını Çözme (Yan yana ve daha minimal) */
+    /* 3. Üst Menü Karmaşasını Çözme */
     .top-header {
-        flex-direction: row !important; /* Alt alta dizilmesini engelledik */
+        flex-direction: row !important; 
         padding: 10px 15px !important;
         height: auto;
         flex-wrap: wrap;
@@ -244,7 +243,10 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     .volume-control { padding: 5px 10px !important; }
     #volume-slider { width: 60px !important; }
 
-    /* 4. Quiz Üst Bilgileri (Soru, Süre, Puan) */
+    /* İOS SAFARİ İÇİN TAM EKRAN BUTONUNU GİZLEME */
+    #fullscreen-btn { display: none !important; }
+
+    /* 4. Quiz Üst Bilgileri */
     .quiz-header, .t-header {
         flex-direction: row !important;
         flex-wrap: wrap !important;
@@ -262,7 +264,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     h2 { font-size: 1.6rem !important; margin-bottom: 15px !important; }
     .question-text, #t-question-text { font-size: 1.3rem !important; margin-bottom: 15px !important; line-height: 1.4 !important; }
 
-    /* 6. Butonlar ve Seçenekler (Alt Alta) */
+    /* 6. Butonlar ve Seçenekler */
     .menu-grid, .grid-3, #options-grid, #t-options-display {
         grid-template-columns: 1fr !important; 
         gap: 10px !important;
@@ -283,7 +285,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     /* 7. Joker Bölümü */
     .joker-area { gap: 5px !important; flex-wrap: wrap !important; justify-content: center !important;}
     .joker-area .action-btn {
-        flex: 1 1 40% !important; /* Butonları ikişerli gruplar */
+        flex: 1 1 40% !important; 
         font-size: 0.9rem !important;
         padding: 8px !important;
         margin: 0 !important;
@@ -297,4 +299,18 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     }
     .t-team-card { width: 100% !important; max-width: 100% !important; margin: 0 !important; }
     .back-link { position: static !important; display: block !important; margin-bottom: 15px !important; text-align: left !important;}
+
+    /* 9. FİNAL EKRANI OVERLAP (BUTONLARIN ÜST ÜSTE BİNMESİ) ÇÖZÜMÜ */
+    #quiz-end > div {
+        flex-direction: column !important;
+        width: 90% !important;
+        gap: 15px !important;
+    }
+    #quiz-end .action-btn {
+        width: 100% !important;
+        margin: 0 !important;
+        font-size: 1.2rem !important;
+        padding: 15px !important;
+        text-align: center !important;
+    }
 }
