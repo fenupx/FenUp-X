@@ -314,3 +314,21 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
         text-align: center !important;
     }
 }
+/* =========================================================
+   YAPIŞKAN HOVER (STICKY HOVER) ÇÖZÜMÜ - DOKUNMATİK EKRANLAR
+   ========================================================= */
+   @media (hover: none) {
+    /* Dokunmatik cihazlarda yapışık kalan hover efektini iptal et */
+    .answer-btn:hover:not(.is-correct):not(.is-wrong):not(.is-pending) {
+        background: rgba(15, 23, 42, 0.8) !important;
+        border-color: rgba(255,255,255,0.2) !important;
+        transform: none !important;
+    }
+    
+    /* Hover yerine sadece dokunma (basma) anında tepki ver (:active) */
+    .answer-btn:active:not(.is-correct):not(.is-wrong):not(.is-pending) {
+        border-color: var(--neon-blue) !important;
+        background: rgba(0, 210, 255, 0.1) !important;
+        transform: scale(0.98) !important;
+    }
+}
