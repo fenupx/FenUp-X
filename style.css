@@ -200,95 +200,101 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
+
 /* =========================================================
    MOBİL VE TABLET OPTİMİZASYONU (@MEDIA QUERIES)
    ========================================================= */
 
 @media (max-width: 900px) {
-    /* Ana Panel Esnekliği */
+    /* 1. Kilit Açma: Dikey kaydırmaya izin ver */
+    body {
+        overflow-y: auto !important; 
+        height: auto !important;
+        min-height: 100vh;
+    }
+
+    /* 2. Sahne Düzeni: Ortalamayı iptal edip üstten boşluk bırakıyoruz */
     .scene {
+        position: relative !important;
+        top: 0 !important;
+        left: 0 !important;
+        transform: none !important;
+        margin: 90px auto 30px auto !important; /* Üstteki sabit menünün altına itildi */
         width: 95vw !important;
-        max-height: 95vh !important;
-        top: 50% !important;
-        transform: translate(-50%, -50%) !important;
+        max-height: none !important;
     }
     
     .glass-panel {
-        padding: 20px !important;
-        max-height: 90vh !important;
-        overflow-y: auto !important; /* Taşan içerikleri kaydırılabilir yapar */
-        width: 100% !important;
+        padding: 20px 15px !important;
+        max-height: none !important;
+        overflow-y: visible !important;
     }
 
-    /* Başlıklar ve Font Küçültmeleri */
-    .logo { font-size: 1.8rem !important; }
-    h2, .main-title { font-size: 2rem !important; margin-bottom: 15px !important; }
-    .question-text, #t-question-text { font-size: 1.4rem !important; margin-bottom: 15px !important; }
-
-    /* Butonlar ve Seçenek Gridleri */
-    .menu-grid, .grid-3, #options-grid, #t-options-display {
-        grid-template-columns: 1fr !important; /* Yan yana değil alt alta dizer */
-        gap: 12px !important;
-    }
-
-    /* Ana Menü Modülleri */
-    .main-menu-grid {
-        grid-template-columns: 1fr !important;
-        gap: 20px !important;
-    }
-    .module-btn { min-height: 180px !important; padding: 20px !important; }
-    .module-btn i { font-size: 3rem !important; }
-    .module-btn span { font-size: 1.5rem !important; }
-
-    /* Şıklar ve Cevap Butonları */
-    .answer-btn {
-        font-size: 1.2rem !important;
-        padding: 15px !important;
-        min-height: auto !important;
-    }
-    .t-main-opt { font-size: 1.1rem !important; padding: 10px !important; }
-
-    /* Üst Menü / Kontroller */
+    /* 3. Üst Menü Karmaşasını Çözme (Yan yana ve daha minimal) */
     .top-header {
-        padding: 15px !important;
-        flex-direction: column !important;
-        gap: 10px !important;
-    }
-    .top-controls {
-        width: 100% !important;
+        flex-direction: row !important; /* Alt alta dizilmesini engelledik */
+        padding: 10px 15px !important;
+        height: auto;
+        flex-wrap: wrap;
         justify-content: space-between !important;
     }
-    .volume-control { width: 60% !important; }
+    .logo { font-size: 1.6rem !important; margin-bottom: 0 !important;}
+    .header-right { gap: 10px !important; }
+    .text-btn { font-size: 1rem !important; }
+    .volume-control { padding: 5px 10px !important; }
+    #volume-slider { width: 60px !important; }
 
-    /* Joker Bölümü */
-    .joker-area {
+    /* 4. Quiz Üst Bilgileri (Soru, Süre, Puan) */
+    .quiz-header, .t-header {
+        flex-direction: row !important;
         flex-wrap: wrap !important;
-        gap: 8px !important;
+        gap: 10px !important;
+        font-size: 1rem !important;
+        justify-content: center !important;
+        text-align: center;
+        margin-bottom: 15px !important;
     }
+    .quiz-header span { font-size: 1.1rem !important; margin: 0 5px; }
+    #t-timer-display { font-size: 1.5rem !important; }
+
+    /* 5. Yazı Boyutları */
+    h1, .main-title { font-size: 2rem !important; margin-bottom: 15px !important; }
+    h2 { font-size: 1.6rem !important; margin-bottom: 15px !important; }
+    .question-text, #t-question-text { font-size: 1.3rem !important; margin-bottom: 15px !important; line-height: 1.4 !important; }
+
+    /* 6. Butonlar ve Seçenekler (Alt Alta) */
+    .menu-grid, .grid-3, #options-grid, #t-options-display {
+        grid-template-columns: 1fr !important; 
+        gap: 10px !important;
+    }
+    .main-menu-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    .module-btn { min-height: 150px !important; padding: 15px !important; }
+    .module-btn i { font-size: 2.5rem !important; }
+    .module-btn span { font-size: 1.4rem !important; }
+
+    .answer-btn {
+        font-size: 1.1rem !important;
+        padding: 12px 15px !important;
+    }
+
+    /* 7. Joker Bölümü */
+    .joker-area { gap: 5px !important; flex-wrap: wrap !important; justify-content: center !important;}
     .joker-area .action-btn {
-        flex: 1 1 45% !important; /* Yan yana ikişer tane hizalar */
+        flex: 1 1 40% !important; /* Butonları ikişerli gruplar */
         font-size: 0.9rem !important;
-        padding: 10px !important;
+        padding: 8px !important;
         margin: 0 !important;
     }
 
-    /* Turnuva Takım Kutuları */
+    /* 8. Turnuva Kartları */
     #t-teams-container {
         display: flex !important;
-        flex-direction: column !important; /* Takım kartlarını alt alta dizer */
-        gap: 15px !important;
-    }
-    .t-team-card { width: 100% !important; max-width: 100% !important; margin: 0 !important; }
-    
-    /* Geri Butonu */
-    .back-link { position: static !important; display: block !important; margin-bottom: 15px !important; text-align: left !important;}
-    
-    /* Quiz Başlık / Timer Bar */
-    .quiz-header, .t-header {
         flex-direction: column !important;
         gap: 10px !important;
-        font-size: 1.2rem !important;
-        align-items: flex-start !important;
     }
-    #t-timer-display { font-size: 1.8rem !important; }
+    .t-team-card { width: 100% !important; max-width: 100% !important; margin: 0 !important; }
+    .back-link { position: static !important; display: block !important; margin-bottom: 15px !important; text-align: left !important;}
 }
