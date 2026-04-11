@@ -114,7 +114,6 @@
         }
     }
 
-    // --- MOBİL UYUMLU TAM EKRAN (FULLSCREEN) BUTONU ---
     document.getElementById('fullscreen-btn').onclick = () => {
         let elem = document.documentElement;
         if (!document.fullscreenElement && !document.mozFullScreenElement &&
@@ -333,7 +332,6 @@
 
     async function fetchQuestions(grade, unit) {
         try {
-            // GÜNCELLEME: Seçilen sınıfa göre özel JSON dosyasını çağırır
             const res = await fetch(`${grade}_sinif_sorular.json`); 
             const data = await res.json();
             const allPool = data.questions.filter(q => String(q.grade) === String(grade) && String(q.unit) === String(unit));
@@ -379,6 +377,9 @@
     }
 
     function renderIndividual() {
+        /* BÜTÜN BUTONLARIN ODAĞINI (FOCUS) ZORLA SİLİYORUZ - iOS YAPISKANLIK ÇÖZÜMÜ */
+        if(document.activeElement) document.activeElement.blur(); 
+
         if (quizState.index >= 8 && !quizState.riskAcceptedForCurrent) { showBlackHoleWarning(); return; }
         const q = quizState.set[quizState.index]; const settings = getSettings(quizState.index);
         quizState.locked = false; isTimerPaused = false; 
@@ -389,7 +390,12 @@
         const pauseBtn = document.getElementById('joker-pause');
         if (pauseBtn.classList.contains('is-used')) { pauseBtn.innerHTML = "Kullanıldı"; pauseBtn.style.background = ""; pauseBtn.style.opacity = "0.5"; pauseBtn.style.pointerEvents = "none"; } else if (quizState.index >= 4) { if (pauseBtn.classList.contains('is-hidden')) { pauseBtn.classList.remove('is-hidden'); pauseBtn.classList.add('joker-spawn-anim'); } }
         document.getElementById('quiz-hint').classList.add('is-hidden');
-        document.querySelectorAll('.answer-btn').forEach((btn, i) => { btn.classList.remove('is-correct', 'is-wrong', 'is-pending', 'is-hidden'); btn.querySelector('.answer-text').textContent = q.answerOptions[i].text; btn.dataset.correct = q.answerOptions[i].isCorrect; });
+        document.querySelectorAll('.answer-btn').forEach((btn, i) => { 
+            btn.blur(); /* Kesin garanti altına alma */
+            btn.classList.remove('is-correct', 'is-wrong', 'is-pending', 'is-hidden'); 
+            btn.querySelector('.answer-text').textContent = q.answerOptions[i].text; 
+            btn.dataset.correct = q.answerOptions[i].isCorrect; 
+        });
         startIndividualTimer(settings.time);
     }
 
@@ -439,6 +445,7 @@
     });
 
     function finishIndividual(msg) {
+        if(document.activeElement) document.activeElement.blur();
         individualLeaderboard.push({ name: currentActivePlayerName, score: quizState.score, time: quizState.totalTimeSpent });
         const quizEndEl = document.getElementById('quiz-end'); document.getElementById('scene-quiz').appendChild(quizEndEl); quizEndEl.classList.remove('is-hidden');
         document.getElementById('btn-show-leaderboard').style.display = "block"; document.getElementById('quiz-end-title').textContent = msg; document.getElementById('quiz-end-score').textContent = `Final Puanın: ${quizState.score}`; document.getElementById('quiz-end-time').textContent = `Çözüm Süresi: ${quizState.totalTimeSpent} Saniye`;
@@ -522,6 +529,8 @@
     }
 
     function renderTournamentQuestion() {
+        if(document.activeElement) document.activeElement.blur(); 
+
         const q = tState.questions[tState.index];
         const currentPoints = tState.index < 4 ? 100 : tState.index < 8 ? 200 : 400;
         
@@ -908,6 +917,7 @@
     }
 
     function endTournament(msg, scoreStr) {
+        if(document.activeElement) document.activeElement.blur();
         stopSound(sfx.bgm); 
         if(msg.includes("KAZAN") || msg.includes("ŞAMPİYON") || msg.includes("AYAKTA")) playSound(sfx.cheer); else playSound(sfx.wrong);
         

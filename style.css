@@ -77,9 +77,16 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
   box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: center;
 }
 .mode-btn i { font-size: 3rem; margin-bottom: 15px; display: block; color: var(--neon-blue); }
-.mode-btn:hover, .class-card:hover:not(.disabled), .unit-card:hover { 
-  background: var(--neon-blue); color: #000; border-color: #fff; transform: scale(1.08); 
+
+/* SADECE MOUSE İLE GİRİLEN CİHAZLARDA HOVER EFEKTİ ÇALIŞSIN (YAPIŞKANLIĞI ÖNLER) */
+@media (hover: hover) {
+  .mode-btn:hover, .class-card:hover:not(.disabled), .unit-card:hover { 
+    background: var(--neon-blue); color: #000; border-color: #fff; transform: scale(1.08); 
+  }
+  .answer-btn:hover { border-color: var(--neon-blue); background: rgba(0, 210, 255, 0.1); transform:translateY(-5px); }
+  .t-ans-btn:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
 }
+
 .class-card.disabled { opacity: 0.3; cursor: not-allowed; filter: grayscale(100%); }
 
 .question-text { font-size: 2.2rem; margin-bottom: 30px; text-align: center; font-weight: 500;}
@@ -89,11 +96,18 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
   color: white; padding: 25px; border-radius: 15px; font-size: 1.6rem; 
   text-align: left; cursor: pointer; transition: 0.3s;
   box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  -webkit-tap-highlight-color: transparent; /* Mobildeki mavi seçili kalma sorununu çözer */
 }
-.answer-btn:hover { border-color: var(--neon-blue); background: rgba(0, 210, 255, 0.1); transform:translateY(-5px); }
+
+/* MOBİL İÇİN DOKUNMA (ACTIVE) EFEKTİ */
+.answer-btn:active:not(.is-correct):not(.is-wrong):not(.is-pending) { 
+    border-color: var(--neon-blue) !important; 
+    background: rgba(0, 210, 255, 0.1) !important; 
+    transform: scale(0.98) !important; 
+}
 
 .is-pending { background: #f59e0b !important; border-color: #f59e0b !important; color: white !important; transform: scale(1.03); }
-.is-correct { background: #22c55e !important; border-color: #22c55e !important; color: white !important; transform: scale(1.05); box-shadow: 0 0 20px #22c55e; }
+.is-correct { background: #22c55e !important; border-color: #22c55e !important; color: white !important; transform: scale(1.05) !important; box-shadow: 0 0 20px #22c55e; }
 .is-wrong { background: #ef4444 !important; border-color: #ef4444 !important; color: white !important; animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
 
 @keyframes shake {
@@ -168,8 +182,8 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .t-ans-btn {
   background: rgba(0,0,0,0.6); border: 2px solid #555; color: white;
   padding: 10px 0; border-radius: 10px; cursor: pointer; font-size: 1.3rem; font-weight: bold; transition:0.2s;
+  -webkit-tap-highlight-color: transparent;
 }
-.t-ans-btn:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
 .t-ans-btn.selected { background: var(--neon-blue); border-color: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue); }
 .t-ans-btn.correct { background: #22c55e !important; border-color: #22c55e !important; color: white!important; box-shadow: 0 0 20px #22c55e; }
 .t-ans-btn.wrong { background: #ef4444 !important; border-color: #ef4444 !important; color: white!important; opacity: 0.4;}
@@ -205,14 +219,12 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
    ========================================================= */
 
 @media (max-width: 900px) {
-    /* 1. Kilit Açma: Dikey kaydırmaya izin ver */
     body {
         overflow-y: auto !important; 
         height: auto !important;
         min-height: 100vh;
     }
 
-    /* 2. Sahne Düzeni: Ortalamayı iptal edip üstten boşluk bırakıyoruz */
     .scene {
         position: relative !important;
         top: 0 !important;
@@ -229,7 +241,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
         overflow-y: visible !important;
     }
 
-    /* 3. Üst Menü Karmaşasını Çözme */
     .top-header {
         flex-direction: row !important; 
         padding: 10px 15px !important;
@@ -243,10 +254,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     .volume-control { padding: 5px 10px !important; }
     #volume-slider { width: 60px !important; }
 
-    /* İOS SAFARİ İÇİN TAM EKRAN BUTONUNU GİZLEME */
-    #fullscreen-btn { display: none !important; }
-
-    /* 4. Quiz Üst Bilgileri */
     .quiz-header, .t-header {
         flex-direction: row !important;
         flex-wrap: wrap !important;
@@ -259,12 +266,10 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     .quiz-header span { font-size: 1.1rem !important; margin: 0 5px; }
     #t-timer-display { font-size: 1.5rem !important; }
 
-    /* 5. Yazı Boyutları */
     h1, .main-title { font-size: 2rem !important; margin-bottom: 15px !important; }
     h2 { font-size: 1.6rem !important; margin-bottom: 15px !important; }
     .question-text, #t-question-text { font-size: 1.3rem !important; margin-bottom: 15px !important; line-height: 1.4 !important; }
 
-    /* 6. Butonlar ve Seçenekler */
     .menu-grid, .grid-3, #options-grid, #t-options-display {
         grid-template-columns: 1fr !important; 
         gap: 10px !important;
@@ -282,7 +287,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
         padding: 12px 15px !important;
     }
 
-    /* 7. Joker Bölümü */
     .joker-area { gap: 5px !important; flex-wrap: wrap !important; justify-content: center !important;}
     .joker-area .action-btn {
         flex: 1 1 40% !important; 
@@ -291,7 +295,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
         margin: 0 !important;
     }
 
-    /* 8. Turnuva Kartları */
     #t-teams-container {
         display: flex !important;
         flex-direction: column !important;
@@ -300,7 +303,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     .t-team-card { width: 100% !important; max-width: 100% !important; margin: 0 !important; }
     .back-link { position: static !important; display: block !important; margin-bottom: 15px !important; text-align: left !important;}
 
-    /* 9. FİNAL EKRANI OVERLAP (BUTONLARIN ÜST ÜSTE BİNMESİ) ÇÖZÜMÜ */
+    /* QUIZ SONU EKRANI TAŞMA (OVERLAP) ÇÖZÜMÜ */
     #quiz-end > div {
         flex-direction: column !important;
         width: 90% !important;
@@ -309,26 +312,8 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     #quiz-end .action-btn {
         width: 100% !important;
         margin: 0 !important;
-        font-size: 1.2rem !important;
+        font-size: 1.1rem !important;
         padding: 15px !important;
         text-align: center !important;
-    }
-}
-/* =========================================================
-   YAPIŞKAN HOVER (STICKY HOVER) ÇÖZÜMÜ - DOKUNMATİK EKRANLAR
-   ========================================================= */
-   @media (hover: none) {
-    /* Dokunmatik cihazlarda yapışık kalan hover efektini iptal et */
-    .answer-btn:hover:not(.is-correct):not(.is-wrong):not(.is-pending) {
-        background: rgba(15, 23, 42, 0.8) !important;
-        border-color: rgba(255,255,255,0.2) !important;
-        transform: none !important;
-    }
-    
-    /* Hover yerine sadece dokunma (basma) anında tepki ver (:active) */
-    .answer-btn:active:not(.is-correct):not(.is-wrong):not(.is-pending) {
-        border-color: var(--neon-blue) !important;
-        background: rgba(0, 210, 255, 0.1) !important;
-        transform: scale(0.98) !important;
     }
 }
