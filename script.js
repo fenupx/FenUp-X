@@ -106,7 +106,7 @@
 
     function updateVolumes() {
         for (let key in sfx) {
-            sfx[key].muted = isMuted; // iOS uyumluluğu
+            sfx[key].muted = isMuted;
             if (key === 'bgm') {
                 sfx[key].volume = isMuted ? 0 : (globalVolume * 0.5); 
             } else {
@@ -244,13 +244,12 @@
     document.getElementById('btn-oyun-modulu').onclick = () => switchScene(scenes.home, scenes.crossroads);
     document.getElementById('btn-deney-modulu').onclick = () => alert("İnteraktif Deney Modülü Çok Yakında!");
     
-    document.getElementById('btn-mode-bireysel').onclick = () => { activeMode = "bireysel"; usedQuestions = []; switchScene(scenes.crossroads, scenes.lobby); };
-    document.getElementById('btn-mode-turnuva').onclick = () => { activeMode = "turnuva"; usedQuestions = []; initTournamentLobby(); switchScene(scenes.crossroads, scenes.tournamentLobby); };
+    document.getElementById('btn-mode-bireysel').onclick = () => { activeMode = "bireysel"; switchScene(scenes.crossroads, scenes.lobby); };
+    document.getElementById('btn-mode-turnuva').onclick = () => { activeMode = "turnuva"; initTournamentLobby(); switchScene(scenes.crossroads, scenes.tournamentLobby); };
 
     document.querySelector('.btn-back-home').onclick = () => switchScene(scenes.crossroads, scenes.home);
     document.querySelectorAll('.btn-back-cross').forEach(btn => btn.onclick = () => switchScene(btn.closest('.scene'), scenes.crossroads));
     document.getElementById('btn-back-class').onclick = () => switchScene(scenes.unit, scenes.class);
-    
     document.getElementById('btn-back-rules').onclick = () => switchScene(scenes.rules, scenes.unit);
 
     // Bireysel Kura
@@ -336,15 +335,23 @@
             const res = await fetch(`${grade}_sinif_sorular.json`); 
             const data = await res.json();
             const allPool = data.questions.filter(q => String(q.grade) === String(grade) && String(q.unit) === String(unit));
+            
+            // --- PAS JOKERİ İÇİN HAVUZU DOLDUR ---
+            quizState.fullPool = allPool; 
+
             if(allPool.length === 0) { alert(`Soru bulunamadı.`); return []; }
             
+            // Daha önce sorulanları havuzdan çıkar
             let availablePool = allPool.filter(q => !usedQuestions.some(uq => uq.question === q.question));
+            
             let e = availablePool.filter(q => String(q.difficulty) === "1").length;
             let m = availablePool.filter(q => String(q.difficulty) === "2").length;
             let h = availablePool.filter(q => String(q.difficulty) === "3").length;
 
+            // Havuz yetersizse sıfırla (Session persistence devam eder)
             if (e < 4 || m < 4 || h < 2) {
-                usedQuestions = []; availablePool = allPool; 
+                usedQuestions = []; 
+                availablePool = allPool; 
             }
 
             const easy = availablePool.filter(q => String(q.difficulty) === "1").sort(() => Math.random() - 0.5);
@@ -352,10 +359,14 @@
             const hard = availablePool.filter(q => String(q.difficulty) === "3").sort(() => Math.random() - 0.5);
             
             let finalSet = [].concat(easy.slice(0, 4), mid.slice(0, 4), hard.slice(0, 2));
+            
+            // 10'a tamamla (Eğer havuz çok darsa)
             if(finalSet.length < 10) { 
                 const remaining = availablePool.filter(q => !finalSet.includes(q)).sort(() => Math.random() - 0.5); 
                 finalSet = finalSet.concat(remaining.slice(0, 10 - finalSet.length)); 
             }
+
+            // Seçilenleri küresel kullanılanlar listesine ekle
             usedQuestions.push(...finalSet);
             return finalSet;
         } catch(e) { return []; }
@@ -476,20 +487,44 @@
     document.getElementById('joker-hint').onclick = function() { if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; this.classList.add('is-used'); this.style.opacity = "0.5"; this.style.pointerEvents = "none"; document.getElementById('quiz-hint').classList.remove('is-hidden'); document.getElementById('quiz-hint').textContent = `💡 İpucu: ${quizState.set[quizState.index].hint}`; };
     document.getElementById('joker-fifty').onclick = function() { if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; this.classList.add('is-used'); this.style.opacity = "0.5"; this.style.pointerEvents = "none"; let hidden = 0; document.querySelectorAll('.answer-btn').forEach(btn => { if(btn.dataset.correct === "false" && hidden < 2) { btn.classList.add('is-hidden'); hidden++; } }); };
     document.getElementById('joker-pause').onclick = function() { if(quizState.locked || isGlobalPaused) return; if(!isTimerPaused) { isTimerPaused = true; this.innerHTML = "Süreyi Başlat ▶"; this.style.background = "#22c55e"; this.classList.add('is-used'); this.classList.remove('joker-spawn-anim'); stopSound(sfx.bgm); } else { isTimerPaused = false; this.innerHTML = "Kullanıldı"; this.style.background = ""; this.style.opacity = "0.5"; this.style.pointerEvents = "none"; playSound(sfx.bgm); } };
+    
+    // --- PAS JOKERİ DÜZELTİLDİ ---
     document.getElementById('joker-pass').onclick = function() { 
         if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; 
-        this.classList.add('is-used'); this.style.opacity = "0.5"; this.style.pointerEvents = "none"; 
-        const currentQ = quizState.set[quizState.index]; const diff = currentQ.difficulty; 
-        let availableSameDiff = quizState.fullPool.filter(q => q.difficulty === diff && !quizState.set.includes(q) && !usedQuestions.some(uq => uq.question === q.question)); 
-        if(availableSameDiff.length === 0) availableSameDiff = quizState.fullPool.filter(q => q.difficulty === diff && !quizState.set.includes(q)); 
-        if (availableSameDiff.length > 0) { const newQ = availableSameDiff[Math.floor(Math.random() * availableSameDiff.length)]; quizState.set[quizState.index] = newQ; usedQuestions.push(newQ); } 
-        renderIndividual(); 
+        
+        const currentQ = quizState.set[quizState.index]; 
+        const diff = String(currentQ.difficulty); 
+
+        // Havuzda; mevcut set içinde olmayan ve daha önce hiç sorulmamış olanları bul
+        let availableSameDiff = quizState.fullPool.filter(q => 
+            String(q.difficulty) === diff && 
+            !quizState.set.some(sq => sq.question === q.question) && 
+            !usedQuestions.some(uq => uq.question === q.question)
+        ); 
+
+        // Eğer hiç "hiç sorulmamış" soru kalmadıysa, sadece mevcut seti hariç tut
+        if(availableSameDiff.length === 0) {
+            availableSameDiff = quizState.fullPool.filter(q => 
+                String(q.difficulty) === diff && 
+                !quizState.set.some(sq => sq.question === q.question)
+            );
+        }
+
+        if (availableSameDiff.length > 0) { 
+            const newQ = availableSameDiff[Math.floor(Math.random() * availableSameDiff.length)]; 
+            quizState.set[quizState.index] = newQ; 
+            usedQuestions.push(newQ);
+            
+            this.classList.add('is-used'); 
+            this.style.opacity = "0.5"; 
+            this.style.pointerEvents = "none";
+            renderIndividual(); 
+        } else {
+            alert("Havuzda değiştirilebilecek başka soru kalmadı!");
+        }
     };
 
-    // =========================================================================
     // --- 7. TURNUVA MODU ---
-    // =========================================================================
-    
     const presetNames = ["Protonlar", "Atom Karıncalar", "Foton Fırtınası", "DNA Şifresi", "Kuantum Gücü", "Elementler", "Dinamolar", "Süpernovalar", "Hücre Muhafızları", "Galaksi Kaşifleri"];
     let tTeams = [];
     const tState = { questions: [], index: 0, locked: false, skipTimer: false, timerInterval: null, isEvaluating: false, isDuel: false, isDuelFinished: false, tiedTeams: [] };
@@ -792,7 +827,6 @@
         tState.isDuel = true;
         document.getElementById('scene-tournament-quiz').classList.add('duel-mode-active');
         
-        // GÜNCELLEME: Düello sorusunu seçili sınıfın özel dosyasından çeker
         const res = await fetch(`${selectedGrade}_sinif_sorular.json`); 
         const data = await res.json();
         let hardPool = data.questions.filter(q => String(q.grade) === String(selectedGrade) && String(q.unit) === String(selectedUnit) && String(q.difficulty) === "3" && !usedQuestions.some(uq => uq.question === q.question));
