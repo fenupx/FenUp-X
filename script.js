@@ -106,6 +106,7 @@
 
     function updateVolumes() {
         for (let key in sfx) {
+            sfx[key].muted = isMuted; // iOS uyumluluğu
             if (key === 'bgm') {
                 sfx[key].volume = isMuted ? 0 : (globalVolume * 0.5); 
             } else {
@@ -377,7 +378,6 @@
     }
 
     function renderIndividual() {
-        /* BÜTÜN BUTONLARIN ODAĞINI (FOCUS) ZORLA SİLİYORUZ - iOS YAPISKANLIK ÇÖZÜMÜ */
         if(document.activeElement) document.activeElement.blur(); 
 
         if (quizState.index >= 8 && !quizState.riskAcceptedForCurrent) { showBlackHoleWarning(); return; }
@@ -391,7 +391,7 @@
         if (pauseBtn.classList.contains('is-used')) { pauseBtn.innerHTML = "Kullanıldı"; pauseBtn.style.background = ""; pauseBtn.style.opacity = "0.5"; pauseBtn.style.pointerEvents = "none"; } else if (quizState.index >= 4) { if (pauseBtn.classList.contains('is-hidden')) { pauseBtn.classList.remove('is-hidden'); pauseBtn.classList.add('joker-spawn-anim'); } }
         document.getElementById('quiz-hint').classList.add('is-hidden');
         document.querySelectorAll('.answer-btn').forEach((btn, i) => { 
-            btn.blur(); /* Kesin garanti altına alma */
+            btn.blur(); 
             btn.classList.remove('is-correct', 'is-wrong', 'is-pending', 'is-hidden'); 
             btn.querySelector('.answer-text').textContent = q.answerOptions[i].text; 
             btn.dataset.correct = q.answerOptions[i].isCorrect; 
