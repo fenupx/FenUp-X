@@ -183,6 +183,12 @@
         from.classList.add('is-hidden');
         to.classList.remove('is-hidden');
         
+        // HAKKIMIZDA BUTONU KONTROLÜ (Sadece ana menüde görünür)
+        const btnHakkimizda = document.getElementById('btn-hakkimizda');
+        if (btnHakkimizda) {
+            btnHakkimizda.style.display = (to.id === "scene-home") ? "block" : "none";
+        }
+
         if (to.id === "scene-quiz" || to.id === "scene-tournament-quiz") {
             topControls.style.display = "flex";
         } else {
@@ -336,19 +342,16 @@
             const data = await res.json();
             const allPool = data.questions.filter(q => String(q.grade) === String(grade) && String(q.unit) === String(unit));
             
-            // --- PAS JOKERİ İÇİN HAVUZU DOLDUR ---
             quizState.fullPool = allPool; 
 
             if(allPool.length === 0) { alert(`Soru bulunamadı.`); return []; }
             
-            // Daha önce sorulanları havuzdan çıkar
             let availablePool = allPool.filter(q => !usedQuestions.some(uq => uq.question === q.question));
             
             let e = availablePool.filter(q => String(q.difficulty) === "1").length;
             let m = availablePool.filter(q => String(q.difficulty) === "2").length;
             let h = availablePool.filter(q => String(q.difficulty) === "3").length;
 
-            // Havuz yetersizse sıfırla (Session persistence devam eder)
             if (e < 4 || m < 4 || h < 2) {
                 usedQuestions = []; 
                 availablePool = allPool; 
@@ -360,13 +363,19 @@
             
             let finalSet = [].concat(easy.slice(0, 4), mid.slice(0, 4), hard.slice(0, 2));
             
-            // 10'a tamamla (Eğer havuz çok darsa)
             if(finalSet.length < 10) { 
                 const remaining = availablePool.filter(q => !finalSet.includes(q)).sort(() => Math.random() - 0.5); 
                 finalSet = finalSet.concat(remaining.slice(0, 10 - finalSet.length)); 
             }
 
-            // Seçilenleri küresel kullanılanlar listesine ekle
+            // ŞIKLARI KARIŞTIR (A,B,C,D Hep aynı olmasın)
+            finalSet.forEach(q => {
+                for (let i = q.answerOptions.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [q.answerOptions[i], q.answerOptions[j]] = [q.answerOptions[j], q.answerOptions[i]];
+                }
+            });
+
             usedQuestions.push(...finalSet);
             return finalSet;
         } catch(e) { return []; }
@@ -488,21 +497,18 @@
     document.getElementById('joker-fifty').onclick = function() { if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; this.classList.add('is-used'); this.style.opacity = "0.5"; this.style.pointerEvents = "none"; let hidden = 0; document.querySelectorAll('.answer-btn').forEach(btn => { if(btn.dataset.correct === "false" && hidden < 2) { btn.classList.add('is-hidden'); hidden++; } }); };
     document.getElementById('joker-pause').onclick = function() { if(quizState.locked || isGlobalPaused) return; if(!isTimerPaused) { isTimerPaused = true; this.innerHTML = "Süreyi Başlat ▶"; this.style.background = "#22c55e"; this.classList.add('is-used'); this.classList.remove('joker-spawn-anim'); stopSound(sfx.bgm); } else { isTimerPaused = false; this.innerHTML = "Kullanıldı"; this.style.background = ""; this.style.opacity = "0.5"; this.style.pointerEvents = "none"; playSound(sfx.bgm); } };
     
-    // --- PAS JOKERİ DÜZELTİLDİ ---
     document.getElementById('joker-pass').onclick = function() { 
         if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; 
         
         const currentQ = quizState.set[quizState.index]; 
         const diff = String(currentQ.difficulty); 
 
-        // Havuzda; mevcut set içinde olmayan ve daha önce hiç sorulmamış olanları bul
         let availableSameDiff = quizState.fullPool.filter(q => 
             String(q.difficulty) === diff && 
             !quizState.set.some(sq => sq.question === q.question) && 
             !usedQuestions.some(uq => uq.question === q.question)
         ); 
 
-        // Eğer hiç "hiç sorulmamış" soru kalmadıysa, sadece mevcut seti hariç tut
         if(availableSameDiff.length === 0) {
             availableSameDiff = quizState.fullPool.filter(q => 
                 String(q.difficulty) === diff && 
@@ -838,6 +844,13 @@
         }
         
         const duelQ = hardPool.length > 0 ? hardPool[Math.floor(Math.random() * hardPool.length)] : tState.questions[0]; 
+        
+        // Düello sorusunun da şıklarını karıştır
+        for (let i = duelQ.answerOptions.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [duelQ.answerOptions[i], duelQ.answerOptions[j]] = [duelQ.answerOptions[j], duelQ.answerOptions[i]];
+        }
+        
         usedQuestions.push(duelQ); 
         
         tState.questions = [duelQ]; 

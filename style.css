@@ -78,7 +78,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 }
 .mode-btn i { font-size: 3rem; margin-bottom: 15px; display: block; color: var(--neon-blue); }
 
-/* SADECE MOUSE İLE GİRİLEN CİHAZLARDA HOVER EFEKTİ ÇALIŞSIN (YAPIŞKANLIĞI ÖNLER) */
 @media (hover: hover) {
   .mode-btn:hover, .class-card:hover:not(.disabled), .unit-card:hover { 
     background: var(--neon-blue); color: #000; border-color: #fff; transform: scale(1.08); 
@@ -99,7 +98,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
   -webkit-tap-highlight-color: transparent;
 }
 
-/* MOBİL İÇİN DOKUNMA (ACTIVE) EFEKTİ */
 .answer-btn:active:not(.is-correct):not(.is-wrong):not(.is-pending) { 
     border-color: var(--neon-blue) !important; 
     background: rgba(0, 210, 255, 0.1) !important; 
@@ -263,4 +261,15 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 
     #quiz-end > div { flex-direction: column !important; width: 90% !important; gap: 15px !important; }
     #quiz-end .action-btn { width: 100% !important; margin: 0 !important; font-size: 1.1rem !important; padding: 15px !important; text-align: center !important; }
+
+    /* Kara Delik ve Master Pause Mobil İyileştirmeleri */
+    #blackhole-overlay h2 { font-size: 2.5rem !important; margin-top: 40px !important; margin-bottom: 10px !important; }
+    #blackhole-overlay p { font-size: 1.1rem !important; line-height: 1.4 !important; max-width: 95% !important; margin-bottom: 20px !important; }
+    #bh-current-score { font-size: 2rem !important; }
+    #blackhole-overlay > div { flex-direction: column !important; gap: 10px !important; width: 90% !important; }
+    #btn-bh-withdraw, #btn-bh-continue { width: 100% !important; font-size: 1.1rem !important; padding: 15px !important; margin: 0 !important; }
+    
+    #master-pause-overlay h1 { font-size: 2.5rem !important; }
+    #master-pause-overlay p { font-size: 1.1rem !important; text-align: center; max-width: 90%; }
+    #btn-master-resume { font-size: 1.2rem !important; padding: 15px !important; width: 90%; justify-content: center; }
 }
