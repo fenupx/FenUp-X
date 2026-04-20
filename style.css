@@ -239,7 +239,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
    4. MÜDAHALE: SIKIŞAN OVERLAY EKRANLARI İÇİN YAMA
    ========================================================= */
 
-/* Arka planı panele tam oturtur ve içeriden nefes aldırır */
 #cards-overlay, #quiz-end, #blackhole-overlay {
     position: absolute !important;
     top: 0 !important; left: 0 !important;
@@ -249,13 +248,11 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     padding: 20px !important;
 }
 
-/* SÜRE BİTTİ Ekranındaki yazılar biraz daha küçültüldü (Ünlem tavanı çizmesin) */
 #cards-overlay i { font-size: clamp(2.5rem, 8vh, 4.5rem) !important; margin-bottom: 10px !important; }
 #cards-overlay h2 { font-size: clamp(2rem, 6vh, 3.5rem) !important; margin-bottom: 10px !important; }
 #cards-overlay p { font-size: clamp(1.1rem, 3vh, 2rem) !important; margin-bottom: 20px !important; }
 #btn-cards-seen { font-size: clamp(1.1rem, 2.5vh, 1.5rem) !important; padding: 12px 25px !important; }
 
-/* Düello modunda ekranın sıkışmasını engeller, serbest bırakır */
 .duel-mode-active #t-teams-container { 
     max-height: none !important; 
     overflow: visible !important; 
@@ -270,23 +267,33 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 @media (max-width: 900px) {
     body { overflow-y: auto !important; height: auto !important; min-height: 100vh; }
     
+    /* MODİFİYE EDİLDİ: Üstten boşluk artırıldı (120px -> 170px) */
     .scene {
         position: relative !important; top: 0 !important; left: 0 !important; transform: none !important;
-        margin: 120px auto 30px auto !important; 
+        margin: 170px auto 30px auto !important; 
         width: 95vw !important; max-height: none !important;
     }
     .glass-panel { padding: 20px 15px !important; max-height: none !important; overflow-y: visible !important; }
 
+    /* MODİFİYE EDİLDİ: Menü butonlarının aralıkları ve boyutları daraltıldı */
     .top-header {
         flex-direction: column !important; 
-        padding: 15px !important; gap: 15px !important;
+        padding: 15px !important; gap: 10px !important;
     }
     .logo { font-size: 2rem !important; margin-bottom: 0 !important; text-align: center; }
-    .header-right { width: 100%; justify-content: center !important; flex-wrap: wrap !important; gap: 15px !important; }
+    .header-right { width: 100%; justify-content: center !important; flex-wrap: wrap !important; gap: 10px !important; }
+    .text-btn { font-size: 1rem !important; }
+    .outline-btn { padding: 6px 12px !important; font-size: 0.9rem !important; }
     .top-controls { justify-content: center !important; flex-wrap: wrap !important; }
-    .text-btn { font-size: 1.1rem !important; }
     .volume-control { padding: 5px 10px !important; }
     #volume-slider { width: 70px !important; }
+
+    /* YENİ: İletişim sayfasındaki mail taşmasını önleyen kod */
+    #scene-iletisim > div:last-child {
+        padding: 20px !important;
+        font-size: 1.2rem !important;
+        word-break: break-all !important;
+    }
 
     .quiz-header, .t-header { flex-direction: row !important; flex-wrap: wrap !important; gap: 10px !important; font-size: 1rem !important; justify-content: center !important; text-align: center; margin-bottom: 15px !important; }
     .quiz-header span { font-size: 1.1rem !important; margin: 0 5px; }
@@ -313,7 +320,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     #quiz-end > div { flex-direction: column !important; width: 90% !important; gap: 15px !important; }
     #quiz-end .action-btn { width: 100% !important; margin: 0 !important; font-size: 1.1rem !important; padding: 15px !important; text-align: center !important; }
 
-    /* Kara Delik ve Master Pause Mobil İyileştirmeleri */
     #blackhole-overlay h2 { font-size: 2.5rem !important; margin-top: 40px !important; margin-bottom: 10px !important; }
     #blackhole-overlay p { font-size: 1.1rem !important; line-height: 1.4 !important; max-width: 95% !important; margin-bottom: 20px !important; }
     #bh-current-score { font-size: 2rem !important; }
