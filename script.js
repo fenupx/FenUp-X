@@ -170,7 +170,7 @@
     }
     tick();
 
-    // --- 3. SAHNE YÖNETİMİ ---
+    // --- 3. SAHNE YÖNETİMİ & YENİ BUTONLAR ---
     const scenes = {};
     document.querySelectorAll('.scene').forEach(s => {
         let key = s.id.replace('scene-', '');
@@ -178,15 +178,25 @@
         scenes[key] = s;
     });
 
+    const btnHakkimizda = document.getElementById('btn-hakkimizda');
+    const btnIletisim = document.getElementById('btn-iletisim');
+    const btnUyelik = document.getElementById('btn-uyelik');
+    const mainFooter = document.getElementById('main-footer');
+
     function switchScene(from, to) {
         if(!from || !to) return;
         from.classList.add('is-hidden');
         to.classList.remove('is-hidden');
         
-        // HAKKIMIZDA BUTONU KONTROLÜ (Sadece ana menüde görünür)
-        const btnHakkimizda = document.getElementById('btn-hakkimizda');
-        if (btnHakkimizda) {
-            btnHakkimizda.style.display = (to.id === "scene-home") ? "block" : "none";
+        // Menü ve Footer Kontrolü (Sadece Ana Menüde Görünür)
+        const isHome = (to.id === "scene-home");
+        if (btnHakkimizda && btnIletisim && btnUyelik) {
+            btnHakkimizda.style.display = isHome ? "block" : "none";
+            btnIletisim.style.display = isHome ? "block" : "none";
+            btnUyelik.style.display = isHome ? "block" : "none";
+        }
+        if (mainFooter) {
+            mainFooter.classList.toggle('hidden-footer', !isHome);
         }
 
         if (to.id === "scene-quiz" || to.id === "scene-tournament-quiz") {
@@ -247,13 +257,20 @@
     let usedQuestions = []; 
 
     document.querySelector('.logo').onclick = () => location.reload();
+    
+    // YENİ: Başlık Butonları Yönlendirmeleri
+    if(btnHakkimizda) btnHakkimizda.onclick = () => switchScene(scenes.home, scenes.hakkimizda);
+    if(btnIletisim) btnIletisim.onclick = () => switchScene(scenes.home, scenes.iletisim);
+    if(btnUyelik) btnUyelik.onclick = () => alert("Üyelik sistemi çok yakında aktif edilecektir!");
+
     document.getElementById('btn-oyun-modulu').onclick = () => switchScene(scenes.home, scenes.crossroads);
     document.getElementById('btn-deney-modulu').onclick = () => alert("İnteraktif Deney Modülü Çok Yakında!");
     
     document.getElementById('btn-mode-bireysel').onclick = () => { activeMode = "bireysel"; switchScene(scenes.crossroads, scenes.lobby); };
     document.getElementById('btn-mode-turnuva').onclick = () => { activeMode = "turnuva"; initTournamentLobby(); switchScene(scenes.crossroads, scenes.tournamentLobby); };
 
-    document.querySelector('.btn-back-home').onclick = () => switchScene(scenes.crossroads, scenes.home);
+    // Tüm "Ana Menü" butonları için
+    document.querySelectorAll('.btn-back-home').forEach(btn => btn.onclick = () => switchScene(btn.closest('.scene'), scenes.home));
     document.querySelectorAll('.btn-back-cross').forEach(btn => btn.onclick = () => switchScene(btn.closest('.scene'), scenes.crossroads));
     document.getElementById('btn-back-class').onclick = () => switchScene(scenes.unit, scenes.class);
     document.getElementById('btn-back-rules').onclick = () => switchScene(scenes.rules, scenes.unit);
