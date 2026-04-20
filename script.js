@@ -63,7 +63,7 @@
         input.onkeydown = (e) => { if(e.key === "Enter") document.getElementById('f-baslat').click(); };
     }
 
-    // --- 1. SES MOTORU ---
+    // --- 1. SES MOTORU (MOBİL İÇİN KUSURSUZLAŞTIRILDI) ---
     const sfx = {
         correct: new Audio('sesler/dogru.mp3'),
         wrong: new Audio('sesler/yanlis.mp3'),
@@ -80,17 +80,34 @@
     let isMuted = false; 
     let globalVolume = 0.7;
 
+    // MOBİL İÇİN DÜZELTİLMİŞ SES KİLİDİ AÇICI
     let audioUnlocked = false;
-    document.body.addEventListener('click', () => {
-        if (!audioUnlocked) {
+    let isUnlocking = false;
+
+    const unlockAudio = () => {
+        if (!audioUnlocked && !isUnlocking) {
+            isUnlocking = true;
             for (let key in sfx) {
-                sfx[key].volume = 0; 
+                sfx[key].muted = true; // Sesi tamamen sessize al (Mobil için en güvenlisi)
                 let p = sfx[key].play();
-                if (p !== undefined) p.then(() => { sfx[key].pause(); sfx[key].currentTime = 0; }).catch(() => {});
+                if (p !== undefined) {
+                    p.then(() => { 
+                        sfx[key].pause(); 
+                        sfx[key].currentTime = 0; 
+                    }).catch(() => {});
+                }
             }
             audioUnlocked = true;
+            isUnlocking = false;
+            // Kilit açıldıktan sonra event'leri temizle
+            document.body.removeEventListener('click', unlockAudio);
+            document.body.removeEventListener('touchstart', unlockAudio);
         }
-    }, { once: true });
+    };
+
+    // İlk etkileşimde kilidi aç (Hem tıklama hem dokunma)
+    document.body.addEventListener('click', unlockAudio, { once: true });
+    document.body.addEventListener('touchstart', unlockAudio, { once: true });
 
     volumeSlider.addEventListener('input', (e) => {
         globalVolume = e.target.value / 100;
@@ -105,6 +122,7 @@
     });
 
     function updateVolumes() {
+        if(isUnlocking) return; // Kilit açılırken müdahale etme
         for (let key in sfx) {
             sfx[key].muted = isMuted;
             if (key === 'bgm') {
@@ -133,6 +151,13 @@
 
     function playSound(obj) { 
         if(!obj) return;
+        
+        // MÜDAHALE: BGM zaten çalıyorsa, üst üste binmesini ve başa sarmasını engelle
+        if (obj === sfx.bgm && !obj.paused) {
+             updateVolumes();
+             return;
+        }
+
         try { obj.currentTime = 0; } catch(e){}
         updateVolumes(); 
         let playPromise = obj.play();
@@ -203,7 +228,7 @@
             topControls.style.display = "flex";
         } else {
             topControls.style.display = "none";
-            stopSound(sfx.bgm);
+            stopSound(sfx.bgm); // Ana menüye dönünce müziği güvenle durdurur
         }
     }
     topControls.style.display = "none"; 
@@ -258,7 +283,6 @@
 
     document.querySelector('.logo').onclick = () => location.reload();
     
-    // YENİ: Başlık Butonları Yönlendirmeleri
     if(btnHakkimizda) btnHakkimizda.onclick = () => switchScene(scenes.home, scenes.hakkimizda);
     if(btnIletisim) btnIletisim.onclick = () => switchScene(scenes.home, scenes.iletisim);
     if(btnUyelik) btnUyelik.onclick = () => alert("Üyelik sistemi çok yakında aktif edilecektir!");
@@ -415,7 +439,6 @@
     }
 
     function renderIndividual() {
-        // 1. MÜDAHALE: Soru geçerken varsa maviliği temizle
         if(document.activeElement) document.activeElement.blur(); 
 
         if (quizState.index >= 8 && !quizState.riskAcceptedForCurrent) { showBlackHoleWarning(); return; }
@@ -462,7 +485,6 @@
     document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = function() {
         if(quizState.locked || isGlobalPaused) return;
         
-        // 1. MÜDAHALE: Tıklandıktan sonra mavilik kalmasın diye eklendi
         this.blur(); 
         
         quizState.locked = true; clearInterval(quizState.timerInterval); stopSound(sfx.bgm);
@@ -592,7 +614,6 @@
     }
 
     function renderTournamentQuestion() {
-        // 1. MÜDAHALE: Odak temizleme eklendi
         if(document.activeElement) document.activeElement.blur(); 
 
         const q = tState.questions[tState.index];
@@ -667,7 +688,7 @@
         document.querySelectorAll('.t-ans-btn').forEach(btn => {
             btn.onclick = function() {
                 if (tState.locked) return; 
-                this.blur(); // 1. MÜDAHALE: Tıklandıktan sonra mavilik kalmasın diye eklendi
+                this.blur(); 
                 const tid = parseInt(this.dataset.tid);
                 const team = tTeams.find(x => x.id === tid);
                 if (team.isEliminated) return;
@@ -869,7 +890,6 @@
         
         const duelQ = hardPool.length > 0 ? hardPool[Math.floor(Math.random() * hardPool.length)] : tState.questions[0]; 
         
-        // Düello sorusunun da şıklarını karıştır
         for (let i = duelQ.answerOptions.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [duelQ.answerOptions[i], duelQ.answerOptions[j]] = [duelQ.answerOptions[j], duelQ.answerOptions[i]];
@@ -884,7 +904,6 @@
     };
 
     function renderDuelQuestion() {
-        // 1. MÜDAHALE: Odak temizleme eklendi
         if(document.activeElement) document.activeElement.blur(); 
 
         const q = tState.questions[0];
@@ -936,7 +955,7 @@
         document.querySelectorAll('.t-ans-btn').forEach(btn => {
             btn.onclick = function() {
                 if (tState.locked || isGlobalPaused) return; 
-                this.blur(); // 1. MÜDAHALE: Tıklandıktan sonra mavilik kalmasın diye eklendi
+                this.blur(); 
                 const tid = parseInt(this.dataset.tid);
                 const team = tState.tiedTeams.find(x => x.id === tid);
                 evaluateDuel(team, this.dataset.opt, this);
