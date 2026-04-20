@@ -398,6 +398,7 @@
     }
 
     function renderIndividual() {
+        // 1. MÜDAHALE: Soru geçerken varsa maviliği temizle
         if(document.activeElement) document.activeElement.blur(); 
 
         if (quizState.index >= 8 && !quizState.riskAcceptedForCurrent) { showBlackHoleWarning(); return; }
@@ -443,6 +444,10 @@
 
     document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = function() {
         if(quizState.locked || isGlobalPaused) return;
+        
+        // 1. MÜDAHALE: Tıklandıktan sonra mavilik kalmasın diye eklendi
+        this.blur(); 
+        
         quizState.locked = true; clearInterval(quizState.timerInterval); stopSound(sfx.bgm);
         const isCorrect = this.dataset.correct === "true"; this.classList.add('is-pending'); playSound(sfx.drum);
         
@@ -493,13 +498,13 @@
     
     document.getElementById('btn-leaderboard-continue').onclick = () => { switchScene(scenes.leaderboard, scenes.lobby); };
 
-    document.getElementById('joker-hint').onclick = function() { if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; this.classList.add('is-used'); this.style.opacity = "0.5"; this.style.pointerEvents = "none"; document.getElementById('quiz-hint').classList.remove('is-hidden'); document.getElementById('quiz-hint').textContent = `💡 İpucu: ${quizState.set[quizState.index].hint}`; };
-    document.getElementById('joker-fifty').onclick = function() { if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; this.classList.add('is-used'); this.style.opacity = "0.5"; this.style.pointerEvents = "none"; let hidden = 0; document.querySelectorAll('.answer-btn').forEach(btn => { if(btn.dataset.correct === "false" && hidden < 2) { btn.classList.add('is-hidden'); hidden++; } }); };
-    document.getElementById('joker-pause').onclick = function() { if(quizState.locked || isGlobalPaused) return; if(!isTimerPaused) { isTimerPaused = true; this.innerHTML = "Süreyi Başlat ▶"; this.style.background = "#22c55e"; this.classList.add('is-used'); this.classList.remove('joker-spawn-anim'); stopSound(sfx.bgm); } else { isTimerPaused = false; this.innerHTML = "Kullanıldı"; this.style.background = ""; this.style.opacity = "0.5"; this.style.pointerEvents = "none"; playSound(sfx.bgm); } };
+    document.getElementById('joker-hint').onclick = function() { if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; this.blur(); this.classList.add('is-used'); this.style.opacity = "0.5"; this.style.pointerEvents = "none"; document.getElementById('quiz-hint').classList.remove('is-hidden'); document.getElementById('quiz-hint').textContent = `💡 İpucu: ${quizState.set[quizState.index].hint}`; };
+    document.getElementById('joker-fifty').onclick = function() { if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; this.blur(); this.classList.add('is-used'); this.style.opacity = "0.5"; this.style.pointerEvents = "none"; let hidden = 0; document.querySelectorAll('.answer-btn').forEach(btn => { if(btn.dataset.correct === "false" && hidden < 2) { btn.classList.add('is-hidden'); hidden++; } }); };
+    document.getElementById('joker-pause').onclick = function() { if(quizState.locked || isGlobalPaused) return; this.blur(); if(!isTimerPaused) { isTimerPaused = true; this.innerHTML = "Süreyi Başlat ▶"; this.style.background = "#22c55e"; this.classList.add('is-used'); this.classList.remove('joker-spawn-anim'); stopSound(sfx.bgm); } else { isTimerPaused = false; this.innerHTML = "Kullanıldı"; this.style.background = ""; this.style.opacity = "0.5"; this.style.pointerEvents = "none"; playSound(sfx.bgm); } };
     
     document.getElementById('joker-pass').onclick = function() { 
         if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; 
-        
+        this.blur();
         const currentQ = quizState.set[quizState.index]; 
         const diff = String(currentQ.difficulty); 
 
@@ -570,6 +575,7 @@
     }
 
     function renderTournamentQuestion() {
+        // 1. MÜDAHALE: Odak temizleme eklendi
         if(document.activeElement) document.activeElement.blur(); 
 
         const q = tState.questions[tState.index];
@@ -644,6 +650,7 @@
         document.querySelectorAll('.t-ans-btn').forEach(btn => {
             btn.onclick = function() {
                 if (tState.locked) return; 
+                this.blur(); // 1. MÜDAHALE: Tıklandıktan sonra mavilik kalmasın diye eklendi
                 const tid = parseInt(this.dataset.tid);
                 const team = tTeams.find(x => x.id === tid);
                 if (team.isEliminated) return;
@@ -860,6 +867,9 @@
     };
 
     function renderDuelQuestion() {
+        // 1. MÜDAHALE: Odak temizleme eklendi
+        if(document.activeElement) document.activeElement.blur(); 
+
         const q = tState.questions[0];
         tState.locked = false; 
         tState.isDuelFinished = false;
@@ -909,6 +919,7 @@
         document.querySelectorAll('.t-ans-btn').forEach(btn => {
             btn.onclick = function() {
                 if (tState.locked || isGlobalPaused) return; 
+                this.blur(); // 1. MÜDAHALE: Tıklandıktan sonra mavilik kalmasın diye eklendi
                 const tid = parseInt(this.dataset.tid);
                 const team = tState.tiedTeams.find(x => x.id === tid);
                 evaluateDuel(team, this.dataset.opt, this);
