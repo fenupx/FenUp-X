@@ -32,7 +32,6 @@
     `;
     document.head.appendChild(styleEnjektor);
 
-    // Modern İsim Sorma Fonksiyonu
     function isimSor(callback) {
         const overlay = document.createElement('div');
         overlay.className = "fenupx-prompt-overlay";
@@ -63,7 +62,7 @@
         input.onkeydown = (e) => { if(e.key === "Enter") document.getElementById('f-baslat').click(); };
     }
 
-    // --- 1. SES MOTORU (MOBİL İÇİN KUSURSUZLAŞTIRILDI) ---
+    // --- 1. SES MOTORU (KUSURSUZ MOBİL OPTİMİZASYON) ---
     const sfx = {
         correct: new Audio('sesler/dogru.mp3'),
         wrong: new Audio('sesler/yanlis.mp3'),
@@ -80,32 +79,20 @@
     let isMuted = false; 
     let globalVolume = 0.7;
 
-    // MOBİL İÇİN DÜZELTİLMİŞ SES KİLİDİ AÇICI
+    // YENİ: Mobilde ses patlamasını önleyen akıllı yükleyici
     let audioUnlocked = false;
-    let isUnlocking = false;
-
     const unlockAudio = () => {
-        if (!audioUnlocked && !isUnlocking) {
-            isUnlocking = true;
+        if (!audioUnlocked) {
+            // Sesleri çaldırıp sistemi boğmak yerine sadece belleğe yüklüyoruz.
             for (let key in sfx) {
-                sfx[key].muted = true; // Sesi tamamen sessize al (Mobil için en güvenlisi)
-                let p = sfx[key].play();
-                if (p !== undefined) {
-                    p.then(() => { 
-                        sfx[key].pause(); 
-                        sfx[key].currentTime = 0; 
-                    }).catch(() => {});
-                }
+                sfx[key].load();
             }
             audioUnlocked = true;
-            isUnlocking = false;
-            // Kilit açıldıktan sonra event'leri temizle
             document.body.removeEventListener('click', unlockAudio);
             document.body.removeEventListener('touchstart', unlockAudio);
         }
     };
 
-    // İlk etkileşimde kilidi aç (Hem tıklama hem dokunma)
     document.body.addEventListener('click', unlockAudio, { once: true });
     document.body.addEventListener('touchstart', unlockAudio, { once: true });
 
@@ -122,7 +109,6 @@
     });
 
     function updateVolumes() {
-        if(isUnlocking) return; // Kilit açılırken müdahale etme
         for (let key in sfx) {
             sfx[key].muted = isMuted;
             if (key === 'bgm') {
@@ -152,7 +138,7 @@
     function playSound(obj) { 
         if(!obj) return;
         
-        // MÜDAHALE: BGM zaten çalıyorsa, üst üste binmesini ve başa sarmasını engelle
+        // Zaten çalan arka plan müziğini baştan başlatıp sesi bozma
         if (obj === sfx.bgm && !obj.paused) {
              updateVolumes();
              return;
@@ -195,7 +181,7 @@
     }
     tick();
 
-    // --- 3. SAHNE YÖNETİMİ & YENİ BUTONLAR ---
+    // --- 3. SAHNE YÖNETİMİ ---
     const scenes = {};
     document.querySelectorAll('.scene').forEach(s => {
         let key = s.id.replace('scene-', '');
@@ -213,22 +199,19 @@
         from.classList.add('is-hidden');
         to.classList.remove('is-hidden');
         
-        // Menü ve Footer Kontrolü (Sadece Ana Menüde Görünür)
         const isHome = (to.id === "scene-home");
         if (btnHakkimizda && btnIletisim && btnUyelik) {
             btnHakkimizda.style.display = isHome ? "block" : "none";
             btnIletisim.style.display = isHome ? "block" : "none";
             btnUyelik.style.display = isHome ? "block" : "none";
         }
-        if (mainFooter) {
-            mainFooter.classList.toggle('hidden-footer', !isHome);
-        }
+        if (mainFooter) mainFooter.classList.toggle('hidden-footer', !isHome);
 
         if (to.id === "scene-quiz" || to.id === "scene-tournament-quiz") {
             topControls.style.display = "flex";
         } else {
             topControls.style.display = "none";
-            stopSound(sfx.bgm); // Ana menüye dönünce müziği güvenle durdurur
+            stopSound(sfx.bgm); 
         }
     }
     topControls.style.display = "none"; 
@@ -293,13 +276,11 @@
     document.getElementById('btn-mode-bireysel').onclick = () => { activeMode = "bireysel"; switchScene(scenes.crossroads, scenes.lobby); };
     document.getElementById('btn-mode-turnuva').onclick = () => { activeMode = "turnuva"; initTournamentLobby(); switchScene(scenes.crossroads, scenes.tournamentLobby); };
 
-    // Tüm "Ana Menü" butonları için
     document.querySelectorAll('.btn-back-home').forEach(btn => btn.onclick = () => switchScene(btn.closest('.scene'), scenes.home));
     document.querySelectorAll('.btn-back-cross').forEach(btn => btn.onclick = () => switchScene(btn.closest('.scene'), scenes.crossroads));
     document.getElementById('btn-back-class').onclick = () => switchScene(scenes.unit, scenes.class);
     document.getElementById('btn-back-rules').onclick = () => switchScene(scenes.rules, scenes.unit);
 
-    // Bireysel Kura
     let drawBag = []; let currentDrawSize = 0; let currentActivePlayerName = "Misafir"; let individualLeaderboard = [];
     document.getElementById('btn-kura-baslat').onclick = () => {
         const size = parseInt(document.getElementById('lobby-size').value);
@@ -334,7 +315,6 @@
         });
     };
 
-    // Sınıf / Ünite
     document.querySelectorAll('.class-card').forEach(c => c.onclick = function() { 
         if(this.classList.contains('disabled')) return; 
         selectedGrade = this.dataset.grade; 
@@ -372,9 +352,29 @@
         }
     }
 
-    document.getElementById('btn-start-from-rules').onclick = () => {
-        if (activeMode === "bireysel") startIndividual();
-        else if (activeMode === "turnuva") startTournament();
+    // YENİ: Mobilde sesi senkron başlatıp, çoklu tıklamayı (karmaşayı) önleyen zırh!
+    document.getElementById('btn-start-from-rules').onclick = function() {
+        const btn = this;
+        btn.disabled = true;
+        btn.style.opacity = "0.5";
+        btn.innerHTML = "Hazırlanıyor...";
+        
+        // Ses kısıtlamasına takılmamak için BGM'yi bekleme (await) öncesi başlatıyoruz!
+        playSound(sfx.bgm);
+
+        if (activeMode === "bireysel") {
+            startIndividual().then(() => { 
+                btn.disabled = false; 
+                btn.style.opacity = "1";
+                btn.innerHTML = "OKUDUM, YARIŞMAYI BAŞLAT!"; 
+            });
+        } else if (activeMode === "turnuva") {
+            startTournament().then(() => { 
+                btn.disabled = false; 
+                btn.style.opacity = "1";
+                btn.innerHTML = "OKUDUM, YARIŞMAYI BAŞLAT!"; 
+            });
+        }
     };
 
     async function fetchQuestions(grade, unit) {
@@ -409,7 +409,6 @@
                 finalSet = finalSet.concat(remaining.slice(0, 10 - finalSet.length)); 
             }
 
-            // ŞIKLARI KARIŞTIR (A,B,C,D Hep aynı olmasın)
             finalSet.forEach(q => {
                 for (let i = q.answerOptions.length - 1; i > 0; i--) {
                     const j = Math.floor(Math.random() * (i + 1));
@@ -422,9 +421,6 @@
         } catch(e) { return []; }
     }
 
-    // =========================================================================
-    // --- 6. BİREYSEL YARIŞMA MANTIĞI ---
-    // =========================================================================
     const quizState = { set: [], index: 0, score: 0, locked: false, timerInterval: null, totalTimeSpent: 0, riskAcceptedForCurrent: false, fullPool: [] };
     let isTimerPaused = false;
     function getSettings(idx) { return idx < 4 ? { time: 40, points: 100 } : idx < 8 ? { time: 50, points: 200 } : { time: 60, points: 400 }; }
@@ -445,7 +441,9 @@
         const q = quizState.set[quizState.index]; const settings = getSettings(quizState.index);
         quizState.locked = false; isTimerPaused = false; 
         document.getElementById('quiz-timer-display').style.color = "#00d2ff"; document.getElementById('quiz-timer-display').style.textShadow = "none";
-        playSound(sfx.bgm); 
+        
+        playSound(sfx.bgm); // Zaten çalıyorsa baştan başlatmaz, güvenlidir.
+        
         document.getElementById('quiz-progress').textContent = `Soru ${quizState.index + 1}/10 (${settings.points} Puan)`;
         document.getElementById('quiz-score').textContent = quizState.score; document.getElementById('quiz-question').textContent = q.question;
         const pauseBtn = document.getElementById('joker-pause');
