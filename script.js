@@ -263,7 +263,6 @@
     
     if(btnHakkimizda) btnHakkimizda.onclick = () => switchScene(scenes.home, scenes.hakkimizda);
     if(btnIletisim) btnIletisim.onclick = () => switchScene(scenes.home, scenes.iletisim);
-    if(btnUyelik) btnUyelik.onclick = () => alert("Üyelik sistemi çok yakında aktif edilecektir!");
 
     document.getElementById('btn-oyun-modulu').onclick = () => switchScene(scenes.home, scenes.crossroads);
     document.getElementById('btn-deney-modulu').onclick = () => alert("İnteraktif Deney Modülü Çok Yakında!");
@@ -1029,7 +1028,7 @@
     if (!localStorage.getItem('fenupx_cookie_consent')) {
         setTimeout(() => {
             cookieBanner.classList.remove('is-hidden');
-        }, 1500); // Sayfa açıldıktan 1.5 saniye sonra nazikçe belirir
+        }, 1500);
     }
 
     btnAcceptCookies.onclick = () => {
@@ -1106,5 +1105,41 @@
             openModal('cookies'); 
         };
     }
+
+    // --- 9. ÜYELİK SİSTEMİ (AŞAMA 2) ---
+    const btnUyelikHeader = document.getElementById('btn-uyelik');
+    const authModal = document.getElementById('auth-modal');
+    const btnCloseAuth = document.getElementById('btn-close-auth');
+    const authTabBtns = document.querySelectorAll('.auth-tab-btn');
+    const authPanes = document.querySelectorAll('.auth-pane');
+
+    if(btnUyelikHeader) {
+        btnUyelikHeader.onclick = () => { 
+            if(isGlobalPaused === false && (!scenes.quiz.classList.contains('is-hidden') || !scenes.tournamentQuiz.classList.contains('is-hidden'))) {
+                toggleMasterPause(); 
+            }
+            authModal.classList.remove('is-hidden'); 
+        };
+    }
+
+    if(btnCloseAuth) {
+        btnCloseAuth.onclick = () => { authModal.classList.add('is-hidden'); };
+    }
+
+    if(authModal) {
+        authModal.onclick = (e) => { 
+            if (e.target === authModal) authModal.classList.add('is-hidden'); 
+        };
+    }
+
+    authTabBtns.forEach(btn => {
+        btn.onclick = () => {
+            authTabBtns.forEach(b => b.classList.remove('active'));
+            authPanes.forEach(p => p.classList.add('is-hidden'));
+            
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.target).classList.remove('is-hidden');
+        };
+    });
 
 })();
