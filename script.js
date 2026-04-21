@@ -79,11 +79,9 @@
     let isMuted = false; 
     let globalVolume = 0.7;
 
-    // YENİ: Mobilde ses patlamasını önleyen akıllı yükleyici
     let audioUnlocked = false;
     const unlockAudio = () => {
         if (!audioUnlocked) {
-            // Sesleri çaldırıp sistemi boğmak yerine sadece belleğe yüklüyoruz.
             for (let key in sfx) {
                 sfx[key].load();
             }
@@ -137,13 +135,10 @@
 
     function playSound(obj) { 
         if(!obj) return;
-        
-        // Zaten çalan arka plan müziğini baştan başlatıp sesi bozma
         if (obj === sfx.bgm && !obj.paused) {
              updateVolumes();
              return;
         }
-
         try { obj.currentTime = 0; } catch(e){}
         updateVolumes(); 
         let playPromise = obj.play();
@@ -352,14 +347,12 @@
         }
     }
 
-    // YENİ: Mobilde sesi senkron başlatıp, çoklu tıklamayı (karmaşayı) önleyen zırh!
     document.getElementById('btn-start-from-rules').onclick = function() {
         const btn = this;
         btn.disabled = true;
         btn.style.opacity = "0.5";
         btn.innerHTML = "Hazırlanıyor...";
         
-        // Ses kısıtlamasına takılmamak için BGM'yi bekleme (await) öncesi başlatıyoruz!
         playSound(sfx.bgm);
 
         if (activeMode === "bireysel") {
@@ -442,7 +435,7 @@
         quizState.locked = false; isTimerPaused = false; 
         document.getElementById('quiz-timer-display').style.color = "#00d2ff"; document.getElementById('quiz-timer-display').style.textShadow = "none";
         
-        playSound(sfx.bgm); // Zaten çalıyorsa baştan başlatmaz, güvenlidir.
+        playSound(sfx.bgm);
         
         document.getElementById('quiz-progress').textContent = `Soru ${quizState.index + 1}/10 (${settings.points} Puan)`;
         document.getElementById('quiz-score').textContent = quizState.score; document.getElementById('quiz-question').textContent = q.question;
@@ -482,7 +475,6 @@
 
     document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = function() {
         if(quizState.locked || isGlobalPaused) return;
-        
         this.blur(); 
         
         quizState.locked = true; clearInterval(quizState.timerInterval); stopSound(sfx.bgm);
@@ -1028,6 +1020,91 @@
         
         document.getElementById('quiz-end-time').textContent = "";
         document.getElementById('btn-show-leaderboard').style.display = "none"; 
+    }
+
+    // --- 8. YASAL ZORUNLULUKLAR VE ÇEREZ YÖNETİMİ ---
+    const cookieBanner = document.getElementById('cookie-consent');
+    const btnAcceptCookies = document.getElementById('btn-accept-cookies');
+    
+    if (!localStorage.getItem('fenupx_cookie_consent')) {
+        setTimeout(() => {
+            cookieBanner.classList.remove('is-hidden');
+        }, 1500); // Sayfa açıldıktan 1.5 saniye sonra nazikçe belirir
+    }
+
+    btnAcceptCookies.onclick = () => {
+        localStorage.setItem('fenupx_cookie_consent', 'accepted');
+        cookieBanner.style.opacity = '0';
+        setTimeout(() => { cookieBanner.classList.add('is-hidden'); }, 500);
+    };
+
+    const policyModal = document.getElementById('policy-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const btnCloseModal = document.getElementById('btn-close-modal');
+
+    const policies = {
+        kvkk: {
+            title: "Gizlilik Politikası (KVKK)",
+            content: `<p>FenUp X olarak kişisel verilerinizin güvenliğine büyük önem veriyoruz. 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, sitemizi ziyaretiniz sırasında elde edilen veriler aşağıda belirtilen şartlarda işlenmektedir.</p>
+            <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">1. Toplanan Veriler</h3>
+            <p>Şu aşamada sitemiz doğrudan kişisel veri (ad, soyad, TC kimlik numarası vb.) toplamamaktadır. Yarışma modülünde girilen "Kaptan Adı" veya "Grup İsmi" gibi bilgiler yalnızca o oturum (session) için tarayıcınızın belleğinde tutulur ve veritabanımıza kaydedilmez.</p>
+            <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">2. Verilerin Kullanım Amacı</h3>
+            <p>Sitemizin genel trafiğini ve kullanım alışkanlıklarını anlamak amacıyla toplanan anonim analitik veriler (sayfa görüntülenme sayısı vb.), platformun performansını ölçmek ve eğitim içeriklerimizi geliştirmek amacıyla kullanılır.</p>
+            <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">3. Üçüncü Taraflarla Paylaşım</h3>
+            <p>Toplanan hiçbir veri; reklam, pazarlama veya başka bir amaçla üçüncü kurum, kuruluş veya şahıslarla paylaşılmamaktadır.</p>`
+        },
+        terms: {
+            title: "Kullanım Koşulları",
+            content: `<p>FenUp X eğitim platformuna hoş geldiniz. Sitemizi kullanarak aşağıda belirtilen koşulları kabul etmiş sayılırsınız:</p>
+            <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">1. Fikri Mülkiyet ve Telif Hakları</h3>
+            <p>Sitede yer alan tüm yazılım kodları, görsel tasarımlar, oyun mekanikleri ve özgün soru havuzu FenUp X platformuna ve kurucusuna aittir. İçerikler izinsiz olarak kopyalanamaz, başka bir web sitesinde yayınlanamaz ve ticari amaçla kullanılamaz.</p>
+            <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">2. Eğitim Amaçlı Kullanım</h3>
+            <p>Sitemiz; okullarda, akıllı tahtalarda ve bireysel cihazlarda eğitim ve pekiştirme amaçlı olarak ücretsiz kullanılmak üzere tasarlanmıştır.</p>
+            <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">3. Sorumluluk Reddi</h3>
+            <p>Oyun modüllerimiz üzerinden elde edilen puanlar, sıralamalar veya sonuçlar hiçbir şekilde resmi bir eğitim değerlendirme niteliği taşımaz. Uygulamanın amacı öğrencilerin fen bilimlerine olan ilgisini artırmak ve öğrenmeyi eğlenceli hale getirmektir.</p>`
+        },
+        cookies: {
+            title: "Çerez Politikası",
+            content: `<p>FenUp X, sizlere daha iyi bir kullanıcı deneyimi sunabilmek ve platformumuzu geliştirebilmek amacıyla çerez (cookie) teknolojilerinden faydalanır.</p>
+            <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">1. Çerez Nedir?</h3>
+            <p>Çerezler, bir web sitesini ziyaret ettiğinizde tarayıcınız aracılığıyla bilgisayarınıza veya mobil cihazınıza kaydedilen küçük boyutlu metin dosyalarıdır.</p>
+            <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">2. Hangi Çerezleri Kullanıyoruz?</h3>
+            <ul style="margin-left: 20px;">
+                <li style="margin-bottom: 10px;"><strong>Zorunlu Çerezler:</strong> Sitenin temel fonksiyonlarının eksiksiz çalışması için gereklidir. Örneğin, bu politika onay çubuğunu kapatıp kapatmadığınızın bilgisi tarayıcınızda bu sayede tutulur.</li>
+                <li style="margin-bottom: 10px;"><strong>Analitik Çerezler:</strong> Ziyaretçi sayılarını ve site kullanım istatistiklerini anlamamıza yardımcı olur. <em>(Google AdSense veya Google Analytics gibi servisler eklendiğinde bu alan güncellenecektir.)</em></li>
+            </ul>
+            <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">3. Çerez Yönetimi</h3>
+            <p>İnternet tarayıcınızın ayarlar bölümünden çerezleri silebilir veya kullanımını engelleyebilirsiniz; ancak bu durumda sitenin bazı özellikleri (örneğin karanlık mod tercihi veya kura çekimi verileri) düzgün çalışmayabilir.</p>`
+        }
+    };
+
+    function openModal(policyKey) {
+        if(isGlobalPaused === false && (scenes.quiz.classList.contains('is-hidden') === false || scenes.tournamentQuiz.classList.contains('is-hidden') === false)) {
+            toggleMasterPause(); 
+        }
+        
+        modalTitle.textContent = policies[policyKey].title;
+        modalBody.innerHTML = policies[policyKey].content;
+        policyModal.classList.remove('is-hidden');
+    }
+
+    btnCloseModal.onclick = () => { policyModal.classList.add('is-hidden'); };
+    
+    policyModal.onclick = (e) => { 
+        if (e.target === policyModal) policyModal.classList.add('is-hidden'); 
+    };
+
+    document.getElementById('btn-kvkk').onclick = () => openModal('kvkk');
+    document.getElementById('btn-terms').onclick = () => openModal('terms');
+    document.getElementById('btn-cookies').onclick = () => openModal('cookies');
+    
+    const cookiePolicyLink = document.getElementById('cookie-policy-link');
+    if(cookiePolicyLink) {
+        cookiePolicyLink.onclick = (e) => { 
+            e.preventDefault(); 
+            openModal('cookies'); 
+        };
     }
 
 })();

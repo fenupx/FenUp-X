@@ -22,7 +22,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 
 .outline-btn { border: 2px solid var(--neon-blue); color: var(--neon-blue); padding: 8px 18px; border-radius: 20px; font-weight: bold; }
 .outline-btn:hover { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px rgba(0, 210, 255, 0.5); }
-.fenupx-footer { position: fixed; bottom: 20px; left: 0; width: 100%; display: flex; justify-content: center; gap: 30px; z-index: 50; transition: opacity 0.4s ease; }
+.fenupx-footer { position: fixed; bottom: 20px; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 50; transition: opacity 0.4s ease; }
 .social-icon { color: rgba(255,255,255,0.5); font-size: 2rem; transition: 0.3s; }
 .social-icon:hover { color: var(--neon-blue); transform: scale(1.2); }
 .hidden-footer { opacity: 0; pointer-events: none; }
@@ -252,6 +252,37 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
+/* --- YENİ EKLENENLER: ÇEREZ VE POLİTİKA MODALLARI --- */
+.cookie-banner {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.95); border: 1px solid var(--neon-blue);
+    padding: 20px 30px; border-radius: 20px; z-index: 10000;
+    display: flex; align-items: center; gap: 20px; box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    width: 90%; max-width: 800px; backdrop-filter: blur(10px); transition: 0.5s ease;
+}
+.cookie-banner p { font-size: 1rem; color: #ccc; margin: 0; text-align: left; flex: 1; }
+.cookie-banner a { color: var(--neon-blue); text-decoration: none; font-weight: bold; transition: 0.3s; }
+.cookie-banner a:hover { text-decoration: underline; }
+
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+    z-index: 200000; display: flex; justify-content: center; align-items: center;
+    transition: opacity 0.3s ease;
+}
+.modal-content {
+    position: relative; max-width: 800px; width: 90%;
+    animation: promptGiris 0.3s ease-out; box-shadow: 0 0 50px rgba(0, 210, 255, 0.2);
+}
+.close-btn {
+    position: absolute; top: 20px; right: 20px; background: none; border: none;
+    color: #fff; font-size: 2rem; cursor: pointer; transition: 0.3s; z-index: 10;
+}
+.close-btn:hover { color: #ef4444; transform: scale(1.1) rotate(90deg); }
+#modal-body::-webkit-scrollbar { width: 8px; }
+#modal-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+
 /* =========================================================
    MOBİL VE TABLET OPTİMİZASYONU (@MEDIA QUERIES)
    ========================================================= */
@@ -302,7 +333,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     .joker-area { gap: 5px !important; flex-wrap: wrap !important; justify-content: center !important;}
     .joker-area .action-btn { flex: 1 1 40% !important; font-size: 0.9rem !important; padding: 8px !important; margin: 0 !important; }
     
-    /* YENİ: Mobilde Turnuva Takım Kartlarının Görünmezlik Sorununu Çözen Izgara (Grid) Yapısı */
     #t-teams-container { 
         display: grid !important; 
         grid-template-columns: 1fr 1fr !important; 
@@ -329,4 +359,11 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     #master-pause-overlay h1 { font-size: 2.5rem !important; }
     #master-pause-overlay p { font-size: 1.1rem !important; text-align: center; max-width: 90%; }
     #btn-master-resume { font-size: 1.2rem !important; padding: 15px !important; width: 90%; justify-content: center; }
+
+    /* Mobil Footer ve Yasal Geliştirmeler */
+    .cookie-banner { flex-direction: column; text-align: center; bottom: 10px; width: 95%; padding: 15px; }
+    .cookie-banner p { text-align: center; font-size: 0.9rem; }
+    .fenupx-footer { position: static !important; margin-top: 40px; padding-bottom: 30px; }
+    .policy-links { flex-direction: column; gap: 5px !important; }
+    .desktop-only { display: none !important; }
 }

@@ -266,9 +266,31 @@
         <button id="btn-leaderboard-continue" class="action-btn" style="margin-top: 30px;">KURA EKRANINA DÖN</button>
     </div>
 
+    <div id="cookie-consent" class="cookie-banner is-hidden">
+        <p>FenUp X, size en iyi deneyimi sunmak ve site trafiğini analiz etmek için çerezleri kullanır. Detaylı bilgi için <a href="#" id="cookie-policy-link">Çerez Politikamızı</a> inceleyebilirsiniz.</p>
+        <button id="btn-accept-cookies" class="action-btn green" style="font-size: 1rem; padding: 10px 20px; margin: 0;">Anladım ve Kabul Ediyorum</button>
+    </div>
+
+    <div id="policy-modal" class="modal-overlay is-hidden">
+        <div class="modal-content glass-panel" style="max-height: 85vh;">
+            <button id="btn-close-modal" class="close-btn"><i class="fas fa-times"></i></button>
+            <h2 id="modal-title" style="color: var(--neon-blue); margin-bottom: 20px; font-size: 2rem;"></h2>
+            <div id="modal-body" style="text-align: left; font-size: 1.1rem; line-height: 1.6; color: #ddd; max-height: 60vh; overflow-y: auto; padding-right: 15px;"></div>
+        </div>
+    </div>
+
     <footer id="main-footer" class="fenupx-footer">
-        <a href="https://youtube.com/@FenUpX" target="_blank" class="social-icon" title="YouTube"><i class="fab fa-youtube"></i></a>
-        <a href="https://instagram.com/fenupx" target="_blank" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <div class="policy-links" style="display: flex; gap: 15px; align-items: center;">
+            <button id="btn-kvkk" class="text-btn" style="font-size: 0.9rem; color: #aaa;">Gizlilik Politikası</button>
+            <span class="desktop-only" style="color: #555;">|</span>
+            <button id="btn-terms" class="text-btn" style="font-size: 0.9rem; color: #aaa;">Kullanım Koşulları</button>
+            <span class="desktop-only" style="color: #555;">|</span>
+            <button id="btn-cookies" class="text-btn" style="font-size: 0.9rem; color: #aaa;">Çerez Politikası</button>
+        </div>
+        <div style="display: flex; gap: 30px;">
+            <a href="https://youtube.com/@FenUpX" target="_blank" class="social-icon" title="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="https://instagram.com/fenupx" target="_blank" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+        </div>
     </footer>
 
     <script src="script.js"></script>
