@@ -18,7 +18,25 @@
         <div class="header-right">
             <button id="btn-hakkimizda" class="text-btn">Hakkımızda</button>
             <button id="btn-iletisim" class="text-btn">İletişim</button>
-            <button id="btn-uyelik" class="text-btn outline-btn">Giriş Yap / Üye Ol</button>
+            
+            <div id="user-profile-area" class="user-profile-container">
+                <button id="btn-uyelik" class="text-btn outline-btn">Giriş Yap / Üye Ol</button>
+                <div id="profile-dropdown" class="dropdown-menu is-hidden">
+                    <div class="dropdown-header">
+                        <span id="user-display-name">Yükleniyor...</span>
+                        <small id="user-display-role">Öğrenci</small>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item" onclick="alert('Profil düzenleme yakında!')"><i class="fas fa-user-circle"></i> Profilim</button>
+                    <button id="btn-teacher-tools" class="dropdown-item is-hidden" onclick="alert('Öğretmen araçları yakında!')"><i class="fas fa-chalkboard-teacher"></i> Sınav Oluşturucu</button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item btn-kvkk-open"><i class="fas fa-shield-alt"></i> Gizlilik Politikası</button>
+                    <button class="dropdown-item btn-terms-open"><i class="fas fa-file-contract"></i> Kullanım Koşulları</button>
+                    <div class="dropdown-divider"></div>
+                    <button id="btn-logout" class="dropdown-item logout-red"><i class="fas fa-sign-out-alt"></i> Çıkış Yap</button>
+                </div>
+            </div>
+
             <div class="top-controls">
                 <div class="volume-control">
                     <i class="fas fa-volume-up" id="mute-btn"></i>
@@ -280,7 +298,7 @@
     </div>
 
     <div id="auth-modal" class="modal-overlay is-hidden">
-        <div class="modal-content glass-panel" style="max-height: 90vh; width: 90%; max-width: 500px; padding: 40px 30px;">
+        <div class="modal-content glass-panel" style="max-height: 90vh; width: 90%; max-width: 500px; padding: 40px 30px; overflow-y: auto;">
             <button id="btn-close-auth" class="close-btn"><i class="fas fa-times"></i></button>
             <div class="logo" style="font-size: 2.5rem; margin-bottom: 20px; text-align: center; cursor: default;">FenUp X</div>
             
@@ -290,36 +308,73 @@
             </div>
             
             <div id="student-auth" class="auth-pane active">
-                <h3 style="color: #fff; margin-bottom: 20px; font-weight: 300;">Öğrenci Girişi</h3>
-                <input type="email" class="fenupx-input auth-input" placeholder="E-Posta Adresi">
-                <input type="password" class="fenupx-input auth-input" placeholder="Şifre">
-                <button class="action-btn" style="width: 100%; margin: 10px 0;">GİRİŞ YAP</button>
-                <p style="color: #aaa; margin-top: 15px; font-size: 0.9rem;">Hesabın yok mu? <a href="#" style="color: var(--neon-blue); text-decoration: none;">Hemen Üye Ol</a></p>
+                <h3 id="student-auth-title" style="color: #fff; margin-bottom: 20px; font-weight: 300;">Öğrenci Girişi</h3>
+                
+                <input type="text" id="student-nickname" class="fenupx-input auth-input is-hidden" placeholder="Kullanıcı Adı (Liderlik tablosu için)">
+                <input type="email" id="student-email" class="fenupx-input auth-input" placeholder="E-Posta Adresi">
+                <input type="password" id="student-pass" class="fenupx-input auth-input" placeholder="Şifre">
+                <button id="btn-student-submit" class="action-btn" style="width: 100%; margin: 10px 0;">GİRİŞ YAP</button>
+                <p style="color: #aaa; margin-top: 15px; font-size: 0.9rem;">
+                    <span id="student-toggle-text">Hesabın yok mu?</span> 
+                    <a href="#" id="student-toggle-link" style="color: var(--neon-blue); text-decoration: none;">Hemen Üye Ol</a>
+                </p>
             </div>
             
             <div id="teacher-auth" class="auth-pane is-hidden">
-                <h3 style="color: #fff; margin-bottom: 20px; font-weight: 300;">Öğretmen Girişi</h3>
-                <input type="email" class="fenupx-input auth-input" placeholder="E-Posta">
-                <input type="password" class="fenupx-input auth-input" placeholder="Şifre">
-                <button class="action-btn" style="width: 100%; margin: 10px 0;">GİRİŞ YAP</button>
-                <p style="color: #aaa; margin-top: 15px; font-size: 0.9rem;">Meslektaşımız mısınız? <a href="#" style="color: var(--neon-blue); text-decoration: none;">Kayıt Ol</a></p>
+                <h3 id="teacher-auth-title" style="color: #fff; margin-bottom: 20px; font-weight: 300;">Öğretmen Girişi</h3>
+                
+                <input type="text" id="teacher-name" class="fenupx-input auth-input is-hidden" placeholder="Adınız ve Soyadınız">
+                
+                <div id="teacher-file-group" class="is-hidden" style="text-align: left; margin-bottom: 15px;">
+                    <label style="color: #aaa; font-size: 0.9rem; display: block; margin-bottom: 5px;">Öğretmenlik Belgesi (MEBBİS / Kurum Kimliği / Diploma):</label>
+                    <input type="file" id="teacher-document" accept="image/*" class="fenupx-input auth-input" style="padding: 10px;">
+                </div>
+
+                <input type="email" id="teacher-email" class="fenupx-input auth-input" placeholder="E-Posta">
+                <input type="password" id="teacher-pass" class="fenupx-input auth-input" placeholder="Şifre">
+                <button id="btn-teacher-submit" class="action-btn" style="width: 100%; margin: 10px 0;">GİRİŞ YAP</button>
+                <p style="color: #aaa; margin-top: 15px; font-size: 0.9rem;">
+                    <span id="teacher-toggle-text">Meslektaşımız mısınız?</span> 
+                    <a href="#" id="teacher-toggle-link" style="color: var(--neon-blue); text-decoration: none;">Kayıt Ol</a>
+                </p>
             </div>
             
             <div style="margin-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                <button class="f-btn f-btn-ikinci" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem;">
+                <button id="btn-google-login" class="f-btn f-btn-ikinci" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem;">
                     <i class="fab fa-google" style="color: #ea4335;"></i> Google ile Devam Et
                 </button>
             </div>
         </div>
     </div>
 
+    <div id="google-complete-modal" class="modal-overlay is-hidden">
+        <div class="modal-content glass-panel" style="max-width: 400px; text-align: center;">
+            <h2 style="color:var(--neon-blue); font-size:2rem; margin-bottom:15px;">Son Bir Adım!</h2>
+            <p style="margin-bottom: 20px; color:#ddd;">Liderlik tablosunda görünecek şampiyon adını belirle.</p>
+            <input type="text" id="google-nickname" class="fenupx-input auth-input" placeholder="Kullanıcı Adı" maxlength="15">
+            <button id="btn-google-complete-submit" class="action-btn" style="width:100%;">KAYDI TAMAMLA</button>
+        </div>
+    </div>
+
+    <div id="google-teacher-complete-modal" class="modal-overlay is-hidden">
+        <div class="modal-content glass-panel" style="max-width: 400px; text-align: center;">
+            <h2 style="color:var(--neon-blue); font-size:2rem; margin-bottom:15px;">Son Bir Adım!</h2>
+            <p style="margin-bottom: 20px; color:#ddd;">Öğretmen hesabınızı doğrulamak için lütfen belgenizi yükleyin.</p>
+            <div style="text-align: left; margin-bottom: 15px;">
+                <label style="color: #aaa; font-size: 0.9rem; display: block; margin-bottom: 5px;">Öğretmenlik Belgesi (MEBBİS/Kurum/Diploma):</label>
+                <input type="file" id="google-teacher-document" accept="image/*" class="fenupx-input auth-input" style="padding: 10px;">
+            </div>
+            <button id="btn-google-teacher-submit" class="action-btn" style="width:100%;">KAYDI TAMAMLA</button>
+        </div>
+    </div>
+
     <footer id="main-footer" class="fenupx-footer">
         <div class="policy-links" style="display: flex; gap: 15px; align-items: center;">
-            <button id="btn-kvkk" class="text-btn" style="font-size: 0.9rem; color: #aaa;">Gizlilik Politikası</button>
+            <button class="text-btn btn-kvkk-open" style="font-size: 0.9rem; color: #aaa;">Gizlilik Politikası</button>
             <span class="desktop-only" style="color: #555;">|</span>
-            <button id="btn-terms" class="text-btn" style="font-size: 0.9rem; color: #aaa;">Kullanım Koşulları</button>
+            <button class="text-btn btn-terms-open" style="font-size: 0.9rem; color: #aaa;">Kullanım Koşulları</button>
             <span class="desktop-only" style="color: #555;">|</span>
-            <button id="btn-cookies" class="text-btn" style="font-size: 0.9rem; color: #aaa;">Çerez Politikası</button>
+            <button class="text-btn btn-cookies-open" style="font-size: 0.9rem; color: #aaa;">Çerez Politikası</button>
         </div>
         <div style="display: flex; gap: 30px;">
             <a href="https://youtube.com/@FenUpX" target="_blank" class="social-icon" title="YouTube"><i class="fab fa-youtube"></i></a>
@@ -327,6 +382,6 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
