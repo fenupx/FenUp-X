@@ -1,16 +1,16 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCJlQQH64tsze59akzcnBMPRbH2HY7rCho",
-  authDomain: "fenup-x.firebaseapp.com",
-  projectId: "fenup-x",
-  storageBucket: "fenup-x.firebasestorage.app",
-  messagingSenderId: "969661960952",
-  appId: "1:969661960952:web:8c091e35e8cca27f84e10d",
-  measurementId: "G-HW3RN9415Z"
+    apiKey: "AIzaSyCJlQQH64tsze59akzcnBMPRbH2HY7rCho",
+    authDomain: "fenup-x.firebaseapp.com",
+    projectId: "fenup-x",
+    storageBucket: "fenup-x.firebasestorage.app",
+    messagingSenderId: "969661960952",
+    appId: "1:969661960952:web:8c091e35e8cca27f84e10d",
+    measurementId: "G-HW3RN9415Z"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -1405,10 +1405,13 @@ onAuthStateChanged(auth, async (user) => {
             // SAĞ ÜST İSİM KONTROLÜ (NICKNAME YERİNE AD)
             btnUyelik.innerHTML = `<img src="${userAvatar}" class="profile-img-header"> ${userData.name}`;
             userDisplayName.textContent = fullAd;
-            userDisplayRole.textContent = userData.role === 'teacher' ? 'Öğretmen' : 'Öğrenci';
+            userDisplayRole.textContent = userData.role === 'teacher' ? 'Öğretmen' : (userData.role === 'admin' ? 'Sistem Yöneticisi' : 'Öğrenci');
             
-            if(userData.role === 'teacher') {
+            if(userData.role === 'teacher' || userData.role === 'admin') {
                 document.getElementById('btn-teacher-tools').classList.remove('is-hidden');
+            }
+            if(userData.role === 'admin') {
+                document.getElementById('btn-admin-panel').classList.remove('is-hidden');
             }
             
             btnUyelik.onclick = (e) => {
@@ -1444,6 +1447,7 @@ onAuthStateChanged(auth, async (user) => {
             authModal.classList.remove('is-hidden'); 
         };
         profileDropdown.classList.add('is-hidden');
+        document.getElementById('btn-admin-panel').classList.add('is-hidden');
     }
 });
 
@@ -1573,7 +1577,7 @@ document.getElementById('btn-student-submit').onclick = async () => {
             
             const cred = await createUserWithEmailAndPassword(auth, email, pass);
             await setDoc(doc(db, "users", cred.user.uid), {
-                name: fName, surname: lName, nickname: nick, email: email, role: "student", avatar: kozmikAvatarlar[0].url, createdAt: new Date()
+                name: fName, surname: lName, nickname: nick, email: email, role: "student", totalScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
             });
             authModal.classList.add('is-hidden');
             alert(`Hoş geldin ${fName}! Kozmik maceraya hazırsın.`);
@@ -1601,7 +1605,7 @@ document.getElementById('btn-google-login').onclick = async () => {
             const lastName = nameParts.slice(1).join(' ') || "X";
             
             await setDoc(doc(db, "users", result.user.uid), {
-                name: firstName, surname: lastName, nickname: gName, email: result.user.email, role: "student", avatar: kozmikAvatarlar[0].url, createdAt: new Date()
+                name: firstName, surname: lastName, nickname: gName, email: result.user.email, role: "student", totalScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
             });
             
             sessionStorage.removeItem('google_auth_in_progress');
@@ -1615,3 +1619,107 @@ document.getElementById('btn-google-login').onclick = async () => {
         alert("Google Hatası: Pencereyi erken kapattınız veya bir sorun oluştu."); 
     }
 };
+
+// --- ADMIN PANELİ MANTIĞI ---
+const btnAdminPanel = document.getElementById('btn-admin-panel');
+const adminModal = document.getElementById('admin-modal');
+const btnCloseAdmin = document.getElementById('btn-close-admin');
+const adminUserList = document.getElementById('admin-user-list');
+const adminSearchInput = document.getElementById('admin-search-input');
+let allAdminUsers = [];
+
+btnAdminPanel.onclick = (e) => {
+    e.stopPropagation();
+    profileDropdown.classList.add('is-hidden');
+    adminModal.classList.remove('is-hidden');
+    loadAdminUsers();
+};
+
+btnCloseAdmin.onclick = () => { adminModal.classList.add('is-hidden'); };
+adminModal.onclick = (e) => { if (e.target === adminModal) adminModal.classList.add('is-hidden'); };
+
+adminSearchInput.oninput = (e) => { renderAdminUsers(e.target.value); };
+
+async function loadAdminUsers() {
+    adminUserList.innerHTML = '<p style="text-align:center; color:#aaa; margin-top:20px;">Kullanıcılar yükleniyor...</p>';
+    try {
+        const q = collection(db, "users");
+        const snap = await getDocs(q);
+        allAdminUsers = [];
+        snap.forEach(docSnap => {
+            const data = docSnap.data();
+            // Kendini (admini) listeden gizleyen satır:
+            if (data.role !== 'admin') {
+                allAdminUsers.push({ id: docSnap.id, ...data });
+            }
+        });
+        
+        allAdminUsers.sort((a, b) => (b.totalScore || 0) - (a.totalScore || 0));
+        renderAdminUsers();
+    } catch(e) {
+        adminUserList.innerHTML = '<p style="color:#ef4444; text-align:center;">Kullanıcılar yüklenirken bir hata oluştu.</p>';
+    }
+}
+
+function renderAdminUsers(filterText = '') {
+    adminUserList.innerHTML = '';
+    const lowerFilter = filterText.toLowerCase();
+    const filtered = allAdminUsers.filter(u => 
+        (u.name && u.name.toLowerCase().includes(lowerFilter)) || 
+        (u.nickname && u.nickname.toLowerCase().includes(lowerFilter)) ||
+        (u.email && u.email.toLowerCase().includes(lowerFilter))
+    );
+
+    if(filtered.length === 0) {
+        adminUserList.innerHTML = '<p style="color:#aaa; text-align:center; margin-top:20px;">Kullanıcı bulunamadı.</p>';
+        return;
+    }
+
+    filtered.forEach(u => {
+        const isBanned = u.isBanned === true;
+        const row = document.createElement('div');
+        row.className = `admin-user-row ${isBanned ? 'banned' : ''}`;
+        row.innerHTML = `
+            <div class="admin-user-info">
+                <img src="${u.avatar || kozmikAvatarlar[0].url}" class="admin-user-avatar">
+                <div class="admin-user-details">
+                    <h4>${u.nickname || 'İsimsiz Kaptan'}</h4>
+                    <p>${u.name || ''} ${u.surname || ''} | ${u.email || ''}</p>
+                </div>
+            </div>
+            <div class="admin-user-stats">
+                <i class="fas fa-star" style="color:#f59e0b;"></i> ${u.totalScore || 0} Puan
+            </div>
+            <div class="admin-actions">
+                ${isBanned 
+                    ? `<button class="btn-unban" data-uid="${u.id}"><i class="fas fa-check-circle"></i> Engeli Kaldır</button>`
+                    : `<button class="btn-ban" data-uid="${u.id}"><i class="fas fa-ban"></i> Blokla</button>`
+                }
+            </div>
+        `;
+        adminUserList.appendChild(row);
+    });
+
+    document.querySelectorAll('.btn-ban').forEach(btn => {
+        btn.onclick = () => toggleBanStatus(btn.dataset.uid, true);
+    });
+    document.querySelectorAll('.btn-unban').forEach(btn => {
+        btn.onclick = () => toggleBanStatus(btn.dataset.uid, false);
+    });
+}
+
+async function toggleBanStatus(uid, banStatus) {
+    const mesaj = banStatus ? "Bu kullanıcıyı tablolardan bloklamak istediğinize emin misiniz?" : "Bu kullanıcının engelini kaldırmak istediğinize emin misiniz?";
+    if(!confirm(mesaj)) return;
+    
+    try {
+        await updateDoc(doc(db, "users", uid), { isBanned: banStatus });
+        const userIndex = allAdminUsers.findIndex(u => u.id === uid);
+        if(userIndex > -1) {
+            allAdminUsers[userIndex].isBanned = banStatus;
+        }
+        renderAdminUsers(adminSearchInput.value); 
+    } catch(e) {
+        alert("Hata oluştu: " + e.message);
+    }
+}

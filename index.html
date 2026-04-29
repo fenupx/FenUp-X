@@ -29,6 +29,9 @@
                     <div class="dropdown-divider"></div>
                     <button class="dropdown-item" onclick="alert('Profil düzenleme yakında!')"><i class="fas fa-user-circle"></i> Profilim</button>
                     <button id="btn-teacher-tools" class="dropdown-item is-hidden" onclick="alert('Öğretmen araçları yakında!')"><i class="fas fa-chalkboard-teacher"></i> Sınav Oluşturucu</button>
+                    
+                    <button id="btn-admin-panel" class="dropdown-item is-hidden" style="color: #f59e0b;"><i class="fas fa-crown"></i> Yönetim Paneli</button>
+
                     <div class="dropdown-divider"></div>
                     <button class="dropdown-item btn-kvkk-open"><i class="fas fa-shield-alt"></i> Gizlilik Politikası</button>
                     <button class="dropdown-item btn-terms-open"><i class="fas fa-file-contract"></i> Kullanım Koşulları</button>
@@ -125,7 +128,7 @@
         
         <div id="draw-actions" class="is-hidden" style="margin-top: 30px;">
             <input type="text" id="player-name-input" placeholder="Yarışmacının Adı" class="lobby-input" style="display:block; margin: 0 auto 20px auto; background: rgba(0,0,0,0.5); color: white;">
-            <button id="btn-new-draw" class="action-btn secondary">YENİDEN ÇEK</button>
+            <button id="btn-new-draw" class="action-btn secondary">YENİDEN çek</button>
             <button id="btn-go-class" class="action-btn green">SINIF SEÇİMİNE GEÇ</button>
         </div>
     </div>
@@ -282,6 +285,18 @@
         <h2 style="font-size: 3rem; color: var(--neon-blue); margin-bottom: 30px;">Bireysel Puan Durumu</h2>
         <div id="leaderboard-list" style="width: 100%; max-width: 700px; max-height: 400px; overflow-y: auto;"></div>
         <button id="btn-leaderboard-continue" class="action-btn" style="margin-top: 30px;">KURA EKRANINA DÖN</button>
+    </div>
+
+    <div id="admin-modal" class="modal-overlay is-hidden">
+        <div class="modal-content glass-panel" style="max-height: 90vh; width: 95%; max-width: 900px; padding: 30px; display: flex; flex-direction: column;">
+            <button id="btn-close-admin" class="close-btn"><i class="fas fa-times"></i></button>
+            <h2 style="color: #f59e0b; font-size: 2.5rem; margin-bottom: 20px;"><i class="fas fa-crown"></i> Sistem Yönetimi</h2>
+            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <input type="text" id="admin-search-input" class="fenupx-input" placeholder="Kullanıcı ara (İsim veya Nickname)..." style="flex: 1; margin: 0;">
+            </div>
+            <div id="admin-user-list" style="flex: 1; overflow-y: auto; text-align: left; background: rgba(0,0,0,0.5); border-radius: 15px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); min-height: 300px;">
+                </div>
+        </div>
     </div>
 
     <div id="cookie-consent" class="cookie-banner is-hidden">
