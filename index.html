@@ -84,7 +84,7 @@
             </ul>
             
             <h3 style="color: #fff; margin-top: 25px; font-size: 1.5rem;">Gelecek Hedeflerimiz 🔭</h3>
-            <p>FenUp X, durağan bir platform değil, sürekli genişleyen dinamik bir evren. Eğitim teknolojilerinde sınırları zorlamak adına, şu an arka planda hem değerli meslektaşlarımın süreçlerine çağ atlatacak hem de öğrencilerimizin öğrenme deneyimini eşsiz kılacak yenilikçi modüller üzerinde titizlikle çalışıyorum.</p>
+            <p>FenUp X, durağan platform değil, sürekli genişleyen dinamik bir evren. Eğitim teknolojilerinde sınırları zorlamak adına, şu an arka planda hem değerli meslektaşlarımın süreçlerine çağ atlatacak hem de öğrencilerimizin öğrenme deneyimini eşsiz kılacak yenilikçi modüller üzerinde titizlikle çalışıyorum.</p>
             <p style="margin-top: 10px;">Türkiye’nin en kapsamlı ve öncü fen bilimleri platformu olma yolculuğumuz hız kesmeden devam ediyor. Çok yakında eğitim ekosistemimize katacağımız devrim niteliğindeki yeni araçlarla tanışmak için bizi takipte kalın. Roketlerimiz daha yeni ateşleniyor!</p>
             
             <p style="margin-top: 35px; font-style: italic; color: var(--neon-blue); font-size: 1.3rem;"><strong>Kurucu ve Geliştirici:</strong> R. Karayel (Fen Bilimleri Öğretmeni)</p>
@@ -128,7 +128,7 @@
         
         <div id="draw-actions" class="is-hidden" style="margin-top: 30px;">
             <input type="text" id="player-name-input" placeholder="Yarışmacının Adı" class="lobby-input" style="display:block; margin: 0 auto 20px auto; background: rgba(0,0,0,0.5); color: white;">
-            <button id="btn-new-draw" class="action-btn secondary">YENİDEN çek</button>
+            <button id="btn-new-draw" class="action-btn secondary">YENİDEN ÇEK</button>
             <button id="btn-go-class" class="action-btn green">SINIF SEÇİMİNE GEÇ</button>
         </div>
     </div>
@@ -175,17 +175,45 @@
         </div>
     </div>
 
-    <div id="scene-unit" class="scene is-hidden glass-panel">
-        <button id="btn-back-class" class="back-link">← Geri</button>
-        <h2>Ünite Seç</h2>
-        <div id="unit-list" class="grid-3">
-            <div class="unit-card" data-unit="1">1. Ünite</div>
-            <div class="unit-card" data-unit="2">2. Ünite</div>
-            <div class="unit-card" data-unit="3">3. Ünite</div>
-            <div class="unit-card" data-unit="4">4. Ünite</div>
-            <div class="unit-card" data-unit="5">5. Ünite</div>
-            <div class="unit-card" data-unit="6">6. Ünite</div>
-            <div class="unit-card" data-unit="7">7. Ünite</div>
+    <div id="scene-unit" class="scene is-hidden glass-panel split-scene" style="max-width: 95vw; padding: 60px 30px 30px 30px; flex-direction: row; gap: 30px; align-items: stretch; max-height: 85vh;">
+        <button id="btn-back-class" class="back-link" style="position: absolute; top: 20px; left: 25px; z-index: 10;">← Geri</button>
+        
+        <div id="unit-leaderboard-side" style="flex: 1; background: rgba(0,0,0,0.4); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; border: 1px solid rgba(0, 210, 255, 0.2); position: relative; overflow: hidden; max-width: 50%;">
+            <h2 style="color: #f59e0b; font-size: 2rem; margin-bottom: 15px; font-weight: bold;"><i class="fas fa-trophy"></i> Şampiyonlar Ligi</h2>
+            
+            <div class="lb-tabs" style="display: flex; gap: 10px; margin-bottom: 15px; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 10px;">
+                <button class="lb-tab-btn active" data-tab="weekly">Haftalık</button>
+                <button class="lb-tab-btn" data-tab="monthly">Aylık</button>
+                <button class="lb-tab-btn" data-tab="alltime">Sezonluk</button>
+            </div>
+            
+            <div id="global-lb-list" style="flex: 1; overflow-y: auto; text-align: left; padding-right: 10px; min-height: 200px;">
+                <p style="text-align:center; color:#aaa; margin-top:20px;">Liderler yükleniyor...</p>
+            </div>
+            
+            <p id="season-reset-note" class="is-hidden" style="font-size: 0.85rem; color: #aaa; text-align: center; margin-top: 10px; margin-bottom: 0; font-style: italic;">* Puanlar 1 Eylül'de yeni eğitim yılıyla otomatik sıfırlanır.</p>
+            
+            <div id="lb-guest-promo" class="is-hidden" style="margin-top: 15px; padding: 15px; background: linear-gradient(45deg, rgba(239, 68, 68, 0.2), rgba(245, 158, 11, 0.2)); border: 1px solid #f59e0b; border-radius: 15px; animation: pulse 2s infinite;">
+                <p style="font-size: 0.9rem; margin-bottom: 10px; color: #fff;">Efsaneler arasına katılmak ve puanlarını kaydetmek ister misin?</p>
+                <button id="btn-lb-signup" class="action-btn" style="padding: 10px 15px; font-size: 1rem; width: 100%; margin: 0; background: linear-gradient(45deg, #f59e0b, #d97706); box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);">ÜCRETSİZ KAYIT OL</button>
+            </div>
+
+            <div id="lb-user-rank" class="is-hidden" style="margin-top: 15px; padding: 15px; background: rgba(0, 210, 255, 0.1); border: 1px solid #00d2ff; border-radius: 15px;">
+                <p id="lb-user-rank-text" style="font-size: 1rem; color: #fff; margin: 0; font-weight: bold;">Sıran: Hesaplanıyor...</p>
+            </div>
+        </div>
+
+        <div id="unit-selection-side" style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
+            <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Ünite Seç</h2>
+            <div id="unit-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%;">
+                <div class="unit-card" data-unit="1" style="padding: 20px; font-size: 1.4rem;">1. Ünite</div>
+                <div class="unit-card" data-unit="2" style="padding: 20px; font-size: 1.4rem;">2. Ünite</div>
+                <div class="unit-card" data-unit="3" style="padding: 20px; font-size: 1.4rem;">3. Ünite</div>
+                <div class="unit-card" data-unit="4" style="padding: 20px; font-size: 1.4rem;">4. Ünite</div>
+                <div class="unit-card" data-unit="5" style="padding: 20px; font-size: 1.4rem;">5. Ünite</div>
+                <div class="unit-card" data-unit="6" style="padding: 20px; font-size: 1.4rem;">6. Ünite</div>
+                <div class="unit-card" data-unit="7" style="padding: 20px; font-size: 1.4rem; grid-column: span 2;">7. Ünite</div>
+            </div>
         </div>
     </div>
 

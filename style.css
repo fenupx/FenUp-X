@@ -391,6 +391,12 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     .admin-user-info { width: 100%; }
     .admin-user-stats { width: 100%; text-align: left; }
     .admin-actions { width: 100%; justify-content: flex-start; }
+
+    /* Mobil Liderlik Tablosu Bölünmüş Ekran Düzenlemesi (Kural 5) */
+    .split-scene { flex-direction: column !important; gap: 20px !important; overflow-y: auto !important; max-height: none !important;}
+    #unit-leaderboard-side { max-width: 100% !important; order: 2; min-height: 400px !important;}
+    #unit-selection-side { order: 1; }
+    #scene-unit h2 { font-size: 2rem !important; margin-top: 30px !important; }
 }
 
 /* --- YENİ EKLENENLER: ADMIN PANELİ --- */
@@ -420,3 +426,29 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 /* Admin modal scrollbar fix */
 #admin-user-list::-webkit-scrollbar { width: 8px; }
 #admin-user-list::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.5); border-radius: 10px; }
+
+/* --- YENİ EKLENENLER: GLOBAL LİDERLİK TABLOSU --- */
+.split-scene { display: flex; }
+
+.lb-tab-btn { flex: 1; background: transparent; border: none; color: #aaa; padding: 10px; font-size: 1rem; font-weight: bold; cursor: pointer; border-radius: 8px; transition: 0.3s; }
+.lb-tab-btn.active { background: var(--neon-blue); color: #000; box-shadow: 0 0 10px rgba(0, 210, 255, 0.4); }
+
+#global-lb-list::-webkit-scrollbar { width: 6px; }
+#global-lb-list::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.5); border-radius: 10px; }
+
+.global-lb-row { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s; border-radius: 10px;}
+.global-lb-row:hover { background: rgba(255,255,255,0.1); transform: scale(1.02); }
+.global-lb-rank { font-size: 1.4rem; font-weight: bold; width: 30px; text-align: center; }
+.global-lb-avatar { width: 45px; height: 45px; border-radius: 50%; margin: 0 10px; border: 2px solid var(--neon-blue); background: rgba(255,255,255,0.1);}
+.global-lb-info { flex: 1; text-align: left; overflow: hidden;}
+.global-lb-info h4 { margin: 0; font-size: 1.1rem; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.global-lb-info p { margin: 0; font-size: 0.8rem; color: #aaa; }
+.global-lb-score { font-size: 1.2rem; font-weight: bold; color: #f59e0b; text-align: right;}
+
+/* Podyum Renkleri (İlk 3 Sıra) */
+.rank-1 .global-lb-rank { color: #f59e0b; text-shadow: 0 0 15px #f59e0b; font-size: 1.8rem;}
+.rank-1 .global-lb-avatar { border-color: #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);}
+.rank-2 .global-lb-rank { color: #9ca3af; text-shadow: 0 0 15px #9ca3af; font-size: 1.6rem;}
+.rank-2 .global-lb-avatar { border-color: #9ca3af; box-shadow: 0 0 15px rgba(156, 163, 175, 0.5);}
+.rank-3 .global-lb-rank { color: #b45309; text-shadow: 0 0 15px #b45309; font-size: 1.5rem;}
+.rank-3 .global-lb-avatar { border-color: #b45309; box-shadow: 0 0 15px rgba(180, 83, 9, 0.5);}
