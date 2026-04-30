@@ -66,7 +66,7 @@
         </div>
     </div>
 
-    <div id="scene-hakkimizda" class="scene is-hidden glass-panel" style="max-height: calc(100vh - 160px); overflow-y: auto; margin-top: 40px;">
+    <div id="scene-hakkimizda" class="scene is-hidden glass-panel">
         <div style="width: 100%; text-align: left; margin-bottom: 20px;">
             <button class="back-link btn-back-home" style="position: relative; top: 0; left: 0;"><i class="fas fa-arrow-left"></i> Ana Menüye Dön</button>
         </div>
@@ -91,7 +91,7 @@
         </div>
     </div>
 
-    <div id="scene-iletisim" class="scene is-hidden glass-panel" style="max-height: calc(100vh - 160px); margin-top: 40px;">
+    <div id="scene-iletisim" class="scene is-hidden glass-panel">
         <div style="width: 100%; text-align: left; margin-bottom: 20px;">
             <button class="back-link btn-back-home" style="position: relative; top: 0; left: 0;"><i class="fas fa-arrow-left"></i> Ana Menüye Dön</button>
         </div>
@@ -175,7 +175,7 @@
         </div>
     </div>
 
-    <div id="scene-unit" class="scene is-hidden glass-panel split-scene" style="max-width: 95vw; padding: 60px 30px 30px 30px; flex-direction: row; gap: 30px; align-items: stretch; max-height: 85vh;">
+    <div id="scene-unit" class="scene is-hidden glass-panel split-scene" style="max-width: 95vw; padding: 60px 30px 30px 30px; flex-direction: row; gap: 30px; align-items: stretch;">
         <button id="btn-back-class" class="back-link" style="position: absolute; top: 20px; left: 25px; z-index: 10;">← Geri</button>
         
         <div id="unit-leaderboard-side" style="flex: 1; background: rgba(0,0,0,0.4); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; border: 1px solid rgba(0, 210, 255, 0.2); position: relative; overflow: hidden; max-width: 50%;">
@@ -217,7 +217,7 @@
         </div>
     </div>
 
-    <div id="scene-rules" class="scene is-hidden glass-panel" style="max-height: calc(100vh - 160px); display: flex; flex-direction: column;">
+    <div id="scene-rules" class="scene is-hidden glass-panel" style="display: flex; flex-direction: column;">
         <button id="btn-back-rules" class="back-link">← Geri</button>
         <h2 style="font-size: 3rem; color: var(--neon-blue); margin-bottom: 15px; flex-shrink: 0;"><i class="fas fa-scroll"></i> Oyun Kuralları</h2>
         <div id="rules-content" style="text-align: left; font-size: 1.25rem; line-height: 1.5; max-width: 800px; width: 100%; margin-bottom: 20px; background: rgba(0,0,0,0.5); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); overflow-y: auto; flex-grow: 1;">
@@ -260,8 +260,7 @@
 
         <div id="quiz-end" class="is-hidden" style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); border-radius:30px; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index: 60;">
             <h2 id="quiz-end-title" style="font-size: 4rem; color: var(--neon-blue); margin-bottom: 10px;"></h2>
-            <p id="quiz-end-score" style="font-size: 2.5rem; margin-bottom: 10px;"></p>
-            <p id="quiz-end-time" style="font-size: 1.5rem; color: #aaa; margin-bottom: 30px;"></p>
+            <p id="quiz-end-score" style="font-size: 2.5rem; margin-bottom: 30px;"></p>
             <div style="display: flex; gap: 20px;">
                 <button id="btn-back-draw" class="action-btn secondary">KURA EKRANINA DÖN</button>
                 <button id="btn-show-leaderboard" class="action-btn">🏆 PUAN DURUMU</button>
@@ -333,7 +332,7 @@
     </div>
 
     <div id="policy-modal" class="modal-overlay is-hidden">
-        <div class="modal-content glass-panel" style="max-height: calc(100vh - 160px);">
+        <div class="modal-content glass-panel">
             <button id="btn-close-modal" class="close-btn"><i class="fas fa-times"></i></button>
             <h2 id="modal-title" style="color: var(--neon-blue); margin-bottom: 20px; font-size: 2rem;"></h2>
             <div id="modal-body" style="text-align: left; font-size: 1.1rem; line-height: 1.6; color: #ddd; max-height: 60vh; overflow-y: auto; padding-right: 15px;"></div>
@@ -341,7 +340,7 @@
     </div>
 
     <div id="auth-modal" class="modal-overlay is-hidden">
-        <div class="modal-content glass-panel" style="max-height: calc(100vh - 100px); width: 90%; max-width: 500px; padding: 40px 30px; overflow-y: auto;">
+        <div class="modal-content glass-panel" style="width: 90%; max-width: 500px; padding: 40px 30px; overflow-y: auto;">
             <button id="btn-close-auth" class="close-btn"><i class="fas fa-times"></i></button>
             <div class="logo" style="font-size: 2.5rem; margin-bottom: 20px; text-align: center; cursor: default;">FenUp X</div>
             

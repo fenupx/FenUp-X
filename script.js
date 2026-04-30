@@ -48,7 +48,6 @@ styleEnjektor.innerHTML = `
     .f-btn-ikinci { background: rgba(255,255,255,0.1); color: #fff; }
     .f-btn:hover { transform: translateY(-3px); filter: brightness(1.2); }
     
-    /* Profil Menüsü CSS */
     .user-profile-container { position: relative; display: inline-block; }
     .dropdown-menu {
         position: absolute; top: 60px; right: 0; width: 220px;
@@ -68,15 +67,9 @@ styleEnjektor.innerHTML = `
     .logout-red:hover { color: #ff4d4d; background: rgba(255, 77, 77, 0.1); }
     .dropdown-divider { height: 1px; background: rgba(255,255,255,0.1); margin: 5px 0; }
 
-    /* Profil Modal UI Extralar (KAYDIRILABİLİR AVATAR ALANI) */
     .avatar-grid { 
-        display: grid; 
-        grid-template-columns: repeat(4, 1fr); 
-        gap: 15px; 
-        margin: 15px 0; 
-        max-height: 300px; 
-        overflow-y: auto; 
-        padding: 10px;
+        display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; 
+        margin: 15px 0; max-height: 300px; overflow-y: auto; padding: 10px;
     }
     .avatar-grid::-webkit-scrollbar { width: 8px; }
     .avatar-grid::-webkit-scrollbar-thumb { background: rgba(0, 210, 255, 0.5); border-radius: 10px; }
@@ -88,7 +81,6 @@ styleEnjektor.innerHTML = `
     .btn-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; margin-top: 15px; }
     .btn-danger:hover { background: #ef4444; color: #fff; }
     
-    /* Araç İpucu (Tooltip) CSS */
     .info-container { position: relative; display: flex; align-items: center; width: 100%; margin-bottom: 15px; }
     .info-icon { position: absolute; right: 15px; color: #f59e0b; font-size: 1.2rem; cursor: help; z-index: 5; }
     .tooltiptext {
@@ -100,20 +92,17 @@ styleEnjektor.innerHTML = `
     .info-icon:hover ~ .tooltiptext { visibility: visible; opacity: 1; }
     .tooltiptext.active { visibility: visible !important; opacity: 1 !important; pointer-events: auto; }
 
-    /* Şifre Göster/Gizle Butonu İçin Özel Container */
     .password-container { position: relative; width: 100%; margin-bottom: 15px; }
     .password-container input { margin-bottom: 0 !important; width: 100%; padding-right: 45px; }
     .toggle-pass-icon { position: absolute; right: 15px; top: 16px; color: #aaa; cursor: pointer; font-size: 1.2rem; transition: 0.3s; z-index: 5;}
     .toggle-pass-icon:hover { color: #00d2ff; }
 
-    /* ÖĞRETMEN MODÜLÜNÜ GÜVENLİK SEBEBİYLE ASKIYA ALMA */
     #auth-modal .auth-tab-btn[data-target="teacher-auth"] {
         display: none !important;
     }
 `;
 document.head.appendChild(styleEnjektor);
 
-// 48 Adet Genişletilmiş Sevimli Öğrenci, Süper Kahraman, Robot ve Uzay Avatarları
 const kozmikAvatarlar = [
     {id: 'k1', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Efe&baseColor=f9c9b6&hair=mrT&facialHairProbability=0'},
     {id: 'k2', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Ali&baseColor=f9c9b6&hair=dougFunny&glassesProbability=100'},
@@ -205,7 +194,7 @@ function isimSor(prefill, callback) {
     }
 }
 
-// --- DİNAMİK PUAN FORMATLAYICI (K/M MANTIĞI) ---
+// --- DİNAMİK PUAN FORMATLAYICI (SADECE LİDERLİK TABLOSUNDA ÇALIŞIR) ---
 function formatScore(num) {
     if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
     if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
@@ -226,11 +215,9 @@ function getMonthId(date) {
     return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
 }
 
-// YENİ: 1 Eylül Sıfırlaması (Eğitim-Öğretim Yılı Sezonu)
 function getSeasonId(date) {
     const year = date.getFullYear();
-    const month = date.getMonth(); // 0=Ocak, 8=Eylül
-    // 1 Eylül itibarıyla, Eylül (8) ayı ve sonrası yeni sezondur.
+    const month = date.getMonth(); 
     if (month >= 8) {
         return `${year}-${year + 1}`;
     } else {
@@ -387,8 +374,14 @@ function switchScene(from, to) {
         stopSound(sfx.bgm); 
     }
 
-    if (to.id === "scene-unit" && activeMode === "bireysel") {
-        loadGlobalLeaderboard('weekly');
+    if (to.id === "scene-unit") {
+        const lbSide = document.getElementById('unit-leaderboard-side');
+        if (activeMode === "bireysel") {
+            if(lbSide) lbSide.classList.remove('is-hidden');
+            loadGlobalLeaderboard('weekly');
+        } else {
+            if(lbSide) lbSide.classList.add('is-hidden');
+        }
     }
 }
 if (topControls) topControls.style.display = "none"; 
@@ -439,7 +432,7 @@ masterPauseBtn.onclick = toggleMasterPause;
 const btnMasterResume = document.getElementById('btn-master-resume');
 if(btnMasterResume) btnMasterResume.onclick = toggleMasterPause;
 
-// --- 5. MENÜ YÖNLENDİRMELERİ (SAVUNMACI YAKLAŞIM) ---
+// --- 5. MENÜ YÖNLENDİRMELERİ ---
 let activeMode = "", selectedGrade = null, selectedUnit = null;
 let usedQuestions = []; 
 
@@ -576,8 +569,8 @@ function showRulesScreen() {
     if (activeMode === "bireysel") {
         content.innerHTML = `
             <ul style="list-style: none; padding: 0;">
-                <li style="margin-bottom: 15px;"><i class="fas fa-bullseye" style="color:#22c55e; margin-right:10px; width: 25px;"></i> <b>Puanlama ve Süre:</b> Toplam 10 soru seni bekliyor. İlk 4 soru 100 puan (40 sn), 5-8. sorular 200 puan (50 sn), finaldeki son 2 soru ise 400 puan (60 sn) değerindedir. Liderlik için hızı ödüllendiren dinamik zaman bonusu aktiftir! Kalan her saniye ekstra 5 puan kazandırır.</li>
-                <li style="margin-bottom: 15px;"><i class="fas fa-stopwatch" style="color:#00d2ff; margin-right:10px; width: 25px;"></i> <b>Hız Çok Önemli:</b> Sadece doğru bilmek yetmez! Liderlik tablosunda üst sıralara çıkmak için soruları olabildiğince <b>hızlı</b> cevaplamalısın. Eşit puanda hızlı olan kazanır!</li>
+                <li style="margin-bottom: 15px;"><i class="fas fa-bullseye" style="color:#22c55e; margin-right:10px; width: 25px;"></i> <b>Puanlama ve Süre:</b> Toplam 10 soru seni bekliyor. İlk 4 soru 100 puan (40 sn), 5-8. sorular 200 puan (50 sn), finaldeki son 2 soru ise 400 puan (60 sn) değerindedir.</li>
+                <li style="margin-bottom: 15px;"><i class="fas fa-stopwatch" style="color:#00d2ff; margin-right:10px; width: 25px;"></i> <b>Hız Eşittir Puan:</b> Sadece doğru bilmek yetmez! Liderlik tablosuna girmek için soruları olabildiğince <b>hızlı</b> cevaplamalısın. Kalan her saniye ekstra 5 puan olarak hanene yazılır! Misafir veya üye fark etmeksizin herkes bu kurala tabidir.</li>
                 <li style="margin-bottom: 15px;"><i class="fas fa-heart-crack" style="color:#ef4444; margin-right:10px; width: 25px;"></i> <b>Hata Affetmez:</b> Jokerlerin dışında, herhangi bir soruya yanlış cevap verdiğin veya süreyi geçirdiğin anda yarışmaya veda edersin.</li>
                 <li style="margin-bottom: 15px;"><i class="fas fa-magic" style="color:#9d50bb; margin-right:10px; width: 25px;"></i> <b>Kurtarıcı Jokerler:</b> 50:50, İpucu ve Pas haklarını iyi değerlendir. 4. soruyu geçersen çok özel 'Zamanı Durdur' jokeri de aktifleşir.</li>
                 <li style="margin-bottom: 15px;"><i class="fas fa-meteor" style="color:#f59e0b; margin-right:10px; width: 25px;"></i> <b>Kara Delik (9. ve 10. Sorular):</b> 8. soruyu başarıyla geçtikten sonra Kara Delik bölgesi başlar! Son iki zorlu soruda istersen o ana kadar topladığın puanı kasaya kilitleyip yarışmadan çekilebilirsin. "Riski alıyorum" deyip devam edersen ve yanlış yaparsan, Kara Delik puanının <b>yarısını</b> yutar ve elenirsin!</li>
@@ -802,30 +795,33 @@ async function finishIndividual(msg) {
                 const currentWeek = getWeekId(now);
                 const currentMonth = getMonthId(now);
                 const currentSeason = getSeasonId(now);
+                
+                const gradeSuffix = `_${selectedGrade}`;
 
                 let updates = {
-                    totalScore: (userData.totalScore || 0) + quizState.score
+                    totalScore: (userData.totalScore || 0) + quizState.score,
+                    [`totalScore${gradeSuffix}`]: (userData[`totalScore${gradeSuffix}`] || 0) + quizState.score
                 };
 
-                if (userData.lastWeekId === currentWeek) {
-                    updates.weeklyScore = (userData.weeklyScore || 0) + quizState.score;
+                if (userData[`lastWeekId${gradeSuffix}`] === currentWeek) {
+                    updates[`weeklyScore${gradeSuffix}`] = (userData[`weeklyScore${gradeSuffix}`] || 0) + quizState.score;
                 } else {
-                    updates.weeklyScore = quizState.score;
-                    updates.lastWeekId = currentWeek;
+                    updates[`weeklyScore${gradeSuffix}`] = quizState.score;
+                    updates[`lastWeekId${gradeSuffix}`] = currentWeek;
                 }
 
-                if (userData.lastMonthId === currentMonth) {
-                    updates.monthlyScore = (userData.monthlyScore || 0) + quizState.score;
+                if (userData[`lastMonthId${gradeSuffix}`] === currentMonth) {
+                    updates[`monthlyScore${gradeSuffix}`] = (userData[`monthlyScore${gradeSuffix}`] || 0) + quizState.score;
                 } else {
-                    updates.monthlyScore = quizState.score;
-                    updates.lastMonthId = currentMonth;
+                    updates[`monthlyScore${gradeSuffix}`] = quizState.score;
+                    updates[`lastMonthId${gradeSuffix}`] = currentMonth;
                 }
 
-                if (userData.lastSeasonId === currentSeason) {
-                    updates.seasonScore = (userData.seasonScore || 0) + quizState.score;
+                if (userData[`lastSeasonId${gradeSuffix}`] === currentSeason) {
+                    updates[`seasonScore${gradeSuffix}`] = (userData[`seasonScore${gradeSuffix}`] || 0) + quizState.score;
                 } else {
-                    updates.seasonScore = quizState.score;
-                    updates.lastSeasonId = currentSeason;
+                    updates[`seasonScore${gradeSuffix}`] = quizState.score;
+                    updates[`lastSeasonId${gradeSuffix}`] = currentSeason;
                 }
 
                 await updateDoc(userRef, updates);
@@ -846,8 +842,6 @@ async function finishIndividual(msg) {
     if(qeTitle) qeTitle.textContent = msg; 
     const qeScore = document.getElementById('quiz-end-score');
     if(qeScore) qeScore.textContent = `Final Puanın: ${quizState.score}`; 
-    const qeTime = document.getElementById('quiz-end-time');
-    if(qeTime) qeTime.textContent = `Çözüm Süresi: ${quizState.totalTimeSpent} Saniye`;
     
     if(msg.includes("ŞAMPİYON") || msg.includes("ÇEKİLDİN")) playSound(sfx.cheer); else playSound(sfx.wrong);
 }
@@ -867,12 +861,12 @@ const btnShowLb = document.getElementById('btn-show-leaderboard');
 if(btnShowLb) {
     btnShowLb.onclick = () => { 
         stopSound(sfx.cheer); stopSound(sfx.wrong); const qe = document.getElementById('quiz-end'); if(qe) qe.classList.add('is-hidden'); 
-        individualLeaderboard.sort((a, b) => { if (b.score !== a.score) return b.score - a.score; return a.time - b.time; }); 
+        individualLeaderboard.sort((a, b) => b.score - a.score); 
         const list = document.getElementById('leaderboard-list'); if(list) { list.innerHTML = ''; 
             individualLeaderboard.forEach((p, i) => { 
                 let rankColor = i === 0 ? "#f59e0b" : i === 1 ? "#9ca3af" : i === 2 ? "#b45309" : "rgba(255,255,255,0.1)"; 
                 let badge = i === 0 ? "🥇 Galaksi Fatihi" : i === 1 ? "🥈 Yıldız Kaşifi" : i === 2 ? "🥉 Cesur Astronot" : "☄️ Uzay Yolcusu"; 
-                list.innerHTML += `<div style="display: flex; justify-content: space-between; font-size: 1.6rem; margin: 10px 0; padding: 15px 25px; background: ${rankColor}; border-radius:15px; font-weight: bold; align-items: center;"><div style="display:flex; flex-direction:column;"><span>${i+1}. ${p.name}</span><span style="font-size: 1rem; color: ${i<3 ? '#000' : '#00d2ff'};">${badge}</span></div><div style="text-align: right; font-size: 1.4rem;"><span style="color: ${i<3 ? '#000' : '#fff'};">${p.score} Puan</span><br><span style="font-size: 1rem; color: ${i<3 ? '#333' : '#aaa'};">⏱ ${p.time} sn</span></div></div>`; 
+                list.innerHTML += `<div style="display: flex; justify-content: space-between; font-size: 1.6rem; margin: 10px 0; padding: 15px 25px; background: ${rankColor}; border-radius:15px; font-weight: bold; align-items: center;"><div style="display:flex; flex-direction:column;"><span>${i+1}. ${p.name}</span><span style="font-size: 1rem; color: ${i<3 ? '#000' : '#00d2ff'};">${badge}</span></div><div style="text-align: right; font-size: 1.6rem;"><span style="color: ${i<3 ? '#000' : '#fff'};">${p.score} Puan</span></div></div>`; 
             }); 
         }
         switchScene(scenes.quiz, scenes.leaderboard); 
@@ -1409,7 +1403,6 @@ function endTournament(msg, scoreStr) {
         else qs.textContent = "";
     }
     
-    const qe = document.getElementById('quiz-end-time'); if(qe) qe.textContent = "";
     const bl = document.getElementById('btn-show-leaderboard'); if(bl) bl.style.display = "none"; 
 }
 
@@ -1588,7 +1581,6 @@ if (studentPane) {
     `;
 }
 
-// ŞİFRE GÖSTER/GİZLE İÇİN TOUCH VE CLICK DÜZELTMESİ
 const togglePassBtn = document.getElementById('toggle-pass');
 if (togglePassBtn) {
     const handleToggle = (e) => {
@@ -1883,7 +1875,7 @@ if(btnStuSub) {
                 
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
                 await setDoc(doc(db, "users", cred.user.uid), {
-                    name: fName, surname: lName, nickname: nick, email: email, role: "student", totalScore: 0, seasonScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
+                    name: fName, surname: lName, nickname: nick, email: email, role: "student", totalScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
                 });
                 if(authModal) authModal.classList.add('is-hidden');
                 alert(`Hoş geldin ${fName}! Kozmik maceraya hazırsın.`);
@@ -1913,7 +1905,7 @@ if(btnGoogleLog) {
                 const lastName = nameParts.slice(1).join(' ') || "X";
                 
                 await setDoc(doc(db, "users", result.user.uid), {
-                    name: firstName, surname: lastName, nickname: gName, email: result.user.email, role: "student", totalScore: 0, seasonScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
+                    name: firstName, surname: lastName, nickname: gName, email: result.user.email, role: "student", totalScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
                 });
                 
                 sessionStorage.removeItem('google_auth_in_progress');
@@ -2061,12 +2053,16 @@ async function loadGlobalLeaderboard(type = 'weekly') {
     if(!lbListEl) return;
     lbListEl.innerHTML = '<p style="text-align:center; color:#aaa; margin-top:20px;">Liderler yükleniyor...</p>';
     
-    let field = 'totalScore';
+    const lbTitle = document.querySelector('#unit-leaderboard-side h2');
+    if(lbTitle && selectedGrade) lbTitle.innerHTML = `<i class="fas fa-trophy"></i> ${selectedGrade}. Sınıf Şampiyonlar Ligi`;
+
+    const gradeSuffix = `_${selectedGrade}`;
+    let field = `totalScore${gradeSuffix}`;
     const now = new Date();
     
-    if (type === 'weekly') field = 'weeklyScore';
-    else if (type === 'monthly') field = 'monthlyScore';
-    else if (type === 'alltime') field = 'seasonScore';
+    if (type === 'weekly') field = `weeklyScore${gradeSuffix}`;
+    else if (type === 'monthly') field = `monthlyScore${gradeSuffix}`;
+    else if (type === 'alltime') field = `seasonScore${gradeSuffix}`;
 
     try {
         const usersRef = collection(db, "users");
@@ -2084,11 +2080,10 @@ async function loadGlobalLeaderboard(type = 'weekly') {
             if (data.role === 'student' && data.isBanned === false) {
                 let score = 0;
                 
-                if (type === 'weekly' && data.lastWeekId === currentWeekId) score = data.weeklyScore || 0;
-                else if (type === 'monthly' && data.lastMonthId === currentMonthId) score = data.monthlyScore || 0;
+                if (type === 'weekly' && data[`lastWeekId${gradeSuffix}`] === currentWeekId) score = data[`weeklyScore${gradeSuffix}`] || 0;
+                else if (type === 'monthly' && data[`lastMonthId${gradeSuffix}`] === currentMonthId) score = data[`monthlyScore${gradeSuffix}`] || 0;
                 else if (type === 'alltime') {
-                    if (data.lastSeasonId === currentSeasonId) score = data.seasonScore || 0;
-                    else if (data.lastSeasonId === undefined) score = data.totalScore || 0; // Eski hesapları koruma (Migration)
+                    if (data[`lastSeasonId${gradeSuffix}`] === currentSeasonId) score = data[`seasonScore${gradeSuffix}`] || 0;
                 }
 
                 if (score > 0) {
@@ -2102,7 +2097,7 @@ async function loadGlobalLeaderboard(type = 'weekly') {
 
     } catch (e) {
         console.error("Tablo yükleme hatası:", e);
-        lbListEl.innerHTML = '<p style="color:#ef4444; text-align:center;">Veriler çekilemedi.</p>';
+        lbListEl.innerHTML = '<p style="color:#ef4444; text-align:center;">Henüz bu sınıfa ait veri yok.</p>';
     }
 }
 
@@ -2154,12 +2149,12 @@ async function updateUserGlobalRank(field, type) {
         let myScore = 0;
         const now = new Date();
         const currentSeasonId = getSeasonId(now);
+        const gradeSuffix = `_${selectedGrade}`;
         
-        if (type === 'weekly' && userData.lastWeekId === getWeekId(now)) myScore = userData.weeklyScore || 0;
-        else if (type === 'monthly' && userData.lastMonthId === getMonthId(now)) myScore = userData.monthlyScore || 0;
+        if (type === 'weekly' && userData[`lastWeekId${gradeSuffix}`] === getWeekId(now)) myScore = userData[`weeklyScore${gradeSuffix}`] || 0;
+        else if (type === 'monthly' && userData[`lastMonthId${gradeSuffix}`] === getMonthId(now)) myScore = userData[`monthlyScore${gradeSuffix}`] || 0;
         else if (type === 'alltime') {
-            if (userData.lastSeasonId === currentSeasonId) myScore = userData.seasonScore || 0;
-            else if (userData.lastSeasonId === undefined) myScore = userData.totalScore || 0;
+            if (userData[`lastSeasonId${gradeSuffix}`] === currentSeasonId) myScore = userData[`seasonScore${gradeSuffix}`] || 0;
         }
 
         const q = query(collection(db, "users"), orderBy(field, "desc"));
@@ -2170,18 +2165,17 @@ async function updateUserGlobalRank(field, type) {
             const d = docSnap.data();
             if (d.role === 'student' && d.isBanned === false) {
                 let s = 0;
-                if (type === 'weekly' && d.lastWeekId === getWeekId(now)) s = d.weeklyScore || 0;
-                else if (type === 'monthly' && d.lastMonthId === getMonthId(now)) s = d.monthlyScore || 0;
+                if (type === 'weekly' && d[`lastWeekId${gradeSuffix}`] === getWeekId(now)) s = d[`weeklyScore${gradeSuffix}`] || 0;
+                else if (type === 'monthly' && d[`lastMonthId${gradeSuffix}`] === getMonthId(now)) s = d[`monthlyScore${gradeSuffix}`] || 0;
                 else if (type === 'alltime') {
-                    if (d.lastSeasonId === currentSeasonId) s = d.seasonScore || 0;
-                    else if (d.lastSeasonId === undefined) s = d.totalScore || 0;
+                    if (d[`lastSeasonId${gradeSuffix}`] === currentSeasonId) s = d[`seasonScore${gradeSuffix}`] || 0;
                 }
                 
                 if (s > myScore) rank++;
             }
         });
 
-        if(rankText) rankText.innerHTML = `<i class="fas fa-medal"></i> Sıran: ${rank}. | Puanın: ${formatScore(myScore)}`;
+        if(rankText) rankText.innerHTML = `<i class="fas fa-medal"></i> ${selectedGrade}. Sınıf Sıran: ${rank}. | Puanın: ${formatScore(myScore)}`;
         if(rankArea) rankArea.classList.remove('is-hidden');
     } catch (e) {
         if(rankText) rankText.textContent = "Sıra hesaplanamadı.";

@@ -32,9 +32,10 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .icon-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition:0.3s; }
 .icon-btn:hover { color: var(--neon-blue); }
 
+/* SCENE VE PANEL OPTİMİZASYONLARI (TAŞMA VE KESİLME ENGELLENDİ) */
 .scene {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 90vw; max-width: 1200px; max-height: calc(100vh - 180px);
+  width: 90vw; max-width: 1200px;
   display: flex; flex-direction: column; justify-content: center; align-items: center;
   transition: 0.3s ease;
 }
@@ -45,7 +46,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
   background: var(--glass); backdrop-filter: blur(20px);
   border: 1px solid rgba(255,255,255,0.1); border-radius: 30px;
   padding: 30px 40px; box-shadow: 0 0 50px rgba(0,0,0,0.8); width: 100%; text-align: center;
-  max-height: calc(100vh - 180px); overflow-y: auto; 
   position: relative;
 }
 .glass-panel::-webkit-scrollbar { width: 8px; }
@@ -135,7 +135,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .joker-spawn-anim { animation: jokerSpawn 1s ease-out; }
 
 .lobby-input { width: 200px; padding: 15px; font-size: 1.5rem; text-align: center; border-radius: 10px; border: none; outline: none; margin-bottom: 20px; }
-.back-link { position: absolute; top: 25px; left: 25px; background: none; border: none; color: #aaa; cursor: pointer; font-size: 1.2rem; transition: 0.3s; }
+.back-link { position: absolute; top: 25px; left: 25px; background: none; border: none; color: #aaa; cursor: pointer; font-size: 1.2rem; transition: 0.3s; z-index: 10;}
 .back-link:hover { color: #fff; transform: translateX(-5px); }
 #draw-counter { font-size: 12rem; color: var(--neon-blue); text-shadow: 0 0 30px var(--neon-blue); font-weight: bold;}
 
@@ -156,9 +156,10 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .t-team-input { width: 100%; padding: 10px; font-size: 1.2rem; background: rgba(0,0,0,0.6); border: 1px solid #555; color: white; border-radius: 8px; }
 .t-team-input:focus { border-color: var(--neon-blue); outline: none; }
 
+/* TURNUVA KARTLARI KISA EKRAN/AKILLI TAHTA UYUMU */
 #t-teams-container {
-  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; width: 100%;
-  max-height: 38vh; overflow-y: auto; padding: 10px; 
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; width: 100%;
+  overflow: visible; padding: 5px; 
 }
 #t-teams-container::-webkit-scrollbar { width: 8px; }
 #t-teams-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
@@ -179,11 +180,11 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 
 .t-team-card {
   background: rgba(15, 23, 42, 0.9); border: 2px solid rgba(255,255,255,0.2);
-  padding: 12px; border-radius: 15px; min-width: 130px; flex: 1 1 18%; max-width: 200px;
+  padding: 10px; border-radius: 12px; min-width: 120px; flex: 1 1 15%; max-width: 180px;
   text-align: center; transition: 0.4s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
   position: relative;
 }
-.t-team-card h3 { font-size: 1.3rem; margin-bottom: 10px; color: #fff; word-break: break-word;}
+.t-team-card h3 { font-size: 1.1rem; margin-bottom: 5px; color: #fff; word-break: break-word;}
 
 .t-score { display: none; }
 
@@ -195,19 +196,19 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .floating-point { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 900; font-size: 2.5rem; animation: floatAndFade 2s forwards; z-index: 100; text-shadow: 0 0 10px rgba(0,0,0,0.8); pointer-events: none;}
 @keyframes floatAndFade { 0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); } 30% { opacity: 1; transform: translate(-50%, -100%) scale(1.2); } 100% { opacity: 0; transform: translate(-50%, -200%) scale(1); } }
 
-.t-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; pointer-events: none; opacity: 0.5; transition: 0.3s;}
+.t-answers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; pointer-events: none; opacity: 0.5; transition: 0.3s;}
 .t-answers.active { pointer-events: auto; opacity: 1; }
 
 .t-ans-btn {
   background: rgba(0,0,0,0.6); border: 2px solid #555; color: white;
-  padding: 10px 0; border-radius: 10px; cursor: pointer; font-size: 1.3rem; font-weight: bold; transition:0.2s;
+  padding: 6px 0; border-radius: 6px; cursor: pointer; font-size: 1.1rem; font-weight: bold; transition:0.2s;
   -webkit-tap-highlight-color: transparent;
 }
 .t-ans-btn.selected { background: var(--neon-blue); border-color: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue); }
 .t-ans-btn.correct { background: #22c55e !important; border-color: #22c55e !important; color: white!important; box-shadow: 0 0 20px #22c55e; }
 .t-ans-btn.wrong { background: #ef4444 !important; border-color: #ef4444 !important; color: white!important; opacity: 0.4;}
 
-.t-no-answer { color: #ef4444; font-size: 1rem; font-weight: bold; padding: 15px 0; text-shadow: 0 0 10px #ef4444; animation: pulse 1.5s infinite; }
+.t-no-answer { color: #ef4444; font-size: 1rem; font-weight: bold; padding: 10px 0; text-shadow: 0 0 10px #ef4444; animation: pulse 1.5s infinite; }
 
 .t-team-card.eliminated { filter: grayscale(100%); opacity: 0.3; pointer-events: none; border-color: #333; }
 .t-team-card.correct-glow { box-shadow: 0 0 30px #22c55e; border-color: #22c55e; }
@@ -222,13 +223,13 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     transform: scale(1.02);
 }
 
-.duel-mode-active #t-teams-container { gap: 20px; }
+.duel-mode-active #t-teams-container { gap: 15px; }
 .duel-mode-active .t-team-card {
-  min-width: 250px; padding: 25px; border-color: #f59e0b;
+  min-width: 200px; padding: 15px; border-color: #f59e0b;
   box-shadow: 0 0 30px rgba(245, 158, 11, 0.4); transform: scale(1.05); max-width: 320px;
 }
-.duel-mode-active .t-team-card h3 { font-size: 1.8rem; color: #f59e0b; margin-bottom: 15px;}
-.duel-mode-active .t-ans-btn { font-size: 2rem; padding: 15px 0; border-radius: 15px; }
+.duel-mode-active .t-team-card h3 { font-size: 1.5rem; color: #f59e0b; margin-bottom: 10px;}
+.duel-mode-active .t-ans-btn { font-size: 1.5rem; padding: 10px 0; border-radius: 10px; }
 .duel-mode-active .t-answers { pointer-events: auto; opacity: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
 #cards-overlay, #quiz-end, #blackhole-overlay {
@@ -244,11 +245,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 #cards-overlay h2 { font-size: clamp(2rem, 6vh, 3.5rem) !important; margin-bottom: 10px !important; }
 #cards-overlay p { font-size: clamp(1.1rem, 3vh, 2rem) !important; margin-bottom: 20px !important; }
 #btn-cards-seen { font-size: clamp(1.1rem, 2.5vh, 1.5rem) !important; padding: 12px 25px !important; }
-
-.duel-mode-active #t-teams-container { 
-    max-height: none !important; 
-    overflow: visible !important; 
-}
 
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
@@ -282,7 +278,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 #modal-body::-webkit-scrollbar { width: 8px; }
 #modal-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
 
-/* --- YENİ EKLENENLER: ÜYELİK MODALI (AŞAMA 2) --- */
+/* --- YENİ EKLENENLER: ÜYELİK MODALI --- */
 .auth-tabs { display: flex; margin-bottom: 25px; background: rgba(0,0,0,0.5); border-radius: 15px; padding: 5px; }
 .auth-tab-btn { flex: 1; background: transparent; border: none; color: #aaa; padding: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; border-radius: 10px; transition: 0.3s; }
 .auth-tab-btn.active { background: var(--neon-blue); color: #000; box-shadow: 0 0 15px rgba(0, 210, 255, 0.4); }
@@ -290,16 +286,30 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .auth-pane { animation: promptGiris 0.3s ease-out; }
 
 /* =========================================================
-   AKILLI TAHTA VE KISA MASAÜSTÜ EKRANLARI İÇİN OPTİMİZASYON (16:9 / 1366x768)
+   AKILLI TAHTA VE KISA EKRANLAR İÇİN RESPONSIVE OPTİMİZASYONU 
+   (16:9 / 1366x768 gibi ekranlarda kesilmeyi önler)
    ========================================================= */
-@media (max-height: 768px) and (min-width: 901px) {
-    .glass-panel { padding: 20px 30px; }
-    .main-title { font-size: 2.2rem; margin-bottom: 20px; }
+@media (max-height: 850px) {
+    body { overflow-y: auto !important; height: auto !important; min-height: 100vh; }
+    
+    .scene {
+        position: relative !important;
+        top: 0 !important; left: 0 !important; transform: none !important;
+        margin: 120px auto 40px auto !important;
+        max-height: none !important; height: auto !important;
+    }
+    
+    .glass-panel { max-height: none !important; overflow-y: visible !important; }
+    
+    /* Overlay'lerin genişleyen panele tam oturması için */
+    #cards-overlay, #quiz-end, #blackhole-overlay {
+        height: 100% !important; 
+    }
+
+    .main-title { font-size: 2.5rem; margin-bottom: 20px; }
     .module-btn { min-height: 180px; padding: 20px 10px; gap: 10px; }
     .module-btn i { font-size: 3.5rem; }
-    .module-btn span { font-size: 1.6rem; }
-    .logo { font-size: 2rem; }
-    .top-header { padding: 15px 30px; }
+    .module-btn span { font-size: 1.8rem; }
 }
 
 /* =========================================================
@@ -356,8 +366,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
         display: grid !important; 
         grid-template-columns: 1fr 1fr !important; 
         gap: 10px !important; 
-        max-height: 55vh !important; 
-        overflow-y: auto !important; 
         padding: 5px !important;
     }
     .t-team-card { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 10px !important;}
@@ -392,7 +400,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     .admin-user-stats { width: 100%; text-align: left; }
     .admin-actions { width: 100%; justify-content: flex-start; }
 
-    /* Mobil Liderlik Tablosu Bölünmüş Ekran Düzenlemesi (Kural 5) */
+    /* Mobil Liderlik Tablosu Bölünmüş Ekran Düzenlemesi */
     .split-scene { flex-direction: column !important; gap: 20px !important; overflow-y: auto !important; max-height: none !important;}
     #unit-leaderboard-side { max-width: 100% !important; order: 2; min-height: 400px !important;}
     #unit-selection-side { order: 1; }
@@ -423,7 +431,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .btn-unban { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; padding: 8px 15px; border-radius: 10px; cursor: pointer; transition: 0.3s; font-weight: bold; }
 .btn-unban:hover { background: #22c55e; color: #fff; box-shadow: 0 0 15px #22c55e; }
 
-/* Admin modal scrollbar fix */
 #admin-user-list::-webkit-scrollbar { width: 8px; }
 #admin-user-list::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.5); border-radius: 10px; }
 
@@ -445,7 +452,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .global-lb-info p { margin: 0; font-size: 0.8rem; color: #aaa; }
 .global-lb-score { font-size: 1.2rem; font-weight: bold; color: #f59e0b; text-align: right;}
 
-/* Podyum Renkleri (İlk 3 Sıra) */
 .rank-1 .global-lb-rank { color: #f59e0b; text-shadow: 0 0 15px #f59e0b; font-size: 1.8rem;}
 .rank-1 .global-lb-avatar { border-color: #f59e0b; box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);}
 .rank-2 .global-lb-rank { color: #9ca3af; text-shadow: 0 0 15px #9ca3af; font-size: 1.6rem;}
