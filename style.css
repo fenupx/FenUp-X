@@ -32,7 +32,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .icon-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition:0.3s; }
 .icon-btn:hover { color: var(--neon-blue); }
 
-/* SCENE VE PANEL OPTİMİZASYONLARI (TAŞMA VE KESİLME ENGELLENDİ) */
+/* SCENE VE PANEL OPTİMİZASYONLARI */
 .scene {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 90vw; max-width: 1200px;
@@ -287,7 +287,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 
 /* =========================================================
    AKILLI TAHTA VE KISA EKRANLAR İÇİN RESPONSIVE OPTİMİZASYONU 
-   (16:9 / 1366x768 gibi ekranlarda kesilmeyi önler)
    ========================================================= */
 @media (max-height: 850px) {
     body { overflow-y: auto !important; height: auto !important; min-height: 100vh; }
@@ -301,10 +300,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     
     .glass-panel { max-height: none !important; overflow-y: visible !important; }
     
-    /* Overlay'lerin genişleyen panele tam oturması için */
-    #cards-overlay, #quiz-end, #blackhole-overlay {
-        height: 100% !important; 
-    }
+    #cards-overlay, #quiz-end, #blackhole-overlay { height: 100% !important; }
 
     .main-title { font-size: 2.5rem; margin-bottom: 20px; }
     .module-btn { min-height: 180px; padding: 20px 10px; gap: 10px; }
@@ -338,11 +334,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     .volume-control { padding: 5px 10px !important; }
     #volume-slider { width: 70px !important; }
 
-    #scene-iletisim > div:last-child {
-        padding: 20px !important;
-        font-size: 1.2rem !important;
-        word-break: break-all !important;
-    }
+    #scene-iletisim > div:last-child { padding: 20px !important; font-size: 1.2rem !important; word-break: break-all !important; }
 
     .quiz-header, .t-header { flex-direction: row !important; flex-wrap: wrap !important; gap: 10px !important; font-size: 1rem !important; justify-content: center !important; text-align: center; margin-bottom: 15px !important; }
     .quiz-header span { font-size: 1.1rem !important; margin: 0 5px; }
@@ -387,24 +379,28 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     #master-pause-overlay p { font-size: 1.1rem !important; text-align: center; max-width: 90%; }
     #btn-master-resume { font-size: 1.2rem !important; padding: 15px !important; width: 90%; justify-content: center; }
 
-    /* Mobil Footer ve Yasal Geliştirmeler */
     .cookie-banner { flex-direction: column; text-align: center; bottom: 10px; width: 95%; padding: 15px; }
     .cookie-banner p { text-align: center; font-size: 0.9rem; }
     .fenupx-footer { position: static !important; margin-top: 40px; padding-bottom: 30px; }
     .policy-links { flex-direction: column; gap: 5px !important; }
     .desktop-only { display: none !important; }
     
-    /* Mobil Admin Panel Düzenlemeleri */
-    .admin-user-row { flex-direction: column; gap: 15px; align-items: flex-start; }
-    .admin-user-info { width: 100%; }
-    .admin-user-stats { width: 100%; text-align: left; }
-    .admin-actions { width: 100%; justify-content: flex-start; }
-
     /* Mobil Liderlik Tablosu Bölünmüş Ekran Düzenlemesi */
     .split-scene { flex-direction: column !important; gap: 20px !important; overflow-y: auto !important; max-height: none !important;}
     #unit-leaderboard-side { max-width: 100% !important; order: 2; min-height: 400px !important;}
     #unit-selection-side { order: 1; }
     #scene-unit h2 { font-size: 2rem !important; margin-top: 30px !important; }
+    
+    /* Mobil Modal ve Admin Panel Düzenlemeleri */
+    .modal-content.glass-panel { max-height: 90vh !important; overflow-y: auto !important; }
+    #admin-modal .modal-content.glass-panel { overflow-y: hidden !important; display: flex !important; flex-direction: column !important; }
+    #admin-user-list { flex: 1 1 auto !important; overflow-y: auto !important; min-height: 0 !important; padding: 10px !important; }
+    
+    .admin-user-row { flex-direction: row !important; flex-wrap: wrap !important; gap: 10px !important; align-items: center !important; justify-content: space-between !important; padding: 15px 5px !important; }
+    .admin-user-info { width: 100% !important; margin-bottom: 5px !important; }
+    .admin-user-stats { width: auto !important; text-align: left !important; font-size: 1.1rem !important; }
+    .admin-actions { width: auto !important; justify-content: flex-end !important; }
+    .btn-ban, .btn-unban { padding: 8px 15px !important; font-size: 0.9rem !important; margin: 0 !important; }
 }
 
 /* --- YENİ EKLENENLER: ADMIN PANELİ --- */
