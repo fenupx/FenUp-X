@@ -285,6 +285,47 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .auth-input { text-align: left !important; font-size: 1.1rem !important; margin-bottom: 15px !important; padding: 12px 20px !important; }
 .auth-pane { animation: promptGiris 0.3s ease-out; }
 
+/* --- YENİ EKLENENLER: ADMIN PANELİ (TÜM EKRANLAR İÇİN SCROLL KİLİDİ) --- */
+#admin-modal .modal-content.glass-panel {
+    max-height: 90vh !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+#admin-user-list {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    min-height: 0 !important;
+}
+
+.admin-user-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);
+    transition: 0.3s;
+}
+.admin-user-row:last-child { border-bottom: none; }
+.admin-user-row:hover { background: rgba(255,255,255,0.05); }
+.admin-user-row.banned { filter: grayscale(100%); opacity: 0.6; }
+.admin-user-row.banned h4 { text-decoration: line-through; color: #ef4444 !important; }
+
+.admin-user-info { display: flex; align-items: center; gap: 15px; flex: 2; }
+.admin-user-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--neon-blue); background: rgba(255,255,255,0.1); }
+.admin-user-details h4 { margin: 0; color: #fff; font-size: 1.2rem; }
+.admin-user-details p { margin: 0; color: #aaa; font-size: 0.9rem; }
+
+.admin-user-stats { flex: 1; text-align: center; font-weight: bold; color: #00d2ff; font-size: 1.2rem; }
+
+.admin-actions { display: flex; gap: 10px; flex: 1; justify-content: flex-end; }
+.btn-ban { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; padding: 8px 15px; border-radius: 10px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+.btn-ban:hover { background: #ef4444; color: #fff; box-shadow: 0 0 15px #ef4444; }
+.btn-unban { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; padding: 8px 15px; border-radius: 10px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+.btn-unban:hover { background: #22c55e; color: #fff; box-shadow: 0 0 15px #22c55e; }
+
+#admin-user-list::-webkit-scrollbar { width: 8px; }
+#admin-user-list::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.5); border-radius: 10px; }
+
+
 /* =========================================================
    AKILLI TAHTA VE KISA EKRANLAR İÇİN RESPONSIVE OPTİMİZASYONU 
    ========================================================= */
@@ -393,8 +434,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     
     /* Mobil Modal ve Admin Panel Düzenlemeleri */
     .modal-content.glass-panel { max-height: 90vh !important; overflow-y: auto !important; }
-    #admin-modal .modal-content.glass-panel { overflow-y: hidden !important; display: flex !important; flex-direction: column !important; }
-    #admin-user-list { flex: 1 1 auto !important; overflow-y: auto !important; min-height: 0 !important; padding: 10px !important; }
     
     .admin-user-row { flex-direction: row !important; flex-wrap: wrap !important; gap: 10px !important; align-items: center !important; justify-content: space-between !important; padding: 15px 5px !important; }
     .admin-user-info { width: 100% !important; margin-bottom: 5px !important; }
@@ -402,33 +441,6 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     .admin-actions { width: auto !important; justify-content: flex-end !important; }
     .btn-ban, .btn-unban { padding: 8px 15px !important; font-size: 0.9rem !important; margin: 0 !important; }
 }
-
-/* --- YENİ EKLENENLER: ADMIN PANELİ --- */
-.admin-user-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1);
-    transition: 0.3s;
-}
-.admin-user-row:last-child { border-bottom: none; }
-.admin-user-row:hover { background: rgba(255,255,255,0.05); }
-.admin-user-row.banned { filter: grayscale(100%); opacity: 0.6; }
-.admin-user-row.banned h4 { text-decoration: line-through; color: #ef4444 !important; }
-
-.admin-user-info { display: flex; align-items: center; gap: 15px; flex: 2; }
-.admin-user-avatar { width: 50px; height: 50px; border-radius: 50%; border: 2px solid var(--neon-blue); background: rgba(255,255,255,0.1); }
-.admin-user-details h4 { margin: 0; color: #fff; font-size: 1.2rem; }
-.admin-user-details p { margin: 0; color: #aaa; font-size: 0.9rem; }
-
-.admin-user-stats { flex: 1; text-align: center; font-weight: bold; color: #00d2ff; font-size: 1.2rem; }
-
-.admin-actions { display: flex; gap: 10px; flex: 1; justify-content: flex-end; }
-.btn-ban { background: rgba(239, 68, 68, 0.2); color: #ef4444; border: 1px solid #ef4444; padding: 8px 15px; border-radius: 10px; cursor: pointer; transition: 0.3s; font-weight: bold; }
-.btn-ban:hover { background: #ef4444; color: #fff; box-shadow: 0 0 15px #ef4444; }
-.btn-unban { background: rgba(34, 197, 94, 0.2); color: #22c55e; border: 1px solid #22c55e; padding: 8px 15px; border-radius: 10px; cursor: pointer; transition: 0.3s; font-weight: bold; }
-.btn-unban:hover { background: #22c55e; color: #fff; box-shadow: 0 0 15px #22c55e; }
-
-#admin-user-list::-webkit-scrollbar { width: 8px; }
-#admin-user-list::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.5); border-radius: 10px; }
 
 /* --- YENİ EKLENENLER: GLOBAL LİDERLİK TABLOSU --- */
 .split-scene { display: flex; }
