@@ -100,6 +100,9 @@ styleEnjektor.innerHTML = `
     #auth-modal .auth-tab-btn[data-target="teacher-auth"] {
         display: none !important;
     }
+    
+    .btn-edit-nick { background: rgba(0, 210, 255, 0.2); color: #00d2ff; border: 1px solid #00d2ff; padding: 8px 15px; border-radius: 10px; cursor: pointer; transition: 0.3s; font-weight: bold; }
+    .btn-edit-nick:hover { background: #00d2ff; color: #000; box-shadow: 0 0 15px #00d2ff; }
 `;
 document.head.appendChild(styleEnjektor);
 
@@ -521,7 +524,12 @@ if(btnGoClass) {
     btnGoClass.onclick = () => { 
         const pInput = document.getElementById('player-name-input');
         const dCounter = document.getElementById('draw-counter');
-        currentActivePlayerName = (pInput && pInput.value.trim()) || `${dCounter ? dCounter.textContent : '1'} Numara`; 
+        let rawName = (pInput && pInput.value.trim()) || `${dCounter ? dCounter.textContent : '1'} Numara`;
+        if(!uygunIsimMi(rawName) && !rawName.includes("Numara")) {
+            alert("Girilen yarışmacı adı kurallara aykırı!");
+            return;
+        }
+        currentActivePlayerName = rawName; 
         switchScene(scenes.draw, scenes.class); 
     };
 }
@@ -538,11 +546,19 @@ if(btnDirektBaslat) {
                 nick = userSnap.data().nickname;
             }
             isimSor(nick, (gelenIsim) => {
+                if (!uygunIsimMi(gelenIsim) && gelenIsim !== "Misafir Yarışmacı") {
+                    alert("Topluluk kurallarına aykırı bir isim girdiniz!");
+                    return;
+                }
                 currentActivePlayerName = gelenIsim;
                 switchScene(scenes.lobby, scenes.class);
             });
         } else {
             isimSor("", (gelenIsim) => {
+                if (!uygunIsimMi(gelenIsim) && gelenIsim !== "Misafir Yarışmacı") {
+                    alert("Topluluk kurallarına aykırı bir isim girdiniz!");
+                    return;
+                }
                 currentActivePlayerName = gelenIsim;
                 switchScene(scenes.lobby, scenes.class);
             });
@@ -957,6 +973,10 @@ if(btnStartTour) {
         for(let i=1; i<=count; i++) { 
             const ti = document.getElementById(`t-name-${i}`);
             let name = ti ? ti.value.trim() : ''; if(!name) name = `${i}. Grup`; 
+            if(!uygunIsimMi(name) && !name.includes(". Grup")) {
+                alert(`${i}. Grup ismi topluluk kurallarına aykırı! Lütfen düzeltin.`);
+                return;
+            }
             tTeams.push({ id: i, name: name, score: 0, answer: null, isEliminated: false, consecutive: 0, isOnFire: false }); 
         }
         switchScene(scenes.tournamentLobby, scenes.class);
@@ -1511,20 +1531,56 @@ const authPanes = document.querySelectorAll('.auth-pane');
 
 function uygunIsimMi(metin) {
     if(!metin || metin.length < 2) return false;
+
+    // 1. ADIM: Tam metin normalizasyonu (Leet Speak zırhı)
+    let normalizedText = metin.toLowerCase();
+    normalizedText = normalizedText.replace(/[1!|]/g, 'i').replace(/[ıİ]/g, 'i')
+                 .replace(/[0]/g, 'o').replace(/[öÖ]/g, 'o')
+                 .replace(/[3]/g, 'e').replace(/[4@]/g, 'a')
+                 .replace(/[5\$]/g, 's').replace(/[şŞ]/g, 's')
+                 .replace(/[7]/g, 't').replace(/[çÇ]/g, 'c')
+                 .replace(/[ğĞ]/g, 'g').replace(/[üÜ]/g, 'u')
+                 .replace(/q/g, 'k').replace(/x/g, 'ks').replace(/w/g, 'v');
+
+    // 2. ADIM: Kelime Bazlı Tarama (Kök Yakalama - "sikolog" gibi türevleri burada avlıyoruz)
+    const kelimeler = normalizedText.split(/[\s\.\-_,\*!@#\$%\^&\(\)\[\]\{\}\\\/]+/);
     
-    const kelimeler = metin.toLowerCase().split(/[\s\.\-_,\*!@#\$%\^&\(\)\[\]\{\}\\\/]+/);
-    const kisaYasaklilar = ["mal", "it", "oc", "pic", "pij", "sik", "s1k", "amk", "aq", "sg", "göt"];
+    // Bu köklerle BAŞLAYAN kelimeler yasak (istisnalar hariç)
+    const kokYasaklilar = /^(sik|sok|yarra|yara|amc|amk|amq|aq|o[cç]|pi[cç]|pij|g[oö]t|kahp|ibn|yavs|pezev|godo|whore|slut|pussy|cock|fuck|bitch|cunt|dick)/;
+    
+    // Sadece tam eşleşmede yasak olan kısa kelimeler
+    const tamYasaklilar = /^(am|mk|sg|it|mal|oc)$/;
+
     for(let k of kelimeler) {
-        if(kisaYasaklilar.includes(k)) return false;
+        if(!k) continue;
+        let squeezedWord = k.replace(/(.)\1+/g, '$1'); // aaammmkkk -> amk
+        
+        // İstisna kelimeler (false positive engellemek için)
+        const istisnalar = ["sikke", "siklamen", "sokak", "soket"];
+        
+        if(kokYasaklilar.test(squeezedWord) && !istisnalar.includes(squeezedWord)) return false;
+        if(tamYasaklilar.test(squeezedWord)) return false;
+        
+        if(kokYasaklilar.test(k) && !istisnalar.includes(k)) return false; 
+        if(tamYasaklilar.test(k)) return false;
     }
 
-    let clean = metin.toLowerCase().replace(/[\s\.\-_,\*!@#\$%\^&\(\)\[\]\{\}\\\/]/g, '');
-    clean = clean.replace(/[1iı|!]/g, 'i').replace(/[0oö]/g, 'o').replace(/[3e]/g, 'e').replace(/[4a@]/g, 'a').replace(/[5sş$]/g, 's').replace(/[7t]/g, 't').replace(/[cç]/g, 'c').replace(/[gğ]/g, 'g').replace(/[uü]/g, 'u');
-    clean = clean.replace(/(.)\1+/g, '$1');
+    // 3. ADIM: Boşluksuz Bitişik Tarama (s i k i c i)
+    let bitisik = normalizedText.replace(/[^a-z0-9]/gi, '');
+    let squeezedBitisik = bitisik.replace(/(.)\1+/g, '$1');
 
-    const uzunYasaklilar = /siktir|skik|sikik|orosp|orosb|yarrak|yarak|gavat|kahpe|qehpe|ibne|yavsak|amcik|pezevenk|godo|kuzi|kusk|kusbeyin|gerizekal|ahmak|salak|aptal|nigg|whore|slut|pussy|cock|fuck|bitch|shit|asshole|cunt|dick|esek|eshek|kopek|inek|okuz|piclik|pij|pislik|serefsiz|göt|g0t/i;
+    // Bitişik metnin içinde GEÇMESİ bile yasak olan çok belirgin türevler (klasik, müzik vb. kelimeleri bozmaması için sik kökü tek bırakılmaz)
+    const kesinYasaklilar = /siktir|sikik|sikici|sikolog|sikcem|siker|sokuk|sokacam|orosp|orosb|yarrak|gavat|kahpe|ibne|yavsak|amcik|pezevenk|gerizekal|ahmak|aptal|nigg|whore|slut|pussy|cock|fuck|bitch|asshole|cunt|dick|piclik|serefsiz/i;
+
+    if (kesinYasaklilar.test(bitisik) || kesinYasaklilar.test(squeezedBitisik)) {
+        return false;
+    }
     
-    return !uzunYasaklilar.test(clean);
+    // Sadece kısaltmalardan oluşan boşluklu mesajlar (a m k)
+    const bitisikTamYasak = /^(amk|amq|aq|oc|pic|pij|sg|mk)$/;
+    if(bitisikTamYasak.test(squeezedBitisik)) return false;
+
+    return true;
 }
 
 function getAuthErrorMessage(errCode) {
@@ -1815,7 +1871,17 @@ if(btnSaveProf) {
         const avatar = pca ? pca.src : '';
 
         if(!name || !surname || !nickname) return alert("Ad, soyad ve kullanıcı adı alanları boş bırakılamaz.");
-        if(!uygunIsimMi(name) || !uygunIsimMi(surname) || !uygunIsimMi(nickname)) return alert("Uygunsuz kelime kullanımı tespit edildi. Lütfen kırıcı veya argo içermeyen kelimeler kullanın.");
+        
+        if(!uygunIsimMi(name) || !uygunIsimMi(surname) || !uygunIsimMi(nickname)) {
+            try {
+                await updateDoc(doc(db, "users", user.uid), { isBanned: true });
+                alert("Kullanıcı adınız veya profil bilgileriniz topluluk kurallarına aykırı tespit edildi. Sistem tarafından otomatik olarak ENGELLENDİNİZ! Uygun bir kullanıcı adı seçmeden engeliniz kaldırılmaz.");
+                location.reload();
+            } catch(e) {
+                alert("Topluluk kurallarına aykırı kelime kullanımı tespit edildi!");
+            }
+            return;
+        }
         
         try {
             await updateDoc(doc(db, "users", user.uid), { name, surname, nickname, avatar });
@@ -1871,7 +1937,7 @@ if(btnStuSub) {
                 const nick = rn ? rn.value.trim() : '';
                 
                 if(!fName || !lName || !nick) return alert("Lütfen Ad, Soyad ve Liderlik Tablosu Adı alanlarını doldurun.");
-                if(!uygunIsimMi(fName) || !uygunIsimMi(lName) || !uygunIsimMi(nick)) return alert("Uygunsuz kelime kullanımı tespit edildi. Lütfen küfür veya argo içermeyen isimler kullanın.");
+                if(!uygunIsimMi(fName) || !uygunIsimMi(lName) || !uygunIsimMi(nick)) return alert("Uygunsuz kelime kullanımı tespit edildi. Sistem kuralları gereği üyeliğiniz reddedildi. Lütfen küfür veya argo içermeyen isimler kullanın.");
                 
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
                 await setDoc(doc(db, "users", cred.user.uid), {
@@ -1993,6 +2059,7 @@ function renderAdminUsers(filterText = '') {
                 <i class="fas fa-star" style="color:#f59e0b;"></i> ${formatScore(u.totalScore || 0)} Puan
             </div>
             <div class="admin-actions">
+                <button class="btn-edit-nick" data-uid="${u.id}" data-nick="${u.nickname || ''}"><i class="fas fa-edit"></i> İsim Değiştir</button>
                 ${isBanned 
                     ? `<button class="btn-unban" data-uid="${u.id}"><i class="fas fa-check-circle"></i> Engeli Kaldır</button>`
                     : `<button class="btn-ban" data-uid="${u.id}"><i class="fas fa-ban"></i> Blokla</button>`
@@ -2002,12 +2069,38 @@ function renderAdminUsers(filterText = '') {
         adminUserList.appendChild(row);
     });
 
+    document.querySelectorAll('.btn-edit-nick').forEach(btn => {
+        btn.onclick = () => {
+            const newNick = prompt("Kullanıcı için yeni bir nickname belirleyin:", btn.dataset.nick);
+            if(newNick && newNick.trim() !== "" && newNick !== btn.dataset.nick) {
+                if(!uygunIsimMi(newNick.trim())) {
+                    alert("Uyarı: Admin olsanız bile bu isim filtreye takıldı. Lütfen daha uygun bir isim belirleyin.");
+                    return;
+                }
+                changeUserNickname(btn.dataset.uid, newNick.trim());
+            }
+        };
+    });
+    
     document.querySelectorAll('.btn-ban').forEach(btn => {
         btn.onclick = () => toggleBanStatus(btn.dataset.uid, true);
     });
     document.querySelectorAll('.btn-unban').forEach(btn => {
         btn.onclick = () => toggleBanStatus(btn.dataset.uid, false);
     });
+}
+
+async function changeUserNickname(uid, newNick) {
+    try {
+        await updateDoc(doc(db, "users", uid), { nickname: newNick });
+        const userIndex = allAdminUsers.findIndex(u => u.id === uid);
+        if(userIndex > -1) allAdminUsers[userIndex].nickname = newNick;
+        const asi = document.getElementById('admin-search-input');
+        renderAdminUsers(asi ? asi.value : '');
+        alert("Kullanıcı adı başarıyla değiştirildi.");
+    } catch(e) {
+        alert("İsim değiştirilemedi: " + e.message);
+    }
 }
 
 async function toggleBanStatus(uid, banStatus) {
