@@ -111,6 +111,10 @@ styleEnjektor.innerHTML = `
     .report-radio-label { display: flex; align-items: center; gap: 10px; color: #ddd; cursor: pointer; font-size: 1.1rem; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); transition: 0.2s;}
     .report-radio-label:hover { background: rgba(255,255,255,0.1); }
     .report-radio-label input[type="radio"] { accent-color: #ef4444; width: 18px; height: 18px; cursor: pointer;}
+
+    .season-champ { color: #f59e0b !important; text-shadow: 0 0 20px #f59e0b, 0 0 40px #f59e0b; font-weight: 900; animation: pulseGlow 2s infinite; }
+    @keyframes pulseGlow { 0% { text-shadow: 0 0 20px #f59e0b; } 50% { text-shadow: 0 0 40px #f59e0b, 0 0 10px #fff; } 100% { text-shadow: 0 0 20px #f59e0b; } }
+    .badge-icon { margin-right: 5px; font-size: 1.2em; vertical-align: middle; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
 `;
 document.head.appendChild(styleEnjektor);
 
@@ -2245,13 +2249,27 @@ function renderGlobalLeaderboard(users, type) {
     const topUsers = users.slice(0, 10);
 
     topUsers.forEach((u, i) => {
+        let badgeStr = "";
+        let nameClass = "";
+        
+        if (type === 'alltime' && i === 0) {
+            badgeStr = '<span class="badge-icon">🏆</span>';
+            nameClass = 'season-champ';
+        } else if (i === 0) {
+            badgeStr = '<span class="badge-icon">🥇</span>';
+        } else if (i === 1) {
+            badgeStr = '<span class="badge-icon">🥈</span>';
+        } else if (i === 2) {
+            badgeStr = '<span class="badge-icon">🥉</span>';
+        }
+
         const row = document.createElement('div');
         row.className = `global-lb-row rank-${i+1}`;
         row.innerHTML = `
             <div class="global-lb-rank">${i+1}</div>
             <img src="${u.avatar || kozmikAvatarlar[0].url}" class="global-lb-avatar">
             <div class="global-lb-info">
-                <h4>${u.nickname || 'Kozmik Kaptan'}</h4>
+                <h4 class="${nameClass}">${badgeStr}${u.nickname || 'Kozmik Kaptan'}</h4>
                 <p>${u.role === 'teacher' ? 'Öğretmen' : 'Öğrenci'}</p>
             </div>
             <div class="global-lb-score">${formatScore(u.displayScore)}</div>
