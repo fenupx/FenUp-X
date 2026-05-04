@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, collection, getDocs, query, orderBy, limit, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
 
 const firebaseConfig = {
@@ -103,6 +103,14 @@ styleEnjektor.innerHTML = `
     
     .btn-edit-nick { background: rgba(0, 210, 255, 0.2); color: #00d2ff; border: 1px solid #00d2ff; padding: 8px 15px; border-radius: 10px; cursor: pointer; transition: 0.3s; font-weight: bold; }
     .btn-edit-nick:hover { background: #00d2ff; color: #000; box-shadow: 0 0 15px #00d2ff; }
+    
+    .btn-report-bug { position: relative; margin-top: 25px; display: inline-flex; justify-content: center; align-items: center; gap: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.5); color: #ef4444; padding: 8px 20px; border-radius: 20px; font-size: 0.95rem; font-weight: 500; cursor: pointer; transition: 0.3s; z-index: 40; margin-bottom: 10px; }
+    .btn-report-bug:hover { background: #ef4444; color: #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); transform: translateY(-3px);}
+    
+    .report-options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px; text-align: left; }
+    .report-radio-label { display: flex; align-items: center; gap: 10px; color: #ddd; cursor: pointer; font-size: 1.1rem; padding: 10px; background: rgba(0,0,0,0.5); border-radius: 10px; border: 1px solid rgba(255,255,255,0.1); transition: 0.2s;}
+    .report-radio-label:hover { background: rgba(255,255,255,0.1); }
+    .report-radio-label input[type="radio"] { accent-color: #ef4444; width: 18px; height: 18px; cursor: pointer;}
 `;
 document.head.appendChild(styleEnjektor);
 
@@ -2303,4 +2311,144 @@ async function updateUserGlobalRank(field, type) {
     } catch (e) {
         if(rankText) rankText.textContent = "Sıra hesaplanamadı.";
     }
+}
+
+// --- 10. HATA BİLDİRİM SİSTEMİ ---
+
+// Hata Bildirim Butonlarını Ekle (Bireysel ve Turnuva Ekranlarına)
+const sq = document.getElementById('scene-quiz');
+if(sq) {
+    const btnIndReport = document.createElement('button');
+    btnIndReport.className = 'btn-report-bug';
+    btnIndReport.innerHTML = '<i class="fas fa-bug"></i> Soruyu Bildir';
+    btnIndReport.onclick = () => openReportModal(quizState.set[quizState.index]);
+    
+    const optionsGrid = document.getElementById('options-grid');
+    if(optionsGrid) {
+        optionsGrid.insertAdjacentElement('afterend', btnIndReport);
+    } else {
+        sq.appendChild(btnIndReport);
+    }
+}
+
+const stq = document.getElementById('scene-tournament-quiz');
+if(stq) {
+    const btnTourReport = document.createElement('button');
+    btnTourReport.className = 'btn-report-bug';
+    btnTourReport.innerHTML = '<i class="fas fa-bug"></i> Soruyu Bildir';
+    btnTourReport.onclick = () => openReportModal(tState.questions[tState.index] || tState.questions[0]);
+    
+    const tControls = document.querySelector('.t-controls');
+    if(tControls) {
+        tControls.insertAdjacentElement('afterend', btnTourReport);
+    } else {
+        stq.appendChild(btnTourReport);
+    }
+}
+
+// Hata Bildirim Modalını Oluştur
+const reportModal = document.createElement('div');
+reportModal.id = "report-modal";
+reportModal.className = "modal-overlay is-hidden";
+reportModal.innerHTML = `
+    <div class="modal-content glass-panel" style="max-width:500px; padding: 30px;">
+        <button id="close-report" class="close-btn"><i class="fas fa-times"></i></button>
+        <h2 style="color: #ef4444; font-size: 2rem; margin-bottom: 20px;"><i class="fas fa-exclamation-triangle"></i> Soru Bildirimi</h2>
+        <p style="color: #aaa; margin-bottom: 20px; font-size: 1rem; text-align: left;">Bu soruda ne gibi bir hata olduğunu düşünüyorsunuz? Bildiriminiz doğrudan yöneticilere iletilecektir.</p>
+        
+        <div class="report-options">
+            <label class="report-radio-label">
+                <input type="radio" name="reportType" value="hatali_soru" checked> Hatalı Soru Kökü
+            </label>
+            <label class="report-radio-label">
+                <input type="radio" name="reportType" value="yanlis_sik"> Yanlış Şıklar / Cevap Anahtarı
+            </label>
+            <label class="report-radio-label">
+                <input type="radio" name="reportType" value="yazim_hatasi"> Yazım / İmla Hatası
+            </label>
+            <label class="report-radio-label">
+                <input type="radio" name="reportType" value="mufredat_disi"> Müfredat Dışı Konu
+            </label>
+            <label class="report-radio-label">
+                <input type="radio" name="reportType" value="diger"> Diğer
+            </label>
+        </div>
+        
+        <textarea id="report-desc" class="fenupx-input" placeholder="Eklemek istediğiniz bir detay var mı? (Opsiyonel)" rows="3" style="resize: none;"></textarea>
+        
+        <button id="btn-submit-report" class="f-btn" style="background: linear-gradient(45deg, #ef4444, #b91c1c); color: #fff; width: 100%; margin-top: 10px; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);">BİLDİRİMİ GÖNDER</button>
+    </div>
+`;
+document.body.appendChild(reportModal);
+
+const clReport = document.getElementById('close-report');
+if(clReport) {
+    clReport.onclick = () => {
+        if(reportModal) reportModal.classList.add('is-hidden');
+        if(isGlobalPaused) toggleMasterPause(); // Bildirim penceresi kapanınca oyunu devam ettir
+    };
+}
+
+let currentReportedQuestion = null;
+
+function openReportModal(questionData) {
+    if(!questionData) return;
+    
+    // Arka planda oyunu durdur (süre akmasın diye)
+    if(!isGlobalPaused) toggleMasterPause();
+    
+    currentReportedQuestion = questionData;
+    if(reportModal) reportModal.classList.remove('is-hidden');
+    
+    // Modal açıldığında radyo butonunu sıfırla ve metni temizle
+    const firstRadio = document.querySelector('input[name="reportType"][value="hatali_soru"]');
+    if(firstRadio) firstRadio.checked = true;
+    const descInput = document.getElementById('report-desc');
+    if(descInput) descInput.value = "";
+}
+
+const btnSubmitReport = document.getElementById('btn-submit-report');
+if(btnSubmitReport) {
+    btnSubmitReport.onclick = async () => {
+        if(!currentReportedQuestion) return;
+        
+        btnSubmitReport.disabled = true;
+        btnSubmitReport.textContent = "Gönderiliyor...";
+        btnSubmitReport.style.opacity = "0.7";
+
+        const selectedType = document.querySelector('input[name="reportType"]:checked').value;
+        const descInput = document.getElementById('report-desc');
+        const description = descInput ? descInput.value.trim() : "";
+        
+        const user = auth.currentUser;
+        const reporterId = user ? user.uid : "Misafir";
+        const reporterName = currentActivePlayerName || "Bilinmiyor";
+
+        try {
+            await addDoc(collection(db, "reported_questions"), {
+                questionText: currentReportedQuestion.question,
+                grade: selectedGrade || "Bilinmiyor",
+                unit: selectedUnit || "Bilinmiyor",
+                difficulty: currentReportedQuestion.difficulty || "Bilinmiyor",
+                reportType: selectedType,
+                description: description,
+                reporterId: reporterId,
+                reporterName: reporterName,
+                reportedAt: new Date(),
+                status: "yeni" // Adminin sonradan "incelendi", "duzeltildi" vs. yapabilmesi için
+            });
+            
+            alert("Bildiriminiz başarıyla iletildi. Katkınız için teşekkür ederiz!");
+        } catch (e) {
+            console.error("Hata bildirimi gönderilemedi:", e);
+            alert("Bildirim gönderilirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.");
+        } finally {
+            btnSubmitReport.disabled = false;
+            btnSubmitReport.textContent = "BİLDİRİMİ GÖNDER";
+            btnSubmitReport.style.opacity = "1";
+            
+            if(reportModal) reportModal.classList.add('is-hidden');
+            if(isGlobalPaused) toggleMasterPause(); // Bildirim gönderilip modal kapanınca oyunu devam ettir
+        }
+    };
 }
