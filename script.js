@@ -1532,7 +1532,6 @@ const authPanes = document.querySelectorAll('.auth-pane');
 function uygunIsimMi(metin) {
     if(!metin || metin.length < 2) return false;
 
-    // 1. ADIM: Tam metin normalizasyonu (Leet Speak zırhı)
     let normalizedText = metin.toLowerCase();
     normalizedText = normalizedText.replace(/[1!|]/g, 'i').replace(/[ıİ]/g, 'i')
                  .replace(/[0]/g, 'o').replace(/[öÖ]/g, 'o')
@@ -1542,20 +1541,16 @@ function uygunIsimMi(metin) {
                  .replace(/[ğĞ]/g, 'g').replace(/[üÜ]/g, 'u')
                  .replace(/q/g, 'k').replace(/x/g, 'ks').replace(/w/g, 'v');
 
-    // 2. ADIM: Kelime Bazlı Tarama (Kök Yakalama - "sikolog" gibi türevleri burada avlıyoruz)
     const kelimeler = normalizedText.split(/[\s\.\-_,\*!@#\$%\^&\(\)\[\]\{\}\\\/]+/);
     
-    // Bu köklerle BAŞLAYAN kelimeler yasak (istisnalar hariç)
     const kokYasaklilar = /^(sik|sok|yarra|yara|amc|amk|amq|aq|o[cç]|pi[cç]|pij|g[oö]t|kahp|ibn|yavs|pezev|godo|whore|slut|pussy|cock|fuck|bitch|cunt|dick)/;
     
-    // Sadece tam eşleşmede yasak olan kısa kelimeler
     const tamYasaklilar = /^(am|mk|sg|it|mal|oc)$/;
 
     for(let k of kelimeler) {
         if(!k) continue;
-        let squeezedWord = k.replace(/(.)\1+/g, '$1'); // aaammmkkk -> amk
+        let squeezedWord = k.replace(/(.)\1+/g, '$1'); 
         
-        // İstisna kelimeler (false positive engellemek için)
         const istisnalar = ["sikke", "siklamen", "sokak", "soket"];
         
         if(kokYasaklilar.test(squeezedWord) && !istisnalar.includes(squeezedWord)) return false;
@@ -1565,18 +1560,15 @@ function uygunIsimMi(metin) {
         if(tamYasaklilar.test(k)) return false;
     }
 
-    // 3. ADIM: Boşluksuz Bitişik Tarama (s i k i c i)
     let bitisik = normalizedText.replace(/[^a-z0-9]/gi, '');
     let squeezedBitisik = bitisik.replace(/(.)\1+/g, '$1');
 
-    // Bitişik metnin içinde GEÇMESİ bile yasak olan çok belirgin türevler (klasik, müzik vb. kelimeleri bozmaması için sik kökü tek bırakılmaz)
     const kesinYasaklilar = /siktir|sikik|sikici|sikolog|sikcem|siker|sokuk|sokacam|orosp|orosb|yarrak|gavat|kahpe|ibne|yavsak|amcik|pezevenk|gerizekal|ahmak|aptal|nigg|whore|slut|pussy|cock|fuck|bitch|asshole|cunt|dick|piclik|serefsiz/i;
 
     if (kesinYasaklilar.test(bitisik) || kesinYasaklilar.test(squeezedBitisik)) {
         return false;
     }
     
-    // Sadece kısaltmalardan oluşan boşluklu mesajlar (a m k)
     const bitisikTamYasak = /^(amk|amq|aq|oc|pic|pij|sg|mk)$/;
     if(bitisikTamYasak.test(squeezedBitisik)) return false;
 
@@ -1629,6 +1621,11 @@ if (studentPane) {
             <i class="fas fa-eye toggle-pass-icon" id="toggle-pass"></i>
         </div>
         
+        <div class="password-container is-hidden" id="confirm-pass-container" style="display:none;">
+            <input type="password" id="student-pass-confirm" class="fenupx-input auth-input" placeholder="Şifreyi Tekrar Gir">
+            <i class="fas fa-eye toggle-pass-icon" id="toggle-pass-confirm"></i>
+        </div>
+        
         <button id="btn-student-submit" class="f-btn f-btn-ana" style="width:100%; margin-top:5px;">GİRİŞ YAP</button>
         <p style="color: #aaa; margin-top: 15px; font-size: 0.9rem;">
             <span id="student-toggle-text">Hesabın yok mu?</span> 
@@ -1656,6 +1653,27 @@ if (togglePassBtn) {
     };
     togglePassBtn.addEventListener('click', handleToggle);
     togglePassBtn.addEventListener('touchstart', handleToggle, {passive: false});
+}
+
+const togglePassConfirmBtn = document.getElementById('toggle-pass-confirm');
+if (togglePassConfirmBtn) {
+    const handleToggleConfirm = (e) => {
+        e.preventDefault(); 
+        const passConfirmInput = document.getElementById('student-pass-confirm');
+        if(passConfirmInput) {
+            if(passConfirmInput.type === "password") {
+                passConfirmInput.type = "text";
+                togglePassConfirmBtn.classList.replace('fa-eye', 'fa-eye-slash');
+                togglePassConfirmBtn.style.color = '#00d2ff';
+            } else {
+                passConfirmInput.type = "password";
+                togglePassConfirmBtn.classList.replace('fa-eye-slash', 'fa-eye');
+                togglePassConfirmBtn.style.color = '#aaa';
+            }
+        }
+    };
+    togglePassConfirmBtn.addEventListener('click', handleToggleConfirm);
+    togglePassConfirmBtn.addEventListener('touchstart', handleToggleConfirm, {passive: false});
 }
 
 const profileModal = document.createElement('div');
@@ -1831,13 +1849,22 @@ if(studentTog) {
         if(studentTog) studentTog.textContent = isStudentLoginMode ? "Hemen Üye Ol" : "Giriş Yap";
         
         const regFields = document.getElementById('register-fields');
+        const confirmPassContainer = document.getElementById('confirm-pass-container');
         if (regFields) {
             if (isStudentLoginMode) {
                 regFields.classList.add('is-hidden');
                 regFields.style.display = 'none';
+                if(confirmPassContainer) {
+                    confirmPassContainer.classList.add('is-hidden');
+                    confirmPassContainer.style.display = 'none';
+                }
             } else {
                 regFields.classList.remove('is-hidden');
                 regFields.style.display = 'flex';
+                if(confirmPassContainer) {
+                    confirmPassContainer.classList.remove('is-hidden');
+                    confirmPassContainer.style.display = 'block';
+                }
             }
         }
     };
@@ -1932,11 +1959,14 @@ if(btnStuSub) {
                 const fn = document.getElementById('student-first-name');
                 const ln = document.getElementById('student-last-name');
                 const rn = document.getElementById('student-reg-nickname');
+                const spc = document.getElementById('student-pass-confirm');
                 const fName = fn ? fn.value.trim() : '';
                 const lName = ln ? ln.value.trim() : '';
                 const nick = rn ? rn.value.trim() : '';
+                const passConfirm = spc ? spc.value : '';
                 
-                if(!fName || !lName || !nick) return alert("Lütfen Ad, Soyad ve Liderlik Tablosu Adı alanlarını doldurun.");
+                if(!fName || !lName || !nick || !passConfirm) return alert("Lütfen Ad, Soyad, Liderlik Tablosu Adı ve Şifre Tekrarı alanlarını doldurun.");
+                if(pass !== passConfirm) return alert("Şifreler eşleşmiyor! Lütfen kontrol edin.");
                 if(!uygunIsimMi(fName) || !uygunIsimMi(lName) || !uygunIsimMi(nick)) return alert("Uygunsuz kelime kullanımı tespit edildi. Sistem kuralları gereği üyeliğiniz reddedildi. Lütfen küfür veya argo içermeyen isimler kullanın.");
                 
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
