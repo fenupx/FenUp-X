@@ -599,6 +599,7 @@ function showRulesScreen() {
             <ul style="list-style: none; padding: 0;">
                 <li style="margin-bottom: 15px;"><i class="fas fa-bullseye" style="color:#22c55e; margin-right:10px; width: 25px;"></i> <b>Puanlama ve Süre:</b> Toplam 10 soru seni bekliyor. İlk 4 soru 100 puan (40 sn), 5-8. sorular 200 puan (50 sn), finaldeki son 2 soru ise 400 puan (60 sn) değerindedir.</li>
                 <li style="margin-bottom: 15px;"><i class="fas fa-stopwatch" style="color:#00d2ff; margin-right:10px; width: 25px;"></i> <b>Hız Eşittir Puan:</b> Sadece doğru bilmek yetmez! Liderlik tablosuna girmek için soruları olabildiğince <b>hızlı</b> cevaplamalısın. Kalan her saniye ekstra 5 puan olarak hanene yazılır! Misafir veya üye fark etmeksizin herkes bu kurala tabidir.</li>
+                <li style="margin-bottom: 15px;"><i class="fas fa-calendar-check" style="color:#f472b6; margin-right:10px; width: 25px;"></i> <b>Günlük Kota Sistemi:</b> Aynı üniteden gün içinde elde ettiğin yalnızca <b>en yüksek 3 skor</b> hanene yazılır. Daha fazla puan kazanmak için farklı üniteleri de tamamlaman gerekir!</li>
                 <li style="margin-bottom: 15px;"><i class="fas fa-heart-crack" style="color:#ef4444; margin-right:10px; width: 25px;"></i> <b>Hata Affetmez:</b> Jokerlerin dışında, herhangi bir soruya yanlış cevap verdiğin veya süreyi geçirdiğin anda yarışmaya veda edersin.</li>
                 <li style="margin-bottom: 15px;"><i class="fas fa-magic" style="color:#9d50bb; margin-right:10px; width: 25px;"></i> <b>Kurtarıcı Jokerler:</b> 50:50, İpucu ve Pas haklarını iyi değerlendir. 4. soruyu geçersen çok özel 'Zamanı Durdur' jokeri de aktifleşir.</li>
                 <li style="margin-bottom: 15px;"><i class="fas fa-meteor" style="color:#f59e0b; margin-right:10px; width: 25px;"></i> <b>Kara Delik (9. ve 10. Sorular):</b> 8. soruyu başarıyla geçtikten sonra Kara Delik bölgesi başlar! Son iki zorlu soruda istersen o ana kadar topladığın puanı kasaya kilitleyip yarışmadan çekilebilirsin. "Riski alıyorum" deyip devam edersen ve yanlış yaparsan, Kara Delik puanının <b>yarısını</b> yutar ve elenirsin!</li>
@@ -826,30 +827,57 @@ async function finishIndividual(msg) {
                 
                 const gradeSuffix = `_${selectedGrade}`;
 
-                let updates = {
-                    totalScore: (userData.totalScore || 0) + quizState.score,
-                    [`totalScore${gradeSuffix}`]: (userData[`totalScore${gradeSuffix}`] || 0) + quizState.score
-                };
+                // --- GÜNLÜK ÜNİTE BAZLI LİMİT SİSTEMİ ---
+                const todayStr = now.getFullYear() + "-" + (now.getMonth() + 1).toString().padStart(2, '0') + "-" + now.getDate().toString().padStart(2, '0');
+                const unitKey = `${selectedGrade}_${selectedUnit}`;
 
-                if (userData[`lastWeekId${gradeSuffix}`] === currentWeek) {
-                    updates[`weeklyScore${gradeSuffix}`] = (userData[`weeklyScore${gradeSuffix}`] || 0) + quizState.score;
+                let dailyTracker = userData.dailyTracker || { date: todayStr, units: {} };
+                if (dailyTracker.date !== todayStr) {
+                    dailyTracker = { date: todayStr, units: {} };
+                }
+                if (!dailyTracker.units) dailyTracker.units = {};
+                if (!dailyTracker.units[unitKey]) dailyTracker.units[unitKey] = [];
+
+                let scoresArray = dailyTracker.units[unitKey];
+                let scoreDiff = 0;
+
+                if (scoresArray.length < 3) {
+                    scoresArray.push(quizState.score);
+                    scoreDiff = quizState.score;
                 } else {
-                    updates[`weeklyScore${gradeSuffix}`] = quizState.score;
-                    updates[`lastWeekId${gradeSuffix}`] = currentWeek;
+                    scoresArray.sort((a, b) => a - b);
+                    if (quizState.score > scoresArray[0]) {
+                        scoreDiff = quizState.score - scoresArray[0];
+                        scoresArray[0] = quizState.score;
+                    }
                 }
 
-                if (userData[`lastMonthId${gradeSuffix}`] === currentMonth) {
-                    updates[`monthlyScore${gradeSuffix}`] = (userData[`monthlyScore${gradeSuffix}`] || 0) + quizState.score;
-                } else {
-                    updates[`monthlyScore${gradeSuffix}`] = quizState.score;
-                    updates[`lastMonthId${gradeSuffix}`] = currentMonth;
-                }
+                let updates = { dailyTracker: dailyTracker };
 
-                if (userData[`lastSeasonId${gradeSuffix}`] === currentSeason) {
-                    updates[`seasonScore${gradeSuffix}`] = (userData[`seasonScore${gradeSuffix}`] || 0) + quizState.score;
-                } else {
-                    updates[`seasonScore${gradeSuffix}`] = quizState.score;
-                    updates[`lastSeasonId${gradeSuffix}`] = currentSeason;
+                if (scoreDiff > 0) {
+                    updates.totalScore = (userData.totalScore || 0) + scoreDiff;
+                    updates[`totalScore${gradeSuffix}`] = (userData[`totalScore${gradeSuffix}`] || 0) + scoreDiff;
+
+                    if (userData[`lastWeekId${gradeSuffix}`] === currentWeek) {
+                        updates[`weeklyScore${gradeSuffix}`] = (userData[`weeklyScore${gradeSuffix}`] || 0) + scoreDiff;
+                    } else {
+                        updates[`weeklyScore${gradeSuffix}`] = scoreDiff;
+                        updates[`lastWeekId${gradeSuffix}`] = currentWeek;
+                    }
+
+                    if (userData[`lastMonthId${gradeSuffix}`] === currentMonth) {
+                        updates[`monthlyScore${gradeSuffix}`] = (userData[`monthlyScore${gradeSuffix}`] || 0) + scoreDiff;
+                    } else {
+                        updates[`monthlyScore${gradeSuffix}`] = scoreDiff;
+                        updates[`lastMonthId${gradeSuffix}`] = currentMonth;
+                    }
+
+                    if (userData[`lastSeasonId${gradeSuffix}`] === currentSeason) {
+                        updates[`seasonScore${gradeSuffix}`] = (userData[`seasonScore${gradeSuffix}`] || 0) + scoreDiff;
+                    } else {
+                        updates[`seasonScore${gradeSuffix}`] = scoreDiff;
+                        updates[`lastSeasonId${gradeSuffix}`] = currentSeason;
+                    }
                 }
 
                 await updateDoc(userRef, updates);
@@ -1081,7 +1109,8 @@ function revealTeamsForVoting() {
     }
 
     document.querySelectorAll('.t-ans-btn').forEach(btn => {
-        btn.onclick = function() {
+        const handleAns = function(e) {
+            if(e.type === 'touchstart') { e.preventDefault(); }
             if (tState.locked) return; 
             this.blur(); 
             const tid = parseInt(this.dataset.tid);
@@ -1097,6 +1126,8 @@ function revealTeamsForVoting() {
                 evaluateDuel(team, this.dataset.opt, this);
             }
         };
+        btn.onclick = handleAns;
+        btn.addEventListener('touchstart', handleAns, {passive: false});
     });
 
     const btr = document.getElementById('btn-t-reveal');
@@ -1361,13 +1392,16 @@ function renderDuelQuestion() {
     }
 
     document.querySelectorAll('.t-ans-btn').forEach(btn => {
-        btn.onclick = function() {
+        const handleDuelAns = function(e) {
+            if(e.type === 'touchstart') { e.preventDefault(); }
             if (tState.locked || isGlobalPaused) return; 
             this.blur(); 
             const tid = parseInt(this.dataset.tid);
             const team = tState.tiedTeams.find(x => x.id === tid);
             if(team) evaluateDuel(team, this.dataset.opt, this);
         };
+        btn.onclick = handleDuelAns;
+        btn.addEventListener('touchstart', handleDuelAns, {passive: false});
     });
 }
 

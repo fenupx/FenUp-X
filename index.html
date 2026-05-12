@@ -179,7 +179,16 @@
         <button id="btn-back-class" class="back-link" style="position: absolute; top: 20px; left: 25px; z-index: 10;">← Geri</button>
         
         <div id="unit-leaderboard-side" style="flex: 1; background: rgba(0,0,0,0.4); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; border: 1px solid rgba(0, 210, 255, 0.2); position: relative; overflow: hidden; max-width: 50%;">
-            <h2 style="color: #f59e0b; font-size: 2rem; margin-bottom: 15px; font-weight: bold;"><i class="fas fa-trophy"></i> Şampiyonlar Ligi</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-right: 10px;">
+                <h2 style="color: #f59e0b; font-size: 2rem; margin: 0; font-weight: bold;"><i class="fas fa-trophy"></i> Şampiyonlar Ligi</h2>
+                <div class="info-container" style="width: auto; margin: 0;">
+                    <i class="fas fa-info-circle info-icon" style="position: relative; right: 0; font-size: 1.8rem; color: #00d2ff; cursor: pointer; animation: pulse 2s infinite;"></i>
+                    <span class="tooltiptext" style="width: 280px; top: 130%; bottom: auto; right: -10px; z-index: 200;">
+                        <i class="fas fa-bolt" style="color: #f59e0b; margin-right: 5px;"></i>
+                        <b>Günlük Kota Kuralı:</b> Daha fazla konu keşfetmen için, aynı üniteden gün içinde elde ettiğin <b>sadece en yüksek 3 skor</b> tabloya yansır. Puanını artırmak için diğer ünitelere meydan oku! <br><small style="color:#aaa;">(Kotalar her gece 00:00'da yenilenir)</small>
+                    </span>
+                </div>
+            </div>
             
             <div class="lb-tabs" style="display: flex; gap: 10px; margin-bottom: 15px; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 10px;">
                 <button class="lb-tab-btn active" data-tab="weekly">Haftalık</button>
