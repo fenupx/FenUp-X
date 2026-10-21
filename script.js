@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, collection, getDocs, query, orderBy, limit, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-storage.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCJlQQH64tsze59akzcnBMPRbH2HY7rCho",
@@ -16,7 +15,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const storage = getStorage(app);
 const googleProvider = new GoogleAuthProvider();
 
 // --- 0. DİNAMİK STİL ENJEKSİYONU ---
@@ -94,12 +92,8 @@ styleEnjektor.innerHTML = `
 
     .password-container { position: relative; width: 100%; margin-bottom: 15px; }
     .password-container input { margin-bottom: 0 !important; width: 100%; padding-right: 45px; }
-    .toggle-pass-icon { position: absolute; right: 15px; top: 16px; color: #aaa; cursor: pointer; font-size: 1.2rem; transition: 0.3s; z-index: 5;}
+    .toggle-pass-icon { position: absolute; right: 15px; top: 16px; color: #aaa; cursor: pointer; font-size: 1.2rem; transition: 0.3s; z-index: 5; touch-action: manipulation; user-select: none; -webkit-user-select: none;}
     .toggle-pass-icon:hover { color: #00d2ff; }
-
-    #auth-modal .auth-tab-btn[data-target="teacher-auth"] {
-        display: none !important;
-    }
     
     .btn-edit-nick { background: rgba(0, 210, 255, 0.2); color: #00d2ff; border: 1px solid #00d2ff; padding: 8px 15px; border-radius: 10px; cursor: pointer; transition: 0.3s; font-weight: bold; }
     .btn-edit-nick:hover { background: #00d2ff; color: #000; box-shadow: 0 0 15px #00d2ff; }
@@ -333,7 +327,7 @@ if (canvas) {
     let stars = [];
     function resize() {
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        stars = Array.from({length: 150}, () => ({
+        stars = Array.from({length: 90}, () => ({
             x: Math.random() * canvas.width, y: Math.random() * canvas.height,
             r: Math.random() * 1.5, vx: (Math.random()-0.5)*0.15, vy: (Math.random()-0.5)*0.15,
             tw: Math.random() * Math.PI * 2, twSpeed: 0.02, base: 0.5
@@ -1109,8 +1103,12 @@ function revealTeamsForVoting() {
     }
 
     document.querySelectorAll('.t-ans-btn').forEach(btn => {
+        let lastTap = 0;
         const handleAns = function(e) {
-            if(e.type === 'touchstart') { e.preventDefault(); }
+            const now = Date.now();
+            if (now - lastTap < 250) return;
+            lastTap = now;
+            if (e.type === 'touchstart' && e.cancelable) { e.preventDefault(); }
             if (tState.locked) return; 
             this.blur(); 
             const tid = parseInt(this.dataset.tid);
@@ -1126,8 +1124,8 @@ function revealTeamsForVoting() {
                 evaluateDuel(team, this.dataset.opt, this);
             }
         };
+        btn.addEventListener('pointerdown', handleAns);
         btn.onclick = handleAns;
-        btn.addEventListener('touchstart', handleAns, {passive: false});
     });
 
     const btr = document.getElementById('btn-t-reveal');
@@ -1392,16 +1390,20 @@ function renderDuelQuestion() {
     }
 
     document.querySelectorAll('.t-ans-btn').forEach(btn => {
+        let lastTap = 0;
         const handleDuelAns = function(e) {
-            if(e.type === 'touchstart') { e.preventDefault(); }
+            const now = Date.now();
+            if (now - lastTap < 250) return;
+            lastTap = now;
+            if (e.type === 'touchstart' && e.cancelable) { e.preventDefault(); }
             if (tState.locked || isGlobalPaused) return; 
             this.blur(); 
             const tid = parseInt(this.dataset.tid);
             const team = tState.tiedTeams.find(x => x.id === tid);
             if(team) evaluateDuel(team, this.dataset.opt, this);
         };
+        btn.addEventListener('pointerdown', handleDuelAns);
         btn.onclick = handleDuelAns;
-        btn.addEventListener('touchstart', handleDuelAns, {passive: false});
     });
 }
 
@@ -1572,8 +1574,6 @@ const userDisplayName = document.getElementById('user-display-name');
 const userDisplayRole = document.getElementById('user-display-role');
 const authModal = document.getElementById('auth-modal');
 const btnCloseAuth = document.getElementById('btn-close-auth');
-const authTabBtns = document.querySelectorAll('.auth-tab-btn');
-const authPanes = document.querySelectorAll('.auth-pane');
 
 function uygunIsimMi(metin) {
     if(!metin || metin.length < 2) return false;
@@ -1633,7 +1633,7 @@ function getAuthErrorMessage(errCode) {
     }
 }
 
-document.addEventListener('touchstart', (e) => {
+document.addEventListener('pointerdown', (e) => {
     const isTooltipIcon = e.target.classList && e.target.classList.contains('info-icon');
     document.querySelectorAll('.tooltiptext').forEach(t => {
         if (isTooltipIcon && e.target.nextElementSibling === t) {
@@ -1682,8 +1682,12 @@ if (studentPane) {
 
 const togglePassBtn = document.getElementById('toggle-pass');
 if (togglePassBtn) {
+    let lastTogglePass = 0;
     const handleToggle = (e) => {
-        e.preventDefault(); 
+        if (e.cancelable) e.preventDefault();
+        const now = Date.now();
+        if (now - lastTogglePass < 250) return;
+        lastTogglePass = now;
         const passInput = document.getElementById('student-pass');
         if(passInput) {
             if(passInput.type === "password") {
@@ -1697,14 +1701,18 @@ if (togglePassBtn) {
             }
         }
     };
+    togglePassBtn.addEventListener('pointerdown', handleToggle);
     togglePassBtn.addEventListener('click', handleToggle);
-    togglePassBtn.addEventListener('touchstart', handleToggle, {passive: false});
 }
 
 const togglePassConfirmBtn = document.getElementById('toggle-pass-confirm');
 if (togglePassConfirmBtn) {
+    let lastToggleConfirm = 0;
     const handleToggleConfirm = (e) => {
-        e.preventDefault(); 
+        if (e.cancelable) e.preventDefault();
+        const now = Date.now();
+        if (now - lastToggleConfirm < 250) return;
+        lastToggleConfirm = now;
         const passConfirmInput = document.getElementById('student-pass-confirm');
         if(passConfirmInput) {
             if(passConfirmInput.type === "password") {
@@ -1718,8 +1726,8 @@ if (togglePassConfirmBtn) {
             }
         }
     };
+    togglePassConfirmBtn.addEventListener('pointerdown', handleToggleConfirm);
     togglePassConfirmBtn.addEventListener('click', handleToggleConfirm);
-    togglePassConfirmBtn.addEventListener('touchstart', handleToggleConfirm, {passive: false});
 }
 
 const profileModal = document.createElement('div');
@@ -1795,12 +1803,8 @@ onAuthStateChanged(auth, async (user) => {
                 };
             }
             if(userDisplayName) userDisplayName.textContent = fullAd;
-            if(userDisplayRole) userDisplayRole.textContent = userData.role === 'teacher' ? 'Öğretmen' : (userData.role === 'admin' ? 'Sistem Yöneticisi' : 'Öğrenci');
+            if(userDisplayRole) userDisplayRole.textContent = userData.role === 'admin' ? 'Sistem Yöneticisi' : 'Öğrenci';
             
-            const btnTT = document.getElementById('btn-teacher-tools');
-            if((userData.role === 'teacher' || userData.role === 'admin') && btnTT) {
-                btnTT.classList.remove('is-hidden');
-            }
             const btnAP = document.getElementById('btn-admin-panel');
             if(userData.role === 'admin' && btnAP) {
                 btnAP.classList.remove('is-hidden');
@@ -1872,16 +1876,6 @@ if(authModal) {
         if (e.target === authModal) authModal.classList.add('is-hidden'); 
     };
 }
-
-authTabBtns.forEach(btn => {
-    btn.onclick = () => {
-        authTabBtns.forEach(b => b.classList.remove('active'));
-        authPanes.forEach(p => p.classList.add('is-hidden'));
-        btn.classList.add('active');
-        const t = document.getElementById(btn.dataset.target);
-        if(t) t.classList.remove('is-hidden');
-    };
-});
 
 let isStudentLoginMode = true; 
 const studentTog = document.getElementById('student-toggle-link');
@@ -2304,7 +2298,7 @@ function renderGlobalLeaderboard(users, type) {
             <img src="${u.avatar || kozmikAvatarlar[0].url}" class="global-lb-avatar">
             <div class="global-lb-info">
                 <h4 class="${nameClass}">${badgeStr}${u.nickname || 'Kozmik Kaptan'}</h4>
-                <p>${u.role === 'teacher' ? 'Öğretmen' : 'Öğrenci'}</p>
+                <p>Öğrenci</p>
             </div>
             <div class="global-lb-score">${formatScore(u.displayScore)}</div>
         `;
