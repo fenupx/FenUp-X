@@ -384,6 +384,7 @@ function switchScene(from, to) {
     }
 
     if (to.id === "scene-unit") {
+        if (selectedGrade && typeof updateUnitCards === "function") updateUnitCards(selectedGrade);
         const lbSide = document.getElementById('unit-leaderboard-side');
         if (activeMode === "bireysel") {
             if(lbSide) lbSide.classList.remove('is-hidden');
@@ -608,8 +609,8 @@ function updateUnitCards(grade) {
         const u = card.dataset.unit;
         const title = names[u] || "";
         card.innerHTML = title 
-            ? `<span class="unit-card-num">${u}. Ünite</span><span class="unit-card-title">${title}</span>`
-            : `<span class="unit-card-num">${u}. Ünite</span>`;
+            ? `<div class="unit-card-num">${u}. Ünite</div><div class="unit-card-title">${title}</div>`
+            : `<div class="unit-card-num">${u}. Ünite</div>`;
     });
 }
 
