@@ -91,7 +91,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 }
 .unit-card {
   display: flex; flex-direction: column; justify-content: center; align-items: center;
-  gap: 5px; min-height: 82px;
+  gap: 5px; min-height: 82px; min-width: 0; width: 100%; box-sizing: border-box;
 }
 .unit-card-num {
   display: block; width: 100%;
@@ -101,7 +101,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .unit-card-title {
   display: block; width: 100%;
   font-size: 0.98rem; font-weight: 600; color: rgba(255, 255, 255, 0.92);
-  line-height: 1.25; text-align: center; word-break: break-word;
+  line-height: 1.25; text-align: center; word-break: break-word; overflow-wrap: anywhere;
   transition: color 0.3s ease; pointer-events: none;
 }
 .mode-btn i { font-size: 3rem; margin-bottom: 15px; display: block; color: var(--neon-blue); }
@@ -476,14 +476,14 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     .desktop-only { display: none !important; }
     
     /* Mobil Liderlik Tablosu Bölünmüş Ekran Düzenlemesi */
-    .split-scene { flex-direction: column !important; gap: 20px !important; overflow-y: auto !important; max-height: none !important;}
-    #unit-leaderboard-side { max-width: 100% !important; order: 2; min-height: 400px !important;}
-    #unit-selection-side { order: 1; }
+    .split-scene { flex-direction: column !important; gap: 20px !important; overflow-y: auto !important; overflow-x: hidden !important; max-height: none !important;}
+    #unit-leaderboard-side { max-width: 100% !important; width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; order: 2; min-height: 400px !important;}
+    #unit-selection-side { order: 1; width: 100% !important; max-width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; }
     #scene-unit h2 { font-size: 2rem !important; margin-top: 30px !important; }
-    #unit-list { gap: 10px !important; }
-    .unit-card { padding: 12px 8px !important; min-height: 74px; }
+    #unit-list { grid-template-columns: 1fr !important; gap: 10px !important; width: 100% !important; max-width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; }
+    .unit-card { grid-column: 1 / -1 !important; width: 100% !important; max-width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; padding: 14px 12px !important; min-height: auto; word-break: break-word; overflow-wrap: anywhere; }
     .unit-card-num { font-size: 1.05rem; }
-    .unit-card-title { font-size: 0.85rem; line-height: 1.2; }
+    .unit-card-title { font-size: 0.9rem; line-height: 1.25; word-break: break-word; overflow-wrap: anywhere; }
     
     /* Mobil Modal ve Admin Panel Düzenlemeleri */
     .admin-user-row { flex-direction: row !important; flex-wrap: wrap !important; gap: 10px !important; align-items: center !important; justify-content: space-between !important; padding: 15px 5px !important; }
@@ -491,6 +491,11 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     .admin-user-stats { width: auto !important; text-align: left !important; font-size: 1.1rem !important; }
     .admin-actions { width: auto !important; justify-content: flex-end !important; }
     .btn-ban, .btn-unban { padding: 8px 15px !important; font-size: 0.9rem !important; margin: 0 !important; }
+}
+
+@media (max-width: 640px) {
+    #unit-list { grid-template-columns: 1fr !important; gap: 10px !important; width: 100% !important; max-width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; }
+    .unit-card { grid-column: 1 / -1 !important; width: 100% !important; max-width: 100% !important; min-width: 0 !important; box-sizing: border-box !important; padding: 12px 10px !important; word-break: break-word; overflow-wrap: anywhere; }
 }
 
 /* --- YENİ EKLENENLER: GLOBAL LİDERLİK TABLOSU --- */
