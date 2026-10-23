@@ -572,9 +572,51 @@ if(btnDirektBaslat) {
     };
 }
 
+const unitNamesByGrade = {
+    "5": {
+        "1": "Gökyüzündeki Komşularımız ve Biz",
+        "2": "Kuvveti Tanıyalım",
+        "3": "Canlıların Yapısına Yolculuk",
+        "4": "Işığın Dünyası",
+        "5": "Maddenin Doğası",
+        "6": "Yaşamımızın Vazgeçilmezi: Elektrik",
+        "7": "Sürdürülebilir Yaşam ve Geri Dönüşüm"
+    },
+    "6": {
+        "1": "Güneş Sistemi ve Tutulmalar",
+        "2": "Kuvvetin Etkisinde Hareket",
+        "3": "Canlılarda Sistemler",
+        "4": "Işığın Yansıması ve Renkler",
+        "5": "Maddenin Ayırt Edici Özellikleri",
+        "6": "Elektriğin İletimi ve Direnç",
+        "7": "Sürdürülebilir Yaşam ve Etkileşim"
+    },
+    "7": {
+        "1": "Uzay Çağı",
+        "2": "Kuvvet ve Enerjiyi Keşfedelim",
+        "3": "Vücudumuzdaki Sistemler",
+        "4": "Işığın Kırılması ve Mercekler",
+        "5": "Maddenin Doğasına Yolculuk",
+        "6": "Elektriklenme",
+        "7": "Sürdürülebilir Yaşam ve Enerji"
+    }
+};
+
+function updateUnitCards(grade) {
+    const names = unitNamesByGrade[String(grade)] || {};
+    document.querySelectorAll('.unit-card').forEach(card => {
+        const u = card.dataset.unit;
+        const title = names[u] || "";
+        card.innerHTML = title 
+            ? `<span class="unit-card-num">${u}. Ünite</span><span class="unit-card-title">${title}</span>`
+            : `<span class="unit-card-num">${u}. Ünite</span>`;
+    });
+}
+
 document.querySelectorAll('.class-card').forEach(c => c.onclick = function() { 
     if(this.classList.contains('disabled')) return; 
     selectedGrade = this.dataset.grade; 
+    updateUnitCards(selectedGrade);
     switchScene(scenes.class, scenes.unit); 
 });
 

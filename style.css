@@ -89,12 +89,26 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
   cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: center;
 }
+.unit-card {
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  gap: 5px; min-height: 82px;
+}
+.unit-card-num {
+  font-size: 1.2rem; font-weight: 800; color: var(--neon-blue);
+  letter-spacing: 0.5px; transition: color 0.3s ease; pointer-events: none;
+}
+.unit-card-title {
+  font-size: 0.98rem; font-weight: 600; color: rgba(255, 255, 255, 0.92);
+  line-height: 1.25; text-align: center; word-break: break-word;
+  transition: color 0.3s ease; pointer-events: none;
+}
 .mode-btn i { font-size: 3rem; margin-bottom: 15px; display: block; color: var(--neon-blue); }
 
 @media (hover: hover) {
   .mode-btn:hover, .class-card:hover:not(.disabled), .unit-card:hover { 
     background: var(--neon-blue); color: #000; border-color: #fff; transform: scale(1.08); 
   }
+  .unit-card:hover .unit-card-num, .unit-card:hover .unit-card-title { color: #000; }
   .answer-btn:hover { border-color: var(--neon-blue); background: rgba(0, 210, 255, 0.1); transform:translateY(-5px); }
   .t-ans-btn:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
 }
@@ -464,6 +478,10 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     #unit-leaderboard-side { max-width: 100% !important; order: 2; min-height: 400px !important;}
     #unit-selection-side { order: 1; }
     #scene-unit h2 { font-size: 2rem !important; margin-top: 30px !important; }
+    #unit-list { gap: 10px !important; }
+    .unit-card { padding: 12px 8px !important; min-height: 74px; }
+    .unit-card-num { font-size: 1.05rem; }
+    .unit-card-title { font-size: 0.85rem; line-height: 1.2; }
     
     /* Mobil Modal ve Admin Panel Düzenlemeleri */
     .admin-user-row { flex-direction: row !important; flex-wrap: wrap !important; gap: 10px !important; align-items: center !important; justify-content: space-between !important; padding: 15px 5px !important; }
