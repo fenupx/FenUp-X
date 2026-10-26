@@ -607,7 +607,7 @@ const unitNamesByGrade = {
         "3": "Canlıların Yapısına Yolculuk",
         "4": "Işığın Dünyası",
         "5": "Maddenin Doğası",
-        "6": "Yaşamımızın Vazgeçilmezi: Elektrik",
+        "6": "Yaşamımızda Elektrik",
         "7": "Sürdürülebilir Yaşam ve Geri Dönüşüm"
     },
     "6": {
