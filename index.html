@@ -356,13 +356,55 @@
             <div class="logo" style="font-size: 2.5rem; margin-bottom: 20px; text-align: center; cursor: default;">FenUp X</div>
             
             <div id="student-auth" class="auth-pane active">
-                <h3 id="student-auth-title" style="color: #fff; margin-bottom: 20px; font-weight: 300;">Öğrenci Girişi</h3>
+                <h3 id="student-auth-title" style="color: #fff; margin-bottom: 8px; font-weight: 300;">Öğrenci Girişi</h3>
+                <p class="auth-subtitle">Puanlarını kaydet, Şampiyonlar Ligi'nde yerini al!</p>
                 
-                <input type="text" id="student-nickname" class="fenupx-input auth-input is-hidden" placeholder="Kullanıcı Adı (Liderlik tablosu için)">
-                <input type="email" id="student-email" class="fenupx-input auth-input" placeholder="E-Posta Adresi">
-                <input type="password" id="student-pass" class="fenupx-input auth-input" placeholder="Şifre">
+                <div id="register-fields" class="is-hidden" style="display:none; flex-direction:column; width:100%;">
+                    <div class="auth-name-row">
+                        <div class="auth-field-group" style="width:50%; margin-bottom:0;">
+                            <label for="student-first-name" class="auth-label">Adın</label>
+                            <input type="text" id="student-first-name" class="fenupx-input auth-input" placeholder="Adınız">
+                        </div>
+                        <div class="auth-field-group" style="width:50%; margin-bottom:0;">
+                            <label for="student-last-name" class="auth-label">Soyadın</label>
+                            <input type="text" id="student-last-name" class="fenupx-input auth-input" placeholder="Soyadınız">
+                        </div>
+                    </div>
+                    <div class="auth-field-group">
+                        <label for="student-reg-nickname" class="auth-label">Yarışmacı Adın</label>
+                        <div class="info-container" style="margin-bottom:0;">
+                            <input type="text" id="student-reg-nickname" class="fenupx-input auth-input" placeholder="Yarışmacı Adın (Örn: Cesur Proton)" style="margin-bottom:0; width:100%; padding-right:45px;">
+                            <i class="fas fa-info-circle info-icon"></i>
+                            <span class="tooltiptext"><i class="fas fa-exclamation-triangle" style="margin-right:5px;"></i> Lütfen gerçek adınızı veya bilim temalı bir unvan seçin. Kırıcı veya argo isim kullanan hesaplar tablodan kalıcı olarak silinir.</span>
+                        </div>
+                        <small class="auth-field-hint">Şampiyonlar Ligi liderlik tablosunda görünecek yarışmacı adın (Örn: Cesur Proton).</small>
+                    </div>
+                </div>
+
+                <div class="auth-field-group">
+                    <label for="student-email" class="auth-label">E-Posta Adresi</label>
+                    <input type="email" id="student-email" class="fenupx-input auth-input" placeholder="E-Posta Adresi">
+                </div>
+                <div class="auth-field-group">
+                    <label for="student-pass" class="auth-label">Şifre</label>
+                    <div class="password-container" style="margin-bottom:0;">
+                        <input type="password" id="student-pass" class="fenupx-input auth-input" placeholder="Şifre">
+                        <i class="fas fa-eye toggle-pass-icon" id="toggle-pass"></i>
+                    </div>
+                </div>
+                <div id="forgot-password-row" class="auth-forgot-row">
+                    <a href="#" id="link-forgot-password" class="auth-forgot-link">Şifremi Unuttum?</a>
+                </div>
+                <div class="auth-field-group is-hidden" id="confirm-pass-container" style="display:none;">
+                    <label for="student-pass-confirm" class="auth-label">Şifreyi Tekrar Gir</label>
+                    <div class="password-container" style="margin-bottom:0;">
+                        <input type="password" id="student-pass-confirm" class="fenupx-input auth-input" placeholder="Şifreyi Tekrar Gir">
+                        <i class="fas fa-eye toggle-pass-icon" id="toggle-pass-confirm"></i>
+                    </div>
+                </div>
                 <button id="btn-student-submit" class="action-btn" style="width: 100%; margin: 10px 0;">GİRİŞ YAP</button>
-                <p style="color: #aaa; margin-top: 15px; font-size: 0.9rem;">
+                <p class="auth-security-note">🔒 E-postan diğer oyunculara gösterilmez. Liderlik tablosunda yarışmacı adın görünür.</p>
+                <p class="auth-toggle-row" style="color: #aaa; margin-top: 15px; font-size: 0.9rem;">
                     <span id="student-toggle-text">Hesabın yok mu?</span> 
                     <a href="#" id="student-toggle-link" style="color: var(--neon-blue); text-decoration: none;">Hemen Üye Ol</a>
                 </p>
@@ -372,6 +414,9 @@
                 <button id="btn-google-login" class="f-btn f-btn-ikinci" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem;">
                     <i class="fab fa-google" style="color: #ea4335;"></i> Google ile Devam Et
                 </button>
+                <div class="auth-guest-row">
+                    <a href="#" id="link-play-guest" class="auth-guest-link">Kayıt olmadan oyna</a>
+                </div>
             </div>
         </div>
     </div>
@@ -380,7 +425,10 @@
         <div class="modal-content glass-panel" style="max-width: 400px; text-align: center;">
             <h2 style="color:var(--neon-blue); font-size:2rem; margin-bottom:15px;">Son Bir Adım!</h2>
             <p style="margin-bottom: 20px; color:#ddd;">Liderlik tablosunda görünecek şampiyon adını belirle.</p>
-            <input type="text" id="google-nickname" class="fenupx-input auth-input" placeholder="Kullanıcı Adı" maxlength="15">
+            <div class="auth-field-group">
+                <label for="google-nickname" class="auth-label">Yarışmacı Adın</label>
+                <input type="text" id="google-nickname" class="fenupx-input auth-input" placeholder="Yarışmacı Adın" maxlength="15">
+            </div>
             <button id="btn-google-complete-submit" class="action-btn" style="width:100%;">KAYDI TAMAMLA</button>
         </div>
     </div>

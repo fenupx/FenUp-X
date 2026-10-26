@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, deleteUser, EmailAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, deleteUser, EmailAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, collection, getDocs, query, orderBy, limit, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1700,33 +1700,57 @@ document.addEventListener('pointerdown', (e) => {
 const studentPane = document.getElementById('student-auth');
 if (studentPane) {
     studentPane.innerHTML = `
-        <h3 id="student-auth-title" style="color: #fff; margin-bottom: 20px; font-weight: 300;">Öğrenci Girişi</h3>
+        <h3 id="student-auth-title" style="color: #fff; margin-bottom: 8px; font-weight: 300;">Öğrenci Girişi</h3>
+        <p class="auth-subtitle">Puanlarını kaydet, Şampiyonlar Ligi'nde yerini al!</p>
         
         <div id="register-fields" class="is-hidden" style="display:none; flex-direction:column; width:100%;">
-            <div style="display:flex; gap:10px; margin-bottom:15px; width:100%;">
-                <input type="text" id="student-first-name" class="fenupx-input auth-input" placeholder="Adınız" style="margin-bottom:0; width:50%;">
-                <input type="text" id="student-last-name" class="fenupx-input auth-input" placeholder="Soyadınız" style="margin-bottom:0; width:50%;">
+            <div class="auth-name-row">
+                <div class="auth-field-group" style="width:50%; margin-bottom:0;">
+                    <label for="student-first-name" class="auth-label">Adın</label>
+                    <input type="text" id="student-first-name" class="fenupx-input auth-input" placeholder="Adınız">
+                </div>
+                <div class="auth-field-group" style="width:50%; margin-bottom:0;">
+                    <label for="student-last-name" class="auth-label">Soyadın</label>
+                    <input type="text" id="student-last-name" class="fenupx-input auth-input" placeholder="Soyadınız">
+                </div>
             </div>
-            <div class="info-container">
-                <input type="text" id="student-reg-nickname" class="fenupx-input auth-input" placeholder="Liderlik Tablosu Adı (Örn: Cesur Proton)" style="margin-bottom:0; width:100%; padding-right:45px;">
-                <i class="fas fa-info-circle info-icon"></i>
-                <span class="tooltiptext"><i class="fas fa-exclamation-triangle" style="margin-right:5px;"></i> Lütfen gerçek adınızı veya bilim temalı bir unvan seçin. Kırıcı veya argo isim kullanan hesaplar tablodan kalıcı olarak silinir.</span>
+            <div class="auth-field-group">
+                <label for="student-reg-nickname" class="auth-label">Yarışmacı Adın</label>
+                <div class="info-container" style="margin-bottom:0;">
+                    <input type="text" id="student-reg-nickname" class="fenupx-input auth-input" placeholder="Yarışmacı Adın (Örn: Cesur Proton)" style="margin-bottom:0; width:100%; padding-right:45px;">
+                    <i class="fas fa-info-circle info-icon"></i>
+                    <span class="tooltiptext"><i class="fas fa-exclamation-triangle" style="margin-right:5px;"></i> Lütfen gerçek adınızı veya bilim temalı bir unvan seçin. Kırıcı veya argo isim kullanan hesaplar tablodan kalıcı olarak silinir.</span>
+                </div>
+                <small class="auth-field-hint">Şampiyonlar Ligi liderlik tablosunda görünecek yarışmacı adın (Örn: Cesur Proton).</small>
             </div>
         </div>
         
-        <input type="email" id="student-email" class="fenupx-input auth-input" placeholder="E-Posta Adresi">
-        <div class="password-container">
-            <input type="password" id="student-pass" class="fenupx-input auth-input" placeholder="Şifre">
-            <i class="fas fa-eye toggle-pass-icon" id="toggle-pass"></i>
+        <div class="auth-field-group">
+            <label for="student-email" class="auth-label">E-Posta Adresi</label>
+            <input type="email" id="student-email" class="fenupx-input auth-input" placeholder="E-Posta Adresi">
+        </div>
+        <div class="auth-field-group">
+            <label for="student-pass" class="auth-label">Şifre</label>
+            <div class="password-container" style="margin-bottom:0;">
+                <input type="password" id="student-pass" class="fenupx-input auth-input" placeholder="Şifre">
+                <i class="fas fa-eye toggle-pass-icon" id="toggle-pass"></i>
+            </div>
+        </div>
+        <div id="forgot-password-row" class="auth-forgot-row">
+            <a href="#" id="link-forgot-password" class="auth-forgot-link">Şifremi Unuttum?</a>
         </div>
         
-        <div class="password-container is-hidden" id="confirm-pass-container" style="display:none;">
-            <input type="password" id="student-pass-confirm" class="fenupx-input auth-input" placeholder="Şifreyi Tekrar Gir">
-            <i class="fas fa-eye toggle-pass-icon" id="toggle-pass-confirm"></i>
+        <div class="auth-field-group is-hidden" id="confirm-pass-container" style="display:none;">
+            <label for="student-pass-confirm" class="auth-label">Şifreyi Tekrar Gir</label>
+            <div class="password-container" style="margin-bottom:0;">
+                <input type="password" id="student-pass-confirm" class="fenupx-input auth-input" placeholder="Şifreyi Tekrar Gir">
+                <i class="fas fa-eye toggle-pass-icon" id="toggle-pass-confirm"></i>
+            </div>
         </div>
         
         <button id="btn-student-submit" class="f-btn f-btn-ana" style="width:100%; margin-top:5px;">GİRİŞ YAP</button>
-        <p style="color: #aaa; margin-top: 15px; font-size: 0.9rem;">
+        <p class="auth-security-note">🔒 E-postan diğer oyunculara gösterilmez. Liderlik tablosunda yarışmacı adın görünür.</p>
+        <p class="auth-toggle-row" style="color: #aaa; margin-top: 15px; font-size: 0.9rem;">
             <span id="student-toggle-text">Hesabın yok mu?</span> 
             <a href="#" id="student-toggle-link" style="color: var(--neon-blue); text-decoration: none;">Hemen Üye Ol</a>
         </p>
@@ -1808,14 +1832,23 @@ profileModal.innerHTML = `
             </div>
         </div>
 
-        <div style="display:flex; gap:10px; margin-bottom:15px;">
-            <input type="text" id="p-name" class="fenupx-input" placeholder="Ad" style="margin-bottom:0; width:50%;">
-            <input type="text" id="p-surname" class="fenupx-input" placeholder="Soyad" style="margin-bottom:0; width:50%;">
+        <div class="auth-name-row">
+            <div class="auth-field-group" style="width:50%; margin-bottom:0;">
+                <label for="p-name" class="auth-label">Adın</label>
+                <input type="text" id="p-name" class="fenupx-input" placeholder="Ad" style="margin-bottom:0; width:100%;">
+            </div>
+            <div class="auth-field-group" style="width:50%; margin-bottom:0;">
+                <label for="p-surname" class="auth-label">Soyadın</label>
+                <input type="text" id="p-surname" class="fenupx-input" placeholder="Soyad" style="margin-bottom:0; width:100%;">
+            </div>
         </div>
-        <div class="info-container">
-            <input type="text" id="p-nickname" class="fenupx-input" placeholder="Liderlik Tablosu Adı" style="width:100%; margin-bottom:0; padding-right:45px;">
-            <i class="fas fa-info-circle info-icon"></i>
-            <span class="tooltiptext"><i class="fas fa-exclamation-triangle" style="margin-right:5px;"></i> Kırıcı veya argo isim kullanan hesaplar tablodan kalıcı olarak silinir.</span>
+        <div class="auth-field-group">
+            <label for="p-nickname" class="auth-label">Yarışmacı Adın</label>
+            <div class="info-container" style="margin-bottom:0;">
+                <input type="text" id="p-nickname" class="fenupx-input" placeholder="Yarışmacı Adın" style="width:100%; margin-bottom:0; padding-right:45px;">
+                <i class="fas fa-info-circle info-icon"></i>
+                <span class="tooltiptext"><i class="fas fa-exclamation-triangle" style="margin-right:5px;"></i> Kırıcı veya argo isim kullanan hesaplar tablodan kalıcı olarak silinir.</span>
+            </div>
         </div>
         
         <button id="btn-save-profile" class="f-btn f-btn-ana" style="width:100%; margin-top:5px;">GÜNCELLE</button>
@@ -1967,6 +2000,7 @@ if(studentTog) {
         
         const regFields = document.getElementById('register-fields');
         const confirmPassContainer = document.getElementById('confirm-pass-container');
+        const forgotPassRow = document.getElementById('forgot-password-row');
         if (regFields) {
             if (isStudentLoginMode) {
                 regFields.classList.add('is-hidden');
@@ -1975,15 +2009,53 @@ if(studentTog) {
                     confirmPassContainer.classList.add('is-hidden');
                     confirmPassContainer.style.display = 'none';
                 }
+                if(forgotPassRow) {
+                    forgotPassRow.classList.remove('is-hidden');
+                }
             } else {
                 regFields.classList.remove('is-hidden');
                 regFields.style.display = 'flex';
                 if(confirmPassContainer) {
                     confirmPassContainer.classList.remove('is-hidden');
-                    confirmPassContainer.style.display = 'block';
+                    confirmPassContainer.style.display = 'flex';
+                }
+                if(forgotPassRow) {
+                    forgotPassRow.classList.add('is-hidden');
                 }
             }
         }
+    };
+}
+
+const linkForgotPass = document.getElementById('link-forgot-password');
+if (linkForgotPass) {
+    linkForgotPass.onclick = async (e) => {
+        e.preventDefault();
+        const se = document.getElementById('student-email');
+        const email = se ? se.value.trim() : '';
+        if (!email) {
+            alert("Şifre sıfırlama bağlantısı gönderebilmemiz için lütfen E-Posta Adresi alanına e-postanızı girin.");
+            if (se) se.focus();
+            return;
+        }
+        try {
+            await sendPasswordResetEmail(auth, email);
+            alert("Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Lütfen gelen kutunuzu ve spam klasörünü kontrol edin.");
+        } catch (err) {
+            if (err.code === 'auth/too-many-requests') {
+                alert("Kısa sürede çok fazla istek gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin.");
+            } else {
+                alert("İşlem Hatası: " + getAuthErrorMessage(err.code));
+            }
+        }
+    };
+}
+
+const linkPlayGuest = document.getElementById('link-play-guest');
+if (linkPlayGuest) {
+    linkPlayGuest.onclick = (e) => {
+        e.preventDefault();
+        if (authModal) authModal.classList.add('is-hidden');
     };
 }
 
@@ -2130,7 +2202,7 @@ if(btnSaveProf) {
         const nickname = pNick ? pNick.value.trim() : '';
         const avatar = pca ? pca.src : '';
 
-        if(!name || !surname || !nickname) return alert("Ad, soyad ve kullanıcı adı alanları boş bırakılamaz.");
+        if(!name || !surname || !nickname) return alert("Ad, soyad ve yarışmacı adı alanları boş bırakılamaz.");
         
         if(!uygunIsimMi(name) || !uygunIsimMi(surname) || !uygunIsimMi(nickname)) {
             try {
@@ -2288,7 +2360,7 @@ if(btnStuSub) {
                 const nick = rn ? rn.value.trim() : '';
                 const passConfirm = spc ? spc.value : '';
                 
-                if(!fName || !lName || !nick || !passConfirm) return alert("Lütfen Ad, Soyad, Liderlik Tablosu Adı ve Şifre Tekrarı alanlarını doldurun.");
+                if(!fName || !lName || !nick || !passConfirm) return alert("Lütfen Ad, Soyad, Yarışmacı Adın ve Şifre Tekrarı alanlarını doldurun.");
                 if(pass !== passConfirm) return alert("Şifreler eşleşmiyor! Lütfen kontrol edin.");
                 if(!uygunIsimMi(fName) || !uygunIsimMi(lName) || !uygunIsimMi(nick)) return alert("Uygunsuz kelime kullanımı tespit edildi. Sistem kuralları gereği üyeliğiniz reddedildi. Lütfen küfür veya argo içermeyen isimler kullanın.");
                 
