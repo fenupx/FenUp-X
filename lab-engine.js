@@ -643,11 +643,9 @@ export function openExperimentWorkspace(expId) {
     const is73 = (expId === "7.3");
     const is74 = (expId === "7.4");
 
-    // HUD Panelleri
+    // HUD Paneli (Sadece Deney 7.3)
     const hud73 = document.getElementById('hud-exp-7-3');
-    const hud74 = document.getElementById('hud-exp-7-4');
     if (hud73) hud73.classList.toggle('is-hidden', !is73);
-    if (hud74) hud74.classList.toggle('is-hidden', !is74);
 
     // Hızlı Kontroller (Canvas Altı)
     const qc73 = document.getElementById('quick-controls-7-3');
@@ -1088,18 +1086,7 @@ function calculateLensPhysics() {
     labState.lens.imageHeight = hi;
     labState.lens.magnification = mag;
 
-    // HUD ve Metrikleri Güncelle
-    const hudType = document.getElementById('hud-lens-type');
-    const hudFocal = document.getElementById('hud-lens-focal');
-    const hudStatus = document.getElementById('hud-lens-status');
-
-    if (hudType) hudType.textContent = isConvex ? "İnce Kenarlı (Yakınsak)" : "Kalın Kenarlı (Iraksak)";
-    if (hudFocal) hudFocal.textContent = `${focalLength} mm`;
-    if (hudStatus) {
-        hudStatus.textContent = statusText;
-        hudStatus.style.borderColor = statusColor;
-    }
-
+    // Panel Metriklerini Güncelle
     const mType = document.getElementById('metric-lens-type');
     const mF = document.getElementById('metric-lens-f');
     const mDo = document.getElementById('metric-lens-do');
@@ -1196,16 +1183,28 @@ function drawLensSimulation() {
 
     // 1. Asal Eksen
     ctx.beginPath();
-    ctx.moveTo(30 * scale, cy);
-    ctx.lineTo(W - (30 * scale), cy);
+    ctx.moveTo(25 * scale, cy);
+    ctx.lineTo(W - (25 * scale), cy);
     ctx.strokeStyle = "rgba(0, 210, 255, 0.35)";
     ctx.lineWidth = 1.8 * scale;
     ctx.stroke();
 
-    ctx.font = `${Math.max(10, 11 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = "rgba(0, 210, 255, 0.6)";
-    ctx.textAlign = "right";
-    ctx.fillText("Asal Eksen ➔", W - (35 * scale), cy - (12 * scale));
+    // Asal eksen sağ uç oku (Minimal eksen yön oku)
+    ctx.beginPath();
+    ctx.moveTo(W - (25 * scale), cy);
+    ctx.lineTo(W - (32 * scale), cy - (4 * scale));
+    ctx.moveTo(W - (25 * scale), cy);
+    ctx.lineTo(W - (32 * scale), cy + (4 * scale));
+    ctx.strokeStyle = "rgba(0, 210, 255, 0.4)";
+    ctx.lineWidth = 1.5 * scale;
+    ctx.stroke();
+
+    // Asal Eksen etiketi (Sadece sol kenarda, eksenin 18px altında çok silik/minimal)
+    ctx.font = `${Math.max(9, 10 * scale)}px 'Nunito', sans-serif`;
+    ctx.fillStyle = "rgba(148, 163, 184, 0.45)";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "top";
+    ctx.fillText("Asal Eksen", 28 * scale, cy + (18 * scale));
 
     // 2. MODA GÖRE IŞINLARIN VE CİSMİN ÇİZİMİ (Işınlar altta akar)
     if (mode === "parallel") {
@@ -1217,7 +1216,7 @@ function drawLensSimulation() {
     // 3. Merceğin Çizimi (Cam Gövde & Sembolik Oklar)
     drawLensElement(ctx, cx, cy, isConvex, scale);
 
-    // 4. Odak ve Merkez Noktaları (F1, 2F1, F2, 2F2, O) - Koruyucu arka plan rozetiyle ışınların üstünde ferahça görünür
+    // 4. Odak ve Merkez Noktaları (F1, 2F1, F2, 2F2, O) - Eksen çizgisinin net 18px altında
     drawFocalPoint(ctx, cx - f, cy, "F₁", scale);
     drawFocalPoint(ctx, cx - (2 * f), cy, "2F₁", scale);
     drawFocalPoint(ctx, cx + f, cy, "F₂", scale);
@@ -1225,26 +1224,15 @@ function drawLensSimulation() {
 
     // Optik Merkez (O)
     ctx.beginPath();
-    ctx.arc(cx, cy, 2.8 * scale, 0, Math.PI * 2);
+    ctx.arc(cx, cy, 2.5 * scale, 0, Math.PI * 2);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
 
-    const oFontSize = Math.max(10, 11 * scale);
-    ctx.font = `bold ${oFontSize}px 'Nunito', sans-serif`;
+    ctx.font = `bold ${Math.max(10, 11 * scale)}px 'Nunito', sans-serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
-    const oTextW = ctx.measureText("O").width;
-    const oPadX = 4 * scale;
-    const oPadY = 2 * scale;
-    const oLabelY = cy + (8 * scale);
-
-    ctx.fillStyle = "rgba(7, 12, 27, 0.85)";
-    ctx.beginPath();
-    ctx.roundRect(cx - (oTextW / 2) - oPadX, oLabelY, oTextW + (oPadX * 2), oFontSize + (oPadY * 2), 3 * scale);
-    ctx.fill();
-
-    ctx.fillStyle = "#ffffff";
-    ctx.fillText("O", cx, oLabelY + oPadY);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+    ctx.fillText("O", cx, cy + (18 * scale));
 
     ctx.restore();
 }
@@ -1253,36 +1241,24 @@ function drawFocalPoint(ctx, x, y, label, scale) {
     ctx.save();
     // 1. Odak Noktası Diski
     ctx.beginPath();
-    ctx.arc(x, y, 2.8 * scale, 0, Math.PI * 2);
+    ctx.arc(x, y, 2.5 * scale, 0, Math.PI * 2);
     ctx.fillStyle = "#00d2ff";
     ctx.fill();
 
     // 2. Dikey Minimal Çentik
     ctx.beginPath();
-    ctx.moveTo(x, y - (5 * scale));
-    ctx.lineTo(x, y + (5 * scale));
+    ctx.moveTo(x, y - (4 * scale));
+    ctx.lineTo(x, y + (4 * scale));
     ctx.strokeStyle = "rgba(0, 210, 255, 0.5)";
     ctx.lineWidth = 1.5 * scale;
     ctx.stroke();
 
-    // 3. Etiket Arka Plan Rozeti (Işınların metni örtmesini ve harf çakışmasını önler)
-    const fontSize = Math.max(10, 11 * scale);
-    ctx.font = `bold ${fontSize}px 'Nunito', sans-serif`;
+    // 3. Etiket (Eksen çizgisinin net 18px altında)
+    ctx.font = `bold ${Math.max(10, 11 * scale)}px 'Nunito', sans-serif`;
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
-    const textW = ctx.measureText(label).width;
-    const padX = 4 * scale;
-    const padY = 2 * scale;
-    const labelY = y + (8 * scale);
-
-    ctx.fillStyle = "rgba(7, 12, 27, 0.85)";
-    ctx.beginPath();
-    ctx.roundRect(x - (textW / 2) - padX, labelY, textW + (padX * 2), fontSize + (padY * 2), 3 * scale);
-    ctx.fill();
-
-    // 4. Etiket Metni
     ctx.fillStyle = "#93c5fd";
-    ctx.fillText(label, x, labelY + padY);
+    ctx.fillText(label, x, y + (18 * scale));
     ctx.restore();
 }
 
@@ -1306,11 +1282,6 @@ function drawLensElement(ctx, cx, cy, isConvex, scale) {
         // Çift Dışa Ok Sembolü (▲ ve ▼)
         drawArrowHead(ctx, cx, cy - lensH, -Math.PI / 2, 10 * scale, "#38bdf8");
         drawArrowHead(ctx, cx, cy + lensH, Math.PI / 2, 10 * scale, "#38bdf8");
-
-        ctx.font = `bold ${Math.max(12, 14 * scale)}px 'Nunito', sans-serif`;
-        ctx.fillStyle = "#38bdf8";
-        ctx.textAlign = "center";
-        ctx.fillText("İnce Kenarlı (Yakınsak) Mercek", cx, cy - lensH - (14 * scale));
     } else {
         // Kalın Kenarlı Mercek (Ortası İnce, Kenarları Kalın)
         const edgeW = 18 * scale;
@@ -1330,11 +1301,6 @@ function drawLensElement(ctx, cx, cy, isConvex, scale) {
         // İçe Doğru Ok Sembolleri (▼ ve ▲)
         drawArrowHead(ctx, cx, cy - lensH, Math.PI / 2, 10 * scale, "#c084fc");
         drawArrowHead(ctx, cx, cy + lensH, -Math.PI / 2, 10 * scale, "#c084fc");
-
-        ctx.font = `bold ${Math.max(12, 14 * scale)}px 'Nunito', sans-serif`;
-        ctx.fillStyle = "#c084fc";
-        ctx.textAlign = "center";
-        ctx.fillText("Kalın Kenarlı (Iraksak) Mercek", cx, cy - lensH - (14 * scale));
     }
     ctx.restore();
 }
