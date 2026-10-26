@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, deleteUser, EmailAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, deleteUser, EmailAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, collection, getDocs, query, orderBy, limit, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -852,6 +852,15 @@ async function finishIndividual(msg) {
     
     const user = auth.currentUser;
     if (user && quizState.score > 0) {
+        const hasGoogleProv = (user.providerData || []).some(p => p.providerId === 'google.com');
+        if (!user.emailVerified && !hasGoogleProv) {
+            try { await user.reload(); } catch(e) {}
+        }
+        const currentUserAfterReload = auth.currentUser || user;
+        const isVerifiedNow = currentUserAfterReload.emailVerified === true || (currentUserAfterReload.providerData || []).some(p => p.providerId === 'google.com');
+        if (!isVerifiedNow) {
+            alert("Yarışmayı tamamladın! Puanının Şampiyonlar Ligi liderlik tablosuna kaydedilmesi için e-posta adresini doğrulaman gerekiyor. Profil menüsünden doğrulama bağlantısını tekrar gönderebilirsin.");
+        } else {
         try {
             const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
@@ -920,6 +929,7 @@ async function finishIndividual(msg) {
                 await updateDoc(userRef, updates);
             }
         } catch (e) { console.error("Puan kaydedilemedi:", e); }
+        }
     }
 
     const quizEndEl = document.getElementById('quiz-end'); 
@@ -1789,6 +1799,15 @@ profileModal.innerHTML = `
             <div class="avatar-grid" id="avatar-selector"></div>
         </div>
 
+        <div id="email-verify-box" class="email-verify-box is-hidden">
+            <p class="email-verify-text">E-posta adresiniz henüz doğrulanmadı. Puanlarınızın liderlik tablosuna kaydedilmesi için e-postanızı doğrulayın.</p>
+            <p id="email-verify-feedback" class="email-verify-feedback is-hidden"></p>
+            <div class="email-verify-actions">
+                <button type="button" id="btn-resend-verification" class="f-btn f-btn-ikinci">Doğrulama E-postası Gönder</button>
+                <button type="button" id="btn-check-verification" class="f-btn f-btn-ana">Doğruladım, Kontrol Et</button>
+            </div>
+        </div>
+
         <div style="display:flex; gap:10px; margin-bottom:15px;">
             <input type="text" id="p-name" class="fenupx-input" placeholder="Ad" style="margin-bottom:0; width:50%;">
             <input type="text" id="p-surname" class="fenupx-input" placeholder="Soyad" style="margin-bottom:0; width:50%;">
@@ -1876,6 +1895,7 @@ onAuthStateChanged(auth, async (user) => {
 
             const lbg = document.getElementById('lb-guest-promo'); if(lbg) lbg.classList.add('is-hidden');
             const lbu = document.getElementById('lb-user-rank'); if(lbu) lbu.classList.remove('is-hidden');
+            updateEmailVerifyBox(user);
 
         } else {
             if (sessionStorage.getItem('google_auth_in_progress') === 'true') {
@@ -1908,6 +1928,7 @@ onAuthStateChanged(auth, async (user) => {
         
         const lbg = document.getElementById('lb-guest-promo'); if(lbg) lbg.classList.remove('is-hidden');
         const lbu = document.getElementById('lb-user-rank'); if(lbu) lbu.classList.add('is-hidden');
+        updateEmailVerifyBox(null);
     }
 });
 
@@ -1966,6 +1987,83 @@ if(studentTog) {
     };
 }
 
+const emailVerifyBox = document.getElementById('email-verify-box');
+const emailVerifyFeedback = document.getElementById('email-verify-feedback');
+const btnResendVerif = document.getElementById('btn-resend-verification');
+const btnCheckVerif = document.getElementById('btn-check-verification');
+
+function isUserEmailVerified(user) {
+    if (!user) return false;
+    if (user.emailVerified === true) return true;
+    const providers = (user.providerData || []).map(p => p.providerId);
+    return providers.includes('google.com');
+}
+
+function showEmailVerifyFeedback(msg, isSuccess = false) {
+    if (emailVerifyFeedback) {
+        emailVerifyFeedback.textContent = msg;
+        emailVerifyFeedback.style.color = isSuccess ? '#4ade80' : '#fde047';
+        emailVerifyFeedback.classList.remove('is-hidden');
+    } else {
+        alert(msg);
+    }
+}
+
+function updateEmailVerifyBox(user) {
+    if (!emailVerifyBox) return;
+    if (emailVerifyFeedback) {
+        emailVerifyFeedback.textContent = '';
+        emailVerifyFeedback.classList.add('is-hidden');
+    }
+    if (user && !isUserEmailVerified(user)) {
+        emailVerifyBox.classList.remove('is-hidden');
+    } else {
+        emailVerifyBox.classList.add('is-hidden');
+    }
+}
+
+if (btnResendVerif) {
+    btnResendVerif.onclick = async () => {
+        const user = auth.currentUser;
+        if (!user) return;
+        btnResendVerif.disabled = true;
+        try {
+            await sendEmailVerification(user);
+            showEmailVerifyFeedback("Doğrulama bağlantısı e-posta adresinize tekrar gönderildi. Lütfen gelen kutunuzu ve spam klasörünü kontrol edin.", true);
+        } catch (err) {
+            if (err.code === 'auth/too-many-requests') {
+                showEmailVerifyFeedback("Kısa sürede çok fazla istek gönderildi. Lütfen birkaç dakika bekleyip tekrar deneyin.");
+            } else {
+                showEmailVerifyFeedback("Doğrulama e-postası gönderilemedi. Lütfen tekrar deneyin.");
+            }
+        } finally {
+            btnResendVerif.disabled = false;
+        }
+    };
+}
+
+if (btnCheckVerif) {
+    btnCheckVerif.onclick = async () => {
+        const user = auth.currentUser;
+        if (!user) return;
+        btnCheckVerif.disabled = true;
+        try {
+            await user.reload();
+            const refreshed = auth.currentUser || user;
+            if (isUserEmailVerified(refreshed)) {
+                if (emailVerifyBox) emailVerifyBox.classList.add('is-hidden');
+                alert("E-posta adresiniz doğrulandı!");
+            } else {
+                showEmailVerifyFeedback("E-posta doğrulaması henüz tamamlanmamış görünüyor. E-postanızdaki bağlantıya tıkladıktan sonra tekrar deneyin.");
+            }
+        } catch (err) {
+            showEmailVerifyFeedback("Doğrulama durumu kontrol edilirken bir sorun oluştu.");
+        } finally {
+            btnCheckVerif.disabled = false;
+        }
+    };
+}
+
 const delConfirmBox = document.getElementById('delete-account-confirm-box');
 const delPassGroup = document.getElementById('delete-password-group');
 const delPassInput = document.getElementById('delete-confirm-password');
@@ -2005,6 +2103,7 @@ document.querySelectorAll('.dropdown-item').forEach(item => {
         item.onclick = (e) => {
             e.stopPropagation();
             resetDeleteAccountBox();
+            updateEmailVerifyBox(auth.currentUser);
             if(profileDropdown) profileDropdown.classList.add('is-hidden');
             if(profileModal) profileModal.classList.remove('is-hidden');
         };
@@ -2194,11 +2293,17 @@ if(btnStuSub) {
                 if(!uygunIsimMi(fName) || !uygunIsimMi(lName) || !uygunIsimMi(nick)) return alert("Uygunsuz kelime kullanımı tespit edildi. Sistem kuralları gereği üyeliğiniz reddedildi. Lütfen küfür veya argo içermeyen isimler kullanın.");
                 
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
+                try {
+                    await sendEmailVerification(cred.user);
+                } catch (verifyErr) {
+                    console.warn("Doğrulama e-postası gönderilemedi:", verifyErr);
+                }
                 await setDoc(doc(db, "users", cred.user.uid), {
                     name: fName, surname: lName, nickname: nick, email: email, role: "student", totalScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
                 });
+                updateEmailVerifyBox(cred.user);
                 if(authModal) authModal.classList.add('is-hidden');
-                alert(`Hoş geldin ${fName}! Kozmik maceraya hazırsın.`);
+                alert("Hesabınız oluşturuldu! E-posta adresinize bir doğrulama bağlantısı gönderdik. Hemen yarışmaya başlayabilirsiniz; puanlarınızın Şampiyonlar Ligi liderlik tablosuna kaydedilmesi için e-postanızı doğrulamanız yeterlidir.");
             }
         } catch(err) { 
             alert("İşlem Hatası: " + getAuthErrorMessage(err.code)); 

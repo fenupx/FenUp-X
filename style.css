@@ -387,6 +387,29 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     background: #dc2626 !important; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
 }
 
+/* --- E-POSTA DOĞRULAMA BİLGİLENDİRME KUTUSU --- */
+.email-verify-box {
+    margin-bottom: 15px; padding: 14px; border-radius: 14px;
+    background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.55);
+    text-align: left; width: 100%; min-width: 0; box-sizing: border-box;
+    overflow-wrap: anywhere;
+}
+.email-verify-text {
+    color: #fde68a; font-size: 0.92rem; line-height: 1.4; margin: 0 0 10px 0;
+    min-width: 0; box-sizing: border-box; overflow-wrap: anywhere;
+}
+.email-verify-feedback {
+    font-size: 0.88rem; line-height: 1.35; font-weight: 600;
+    margin: 0 0 10px 0; min-width: 0; box-sizing: border-box; overflow-wrap: anywhere;
+}
+.email-verify-actions {
+    display: flex; gap: 8px; width: 100%; min-width: 0; box-sizing: border-box;
+}
+.email-verify-actions .f-btn {
+    flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 9px 10px;
+    font-size: 0.88rem; overflow-wrap: anywhere; margin-top: 0;
+}
+
 /* --- ADMIN PANELİ (KULLANICI LİSTESİ TASARIMI) --- */
 .admin-user-row {
     display: flex; align-items: center; justify-content: space-between;
@@ -545,6 +568,9 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     .delete-confirm-box { padding: 14px 12px; min-width: 0; box-sizing: border-box; overflow-wrap: anywhere; }
     .delete-confirm-actions { flex-direction: column; gap: 8px; }
     .delete-confirm-actions .f-btn { width: 100%; min-width: 0; box-sizing: border-box; overflow-wrap: anywhere; }
+    .email-verify-box { padding: 12px; min-width: 0; box-sizing: border-box; overflow-wrap: anywhere; }
+    .email-verify-actions { flex-direction: column; gap: 8px; }
+    .email-verify-actions .f-btn { width: 100%; min-width: 0; box-sizing: border-box; overflow-wrap: anywhere; }
 }
 
 @media (max-width: 640px) {
