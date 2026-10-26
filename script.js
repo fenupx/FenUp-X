@@ -649,6 +649,7 @@ document.querySelectorAll('.class-card').forEach(c => {
     c.onclick = function() { 
         if(this.classList.contains('disabled')) return; 
         selectedGrade = this.dataset.grade; 
+        prefetchGradeQuestions(selectedGrade);
         updateUnitCards(selectedGrade);
         switchScene(scenes.class, scenes.unit); 
     };
@@ -746,11 +747,59 @@ if(btnStartRules) {
     };
 }
 
+// --- SORU HAVUZU ÖNBELLEK VE KARIŞTIRMA MOTORU ---
+const questionPoolCache = {};
+
+async function loadGradePool(grade) {
+    const gKey = String(grade);
+    if (questionPoolCache[gKey]) {
+        return questionPoolCache[gKey];
+    }
+    try {
+        const res = await fetch(`${gKey}_sinif_sorular.json`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        const list = data && Array.isArray(data.questions) ? data.questions : (Array.isArray(data) ? data : []);
+        questionPoolCache[gKey] = list;
+        return list;
+    } catch (err) {
+        console.error(`Soru havuzu yükleme hatası (${gKey}. sınıf):`, err);
+        return [];
+    }
+}
+
+function prefetchGradeQuestions(grade) {
+    if (!grade) return;
+    const gKey = String(grade);
+    if (!questionPoolCache[gKey]) {
+        loadGradePool(gKey).catch(err => console.warn("Ön yükleme uyarısı:", err));
+    }
+}
+
+function cloneAndShuffleQuestion(rawQ) {
+    if (!rawQ) return null;
+    const clonedOptions = Array.isArray(rawQ.answerOptions)
+        ? rawQ.answerOptions.map(opt => ({ ...opt }))
+        : [];
+    
+    // Fisher-Yates karıştırma algoritması
+    for (let i = clonedOptions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = clonedOptions[i];
+        clonedOptions[i] = clonedOptions[j];
+        clonedOptions[j] = temp;
+    }
+
+    return {
+        ...rawQ,
+        answerOptions: clonedOptions
+    };
+}
+
 async function fetchQuestions(grade, unit) {
     try {
-        const res = await fetch(`${grade}_sinif_sorular.json`); 
-        const data = await res.json();
-        const allPool = data.questions.filter(q => String(q.grade) === String(grade) && String(q.unit) === String(unit));
+        const poolData = await loadGradePool(grade);
+        const allPool = poolData.filter(q => String(q.grade) === String(grade) && String(q.unit) === String(unit));
         
         quizState.fullPool = allPool; 
 
@@ -771,23 +820,22 @@ async function fetchQuestions(grade, unit) {
         const mid = availablePool.filter(q => String(q.difficulty) === "2").sort(() => Math.random() - 0.5);
         const hard = availablePool.filter(q => String(q.difficulty) === "3").sort(() => Math.random() - 0.5);
         
-        let finalSet = [].concat(easy.slice(0, 4), mid.slice(0, 4), hard.slice(0, 2));
+        let rawSelected = [].concat(easy.slice(0, 4), mid.slice(0, 4), hard.slice(0, 2));
         
-        if(finalSet.length < 10) { 
-            const remaining = availablePool.filter(q => !finalSet.includes(q)).sort(() => Math.random() - 0.5); 
-            finalSet = finalSet.concat(remaining.slice(0, 10 - finalSet.length)); 
+        if(rawSelected.length < 10) { 
+            const remaining = availablePool.filter(q => !rawSelected.includes(q)).sort(() => Math.random() - 0.5); 
+            rawSelected = rawSelected.concat(remaining.slice(0, 10 - rawSelected.length)); 
         }
 
-        finalSet.forEach(q => {
-            for (let i = q.answerOptions.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [q.answerOptions[i], q.answerOptions[j]] = [q.answerOptions[j], q.answerOptions[i]];
-            }
-        });
+        // Deep clone & Fisher-Yates karıştırma garantisi
+        const finalSet = rawSelected.map(cloneAndShuffleQuestion);
 
-        usedQuestions.push(...finalSet);
+        usedQuestions.push(...rawSelected);
         return finalSet;
-    } catch(e) { return []; }
+    } catch(e) { 
+        console.error("fetchQuestions hatası:", e);
+        return []; 
+    }
 }
 
 const quizState = { set: [], index: 0, score: 0, locked: false, timerInterval: null, totalTimeSpent: 0, riskAcceptedForCurrent: false, fullPool: [], currentTimeLeft: 0 };
@@ -1169,9 +1217,10 @@ if(jokerPass) {
         }
 
         if (availableSameDiff.length > 0) { 
-            const newQ = availableSameDiff[Math.floor(Math.random() * availableSameDiff.length)]; 
+            const rawNewQ = availableSameDiff[Math.floor(Math.random() * availableSameDiff.length)]; 
+            const newQ = cloneAndShuffleQuestion(rawNewQ);
             quizState.set[quizState.index] = newQ; 
-            usedQuestions.push(newQ);
+            usedQuestions.push(rawNewQ);
             
             this.classList.add('is-used'); 
             this.style.opacity = "0.5"; 
@@ -1517,24 +1566,19 @@ if(btnTDuel) {
         tState.isDuel = true;
         const sq = document.getElementById('scene-tournament-quiz'); if(sq) sq.classList.add('duel-mode-active');
         
-        const res = await fetch(`${selectedGrade}_sinif_sorular.json`); 
-        const data = await res.json();
-        let hardPool = data.questions.filter(q => String(q.grade) === String(selectedGrade) && String(q.unit) === String(selectedUnit) && String(q.difficulty) === "3" && !usedQuestions.some(uq => uq.question === q.question));
+        const poolData = await loadGradePool(selectedGrade);
+        let hardPool = poolData.filter(q => String(q.grade) === String(selectedGrade) && String(q.unit) === String(selectedUnit) && String(q.difficulty) === "3" && !usedQuestions.some(uq => uq.question === q.question));
         
         if(hardPool.length === 0) {
-            hardPool = data.questions.filter(q => String(q.grade) === String(selectedGrade) && String(q.unit) === String(selectedUnit) && String(q.difficulty) === "3");
+            hardPool = poolData.filter(q => String(q.grade) === String(selectedGrade) && String(q.unit) === String(selectedUnit) && String(q.difficulty) === "3");
             const lastQ = tState.questions[tState.index]; 
             hardPool = hardPool.filter(q => q.question !== lastQ.question); 
         }
         
-        const duelQ = hardPool.length > 0 ? hardPool[Math.floor(Math.random() * hardPool.length)] : tState.questions[0]; 
+        const rawDuelQ = hardPool.length > 0 ? hardPool[Math.floor(Math.random() * hardPool.length)] : tState.questions[0]; 
+        const duelQ = cloneAndShuffleQuestion(rawDuelQ);
         
-        for (let i = duelQ.answerOptions.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [duelQ.answerOptions[i], duelQ.answerOptions[j]] = [duelQ.answerOptions[j], duelQ.answerOptions[i]];
-        }
-        
-        usedQuestions.push(duelQ); 
+        usedQuestions.push(rawDuelQ); 
         
         tState.questions = [duelQ]; 
         tState.index = 0;
