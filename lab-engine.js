@@ -1106,17 +1106,23 @@ function calculateEnergyInstantValues() {
         energy.potentialEnergy = Ep;
         energy.kineticEnergy = Ek;
     } else {
-        const v = Math.abs(radius * omega);
-        const Ek = 0.5 * m * (v * v);
-        const Emek = Ep + Ek;
+        const vRaw = Math.abs(radius * omega);
+        const EkRaw = 0.5 * m * (vRaw * vRaw);
+        const EmekRaw = Ep + EkRaw;
+
+        // Isı enerjisi geri dönüşsüzdür (Termodinamiğin 2. Yasası uyarınca monoton artar)
+        const currentLoss = Math.max(0, E_initial - EmekRaw);
+        energy.heatEnergy = Math.max(energy.heatEnergy, Math.min(E_initial, currentLoss));
+
+        const effectiveMek = Math.max(0, E_initial - energy.heatEnergy);
+        const effectiveEk = Math.max(0, effectiveMek - Ep);
+        const v = Math.sqrt(Math.max(0, (2 * effectiveEk) / m));
 
         energy.totalEnergy = E_initial;
-        energy.heatEnergy = Math.max(0, Math.min(E_initial, E_initial - Emek));
-
         energy.currentHeight = hCur;
         energy.currentSpeed = v;
         energy.potentialEnergy = Ep;
-        energy.kineticEnergy = Ek;
+        energy.kineticEnergy = effectiveEk;
     }
 
     updateEnergyMetrics();
@@ -1135,6 +1141,7 @@ function updateEnergyPhysics() {
 
     const g = energy.gravity;
     const damping = energy.frictionEnabled ? 0.22 : 0;
+    const maxRelRad = energy.releaseAngle * (Math.PI / 180);
 
     if (energy.mode === "pendulum") {
         const p = energy.pendulum;
@@ -1145,8 +1152,13 @@ function updateEnergyPhysics() {
             p.omega += alpha * subDt;
             p.angle += p.omega * subDt;
 
-            if (energy.frictionEnabled) {
-                if (Math.abs(p.angle) < 0.004 && Math.abs(p.omega) < 0.004) {
+            if (!energy.frictionEnabled) {
+                // Sürtünmesiz ortamda tepe noktasını aşamaz
+                if (p.angle > maxRelRad) { p.angle = maxRelRad; p.omega = 0; }
+                if (p.angle < -maxRelRad) { p.angle = -maxRelRad; p.omega = 0; }
+            } else {
+                // Sürtünmeli ortamda genlik sönümlenir ve dipte doğal olarak durur
+                if (Math.abs(p.angle) < 0.003 && Math.abs(p.omega) < 0.003) {
                     p.angle = 0;
                     p.omega = 0;
                     break;
@@ -1162,8 +1174,11 @@ function updateEnergyPhysics() {
             r.omega += alpha * subDt;
             r.angle += r.omega * subDt;
 
-            if (energy.frictionEnabled) {
-                if (Math.abs(r.angle) < 0.004 && Math.abs(r.omega) < 0.004) {
+            if (!energy.frictionEnabled) {
+                if (r.angle > maxRelRad) { r.angle = maxRelRad; r.omega = 0; }
+                if (r.angle < -maxRelRad) { r.angle = -maxRelRad; r.omega = 0; }
+            } else {
+                if (Math.abs(r.angle) < 0.003 && Math.abs(r.omega) < 0.003) {
                     r.angle = 0;
                     r.omega = 0;
                     break;
@@ -1783,16 +1798,30 @@ function calculateOpticsPhysics() {
         labState.optics.criticalAngle = null;
     }
 
-    // Snell Kanunu: n1 * sin(theta1) = n2 * sin(theta2)
     const rad1 = (incidentAngle * Math.PI) / 180;
     const sinTheta2 = (n1 / n2) * Math.sin(rad1);
 
-    if (sinTheta2 > 1.000001) {
-        labState.optics.isTotalInternalReflection = true;
-        labState.optics.refractedAngle = null;
+    if (incidentAngle === 0) {
+        // Dik geliş (i = 0°): Doğrultu değişmez, kırılma açısı tam 0.0°
+        labState.optics.isTotalInternalReflection = false;
+        labState.optics.refractedAngle = 0.0;
+    } else if (n1 > n2 && criticalAngle !== null) {
+        if (Math.abs(incidentAngle - criticalAngle) < 0.25) {
+            // Tam sınır açısı: Kırılan ışın yüzeyi sıyırır (r = 90.0°)
+            labState.optics.isTotalInternalReflection = false;
+            labState.optics.refractedAngle = 90.0;
+        } else if (incidentAngle > criticalAngle) {
+            // Sınır açısından büyük: Tam Yansıma (kırılan ışın yok)
+            labState.optics.isTotalInternalReflection = true;
+            labState.optics.refractedAngle = null;
+        } else {
+            labState.optics.isTotalInternalReflection = false;
+            const rad2 = Math.asin(Math.min(1.0, sinTheta2));
+            labState.optics.refractedAngle = rad2 * (180 / Math.PI);
+        }
     } else {
         labState.optics.isTotalInternalReflection = false;
-        const rad2 = Math.asin(Math.min(1, sinTheta2));
+        const rad2 = Math.asin(Math.min(1.0, sinTheta2));
         labState.optics.refractedAngle = rad2 * (180 / Math.PI);
     }
 
@@ -1816,15 +1845,15 @@ function updateOpticsHUDAndMetrics() {
     let behaviorColor = "#00d2ff";
 
     if (incidentAngle === 0) {
-        behaviorText = "Yüzeye Dik (Doğrultu Değişmez)";
+        behaviorText = "Yüzeye Dik (Kırılmaz, Sürat Değişir)";
         behaviorColor = "#f59e0b";
-        if (hudRef) hudRef.textContent = `0°`;
+        if (hudRef) hudRef.textContent = `0.0°`;
     } else if (isTotalInternalReflection) {
         behaviorText = "⚡ TAM YANSIMA (Kırılma Yok!)";
         behaviorColor = "#ef4444";
         if (hudRef) hudRef.textContent = `Yok (Yansıdı)`;
-    } else if (criticalAngle && Math.abs(incidentAngle - criticalAngle) < 0.5) {
-        behaviorText = "Sınır Açısı (Yüzeyi Yalar - 90°)";
+    } else if (refractedAngle === 90.0 || (criticalAngle && Math.abs(incidentAngle - criticalAngle) < 0.25)) {
+        behaviorText = "Sınır Açısı (Yüzeyi Sıyırır - 90.0°)";
         behaviorColor = "#f59e0b";
         if (hudRef) hudRef.textContent = `90.0°`;
     } else if (med1.n < med2.n) {
@@ -1945,11 +1974,8 @@ function drawOpticsSimulation() {
     const reflectY = originY - Math.cos(rad1) * radius;
 
     if (isTotalInternalReflection) {
-        drawLaserBeam(ctx, originX, originY, reflectX, reflectY, "#ff0055", 4 * scale, 1.0);
-        ctx.font = `bold ${Math.max(14, 16 * scale)}px 'Nunito', sans-serif`;
-        ctx.fillStyle = "#ff0055";
-        ctx.textAlign = "center";
-        ctx.fillText("⚡ TAM YANSIMA GERÇEKLEŞTİ", originX + (120 * scale), originY - (110 * scale));
+        // %100 Yansıyan Işın (Eşit Açıyla, Tam Parlaklık)
+        drawLaserBeam(ctx, originX, originY, reflectX, reflectY, "#ff0055", 3.8 * scale, 1.0);
     } else if (incidentAngle > 0) {
         drawLaserBeam(ctx, originX, originY, reflectX, reflectY, "rgba(255, 60, 100, 0.35)", 2 * scale, 0.4);
     }
@@ -1957,8 +1983,14 @@ function drawOpticsSimulation() {
     // Kırılan Işın
     if (!isTotalInternalReflection && refractedAngle !== null) {
         const rad2 = (refractedAngle * Math.PI) / 180;
-        const refractX = originX + Math.sin(rad2) * radius;
-        const refractY = originY + Math.cos(rad2) * radius;
+        let refractX = originX + Math.sin(rad2) * radius;
+        let refractY = originY + Math.cos(rad2) * radius;
+
+        if (refractedAngle === 90.0) {
+            // Sınır açısında kırılan ışın ayırıcı yüzeyi milimetrik sıyırır
+            refractX = originX + radius;
+            refractY = originY;
+        }
 
         if (refractedAngle > 2) {
             ctx.beginPath();
@@ -2002,21 +2034,21 @@ function calculateLensPhysics() {
         }
     } else {
         // Mum / Cisim Görüntüsü Fiziği
-        const delta = objectDistance - fVal;
-        if (isConvex && Math.abs(delta) < 4) {
+        const isInfinityZone = isConvex && Math.abs(objectDistance - focalLength) <= 8;
+        if (isInfinityZone) {
             di = null;
             mag = null;
             hi = null;
-            statusText = "Görüntü Sonsuzda (Işınlar Paralel, Oluşmaz)";
+            statusText = "Görüntü Sonsuzda (Işınlar Paralel)";
             statusColor = "#94a3b8";
         } else {
+            const delta = objectDistance - fVal;
             di = (fVal * objectDistance) / delta;
             mag = -di / objectDistance;
             hi = mag * objectHeight;
 
             const isReal = di > 0;
-            const isErect = mag > 0;
-            const sizeDesc = Math.abs(mag) > 1.05 ? "Büyük" : Math.abs(mag) < 0.95 ? "Küçük" : "Eşit Boyda";
+            const sizeDesc = Math.abs(mag) > 1.05 ? "Büyütülmüş" : Math.abs(mag) < 0.95 ? "Küçültülmüş" : "Eşit Boyda";
 
             if (isConvex) {
                 if (isReal) {
@@ -2100,7 +2132,7 @@ function calculateLensPhysics() {
                     pedIcon.innerHTML = '<i class="fas fa-arrows-alt-h" style="color: #94a3b8;"></i>';
                     pedTitle.innerHTML = '♾️ Işınlar Paralel (Görüntü Sonsuzda):';
                     pedTitle.style.color = '#cbd5e1';
-                    pedText.textContent = 'Cisim tam odak noktasına (do = f) yerleştirildiğinde kırılan ışınlar birbirine paralel gider ve kesişmez; net görüntü oluşmaz.';
+                    pedText.textContent = 'Cisim odak noktasına (|do - f| ≤ 8 mm) yerleştirildiğinde kırılan ışınlar birbirine paralel yayılır ve kesişmez; görüntü sonsuzda kabul edilir.';
                 }
             } else {
                 pedBox.style.borderColor = "rgba(192, 132, 252, 0.55)";
@@ -2355,6 +2387,7 @@ function drawFireHeatEffect(ctx, x, y, scale) {
 }
 
 function drawCandleObjectMode(ctx, cx, cy, f, isConvex, doVal, ho, diVal, hiVal, scale) {
+    const W = canvas.width;
     const objX = cx - doVal;
     const objY = cy - ho;
 
@@ -2364,64 +2397,127 @@ function drawCandleObjectMode(ctx, cx, cy, f, isConvex, doVal, ho, diVal, hiVal,
     // 2. Işın Çizimi (Işın 1: Paralel Gelen ➔ Odaktan Kırılan)
     drawLaserBeam(ctx, objX, objY, cx, objY, "#ff3366", 2.2 * scale, 0.92);
 
+    // Asimptot / Sonsuz Bölgesi Denetimi (|do - f| <= 8 mm)
+    const isInfinityZone = isConvex && Math.abs((doVal / scale) - (f / scale)) <= 8;
+
+    if (isInfinityZone) {
+        // İnce kenarlı mercekte cisim odakta olduğunda kırılan ışınlar birbirine paralel yayılır
+        const slope = ho / f;
+        const endX = W - (35 * scale);
+        const end1Y = cy + slope * (endX - (cx + f));
+        const end2Y = cy + slope * (endX - cx);
+
+        // Kırılan Işın 1 (Odaktan geçen)
+        drawLaserBeam(ctx, cx, objY, cx + f, cy, "#38bdf8", 2.2 * scale, 0.92);
+        drawLaserBeam(ctx, cx + f, cy, endX, end1Y, "#38bdf8", 2.0 * scale, 0.85);
+
+        // Işın 2 (Optik Merkezden geçen ve Işın 1'e tam paralel giden)
+        drawLaserBeam(ctx, objX, objY, cx, cy, "#10b981", 2.2 * scale, 0.92);
+        drawLaserBeam(ctx, cx, cy, endX, end2Y, "#10b981", 2.0 * scale, 0.85);
+
+        // Asal Eksen Üzerine Zarif Sonsuzluk Notu
+        drawFarImageIndicator(ctx, cx + (150 * scale), cy + (22 * scale), "♾️ Işınlar paralel gider, görüntü sonsuzda oluşur", "center", scale);
+        return;
+    }
+
+    // Güvenli Tuval Sınırları ve Clamping (Tavan ve tabandan en az 25px emniyet payı)
+    const maxSafeHeight = cy - (25 * scale);
+
     if (isConvex) {
-        // İnce Mercekte Işın 1 F2'den Geçer
         if (diVal !== null) {
-            const imgX = cx + diVal;
-            const imgY = cy - hiVal;
-
-            if (diVal > 0) {
-                // Gerçek Görüntü: Işın F2'den geçip görüntü tepesine ulaşır
-                drawLaserBeam(ctx, cx, objY, imgX, imgY, "#38bdf8", 2.2 * scale, 0.92);
-            } else {
-                // Sanal Görüntü: Işın sağa doğru kırılır, geriye doğru sanal uzantı kesişir
-                const slope = (cy - objY) / f;
-                const endX = cx + (250 * scale);
-                const endY = cy + slope * (endX - (cx + f));
-                drawLaserBeam(ctx, cx, objY, endX, endY, "#38bdf8", 2.2 * scale, 0.92);
-
-                // Geriye Sanal Kesikli Çizgi
-                ctx.save();
-                ctx.beginPath();
-                ctx.setLineDash([4 * scale, 4 * scale]);
-                ctx.moveTo(cx, objY);
-                ctx.lineTo(imgX, imgY);
-                ctx.strokeStyle = "rgba(56, 189, 248, 0.75)";
-                ctx.lineWidth = 1.6 * scale;
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            // Işın 2 (Optik Merkezden Geçen Işın: Kırılmaz)
-            if (diVal > 0) {
-                drawLaserBeam(ctx, objX, objY, imgX, imgY, "#10b981", 2.2 * scale, 0.92);
-            } else {
-                const endX = cx + (250 * scale);
-                const slope2 = (cy - objY) / doVal;
-                const endY = cy + slope2 * (endX - cx);
-                drawLaserBeam(ctx, objX, objY, endX, endY, "#10b981", 2.2 * scale, 0.92);
-
-                // Geriye Sanal Kesikli Çizgi
-                ctx.save();
-                ctx.beginPath();
-                ctx.setLineDash([4 * scale, 4 * scale]);
-                ctx.moveTo(objX, objY);
-                ctx.lineTo(imgX, imgY);
-                ctx.strokeStyle = "rgba(16, 185, 129, 0.75)";
-                ctx.lineWidth = 1.6 * scale;
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            // Görüntü Mumunun Çizimi
             const isReal = diVal > 0;
-            drawCandle(ctx, imgX, cy, Math.abs(hiVal), isReal ? hiVal < 0 : true, isReal ? 0.95 : 0.65, scale, isReal ? "Gerçek Görüntü (Ters)" : "Sanal Görüntü (Büyüteç)", isReal);
+            const imgX = cx + diVal;
+            const rawHi = Math.abs(hiVal);
+
+            // Büyüteç Modunda (do < f) sanal görüntü boyu en fazla 2.5 * ho ile sınırlandırılır
+            const clampedHi = isReal ? Math.min(rawHi, maxSafeHeight) : Math.min(rawHi, Math.min(2.5 * ho, maxSafeHeight));
+            const imgY = isReal ? cy + clampedHi : cy - clampedHi;
+
+            if (isReal) {
+                // GERÇEK VE TERS GÖRÜNTÜ
+                const isOffScreenRight = (imgX > W - (50 * scale));
+                const targetX = isOffScreenRight ? W - (30 * scale) : imgX;
+                const slope1 = (cy - objY) / f;
+                const slope2 = (cy - objY) / doVal;
+
+                if (isOffScreenRight) {
+                    // Ekran dışı gerçek görüntü: Işınlar sağ kenara kadar uzanır, kenarda şık gösterge çıkar
+                    const target1Y = cy + slope1 * (targetX - (cx + f));
+                    const target2Y = cy + slope2 * (targetX - cx);
+
+                    drawLaserBeam(ctx, cx, objY, cx + f, cy, "#38bdf8", 2.2 * scale, 0.92);
+                    drawLaserBeam(ctx, cx + f, cy, targetX, target1Y, "#38bdf8", 2.0 * scale, 0.85);
+                    drawLaserBeam(ctx, objX, objY, cx, cy, "#10b981", 2.2 * scale, 0.92);
+                    drawLaserBeam(ctx, cx, cy, targetX, target2Y, "#10b981", 2.0 * scale, 0.85);
+
+                    drawFarImageIndicator(ctx, W - (20 * scale), cy, `di = ${Math.round(diVal / scale)} mm ➔ Ters/Gerçek`, "right", scale);
+                } else {
+                    // Ekran içi gerçek görüntü: Işınlar tam odaklanıp kesişir
+                    drawLaserBeam(ctx, cx, objY, imgX, imgY, "#38bdf8", 2.2 * scale, 0.92);
+                    drawLaserBeam(ctx, objX, objY, imgX, imgY, "#10b981", 2.2 * scale, 0.92);
+                    drawCandle(ctx, imgX, cy, clampedHi, false, 0.95, scale, "Gerçek Görüntü (Ters)", true);
+                }
+            } else {
+                // SANAL VE DÜZ GÖRÜNTÜ (BÜYÜTEÇ)
+                const isOffScreenLeft = (imgX < 45 * scale);
+                const endX = cx + (250 * scale);
+                const slope1 = (cy - objY) / f;
+                const slope2 = (cy - objY) / doVal;
+                const end1Y = cy + slope1 * (endX - (cx + f));
+                const end2Y = cy + slope2 * (endX - cx);
+
+                // Sağa giden kırılan ışınlar
+                drawLaserBeam(ctx, cx, objY, endX, end1Y, "#38bdf8", 2.2 * scale, 0.92);
+                drawLaserBeam(ctx, objX, objY, endX, end2Y, "#10b981", 2.2 * scale, 0.92);
+
+                if (isOffScreenLeft) {
+                    // Geriye doğru sanal uzantılar ekranın sol kenarında göstergeye bağlanır
+                    ctx.save();
+                    ctx.setLineDash([4 * scale, 4 * scale]);
+                    ctx.beginPath();
+                    ctx.moveTo(cx, objY);
+                    ctx.lineTo(25 * scale, cy - (slope1 * (cx - (25 * scale))));
+                    ctx.strokeStyle = "rgba(56, 189, 248, 0.75)";
+                    ctx.lineWidth = 1.6 * scale;
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.moveTo(objX, objY);
+                    ctx.lineTo(25 * scale, cy - (slope2 * (cx - (25 * scale))));
+                    ctx.strokeStyle = "rgba(16, 185, 129, 0.75)";
+                    ctx.lineWidth = 1.6 * scale;
+                    ctx.stroke();
+                    ctx.restore();
+
+                    drawFarImageIndicator(ctx, 25 * scale, cy, `di = -${Math.round(Math.abs(diVal / scale))} mm ➔ Düz/Sanal`, "left", scale);
+                } else {
+                    // Geriye Sanal Kesikli Çizgiler ve Sanal Mum
+                    ctx.save();
+                    ctx.setLineDash([4 * scale, 4 * scale]);
+                    ctx.beginPath();
+                    ctx.moveTo(cx, objY);
+                    ctx.lineTo(imgX, imgY);
+                    ctx.strokeStyle = "rgba(56, 189, 248, 0.75)";
+                    ctx.lineWidth = 1.6 * scale;
+                    ctx.stroke();
+
+                    ctx.beginPath();
+                    ctx.moveTo(objX, objY);
+                    ctx.lineTo(imgX, imgY);
+                    ctx.strokeStyle = "rgba(16, 185, 129, 0.75)";
+                    ctx.lineWidth = 1.6 * scale;
+                    ctx.stroke();
+                    ctx.restore();
+
+                    drawCandle(ctx, imgX, cy, clampedHi, true, 0.75, scale, "Sanal Görüntü (Büyüteç)", false);
+                }
+            }
         }
     } else {
         // Kalın Mercekte: Işın 1 geriye F1'e uzanarak dağılır
         if (diVal !== null) {
             const imgX = cx + diVal;
-            const imgY = cy - hiVal;
+            const clampedHi = Math.min(Math.abs(hiVal), maxSafeHeight);
 
             const slope = (objY - cy) / f;
             const endX = cx + (250 * scale);
@@ -2446,9 +2542,42 @@ function drawCandleObjectMode(ctx, cx, cy, f, isConvex, doVal, ho, diVal, hiVal,
             drawLaserBeam(ctx, objX, objY, end2X, end2Y, "#10b981", 2.2 * scale, 0.92);
 
             // Görüntü Mumunun Çizimi (Daima Sanal, Düz, Küçük)
-            drawCandle(ctx, imgX, cy, Math.abs(hiVal), true, 0.7, scale, "Sanal Görüntü (Küçük)", false);
+            drawCandle(ctx, imgX, cy, clampedHi, true, 0.75, scale, "Sanal Görüntü (Küçük)", false);
         }
     }
+}
+
+function drawFarImageIndicator(ctx, x, cy, text, align, scale) {
+    ctx.save();
+    const fontSize = Math.max(9, 11 * scale);
+    ctx.font = `bold ${fontSize}px 'Nunito', sans-serif`;
+    const textW = ctx.measureText(text).width;
+    const padX = 8 * scale;
+    const padY = 4 * scale;
+    const boxW = textW + (padX * 2);
+    const boxH = fontSize + (padY * 2);
+
+    let boxX = x;
+    if (align === "right") {
+        boxX = x - boxW;
+    } else if (align === "center") {
+        boxX = x - (boxW / 2);
+    }
+    const boxY = cy - (boxH / 2);
+
+    ctx.fillStyle = "rgba(10, 16, 30, 0.92)";
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.75)";
+    ctx.lineWidth = 1.2 * scale;
+    ctx.beginPath();
+    ctx.roundRect(boxX, boxY, boxW, boxH, 6 * scale);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = "#38bdf8";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, boxX + (boxW / 2), cy);
+    ctx.restore();
 }
 
 function drawCandle(ctx, x, baseY, height, isUpright, alpha, scale, label, isReal = false) {
@@ -2716,6 +2845,7 @@ function updateTableHeader(expId) {
 
 function recordMeasurement() {
     const expId = labState.activeExperimentId;
+    const fmt = (n, dec = 1) => (typeof n === 'number' && !isNaN(n)) ? n.toFixed(dec) : '—';
 
     if (expId === "7.2") {
         const energy = labState.energy;
@@ -2723,10 +2853,10 @@ function recordMeasurement() {
         const row = {
             id: energy.measurements.length + 1,
             col1: modeLabel,
-            col2: `${energy.mass.toFixed(1)} kg`,
-            col3: `h = ${energy.currentHeight.toFixed(2)} m · v = ${energy.currentSpeed.toFixed(2)} m/s`,
-            col4: `Ep: ${energy.potentialEnergy.toFixed(1)} J · Ek: ${energy.kineticEnergy.toFixed(1)} J`,
-            col5: `Etop: ${energy.totalEnergy.toFixed(1)} J (Eısı: ${energy.heatEnergy.toFixed(1)} J)`
+            col2: `${fmt(energy.mass, 1)} kg`,
+            col3: `h = ${fmt(energy.currentHeight, 2)} m · v = ${fmt(energy.currentSpeed, 1)} m/s`,
+            col4: `Ep: ${fmt(energy.potentialEnergy, 1)} J · Ek: ${fmt(energy.kineticEnergy, 1)} J`,
+            col5: `Etop: ${fmt(energy.totalEnergy, 1)} J (Eısı: ${fmt(energy.heatEnergy, 1)} J)`
         };
 
         energy.measurements.push(row);
@@ -2740,28 +2870,28 @@ function recordMeasurement() {
         let behaviorStr = "";
 
         if (incidentAngle === 0) {
-            refractStr = "0° (Doğrultu sabit)";
+            refractStr = "0.0° (Kırılmaz)";
             behaviorStr = med1.n === med2.n ? "Aynı Ortam" : "Hız Değişti, Doğrultu Sabit";
         } else if (isTotalInternalReflection) {
             refractStr = "Kırılma Yok";
-            behaviorStr = `Tam Yansıma (${incidentAngle}° ile yansıdı)`;
-        } else if (criticalAngle && Math.abs(incidentAngle - criticalAngle) < 0.5) {
+            behaviorStr = `Tam Yansıma (${fmt(incidentAngle, 0)}° ile yansıdı)`;
+        } else if (refractedAngle === 90.0 || (criticalAngle && Math.abs(incidentAngle - criticalAngle) < 0.25)) {
             refractStr = "90.0° (Sınır Açısı)";
-            behaviorStr = "Yüzeyi Yalar";
+            behaviorStr = "Yüzeyi Sıyırır (90°)";
         } else if (med1.n < med2.n) {
-            refractStr = `${refractedAngle.toFixed(1)}°`;
-            behaviorStr = "Normale Yaklaşır (Hız Azalır)";
+            refractStr = `${fmt(refractedAngle, 1)}°`;
+            behaviorStr = "Normale Yaklaşır (Sürat Azalır)";
         } else {
-            refractStr = `${refractedAngle.toFixed(1)}°`;
-            behaviorStr = "Normalden Uzaklaşır (Hız Artar)";
+            refractStr = `${fmt(refractedAngle, 1)}°`;
+            behaviorStr = "Normalden Uzaklaşır (Sürat Artar)";
         }
 
         const row = {
             id: labState.optics.measurements.length + 1,
             col1: `${med1.name} ➔ ${med2.name}`,
-            col2: `${incidentAngle}°`,
+            col2: `${fmt(incidentAngle, 0)}°`,
             col3: refractStr,
-            col4: `${(med1.speed / 1000).toFixed(0)}k ➔ ${(med2.speed / 1000).toFixed(0)}k km/s`,
+            col4: `${Math.round(med1.speed / 1000)}k ➔ ${Math.round(med2.speed / 1000)}k km/s`,
             col5: behaviorStr
         };
 
@@ -2770,21 +2900,20 @@ function recordMeasurement() {
     } else if (expId === "7.4") {
         const { type, mode, focalLength, objectDistance, imageDistance, magnification } = labState.lens;
         const isConvex = (type === "convex");
+        const isInfinityZone = isConvex && mode === "object" && Math.abs(objectDistance - focalLength) <= 8;
 
         let modeDesc = mode === "parallel" ? "Paralel Işın" : "Mum (Cisim)";
-        let doDesc = mode === "parallel" ? "Sonsuz" : `${objectDistance} mm`;
+        let doDesc = mode === "parallel" ? "Sonsuz" : `${fmt(objectDistance, 0)} mm`;
         let diDesc = "";
 
         if (mode === "parallel") {
-            diDesc = isConvex ? `Odakta Toplanır (f = ${focalLength} mm)` : `Odaktan Dağılır (f = -${focalLength} mm)`;
+            diDesc = isConvex ? `Odakta Toplanır (f = ${fmt(focalLength, 0)} mm)` : `Odaktan Dağılır (f = -${fmt(focalLength, 0)} mm)`;
+        } else if (isInfinityZone || imageDistance === null) {
+            diDesc = "Sonsuzda (Görüntü Oluşmaz)";
         } else {
-            if (imageDistance === null) {
-                diDesc = "Sonsuzda (Görüntü Oluşmaz)";
-            } else {
-                const isReal = imageDistance > 0;
-                const sizeText = Math.abs(magnification) > 1.05 ? "Büyük" : Math.abs(magnification) < 0.95 ? "Küçük" : "Eşit";
-                diDesc = `${Math.round(Math.abs(imageDistance))} mm (${isReal ? 'Gerçek/Ters' : 'Sanal/Düz'}, ${sizeText})`;
-            }
+            const isReal = imageDistance > 0;
+            const sizeText = Math.abs(magnification) > 1.05 ? "Büyütülmüş" : Math.abs(magnification) < 0.95 ? "Küçültülmüş" : "Eşit";
+            diDesc = `${Math.abs(Number(imageDistance)).toFixed(0)} mm (${isReal ? 'Gerçek/Ters' : 'Sanal/Düz'}, ${sizeText})`;
         }
 
         const row = {
@@ -2792,7 +2921,7 @@ function recordMeasurement() {
             col1: isConvex ? "İnce Kenarlı" : "Kalın Kenarlı",
             col2: modeDesc,
             col3: doDesc,
-            col4: `${focalLength} mm`,
+            col4: `${fmt(focalLength, 0)} mm`,
             col5: diDesc
         };
 
@@ -2888,12 +3017,21 @@ function drawProtractor(ctx, cx, cy, r, scale) {
         ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
         ctx.stroke();
 
+        // Alt Sol (Denge / Simetri Kadranı)
+        ctx.beginPath();
+        ctx.moveTo(cx - Math.sin(rad) * r, cy + Math.cos(rad) * r);
+        ctx.lineTo(cx - Math.sin(rad) * (r - tickLen), cy + Math.cos(rad) * (r - tickLen));
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+        ctx.stroke();
+
         if (deg % 30 === 0 && deg > 0) {
             ctx.font = `${Math.max(9, 10 * scale)}px sans-serif`;
             ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
             ctx.textAlign = "center";
             ctx.fillText(`${deg}°`, cx - Math.sin(rad) * (r - 24 * scale), cy - Math.cos(rad) * (r - 24 * scale) + 4 * scale);
+            ctx.fillText(`${deg}°`, cx + Math.sin(rad) * (r - 24 * scale), cy - Math.cos(rad) * (r - 24 * scale) + 4 * scale);
             ctx.fillText(`${deg}°`, cx + Math.sin(rad) * (r - 24 * scale), cy + Math.cos(rad) * (r - 24 * scale) + 4 * scale);
+            ctx.fillText(`${deg}°`, cx - Math.sin(rad) * (r - 24 * scale), cy + Math.cos(rad) * (r - 24 * scale) + 4 * scale);
         }
     }
     ctx.restore();

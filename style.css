@@ -1514,6 +1514,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     border: 2px solid rgba(0, 210, 255, 0.4);
     box-shadow: 0 0 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 210, 255, 0.2);
     background: #030712;
+    touch-action: none; /* Akıllı tahta ve dokunmatik zırhı */
 }
 #lab-canvas {
     display: block;
