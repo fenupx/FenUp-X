@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, deleteUser } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, deleteUser, EmailAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, collection, getDocs, query, orderBy, limit, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -1801,6 +1801,19 @@ profileModal.innerHTML = `
         
         <button id="btn-save-profile" class="f-btn f-btn-ana" style="width:100%; margin-top:5px;">GÜNCELLE</button>
         <button id="btn-delete-account" class="f-btn btn-danger" style="width:100%; margin-top:15px; padding: 12px; font-size:1rem;">Hesabımı Kalıcı Olarak Sil</button>
+        <div id="delete-account-confirm-box" class="delete-confirm-box is-hidden">
+            <p class="delete-confirm-warning">Dikkat: Hesabınızı sildiğinizde yarışmacı profiliniz, tüm sınıf/sezon puanlarınız ve Şampiyonlar Ligi liderlik tablosu kayıtlarınız kalıcı olarak silinecektir. Bu işlem geri alınamaz.</p>
+            <div id="delete-password-group" class="delete-reauth-group is-hidden">
+                <label for="delete-confirm-password" class="delete-confirm-label">İşlemi onaylamak için şifreniz</label>
+                <input type="password" id="delete-confirm-password" class="fenupx-input auth-input" placeholder="Şifrenizi girin">
+            </div>
+            <p id="delete-google-note" class="delete-google-info is-hidden">Devam ettiğinizde güvenlik için Google hesabınızla yeniden doğrulama yapılacaktır.</p>
+            <p id="delete-error-msg" class="delete-error-text is-hidden"></p>
+            <div class="delete-confirm-actions">
+                <button type="button" id="btn-cancel-delete" class="f-btn f-btn-ikinci">Vazgeç</button>
+                <button type="button" id="btn-confirm-delete-final" class="f-btn btn-danger-solid">Hesabımı Kalıcı Olarak Sil</button>
+            </div>
+        </div>
     </div>
 `;
 document.body.appendChild(profileModal);
@@ -1953,10 +1966,45 @@ if(studentTog) {
     };
 }
 
+const delConfirmBox = document.getElementById('delete-account-confirm-box');
+const delPassGroup = document.getElementById('delete-password-group');
+const delPassInput = document.getElementById('delete-confirm-password');
+const delGoogleNote = document.getElementById('delete-google-note');
+const delErrorMsg = document.getElementById('delete-error-msg');
+const btnCancelDel = document.getElementById('btn-cancel-delete');
+const btnConfirmDelFinal = document.getElementById('btn-confirm-delete-final');
+
+function resetDeleteAccountBox() {
+    const btnDel = document.getElementById('btn-delete-account');
+    if (btnDel) btnDel.classList.remove('is-hidden');
+    if (delConfirmBox) delConfirmBox.classList.add('is-hidden');
+    if (delPassGroup) delPassGroup.classList.add('is-hidden');
+    if (delGoogleNote) delGoogleNote.classList.add('is-hidden');
+    if (delPassInput) delPassInput.value = '';
+    if (delErrorMsg) {
+        delErrorMsg.textContent = '';
+        delErrorMsg.classList.add('is-hidden');
+    }
+    if (btnConfirmDelFinal) {
+        btnConfirmDelFinal.disabled = false;
+        btnConfirmDelFinal.textContent = 'Hesabımı Kalıcı Olarak Sil';
+    }
+}
+
+function showDeleteError(msg) {
+    if (delErrorMsg) {
+        delErrorMsg.textContent = msg;
+        delErrorMsg.classList.remove('is-hidden');
+    } else {
+        alert(msg);
+    }
+}
+
 document.querySelectorAll('.dropdown-item').forEach(item => {
     if (item.textContent.includes("Profilim")) {
         item.onclick = (e) => {
             e.stopPropagation();
+            resetDeleteAccountBox();
             if(profileDropdown) profileDropdown.classList.add('is-hidden');
             if(profileModal) profileModal.classList.remove('is-hidden');
         };
@@ -1964,7 +2012,10 @@ document.querySelectorAll('.dropdown-item').forEach(item => {
 });
 
 const clProfile = document.getElementById('close-profile');
-if(clProfile) clProfile.onclick = () => { if(profileModal) profileModal.classList.add('is-hidden'); };
+if(clProfile) clProfile.onclick = () => {
+    resetDeleteAccountBox();
+    if(profileModal) profileModal.classList.add('is-hidden');
+};
 
 const btnSaveProf = document.getElementById('btn-save-profile');
 if(btnSaveProf) {
@@ -2005,21 +2056,111 @@ if(btnSaveProf) {
 
 const btnDelAcc = document.getElementById('btn-delete-account');
 if(btnDelAcc) {
-    btnDelAcc.onclick = async () => {
-        if(confirm("DİKKAT! Hesabın ve tüm puanların kalıcı olarak silinecek. Bu işlem geri alınamaz. Devam etmek istiyor musun?")) {
-            try {
-                const user = auth.currentUser;
-                await deleteDoc(doc(db, "users", user.uid));
-                await deleteUser(user);
-                alert("Hesabın başarıyla silindi. Kozmik yolculuğunda başarılar dileriz.");
-                location.reload();
-            } catch(err) {
-                if(err.code === "auth/requires-recent-login") {
-                    alert("Güvenlik nedeniyle hesabınızı silebilmek için sistemden çıkış yapıp tekrar giriş yapmanız gerekmektedir.");
-                } else {
-                    alert("Bir hata oluştu: " + err.message);
-                }
+    btnDelAcc.onclick = () => {
+        const user = auth.currentUser;
+        if (!user) return;
+        const providers = (user.providerData || []).map(p => p.providerId);
+        const hasPasswordProvider = providers.includes('password');
+        const hasGoogleProvider = providers.includes('google.com');
+
+        btnDelAcc.classList.add('is-hidden');
+        if (delErrorMsg) {
+            delErrorMsg.textContent = '';
+            delErrorMsg.classList.add('is-hidden');
+        }
+        if (delConfirmBox) {
+            delConfirmBox.classList.remove('is-hidden');
+        }
+        if (hasPasswordProvider) {
+            if (delPassGroup) delPassGroup.classList.remove('is-hidden');
+            if (delGoogleNote) delGoogleNote.classList.add('is-hidden');
+            if (delPassInput) {
+                delPassInput.value = '';
+                setTimeout(() => delPassInput.focus(), 50);
             }
+        } else if (hasGoogleProvider) {
+            if (delPassGroup) delPassGroup.classList.add('is-hidden');
+            if (delGoogleNote) delGoogleNote.classList.remove('is-hidden');
+        }
+        if (delConfirmBox) {
+            setTimeout(() => delConfirmBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+        }
+    };
+}
+
+if (btnCancelDel) {
+    btnCancelDel.onclick = () => {
+        resetDeleteAccountBox();
+    };
+}
+
+if (btnConfirmDelFinal) {
+    btnConfirmDelFinal.onclick = async () => {
+        const user = auth.currentUser;
+        if (!user) return;
+        if (delErrorMsg) {
+            delErrorMsg.textContent = '';
+            delErrorMsg.classList.add('is-hidden');
+        }
+
+        const providers = (user.providerData || []).map(p => p.providerId);
+        const hasPasswordProvider = providers.includes('password');
+        const hasGoogleProvider = providers.includes('google.com');
+
+        if (hasPasswordProvider) {
+            const password = delPassInput ? delPassInput.value : '';
+            if (!password) {
+                showDeleteError("Lütfen işlemi onaylamak için şifrenizi girin.");
+                if (delPassInput) delPassInput.focus();
+                return;
+            }
+            btnConfirmDelFinal.disabled = true;
+            btnConfirmDelFinal.textContent = 'Doğrulanıyor...';
+            try {
+                const credential = EmailAuthProvider.credential(user.email, password);
+                await reauthenticateWithCredential(user, credential);
+            } catch (authErr) {
+                btnConfirmDelFinal.disabled = false;
+                btnConfirmDelFinal.textContent = 'Hesabımı Kalıcı Olarak Sil';
+                if (authErr.code === 'auth/wrong-password' || authErr.code === 'auth/invalid-credential') {
+                    showDeleteError("Girdiğiniz şifre hatalı. Hesabınız silinmedi.");
+                } else if (authErr.code === 'auth/too-many-requests') {
+                    showDeleteError("Çok fazla başarısız deneme yapıldı. Lütfen biraz bekleyip tekrar deneyin.");
+                } else {
+                    showDeleteError("Kimlik doğrulaması başarısız oldu. Hesabınız silinmedi.");
+                }
+                return;
+            }
+        } else if (hasGoogleProvider) {
+            btnConfirmDelFinal.disabled = true;
+            btnConfirmDelFinal.textContent = 'Doğrulanıyor...';
+            try {
+                await reauthenticateWithPopup(user, googleProvider);
+            } catch (googleErr) {
+                btnConfirmDelFinal.disabled = false;
+                btnConfirmDelFinal.textContent = 'Hesabımı Kalıcı Olarak Sil';
+                if (googleErr.code === 'auth/popup-closed-by-user' || googleErr.code === 'auth/cancelled-popup-request') {
+                    showDeleteError("Google doğrulaması iptal edildi. Hesabınız silinmedi.");
+                } else if (googleErr.code === 'auth/user-mismatch') {
+                    showDeleteError("Seçilen Google hesabı mevcut oturumla eşleşmiyor. Hesabınız silinmedi.");
+                } else {
+                    showDeleteError("Google doğrulaması tamamlanamadı. Hesabınız silinmedi.");
+                }
+                return;
+            }
+        }
+
+        try {
+            btnConfirmDelFinal.textContent = 'Siliniyor...';
+            await deleteDoc(doc(db, "users", user.uid));
+            await deleteUser(user);
+            if (profileModal) profileModal.classList.add('is-hidden');
+            alert("Hesabınız, yarışmacı profiliniz ve tüm puan kayıtlarınız kalıcı olarak silindi.");
+            location.reload();
+        } catch (err) {
+            btnConfirmDelFinal.disabled = false;
+            btnConfirmDelFinal.textContent = 'Hesabımı Kalıcı Olarak Sil';
+            showDeleteError("Hesap silinirken bir hata oluştu: " + err.message);
         }
     };
 }

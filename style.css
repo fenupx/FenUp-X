@@ -339,6 +339,54 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .auth-input { text-align: left !important; font-size: 1.1rem !important; margin-bottom: 15px !important; padding: 12px 20px !important; }
 .auth-pane { animation: promptGiris 0.3s ease-out; }
 
+/* --- HESAP SİLME ONAY VE YENİDEN DOĞRULAMA KUTUSU --- */
+.delete-confirm-box {
+    margin-top: 15px; padding: 16px; border-radius: 15px;
+    background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.55);
+    text-align: left; width: 100%; min-width: 0; box-sizing: border-box;
+    overflow-wrap: anywhere; animation: promptGiris 0.25s ease-out;
+}
+.delete-confirm-warning {
+    color: #fca5a5; font-size: 0.95rem; line-height: 1.45; margin: 0 0 12px 0;
+    min-width: 0; box-sizing: border-box; overflow-wrap: anywhere;
+}
+.delete-reauth-group {
+    display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px;
+    width: 100%; min-width: 0; box-sizing: border-box;
+}
+.delete-confirm-label {
+    color: #fff; font-size: 0.92rem; font-weight: 600;
+    min-width: 0; box-sizing: border-box; overflow-wrap: anywhere;
+}
+.delete-reauth-group .auth-input {
+    margin-bottom: 0 !important; width: 100%; min-width: 0; box-sizing: border-box;
+}
+.delete-google-info {
+    color: #e2e8f0; font-size: 0.92rem; line-height: 1.4;
+    background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 10px 12px; border-radius: 10px; margin: 0 0 12px 0;
+    min-width: 0; box-sizing: border-box; overflow-wrap: anywhere;
+}
+.delete-error-text {
+    color: #f87171; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444;
+    padding: 8px 12px; border-radius: 10px; font-size: 0.9rem; font-weight: 600;
+    margin: 0 0 12px 0; min-width: 0; box-sizing: border-box; overflow-wrap: anywhere;
+}
+.delete-confirm-actions {
+    display: flex; gap: 10px; width: 100%; min-width: 0; box-sizing: border-box;
+}
+.delete-confirm-actions .f-btn {
+    flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 11px 12px;
+    font-size: 0.95rem; overflow-wrap: anywhere; margin-top: 0;
+}
+.btn-danger-solid {
+    background: #ef4444 !important; color: #fff !important; border: 1px solid #ef4444 !important;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.35);
+}
+.btn-danger-solid:hover {
+    background: #dc2626 !important; box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+}
+
 /* --- ADMIN PANELİ (KULLANICI LİSTESİ TASARIMI) --- */
 .admin-user-row {
     display: flex; align-items: center; justify-content: space-between;
@@ -491,6 +539,12 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     .admin-user-stats { width: auto !important; text-align: left !important; font-size: 1.1rem !important; }
     .admin-actions { width: auto !important; justify-content: flex-end !important; }
     .btn-ban, .btn-unban { padding: 8px 15px !important; font-size: 0.9rem !important; margin: 0 !important; }
+}
+
+@media (max-width: 768px) {
+    .delete-confirm-box { padding: 14px 12px; min-width: 0; box-sizing: border-box; overflow-wrap: anywhere; }
+    .delete-confirm-actions { flex-direction: column; gap: 8px; }
+    .delete-confirm-actions .f-btn { width: 100%; min-width: 0; box-sizing: border-box; overflow-wrap: anywhere; }
 }
 
 @media (max-width: 640px) {
