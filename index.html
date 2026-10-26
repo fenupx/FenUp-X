@@ -286,8 +286,9 @@
 
         <div id="quiz-end" class="is-hidden" style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); border-radius:30px; display:flex; flex-direction:column; justify-content:center; align-items:center; z-index: 60;">
             <h2 id="quiz-end-title" style="font-size: 4rem; color: var(--neon-blue); margin-bottom: 10px;"></h2>
-            <p id="quiz-end-score" style="font-size: 2.5rem; margin-bottom: 30px;"></p>
-            <div style="display: flex; gap: 20px;">
+            <p id="quiz-end-score" style="font-size: 2.5rem; margin-bottom: 20px;"></p>
+            <div id="quiz-end-review-container" class="review-section-wrapper is-hidden"></div>
+            <div class="quiz-end-actions" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
                 <button id="btn-back-draw" class="action-btn secondary">KURA EKRANINA DÖN</button>
                 <button id="btn-show-leaderboard" class="action-btn">🏆 PUAN DURUMU</button>
             </div>
@@ -335,9 +336,10 @@
     </div>
 
     <div id="scene-leaderboard" class="scene is-hidden glass-panel">
-        <h2 style="font-size: 3rem; color: var(--neon-blue); margin-bottom: 30px;">Bireysel Puan Durumu</h2>
+        <h2 style="font-size: 3rem; color: var(--neon-blue); margin-bottom: 20px;">Bireysel Puan Durumu</h2>
+        <div id="leaderboard-review-container" class="review-section-wrapper"></div>
         <div id="leaderboard-list" style="width: 100%; max-width: 700px; max-height: 400px; overflow-y: auto;"></div>
-        <button id="btn-leaderboard-continue" class="action-btn" style="margin-top: 30px;">KURA EKRANINA DÖN</button>
+        <button id="btn-leaderboard-continue" class="action-btn" style="margin-top: 24px;">KURA EKRANINA DÖN</button>
     </div>
 
     <div id="admin-modal" class="modal-overlay is-hidden">

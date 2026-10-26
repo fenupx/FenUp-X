@@ -775,10 +775,87 @@ async function fetchQuestions(grade, unit) {
 
 const quizState = { set: [], index: 0, score: 0, locked: false, timerInterval: null, totalTimeSpent: 0, riskAcceptedForCurrent: false, fullPool: [], currentTimeLeft: 0 };
 let isTimerPaused = false;
+let sessionMistakes = [];
+
+function escapeReviewHtml(str) {
+    return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+}
+
+function recordSessionMistake(chosenAnswerText) {
+    const currentQ = quizState.set[quizState.index];
+    if (!currentQ) return;
+    const opts = Array.isArray(currentQ.answerOptions) ? currentQ.answerOptions : [];
+    const correctIdx = opts.findIndex(o => o && o.isCorrect);
+    const correctLetter = ["A", "B", "C", "D"][correctIdx] || "";
+    const correctOpt = correctIdx >= 0 ? opts[correctIdx] : null;
+    const correctFormatted = correctOpt
+        ? (correctLetter ? `${correctLetter}) ${correctOpt.text}` : correctOpt.text)
+        : "";
+    sessionMistakes.push({
+        question: currentQ.question || "",
+        chosenAnswer: chosenAnswerText || "Belirtilmedi",
+        correctAnswer: correctFormatted,
+        hint: currentQ.hint || "Bu soru için çözüm ipucu bulunmuyor."
+    });
+}
+
+function buildQuestionReviewHTML() {
+    if (sessionMistakes.length === 0) {
+        return `
+            <div class="question-review-card review-perfect-card">
+                <div class="review-module-header">
+                    <span class="review-module-badge"><i class="fas fa-microscope"></i> Soru Çözüm Analizi</span>
+                </div>
+                <p class="review-perfect-text">🌟 Harika! Tüm soruları doğru tamamladın.</p>
+            </div>
+        `;
+    }
+    const itemsHtml = sessionMistakes.map(m => `
+        <div class="review-mistake-item">
+            <p class="review-question-text">${escapeReviewHtml(m.question)}</p>
+            <div class="review-options-grid">
+                <div class="review-wrong-opt">
+                    <span class="review-opt-label">❌ İşaretlenen Yanlış Şık:</span>
+                    <span class="review-opt-val">${escapeReviewHtml(m.chosenAnswer)}</span>
+                </div>
+                <div class="review-correct-opt">
+                    <span class="review-opt-label">✅ Doğru Şık:</span>
+                    <span class="review-opt-val">${escapeReviewHtml(m.correctAnswer)}</span>
+                </div>
+            </div>
+            <div class="review-hint-box">
+                <div class="review-hint-title"><i class="fas fa-lightbulb"></i> Ders Kitabı İpucu / Çözüm Notu</div>
+                <p class="review-hint-text">${escapeReviewHtml(m.hint)}</p>
+            </div>
+        </div>
+    `).join("");
+
+    return `
+        <details class="question-review-card" open>
+            <summary class="review-accordion-summary">
+                <span class="review-summary-title">📖 Yanlış Yaptığın Soru ve Çözüm Notu</span>
+                <span class="review-module-badge"><i class="fas fa-microscope"></i> Soru Çözüm Analizi</span>
+            </summary>
+            <div class="review-accordion-body">
+                ${itemsHtml}
+            </div>
+        </details>
+    `;
+}
+
 function getSettings(idx) { return idx < 4 ? { time: 40, points: 100 } : idx < 8 ? { time: 50, points: 200 } : { time: 60, points: 400 }; }
 
 async function startIndividual() {
     quizState.set = await fetchQuestions(selectedGrade, selectedUnit); if(quizState.set.length === 0) return;
+    sessionMistakes = [];
+    const qeRev = document.getElementById('quiz-end-review-container');
+    if (qeRev) { qeRev.innerHTML = ""; qeRev.classList.add('is-hidden'); }
+    const lbRev = document.getElementById('leaderboard-review-container');
+    if (lbRev) { lbRev.innerHTML = ""; }
     quizState.index = 0; quizState.score = 0; quizState.totalTimeSpent = 0; quizState.currentTimeLeft = 0; quizState.riskAcceptedForCurrent = false; isTimerPaused = false;
     document.querySelectorAll('.joker-area button').forEach(btn => { btn.classList.remove('is-used', 'joker-spawn-anim'); btn.style.opacity = "1"; btn.style.pointerEvents = "auto"; btn.style.background = ""; });
     const jPause = document.getElementById('joker-pause');
@@ -857,6 +934,7 @@ function startIndividualTimer(time) {
         if(timeLeft <= 10 && timeLeft > 0 && tDisplay) { tDisplay.style.color = "#ef4444"; tDisplay.style.textShadow = "0 0 15px #ef4444"; }
         if(timeLeft <= 0) { 
             clearInterval(quizState.timerInterval); playSound(sfx.wrong); quizState.locked = true;
+            recordSessionMistake("Süre Doldu (Boş Bırakıldı)");
             if (quizState.index >= 8) { quizState.score = Math.floor(quizState.score / 2); setTimeout(() => finishIndividual("KARA DELİĞE YUTULDUN!"), 2000); } else { setTimeout(() => finishIndividual("SÜRE BİTTİ, ELENDİN!"), 2000); } 
         }
     }, 1000);
@@ -887,6 +965,10 @@ document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = function()
         } else { 
             this.classList.replace('is-pending', 'is-wrong'); playSound(sfx.wrong); 
             document.querySelectorAll('.answer-btn').forEach(b => { if(b.dataset.correct === "true") b.classList.add('is-correct'); }); 
+            const ansSpan = this.querySelector('.answer-text');
+            const ansRaw = ansSpan ? ansSpan.textContent.trim() : this.textContent.trim();
+            const chosenFormatted = this.dataset.choice ? `${this.dataset.choice}) ${ansRaw}` : ansRaw;
+            recordSessionMistake(chosenFormatted);
             setTimeout(() => { 
                 if (quizState.index >= 8) { quizState.score = Math.floor(quizState.score / 2); finishIndividual("KARA DELİĞE YUTULDUN!"); } else { finishIndividual("YANLIŞ CEVAP, ELENDİN!"); } 
             }, 3000); 
@@ -994,6 +1076,17 @@ async function finishIndividual(msg) {
     if(qeTitle) qeTitle.textContent = msg; 
     const qeScore = document.getElementById('quiz-end-score');
     if(qeScore) qeScore.textContent = `Final Puanın: ${quizState.score}`; 
+
+    const reviewHtml = buildQuestionReviewHTML();
+    const qeRev = document.getElementById('quiz-end-review-container');
+    if (qeRev) {
+        qeRev.innerHTML = reviewHtml;
+        qeRev.classList.remove('is-hidden');
+    }
+    const lbRev = document.getElementById('leaderboard-review-container');
+    if (lbRev) {
+        lbRev.innerHTML = reviewHtml;
+    }
     
     if(msg.includes("ŞAMPİYON") || msg.includes("ÇEKİLDİN")) playSound(sfx.cheer); else playSound(sfx.wrong);
 }
@@ -1013,6 +1106,8 @@ const btnShowLb = document.getElementById('btn-show-leaderboard');
 if(btnShowLb) {
     btnShowLb.onclick = () => { 
         stopSound(sfx.cheer); stopSound(sfx.wrong); const qe = document.getElementById('quiz-end'); if(qe) qe.classList.add('is-hidden'); 
+        const lbRev = document.getElementById('leaderboard-review-container');
+        if (lbRev) lbRev.innerHTML = buildQuestionReviewHTML();
         individualLeaderboard.sort((a, b) => b.score - a.score); 
         const list = document.getElementById('leaderboard-list'); if(list) { list.innerHTML = ''; 
             individualLeaderboard.forEach((p, i) => { 
@@ -1574,6 +1669,8 @@ function endTournament(msg, scoreStr) {
     }
     
     const bl = document.getElementById('btn-show-leaderboard'); if(bl) bl.style.display = "none"; 
+    const qeRev = document.getElementById('quiz-end-review-container');
+    if (qeRev) { qeRev.innerHTML = ""; qeRev.classList.add('is-hidden'); }
 }
 
 // --- 8. YASAL ZORUNLULUKLAR VE ÇEREZ YÖNETİMİ ---
