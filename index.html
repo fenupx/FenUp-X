@@ -118,12 +118,18 @@
 
     <div id="scene-lobby" class="scene is-hidden glass-panel">
         <button class="back-link btn-back-cross">← Geri</button>
-        <h3>Kura Çekimi</h3>
-        <p style="margin-bottom: 20px; color: #aaa;">Sınıf mevcudunu girin (Örn: 35)</p>
-        <input type="number" id="lobby-size" placeholder="Örn: 35" class="lobby-input">
-        <div class="btn-group">
-            <button id="btn-kura-baslat" class="action-btn">KURA ÇEK</button>
-            <button id="btn-direkt-baslat" class="action-btn secondary">HEMEN BAŞLA</button>
+        <h3>Bireysel Yarışma Başlangıcı</h3>
+        <p class="lobby-subtitle">Evde tek başına oynuyorsan doğrudan başlayabilir veya sınıfta kura çekebilirsin.</p>
+        <div class="lobby-choice-group">
+            <button id="btn-skip-draw" class="action-btn lobby-choice-primary"><i class="fas fa-play-circle"></i> Doğrudan Yarışmaya Başla</button>
+            <button id="btn-do-draw" class="action-btn secondary lobby-choice-secondary"><i class="fas fa-random"></i> Sınıfta Kura Çek</button>
+        </div>
+        <div id="lobby-draw-box" class="lobby-draw-box is-hidden">
+            <p style="margin-bottom: 12px; color: #cbd5e1;">Sınıf mevcudunu girin (Örn: 35)</p>
+            <input type="number" id="lobby-size" placeholder="Örn: 35" class="lobby-input">
+            <div class="btn-group">
+                <button id="btn-kura-baslat" class="action-btn">KURA ÇEK</button>
+            </div>
         </div>
     </div>
 
@@ -173,10 +179,10 @@
         <button class="back-link btn-back-cross">← Geri</button>
         <h2>Sınıf Seç</h2>
         <div class="grid-3">
-            <div class="class-card" data-grade="5">5. SINIF</div>
-            <div class="class-card" data-grade="6">6. SINIF</div>
-            <div class="class-card" data-grade="7">7. SINIF</div>
-            <div class="class-card disabled" title="Eylül 2027'de eklenecek">8. SINIF <br><small style="font-size:1rem; opacity:0.5;">(Yakında)</small></div>
+            <div class="class-card" data-grade="5" tabindex="0" role="button">5. SINIF</div>
+            <div class="class-card" data-grade="6" tabindex="0" role="button">6. SINIF</div>
+            <div class="class-card" data-grade="7" tabindex="0" role="button">7. SINIF</div>
+            <div class="class-card disabled" tabindex="0" role="button" aria-disabled="true" title="Eylül 2027'de eklenecek">8. SINIF <br><small style="font-size:1rem; opacity:0.5;">(Yakında)</small></div>
         </div>
     </div>
 
@@ -220,13 +226,13 @@
         <div id="unit-selection-side" style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%;">
             <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Ünite Seç</h2>
             <div id="unit-list" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%;">
-                <div class="unit-card" data-unit="1" style="padding: 15px 12px;"><div class="unit-card-num">1. Ünite</div><div class="unit-card-title">Gökyüzündeki Komşularımız ve Biz</div></div>
-                <div class="unit-card" data-unit="2" style="padding: 15px 12px;"><div class="unit-card-num">2. Ünite</div><div class="unit-card-title">Kuvveti Tanıyalım</div></div>
-                <div class="unit-card" data-unit="3" style="padding: 15px 12px;"><div class="unit-card-num">3. Ünite</div><div class="unit-card-title">Canlıların Yapısına Yolculuk</div></div>
-                <div class="unit-card" data-unit="4" style="padding: 15px 12px;"><div class="unit-card-num">4. Ünite</div><div class="unit-card-title">Işığın Dünyası</div></div>
-                <div class="unit-card" data-unit="5" style="padding: 15px 12px;"><div class="unit-card-num">5. Ünite</div><div class="unit-card-title">Maddenin Doğası</div></div>
-                <div class="unit-card" data-unit="6" style="padding: 15px 12px;"><div class="unit-card-num">6. Ünite</div><div class="unit-card-title">Yaşamımızın Vazgeçilmezi: Elektrik</div></div>
-                <div class="unit-card" data-unit="7" style="padding: 15px 12px; grid-column: span 2;"><div class="unit-card-num">7. Ünite</div><div class="unit-card-title">Sürdürülebilir Yaşam ve Geri Dönüşüm</div></div>
+                <div class="unit-card" data-unit="1" tabindex="0" role="button" style="padding: 15px 12px;"><div class="unit-card-num">1. Ünite</div><div class="unit-card-title">Gökyüzündeki Komşularımız ve Biz</div></div>
+                <div class="unit-card" data-unit="2" tabindex="0" role="button" style="padding: 15px 12px;"><div class="unit-card-num">2. Ünite</div><div class="unit-card-title">Kuvveti Tanıyalım</div></div>
+                <div class="unit-card" data-unit="3" tabindex="0" role="button" style="padding: 15px 12px;"><div class="unit-card-num">3. Ünite</div><div class="unit-card-title">Canlıların Yapısına Yolculuk</div></div>
+                <div class="unit-card" data-unit="4" tabindex="0" role="button" style="padding: 15px 12px;"><div class="unit-card-num">4. Ünite</div><div class="unit-card-title">Işığın Dünyası</div></div>
+                <div class="unit-card" data-unit="5" tabindex="0" role="button" style="padding: 15px 12px;"><div class="unit-card-num">5. Ünite</div><div class="unit-card-title">Maddenin Doğası</div></div>
+                <div class="unit-card" data-unit="6" tabindex="0" role="button" style="padding: 15px 12px;"><div class="unit-card-num">6. Ünite</div><div class="unit-card-title">Yaşamımızın Vazgeçilmezi: Elektrik</div></div>
+                <div class="unit-card" data-unit="7" tabindex="0" role="button" style="padding: 15px 12px; grid-column: span 2;"><div class="unit-card-num">7. Ünite</div><div class="unit-card-title">Sürdürülebilir Yaşam ve Geri Dönüşüm</div></div>
             </div>
         </div>
     </div>
@@ -234,6 +240,12 @@
     <div id="scene-rules" class="scene is-hidden glass-panel" style="display: flex; flex-direction: column;">
         <button id="btn-back-rules" class="back-link">← Geri</button>
         <h2 style="font-size: 3rem; color: var(--neon-blue); margin-bottom: 15px; flex-shrink: 0;"><i class="fas fa-scroll"></i> Oyun Kuralları</h2>
+        <div class="rules-summary-bar" aria-label="Kurallar Hızlı Özeti">
+            <div class="rules-summary-item"><i class="fas fa-list-ol"></i> <span>10 Soru</span></div>
+            <div class="rules-summary-item"><i class="fas fa-magic"></i> <span>3 Başlangıç Jokeri</span></div>
+            <div class="rules-summary-item"><i class="fas fa-bolt"></i> <span>Yanlış Cevapta Biter</span></div>
+            <div class="rules-summary-item rules-summary-danger"><i class="fas fa-circle-notch"></i> <span>Kara Delik Tehlikesi</span></div>
+        </div>
         <div id="rules-content" style="text-align: left; font-size: 1.25rem; line-height: 1.5; max-width: 800px; width: 100%; margin-bottom: 20px; background: rgba(0,0,0,0.5); padding: 25px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); overflow-y: auto; flex-grow: 1;">
             </div>
         <button id="btn-start-from-rules" class="action-btn" style="padding: 15px 40px; font-size: 1.5rem; background: linear-gradient(45deg, #22c55e, #16a34a); box-shadow: 0 0 20px rgba(34, 197, 94, 0.5); flex-shrink: 0;">OKUDUM, YARIŞMAYI BAŞLAT!</button>

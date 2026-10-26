@@ -460,7 +460,12 @@ const btnDeneyModulu = document.getElementById('btn-deney-modulu');
 if(btnDeneyModulu) btnDeneyModulu.onclick = () => alert("İnteraktif Deney Modülü Çok Yakında!");
 
 const btnModeBireysel = document.getElementById('btn-mode-bireysel');
-if(btnModeBireysel) btnModeBireysel.onclick = () => { activeMode = "bireysel"; switchScene(scenes.crossroads, scenes.lobby); };
+if(btnModeBireysel) btnModeBireysel.onclick = () => {
+    activeMode = "bireysel";
+    const ldb = document.getElementById('lobby-draw-box');
+    if (ldb) ldb.classList.add('is-hidden');
+    switchScene(scenes.crossroads, scenes.lobby);
+};
 
 const btnModeTurnuva = document.getElementById('btn-mode-turnuva');
 if(btnModeTurnuva) btnModeTurnuva.onclick = () => { activeMode = "turnuva"; initTournamentLobby(); switchScene(scenes.crossroads, scenes.tournamentLobby); };
@@ -542,36 +547,57 @@ if(btnGoClass) {
     };
 }
 
-const btnDirektBaslat = document.getElementById('btn-direkt-baslat');
-if(btnDirektBaslat) {
-    btnDirektBaslat.onclick = async () => { 
-        const user = auth.currentUser;
-        if (user) {
+const handleSkipDraw = async () => {
+    const pNickEl = document.getElementById('p-nickname');
+    const cachedNick = pNickEl ? pNickEl.value.trim() : "";
+    currentActivePlayerName = cachedNick || "Misafir Yarışmacı";
+    switchScene(scenes.lobby, scenes.class);
+
+    const user = auth.currentUser;
+    if (user && !cachedNick) {
+        try {
             const userRef = doc(db, "users", user.uid);
             const userSnap = await getDoc(userRef);
-            let nick = "";
-            if (userSnap.exists() && userSnap.data().nickname) {
-                nick = userSnap.data().nickname;
+            if (userSnap.exists()) {
+                const uData = userSnap.data();
+                const resolvedName = (uData.nickname && uData.nickname.trim()) || (uData.name && uData.name.trim());
+                if (resolvedName && uygunIsimMi(resolvedName)) {
+                    currentActivePlayerName = resolvedName;
+                }
             }
-            isimSor(nick, (gelenIsim) => {
-                if (!uygunIsimMi(gelenIsim) && gelenIsim !== "Misafir Yarışmacı") {
-                    alert("Topluluk kurallarına aykırı bir isim girdiniz!");
-                    return;
-                }
-                currentActivePlayerName = gelenIsim;
-                switchScene(scenes.lobby, scenes.class);
-            });
-        } else {
-            isimSor("", (gelenIsim) => {
-                if (!uygunIsimMi(gelenIsim) && gelenIsim !== "Misafir Yarışmacı") {
-                    alert("Topluluk kurallarına aykırı bir isim girdiniz!");
-                    return;
-                }
-                currentActivePlayerName = gelenIsim;
-                switchScene(scenes.lobby, scenes.class);
-            });
+        } catch (e) {}
+    }
+};
+
+const btnSkipDraw = document.getElementById('btn-skip-draw');
+if (btnSkipDraw) {
+    btnSkipDraw.onclick = handleSkipDraw;
+}
+
+const btnDoDraw = document.getElementById('btn-do-draw');
+if (btnDoDraw) {
+    btnDoDraw.onclick = () => {
+        const ldb = document.getElementById('lobby-draw-box');
+        const lobbySizeEl = document.getElementById('lobby-size');
+        if (ldb && ldb.classList.contains('is-hidden')) {
+            ldb.classList.remove('is-hidden');
+            if (lobbySizeEl) lobbySizeEl.focus();
+        } else if (lobbySizeEl && parseInt(lobbySizeEl.value, 10) > 0 && btnKuraBaslat) {
+            btnKuraBaslat.click();
+        } else if (lobbySizeEl) {
+            lobbySizeEl.focus();
         }
     };
+}
+
+const lobbySizeInput = document.getElementById('lobby-size');
+if (lobbySizeInput) {
+    lobbySizeInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && btnKuraBaslat) {
+            e.preventDefault();
+            btnKuraBaslat.click();
+        }
+    });
 }
 
 const unitNamesByGrade = {
@@ -607,6 +633,8 @@ const unitNamesByGrade = {
 function updateUnitCards(grade) {
     const names = unitNamesByGrade[String(grade)] || {};
     document.querySelectorAll('.unit-card').forEach(card => {
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('role', 'button');
         const u = card.dataset.unit;
         const title = names[u] || "";
         card.innerHTML = title 
@@ -615,16 +643,36 @@ function updateUnitCards(grade) {
     });
 }
 
-document.querySelectorAll('.class-card').forEach(c => c.onclick = function() { 
-    if(this.classList.contains('disabled')) return; 
-    selectedGrade = this.dataset.grade; 
-    updateUnitCards(selectedGrade);
-    switchScene(scenes.class, scenes.unit); 
+document.querySelectorAll('.class-card').forEach(c => {
+    c.setAttribute('tabindex', '0');
+    c.setAttribute('role', 'button');
+    c.onclick = function() { 
+        if(this.classList.contains('disabled')) return; 
+        selectedGrade = this.dataset.grade; 
+        updateUnitCards(selectedGrade);
+        switchScene(scenes.class, scenes.unit); 
+    };
+    c.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ' || e.code === 'Space') {
+            e.preventDefault();
+            this.click();
+        }
+    });
 });
 
-document.querySelectorAll('.unit-card').forEach(u => u.onclick = function() {
-    selectedUnit = this.dataset.unit;
-    showRulesScreen();
+document.querySelectorAll('.unit-card').forEach(u => {
+    u.setAttribute('tabindex', '0');
+    u.setAttribute('role', 'button');
+    u.onclick = function() {
+        selectedUnit = this.dataset.unit;
+        showRulesScreen();
+    };
+    u.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ' || e.code === 'Space') {
+            e.preventDefault();
+            this.click();
+        }
+    });
 });
 
 function showRulesScreen() {
