@@ -161,10 +161,10 @@ export const EXPERIMENTS_DATABASE = [
     },
     {
         id: "7.5", grade: 7, unit: 5, unitName: "Maddenin Doğasına Yolculuk",
-        title: "Çözünme Hızını Etkileyen Faktörler",
-        code: "FB.7.5.4", bookRef: "2. Kitap, s. 68–79",
-        active: false,
-        desc: "Sıcaklık, temas yüzeyi (pudra/toz/küp şeker) ve karıştırmanın çözünme süresine etkisini bağımsız değişkenlerle ölçün."
+        title: "Çözünme Hızını Etkileyen Faktörler Simülatörü",
+        code: "FB.7.5.4 - FB.7.5.9", bookRef: "2. Kitap, s. 90–105",
+        active: true, // 🏆 AKTİF!
+        desc: "Sıcaklık, temas yüzeyi (pudra/toz/küp şeker) ve karıştırmanın çözünme süresine etkisini 3 beherli kontrollü deney düzeneğinde eşzamanlı test edin."
     },
     {
         id: "7.6", grade: 7, unit: 5, unitName: "Maddenin Doğasına Yolculuk",
@@ -308,6 +308,65 @@ export const labState = {
         imageHeight: null,
         magnification: null,
         isDraggingObject: false,
+        measurements: []
+    },
+
+    // Deney 7.5 Fizik/Kimya Durumu (Çözünme Hızını Etkileyen Faktörler)
+    dissolve: {
+        preset: "temp", // "temp" | "surface" | "stir" | "custom"
+        isPlaying: false,
+        isFinished: false,
+        timeScale: 3.5, // 1 gerçek saniyede 3.5 saniye ilerler
+
+        // 3 Beher
+        beakers: [
+            {
+                id: "A",
+                name: "Beher A",
+                temp: 20,
+                sugar: "granulated",
+                stirring: false,
+                waterVolume: 100,
+                sugarMass: 10,
+                elapsedTime: 0,
+                targetTime: 33.0,
+                progress: 0,
+                isDissolved: false,
+                particles: [],
+                stirAngle: 0
+            },
+            {
+                id: "B",
+                name: "Beher B",
+                temp: 40,
+                sugar: "granulated",
+                stirring: false,
+                waterVolume: 100,
+                sugarMass: 10,
+                elapsedTime: 0,
+                targetTime: 21.5,
+                progress: 0,
+                isDissolved: false,
+                particles: [],
+                stirAngle: 0
+            },
+            {
+                id: "C",
+                name: "Beher C",
+                temp: 60,
+                sugar: "granulated",
+                stirring: false,
+                waterVolume: 100,
+                sugarMass: 10,
+                elapsedTime: 0,
+                targetTime: 13.2,
+                progress: 0,
+                isDissolved: false,
+                particles: [],
+                stirAngle: 0
+            }
+        ],
+
         measurements: []
     }
 };
@@ -563,6 +622,9 @@ function setupWorkspaceShellDOM() {
     // 7. DENEY 7.4 KONTROLLERİ (MERCEKLER VE ODAKLAMA)
     setupLensControlsDOM();
 
+    // 8. DENEY 7.5 KONTROLLERİ (ÇÖZÜNME HIZI)
+    setupDissolveControlsDOM();
+
     // 7. Tablo Temizle
     const btnClearTable = document.getElementById('btn-clear-table');
     if (btnClearTable) btnClearTable.addEventListener('click', clearMeasurementTable);
@@ -725,6 +787,7 @@ export function openExperimentWorkspace(expId) {
     const is72 = (expId === "7.2");
     const is73 = (expId === "7.3");
     const is74 = (expId === "7.4");
+    const is75 = (expId === "7.5");
 
     // HUD Paneli (Sadece Deney 7.3)
     const hud73 = document.getElementById('hud-exp-7-3');
@@ -735,35 +798,43 @@ export function openExperimentWorkspace(expId) {
     const qc72 = document.getElementById('quick-controls-7-2');
     const qc73 = document.getElementById('quick-controls-7-3');
     const qc74 = document.getElementById('quick-controls-7-4');
+    const qc75 = document.getElementById('quick-controls-7-5');
     if (qc71) qc71.classList.toggle('is-hidden', !is71);
     if (qc72) qc72.classList.toggle('is-hidden', !is72);
     if (qc73) qc73.classList.toggle('is-hidden', !is73);
     if (qc74) qc74.classList.toggle('is-hidden', !is74);
+    if (qc75) qc75.classList.toggle('is-hidden', !is75);
 
     // Değişkenler Panelleri
     const vars71 = document.getElementById('vars-container-7-1');
     const vars72 = document.getElementById('vars-container-7-2');
     const vars73 = document.getElementById('vars-container-7-3');
     const vars74 = document.getElementById('vars-container-7-4');
+    const vars75 = document.getElementById('vars-container-7-5');
     if (vars71) vars71.classList.toggle('is-hidden', !is71);
     if (vars72) vars72.classList.toggle('is-hidden', !is72);
     if (vars73) vars73.classList.toggle('is-hidden', !is73);
     if (vars74) vars74.classList.toggle('is-hidden', !is74);
+    if (vars75) vars75.classList.toggle('is-hidden', !is75);
 
     // Rehber Panelleri
     const guide71 = document.getElementById('guide-container-7-1');
     const guide72 = document.getElementById('guide-container-7-2');
     const guide73 = document.getElementById('guide-container-7-3');
     const guide74 = document.getElementById('guide-container-7-4');
+    const guide75 = document.getElementById('guide-container-7-5');
     if (guide71) guide71.classList.toggle('is-hidden', !is71);
     if (guide72) guide72.classList.toggle('is-hidden', !is72);
     if (guide73) guide73.classList.toggle('is-hidden', !is73);
     if (guide74) guide74.classList.toggle('is-hidden', !is74);
+    if (guide75) guide75.classList.toggle('is-hidden', !is75);
 
     if (is71) {
         initWorkState();
     } else if (is72) {
         initEnergyState();
+    } else if (is75) {
+        initDissolveState();
     }
 
     // Veri Tablosu Başlıklarını Güncelle
@@ -796,6 +867,8 @@ function resetCurrentExperiment() {
         resetWorkExperiment();
     } else if (labState.activeExperimentId === "7.2") {
         resetEnergyExperiment();
+    } else if (labState.activeExperimentId === "7.5") {
+        resetDissolveExperiment();
     } else if (labState.activeExperimentId === "7.3") {
         labState.optics.medium1 = "air";
         labState.optics.medium2 = "water";
@@ -877,6 +950,8 @@ function initExperimentCanvas() {
         calculateOpticsPhysics();
     } else if (labState.activeExperimentId === "7.4") {
         calculateLensPhysics();
+    } else if (labState.activeExperimentId === "7.5") {
+        initDissolveState();
     }
 
     startRenderLoop();
@@ -908,6 +983,9 @@ function startRenderLoop() {
                 drawOpticsSimulation();
             } else if (labState.activeExperimentId === "7.4") {
                 drawLensSimulation();
+            } else if (labState.activeExperimentId === "7.5") {
+                updateDissolvePhysics();
+                drawDissolveSimulation();
             }
         }
         if (labState.activeExperimentId) {
@@ -3972,6 +4050,747 @@ function drawCandle(ctx, x, baseY, height, isUpright, alpha, scale, label, isRea
     ctx.restore();
 }
 
+// --- 8.5. DENEY 7.5: ÇÖZÜNME HIZINI ETKİLEYEN FAKTÖRLER MOTORU ---
+
+function setupDissolveControlsDOM() {
+    // 1. Şablon Preset Butonları (Hızlı Bar & Sağ Panel)
+    const presets = ["temp", "surface", "stir"];
+    presets.forEach(p => {
+        const btn = document.getElementById(`btn-preset-${p}`);
+        const pill = document.getElementById(`pill-preset-${p}`);
+        if (btn) btn.addEventListener('click', () => setDissolvePreset(p));
+        if (pill) pill.addEventListener('click', () => setDissolvePreset(p));
+    });
+
+    // 2. Oynat / Duraklat Butonu
+    const btnPlay = document.getElementById('btn-dissolve-play-pause');
+    if (btnPlay) {
+        btnPlay.addEventListener('click', () => {
+            const dissolve = labState.dissolve;
+            if (dissolve.isFinished) {
+                resetDissolveProgress();
+            }
+            dissolve.isPlaying = !dissolve.isPlaying;
+            updateDissolvePlayButton(dissolve.isPlaying);
+        });
+    }
+
+    // 3. Sıfırla / Yeni Deney Butonu
+    const btnReset = document.getElementById('btn-dissolve-reset');
+    if (btnReset) {
+        btnReset.addEventListener('click', () => {
+            resetDissolveExperiment();
+            showLabToast("🔄 Çözeltiler başlangıç durumuna sıfırlandı");
+        });
+    }
+
+    // 4. 3 Beher Bağımsız Ayar Dinleyicileri (Beher A, B, C)
+    ["a", "b", "c"].forEach((bid, idx) => {
+        const bUpper = bid.toUpperCase();
+        // Sıcaklık Select
+        const selTemp = document.getElementById(`select-beaker-${bid}-temp`);
+        if (selTemp) {
+            selTemp.addEventListener('change', (e) => {
+                labState.dissolve.beakers[idx].temp = parseInt(e.target.value, 10);
+                resetDissolveProgress();
+                calculateDissolveTargets();
+                showLabToast(`Beher ${bUpper} sıcaklığı ${e.target.value}°C yapıldı`);
+            });
+        }
+
+        // Şeker Select
+        const selSugar = document.getElementById(`select-beaker-${bid}-sugar`);
+        if (selSugar) {
+            selSugar.addEventListener('change', (e) => {
+                labState.dissolve.beakers[idx].sugar = e.target.value;
+                resetDissolveProgress();
+                calculateDissolveTargets();
+                const sName = e.target.value === "cube" ? "Küp" : e.target.value === "granulated" ? "Toz" : "Pudra";
+                showLabToast(`Beher ${bUpper} şekeri ${sName} Şeker yapıldı`);
+            });
+        }
+
+        // Karıştırıcı Butonu
+        const btnStir = document.getElementById(`btn-beaker-${bid}-stir`);
+        if (btnStir) {
+            btnStir.addEventListener('click', () => {
+                const beaker = labState.dissolve.beakers[idx];
+                beaker.stirring = !beaker.stirring;
+                btnStir.classList.toggle('stir-active', beaker.stirring);
+                const span = btnStir.querySelector('span');
+                if (span) span.textContent = beaker.stirring ? "Açık" : "Kapalı";
+                resetDissolveProgress();
+                calculateDissolveTargets();
+                showLabToast(`Beher ${bUpper} karıştırıcısı ${beaker.stirring ? 'açıldı' : 'kapatıldı'}`);
+            });
+        }
+    });
+
+    // 5. Gözlemi Kaydet Butonu
+    const btnRecord = document.getElementById('btn-record-data-7-5');
+    if (btnRecord) {
+        btnRecord.addEventListener('click', recordMeasurement);
+    }
+}
+
+function updateDissolvePlayButton(isPlaying) {
+    const btnPlay = document.getElementById('btn-dissolve-play-pause');
+    const labelPlay = document.getElementById('label-dissolve-play');
+    if (!btnPlay) return;
+    if (isPlaying) {
+        btnPlay.innerHTML = '<i class="fas fa-pause"></i> <span id="label-dissolve-play">Duraklat</span>';
+        btnPlay.classList.add('active');
+        showLabToast("▶️ Çözünme Başlatıldı (Kronometreler Sayıyor)");
+    } else {
+        btnPlay.innerHTML = '<i class="fas fa-play"></i> <span id="label-dissolve-play">Çözünmeyi Başlat</span>';
+        btnPlay.classList.remove('active');
+    }
+}
+
+function setDissolvePreset(preset) {
+    const dissolve = labState.dissolve;
+    dissolve.preset = preset;
+    dissolve.isPlaying = false;
+    updateDissolvePlayButton(false);
+
+    // Preset butonlarını güncelle
+    ["temp", "surface", "stir"].forEach(p => {
+        const b = document.getElementById(`btn-preset-${p}`);
+        const pill = document.getElementById(`pill-preset-${p}`);
+        if (b) b.classList.toggle('active', p === preset);
+        if (pill) pill.classList.toggle('active', p === preset);
+    });
+
+    const b = dissolve.beakers;
+
+    if (preset === "temp") {
+        // Bağımsız değişken: Sıcaklık (20°C vs 40°C vs 60°C)
+        // Sabit: Toz şeker, Karıştırma kapalı
+        b[0].temp = 20; b[0].sugar = "granulated"; b[0].stirring = false;
+        b[1].temp = 40; b[1].sugar = "granulated"; b[1].stirring = false;
+        b[2].temp = 60; b[2].sugar = "granulated"; b[2].stirring = false;
+    } else if (preset === "surface") {
+        // Bağımsız değişken: Temas yüzeyi (Küp vs Toz vs Pudra)
+        // Sabit: 40°C su, Karıştırma kapalı
+        b[0].temp = 40; b[0].sugar = "cube"; b[0].stirring = false;
+        b[1].temp = 40; b[1].sugar = "granulated"; b[1].stirring = false;
+        b[2].temp = 40; b[2].sugar = "powder"; b[2].stirring = false;
+    } else if (preset === "stir") {
+        // Bağımsız değişken: Karıştırma (Kapalı vs Açık)
+        // Sabit: 40°C, Küp şeker
+        b[0].temp = 40; b[0].sugar = "cube"; b[0].stirring = false;
+        b[1].temp = 40; b[1].sugar = "cube"; b[1].stirring = true;
+        b[2].temp = 40; b[2].sugar = "granulated"; b[2].stirring = true;
+    }
+
+    syncDissolveUIInputs();
+    resetDissolveProgress();
+    calculateDissolveTargets();
+
+    const titles = {
+        temp: "🌡️ 1. Sıcaklık Etkisi Testi Aktif (20°C / 40°C / 60°C)",
+        surface: "✨ 2. Temas Yüzeyi Testi Aktif (Küp / Toz / Pudra)",
+        stir: "🌀 3. Karıştırma Etkisi Testi Aktif (Durgun / Karıştırılan)"
+    };
+    showLabToast(titles[preset] || "Deney şablonu yüklendi");
+}
+
+function syncDissolveUIInputs() {
+    const b = labState.dissolve.beakers;
+    ["a", "b", "c"].forEach((bid, idx) => {
+        const beaker = b[idx];
+        const selTemp = document.getElementById(`select-beaker-${bid}-temp`);
+        const selSugar = document.getElementById(`select-beaker-${bid}-sugar`);
+        const btnStir = document.getElementById(`btn-beaker-${bid}-stir`);
+
+        if (selTemp) selTemp.value = beaker.temp;
+        if (selSugar) selSugar.value = beaker.sugar;
+        if (btnStir) {
+            btnStir.classList.toggle('stir-active', beaker.stirring);
+            const span = btnStir.querySelector('span');
+            if (span) span.textContent = beaker.stirring ? "Açık" : "Kapalı";
+        }
+    });
+}
+
+function resetDissolveProgress() {
+    const dissolve = labState.dissolve;
+    dissolve.isPlaying = false;
+    dissolve.isFinished = false;
+    updateDissolvePlayButton(false);
+
+    dissolve.beakers.forEach(b => {
+        b.elapsedTime = 0;
+        b.progress = 0;
+        b.isDissolved = false;
+        b.particles = initBeakerParticles(b);
+    });
+
+    updateDissolveStopwatchDOM();
+}
+
+function resetDissolveExperiment() {
+    setDissolvePreset(labState.dissolve.preset || "temp");
+}
+
+function initDissolveState() {
+    calculateDissolveTargets();
+    resetDissolveProgress();
+    syncDissolveUIInputs();
+}
+
+function calculateDissolveTargets() {
+    const dissolve = labState.dissolve;
+    dissolve.beakers.forEach(b => {
+        const baseTime = 60.0; // 20°C, küp, durgun için baz süre
+        
+        let fT = 1.0;
+        if (b.temp === 20) fT = 1.0;
+        else if (b.temp === 40) fT = 0.65;
+        else if (b.temp === 60) fT = 0.40;
+        else if (b.temp === 80) fT = 0.25;
+
+        let fS = 1.0;
+        if (b.sugar === "cube") fS = 1.0;
+        else if (b.sugar === "granulated") fS = 0.55;
+        else if (b.sugar === "powder") fS = 0.28;
+
+        let fStir = b.stirring ? 0.45 : 1.0;
+
+        b.targetTime = Math.max(3.0, Math.round(baseTime * fT * fS * fStir * 10) / 10);
+    });
+
+    updateDissolvePedagogicalBox();
+}
+
+function updateDissolvePedagogicalBox() {
+    const dissolve = labState.dissolve;
+    const box = document.getElementById('dissolve-pedagogical-box');
+    const icon = document.getElementById('dissolve-pedagogical-icon');
+    const title = document.getElementById('dissolve-pedagogical-title');
+    const text = document.getElementById('dissolve-pedagogical-text');
+    if (!box || !title || !text) return;
+
+    const b = dissolve.beakers;
+
+    if (dissolve.isFinished) {
+        box.className = "lab-pedagogical-card is-work";
+        if (icon) icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+        if (title) title.textContent = "🏆 Çözünme Tamamlandı (Bilimsel Sonuç Çıkarımı):";
+        
+        if (dissolve.preset === "temp") {
+            text.textContent = `Sıcaklık 20°C'den 60°C'ye çıktıkça çözünme süresi ${b[0].targetTime.toFixed(1)} sn'den ${b[2].targetTime.toFixed(1)} sn'ye düşmüştür! Sıcaklık arttıkça çözücü su taneciklerinin kinetik enerjisi artar ve çözünme hızlanır.`;
+        } else if (dissolve.preset === "surface") {
+            text.textContent = `Temas yüzeyi arttıkça (Küp ➔ Toz ➔ Pudra Şekeri) çözünme süresi ${b[0].targetTime.toFixed(1)} sn'den ${b[2].targetTime.toFixed(1)} sn'ye inmiştir! Katı tanecik boyutu küçüldükçe temas yüzeyi genişler ve çözünme hızlanır.`;
+        } else if (dissolve.preset === "stir") {
+            text.textContent = `Karıştırma işlemi uygulandığında çözünme süresi ${b[0].targetTime.toFixed(1)} sn'den ${b[1].targetTime.toFixed(1)} sn'ye inmiştir! Karıştırma taneciklerin çözücü ile temas sıklığını artırarak çözünmeyi hızlandırır.`;
+        } else {
+            text.textContent = `En hızlı çözünme ${Math.min(b[0].targetTime, b[1].targetTime, b[2].targetTime).toFixed(1)} sn ile tamamlanmıştır. Sıcaklık, temas yüzeyi ve karıştırma çözünme hızını doğrudan artıran 3 temel faktördür.`;
+        }
+        return;
+    }
+
+    box.className = "lab-pedagogical-card is-work";
+    if (icon) icon.innerHTML = '<i class="fas fa-vial"></i>';
+
+    if (dissolve.preset === "temp") {
+        title.textContent = "🌡️ Sıcaklık Etkisi Hipotezi (Kontrollü Deney):";
+        text.textContent = `Sıcaklık arttıkça su moleküllerinin kinetik enerjisi ve hareket sürati artar. Şeker tanecikleriyle çarpışma şiddetlenerek çözünme süresi kısalır (${b[0].targetTime.toFixed(1)}s ➔ ${b[1].targetTime.toFixed(1)}s ➔ ${b[2].targetTime.toFixed(1)}s).`;
+    } else if (dissolve.preset === "surface") {
+        title.textContent = "✨ Temas Yüzeyi (Tanecik Boyutu) Hipotezi:";
+        text.textContent = `Küp şekerden toz ve pudra şekerine geçildikçe katının temas yüzeyi kat kat genişler. Su ile aynı anda temas eden tanecik sayısı çoğaldığı için çözünme süresi kısalır (Pudra: ${b[2].targetTime.toFixed(1)}s < Toz: ${b[1].targetTime.toFixed(1)}s < Küp: ${b[0].targetTime.toFixed(1)}s).`;
+    } else if (dissolve.preset === "stir") {
+        title.textContent = "🌀 Karıştırma Etkisi Hipotezi:";
+        text.textContent = `Çözelti karıştırıldığında su molekülleri ile şeker taneciklerinin temas sıklığı artar. Karıştırılan beherde çözünme süresi (${b[1].targetTime.toFixed(1)}s), durgun behere (${b[0].targetTime.toFixed(1)}s) göre belirgin biçimde kısalır.`;
+    } else {
+        title.textContent = "🔬 Çözünme Hızı Araştırması:";
+        text.textContent = `3 beherin parametrelerini bağımsız olarak ayarlayıp "Çözünmeyi Başlat" butonuna basarak süreleri karşılaştırın.`;
+    }
+}
+
+function updateDissolveStopwatchDOM() {
+    const b = labState.dissolve.beakers;
+    const chips = [
+        document.getElementById('stat-beaker-a-time'),
+        document.getElementById('stat-beaker-b-time'),
+        document.getElementById('stat-beaker-c-time')
+    ];
+    chips.forEach((c, idx) => {
+        if (!c) return;
+        const bk = b[idx];
+        if (bk.isDissolved) {
+            c.textContent = `${bk.targetTime.toFixed(1)} s ✓`;
+            c.style.color = '#34d399';
+            c.style.borderColor = 'rgba(52, 211, 153, 0.4)';
+        } else {
+            c.textContent = `${bk.elapsedTime.toFixed(1)} s`;
+            c.style.color = '#facc15';
+            c.style.borderColor = 'rgba(250, 204, 21, 0.3)';
+        }
+    });
+}
+
+function initBeakerParticles(beaker) {
+    const particles = [];
+    const count = beaker.sugar === "powder" ? 45 : beaker.sugar === "granulated" ? 30 : 18;
+    for (let i = 0; i < count; i++) {
+        particles.push({
+            relX: (Math.random() - 0.5) * 80,
+            relY: Math.random() * 80,
+            vx: (Math.random() - 0.5) * 0.8,
+            vy: -0.2 - Math.random() * 0.6,
+            radius: beaker.sugar === "powder" ? 1.5 : beaker.sugar === "granulated" ? 2.5 : 4.0,
+            alpha: 1.0,
+            seed: Math.random() * Math.PI * 2
+        });
+    }
+    return particles;
+}
+
+function updateDissolvePhysics() {
+    const dissolve = labState.dissolve;
+    if (!dissolve.isPlaying) return;
+
+    const dt = (1 / 60) * dissolve.timeScale;
+    let allDone = true;
+
+    dissolve.beakers.forEach(b => {
+        if (b.isDissolved) return;
+
+        b.elapsedTime += dt;
+        if (b.elapsedTime >= b.targetTime) {
+            b.elapsedTime = b.targetTime;
+            b.progress = 1.0;
+            b.isDissolved = true;
+        } else {
+            b.progress = b.elapsedTime / b.targetTime;
+            allDone = false;
+        }
+
+        // Karıştırıcı açısı
+        if (b.stirring) {
+            b.stirAngle += 0.25;
+        }
+
+        // Parçacık simülasyonu
+        if (b.particles) {
+            b.particles.forEach(p => {
+                if (b.stirring) {
+                    p.seed += 0.08;
+                    p.relX = Math.cos(p.seed) * (35 + Math.sin(p.seed * 2) * 15);
+                    p.relY += p.vy * 0.5;
+                } else {
+                    p.relX += p.vx + (Math.random() - 0.5) * (b.temp / 100);
+                    p.relY += p.vy;
+                }
+
+                if (p.relY < 0) p.relY = 90;
+                p.alpha = Math.max(0, 1.0 - b.progress);
+            });
+        }
+    });
+
+    updateDissolveStopwatchDOM();
+
+    if (allDone && !dissolve.isFinished) {
+        dissolve.isFinished = true;
+        dissolve.isPlaying = false;
+        updateDissolvePlayButton(false);
+        updateDissolvePedagogicalBox();
+        showLabToast("🏆 3 Beherde de çözünme tamamlandı! Sonuçları inceleyin.");
+    }
+}
+
+// --- DENEY 7.5 CANVAS 2D ÇİZİM MOTORU ---
+
+function drawDissolveSimulation() {
+    if (!ctx || !canvas) return;
+    const dissolve = labState.dissolve;
+    const w = canvas.width;
+    const scale = w / 800;
+
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    // 1. Arka Plan
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 500);
+    bgGrad.addColorStop(0, '#090d16');
+    bgGrad.addColorStop(1, '#0f172a');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 800, 500);
+
+    // 2. Laboratuvar Tezgahı Zemin Çizgisi
+    const benchY = 414;
+    ctx.strokeStyle = 'rgba(71, 85, 105, 0.6)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(30, benchY);
+    ctx.lineTo(770, benchY);
+    ctx.stroke();
+
+    // Tezgah altı ızgara taraması
+    ctx.strokeStyle = 'rgba(51, 65, 85, 0.3)';
+    ctx.lineWidth = 1;
+    for (let x = 30; x <= 770; x += 15) {
+        ctx.beginPath();
+        ctx.moveTo(x, benchY);
+        ctx.lineTo(x - 8, benchY + 12);
+        ctx.stroke();
+    }
+
+    // 3. 3 Beher Çizimi (A, B, C)
+    const beakerCenters = [160, 400, 640];
+    dissolve.beakers.forEach((b, idx) => {
+        const cx = beakerCenters[idx];
+        drawSingleBeakerAssembly(ctx, b, cx, benchY);
+    });
+
+    ctx.restore();
+}
+
+function drawSingleBeakerAssembly(ctx, beaker, cx, benchY) {
+    const beakerW = 150;
+    const beakerH = 180;
+    const beakerBottom = benchY - 14;
+    const beakerTop = beakerBottom - beakerH;
+    const beakerLeft = cx - beakerW / 2;
+    const waterTop = beakerTop + 55; // 100 mL seviyesi
+    const waterH = beakerBottom - waterTop;
+
+    // 1. Manyetik Karıştırıcı / Isıtıcı Tabla
+    drawMagneticHotplate(ctx, cx, beakerBottom, beaker.temp, beaker.stirring);
+
+    // 2. Su Sıvı Kütlesi (Sıcaklığa göre renk gradyanı)
+    ctx.save();
+    ctx.beginPath();
+    ctx.roundRect(beakerLeft + 4, waterTop, beakerW - 8, waterH, [0, 0, 8, 8]);
+    ctx.clip();
+
+    let waterGrad = ctx.createLinearGradient(cx, waterTop, cx, beakerBottom);
+    if (beaker.temp <= 25) {
+        // Soğuk mavi
+        waterGrad.addColorStop(0, 'rgba(56, 189, 248, 0.22)');
+        waterGrad.addColorStop(1, 'rgba(14, 165, 233, 0.45)');
+    } else if (beaker.temp <= 45) {
+        // Ilık camgöbeği/turkuaz
+        waterGrad.addColorStop(0, 'rgba(45, 212, 191, 0.25)');
+        waterGrad.addColorStop(1, 'rgba(20, 184, 166, 0.48)');
+    } else {
+        // Sıcak amber/turuncu
+        waterGrad.addColorStop(0, 'rgba(251, 146, 60, 0.25)');
+        waterGrad.addColorStop(1, 'rgba(249, 115, 22, 0.50)');
+    }
+    ctx.fillStyle = waterGrad;
+    ctx.fillRect(beakerLeft, waterTop, beakerW, waterH);
+
+    // Su Menisküs Çizgisi
+    ctx.strokeStyle = beaker.temp > 45 ? 'rgba(251, 146, 60, 0.6)' : 'rgba(56, 189, 248, 0.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(beakerLeft + 4, waterTop);
+    ctx.quadraticCurveTo(cx, waterTop + 4, beakerLeft + beakerW - 4, waterTop);
+    ctx.stroke();
+
+    // 3. Karıştırma Girdap Çizgileri
+    if (beaker.stirring) {
+        drawBeakerVortex(ctx, cx, waterTop, beakerBottom);
+    }
+
+    // 4. Parçacık Animasyonu (Çözünen Mikro Tanecikler)
+    drawBeakerParticles(ctx, beaker, cx, beakerBottom);
+
+    // 5. Çözünmemiş Katı Şeker (Tabanda)
+    drawBeakerSolidSugar(ctx, beaker, cx, beakerBottom);
+
+    // 6. Manyetik Balık (Karıştırma Çubuğu)
+    drawMagneticStirBar(ctx, cx, beakerBottom - 8, beaker.stirring, beaker.stirAngle);
+
+    ctx.restore();
+
+    // 7. Dereceli Cam Beher Gövdesi ve Çizgileri
+    drawBeakerGlassware(ctx, beakerLeft, beakerTop, beakerW, beakerH, cx, waterTop);
+
+    // 8. Daldırılmış Dijital Termometre
+    drawDigitalThermometer(ctx, beakerLeft + 22, beakerTop - 35, beaker.temp);
+
+    // 9. Tepe Dijital Kronometre ve Beher Başlığı
+    drawBeakerHeaderAndStopwatch(ctx, beaker, cx, beakerTop - 45);
+}
+
+function drawMagneticHotplate(ctx, cx, topY, temp, stirring) {
+    const plateW = 164;
+    const plateH = 20;
+    const plateX = cx - plateW / 2;
+
+    ctx.save();
+    // Metal gövde
+    const pGrad = ctx.createLinearGradient(cx, topY, cx, topY + plateH);
+    pGrad.addColorStop(0, '#334155');
+    pGrad.addColorStop(1, '#1e293b');
+    ctx.fillStyle = pGrad;
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(plateX, topY, plateW, plateH, [4, 4, 8, 8]);
+    ctx.fill();
+    ctx.stroke();
+
+    // Isıtıcı LED (Kırmızı / Turuncu)
+    const heatLedColor = temp >= 40 ? '#ef4444' : '#64748b';
+    ctx.fillStyle = heatLedColor;
+    ctx.shadowColor = temp >= 40 ? '#ef4444' : 'transparent';
+    ctx.shadowBlur = temp >= 40 ? 6 : 0;
+    ctx.beginPath();
+    ctx.arc(cx - 50, topY + 10, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Karıştırıcı LED (Mavi / Cyan)
+    ctx.fillStyle = stirring ? '#38bdf8' : '#64748b';
+    ctx.shadowColor = stirring ? '#38bdf8' : 'transparent';
+    ctx.shadowBlur = stirring ? 6 : 0;
+    ctx.beginPath();
+    ctx.arc(cx - 36, topY + 10, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+    ctx.font = '8px Inter, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.textAlign = 'right';
+    ctx.fillText("MANYETİK TABLA", cx + 70, topY + 13);
+    ctx.restore();
+}
+
+function drawBeakerGlassware(ctx, x, y, w, h, cx, waterTop) {
+    ctx.save();
+    // Cam kontur
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    // Sol ağız çıkıntısı (beaker spout)
+    ctx.moveTo(x - 5, y);
+    ctx.lineTo(x, y + 6);
+    // Sol kenar
+    ctx.lineTo(x, y + h - 8);
+    // Taban kavis
+    ctx.quadraticCurveTo(x, y + h, x + 8, y + h);
+    ctx.lineTo(x + w - 8, y + h);
+    ctx.quadraticCurveTo(x + w, y + h, x + w, y + h - 8);
+    // Sağ kenar
+    ctx.lineTo(x + w, y);
+    ctx.stroke();
+
+    // Cam ışıltısı / Yansıma
+    const rGrad = ctx.createLinearGradient(x, y, x + 15, y);
+    rGrad.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
+    rGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = rGrad;
+    ctx.fillRect(x + 2, y + 10, 15, h - 20);
+
+    // Hacim Dereceleri (20, 40, 60, 80, 100 mL)
+    const ticks = [
+        { ml: "100 mL", ty: waterTop },
+        { ml: "80 mL", ty: waterTop + 24 },
+        { ml: "60 mL", ty: waterTop + 48 },
+        { ml: "40 mL", ty: waterTop + 72 },
+        { ml: "20 mL", ty: waterTop + 96 }
+    ];
+
+    ticks.forEach(t => {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(x + w - 18, t.ty);
+        ctx.lineTo(x + w, t.ty);
+        ctx.stroke();
+
+        ctx.font = '8px Inter, sans-serif';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.textAlign = 'right';
+        ctx.fillText(t.ml, x + w - 22, t.ty + 3);
+    });
+
+    ctx.restore();
+}
+
+function drawDigitalThermometer(ctx, x, y, temp) {
+    ctx.save();
+    // Cam prob borusu (sıvı içine dalar)
+    ctx.strokeStyle = 'rgba(203, 213, 225, 0.85)';
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x, y + 30);
+    ctx.lineTo(x, y + 160);
+    ctx.stroke();
+
+    // Prob ucu
+    ctx.fillStyle = '#64748b';
+    ctx.beginPath();
+    ctx.arc(x, y + 160, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Dijital Başlık Kutusu
+    const headW = 44;
+    const headH = 26;
+    const headX = x - headW / 2;
+    const headY = y;
+
+    ctx.fillStyle = '#0f172a';
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(headX, headY, headW, headH, 4);
+    ctx.fill();
+    ctx.stroke();
+
+    // Sıcaklık Yazısı
+    ctx.font = 'bold 11px Inter, monospace';
+    ctx.fillStyle = temp >= 60 ? '#fb923c' : temp >= 40 ? '#facc15' : '#38bdf8';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${temp}°C`, headX + headW / 2, headY + 17);
+    ctx.restore();
+}
+
+function drawBeakerVortex(ctx, cx, waterTop, beakerBottom) {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+    ctx.lineWidth = 1.5;
+    const midY = (waterTop + beakerBottom) / 2;
+
+    ctx.beginPath();
+    ctx.ellipse(cx, midY - 20, 35, 8, 0, 0, Math.PI * 2);
+    ctx.ellipse(cx, midY + 15, 22, 6, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+}
+
+function drawBeakerParticles(ctx, beaker, cx, beakerBottom) {
+    if (!beaker.particles) return;
+    ctx.save();
+    const waterBaseY = beakerBottom - 35;
+
+    beaker.particles.forEach(p => {
+        if (p.alpha <= 0.02) return;
+        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha * 0.75})`;
+        ctx.beginPath();
+        ctx.arc(cx + p.relX, waterBaseY - p.relY, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+    });
+    ctx.restore();
+}
+
+function drawBeakerSolidSugar(ctx, beaker, cx, beakerBottom) {
+    if (beaker.isDissolved || beaker.progress >= 0.99) return;
+    ctx.save();
+    const remain = Math.max(0, 1.0 - beaker.progress);
+
+    if (beaker.sugar === "cube") {
+        // Küp Şeker (3D İzometrik Blok)
+        const size = 26 * Math.sqrt(remain);
+        const y = beakerBottom - 10 - size / 2;
+
+        ctx.translate(cx, y);
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+        ctx.strokeStyle = 'rgba(203, 213, 225, 0.8)';
+        ctx.lineWidth = 1.5;
+
+        // Küp ön yüz
+        ctx.beginPath();
+        ctx.rect(-size / 2, -size / 2, size, size);
+        ctx.fill();
+        ctx.stroke();
+
+        // Üst yüz kapağı
+        ctx.fillStyle = 'rgba(241, 245, 249, 0.95)';
+        ctx.beginPath();
+        ctx.moveTo(-size / 2, -size / 2);
+        ctx.lineTo(-size / 2 + size * 0.35, -size / 2 - size * 0.35);
+        ctx.lineTo(size / 2 + size * 0.35, -size / 2 - size * 0.35);
+        ctx.lineTo(size / 2, -size / 2);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+    } else if (beaker.sugar === "granulated") {
+        // Toz Şeker (Tabanda yığıntı)
+        const heapW = 54 * remain;
+        const heapH = 14 * remain;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.88)';
+        ctx.beginPath();
+        ctx.ellipse(cx, beakerBottom - 10, heapW / 2, heapH, 0, 0, Math.PI * 2);
+        ctx.fill();
+    } else if (beaker.sugar === "powder") {
+        // Pudra Şekeri (İnce taban bulutu)
+        const cloudW = 70 * remain;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+        ctx.beginPath();
+        ctx.ellipse(cx, beakerBottom - 8, cloudW / 2, 6 * remain, 0, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    ctx.restore();
+}
+
+function drawMagneticStirBar(ctx, cx, y, stirring, angle) {
+    ctx.save();
+    ctx.translate(cx, y);
+    if (stirring) {
+        ctx.rotate(angle);
+    }
+    // Manyetik teflon kaplı beyaz balık
+    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(-12, -3.5, 24, 7, 3);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+}
+
+function drawBeakerHeaderAndStopwatch(ctx, beaker, cx, topY) {
+    ctx.save();
+
+    // Başlık ve Etiket Kutusu
+    const boxW = 140;
+    const boxH = 46;
+    const boxX = cx - boxW / 2;
+    const boxY = topY;
+
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+    ctx.strokeStyle = beaker.isDissolved ? 'rgba(52, 211, 153, 0.6)' : 'rgba(71, 85, 105, 0.5)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(boxX, boxY, boxW, boxH, 8);
+    ctx.fill();
+    ctx.stroke();
+
+    // Başlık
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = beaker.id === "A" ? '#38bdf8' : beaker.id === "B" ? '#2dd4bf' : '#fb923c';
+    ctx.textAlign = 'left';
+    ctx.fillText(beaker.name, boxX + 10, boxY + 16);
+
+    // Parametre özeti (örn: 60°C · Toz · Çalk.)
+    const sShort = beaker.sugar === "cube" ? "Küp" : beaker.sugar === "granulated" ? "Toz" : "Pudra";
+    const stirShort = beaker.stirring ? "🌀 Karışt." : "Durgun";
+    ctx.font = '9px Inter, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText(`${beaker.temp}°C · ${sShort} · ${stirShort}`, boxX + 10, boxY + 36);
+
+    // Kronometre
+    ctx.font = 'bold 13px Inter, monospace';
+    ctx.textAlign = 'right';
+    if (beaker.isDissolved) {
+        ctx.fillStyle = '#34d399';
+        ctx.fillText(`${beaker.targetTime.toFixed(1)}s ✓`, boxX + boxW - 8, boxY + 17);
+    } else {
+        ctx.fillStyle = '#facc15';
+        ctx.fillText(`${beaker.elapsedTime.toFixed(1)}s`, boxX + boxW - 8, boxY + 17);
+    }
+
+    ctx.restore();
+}
+
 // --- 9. POINTER VE TOUCH ETKİLEŞİMİ (AKILLI TAHTA & MOBİL) ---
 function setupCanvasPointerEvents() {
     const cvs = document.getElementById('lab-canvas');
@@ -4187,6 +5006,17 @@ function updateTableHeader(expId) {
                 <th>Görüntü (di) / Özellikleri</th>
             </tr>
         `;
+    } else if (expId === "7.5") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Beher No</th>
+                <th>Sıcaklık (°C)</th>
+                <th>Şeker Türü</th>
+                <th>Karıştırma</th>
+                <th>Çözünme Süresi (t)</th>
+            </tr>
+        `;
     }
 }
 
@@ -4307,6 +5137,22 @@ function recordMeasurement() {
 
         labState.lens.measurements.push(row);
         showLabToast(`Mercek Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "7.5") {
+        const dissolve = labState.dissolve;
+        const sugarNames = { cube: "Küp Şeker", granulated: "Toz Şeker", powder: "Pudra Şekeri" };
+        dissolve.beakers.forEach(b => {
+            const timeText = b.isDissolved ? `${fmt(b.elapsedTime, 1)} sn (Çözündü)` : `${fmt(b.elapsedTime, 1)} sn (Devam Ediyor)`;
+            const row = {
+                id: dissolve.measurements.length + 1,
+                col1: `${b.name}`,
+                col2: `${b.temp}°C`,
+                col3: `${sugarNames[b.sugar] || b.sugar} (10g)`,
+                col4: b.stirring ? "Açık (Karıştırılıyor)" : "Kapalı (Durgun)",
+                col5: timeText
+            };
+            dissolve.measurements.push(row);
+        });
+        showLabToast("3 Beherin ölçüm sonuçları deftere kaydedildi!");
     }
 
     renderMeasurementTable();
@@ -4325,6 +5171,8 @@ function renderMeasurementTable() {
         measurements = labState.energy.measurements;
     } else if (expId === "7.4") {
         measurements = labState.lens.measurements;
+    } else if (expId === "7.5") {
+        measurements = labState.dissolve.measurements;
     } else {
         measurements = labState.optics.measurements;
     }
@@ -4360,6 +5208,8 @@ function clearMeasurementTable() {
         labState.energy.measurements = [];
     } else if (expId === "7.4") {
         labState.lens.measurements = [];
+    } else if (expId === "7.5") {
+        labState.dissolve.measurements = [];
     } else {
         labState.optics.measurements = [];
     }

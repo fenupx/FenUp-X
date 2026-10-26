@@ -495,6 +495,21 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Canvas Altı Hızlı Çözünme Hızı Kontrol Barı (Deney 7.5) -->
+                    <div id="quick-controls-7-5" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group" id="group-presets-7-5">
+                                <button class="lab-toggle-btn active" id="btn-preset-temp" title="Sıcaklık Etkisi Karşılaştırması"><i class="fas fa-thermometer-half"></i> 🌡️ Sıcaklık Testi</button>
+                                <button class="lab-toggle-btn" id="btn-preset-surface" title="Temas Yüzeyi (Tanecik Boyutu) Testi"><i class="fas fa-cubes"></i> ✨ Temas Yüzeyi Testi</button>
+                                <button class="lab-toggle-btn" id="btn-preset-stir" title="Karıştırma Etkisi Testi"><i class="fas fa-sync-alt"></i> 🌀 Karıştırma Testi</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-dissolve-play-pause" title="Çözünmeyi Başlat / Duraklat"><i class="fas fa-play"></i> <span id="label-dissolve-play">Çözünmeyi Başlat</span></button>
+                                <button class="lab-toggle-btn" id="btn-dissolve-reset" title="Sıfırla ve Yeni Deney Hazırla"><i class="fas fa-redo"></i> Yeni Deney</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- SAĞ/ALT (%35): Kontrol Paneli & Veri Tablosu -->
@@ -772,6 +787,132 @@
                             </div>
                         </div>
 
+                        <!-- DENEY 7.5 DEĞİŞKENLERİ -->
+                        <div id="vars-container-7-5" class="is-hidden">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Araştırılan Faktör (Sıcaklık, Temas Yüzeyi veya Karıştırma)</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Çözünme Tamamlanma Süresi (t, saniye) ve Çözünme Hızı</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Çözücü Miktarı (100 mL Saf Su), Çözünen Madde Miktarı (10 g Şeker)</div>
+                                </div>
+                            </div>
+
+                            <!-- Dinamik Maarif Pedagojik Çıkarım & Uyarı Kartı -->
+                            <div class="lab-pedagogical-card is-work" id="dissolve-pedagogical-box">
+                                <div class="pedagogical-icon" id="dissolve-pedagogical-icon"><i class="fas fa-vial"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="dissolve-pedagogical-title">🔬 Kontrollü Deney Hipotezi:</strong>
+                                    <p id="dissolve-pedagogical-text">Sıcaklık arttıkça su taneciklerinin kinetik enerjisi ve hareket sürati artar; şeker tanecikleriyle çarpışma şiddetlenerek çözünme süresi kısalır (çözünme hızı artar).</p>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Kontrollü Deney Şablonları</h4>
+                                <div class="lab-lens-controls-box">
+                                    <div class="lab-field-group">
+                                        <label class="lab-field-label">Araştırılan Bağımsız Değişken:</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr; gap: 6px;">
+                                            <button class="lab-select-pill active" id="pill-preset-temp">🌡️ 1. Sıcaklık Etkisi (20°C vs 40°C vs 60°C)</button>
+                                            <button class="lab-select-pill" id="pill-preset-surface">✨ 2. Temas Yüzeyi Etkisi (Küp vs Toz vs Pudra)</button>
+                                            <button class="lab-select-pill" id="pill-preset-stir">🌀 3. Karıştırma Etkisi (Durgun vs Karıştırılan)</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 3 Beher Bağımsız Ayar Kartları -->
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-flask"></i> 3 Beher Parametreleri</h4>
+                                <div class="lab-beakers-config-grid">
+                                    <!-- Beher A -->
+                                    <div class="lab-beaker-card" id="card-beaker-a">
+                                        <div class="beaker-card-header" style="color: #38bdf8;">
+                                            <strong>Beher A</strong>
+                                            <span class="beaker-time-chip" id="stat-beaker-a-time">0.0 s</span>
+                                        </div>
+                                        <div class="beaker-inputs">
+                                            <div class="mini-field">
+                                                <label>Sıcaklık:</label>
+                                                <select id="select-beaker-a-temp" class="fenupx-input mini-select">
+                                                    <option value="20" selected>20°C (Soğuk)</option>
+                                                    <option value="40">40°C (Ilık)</option>
+                                                    <option value="60">60°C (Sıcak)</option>
+                                                    <option value="80">80°C (Çok Sıcak)</option>
+                                                </select>
+                                            </div>
+                                            <div class="mini-field">
+                                                <label>Şeker Türü:</label>
+                                                <select id="select-beaker-a-sugar" class="fenupx-input mini-select">
+                                                    <option value="cube">Küp Şeker</option>
+                                                    <option value="granulated" selected>Toz Şeker</option>
+                                                    <option value="powder">Pudra Şekeri</option>
+                                                </select>
+                                            </div>
+                                            <button class="mini-toggle-btn" id="btn-beaker-a-stir"><i class="fas fa-sync-alt"></i> Karıştırıcı: <span>Kapalı</span></button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Beher B -->
+                                    <div class="lab-beaker-card" id="card-beaker-b">
+                                        <div class="beaker-card-header" style="color: #2dd4bf;">
+                                            <strong>Beher B</strong>
+                                            <span class="beaker-time-chip" id="stat-beaker-b-time">0.0 s</span>
+                                        </div>
+                                        <div class="beaker-inputs">
+                                            <div class="mini-field">
+                                                <label>Sıcaklık:</label>
+                                                <select id="select-beaker-b-temp" class="fenupx-input mini-select">
+                                                    <option value="20">20°C (Soğuk)</option>
+                                                    <option value="40" selected>40°C (Ilık)</option>
+                                                    <option value="60">60°C (Sıcak)</option>
+                                                    <option value="80">80°C (Çok Sıcak)</option>
+                                                </select>
+                                            </div>
+                                            <div class="mini-field">
+                                                <label>Şeker Türü:</label>
+                                                <select id="select-beaker-b-sugar" class="fenupx-input mini-select">
+                                                    <option value="cube">Küp Şeker</option>
+                                                    <option value="granulated" selected>Toz Şeker</option>
+                                                    <option value="powder">Pudra Şekeri</option>
+                                                </select>
+                                            </div>
+                                            <button class="mini-toggle-btn" id="btn-beaker-b-stir"><i class="fas fa-sync-alt"></i> Karıştırıcı: <span>Kapalı</span></button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Beher C -->
+                                    <div class="lab-beaker-card" id="card-beaker-c">
+                                        <div class="beaker-card-header" style="color: #fb923c;">
+                                            <strong>Beher C</strong>
+                                            <span class="beaker-time-chip" id="stat-beaker-c-time">0.0 s</span>
+                                        </div>
+                                        <div class="beaker-inputs">
+                                            <div class="mini-field">
+                                                <label>Sıcaklık:</label>
+                                                <select id="select-beaker-c-temp" class="fenupx-input mini-select">
+                                                    <option value="20">20°C (Soğuk)</option>
+                                                    <option value="40">40°C (Ilık)</option>
+                                                    <option value="60" selected>60°C (Sıcak)</option>
+                                                    <option value="80">80°C (Çok Sıcak)</option>
+                                                </select>
+                                            </div>
+                                            <div class="mini-field">
+                                                <label>Şeker Türü:</label>
+                                                <select id="select-beaker-c-sugar" class="fenupx-input mini-select">
+                                                    <option value="cube">Küp Şeker</option>
+                                                    <option value="granulated" selected>Toz Şeker</option>
+                                                    <option value="powder">Pudra Şekeri</option>
+                                                </select>
+                                            </div>
+                                            <button class="mini-toggle-btn" id="btn-beaker-c-stir"><i class="fas fa-sync-alt"></i> Karıştırıcı: <span>Kapalı</span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button id="btn-record-data-7-5" class="action-btn lab-record-action-btn" style="margin-top: 14px;"><i class="fas fa-clipboard-check"></i> 📋 3 Beherin Sonuçlarını Kaydet</button>
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- TAB 2: VERİ DEFTERİ VE ÖLÇÜM TABLOSU -->
@@ -898,6 +1039,33 @@
                                 <div class="guide-item">
                                     <strong>4. Orman Yangını Uyarısı:</strong>
                                     <p>Ormanlık alanlara atılan su şişeleri ve cam atıklar ince kenarlı mercek görevi görerek kuru otları tutuşturabilir. Doğamızı korumak için cam atıkları asla doğaya bırakmamalıyız!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 7.5 REHBERİ -->
+                        <div id="guide-container-7-5" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Çözünme Hızını Etkileyen Faktörler Rehberi</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Çözünme Olayı ve Çözelti Nedir?</strong>
+                                    <p>Bir maddenin (çözünen) başka bir madde (çözücü) içerisinde gözle görülemeyecek kadar küçük taneciklerine ayrılarak homojen dağılmasına <strong>çözünme</strong>, oluşan karışıma ise <strong>çözelti</strong> denir. Şekerli su bir çözeltidir.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Sıcaklığın Çözünme Hızına Etkisi:</strong>
+                                    <p>Sıcaklık arttıkça çözücü su taneciklerinin <strong>kinetik enerjisi ve hızı artar</strong>. Hızlanan su molekülleri şeker taneciklerine daha sık ve daha şiddetli çarparak onları daha kısa sürede dağıtır. Bu nedenle sıcak çayda şeker soğuk çaya göre çok daha hızlı çözünür.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>3. Temas Yüzeyinin (Tanecik Boyutunun) Etkisi:</strong>
+                                    <p>Katı bir madde ufalandıkça toplam temas yüzeyi kat kat genişler. Küp şekerde su sadece en dış yüzeye temas ederken, toz ve pudra şekerinde milyonlarca mikro tanecik aynı anda su ile temas eder. Bu yüzden: <strong>Pudra Şekeri &gt; Toz Şeker &gt; Küp Şeker</strong> hız sıralaması geçerlidir.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>4. Karıştırmanın Çözünme Hızına Etkisi:</strong>
+                                    <p>Çözelti karıştırıldığında su molekülleri ile çözünen şeker taneciklerinin çarpışma sıklığı artar. Durgun suya göre karıştırılan çözeltide çözünme süresi belirgin biçimde kısalır.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>5. Bilimsel Kontrollü Deney Kuralı:</strong>
+                                    <p>Bir faktör araştırılırken (örneğin sıcaklık), yalnız o faktör değiştirilir (<strong>bağımsız değişken</strong>). Diğer tüm değişkenler (su miktarı, şeker miktarı, şeker türü, karıştırma) eşit tutulur (<strong>kontrol edilen değişken</strong>). Böylece çözünme süresindeki değişimin (<strong>bağımlı değişken</strong>) araştırılan faktörden kaynaklandığı kesinleşir.</p>
                                 </div>
                             </div>
                         </div>
