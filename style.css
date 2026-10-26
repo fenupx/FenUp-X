@@ -2130,3 +2130,20 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     margin: 0;
 }
 
+/* ==========================================================================
+   ⚡ DENEY 7.2 MEKANİK ENERJİ SİMÜLASYONU STİLLERİ
+   ========================================================================== */
+.lab-toggle-btn.friction-active {
+    background: rgba(239, 68, 68, 0.25) !important;
+    border-color: #ef4444 !important;
+    color: #fca5a5 !important;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.4) !important;
+}
+.lab-toggle-btn.slowmo-active {
+    background: rgba(245, 158, 11, 0.25) !important;
+    border-color: #f59e0b !important;
+    color: #fde68a !important;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.4) !important;
+}
+
+

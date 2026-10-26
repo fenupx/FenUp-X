@@ -442,6 +442,32 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Canvas Altı Hızlı Dokunmatik Enerji Kontrol Barı (Deney 7.2) -->
+                    <div id="quick-controls-7-2" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-mode-pendulum" title="Sarkaç Simülasyonu"><i class="fas fa-circle-notch"></i> Sarkaç Modu</button>
+                                <button class="lab-toggle-btn" id="btn-mode-ramp" title="U-Rampa Simülasyonu"><i class="fas fa-bezier-curve"></i> U-Rampa Modu</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-energy-play-pause" title="Oynat / Duraklat"><i class="fas fa-pause"></i> <span id="label-energy-play">Duraklat</span></button>
+                                <button class="lab-toggle-btn" id="btn-energy-slowmo" title="Yavaş Çekim (0.5x)"><i class="fas fa-tachometer-alt"></i> 0.5x Yavaş</button>
+                                <button class="lab-toggle-btn" id="btn-energy-friction" title="Sürtünme / Hava Direnci"><i class="fas fa-wind"></i> Sürtünme: <span id="label-energy-friction">Kapalı</span></button>
+                                <button class="lab-toggle-btn" id="btn-energy-restart" title="Baştan Bırak"><i class="fas fa-redo"></i> Yeniden Bırak</button>
+                            </div>
+                        </div>
+                        <div class="lab-lens-sliders-row">
+                            <div class="lab-angle-slider-wrap">
+                                <label for="lab-energy-mass-range">Cisim Kütlesi (m): <span id="lab-energy-mass-display">2.0 kg</span></label>
+                                <input type="range" id="lab-energy-mass-range" min="1" max="5" value="2" step="0.5">
+                            </div>
+                            <div class="lab-angle-slider-wrap">
+                                <label for="lab-energy-angle-range">Bırakma Açısı / Yükseklik (θ): <span id="lab-energy-angle-display">45°</span></label>
+                                <input type="range" id="lab-energy-angle-range" min="15" max="60" value="45" step="5">
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- SAĞ/ALT (%35): Kontrol Paneli & Veri Tablosu -->
@@ -449,6 +475,82 @@
                     <!-- TAB 1: DEĞİŞKENLER VE KONTROLLER -->
                     <div class="lab-tab-pane active" id="pane-vars">
                         
+                        <!-- DENEY 7.2 DEĞİŞKENLERİ -->
+                        <div id="vars-container-7-2" class="is-hidden">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Bırakma yüksekliği (h / açı), Cisim kütlesi (m) ve Sürtünme durumu</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Kinetik enerji (Ek), Çekim potansiyel enerjisi (Ep) ve Maksimum sürat (v)</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Yer çekimi ivmesi (g = 9.8 m/s²), İp boyu / Ray eğriliği</div>
+                                </div>
+                            </div>
+
+                            <!-- Dinamik Pedagojik Çıkarım & Uyarı Kartı -->
+                            <div class="lab-pedagogical-card" id="energy-pedagogical-box">
+                                <div class="pedagogical-icon" id="energy-pedagogical-icon"><i class="fas fa-sync-alt"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="energy-pedagogical-title">🔄 Enerji Dönüşümü Devam Ediyor:</strong>
+                                    <p id="energy-pedagogical-text">Potansiyel ve kinetik enerji birbirine dönüşmektedir. Mekanik enerji toplamı (Ep + Ek) sürtünmesiz ortamda sabit kalır.</p>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Deney Parametreleri</h4>
+                                <div class="lab-lens-controls-box">
+                                    <div class="lab-field-group">
+                                        <label class="lab-field-label">Simülasyon Modu:</label>
+                                        <div class="lab-select-pills">
+                                            <button class="lab-select-pill active" id="pill-energy-pendulum">🔄 Sarkaç Modu</button>
+                                            <button class="lab-select-pill" id="pill-energy-ramp">🛹 U-Rampa Modu</button>
+                                        </div>
+                                    </div>
+                                    <div class="lab-field-group" style="margin-top: 8px;">
+                                        <label class="lab-field-label">Sürtünme / Direnç:</label>
+                                        <div class="lab-select-pills">
+                                            <button class="lab-select-pill active" id="pill-energy-friction-off">🛡️ Sürtünmesiz (İdeal)</button>
+                                            <button class="lab-select-pill" id="pill-energy-friction-on">💨 Sürtünmeli (Isı Kayıplı)</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Anlık Ölçüm ve Enerji Değerleri</h4>
+                                <div class="lab-stats-grid">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Cisim Kütlesi (m)</span>
+                                        <strong class="chip-val" id="metric-energy-mass" style="color: #cbd5e1;">2.0 kg</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Yükseklik (h)</span>
+                                        <strong class="chip-val" id="metric-energy-height" style="color: #10b981;">0.44 m</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Anlık Sürat (v)</span>
+                                        <strong class="chip-val" id="metric-energy-speed" style="color: #38bdf8;">0.00 m/s</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Potansiyel Enerji (Ep)</span>
+                                        <strong class="chip-val" id="metric-energy-ep" style="color: #10b981;">8.62 J</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Kinetik Enerji (Ek)</span>
+                                        <strong class="chip-val" id="metric-energy-ek" style="color: #38bdf8;">0.00 J</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Isıya Dönüşen (Eısı)</span>
+                                        <strong class="chip-val" id="metric-energy-heat" style="color: #ef4444;">0.00 J</strong>
+                                    </div>
+                                    <div class="lab-stat-chip" style="grid-column: span 2;">
+                                        <span class="chip-label">Toplam Enerji (Etop = Ep + Ek + Eısı)</span>
+                                        <strong class="chip-val" id="metric-energy-total" style="color: #facc15;">8.62 J (Sabit)</strong>
+                                    </div>
+                                </div>
+                                <button id="btn-record-data-7-2" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
                         <!-- DENEY 7.3 DEĞİŞKENLERİ -->
                         <div id="vars-container-7-3">
                             <div class="lab-panel-box">
@@ -607,6 +709,29 @@
 
                     <!-- TAB 3: BİLİMSEL REHBER -->
                     <div class="lab-tab-pane is-hidden" id="pane-guide">
+                        <!-- DENEY 7.2 REHBERİ -->
+                        <div id="guide-container-7-2" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Mekanik Enerji ve Korunum Rehberi</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Çekim Potansiyel Enerjisi (Ep = m · g · h):</strong>
+                                    <p>Bir cismin konumundan (yüksekliğinden) dolayı sahip olduğu enerjidir. Cismin kütlesi (m) ve yerden yüksekliği (h) arttıkça potansiyel enerjisi de artar. En yüksek noktada (tepe) potansiyel enerji maksimum, sürat sıfır olduğu için kinetik enerji sıfırdır.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Kinetik Enerji (Ek = ½ · m · v²):</strong>
+                                    <p>Hareketli cisimlerin süratlerinden dolayı sahip olduğu enerjidir. Cismin kütlesi (m) ve süratinin karesi (v²) ile doğru orantılıdır. Cisim alçaldıkça potansiyel enerji kinetik enerjiye dönüşür; en alt (denge) noktasında kinetik enerji maksimum değere ulaşır.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>3. Mekanik Enerjinin Korunumu Kanunu:</strong>
+                                    <p>Sürtünmelerin ihmal edildiği ideal bir ortamda kinetik enerji ile potansiyel enerjinin toplamı (Emek = Ep + Ek) daima <strong>sabit kalır</strong>. Enerji yoktan var edilemez, var olan enerji yok olamaz; yalnızca bir türden diğerine dönüşür.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>4. Sürtünme Kuvvetinin Etkisi (Isıya Dönüşüm):</strong>
+                                    <p>Gerçek hayatta hava direnci ve yüzey sürtünmesi mekanik enerjinin bir kısmını <strong>ısı ve ses enerjisine</strong> dönüştürür. Bu nedenle sarkaç veya kaykaycı zamanla yavaşlayarak durur. Mekanik enerji azalır ancak ısıya dönüşen enerjiyle birlikte <strong>toplam enerji daima korunur</strong>.</p>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- DENEY 7.3 REHBERİ -->
                         <div id="guide-container-7-3" class="lab-panel-box">
                             <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Maarif Modeli Bilimsel Rehberi</h4>
