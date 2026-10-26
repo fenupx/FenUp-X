@@ -549,6 +549,50 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Canvas Altı Hızlı Elektroskop Kontrol Barı (Deney 7.8) -->
+                    <div id="quick-controls-7-8" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group" id="group-rod-type-7-8">
+                                <button class="lab-toggle-btn active" id="btn-rod-glass" title="(+) Yüklü Cam Çubuk"><i class="fas fa-gem"></i> (+) Cam Çubuk</button>
+                                <button class="lab-toggle-btn" id="btn-rod-ebonite" title="(-) Yüklü Ebonit Çubuk"><i class="fas fa-magic"></i> (-) Ebonit Çubuk</button>
+                                <button class="lab-toggle-btn" id="btn-rod-neutral" title="Nötr Çubuk"><i class="fas fa-minus"></i> Nötr Çubuk</button>
+                            </div>
+                            <div class="lab-toggle-btn-group" id="group-actions-7-8">
+                                <button class="lab-toggle-btn" id="btn-action-approach" title="Çubuğu Topuza Yaklaştır (Etki)"><i class="fas fa-compress-arrows-alt"></i> Yaklaştır</button>
+                                <button class="lab-toggle-btn" id="btn-action-touch" title="Çubuğu Topuza Dokundur"><i class="fas fa-hand-pointer"></i> Dokundur</button>
+                                <button class="lab-toggle-btn active" id="btn-action-remove" title="Çubuğu Uzaklaştır"><i class="fas fa-expand-arrows-alt"></i> Uzaklaştır</button>
+                            </div>
+                            <div class="lab-toggle-btn-group" id="group-ground-7-8">
+                                <button class="lab-toggle-btn" id="btn-electroscope-ground" title="Topraklama Yap (Nötrle)"><i class="fas fa-bolt"></i> ⚡ Topraklama Yap</button>
+                                <button class="lab-toggle-btn" id="btn-electroscope-reset" title="Elektroskopu Sıfırla"><i class="fas fa-redo"></i> Sıfırla</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Altı Hızlı Besin Piramidi Kontrol Barı (Deney 7.9) -->
+                    <div id="quick-controls-7-9" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group" id="group-modes-7-9">
+                                <button class="lab-toggle-btn active" id="btn-pyramid-mode-energy" title="%10 Enerji Akışı Kuralı"><i class="fas fa-sun"></i> ⚡ %10 Enerji Akışı</button>
+                                <button class="lab-toggle-btn" id="btn-pyramid-mode-bioaccum" title="Biyolojik Birikim (Zehir) Simülasyonu"><i class="fas fa-skull-crossbones"></i> ☠️ Biyobirikim (Zehir)</button>
+                            </div>
+                            <div class="lab-toggle-btn-group" id="group-sunlight-7-9">
+                                <button class="lab-toggle-btn" id="btn-sun-50k" title="Düşük Güneş Enerjisi: 50.000 J">50k J</button>
+                                <button class="lab-toggle-btn active" id="btn-sun-100k" title="Standart Güneş Enerjisi: 100.000 J">100k J</button>
+                                <button class="lab-toggle-btn" id="btn-sun-200k" title="Yüksek Güneş Enerjisi: 200.000 J">200k J</button>
+                            </div>
+                            <div class="lab-toggle-btn-group is-hidden" id="group-pesticide-7-9">
+                                <button class="lab-toggle-btn" id="btn-pest-low" title="Düşük Doz DDT (0.05 ppm)">Az Zehir</button>
+                                <button class="lab-toggle-btn active" id="btn-pest-med" title="Orta Doz DDT (0.5 ppm)">Orta Zehir</button>
+                                <button class="lab-toggle-btn" id="btn-pest-high" title="Yüksek Doz DDT (2.0 ppm)">Aşırı Zehir</button>
+                            </div>
+                            <div class="lab-toggle-btn-group" id="group-flow-7-9">
+                                <button class="lab-toggle-btn active" id="btn-pyramid-toggle-flow" title="Akışı Duraklat / Başlat"><i class="fas fa-pause"></i> <span id="label-pyramid-flow">Duraklat</span></button>
+                                <button class="lab-toggle-btn" id="btn-pyramid-reset" title="Piramidi Sıfırla"><i class="fas fa-redo"></i> Sıfırla</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- SAĞ/ALT (%35): Kontrol Paneli & Veri Tablosu -->
@@ -1164,6 +1208,143 @@
                             </div>
                         </div>
 
+                        <!-- DENEY 7.8 DEĞİŞKENLERİ -->
+                        <div id="vars-container-7-8" class="is-hidden">
+                            <!-- Maarif Modeli Değişkenleri -->
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Çubuğun Yük Cinsi ((+) Cam / (-) Ebonit / Nötr) ve İşlem Türü (Yaklaştırma / Dokundurma / Topraklama)</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Topuz ve Yapraklardaki Yük Dağılımı, Yaprakların Açılma Açısı (α) ve Davranışı</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Pozitif Protonlar (Çekirdekte Kilitlidir; Yalnızca Negatif Elektronlar Hareket Eder!)</div>
+                                </div>
+                            </div>
+
+                            <!-- Dinamik Pedagojik Çıkarım & Durum Kartı -->
+                            <div class="lab-pedagogical-card is-work" id="electroscope-pedagogical-box" style="margin-top: 12px;">
+                                <div class="pedagogical-icon" id="electroscope-pedagogical-icon"><i class="fas fa-atom"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="electroscope-pedagogical-title">⚖️ Elektroskop Nötr Durumda</strong>
+                                    <p id="electroscope-pedagogical-text">Elektroskop yüksüzdür (nötr). Yapraklarda net yük bulunmadığı için yapraklar tamamen kapalıdır (α = 0°).</p>
+                                </div>
+                            </div>
+
+                            <!-- Elektroskop Başlangıç Yükü Seçimi -->
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Elektroskop Başlangıç Yükü</h4>
+                                <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+                                    <button class="lab-select-pill active" id="pill-scope-init-neutral">⚖️ Nötr (0)</button>
+                                    <button class="lab-select-pill" id="pill-scope-init-pos">🔴 Pozitif (+)</button>
+                                    <button class="lab-select-pill" id="pill-scope-init-neg">🔵 Negatif (-)</button>
+                                </div>
+                            </div>
+
+                            <!-- Canlı Elektroskop Metrikleri ve Açılma Göstergesi -->
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Canlı Yük Durumu ve Yaprak Açısı</h4>
+                                
+                                <div class="lab-electroscope-status-grid">
+                                    <!-- Topuz Yükü -->
+                                    <div class="electroscope-part-card">
+                                        <div class="part-header">
+                                            <span>İletken Topuz</span>
+                                            <span class="electro-charge-badge neutral" id="badge-scope-knob">Nötr</span>
+                                        </div>
+                                        <div class="part-charge-val" id="val-scope-knob">0</div>
+                                    </div>
+
+                                    <!-- Yapraklar Yükü -->
+                                    <div class="electroscope-part-card">
+                                        <div class="part-header">
+                                            <span>Altın Yapraklar</span>
+                                            <span class="electro-charge-badge neutral" id="badge-scope-leaves">Nötr</span>
+                                        </div>
+                                        <div class="part-charge-val" id="val-scope-leaves">0</div>
+                                    </div>
+                                </div>
+
+                                <!-- Yaprak Açısı Göstergesi -->
+                                <div class="leaf-angle-meter-card" style="margin-top: 10px;">
+                                    <div class="meter-header">
+                                        <span>Yaprak Açılma Açısı (α):</span>
+                                        <strong id="val-scope-angle" style="color: #facc15; font-family: monospace; font-size: 1.1rem;">0.0°</strong>
+                                    </div>
+                                    <div class="angle-progress-bar">
+                                        <div class="angle-progress-fill" id="bar-scope-angle" style="width: 0%;"></div>
+                                    </div>
+                                    <div class="angle-scale-ticks">
+                                        <span>0° (Kapalı)</span>
+                                        <span>30°</span>
+                                        <span>60° (Maks Açık)</span>
+                                    </div>
+                                </div>
+
+                                <button id="btn-record-data-7-8" class="action-btn lab-record-action-btn" style="margin-top: 14px;"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 7.9 DEĞİŞKENLERİ -->
+                        <div id="vars-container-7-9" class="is-hidden">
+                            <!-- Maarif Modeli Değişkenleri -->
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> İncelenen Trofik Basamak (Üretici, 1., 2., 3. Tüketici) ve Pestisit (Tarım İlacı) Dozu</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Aktarılan Enerji (J), Metabolik Isı Kaybı (J), Biyolojik Birikim (ppm) ve Biyokütle</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> %10 Enerji Aktarım Yasası (Lindeman Kuralı: Enerjinin %90'ı Yaşamsal Isı Olarak Kaybolur)</div>
+                                </div>
+                            </div>
+
+                            <!-- Dinamik Pedagojik Çıkarım & Ekolojik Yasa Kartı -->
+                            <div class="lab-pedagogical-card is-work" id="pyramid-pedagogical-box" style="margin-top: 12px;">
+                                <div class="pedagogical-icon" id="pyramid-pedagogical-icon"><i class="fas fa-leaf"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="pyramid-pedagogical-title">🌾 Üreticiler (1. Trofik Basamak)</strong>
+                                    <p id="pyramid-pedagogical-text">Güneş enerjisini fotosentez ile kimyasal enerjiye dönüştürerek ekosisteme sokan tek basamaktır. Biyokütle ve birey sayısı en büyüktür.</p>
+                                </div>
+                            </div>
+
+                            <!-- Trofik Basamak Seçici -->
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-layer-group"></i> Trofik Basamak İncelemesi</h4>
+                                <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                    <button class="lab-select-pill active" id="pill-tier-producer">🌱 1. Üreticiler</button>
+                                    <button class="lab-select-pill" id="pill-tier-herbivore">🦗 2. 1. Tüketiciler (Otçul)</button>
+                                    <button class="lab-select-pill" id="pill-tier-carnivore">🐸 3. 2. Tüketiciler (Etçil)</button>
+                                    <button class="lab-select-pill" id="pill-tier-apex">🦅 4. Tepe Avcılar</button>
+                                    <button class="lab-select-pill" id="pill-tier-decomposer" style="grid-column: span 2;">🍄 Ayrıştırıcılar (Mantarlar & Bakteriler)</button>
+                                </div>
+                            </div>
+
+                            <!-- Seçili Basamak Canlı Metrik Kartı -->
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <div class="lab-table-title-row">
+                                    <h4 class="lab-box-heading"><i class="fas fa-chart-pie"></i> <span id="label-selected-tier-heading">Üreticiler Detay Metrikleri</span></h4>
+                                </div>
+
+                                <div class="lab-stat-chips-grid">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Aktarılan Enerji</span>
+                                        <strong class="chip-val" id="metric-tier-energy" style="color: #10b981;">10.000 J</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Isı Kaybı (%90)</span>
+                                        <strong class="chip-val" id="metric-tier-heat" style="color: #f87171;">90.000 J</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Biyolojik Birikim</span>
+                                        <strong class="chip-val" id="metric-tier-poison" style="color: #38bdf8;">0.05 ppm</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Biyokütle / Birey</span>
+                                        <strong class="chip-val" id="metric-tier-biomass" style="color: #a78bfa;">En Büyük</strong>
+                                    </div>
+                                </div>
+
+                                <button id="btn-record-data-7-9" class="action-btn lab-record-action-btn" style="margin-top: 14px;"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- TAB 2: VERİ DEFTERİ VE ÖLÇÜM TABLOSU -->
@@ -1371,6 +1552,60 @@
                                 <div class="guide-item">
                                     <strong>5. Dokunma ile Elektriklenme ve Yük Paylaşımı:</strong>
                                     <p>Yüklü bir iletken nötr veya yüklü başka bir iletkene dokundurulduğunda fazla elektronlar temas yüzeyinden akarak iki cisim arasında paylaşılır. Özdeş iki iletken küre dokundurulup ayrıldığında <strong>toplam yükü eşit paylaşır</strong> ve mutlaka <strong>aynı cins yükle</strong> yüklenmiş olurlar.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 7.8 REHBERİ -->
+                        <div id="guide-container-7-8" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Elektroskop ve Topraklama Bilimsel Rehberi</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Elektroskop Nedir ve Nasıl Çalışır?</strong>
+                                    <p>Bir cismin elektrik yüklü olup olmadığını, yüklü ise hangi cins yükle (+ veya -) yüklendiğini anlamaya yarayan araca <strong>elektroskop</strong> denir. İletken bir topuz, iletken bir gövde ve hafif iki yapraktan oluşur; dış hava akımlarından etkilenmemesi için cam bir fanus içine alınmıştır.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Nötr Elektroskoba Yüklü Cisim Yaklaştırma (Etki ile Elektriklenme):</strong>
+                                    <p>Nötr elektroskoba (-) yüklü çubuk yaklaştırılırsa, topuzdaki elektronlar yapraklara itilir. Topuz (+), yapraklar (-) yüklenir ve yapraklar birbirini iterek <strong>açılır</strong>. Çubuk uzaklaştırıldığında elektronlar geri döner ve yapraklar <strong>kapanır</strong>. Benzer şekilde (+) yüklü çubuk yaklaştırılırsa yapraklardan topuza elektron çekilir; yapraklar (+) yüklenerek açılır.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>3. Dokunma ile Elektriklenme (Kalıcı Yükleme):</strong>
+                                    <p>Yüklü bir cisim elektroskop topuzuna dokundurulduğunda yük paylaşımı gerçekleşir. Cisim uzaklaştırılsa dahi elektroskop artık yüklü kalır ve yapraklar <strong>açık kalmaya devam eder</strong>.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>4. Yüklü Elektroskoba Cisim Yaklaştırma:</strong>
+                                    <p>Elektroskop ile yaklaştırılan cisim <strong>aynı cins</strong> yüklü ise yapraklar <strong>biraz daha açılır</strong>. Eğer cisim ile elektroskop <strong>zıt cins</strong> yüklü ise yapraklar <strong>biraz kapanır</strong> (yaklaştırılan cismin yükü çok fazlaysa yapraklar önce tamamen kapanıp sonra tekrar açılabilir).</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>5. Topraklama (Nötrleme İlkesi):</strong>
+                                    <p>Yüklü bir iletkenin iletken bir telle veya elle toprağa bağlanmasına <strong>topraklama</strong> denir. Toprak sonsuz bir elektron deposudur: Pozitif yüklü cisim toprağa bağlandığında topraktan cisme elektron gelir; negatif yüklü cisim bağlandığında cisimden toprağa elektron akar. Her iki durumda da elektroskop <strong>nötrlenir ve yapraklar tamamen kapanır</strong>.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 7.9 REHBERİ -->
+                        <div id="guide-container-7-9" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Besin Piramidinde Enerji Akışı ve Biyobirikim Rehberi</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Besin Piramidi ve Trofik Basamaklar:</strong>
+                                    <p>Bir ekosistemde üreticilerden tepe tüketicilere kadar olan beslenme ilişkilerini gösteren piramide <strong>ekoloji/besin piramidi</strong> denir. Taban basamakta üreticiler, üzerinde birincil tüketiciler (otçullar), ikincil tüketiciler (etçiller) ve en tepede üçüncül tüketiciler (tepe yırtıcılar) bulunur.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. %10 Enerji Aktarımı Kuralı:</strong>
+                                    <p>Bir besin basamağından bir üst basamağa geçerken enerjinin yalnızca yaklaşık <strong>%10'u</strong> aktarılabilir. Geriye kalan <strong>%90'lık enerji</strong> canlıların solunum, hareket, boşaltım gibi yaşamsal faaliyetlerinde metabolik ısı olarak çevreye yayılır veya sindirilmeyen atıklarla kaybedilir.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>3. Biyolojik Birikim (Toksik Maddelerin Katlanması):</strong>
+                                    <p>Tarım ilaçları (DDT), ağır metaller (kurşun, cıva) gibi doğada kolayca parçalanamayan ve vücuttan atılamayan zehirli maddeler yağ dokuda birikir. Bu maddelerin yoğunluğu, besin piramidinde <strong>yukarı çıkıldıkça katlanarak artar</strong>. Bu olaya <strong>biyolojik birikim</strong> denir ve en büyük zarar en üst basamaktaki tepe yırtıcılarda (kartal, insan) görülür.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>4. Piramitte Aşağıdan Yukarıya Değişen Temel Özellikler:</strong>
+                                    <p>Tabandan tavana doğru çıkıldıkça: <strong>Aktarılan enerji azalır</strong>, <strong>toplam biyokütle azalır</strong>, <strong>birey sayısı genellikle azalır</strong>, canlıların vücut büyüklüğü genellikle artar ve <strong>biyolojik birikim (zehir) artar</strong>.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>5. Ayrıştırıcıların Hayati Rolü:</strong>
+                                    <p>Bakteri ve mantarlar gibi ayrıştırıcılar, besin piramidinin belirli bir basamağında değil, <strong>tüm basamaklarında</strong> görev yapar. Ölen canlı kalıntılarını parçalayarak inorganik maddelere dönüştürür ve madde döngüsünün kesintisiz sürmesini sağlar.</p>
                                 </div>
                             </div>
                         </div>

@@ -182,16 +182,16 @@ export const EXPERIMENTS_DATABASE = [
     },
     {
         id: "7.8", grade: 7, unit: 6, unitName: "Elektriklenme",
-        title: "Elektroskop ile Cisimlerin Yük Tayini",
-        code: "FB.7.6.2", bookRef: "2. Kitap, s. 122–129",
-        active: false,
-        desc: "Yüklü cisimleri elektroskop topuzuna dokundurarak ve yaklaştırarak yaprakların açılma/kapanma fiziğini test edin."
+        title: "Elektroskop ile Yük Tayini ve Topraklama Simülatörü",
+        code: "FB.7.6.2 - FB.7.6.3", bookRef: "2. Kitap, s. 120–129",
+        active: true, // 🏆 AKTİF!
+        desc: "Yüklü cisimleri elektroskop topuzuna yaklaştırarak ve dokundurarak yaprak açılma fiziğini ve topraklamayla nötrlenmeyi deneyimleyin."
     },
     {
         id: "7.9", grade: 7, unit: 7, unitName: "Sürdürülebilir Yaşam ve Enerji",
-        title: "Besin Piramidinde Enerji Akışı ve Biyolojik Birikim",
+        title: "Besin Piramidinde Enerji Akışı ve Biyobirikim Simülatörü",
         code: "FB.7.7.1", bookRef: "2. Kitap, s. 136–149",
-        active: false,
+        active: true, // 🏆 AKTİF!
         desc: "Üreticiden tepe avcıya aktarılan enerjinin azalışını (%10 kuralı) ve tarım ilacı zehirlerinin katlanarak birikimini gözlemleyin."
     }
 ];
@@ -465,6 +465,52 @@ export const labState = {
         },
 
         measurements: []
+    },
+
+    // DENEY 7.8: ELEKTROSKOP İLE YÜK TAYİNİ VE TOPRAKLAMA SİMÜLATÖRÜ
+    electroscope: {
+        rod: {
+            type: "glass_pos", // "glass_pos" (+) | "ebonite_neg" (-) | "neutral" (0)
+            charge: 6,         // +6, -6, 0
+            x: 180,
+            y: 110,
+            baseX: 180,
+            baseY: 110,
+            w: 170,
+            h: 30,
+            action: "remove", // "approach" | "touch" | "remove"
+            isDragging: false,
+            dragOffsetX: 0,
+            dragOffsetY: 0
+        },
+        scope: {
+            initialMode: "neutral", // "neutral" | "positive" | "negative"
+            totalNet: 0,       // elektroskobun net yükü
+            knobNet: 0,        // topuzdaki yük
+            leavesNet: 0,      // yapraklardaki yük
+            leafAngle: 0.0,    // mevcut açı (derece)
+            targetAngle: 0.0   // hedef açı
+        },
+        grounding: {
+            isActive: false,
+            animTimer: 0,
+            sparks: []
+        },
+        sparks: [],
+        measurements: []
+    },
+
+    // DENEY 7.9: BESİN PİRAMİDİNDE ENERJİ AKIŞI VE BİYOBİRİKİM SİMÜLATÖRÜ
+    foodPyramid: {
+        mode: "energy",       // "energy" (%10 Kuralı) | "bioaccum" (Biyobirikim)
+        sunlight: 100000,     // 50000, 100000, 200000 J
+        pesticideDose: "med", // "low" | "med" | "high"
+        selectedTier: 0,      // 0: Üretici, 1: 1. Tüketici, 2: 2. Tüketici, 3: Tepe Avcı, 4: Ayrıştırıcı
+        isFlowing: true,      // animasyon akışı
+        flowParticles: [],    // basamaklar arası enerji fotonları
+        heatArrows: [],       // her basamaktan çıkan %90 ısı okları
+        poisonParticles: [],  // dokularda biriken zehir tanecikleri
+        measurements: []
     }
 };
 
@@ -728,6 +774,12 @@ function setupWorkspaceShellDOM() {
     // 10. DENEY 7.7 KONTROLLERİ (ELEKTRİKLENME)
     setupElectroControlsDOM();
 
+    // 11. DENEY 7.8 KONTROLLERİ (ELEKTROSKOP VE TOPRAKLAMA)
+    setupElectroscopeControlsDOM();
+
+    // 12. DENEY 7.9 KONTROLLERİ (BESİN PİRAMİDİ VE BİYOBİRİKİM)
+    setupFoodPyramidControlsDOM();
+
     // 7. Tablo Temizle
     const btnClearTable = document.getElementById('btn-clear-table');
     if (btnClearTable) btnClearTable.addEventListener('click', clearMeasurementTable);
@@ -893,6 +945,8 @@ export function openExperimentWorkspace(expId) {
     const is75 = (expId === "7.5");
     const is76 = (expId === "7.6");
     const is77 = (expId === "7.7");
+    const is78 = (expId === "7.8");
+    const is79 = (expId === "7.9");
 
     // HUD Paneli (Sadece Deney 7.3)
     const hud73 = document.getElementById('hud-exp-7-3');
@@ -906,6 +960,8 @@ export function openExperimentWorkspace(expId) {
     const qc75 = document.getElementById('quick-controls-7-5');
     const qc76 = document.getElementById('quick-controls-7-6');
     const qc77 = document.getElementById('quick-controls-7-7');
+    const qc78 = document.getElementById('quick-controls-7-8');
+    const qc79 = document.getElementById('quick-controls-7-9');
     if (qc71) qc71.classList.toggle('is-hidden', !is71);
     if (qc72) qc72.classList.toggle('is-hidden', !is72);
     if (qc73) qc73.classList.toggle('is-hidden', !is73);
@@ -913,6 +969,8 @@ export function openExperimentWorkspace(expId) {
     if (qc75) qc75.classList.toggle('is-hidden', !is75);
     if (qc76) qc76.classList.toggle('is-hidden', !is76);
     if (qc77) qc77.classList.toggle('is-hidden', !is77);
+    if (qc78) qc78.classList.toggle('is-hidden', !is78);
+    if (qc79) qc79.classList.toggle('is-hidden', !is79);
 
     // Değişkenler Panelleri
     const vars71 = document.getElementById('vars-container-7-1');
@@ -922,6 +980,8 @@ export function openExperimentWorkspace(expId) {
     const vars75 = document.getElementById('vars-container-7-5');
     const vars76 = document.getElementById('vars-container-7-6');
     const vars77 = document.getElementById('vars-container-7-7');
+    const vars78 = document.getElementById('vars-container-7-8');
+    const vars79 = document.getElementById('vars-container-7-9');
     if (vars71) vars71.classList.toggle('is-hidden', !is71);
     if (vars72) vars72.classList.toggle('is-hidden', !is72);
     if (vars73) vars73.classList.toggle('is-hidden', !is73);
@@ -929,6 +989,8 @@ export function openExperimentWorkspace(expId) {
     if (vars75) vars75.classList.toggle('is-hidden', !is75);
     if (vars76) vars76.classList.toggle('is-hidden', !is76);
     if (vars77) vars77.classList.toggle('is-hidden', !is77);
+    if (vars78) vars78.classList.toggle('is-hidden', !is78);
+    if (vars79) vars79.classList.toggle('is-hidden', !is79);
 
     // Rehber Panelleri
     const guide71 = document.getElementById('guide-container-7-1');
@@ -938,6 +1000,8 @@ export function openExperimentWorkspace(expId) {
     const guide75 = document.getElementById('guide-container-7-5');
     const guide76 = document.getElementById('guide-container-7-6');
     const guide77 = document.getElementById('guide-container-7-7');
+    const guide78 = document.getElementById('guide-container-7-8');
+    const guide79 = document.getElementById('guide-container-7-9');
     if (guide71) guide71.classList.toggle('is-hidden', !is71);
     if (guide72) guide72.classList.toggle('is-hidden', !is72);
     if (guide73) guide73.classList.toggle('is-hidden', !is73);
@@ -945,6 +1009,8 @@ export function openExperimentWorkspace(expId) {
     if (guide75) guide75.classList.toggle('is-hidden', !is75);
     if (guide76) guide76.classList.toggle('is-hidden', !is76);
     if (guide77) guide77.classList.toggle('is-hidden', !is77);
+    if (guide78) guide78.classList.toggle('is-hidden', !is78);
+    if (guide79) guide79.classList.toggle('is-hidden', !is79);
 
     if (is71) {
         initWorkState();
@@ -956,6 +1022,10 @@ export function openExperimentWorkspace(expId) {
         initSeparationState();
     } else if (is77) {
         initElectroState();
+    } else if (is78) {
+        initElectroscopeState();
+    } else if (is79) {
+        initFoodPyramidState();
     }
 
     // Veri Tablosu Başlıklarını Güncelle
@@ -994,6 +1064,10 @@ function resetCurrentExperiment() {
         resetSeparationExperiment();
     } else if (labState.activeExperimentId === "7.7") {
         resetElectroExperiment();
+    } else if (labState.activeExperimentId === "7.8") {
+        resetElectroscopeExperiment();
+    } else if (labState.activeExperimentId === "7.9") {
+        resetFoodPyramidExperiment();
     } else if (labState.activeExperimentId === "7.3") {
         labState.optics.medium1 = "air";
         labState.optics.medium2 = "water";
@@ -1081,6 +1155,10 @@ function initExperimentCanvas() {
         initSeparationState();
     } else if (labState.activeExperimentId === "7.7") {
         initElectroState();
+    } else if (labState.activeExperimentId === "7.8") {
+        initElectroscopeState();
+    } else if (labState.activeExperimentId === "7.9") {
+        initFoodPyramidState();
     }
 
     startRenderLoop();
@@ -1121,6 +1199,12 @@ function startRenderLoop() {
             } else if (labState.activeExperimentId === "7.7") {
                 updateElectroPhysics();
                 drawElectroSimulation();
+            } else if (labState.activeExperimentId === "7.8") {
+                updateElectroscopePhysics();
+                drawElectroscopeSimulation();
+            } else if (labState.activeExperimentId === "7.9") {
+                updateFoodPyramidEcology();
+                drawFoodPyramidSimulation();
             }
         }
         if (labState.activeExperimentId) {
@@ -7103,6 +7187,1765 @@ function drawTouchSparks(ctx, sparks) {
     ctx.restore();
 }
 
+// --- 8.8. DENEY 7.8: ELEKTROSKOP İLE YÜK TAYİNİ VE TOPRAKLAMA MOTORU ---
+
+function setupElectroscopeControlsDOM() {
+    // 1. Çubuk Türü Butonları
+    const bGlass = document.getElementById('btn-rod-glass');
+    const bEbonite = document.getElementById('btn-rod-ebonite');
+    const bNeutral = document.getElementById('btn-rod-neutral');
+
+    if (bGlass) bGlass.addEventListener('click', () => setElectroscopeRodType("glass_pos"));
+    if (bEbonite) bEbonite.addEventListener('click', () => setElectroscopeRodType("ebonite_neg"));
+    if (bNeutral) bNeutral.addEventListener('click', () => setElectroscopeRodType("neutral"));
+
+    // 2. Etkileşim Butonları (Yaklaştır / Dokundur / Uzaklaştır)
+    const bApproach = document.getElementById('btn-action-approach');
+    const bTouch = document.getElementById('btn-action-touch');
+    const bRemove = document.getElementById('btn-action-remove');
+
+    if (bApproach) bApproach.addEventListener('click', () => setElectroscopeAction("approach"));
+    if (bTouch) bTouch.addEventListener('click', () => setElectroscopeAction("touch"));
+    if (bRemove) bRemove.addEventListener('click', () => setElectroscopeAction("remove"));
+
+    // 3. Topraklama ve Sıfırlama
+    const bGround = document.getElementById('btn-electroscope-ground');
+    const bReset = document.getElementById('btn-electroscope-reset');
+
+    if (bGround) bGround.addEventListener('click', groundElectroscope);
+    if (bReset) bReset.addEventListener('click', resetElectroscopeExperiment);
+
+    // 4. Başlangıç Yükü Seçim Hapları
+    const pNeutral = document.getElementById('pill-scope-init-neutral');
+    const pPos = document.getElementById('pill-scope-init-pos');
+    const pNeg = document.getElementById('pill-scope-init-neg');
+
+    if (pNeutral) pNeutral.addEventListener('click', () => setElectroscopeInitialCharge("neutral"));
+    if (pPos) pPos.addEventListener('click', () => setElectroscopeInitialCharge("positive"));
+    if (pNeg) pNeg.addEventListener('click', () => setElectroscopeInitialCharge("negative"));
+
+    // 5. Gözlemi Kaydet Butonu
+    const btnRecord78 = document.getElementById('btn-record-data-7-8');
+    if (btnRecord78) btnRecord78.addEventListener('click', recordMeasurement);
+}
+
+function setElectroscopeRodType(type) {
+    const es = labState.electroscope;
+    es.rod.type = type;
+    if (type === "glass_pos") {
+        es.rod.charge = 6;
+    } else if (type === "ebonite_neg") {
+        es.rod.charge = -6;
+    } else {
+        es.rod.charge = 0;
+    }
+
+    ['btn-rod-glass', 'btn-rod-ebonite', 'btn-rod-neutral'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.classList.remove('active');
+    });
+
+    const activeMap = { glass_pos: 'btn-rod-glass', ebonite_neg: 'btn-rod-ebonite', neutral: 'btn-rod-neutral' };
+    const activeBtn = document.getElementById(activeMap[type]);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    // Eğer çubuk zaten dokunma veya yaklaşma modundaysa hemen yeniden hesapla
+    if (es.rod.action === "approach" || es.rod.action === "touch") {
+        setElectroscopeAction(es.rod.action);
+    }
+}
+
+function setElectroscopeAction(action) {
+    const es = labState.electroscope;
+    es.rod.action = action;
+
+    ['btn-action-approach', 'btn-action-touch', 'btn-action-remove'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.classList.remove('active');
+    });
+
+    const activeMap = { approach: 'btn-action-approach', touch: 'btn-action-touch', remove: 'btn-action-remove' };
+    const activeBtn = document.getElementById(activeMap[action]);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    if (action === "approach") {
+        es.rod.x = 230;
+        es.rod.y = 110;
+    } else if (action === "touch") {
+        es.rod.x = 275;
+        es.rod.y = 110;
+        // Dokunma kıvılcımları üret
+        spawnElectroscopeTouchSparks(es);
+    } else if (action === "remove") {
+        es.rod.x = 120;
+        es.rod.y = 110;
+    }
+}
+
+function setElectroscopeInitialCharge(mode) {
+    const es = labState.electroscope;
+    es.scope.initialMode = mode;
+
+    ['pill-scope-init-neutral', 'pill-scope-init-pos', 'pill-scope-init-neg'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+    });
+
+    const activeMap = { neutral: 'pill-scope-init-neutral', positive: 'pill-scope-init-pos', negative: 'pill-scope-init-neg' };
+    const activePill = document.getElementById(activeMap[mode]);
+    if (activePill) activePill.classList.add('active');
+
+    if (mode === "neutral") {
+        es.scope.totalNet = 0;
+        es.scope.knobNet = 0;
+        es.scope.leavesNet = 0;
+        es.scope.leafAngle = 0;
+        es.scope.targetAngle = 0;
+        showLabToast("Elektroskop Nötr (0) duruma getirildi");
+    } else if (mode === "positive") {
+        es.scope.totalNet = 4;
+        es.scope.knobNet = 2;
+        es.scope.leavesNet = 2;
+        es.scope.leafAngle = 24;
+        es.scope.targetAngle = 24;
+        showLabToast("Elektroskop Pozitif (+) yüklendi (Yapraklar açık)");
+    } else if (mode === "negative") {
+        es.scope.totalNet = -4;
+        es.scope.knobNet = -2;
+        es.scope.leavesNet = -2;
+        es.scope.leafAngle = 24;
+        es.scope.targetAngle = 24;
+        showLabToast("Elektroskop Negatif (-) yüklendi (Yapraklar açık)");
+    }
+
+    // Mevcut etkileşimi güncelle
+    setElectroscopeAction(es.rod.action);
+}
+
+function groundElectroscope() {
+    const es = labState.electroscope;
+    es.grounding.isActive = true;
+    es.grounding.animTimer = 35; // ~0.6 saniye kıvılcım
+
+    // Kıvılcım oluştur
+    for (let i = 0; i < 16; i++) {
+        es.grounding.sparks.push({
+            x: 420 + (Math.random() - 0.5) * 30,
+            y: 110 + (Math.random() - 0.5) * 30,
+            vx: (Math.random() - 0.5) * 4 + 2,
+            vy: (Math.random() - 0.5) * 4 - 2,
+            alpha: 1.0,
+            color: '#34d399',
+            size: 2.5 + Math.random() * 2.5
+        });
+    }
+
+    es.scope.totalNet = 0;
+    es.scope.knobNet = 0;
+    es.scope.leavesNet = 0;
+    es.scope.targetAngle = 0;
+    es.scope.initialMode = "neutral";
+
+    ['pill-scope-init-neutral', 'pill-scope-init-pos', 'pill-scope-init-neg'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('active', id === 'pill-scope-init-neutral');
+    });
+
+    showLabToast("⚡ Elektroskop topraklandı ve tamamen nötrlendi!");
+}
+
+function resetElectroscopeExperiment() {
+    const es = labState.electroscope;
+    es.rod.type = "glass_pos";
+    es.rod.charge = 6;
+    es.rod.x = 120;
+    es.rod.y = 110;
+    es.rod.action = "remove";
+    es.rod.isDragging = false;
+
+    es.scope.initialMode = "neutral";
+    es.scope.totalNet = 0;
+    es.scope.knobNet = 0;
+    es.scope.leavesNet = 0;
+    es.scope.leafAngle = 0;
+    es.scope.targetAngle = 0;
+
+    es.grounding.isActive = false;
+    es.grounding.animTimer = 0;
+    es.grounding.sparks = [];
+    es.sparks = [];
+
+    // Buton aktifliklerini sıfırla
+    ['btn-rod-glass', 'btn-action-remove', 'pill-scope-init-neutral'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('active');
+    });
+    ['btn-rod-ebonite', 'btn-rod-neutral', 'btn-action-approach', 'btn-action-touch', 'pill-scope-init-pos', 'pill-scope-init-neg'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+    });
+
+    updateElectroscopeMetricsDOM();
+    showLabToast("Elektroskop düzeneği başlangıç durumuna sıfırlandı");
+}
+
+function initElectroscopeState() {
+    const es = labState.electroscope;
+    es.rod.x = (es.rod.action === "approach") ? 230 : (es.rod.action === "touch") ? 275 : 120;
+    es.rod.y = 110;
+    es.grounding.isActive = false;
+    es.grounding.sparks = [];
+    es.sparks = [];
+    updateElectroscopeMetricsDOM();
+}
+
+function spawnElectroscopeTouchSparks(es) {
+    es.sparks = [];
+    for (let i = 0; i < 20; i++) {
+        es.sparks.push({
+            x: 400 + (Math.random() - 0.5) * 15,
+            y: 110 + (Math.random() - 0.5) * 15,
+            vx: (Math.random() - 0.5) * 5,
+            vy: (Math.random() - 0.5) * 5,
+            alpha: 1.0,
+            color: es.rod.charge > 0 ? '#f87171' : es.rod.charge < 0 ? '#38bdf8' : '#e2e8f0',
+            size: 2 + Math.random() * 3
+        });
+    }
+}
+
+function updateElectroscopePhysics() {
+    const es = labState.electroscope;
+
+    // 1. Topraklama Parçacıkları Güncelleme
+    if (es.grounding.animTimer > 0) {
+        es.grounding.animTimer--;
+        if (es.grounding.animTimer === 0) {
+            es.grounding.isActive = false;
+        }
+    }
+    es.grounding.sparks = es.grounding.sparks.filter(s => {
+        s.x += s.vx;
+        s.y += s.vy;
+        s.alpha -= 0.04;
+        return s.alpha > 0;
+    });
+
+    // 2. Dokunma / İletim Kıvılcımları
+    es.sparks = es.sparks.filter(s => {
+        s.x += s.vx;
+        s.y += s.vy;
+        s.alpha -= 0.05;
+        return s.alpha > 0;
+    });
+
+    // 3. Elektrostatik Yük Durumu Hesaplama
+    if (es.grounding.isActive) {
+        es.scope.knobNet = 0;
+        es.scope.leavesNet = 0;
+        es.scope.targetAngle = 0;
+    } else if (es.rod.action === "touch") {
+        // Dokunma ile yük paylaşımı (Sadece elektron transferi!)
+        if (es.rod.charge > 0) {
+            // Pozitif çubuk elektroskoptan elektron alır -> elektroskop daha pozitif olur
+            es.scope.totalNet = Math.min(6, es.scope.totalNet + 4);
+        } else if (es.rod.charge < 0) {
+            // Negatif çubuk elektroskoba elektron verir -> elektroskop daha negatif olur
+            es.scope.totalNet = Math.max(-6, es.scope.totalNet - 4);
+        }
+        es.scope.knobNet = Math.round(es.scope.totalNet / 2);
+        es.scope.leavesNet = Math.round(es.scope.totalNet / 2);
+        es.scope.targetAngle = Math.min(60, Math.abs(es.scope.leavesNet) * 12.0);
+    } else if (es.rod.action === "approach") {
+        // Etki ile kutuplanma (Yaklaştırma)
+        const halfTotal = Math.round(es.scope.totalNet / 2);
+        if (es.rod.charge > 0) {
+            // (+) Cam çubuk yapraklardaki elektronları topuza çeker:
+            // Topuz negatif (-), yapraklar daha pozitif (+)
+            es.scope.knobNet = halfTotal - 3;
+            es.scope.leavesNet = halfTotal + 3;
+        } else if (es.rod.charge < 0) {
+            // (-) Ebonit çubuk topuzdaki elektronları yapraklara iter:
+            // Topuz pozitif (+), yapraklar daha negatif (-)
+            es.scope.knobNet = halfTotal + 3;
+            es.scope.leavesNet = halfTotal - 3;
+        } else {
+            es.scope.knobNet = halfTotal;
+            es.scope.leavesNet = halfTotal;
+        }
+        es.scope.targetAngle = Math.min(60, Math.abs(es.scope.leavesNet) * 12.0);
+    } else {
+        // Çubuk Uzak (Denge durumu)
+        const halfTotal = Math.round(es.scope.totalNet / 2);
+        es.scope.knobNet = halfTotal;
+        es.scope.leavesNet = halfTotal;
+        es.scope.targetAngle = Math.min(60, Math.abs(es.scope.leavesNet) * 12.0);
+    }
+
+    // 4. Yaprak Açısı Yumuşak Sönümleme
+    es.scope.leafAngle += (es.scope.targetAngle - es.scope.leafAngle) * 0.16;
+    if (Math.abs(es.scope.leafAngle - es.scope.targetAngle) < 0.1) {
+        es.scope.leafAngle = es.scope.targetAngle;
+    }
+
+    updateElectroscopeMetricsDOM();
+}
+
+function updateElectroscopeMetricsDOM() {
+    const es = labState.electroscope;
+
+    // Topuz Rozeti
+    const bKnob = document.getElementById('badge-scope-knob');
+    const vKnob = document.getElementById('val-scope-knob');
+    if (bKnob && vKnob) {
+        const k = es.scope.knobNet;
+        bKnob.className = `electro-charge-badge ${k > 0 ? 'positive' : k < 0 ? 'negative' : 'neutral'}`;
+        bKnob.textContent = k > 0 ? `+${k}e` : k < 0 ? `${k}e` : 'Nötr';
+        vKnob.textContent = k > 0 ? `+${k}e` : k < 0 ? `${k}e` : '0';
+        vKnob.style.color = k > 0 ? '#f87171' : k < 0 ? '#38bdf8' : '#94a3b8';
+    }
+
+    // Yapraklar Rozeti
+    const bLeaves = document.getElementById('badge-scope-leaves');
+    const vLeaves = document.getElementById('val-scope-leaves');
+    if (bLeaves && vLeaves) {
+        const l = es.scope.leavesNet;
+        bLeaves.className = `electro-charge-badge ${l > 0 ? 'positive' : l < 0 ? 'negative' : 'neutral'}`;
+        bLeaves.textContent = l > 0 ? `+${l}e` : l < 0 ? `${l}e` : 'Nötr';
+        vLeaves.textContent = l > 0 ? `+${l}e` : l < 0 ? `${l}e` : '0';
+        vLeaves.style.color = l > 0 ? '#f87171' : l < 0 ? '#38bdf8' : '#94a3b8';
+    }
+
+    // Yaprak Açısı Göstergesi
+    const vAngle = document.getElementById('val-scope-angle');
+    const bAngle = document.getElementById('bar-scope-angle');
+    if (vAngle && bAngle) {
+        const ang = Math.max(0, es.scope.leafAngle);
+        vAngle.textContent = `${ang.toFixed(1)}°`;
+        const pct = Math.min(100, (ang / 60) * 100);
+        bAngle.style.width = `${pct.toFixed(0)}%`;
+    }
+
+    // Dinamik Maarif Pedagojik Kartı
+    const pBox = document.getElementById('electroscope-pedagogical-box');
+    const pTitle = document.getElementById('electroscope-pedagogical-title');
+    const pText = document.getElementById('electroscope-pedagogical-text');
+    const pIcon = document.getElementById('electroscope-pedagogical-icon');
+
+    if (pBox && pTitle && pText && pIcon) {
+        if (es.grounding.isActive) {
+            pBox.className = "lab-pedagogical-card is-work";
+            pIcon.innerHTML = '<i class="fas fa-bolt" style="color: #34d399;"></i>';
+            pTitle.textContent = "⚡ Topraklama Yapıldı: Elektroskop Nötrlendi!";
+            pText.textContent = "Toprak sonsuz bir elektron deposudur. İletken bir yolla toprağa bağlanan elektroskop tüm yük dengesini sağlayarak nötrlenir ve yapraklar tamamen kapanır (α = 0°).";
+        } else if (es.rod.action === "touch") {
+            pBox.className = "lab-pedagogical-card is-work";
+            pIcon.innerHTML = '<i class="fas fa-hand-pointer" style="color: #facc15;"></i>';
+            pTitle.textContent = `🤝 Dokunma ile Elektriklenme (${es.scope.totalNet > 0 ? "Pozitif" : es.scope.totalNet < 0 ? "Negatif" : "Nötr"})`;
+            pText.textContent = `Dokunma sonucu iletken cisimler arasında doğrudan elektron aktarımı gerçekleşti. Çubuk uzaklaştırılsa dahi elektroskop yüklü kalır ve yapraklar açık kalmaya devam eder!`;
+        } else if (es.rod.action === "approach") {
+            pBox.className = "lab-pedagogical-card is-work";
+            if (es.rod.charge > 0) {
+                pIcon.innerHTML = '<i class="fas fa-compress-arrows-alt" style="color: #f87171;"></i>';
+                pTitle.textContent = "🧲 Etki ile Elektriklenme: (+) Cam Çubuk Yaklaştırıldı";
+                pText.textContent = "Pozitif yüklü cam çubuk, elektroskobun yapraklarındaki serbest elektronları (e⁻) topuza çeker. Topuz negatif (-), yapraklar pozitif (+) kutuplanır. Aynı cins yükler birbirini ittiği için yapraklar açılır!";
+            } else if (es.rod.charge < 0) {
+                pIcon.innerHTML = '<i class="fas fa-compress-arrows-alt" style="color: #38bdf8;"></i>';
+                pTitle.textContent = "🧲 Etki ile Elektriklenme: (-) Ebonit Çubuk Yaklaştırıldı";
+                pText.textContent = "Negatif yüklü ebonit çubuk, topuzdaki serbest elektronları (e⁻) yapraklara doğru iter. Topuz pozitif (+), yapraklar negatif (-) kutuplanır. Aynı cins yükler birbirini ittiği için yapraklar açılır!";
+            } else {
+                pIcon.innerHTML = '<i class="fas fa-balance-scale" style="color: #94a3b8;"></i>';
+                pTitle.textContent = "⚖️ Nötr Çubuk Yaklaştırıldı";
+                pText.textContent = "Çubuk yüksüz (nötr) olduğu için elektroskopta elektron hareketi oluşmaz. Yapraklar mevcut durumunu korur.";
+            }
+        } else {
+            // Remove / Uzak
+            if (es.scope.totalNet !== 0) {
+                pBox.className = "lab-pedagogical-card is-work";
+                pIcon.innerHTML = '<i class="fas fa-atom" style="color: #f59e0b;"></i>';
+                pTitle.textContent = `⚡ Elektroskop Kalıcı Yüklü (${es.scope.totalNet > 0 ? "Pozitif" : "Negatif"})`;
+                pText.textContent = `Elektroskop üzerinde net ${es.scope.totalNet > 0 ? "pozitif (+)" : "negatif (-)"} yük birikmiştir. Yapraklar aynı cins yüklerin elektrostatik itmesi nedeniyle açık durmaktadır (α = ${es.scope.leafAngle.toFixed(1)}°).`;
+            } else {
+                pBox.className = "lab-pedagogical-card";
+                pIcon.innerHTML = '<i class="fas fa-balance-scale" style="color: #94a3b8;"></i>';
+                pTitle.textContent = "⚖️ Elektroskop Nötr Durumda";
+                pText.textContent = "Elektroskop yüksüzdür (nötr). Yapraklarda net yük bulunmadığı için yapraklar tamamen kapalıdır (α = 0°).";
+            }
+        }
+    }
+}
+
+// --- DENEY 7.8 CANVAS 2D ÇİZİM MOTORU ---
+
+function drawElectroscopeSimulation() {
+    if (!ctx || !canvas) return;
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    const scale = w / 800;
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    const es = labState.electroscope;
+    const cx = 420;
+    const cy = 270;
+
+    // 1. Zemin ve Masa Standı
+    drawElectroscopeBench(ctx);
+
+    // 2. Cam Fanus
+    drawElectroscopeBellJar(ctx, cx, cy);
+
+    // 3. Yalıtkan Tıpa
+    drawElectroscopeStopper(ctx, cx, 140);
+
+    // 4. İletken Topuz ve Metal Gövde
+    drawElectroscopeKnobAndStem(ctx, cx, es);
+
+    // 5. Altın Yapraklar
+    drawElectroscopeLeaves(ctx, cx, 310, es);
+
+    // 6. Yaklaştırılan / Dokundurulan Çubuk
+    drawElectroscopeRod(ctx, es);
+
+    // 7. Topraklama Teli ve Levhası
+    drawElectroscopeGroundWire(ctx, es);
+
+    // 8. Kıvılcımlar
+    drawElectroscopeSparks(ctx, es);
+
+    ctx.restore();
+}
+
+function drawElectroscopeBench(ctx) {
+    ctx.save();
+    // Masa Gövdesi
+    const tableGrad = ctx.createLinearGradient(0, 430, 0, 500);
+    tableGrad.addColorStop(0, '#1e293b');
+    tableGrad.addColorStop(0.15, '#0f172a');
+    tableGrad.addColorStop(1, '#090d16');
+    ctx.fillStyle = tableGrad;
+    ctx.fillRect(0, 430, 800, 70);
+
+    // Masa Üst Çelik Şerit
+    ctx.fillStyle = '#475569';
+    ctx.fillRect(0, 428, 800, 3);
+
+    // Masadaki Ahşap / Lab Tezgahı Yansıması
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.lineWidth = 1;
+    for (let x = 40; x < 800; x += 60) {
+        ctx.beginPath();
+        ctx.moveTo(x, 430);
+        ctx.lineTo(x + 20, 500);
+        ctx.stroke();
+    }
+    ctx.restore();
+}
+
+function drawElectroscopeBellJar(ctx, cx, cy) {
+    ctx.save();
+    // Fanus Taban Kaidesi (Döküm Metal Taban)
+    const baseGrad = ctx.createLinearGradient(cx - 130, 0, cx + 130, 0);
+    baseGrad.addColorStop(0, '#334155');
+    baseGrad.addColorStop(0.5, '#64748b');
+    baseGrad.addColorStop(1, '#1e293b');
+    ctx.fillStyle = baseGrad;
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(cx - 125, 415, 250, 16, 4);
+    ctx.fill();
+    ctx.stroke();
+
+    // Fanus Şeffaf Cam Kubbesi
+    const jarGrad = ctx.createLinearGradient(cx - 110, 0, cx + 110, 0);
+    jarGrad.addColorStop(0, 'rgba(56, 189, 248, 0.08)');
+    jarGrad.addColorStop(0.2, 'rgba(255, 255, 255, 0.12)');
+    jarGrad.addColorStop(0.8, 'rgba(56, 189, 248, 0.06)');
+    jarGrad.addColorStop(1, 'rgba(30, 58, 138, 0.15)');
+
+    ctx.fillStyle = jarGrad;
+    ctx.strokeStyle = 'rgba(148, 163, 184, 0.6)';
+    ctx.lineWidth = 2.5;
+
+    ctx.beginPath();
+    // Cam Fanus Gövdesi: Alt geniş, üstte yarım kubbe
+    ctx.moveTo(cx - 110, 415);
+    ctx.lineTo(cx - 110, 200);
+    ctx.bezierCurveTo(cx - 110, 135, cx - 40, 135, cx - 25, 142);
+    ctx.lineTo(cx + 25, 142);
+    ctx.bezierCurveTo(cx + 40, 135, cx + 110, 135, cx + 110, 200);
+    ctx.lineTo(cx + 110, 415);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Cam Yansıma Çizgileri (Specular Highlights)
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx - 95, 400);
+    ctx.lineTo(cx - 95, 210);
+    ctx.bezierCurveTo(cx - 95, 165, cx - 60, 150, cx - 35, 148);
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function drawElectroscopeStopper(ctx, cx, y) {
+    ctx.save();
+    // Yalıtkan Mantar / Kauçuk Tıpa
+    const stopperGrad = ctx.createLinearGradient(cx - 25, 0, cx + 25, 0);
+    stopperGrad.addColorStop(0, '#b45309');
+    stopperGrad.addColorStop(0.5, '#f59e0b');
+    stopperGrad.addColorStop(1, '#78350f');
+    ctx.fillStyle = stopperGrad;
+    ctx.strokeStyle = '#d97706';
+    ctx.lineWidth = 1.5;
+
+    ctx.beginPath();
+    ctx.moveTo(cx - 24, y + 16);
+    ctx.lineTo(cx - 20, y - 10);
+    ctx.lineTo(cx + 20, y - 10);
+    ctx.lineTo(cx + 24, y + 16);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Yalıtkan Etiketi
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+    ctx.font = 'bold 9px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText("Yalıtkan Tıpa", cx, y + 30);
+    ctx.restore();
+}
+
+function drawElectroscopeKnobAndStem(ctx, cx, es) {
+    ctx.save();
+
+    // 1. İletken Metal Şaft (Stem)
+    const stemGrad = ctx.createLinearGradient(cx - 4, 0, cx + 4, 0);
+    stemGrad.addColorStop(0, '#94a3b8');
+    stemGrad.addColorStop(0.5, '#f8fafc');
+    stemGrad.addColorStop(1, '#475569');
+    ctx.fillStyle = stemGrad;
+    ctx.strokeStyle = '#334155';
+    ctx.lineWidth = 1;
+
+    ctx.fillRect(cx - 4, 110, 8, 200);
+    ctx.strokeRect(cx - 4, 110, 8, 200);
+
+    // 2. İletken Metal Topuz (Knob)
+    const knobY = 110;
+    const r = 24;
+
+    const knobGrad = ctx.createRadialGradient(cx - 7, knobY - 7, 3, cx, knobY, r);
+    knobGrad.addColorStop(0, '#ffffff');
+    knobGrad.addColorStop(0.3, '#f1f5f9');
+    knobGrad.addColorStop(0.7, '#94a3b8');
+    knobGrad.addColorStop(1, '#334155');
+
+    ctx.fillStyle = knobGrad;
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(cx, knobY, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Topuz Üzerindeki Yük Dağılımı Simgeleri
+    const k = es.scope.knobNet;
+    if (k !== 0) {
+        const sign = k > 0 ? '+' : '-';
+        const count = Math.min(6, Math.abs(k));
+        const color = k > 0 ? '#ef4444' : '#0284c7';
+        const border = k > 0 ? '#f87171' : '#38bdf8';
+
+        for (let i = 0; i < count; i++) {
+            const ang = (i / count) * Math.PI * 2 + 0.2;
+            const qx = cx + Math.cos(ang) * (r * 0.55);
+            const qy = knobY + Math.sin(ang) * (r * 0.55);
+            drawChargeBadge(ctx, qx, qy, sign, color, border);
+        }
+    }
+
+    // Topuz Etiketi
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText("İletken Topuz", cx, knobY - r - 8);
+
+    ctx.restore();
+}
+
+function drawElectroscopeLeaves(ctx, cx, pivotY, es) {
+    ctx.save();
+    const angDeg = es.scope.leafAngle;
+    const rad = (angDeg * Math.PI) / 180;
+    const leafLen = 65;
+    const leafWidth = 10;
+
+    // Mafsal Pimi (Pivot Pin)
+    ctx.fillStyle = '#facc15';
+    ctx.strokeStyle = '#ca8a04';
+    ctx.beginPath();
+    ctx.arc(cx, pivotY, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Altın Yaprak Gradyanı
+    const leafGrad = ctx.createLinearGradient(0, 0, leafWidth, leafLen);
+    leafGrad.addColorStop(0, '#fef08a');
+    leafGrad.addColorStop(0.5, '#fbbf24');
+    leafGrad.addColorStop(1, '#d97706');
+
+    // Sol Yaprak
+    ctx.save();
+    ctx.translate(cx, pivotY);
+    ctx.rotate(-rad);
+    ctx.fillStyle = leafGrad;
+    ctx.strokeStyle = '#b45309';
+    ctx.lineWidth = 1;
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-leafWidth / 2, leafLen);
+    ctx.lineTo(leafWidth / 2, leafLen);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Sol yapraktaki yük simgeleri
+    const l = es.scope.leavesNet;
+    if (l !== 0) {
+        const sign = l > 0 ? '+' : '-';
+        const color = l > 0 ? '#ef4444' : '#0284c7';
+        const border = l > 0 ? '#f87171' : '#38bdf8';
+        drawChargeBadge(ctx, 0, leafLen * 0.45, sign, color, border);
+        drawChargeBadge(ctx, 0, leafLen * 0.8, sign, color, border);
+    }
+    ctx.restore();
+
+    // Sağ Yaprak
+    ctx.save();
+    ctx.translate(cx, pivotY);
+    ctx.rotate(rad);
+    ctx.fillStyle = leafGrad;
+    ctx.strokeStyle = '#b45309';
+    ctx.lineWidth = 1;
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-leafWidth / 2, leafLen);
+    ctx.lineTo(leafWidth / 2, leafLen);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Sağ yapraktaki yük simgeleri
+    if (l !== 0) {
+        const sign = l > 0 ? '+' : '-';
+        const color = l > 0 ? '#ef4444' : '#0284c7';
+        const border = l > 0 ? '#f87171' : '#38bdf8';
+        drawChargeBadge(ctx, 0, leafLen * 0.45, sign, color, border);
+        drawChargeBadge(ctx, 0, leafLen * 0.8, sign, color, border);
+    }
+    ctx.restore();
+
+    // Açı Göstergesi Yayı (Angle Arc)
+    if (angDeg > 4) {
+        ctx.strokeStyle = 'rgba(250, 204, 21, 0.7)';
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([2, 2]);
+        ctx.beginPath();
+        ctx.arc(cx, pivotY, 35, Math.PI / 2 - rad, Math.PI / 2 + rad);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#facc15';
+        ctx.font = 'bold 11px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(`α = ${(angDeg * 2).toFixed(0)}°`, cx, pivotY + 48);
+    }
+
+    // Yapraklar Açıklama Metni
+    ctx.fillStyle = '#cbd5e1';
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText("Altın/Alüminyum Yapraklar", cx, 395);
+
+    ctx.restore();
+}
+
+function drawElectroscopeRod(ctx, es) {
+    ctx.save();
+    const rod = es.rod;
+    const rx = rod.x;
+    const ry = rod.y;
+    const rw = rod.w;
+    const rh = rod.h;
+
+    // Çubuk Tutma Sapı (Yalıtkan Sap)
+    ctx.fillStyle = '#1e293b';
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(rx, ry + 2, 45, rh - 4, 4);
+    ctx.fill();
+    ctx.stroke();
+
+    // Çubuk Gövdesi
+    let rodGrad;
+    let rodBorder;
+    let label;
+
+    if (rod.type === "glass_pos") {
+        // Cam Çubuk (Şeffaf / Buz Mavisi)
+        rodGrad = ctx.createLinearGradient(rx + 45, ry, rx + rw, ry);
+        rodGrad.addColorStop(0, 'rgba(192, 132, 252, 0.6)');
+        rodGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.9)');
+        rodGrad.addColorStop(1, 'rgba(192, 132, 252, 0.7)');
+        rodBorder = '#c084fc';
+        label = "(+) Cam Çubuk";
+    } else if (rod.type === "ebonite_neg") {
+        // Ebonit Çubuk (Sert Plastik / Mat Siyah)
+        rodGrad = ctx.createLinearGradient(rx + 45, ry, rx + rw, ry);
+        rodGrad.addColorStop(0, '#1e1b4b');
+        rodGrad.addColorStop(0.5, '#312e81');
+        rodGrad.addColorStop(1, '#0f172a');
+        rodBorder = '#6366f1';
+        label = "(-) Ebonit Çubuk";
+    } else {
+        // Nötr Çubuk
+        rodGrad = ctx.createLinearGradient(rx + 45, ry, rx + rw, ry);
+        rodGrad.addColorStop(0, '#475569');
+        rodGrad.addColorStop(0.5, '#64748b');
+        rodGrad.addColorStop(1, '#334155');
+        rodBorder = '#94a3b8';
+        label = "Nötr Çubuk";
+    }
+
+    ctx.fillStyle = rodGrad;
+    ctx.strokeStyle = rodBorder;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(rx + 45, ry, rw - 45, rh, [0, 8, 8, 0]);
+    ctx.fill();
+    ctx.stroke();
+
+    // Çubuk Üzerindeki Yükler
+    if (rod.charge !== 0) {
+        const sign = rod.charge > 0 ? '+' : '-';
+        const color = rod.charge > 0 ? '#ef4444' : '#0284c7';
+        const border = rod.charge > 0 ? '#f87171' : '#38bdf8';
+        for (let x = rx + 65; x < rx + rw - 15; x += 26) {
+            drawChargeBadge(ctx, x, ry + rh / 2, sign, color, border);
+        }
+    }
+
+    // Çubuk İsim Etiketi
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, rx + rw / 2 + 15, ry - 8);
+
+    ctx.restore();
+}
+
+function drawElectroscopeGroundWire(ctx, es) {
+    ctx.save();
+    const groundX = 640;
+    const groundY = 110;
+    const isGrounded = es.grounding.isActive;
+
+    // Toprak Levhası ve Sembolü (⏚)
+    ctx.fillStyle = '#1e293b';
+    ctx.strokeStyle = isGrounded ? '#34d399' : '#64748b';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(groundX - 25, groundY - 20, 50, 40, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    // Toprak Sembolü Çizimi (⏚)
+    ctx.strokeStyle = isGrounded ? '#34d399' : '#94a3b8';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(groundX, groundY - 10);
+    ctx.lineTo(groundX, groundY + 4);
+    // 3 yatay basamak
+    ctx.moveTo(groundX - 14, groundY + 4);
+    ctx.lineTo(groundX + 14, groundY + 4);
+    ctx.moveTo(groundX - 9, groundY + 9);
+    ctx.lineTo(groundX + 9, groundY + 9);
+    ctx.moveTo(groundX - 4, groundY + 14);
+    ctx.lineTo(groundX + 4, groundY + 14);
+    ctx.stroke();
+
+    ctx.fillStyle = isGrounded ? '#34d399' : '#94a3b8';
+    ctx.font = 'bold 10px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText("Topraklama", groundX, groundY + 34);
+
+    // İletken Tel: Topraktan Topuza
+    ctx.save();
+    ctx.lineWidth = 2.5;
+    if (isGrounded) {
+        ctx.strokeStyle = '#34d399';
+        ctx.shadowColor = '#34d399';
+        ctx.shadowBlur = 10;
+    } else {
+        ctx.strokeStyle = 'rgba(100, 116, 139, 0.4)';
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(groundX - 25, groundY);
+    ctx.bezierCurveTo(groundX - 80, groundY + 50, 520, groundY + 40, isGrounded ? 444 : 500, isGrounded ? 110 : groundY + 15);
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.restore();
+}
+
+function drawElectroscopeSparks(ctx, es) {
+    ctx.save();
+    // Topraklama kıvılcımları
+    es.grounding.sparks.forEach(s => {
+        ctx.fillStyle = s.color;
+        ctx.shadowColor = s.color;
+        ctx.shadowBlur = 8;
+        ctx.globalAlpha = Math.max(0, s.alpha);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    // Dokunma kıvılcımları
+    es.sparks.forEach(s => {
+        ctx.fillStyle = s.color;
+        ctx.shadowColor = s.color;
+        ctx.shadowBlur = 10;
+        ctx.globalAlpha = Math.max(0, s.alpha);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fill();
+    });
+    ctx.restore();
+}
+
+// --- 8.9. DENEY 7.9: BESİN PİRAMİDİNDE ENERJİ AKIŞI VE BİYOBİRİKİM MOTORU ---
+
+const TROPHIC_TIERS = [
+    {
+        id: 0,
+        name: "1. Trofik Basamak: Üreticiler",
+        shortName: "Üreticiler (Bitkiler)",
+        examples: "Yeşil Bitkiler, Otlar, Fitoplankton",
+        role: "Güneş enerjisini fotosentez ile kimyasal bağ enerjisine çevirir.",
+        energyFraction: 0.10, // 100.000 J güneşten 10.000 J bağlar
+        heatFraction: 0.90,
+        ppmBase: 0.05,
+        biomass: "En Büyük (~10.000 kg)",
+        individualCount: "En Fazla (Milyonlarca)",
+        color: "#10b981",
+        gradientStart: '#064e3b',
+        gradientEnd: '#059669',
+        yTop: 320,
+        yBottom: 390,
+        wTop: 420,
+        wBottom: 540
+    },
+    {
+        id: 1,
+        name: "2. Trofik Basamak: 1. Tüketiciler (Otçullar)",
+        shortName: "1. Tüketiciler (Otçul)",
+        examples: "Çekirge, Tavşan, Koyun, Zooplankton",
+        role: "Doğrudan üreticilerle beslenir, enerjinin %10'unu depolar.",
+        energyFraction: 0.01, // 1.000 J
+        heatFraction: 0.90,
+        ppmBase: 0.50,
+        biomass: "Çok (~1.000 kg)",
+        individualCount: "Çok (~10.000)",
+        color: "#f59e0b",
+        gradientStart: '#78350f',
+        gradientEnd: '#d97706',
+        yTop: 250,
+        yBottom: 320,
+        wTop: 300,
+        wBottom: 420
+    },
+    {
+        id: 2,
+        name: "3. Trofik Basamak: 2. Tüketiciler (Etçiller)",
+        shortName: "2. Tüketiciler (Etçil)",
+        examples: "Kurbağa, Yılan, Tilki, Küçük Balık",
+        role: "Otçulları avlar; enerjinin %90'ı ısı ve metabolizmada harcanır.",
+        energyFraction: 0.001, // 100 J
+        heatFraction: 0.90,
+        ppmBase: 5.0,
+        biomass: "Az (~100 kg)",
+        individualCount: "Az (~500)",
+        color: "#f97316",
+        gradientStart: '#7c2d12',
+        gradientEnd: '#ea580c',
+        yTop: 180,
+        yBottom: 250,
+        wTop: 180,
+        wBottom: 300
+    },
+    {
+        id: 3,
+        name: "4. Trofik Basamak: 3. Tüketiciler (Tepe Avcılar)",
+        shortName: "3. Tüketiciler (Tepe Avcı)",
+        examples: "Kartal, Şahin, Aslan, Balıkçıl Kuş",
+        role: "Besin zincirinin en üst basamağı. Enerji en az, zehir en fazladır!",
+        energyFraction: 0.0001, // 10 J
+        heatFraction: 0.90,
+        ppmBase: 50.0,
+        biomass: "En Az (~10 kg)",
+        individualCount: "En Az (~2-5)",
+        color: "#ef4444",
+        gradientStart: '#7f1d1d',
+        gradientEnd: '#dc2626',
+        yTop: 110,
+        yBottom: 180,
+        wTop: 60,
+        wBottom: 180
+    },
+    {
+        id: 4,
+        name: "Ayrıştırıcılar (Mantarlar & Bakteriler)",
+        shortName: "Ayrıştırıcılar",
+        examples: "Küf Mantarı, Şapkalı Mantar, Çürükçül Bakteriler",
+        role: "Piramidin TÜM basamaklarına bağlıdır. Organik atıkları inorganik maddelere çevirir.",
+        energyFraction: 0,
+        heatFraction: 1.0,
+        ppmBase: 0.1,
+        biomass: "Değişken",
+        individualCount: "Milyarlarca",
+        color: "#8b5cf6",
+        gradientStart: '#4c1d95',
+        gradientEnd: '#7c3aed',
+        yTop: 140,
+        yBottom: 360,
+        wTop: 120,
+        wBottom: 120
+    }
+];
+
+function setupFoodPyramidControlsDOM() {
+    // 1. Mod Butonları (%10 Enerji vs Biyobirikim)
+    const btnEnergy = document.getElementById('btn-pyramid-mode-energy');
+    const btnBioaccum = document.getElementById('btn-pyramid-mode-bioaccum');
+
+    if (btnEnergy) btnEnergy.addEventListener('click', () => setFoodPyramidMode("energy"));
+    if (btnBioaccum) btnBioaccum.addEventListener('click', () => setFoodPyramidMode("bioaccum"));
+
+    // 2. Güneş Enerjisi Butonları
+    const bSun50k = document.getElementById('btn-sun-50k');
+    const bSun100k = document.getElementById('btn-sun-100k');
+    const bSun200k = document.getElementById('btn-sun-200k');
+
+    if (bSun50k) bSun50k.addEventListener('click', () => setFoodPyramidSunlight(50000));
+    if (bSun100k) bSun100k.addEventListener('click', () => setFoodPyramidSunlight(100000));
+    if (bSun200k) bSun200k.addEventListener('click', () => setFoodPyramidSunlight(200000));
+
+    // 3. Pestisit / Zehir Dozu Butonları
+    const bPestLow = document.getElementById('btn-pest-low');
+    const bPestMed = document.getElementById('btn-pest-med');
+    const bPestHigh = document.getElementById('btn-pest-high');
+
+    if (bPestLow) bPestLow.addEventListener('click', () => setFoodPyramidPesticide("low"));
+    if (bPestMed) bPestMed.addEventListener('click', () => setFoodPyramidPesticide("med"));
+    if (bPestHigh) bPestHigh.addEventListener('click', () => setFoodPyramidPesticide("high"));
+
+    // 4. Akışı Duraklat / Başlat & Sıfırla
+    const btnFlow = document.getElementById('btn-pyramid-toggle-flow');
+    const btnReset = document.getElementById('btn-pyramid-reset');
+
+    if (btnFlow) btnFlow.addEventListener('click', toggleFoodPyramidFlow);
+    if (btnReset) btnReset.addEventListener('click', resetFoodPyramidExperiment);
+
+    // 5. Trofik Basamak Seçici Butonları
+    const pProd = document.getElementById('pill-tier-producer');
+    const pHerb = document.getElementById('pill-tier-herbivore');
+    const pCarn = document.getElementById('pill-tier-carnivore');
+    const pApex = document.getElementById('pill-tier-apex');
+    const pDecomp = document.getElementById('pill-tier-decomposer');
+
+    if (pProd) pProd.addEventListener('click', () => selectFoodPyramidTier(0));
+    if (pHerb) pHerb.addEventListener('click', () => selectFoodPyramidTier(1));
+    if (pCarn) pCarn.addEventListener('click', () => selectFoodPyramidTier(2));
+    if (pApex) pApex.addEventListener('click', () => selectFoodPyramidTier(3));
+    if (pDecomp) pDecomp.addEventListener('click', () => selectFoodPyramidTier(4));
+
+    // 6. Gözlemi Kaydet Butonu
+    const btnRecord79 = document.getElementById('btn-record-data-7-9');
+    if (btnRecord79) btnRecord79.addEventListener('click', recordMeasurement);
+}
+
+function setFoodPyramidMode(mode) {
+    const fp = labState.foodPyramid;
+    fp.mode = mode;
+
+    const bEnergy = document.getElementById('btn-pyramid-mode-energy');
+    const bBioaccum = document.getElementById('btn-pyramid-mode-bioaccum');
+    const grpSun = document.getElementById('group-sunlight-7-9');
+    const grpPest = document.getElementById('group-pesticide-7-9');
+
+    if (bEnergy) bEnergy.classList.toggle('active', mode === "energy");
+    if (bBioaccum) bBioaccum.classList.toggle('active', mode === "bioaccum");
+    if (grpSun) grpSun.classList.toggle('is-hidden', mode !== "energy");
+    if (grpPest) grpPest.classList.toggle('is-hidden', mode !== "bioaccum");
+
+    updateFoodPyramidMetricsDOM();
+    showLabToast(mode === "energy" ? "⚡ %10 Enerji Akışı Modu Aktif" : "☠️ Biyolojik Birikim (Zehir) Modu Aktif");
+}
+
+function setFoodPyramidSunlight(amount) {
+    const fp = labState.foodPyramid;
+    fp.sunlight = amount;
+
+    const b50 = document.getElementById('btn-sun-50k');
+    const b100 = document.getElementById('btn-sun-100k');
+    const b200 = document.getElementById('btn-sun-200k');
+
+    if (b50) b50.classList.toggle('active', amount === 50000);
+    if (b100) b100.classList.toggle('active', amount === 100000);
+    if (b200) b200.classList.toggle('active', amount === 200000);
+
+    updateFoodPyramidMetricsDOM();
+    showLabToast(`Güneş Enerjisi Girişi: ${amount.toLocaleString('tr-TR')} J`);
+}
+
+function setFoodPyramidPesticide(dose) {
+    const fp = labState.foodPyramid;
+    fp.pesticideDose = dose;
+
+    const bLow = document.getElementById('btn-pest-low');
+    const bMed = document.getElementById('btn-pest-med');
+    const bHigh = document.getElementById('btn-pest-high');
+
+    if (bLow) bLow.classList.toggle('active', dose === "low");
+    if (bMed) bMed.classList.toggle('active', dose === "med");
+    if (bHigh) bHigh.classList.toggle('active', dose === "high");
+
+    updateFoodPyramidMetricsDOM();
+    showLabToast(`Tarım İlacı Dozu: ${dose === "low" ? "Düşük (0.05 ppm)" : dose === "med" ? "Orta (0.5 ppm)" : "Yüksek (2.0 ppm)"}`);
+}
+
+function selectFoodPyramidTier(tierIndex) {
+    const fp = labState.foodPyramid;
+    fp.selectedTier = tierIndex;
+
+    const pillIds = ['pill-tier-producer', 'pill-tier-herbivore', 'pill-tier-carnivore', 'pill-tier-apex', 'pill-tier-decomposer'];
+    pillIds.forEach((id, idx) => {
+        const el = document.getElementById(id);
+        if (el) el.classList.toggle('active', idx === tierIndex);
+    });
+
+    updateFoodPyramidMetricsDOM();
+}
+
+function toggleFoodPyramidFlow() {
+    const fp = labState.foodPyramid;
+    fp.isFlowing = !fp.isFlowing;
+
+    const label = document.getElementById('label-pyramid-flow');
+    const btn = document.getElementById('btn-pyramid-toggle-flow');
+    if (label) label.textContent = fp.isFlowing ? "Duraklat" : "Oynat";
+    if (btn) {
+        btn.innerHTML = fp.isFlowing 
+            ? '<i class="fas fa-pause"></i> <span id="label-pyramid-flow">Duraklat</span>' 
+            : '<i class="fas fa-play"></i> <span id="label-pyramid-flow">Oynat</span>';
+    }
+}
+
+function resetFoodPyramidExperiment() {
+    const fp = labState.foodPyramid;
+    fp.mode = "energy";
+    fp.sunlight = 100000;
+    fp.pesticideDose = "med";
+    fp.selectedTier = 0;
+    fp.isFlowing = true;
+    fp.flowParticles = [];
+    fp.heatArrows = [];
+    fp.poisonParticles = [];
+
+    const label = document.getElementById('label-pyramid-flow');
+    const btnFlow = document.getElementById('btn-pyramid-toggle-flow');
+    if (label) label.textContent = "Duraklat";
+    if (btnFlow) btnFlow.innerHTML = '<i class="fas fa-pause"></i> <span id="label-pyramid-flow">Duraklat</span>';
+
+    // Buton aktifliklerini sıfırla
+    setFoodPyramidMode("energy");
+    setFoodPyramidSunlight(100000);
+    setFoodPyramidPesticide("med");
+    selectFoodPyramidTier(0);
+
+    showLabToast("Ekoloji piramidi başlangıç ayarlarına sıfırlandı");
+}
+
+function initFoodPyramidState() {
+    const fp = labState.foodPyramid;
+    fp.flowParticles = [];
+    fp.heatArrows = [];
+    fp.poisonParticles = [];
+
+    // Başlangıç zehir parçacıklarını üret
+    initPyramidPoisonParticles(fp);
+    updateFoodPyramidMetricsDOM();
+}
+
+function initPyramidPoisonParticles(fp) {
+    fp.poisonParticles = [];
+    const mult = (fp.pesticideDose === "low") ? 0.5 : (fp.pesticideDose === "high") ? 2.5 : 1.0;
+
+    // Basamak 0 (Üretici): Seyrek, küçük noktalar
+    const count0 = Math.round(15 * mult);
+    for (let i = 0; i < count0; i++) {
+        fp.poisonParticles.push({
+            tier: 0,
+            x: 360 + (Math.random() - 0.5) * 440,
+            y: 325 + Math.random() * 55,
+            size: 2.5,
+            color: '#a3e635'
+        });
+    }
+
+    // Basamak 1 (Otçul): Orta sıklıkta
+    const count1 = Math.round(25 * mult);
+    for (let i = 0; i < count1; i++) {
+        fp.poisonParticles.push({
+            tier: 1,
+            x: 360 + (Math.random() - 0.5) * 320,
+            y: 255 + Math.random() * 55,
+            size: 3.5,
+            color: '#facc15'
+        });
+    }
+
+    // Basamak 2 (Etçil): Yoğun turuncu
+    const count2 = Math.round(35 * mult);
+    for (let i = 0; i < count2; i++) {
+        fp.poisonParticles.push({
+            tier: 2,
+            x: 360 + (Math.random() - 0.5) * 200,
+            y: 185 + Math.random() * 55,
+            size: 4.5,
+            color: '#fb923c'
+        });
+    }
+
+    // Basamak 3 (Tepe Avcı): Çok yoğun, parlak kırmızı/toksik
+    const count3 = Math.round(45 * mult);
+    for (let i = 0; i < count3; i++) {
+        fp.poisonParticles.push({
+            tier: 3,
+            x: 360 + (Math.random() - 0.5) * 90,
+            y: 115 + Math.random() * 55,
+            size: 5.5,
+            color: '#ef4444'
+        });
+    }
+}
+
+function updateFoodPyramidEcology() {
+    const fp = labState.foodPyramid;
+    if (!fp.isFlowing) return;
+
+    // 1. Enerji Modu Parçacıkları (Yukarı Yükselen Fotonlar)
+    if (fp.mode === "energy") {
+        if (Math.random() < 0.35) {
+            fp.flowParticles.push({
+                x: 360 + (Math.random() - 0.5) * 300,
+                y: 380,
+                targetY: 120,
+                vy: 1.8 + Math.random() * 1.5,
+                alpha: 1.0,
+                color: '#fef08a',
+                size: 2.5 + Math.random() * 2
+            });
+        }
+
+        fp.flowParticles = fp.flowParticles.filter(p => {
+            p.y -= p.vy;
+            if (p.y <= p.targetY) p.alpha -= 0.05;
+            return p.alpha > 0;
+        });
+
+        // 2. Isı Kaybı Duman / Parçacıkları (Sağa kaçan kırmızı oklar)
+        if (Math.random() < 0.25) {
+            const tiers = [0, 1, 2];
+            const t = tiers[Math.floor(Math.random() * tiers.length)];
+            const curTier = TROPHIC_TIERS[t];
+            fp.heatArrows.push({
+                x: 360 + curTier.wBottom / 2 - 20,
+                y: curTier.yTop + (curTier.yBottom - curTier.yTop) / 2,
+                vx: 1.5 + Math.random() * 1.2,
+                vy: (Math.random() - 0.5) * 0.8,
+                alpha: 1.0,
+                color: '#f87171'
+            });
+        }
+
+        fp.heatArrows = fp.heatArrows.filter(a => {
+            a.x += a.vx;
+            a.y += a.vy;
+            a.alpha -= 0.025;
+            return a.alpha > 0 && a.x < 780;
+        });
+    }
+}
+
+function updateFoodPyramidMetricsDOM() {
+    const fp = labState.foodPyramid;
+    const tier = TROPHIC_TIERS[fp.selectedTier] || TROPHIC_TIERS[0];
+    const sun = fp.sunlight;
+
+    // Başlık
+    const hHeading = document.getElementById('label-selected-tier-heading');
+    if (hHeading) hHeading.textContent = `${tier.shortName} Detay Metrikleri`;
+
+    // Metrikler
+    const mEnergy = document.getElementById('metric-tier-energy');
+    const mHeat = document.getElementById('metric-tier-heat');
+    const mPoison = document.getElementById('metric-tier-poison');
+    const mBiomass = document.getElementById('metric-tier-biomass');
+
+    const mult = (fp.pesticideDose === "low") ? 0.5 : (fp.pesticideDose === "high") ? 2.5 : 1.0;
+    const curPpm = (tier.ppmBase * mult).toFixed(2);
+
+    if (mEnergy) {
+        if (tier.id === 4) {
+            mEnergy.textContent = "Madde Döngüsü";
+            mEnergy.style.color = '#a78bfa';
+        } else {
+            const curE = sun * tier.energyFraction;
+            mEnergy.textContent = `${Math.round(curE).toLocaleString('tr-TR')} J`;
+            mEnergy.style.color = tier.color;
+        }
+    }
+
+    if (mHeat) {
+        if (tier.id === 4) {
+            mHeat.textContent = "Tam Çürüme";
+            mHeat.style.color = '#c084fc';
+        } else {
+            const curH = sun * tier.energyFraction * 9;
+            mHeat.textContent = `${Math.round(curH).toLocaleString('tr-TR')} J (%90)`;
+            mHeat.style.color = '#f87171';
+        }
+    }
+
+    if (mPoison) {
+        mPoison.textContent = `${curPpm} ppm`;
+        mPoison.style.color = tier.id === 3 ? '#ef4444' : tier.id === 2 ? '#fb923c' : tier.id === 1 ? '#facc15' : '#38bdf8';
+    }
+
+    if (mBiomass) {
+        mBiomass.textContent = tier.biomass;
+        mBiomass.style.color = '#cbd5e1';
+    }
+
+    // Pedagojik Çıkarım Kartı
+    const pBox = document.getElementById('pyramid-pedagogical-box');
+    const pTitle = document.getElementById('pyramid-pedagogical-title');
+    const pText = document.getElementById('pyramid-pedagogical-text');
+    const pIcon = document.getElementById('pyramid-pedagogical-icon');
+
+    if (pBox && pTitle && pText && pIcon) {
+        pBox.className = "lab-pedagogical-card is-work";
+        if (fp.mode === "energy") {
+            if (tier.id === 0) {
+                pIcon.innerHTML = '<i class="fas fa-seedling" style="color: #10b981;"></i>';
+                pTitle.textContent = "🌱 Üreticiler: Fotosentez ile Enerji Girişi";
+                pText.textContent = `Güneşten gelen enerjinin (~${sun.toLocaleString('tr-TR')} J) yaklaşık %10'unu (10.000 J) bağlayarak besin zincirine katan tek gruptur. Toplam biyokütle ve birey sayısı en büyüktür.`;
+            } else if (tier.id === 1) {
+                pIcon.innerHTML = '<i class="fas fa-bug" style="color: #f59e0b;"></i>';
+                pTitle.textContent = "🦗 1. Tüketiciler (Otçullar): %10 Enerji Aktarımı";
+                pText.textContent = "Üreticilerdeki 10.000 J enerjinin yalnızca %10'u (1.000 J) otçulun dokularına aktarılır. Kalan %90'lık devasa kısım (9.000 J) yaşamsal faaliyetlerde (solunum, hareket, boşaltım) ISI OLARAK çevreye yayılır!";
+            } else if (tier.id === 2) {
+                pIcon.innerHTML = '<i class="fas fa-frog" style="color: #f97316;"></i>';
+                pTitle.textContent = "🐸 2. Tüketiciler (Etçiller): Enerji Hızla Azalıyor";
+                pText.textContent = "Otçuldaki 1.000 J enerjinin yalnızca 100 J'lük kısmı etçile geçer. Piramitte yukarı çıkıldıkça aktarılan enerji hızla azaldığı için etçil birey sayısı da otçullardan azdır.";
+            } else if (tier.id === 3) {
+                pIcon.innerHTML = '<i class="fas fa-feather-alt" style="color: #ef4444;"></i>';
+                pTitle.textContent = "🦅 3. Tüketiciler (Tepe Avcı): En Az Enerji Zirvede!";
+                pText.textContent = `Güneşin ${sun.toLocaleString('tr-TR')} J enerjisinden tepe avcının payına yalnızca 10 J kalmıştır! Enerji kaybı çok yüksek olduğu için tepe avcıların sayısı ekosistemde daima en azdır.`;
+            } else {
+                pIcon.innerHTML = '<i class="fas fa-recycle" style="color: #8b5cf6;"></i>';
+                pTitle.textContent = "🍄 Ayrıştırıcılar: Ekosistemin Geri Dönüşüm Fabrikası";
+                pText.textContent = "Ayrıştırıcılar (bakteri ve mantarlar) piramidin tek bir basamağında değil, TÜM basamaklarında görev yapar. Ölen canlı atıklarını inorganik minerallere çevirerek toprağa kazandırırlar.";
+            }
+        } else {
+            // Biyobirikim (Zehir) Modu
+            if (tier.id === 3) {
+                pIcon.innerHTML = '<i class="fas fa-skull-crossbones" style="color: #ef4444;"></i>';
+                pTitle.textContent = "☠️ Tepe Avcıda Ölümcül Toksik Birikim (50.0 ppm)!";
+                pText.textContent = "DDT ve ağır metaller gibi zehirler canlı vücudunda parçalanamaz ve atılamaz. Besin zincirinde yukarı çıkıldıkça katlanarak birikir ve EN ÜST BASAMAKTAKİ CANLIDA EN YÜKSEK (Ölümcül) seviyeye ulaşır!";
+            } else if (tier.id === 0) {
+                pIcon.innerHTML = '<i class="fas fa-shield-alt" style="color: #10b981;"></i>';
+                pTitle.textContent = "🌿 Üreticilerde Zehir Yoğunluğu En Düşüktür (0.05 ppm)";
+                pText.textContent = "Topraktan veya sudan alınan tarım ilacı üreticinin büyük biyokütlesi içine dağıldığı için konsantrasyon (ppm) taban basamakta en azdır.";
+            } else {
+                pIcon.innerHTML = '<i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i>';
+                pTitle.textContent = `⚠️ Biyolojik Birikim Katlanarak Artıyor (${curPpm} ppm)`;
+                pText.textContent = "Bir otçul yaşamı boyunca binlerce bitki yer; bir etçil ise yüzlerce otçul tüketir. Parçalanamayan toksinler her basamakta 10 kat yoğunlaşır.";
+            }
+        }
+    }
+}
+
+// --- DENEY 7.9 CANVAS 2D ÇİZİM MOTORU ---
+
+function drawFoodPyramidSimulation() {
+    if (!ctx || !canvas) return;
+    const w = canvas.width;
+    const h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+
+    const scale = w / 800;
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    const fp = labState.foodPyramid;
+
+    // 1. Arka Plan Güneş
+    drawPyramidSun(ctx, fp.sunlight);
+
+    // 2. Sol Biyokütle / Birey Sayısı İndikatör Şeridi
+    drawPyramidBiomassBar(ctx);
+
+    // 3. Ekoloji Piramidi 4 Basamağı
+    drawPyramidTiers(ctx, fp);
+
+    // 4. Ayrıştırıcılar Kutusu (Sağ Taraf)
+    drawPyramidDecomposers(ctx, fp.selectedTier === 4);
+
+    // 5. Mod A: Enerji Akışı & Isı Kaybı Okları
+    if (fp.mode === "energy") {
+        drawPyramidEnergyFlow(ctx, fp);
+    }
+
+    // 6. Mod B: Biyobirikim Zehir Noktaları
+    if (fp.mode === "bioaccum") {
+        drawPyramidBioaccumulation(ctx, fp);
+    }
+
+    ctx.restore();
+}
+
+function drawPyramidSun(ctx, sunlight) {
+    ctx.save();
+    const sx = 85;
+    const sy = 85;
+    const r = 36;
+
+    // Güneş Işınları Halosu
+    const sunGlow = ctx.createRadialGradient(sx, sy, 10, sx, sy, 70);
+    sunGlow.addColorStop(0, 'rgba(250, 204, 21, 0.45)');
+    sunGlow.addColorStop(0.5, 'rgba(245, 158, 11, 0.2)');
+    sunGlow.addColorStop(1, 'rgba(245, 158, 11, 0)');
+    ctx.fillStyle = sunGlow;
+    ctx.beginPath();
+    ctx.arc(sx, sy, 70, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Dönen Güneş Işınları
+    ctx.strokeStyle = 'rgba(253, 224, 71, 0.6)';
+    ctx.lineWidth = 2.5;
+    const rayCount = 12;
+    for (let i = 0; i < rayCount; i++) {
+        const ang = (i / rayCount) * Math.PI * 2 + animTime * 0.1;
+        const x1 = sx + Math.cos(ang) * (r + 4);
+        const y1 = sy + Math.sin(ang) * (r + 4);
+        const x2 = sx + Math.cos(ang) * (r + 14);
+        const y2 = sy + Math.sin(ang) * (r + 14);
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+    }
+
+    // Güneş Küresi
+    const sunGrad = ctx.createRadialGradient(sx - 8, sy - 8, 4, sx, sy, r);
+    sunGrad.addColorStop(0, '#ffffff');
+    sunGrad.addColorStop(0.3, '#fef08a');
+    sunGrad.addColorStop(0.8, '#f59e0b');
+    sunGrad.addColorStop(1, '#b45309');
+
+    ctx.fillStyle = sunGrad;
+    ctx.beginPath();
+    ctx.arc(sx, sy, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Güneş Enerji Etiketi
+    ctx.fillStyle = '#fef08a';
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText("Güneş Enerjisi", sx, sy + r + 15);
+    ctx.fillStyle = '#facc15';
+    ctx.font = 'bold 12px monospace';
+    ctx.fillText(`${(sunlight / 1000).toFixed(0)}k J`, sx, sy + r + 29);
+
+    ctx.restore();
+}
+
+function drawPyramidTiers(ctx, fp) {
+    // 4 basamağı alttan üste doğru çiz
+    for (let i = 0; i < 4; i++) {
+        const tier = TROPHIC_TIERS[i];
+        const isSelected = (fp.selectedTier === i);
+        drawPyramidTierTrapezoid(ctx, tier, isSelected, fp);
+    }
+}
+
+function drawPyramidTierTrapezoid(ctx, tier, isSelected, fp) {
+    ctx.save();
+    const cx = 360;
+    const yT = tier.yTop;
+    const yB = tier.yBottom;
+    const wT = tier.wTop;
+    const wB = tier.wBottom;
+
+    const xTL = cx - wT / 2;
+    const xTR = cx + wT / 2;
+    const xBL = cx - wB / 2;
+    const xBR = cx + wB / 2;
+
+    // Basamak Gövdesi (Yamuk)
+    const trapGrad = ctx.createLinearGradient(0, yT, 0, yB);
+    trapGrad.addColorStop(0, tier.gradientEnd);
+    trapGrad.addColorStop(1, tier.gradientStart);
+
+    ctx.fillStyle = trapGrad;
+    ctx.strokeStyle = isSelected ? '#facc15' : tier.color;
+    ctx.lineWidth = isSelected ? 3.5 : 1.5;
+
+    if (isSelected) {
+        ctx.shadowColor = '#facc15';
+        ctx.shadowBlur = 14;
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(xTL, yT);
+    ctx.lineTo(xTR, yT);
+    ctx.lineTo(xBR, yB);
+    ctx.lineTo(xBL, yB);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.shadowBlur = 0;
+
+    // Üst Kenar 3D Işıltı Çizgisi
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(xTL + 4, yT + 1);
+    ctx.lineTo(xTR - 4, yT + 1);
+    ctx.stroke();
+
+    // Basamak İçi Metinler
+    const midY = (yT + yB) / 2;
+    ctx.fillStyle = '#f8fafc';
+    ctx.font = 'bold 12px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    ctx.fillText(tier.shortName, cx, midY - 10);
+
+    // Canlı Örnekleri
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+    ctx.font = '10px Inter, sans-serif';
+    ctx.fillText(tier.examples, cx, midY + 8);
+
+    // Mod Bilgisi (Enerji veya Zehir Değeri)
+    if (fp.mode === "energy") {
+        const curE = fp.sunlight * tier.energyFraction;
+        ctx.fillStyle = '#fef08a';
+        ctx.font = 'bold 12px monospace';
+        ctx.fillText(`⚡ ${Math.round(curE).toLocaleString('tr-TR')} J`, cx, midY + 24);
+    } else {
+        const mult = (fp.pesticideDose === "low") ? 0.5 : (fp.pesticideDose === "high") ? 2.5 : 1.0;
+        const ppm = (tier.ppmBase * mult).toFixed(2);
+        ctx.fillStyle = tier.id === 3 ? '#fca5a5' : '#fef08a';
+        ctx.font = 'bold 12px monospace';
+        ctx.fillText(`☠️ ${ppm} ppm ${tier.id === 3 ? '(ÖLÜMCÜL!)' : ''}`, cx, midY + 24);
+    }
+
+    ctx.restore();
+}
+
+function drawPyramidDecomposers(ctx, isSelected) {
+    ctx.save();
+    const bx = 640;
+    const by = 150;
+    const bw = 125;
+    const bh = 240;
+
+    // Ayrıştırıcılar Kutusu
+    const decompGrad = ctx.createLinearGradient(bx, by, bx + bw, by + bh);
+    decompGrad.addColorStop(0, '#3b0764');
+    decompGrad.addColorStop(1, '#1e1b4b');
+
+    ctx.fillStyle = decompGrad;
+    ctx.strokeStyle = isSelected ? '#facc15' : '#8b5cf6';
+    ctx.lineWidth = isSelected ? 3 : 1.5;
+
+    if (isSelected) {
+        ctx.shadowColor = '#8b5cf6';
+        ctx.shadowBlur = 12;
+    }
+
+    ctx.beginPath();
+    ctx.roundRect(bx, by, bw, bh, 8);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.shadowBlur = 0;
+
+    // Kutu İçi Metinler
+    ctx.fillStyle = '#e9d5ff';
+    ctx.font = 'bold 13px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText("🍄 Ayrıştırıcılar", bx + bw / 2, by + 30);
+
+    ctx.fillStyle = '#c084fc';
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillText("Bakteri & Mantar", bx + bw / 2, by + 50);
+
+    // Açıklama
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '10px Inter, sans-serif';
+    ctx.fillText("Ölü organik atıkları", bx + bw / 2, by + 100);
+    ctx.fillText("inorganik minerallere", bx + bw / 2, by + 116);
+    ctx.fillText("dönüştürür.", bx + bw / 2, by + 132);
+
+    ctx.fillStyle = '#34d399';
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillText("🔄 Madde Döngüsü", bx + bw / 2, by + 180);
+    ctx.fillText("Sağlayıcısı", bx + bw / 2, by + 196);
+
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.font = '9px Inter, sans-serif';
+    ctx.fillText("Tüm Basamaklara Bağlı", bx + bw / 2, by + 224);
+
+    // 4 basamaktan ayrıştırıcılara bağlanan mor bağlantı hatları
+    ctx.strokeStyle = 'rgba(139, 92, 246, 0.45)';
+    ctx.lineWidth = 1.2;
+    ctx.setLineDash([3, 3]);
+
+    const tierRights = [
+        { x: 360 + 270, y: 355 },
+        { x: 360 + 210, y: 285 },
+        { x: 360 + 150, y: 215 },
+        { x: 360 + 90, y: 145 }
+    ];
+
+    tierRights.forEach((pt, idx) => {
+        ctx.beginPath();
+        ctx.moveTo(pt.x, pt.y);
+        ctx.bezierCurveTo(bx - 30, pt.y, bx - 10, by + 50 + idx * 45, bx, by + 50 + idx * 45);
+        ctx.stroke();
+    });
+
+    ctx.setLineDash([]);
+    ctx.restore();
+}
+
+function drawPyramidEnergyFlow(ctx, fp) {
+    ctx.save();
+
+    // 1. Güneşten Üreticiye Işın Akışı
+    const sunX = 85;
+    const sunY = 85;
+    ctx.strokeStyle = 'rgba(250, 204, 21, 0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(sunX + 30, sunY + 30);
+    ctx.lineTo(200, 320);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // 2. Yükselen Enerji Fotonları
+    fp.flowParticles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 6;
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    // 3. Basamaklar Arası %10 Aktarım Okları (Sol Kenar)
+    const arrowX = 140;
+    const transitions = [
+        { yFrom: 355, yTo: 285, label: "%10 Aktarım" },
+        { yFrom: 285, yTo: 215, label: "%10 Aktarım" },
+        { yFrom: 215, yTo: 145, label: "%10 Aktarım" }
+    ];
+
+    transitions.forEach(tr => {
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(arrowX, tr.yFrom);
+        ctx.lineTo(arrowX, tr.yTo);
+        ctx.stroke();
+
+        // Ok Ucu
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.moveTo(arrowX, tr.yTo - 4);
+        ctx.lineTo(arrowX - 4, tr.yTo + 4);
+        ctx.lineTo(arrowX + 4, tr.yTo + 4);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = '#7dd3fc';
+        ctx.font = 'bold 9px Inter, sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(tr.label, arrowX - 8, (tr.yFrom + tr.yTo) / 2 + 3);
+    });
+
+    // 4. Her Basamaktan Çıkan %90 Isı Kaybı Okları ve Dumanı (Sağ Taraf)
+    const heatArrows = [
+        { y: 355, loss: Math.round(fp.sunlight * 0.1 * 9).toLocaleString('tr-TR') },
+        { y: 285, loss: Math.round(fp.sunlight * 0.01 * 9).toLocaleString('tr-TR') },
+        { y: 215, loss: Math.round(fp.sunlight * 0.001 * 9).toLocaleString('tr-TR') },
+        { y: 145, loss: Math.round(fp.sunlight * 0.0001 * 9).toLocaleString('tr-TR') }
+    ];
+
+    heatArrows.forEach((ha, idx) => {
+        const startX = 360 + (TROPHIC_TIERS[idx].wBottom / 2) + 6;
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+        ctx.moveTo(startX, ha.y);
+        ctx.bezierCurveTo(startX + 30, ha.y - 10, startX + 50, ha.y - 25, startX + 65, ha.y - 15);
+        ctx.stroke();
+
+        // Ok Ucu
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.moveTo(startX + 68, ha.y - 13);
+        ctx.lineTo(startX + 58, ha.y - 22);
+        ctx.lineTo(startX + 60, ha.y - 10);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = '#f87171';
+        ctx.font = 'bold 9px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(`🔥 %90 Isı: ${ha.loss} J`, startX + 20, ha.y - 28);
+    });
+
+    // Dinamik Isı Duman Parçacıkları
+    fp.heatArrows.forEach(a => {
+        ctx.fillStyle = a.color;
+        ctx.globalAlpha = Math.max(0, a.alpha);
+        ctx.beginPath();
+        ctx.arc(a.x, a.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    ctx.restore();
+}
+
+function drawPyramidBioaccumulation(ctx, fp) {
+    ctx.save();
+    // Zehir Parçacıkları Çizimi
+    fp.poisonParticles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = (p.tier === 3) ? 8 : 4;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (p.tier === 3) {
+            // Tepe avcıda toksik haç işareti
+            ctx.strokeStyle = '#7f1d1d';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(p.x - 2, p.y - 2);
+            ctx.lineTo(p.x + 2, p.y + 2);
+            ctx.moveTo(p.x + 2, p.y - 2);
+            ctx.lineTo(p.x - 2, p.y + 2);
+            ctx.stroke();
+        }
+    });
+
+    // Sol tarafta Katlanarak Artan Zehir Göstergesi Oku
+    const arrX = 140;
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(arrX, 380);
+    ctx.lineTo(arrX, 120);
+    ctx.stroke();
+
+    // Yukarı Yönlü Kırmızı Ok Ucu
+    ctx.fillStyle = '#ef4444';
+    ctx.beginPath();
+    ctx.moveTo(arrX, 114);
+    ctx.lineTo(arrX - 6, 126);
+    ctx.lineTo(arrX + 6, 126);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.fillStyle = '#fca5a5';
+    ctx.font = 'bold 10px Inter, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText("Biyolojik Birikim (Zehir) KATLANARAK ARTAR ➔", arrX - 10, 245);
+
+    ctx.restore();
+}
+
+function drawPyramidBiomassBar(ctx) {
+    ctx.save();
+    const bx = 30;
+    const byTop = 130;
+    const byBottom = 380;
+
+    // Biyokütle / Birey Sayısı Azalır Oku (Aşağı Doğru Genişleyen Çizgi)
+    ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(bx + 15, byTop);
+    ctx.lineTo(bx + 15, byBottom);
+    ctx.stroke();
+
+    // Üstte dar, altta geniş sembolü
+    ctx.fillStyle = '#94a3b8';
+    ctx.beginPath();
+    ctx.moveTo(bx + 15, byTop);
+    ctx.lineTo(bx + 5, byBottom);
+    ctx.lineTo(bx + 25, byBottom);
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
+    ctx.stroke();
+
+    // Dikey Metin (Yukarı Çıkıldıkça Azalanlar)
+    ctx.save();
+    ctx.translate(bx - 12, (byTop + byBottom) / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = 'bold 10px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText("▲ Biyokütle & Birey Sayısı Azalır", 0, 0);
+    ctx.restore();
+
+    ctx.restore();
+}
+
 
 
 
@@ -7260,6 +9103,28 @@ function setupCanvasPointerEvents() {
                 }
             }
         }
+
+        // Deney 7.8: Elektroskop Çubuk Sürükleme
+        if (labState.activeExperimentId === "7.8") {
+            const es = labState.electroscope;
+            if (es.rod.isDragging) {
+                const newX = canvasX - (es.rod.dragOffsetX || (es.rod.w / 2));
+                const newY = canvasY - (es.rod.dragOffsetY || (es.rod.h / 2));
+                es.rod.x = Math.max(20, Math.min(340, newX));
+                es.rod.y = Math.max(40, Math.min(220, newY));
+
+                const tipX = es.rod.x + es.rod.w;
+                const tipY = es.rod.y + es.rod.h / 2;
+                const distToKnob = Math.hypot(tipX - 420, tipY - 110);
+                if (distToKnob <= 28) {
+                    setElectroscopeAction("touch");
+                } else if (distToKnob <= 130) {
+                    setElectroscopeAction("approach");
+                } else {
+                    setElectroscopeAction("remove");
+                }
+            }
+        }
     };
 
     cvs.addEventListener('pointerdown', (e) => {
@@ -7321,6 +9186,51 @@ function setupCanvasPointerEvents() {
             }
         }
 
+        if (labState.activeExperimentId === "7.8") {
+            const rect = cvs.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            const scaleX = 800 / rect.width;
+            const scaleY = 500 / rect.height;
+            const canvasX = (clientX - rect.left) * scaleX;
+            const canvasY = (clientY - rect.top) * scaleY;
+
+            const es = labState.electroscope;
+            if (canvasX >= es.rod.x - 15 && canvasX <= es.rod.x + es.rod.w + 15 &&
+                canvasY >= es.rod.y - 15 && canvasY <= es.rod.y + es.rod.h + 15) {
+                es.rod.isDragging = true;
+                es.rod.dragOffsetX = canvasX - es.rod.x;
+                es.rod.dragOffsetY = canvasY - es.rod.y;
+            } else if (canvasX >= 615 && canvasX <= 665 && canvasY >= 90 && canvasY <= 150) {
+                groundElectroscope();
+            }
+        }
+
+        if (labState.activeExperimentId === "7.9") {
+            const rect = cvs.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            const scaleX = 800 / rect.width;
+            const scaleY = 500 / rect.height;
+            const canvasX = (clientX - rect.left) * scaleX;
+            const canvasY = (clientY - rect.top) * scaleY;
+
+            if (Math.hypot(canvasX - 85, canvasY - 85) <= 50) {
+                const nextSun = (labState.foodPyramid.sunlight === 50000) ? 100000 : (labState.foodPyramid.sunlight === 100000) ? 200000 : 50000;
+                setFoodPyramidSunlight(nextSun);
+            } else if (canvasX >= 640 && canvasX <= 765 && canvasY >= 140 && canvasY <= 380) {
+                selectFoodPyramidTier(4);
+            } else if (canvasY >= 110 && canvasY < 180 && Math.abs(canvasX - 360) <= 90) {
+                selectFoodPyramidTier(3);
+            } else if (canvasY >= 180 && canvasY < 250 && Math.abs(canvasX - 360) <= 150) {
+                selectFoodPyramidTier(2);
+            } else if (canvasY >= 250 && canvasY < 320 && Math.abs(canvasX - 360) <= 210) {
+                selectFoodPyramidTier(1);
+            } else if (canvasY >= 320 && canvasY <= 390 && Math.abs(canvasX - 360) <= 270) {
+                selectFoodPyramidTier(0);
+            }
+        }
+
         handlePointerAction(e);
     });
 
@@ -7331,7 +9241,8 @@ function setupCanvasPointerEvents() {
             (labState.electro.mode === "friction" && (labState.electro.friction.cloth.isDragging || labState.electro.friction.rod.isDragging)) ||
             (labState.electro.mode === "conduction" && (labState.electro.conduction.sphere1.isDragging || labState.electro.conduction.sphere2.isDragging))
         ));
-        if (isDragging71 || isDragging72 || isDragging77 || labState.optics.isDraggingLaser || labState.lens.isDraggingObject) {
+        const isDragging78 = (labState.activeExperimentId === "7.8" && labState.electroscope && labState.electroscope.rod.isDragging);
+        if (isDragging71 || isDragging72 || isDragging77 || isDragging78 || labState.optics.isDraggingLaser || labState.lens.isDraggingObject) {
             handlePointerAction(e);
         }
     });
@@ -7349,6 +9260,9 @@ function setupCanvasPointerEvents() {
             labState.electro.friction.rod.isDragging = false;
             labState.electro.conduction.sphere1.isDragging = false;
             labState.electro.conduction.sphere2.isDragging = false;
+        }
+        if (labState.electroscope) {
+            labState.electroscope.rod.isDragging = false;
         }
         labState.optics.isDraggingLaser = false;
         labState.lens.isDraggingObject = false;
@@ -7439,6 +9353,28 @@ function updateTableHeader(expId) {
                 <th>Başlangıç Yükleri</th>
                 <th>Elektron Akış Yönü</th>
                 <th>Son Yük Durumları</th>
+            </tr>
+        `;
+    } else if (expId === "7.8") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>İşlem Türü</th>
+                <th>Kullanılan Cisim</th>
+                <th>Topuz Yükü</th>
+                <th>Yapraklar Yükü</th>
+                <th>Yaprak Açısı (α) & Durumu</th>
+            </tr>
+        `;
+    } else if (expId === "7.9") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Trofik Basamak</th>
+                <th>Canlı Örnekleri</th>
+                <th>Mevcut Enerji (J)</th>
+                <th>Isı Kaybı (%90)</th>
+                <th>Biyolojik Birikim (Zehir)</th>
             </tr>
         `;
     }
@@ -7664,6 +9600,46 @@ function recordMeasurement() {
             el.measurements.push(row);
             showLabToast(`Dokunma Gözlemi #${row.id} deftere kaydedildi!`);
         }
+    } else if (expId === "7.8") {
+        const es = labState.electroscope;
+        const rodNames = { glass_pos: "(+) Cam Çubuk", ebonite_neg: "(-) Ebonit Çubuk", neutral: "Nötr Çubuk" };
+        const actionNames = { approach: "Etki ile Yaklaştırma", touch: "Dokunma ile İletim", remove: "Uzaklaştırma (Denge)" };
+        const actStr = es.grounding.isActive ? "⚡ Topraklama (Nötrleme)" : actionNames[es.rod.action] || "Yaklaştırma";
+
+        const knobStr = es.scope.knobNet === 0 ? "0 (Nötr)" : es.scope.knobNet > 0 ? `+${es.scope.knobNet}e` : `${es.scope.knobNet}e`;
+        const leavesStr = es.scope.leavesNet === 0 ? "0 (Nötr)" : es.scope.leavesNet > 0 ? `+${es.scope.leavesNet}e` : `${es.scope.leavesNet}e`;
+        const stateStr = es.scope.leafAngle <= 1.0 ? "Kapalı (α = 0°)" : `Açık (α = ${fmt(es.scope.leafAngle, 1)}°)`;
+
+        const row = {
+            id: es.measurements.length + 1,
+            col1: actStr,
+            col2: rodNames[es.rod.type] || "Çubuk",
+            col3: knobStr,
+            col4: leavesStr,
+            col5: stateStr
+        };
+        es.measurements.push(row);
+        showLabToast(`Elektroskop Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "7.9") {
+        const fp = labState.foodPyramid;
+        const tier = TROPHIC_TIERS[fp.selectedTier] || TROPHIC_TIERS[0];
+        const sun = fp.sunlight;
+        const energyJ = (fp.selectedTier === 4) ? "Madde Döngüsü" : `${fmt(sun * tier.energyFraction, 0)} J`;
+        const heatJ = (fp.selectedTier === 4) ? "Tam Ayrışma" : `${fmt(sun * tier.energyFraction * 9, 0)} J`;
+        const mult = (fp.pesticideDose === "low") ? 0.5 : (fp.pesticideDose === "high") ? 2.5 : 1.0;
+        const ppmVal = (tier.ppmBase * mult).toFixed(2);
+        const bioaccumStr = `${ppmVal} ppm ${fp.selectedTier === 3 ? "(ÖLÜMCÜL!)" : ""}`;
+
+        const row = {
+            id: fp.measurements.length + 1,
+            col1: tier.shortName,
+            col2: tier.examples,
+            col3: energyJ,
+            col4: heatJ,
+            col5: bioaccumStr
+        };
+        fp.measurements.push(row);
+        showLabToast(`Ekoloji Gözlemi #${row.id} deftere kaydedildi!`);
     }
 
     renderMeasurementTable();
@@ -7688,6 +9664,10 @@ function renderMeasurementTable() {
         measurements = labState.separation.measurements;
     } else if (expId === "7.7") {
         measurements = labState.electro.measurements;
+    } else if (expId === "7.8") {
+        measurements = labState.electroscope.measurements;
+    } else if (expId === "7.9") {
+        measurements = labState.foodPyramid.measurements;
     } else {
         measurements = labState.optics.measurements;
     }
@@ -7729,6 +9709,10 @@ function clearMeasurementTable() {
         labState.separation.measurements = [];
     } else if (expId === "7.7") {
         labState.electro.measurements = [];
+    } else if (expId === "7.8") {
+        labState.electroscope.measurements = [];
+    } else if (expId === "7.9") {
+        labState.foodPyramid.measurements = [];
     } else {
         labState.optics.measurements = [];
     }
