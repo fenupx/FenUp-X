@@ -365,6 +365,7 @@ function switchScene(from, to) {
     if(!from || !to) return;
     from.classList.add('is-hidden');
     to.classList.remove('is-hidden');
+    window.scrollTo(0, 0);
     
     const isHome = (to.id === "scene-home");
     if (btnHakkimizda && btnIletisim) {
