@@ -1120,6 +1120,59 @@ function calculateLensPhysics() {
             mDi.style.color = statusColor;
         }
     }
+
+    // Pedagojik Uyarı ve Çıkarım Kutusunu Güncelle (Orman Yangını & Maarif Çıkarımı)
+    const pedBox = document.getElementById('lens-pedagogical-box');
+    const pedIcon = document.getElementById('lens-pedagogical-icon');
+    const pedTitle = document.getElementById('lens-pedagogical-title');
+    const pedText = document.getElementById('lens-pedagogical-text');
+
+    if (pedBox && pedTitle && pedText && pedIcon) {
+        if (mode === "parallel") {
+            if (isConvex) {
+                pedBox.style.borderColor = "rgba(245, 158, 11, 0.55)";
+                pedIcon.innerHTML = '<i class="fas fa-fire-alt" style="color: #f59e0b;"></i>';
+                pedTitle.innerHTML = '🔥 Orman Yangını Riski (Işığı Odakta Toplama):';
+                pedTitle.style.color = '#fef08a';
+                pedText.textContent = 'İnce kenarlı mercek gelen paralel güneş ışınlarını tek bir odakta (F₂) toplayarak yüksek ısı oluşturur. Doğaya atılan cam ve su şişeleri kuru otları tutuşturarak orman yangınlarına yol açabilir!';
+            } else {
+                pedBox.style.borderColor = "rgba(192, 132, 252, 0.55)";
+                pedIcon.innerHTML = '<i class="fas fa-glasses" style="color: #c084fc;"></i>';
+                pedTitle.innerHTML = '👓 Işığı Dağıtma & Miyop Gözlüğü İlkesi:';
+                pedTitle.style.color = '#e9d5ff';
+                pedText.textContent = 'Kalın kenarlı mercek gelen paralel ışınları uzantıları odaktan (F₁) geçecek şekilde dağıtır. Miyop göz kusuru düzeltmesinde, deniz fenerlerinde ve el fenerlerinde ışığı yaymak için kullanılır.';
+            }
+        } else {
+            // Mum / Cisim Modu
+            if (isConvex) {
+                if (di > 0) {
+                    pedBox.style.borderColor = "rgba(16, 185, 129, 0.55)";
+                    pedIcon.innerHTML = '<i class="fas fa-camera" style="color: #10b981;"></i>';
+                    pedTitle.innerHTML = '🕯️ Gerçek ve Ters Görüntü (Perdeye Düşürülebilir):';
+                    pedTitle.style.color = '#a7f3d0';
+                    pedText.textContent = 'Cisim odak noktasından uzakta (do > f) olduğunda ışınlar merceğin diğer tarafında kesişir; görüntü gerçek, ters ve bir perde üzerine aktarılabilir (fotoğraf makineleri ve insan gözü merceği).';
+                } else if (di < 0) {
+                    pedBox.style.borderColor = "rgba(56, 189, 248, 0.55)";
+                    pedIcon.innerHTML = '<i class="fas fa-search-plus" style="color: #38bdf8;"></i>';
+                    pedTitle.innerHTML = '🔍 Büyüteç İlkesi (Sanal & Düz Görüntü):';
+                    pedTitle.style.color = '#bae6fd';
+                    pedText.textContent = 'Cisim mercek ile odak noktası arasında (do < f) olduğunda ışınların uzantıları cisim tarafında kesişir; görüntü düz, cisimden büyük ve sanaldır (büyüteç çalışma prensibi).';
+                } else {
+                    pedBox.style.borderColor = "rgba(148, 163, 184, 0.55)";
+                    pedIcon.innerHTML = '<i class="fas fa-arrows-alt-h" style="color: #94a3b8;"></i>';
+                    pedTitle.innerHTML = '♾️ Işınlar Paralel (Görüntü Sonsuzda):';
+                    pedTitle.style.color = '#cbd5e1';
+                    pedText.textContent = 'Cisim tam odak noktasına (do = f) yerleştirildiğinde kırılan ışınlar birbirine paralel gider ve kesişmez; net görüntü oluşmaz.';
+                }
+            } else {
+                pedBox.style.borderColor = "rgba(192, 132, 252, 0.55)";
+                pedIcon.innerHTML = '<i class="fas fa-eye" style="color: #c084fc;"></i>';
+                pedTitle.innerHTML = '👓 Daima Düz, Küçük ve Sanal Görüntü:';
+                pedTitle.style.color = '#e9d5ff';
+                pedText.textContent = 'Kalın kenarlı mercekte cisim nerede olursa olsun görüntü daima odak ile mercek arasında, düz, küçültülmüş ve sanal oluşur (kapı dürbünleri ve miyop gözlükleri).';
+            }
+        }
+    }
 }
 
 function drawLensSimulation() {
@@ -1145,16 +1198,26 @@ function drawLensSimulation() {
     ctx.beginPath();
     ctx.moveTo(30 * scale, cy);
     ctx.lineTo(W - (30 * scale), cy);
-    ctx.strokeStyle = "rgba(0, 210, 255, 0.4)";
-    ctx.lineWidth = 2 * scale;
+    ctx.strokeStyle = "rgba(0, 210, 255, 0.35)";
+    ctx.lineWidth = 1.8 * scale;
     ctx.stroke();
 
-    ctx.font = `${Math.max(11, 12 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = "rgba(0, 210, 255, 0.7)";
+    ctx.font = `${Math.max(10, 11 * scale)}px 'Nunito', sans-serif`;
+    ctx.fillStyle = "rgba(0, 210, 255, 0.6)";
     ctx.textAlign = "right";
-    ctx.fillText("Asal Eksen ➔", W - (35 * scale), cy - (8 * scale));
+    ctx.fillText("Asal Eksen ➔", W - (35 * scale), cy - (12 * scale));
 
-    // 2. Odak ve Merkez Noktaları (F1, 2F1, F2, 2F2, O)
+    // 2. MODA GÖRE IŞINLARIN VE CİSMİN ÇİZİMİ (Işınlar altta akar)
+    if (mode === "parallel") {
+        drawParallelRaysMode(ctx, cx, cy, f, isConvex, scale);
+    } else {
+        drawCandleObjectMode(ctx, cx, cy, f, isConvex, objectDistance * scale, objectHeight * scale, imageDistance !== null ? imageDistance * scale : null, imageHeight !== null ? imageHeight * scale : null, scale);
+    }
+
+    // 3. Merceğin Çizimi (Cam Gövde & Sembolik Oklar)
+    drawLensElement(ctx, cx, cy, isConvex, scale);
+
+    // 4. Odak ve Merkez Noktaları (F1, 2F1, F2, 2F2, O) - Koruyucu arka plan rozetiyle ışınların üstünde ferahça görünür
     drawFocalPoint(ctx, cx - f, cy, "F₁", scale);
     drawFocalPoint(ctx, cx - (2 * f), cy, "2F₁", scale);
     drawFocalPoint(ctx, cx + f, cy, "F₂", scale);
@@ -1162,45 +1225,65 @@ function drawLensSimulation() {
 
     // Optik Merkez (O)
     ctx.beginPath();
-    ctx.arc(cx, cy, 3 * scale, 0, Math.PI * 2);
-    ctx.fillStyle = "#fff";
+    ctx.arc(cx, cy, 2.8 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff";
     ctx.fill();
-    ctx.font = `bold ${Math.max(11, 12 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+
+    const oFontSize = Math.max(10, 11 * scale);
+    ctx.font = `bold ${oFontSize}px 'Nunito', sans-serif`;
     ctx.textAlign = "center";
-    ctx.fillText("O", cx, cy + (18 * scale));
+    ctx.textBaseline = "top";
+    const oTextW = ctx.measureText("O").width;
+    const oPadX = 4 * scale;
+    const oPadY = 2 * scale;
+    const oLabelY = cy + (8 * scale);
 
-    // 3. Merceğin Çizimi (Cam Gövde & Sembolik Oklar)
-    drawLensElement(ctx, cx, cy, isConvex, scale);
+    ctx.fillStyle = "rgba(7, 12, 27, 0.85)";
+    ctx.beginPath();
+    ctx.roundRect(cx - (oTextW / 2) - oPadX, oLabelY, oTextW + (oPadX * 2), oFontSize + (oPadY * 2), 3 * scale);
+    ctx.fill();
 
-    // 4. MODA GÖRE IŞINLARIN VE CİSMİN ÇİZİMİ
-    if (mode === "parallel") {
-        drawParallelRaysMode(ctx, cx, cy, f, isConvex, scale);
-    } else {
-        drawCandleObjectMode(ctx, cx, cy, f, isConvex, objectDistance * scale, objectHeight * scale, imageDistance !== null ? imageDistance * scale : null, imageHeight !== null ? imageHeight * scale : null, scale);
-    }
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("O", cx, oLabelY + oPadY);
 
     ctx.restore();
 }
 
 function drawFocalPoint(ctx, x, y, label, scale) {
+    ctx.save();
+    // 1. Odak Noktası Diski
     ctx.beginPath();
-    ctx.arc(x, y, 4 * scale, 0, Math.PI * 2);
-    ctx.fillStyle = "var(--neon-blue)";
+    ctx.arc(x, y, 2.8 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = "#00d2ff";
     ctx.fill();
 
-    // Dikey küçük çentik
+    // 2. Dikey Minimal Çentik
     ctx.beginPath();
-    ctx.moveTo(x, y - (8 * scale));
-    ctx.lineTo(x, y + (8 * scale));
-    ctx.strokeStyle = "rgba(0, 210, 255, 0.6)";
+    ctx.moveTo(x, y - (5 * scale));
+    ctx.lineTo(x, y + (5 * scale));
+    ctx.strokeStyle = "rgba(0, 210, 255, 0.5)";
     ctx.lineWidth = 1.5 * scale;
     ctx.stroke();
 
-    ctx.font = `bold ${Math.max(11, 13 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = "#93c5fd";
+    // 3. Etiket Arka Plan Rozeti (Işınların metni örtmesini ve harf çakışmasını önler)
+    const fontSize = Math.max(10, 11 * scale);
+    ctx.font = `bold ${fontSize}px 'Nunito', sans-serif`;
     ctx.textAlign = "center";
-    ctx.fillText(label, x, y + (22 * scale));
+    ctx.textBaseline = "top";
+    const textW = ctx.measureText(label).width;
+    const padX = 4 * scale;
+    const padY = 2 * scale;
+    const labelY = y + (8 * scale);
+
+    ctx.fillStyle = "rgba(7, 12, 27, 0.85)";
+    ctx.beginPath();
+    ctx.roundRect(x - (textW / 2) - padX, labelY, textW + (padX * 2), fontSize + (padY * 2), 3 * scale);
+    ctx.fill();
+
+    // 4. Etiket Metni
+    ctx.fillStyle = "#93c5fd";
+    ctx.fillText(label, x, labelY + padY);
+    ctx.restore();
 }
 
 function drawLensElement(ctx, cx, cy, isConvex, scale) {
@@ -1271,19 +1354,19 @@ function drawArrowHead(ctx, x, y, angle, length, color) {
 
 function drawParallelRaysMode(ctx, cx, cy, f, isConvex, scale) {
     const W = canvas.width;
-    const offsets = [-70, -35, 0, 35, 70].map(v => v * scale);
+    const offsets = [-65, -32, 0, 32, 65].map(v => v * scale);
 
     offsets.forEach(dy => {
         const rayY = cy + dy;
 
-        // Soldan merceğe gelen paralel ışın
-        drawLaserBeam(ctx, 40 * scale, rayY, cx, rayY, "#ff3366", 3 * scale, 1.0);
-
         if (dy === 0) {
             // Asal eksen üzerindeki ışın kırılmadan dümdüz devam eder
-            drawLaserBeam(ctx, cx, cy, W - (40 * scale), cy, isConvex ? "#38bdf8" : "#c084fc", 3 * scale, 1.0);
+            drawLaserBeam(ctx, 40 * scale, cy, W - (40 * scale), cy, isConvex ? "#38bdf8" : "#c084fc", 2.2 * scale, 0.9);
             return;
         }
+
+        // Soldan merceğe gelen paralel ışın
+        drawLaserBeam(ctx, 40 * scale, rayY, cx, rayY, "#ff3366", 2.2 * scale, 0.95);
 
         if (isConvex) {
             // İNCE KENARLI: Işın F2 noktasından geçerek kırılır ve sağ kenara gider
@@ -1291,8 +1374,8 @@ function drawParallelRaysMode(ctx, cx, cy, f, isConvex, scale) {
             const endX = W - (40 * scale);
             const endY = cy + slope * (endX - (cx + f));
 
-            drawLaserBeam(ctx, cx, rayY, cx + f, cy, "#38bdf8", 3 * scale, 0.95);
-            drawLaserBeam(ctx, cx + f, cy, endX, endY, "#38bdf8", 2.5 * scale, 0.85);
+            drawLaserBeam(ctx, cx, rayY, cx + f, cy, "#38bdf8", 2.2 * scale, 0.95);
+            drawLaserBeam(ctx, cx + f, cy, endX, endY, "#38bdf8", 2.0 * scale, 0.85);
         } else {
             // KALIN KENARLI: Işın uzantısı F1'den geçecek şekilde dağılır
             const slope = dy / f;
@@ -1300,22 +1383,22 @@ function drawParallelRaysMode(ctx, cx, cy, f, isConvex, scale) {
             const endY = rayY + slope * (endX - cx);
 
             // Gerçek dağılan ışın
-            drawLaserBeam(ctx, cx, rayY, endX, endY, "#c084fc", 3 * scale, 0.95);
+            drawLaserBeam(ctx, cx, rayY, endX, endY, "#c084fc", 2.2 * scale, 0.95);
 
             // Geriye doğru sanal odak uzantısı (Kesikli Çizgi)
             ctx.save();
             ctx.beginPath();
-            ctx.setLineDash([5 * scale, 5 * scale]);
+            ctx.setLineDash([4 * scale, 4 * scale]);
             ctx.moveTo(cx, rayY);
             ctx.lineTo(cx - f, cy);
-            ctx.strokeStyle = "rgba(192, 132, 252, 0.55)";
-            ctx.lineWidth = 2 * scale;
+            ctx.strokeStyle = "rgba(192, 132, 252, 0.7)";
+            ctx.lineWidth = 1.5 * scale;
             ctx.stroke();
             ctx.restore();
         }
     });
 
-    // İnce mercekte Odakta Parlama / Ateş Efekti (Orman Yangını Vurgusu)
+    // İnce mercekte Odakta Zarif / Minimal Parıltı (Işınları örtmez, metinsiz)
     if (isConvex) {
         drawFireHeatEffect(ctx, cx + f, cy, scale);
     }
@@ -1323,14 +1406,15 @@ function drawParallelRaysMode(ctx, cx, cy, f, isConvex, scale) {
 
 function drawFireHeatEffect(ctx, x, y, scale) {
     ctx.save();
-    const pulse = Math.sin(animTime * 3) * (5 * scale);
-    const radius = (18 * scale) + pulse;
+    // Odak noktasında minimal, zarif ışıma (Işınları örtmez, metin kutusu yok)
+    const pulse = Math.sin(animTime * 3) * (1.2 * scale);
+    const radius = (5 * scale) + pulse;
 
-    // Işık / Isı Parıltı Çemberi
-    const grad = ctx.createRadialGradient(x, y, 2 * scale, x, y, radius);
-    grad.addColorStop(0, "rgba(255, 255, 255, 1)");
-    grad.addColorStop(0.3, "rgba(251, 191, 36, 0.9)");
-    grad.addColorStop(0.7, "rgba(239, 68, 68, 0.6)");
+    // Odak Noktası Sıcaklık Çekirdeği
+    const grad = ctx.createRadialGradient(x, y, 0.8 * scale, x, y, radius);
+    grad.addColorStop(0, "#ffffff");
+    grad.addColorStop(0.3, "rgba(251, 191, 36, 0.85)");
+    grad.addColorStop(0.7, "rgba(245, 158, 11, 0.45)");
     grad.addColorStop(1, "rgba(239, 68, 68, 0)");
 
     ctx.fillStyle = grad;
@@ -1338,26 +1422,17 @@ function drawFireHeatEffect(ctx, x, y, scale) {
     ctx.arc(x, y, radius, 0, Math.PI * 2);
     ctx.fill();
 
-    // Kıvılcım parçacıkları
-    for (let i = 0; i < 6; i++) {
-        const sparkAngle = animTime * 2 + (i * (Math.PI / 3));
-        const sparkDist = (22 * scale) + Math.cos(animTime * 4 + i) * (8 * scale);
-        const sx = x + Math.cos(sparkAngle) * sparkDist;
-        const sy = y + Math.sin(sparkAngle) * sparkDist;
+    // 2 adet hafif mikro kıvılcım (odak çevresinde minimal parıltı)
+    for (let i = 0; i < 2; i++) {
+        const angle = animTime * 2.5 + (i * Math.PI);
+        const dist = (7 * scale) + Math.cos(animTime * 3 + i) * (2 * scale);
+        const sx = x + Math.cos(angle) * dist;
+        const sy = y + Math.sin(angle) * dist;
         ctx.beginPath();
-        ctx.arc(sx, sy, 2 * scale, 0, Math.PI * 2);
-        ctx.fillStyle = "#fef08a";
+        ctx.arc(sx, sy, 1.2 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(254, 240, 138, 0.75)";
         ctx.fill();
     }
-
-    // Eğitim Uyarısı Etiketi
-    ctx.font = `bold ${Math.max(11, 13 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = "#f59e0b";
-    ctx.textAlign = "center";
-    ctx.fillText("🔥 IŞIĞI TOPLAR (Odak Noktası)", x, y - (30 * scale));
-    ctx.font = `${Math.max(10, 11 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = "#fca5a5";
-    ctx.fillText("Güneş ışığını toplayarak orman yangınlarına yol açabilir!", x, y - (16 * scale));
 
     ctx.restore();
 }
@@ -1370,7 +1445,7 @@ function drawCandleObjectMode(ctx, cx, cy, f, isConvex, doVal, ho, diVal, hiVal,
     drawCandle(ctx, objX, cy, ho, true, 1.0, scale, "Cisim (Mum)");
 
     // 2. Işın Çizimi (Işın 1: Paralel Gelen ➔ Odaktan Kırılan)
-    drawLaserBeam(ctx, objX, objY, cx, objY, "#ff3366", 2.5 * scale, 0.9);
+    drawLaserBeam(ctx, objX, objY, cx, objY, "#ff3366", 2.2 * scale, 0.92);
 
     if (isConvex) {
         // İnce Mercekte Işın 1 F2'den Geçer
@@ -1380,43 +1455,43 @@ function drawCandleObjectMode(ctx, cx, cy, f, isConvex, doVal, ho, diVal, hiVal,
 
             if (diVal > 0) {
                 // Gerçek Görüntü: Işın F2'den geçip görüntü tepesine ulaşır
-                drawLaserBeam(ctx, cx, objY, imgX, imgY, "#38bdf8", 2.5 * scale, 0.9);
+                drawLaserBeam(ctx, cx, objY, imgX, imgY, "#38bdf8", 2.2 * scale, 0.92);
             } else {
                 // Sanal Görüntü: Işın sağa doğru kırılır, geriye doğru sanal uzantı kesişir
                 const slope = (cy - objY) / f;
                 const endX = cx + (250 * scale);
                 const endY = cy + slope * (endX - (cx + f));
-                drawLaserBeam(ctx, cx, objY, endX, endY, "#38bdf8", 2.5 * scale, 0.9);
+                drawLaserBeam(ctx, cx, objY, endX, endY, "#38bdf8", 2.2 * scale, 0.92);
 
                 // Geriye Sanal Kesikli Çizgi
                 ctx.save();
                 ctx.beginPath();
-                ctx.setLineDash([5 * scale, 5 * scale]);
+                ctx.setLineDash([4 * scale, 4 * scale]);
                 ctx.moveTo(cx, objY);
                 ctx.lineTo(imgX, imgY);
-                ctx.strokeStyle = "rgba(56, 189, 248, 0.6)";
-                ctx.lineWidth = 2 * scale;
+                ctx.strokeStyle = "rgba(56, 189, 248, 0.75)";
+                ctx.lineWidth = 1.6 * scale;
                 ctx.stroke();
                 ctx.restore();
             }
 
             // Işın 2 (Optik Merkezden Geçen Işın: Kırılmaz)
             if (diVal > 0) {
-                drawLaserBeam(ctx, objX, objY, imgX, imgY, "#10b981", 2.5 * scale, 0.9);
+                drawLaserBeam(ctx, objX, objY, imgX, imgY, "#10b981", 2.2 * scale, 0.92);
             } else {
                 const endX = cx + (250 * scale);
                 const slope2 = (cy - objY) / doVal;
                 const endY = cy + slope2 * (endX - cx);
-                drawLaserBeam(ctx, objX, objY, endX, endY, "#10b981", 2.5 * scale, 0.9);
+                drawLaserBeam(ctx, objX, objY, endX, endY, "#10b981", 2.2 * scale, 0.92);
 
                 // Geriye Sanal Kesikli Çizgi
                 ctx.save();
                 ctx.beginPath();
-                ctx.setLineDash([5 * scale, 5 * scale]);
+                ctx.setLineDash([4 * scale, 4 * scale]);
                 ctx.moveTo(objX, objY);
                 ctx.lineTo(imgX, imgY);
-                ctx.strokeStyle = "rgba(16, 185, 129, 0.6)";
-                ctx.lineWidth = 2 * scale;
+                ctx.strokeStyle = "rgba(16, 185, 129, 0.75)";
+                ctx.lineWidth = 1.6 * scale;
                 ctx.stroke();
                 ctx.restore();
             }
@@ -1434,16 +1509,16 @@ function drawCandleObjectMode(ctx, cx, cy, f, isConvex, doVal, ho, diVal, hiVal,
             const slope = (objY - cy) / f;
             const endX = cx + (250 * scale);
             const endY = objY + slope * (endX - cx);
-            drawLaserBeam(ctx, cx, objY, endX, endY, "#c084fc", 2.5 * scale, 0.9);
+            drawLaserBeam(ctx, cx, objY, endX, endY, "#c084fc", 2.2 * scale, 0.92);
 
             // Geriye Sanal Kesikli Çizgi
             ctx.save();
             ctx.beginPath();
-            ctx.setLineDash([5 * scale, 5 * scale]);
+            ctx.setLineDash([4 * scale, 4 * scale]);
             ctx.moveTo(cx, objY);
             ctx.lineTo(cx - f, cy);
-            ctx.strokeStyle = "rgba(192, 132, 252, 0.6)";
-            ctx.lineWidth = 2 * scale;
+            ctx.strokeStyle = "rgba(192, 132, 252, 0.75)";
+            ctx.lineWidth = 1.6 * scale;
             ctx.stroke();
             ctx.restore();
 
@@ -1451,7 +1526,7 @@ function drawCandleObjectMode(ctx, cx, cy, f, isConvex, doVal, ho, diVal, hiVal,
             const slope2 = (cy - objY) / doVal;
             const end2X = cx + (250 * scale);
             const end2Y = cy + slope2 * (end2X - cx);
-            drawLaserBeam(ctx, objX, objY, end2X, end2Y, "#10b981", 2.5 * scale, 0.9);
+            drawLaserBeam(ctx, objX, objY, end2X, end2Y, "#10b981", 2.2 * scale, 0.92);
 
             // Görüntü Mumunun Çizimi (Daima Sanal, Düz, Küçük)
             drawCandle(ctx, imgX, cy, Math.abs(hiVal), true, 0.7, scale, "Sanal Görüntü (Küçük)", false);
@@ -1463,16 +1538,16 @@ function drawCandle(ctx, x, baseY, height, isUpright, alpha, scale, label, isRea
     ctx.save();
     ctx.globalAlpha = alpha;
 
-    const candleW = 14 * scale;
-    const flameH = 20 * scale;
+    const candleW = 12 * scale;
+    const flameH = 18 * scale;
     const dir = isUpright ? 1 : -1;
 
     // Mum Gövdesi
-    const bodyH = Math.max(15 * scale, height - flameH);
+    const bodyH = Math.max(14 * scale, height - flameH);
     const bodyTopY = baseY - (dir * bodyH);
 
-    ctx.fillStyle = isReal ? "#38bdf8" : "#fbbf24";
-    ctx.strokeStyle = isReal ? "#0284c7" : "#d97706";
+    ctx.fillStyle = isReal ? "#0284c7" : (alpha === 1 ? "#d97706" : "#6366f1");
+    ctx.strokeStyle = isReal ? "#38bdf8" : (alpha === 1 ? "#fbbf24" : "#a5b4fc");
     ctx.lineWidth = 1.5 * scale;
 
     ctx.beginPath();
@@ -1480,39 +1555,75 @@ function drawCandle(ctx, x, baseY, height, isUpright, alpha, scale, label, isRea
     ctx.fill();
     ctx.stroke();
 
+    // Mum Taban Tutamacı (Eksen üzerinde sürükleme ipucu)
+    if (alpha === 1) {
+        ctx.beginPath();
+        ctx.arc(x, baseY, 3.5 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = "#fbbf24";
+        ctx.fill();
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1 * scale;
+        ctx.stroke();
+    }
+
     // Mum Fitili
     const wickTopY = bodyTopY - (dir * (4 * scale));
     ctx.beginPath();
     ctx.moveTo(x, bodyTopY);
     ctx.lineTo(x, wickTopY);
-    ctx.strokeStyle = "#fff";
+    ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = 1.5 * scale;
     ctx.stroke();
 
     // Mum Alevi (Titreşen Animasyon)
-    const flicker = Math.sin(animTime * 10 + x) * (2 * scale);
+    const flicker = Math.sin(animTime * 10 + x) * (1.8 * scale);
     const flameTipY = wickTopY - (dir * (flameH + flicker));
 
-    const flameGrad = ctx.createRadialGradient(x, wickTopY - (dir * (flameH / 2)), 2 * scale, x, wickTopY - (dir * (flameH / 2)), flameH);
-    flameGrad.addColorStop(0, "#ffffff");
-    flameGrad.addColorStop(0.3, "#fef08a");
-    flameGrad.addColorStop(0.7, "#f97316");
-    flameGrad.addColorStop(1, "rgba(239, 68, 68, 0)");
+    const flameGrad = ctx.createRadialGradient(x, wickTopY - (dir * (flameH / 2)), 1.5 * scale, x, wickTopY - (dir * (flameH / 2)), flameH);
+    if (alpha < 1) {
+        // Sanal görüntü için holografik mavi/siyan alev tonu
+        flameGrad.addColorStop(0, "#ffffff");
+        flameGrad.addColorStop(0.3, "#a5f3fc");
+        flameGrad.addColorStop(0.7, "#38bdf8");
+        flameGrad.addColorStop(1, "rgba(56, 189, 248, 0)");
+    } else {
+        // Gerçek alev tonu
+        flameGrad.addColorStop(0, "#ffffff");
+        flameGrad.addColorStop(0.3, "#fef08a");
+        flameGrad.addColorStop(0.7, "#f97316");
+        flameGrad.addColorStop(1, "rgba(239, 68, 68, 0)");
+    }
 
     ctx.fillStyle = flameGrad;
     ctx.beginPath();
-    ctx.moveTo(x - (6 * scale), wickTopY);
-    ctx.quadraticCurveTo(x - (8 * scale), wickTopY - (dir * (flameH * 0.6)), x, flameTipY);
-    ctx.quadraticCurveTo(x + (8 * scale), wickTopY - (dir * (flameH * 0.6)), x + (6 * scale), wickTopY);
+    ctx.moveTo(x - (5 * scale), wickTopY);
+    ctx.quadraticCurveTo(x - (7 * scale), wickTopY - (dir * (flameH * 0.6)), x, flameTipY);
+    ctx.quadraticCurveTo(x + (7 * scale), wickTopY - (dir * (flameH * 0.6)), x + (5 * scale), wickTopY);
     ctx.closePath();
     ctx.fill();
 
-    // Etiket
-    ctx.font = `bold ${Math.max(10, 12 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = isReal ? "#38bdf8" : "#fef08a";
+    // Etiket (Işınların ve alevin üzerine binmeyen koruyucu şık rozet)
+    const lblFontSize = Math.max(9, 11 * scale);
+    ctx.font = `bold ${lblFontSize}px 'Nunito', sans-serif`;
     ctx.textAlign = "center";
-    const labelY = isUpright ? flameTipY - (10 * scale) : flameTipY + (18 * scale);
-    ctx.fillText(label, x, labelY);
+    ctx.textBaseline = "middle";
+
+    const lblW = ctx.measureText(label).width;
+    const lblPadX = 6 * scale;
+    const lblPadY = 3 * scale;
+    const lblY = isUpright ? flameTipY - (14 * scale) : flameTipY + (14 * scale);
+
+    ctx.fillStyle = "rgba(7, 12, 27, 0.88)";
+    ctx.beginPath();
+    ctx.roundRect(x - (lblW / 2) - lblPadX, lblY - (lblFontSize / 2) - lblPadY, lblW + (lblPadX * 2), lblFontSize + (lblPadY * 2), 4 * scale);
+    ctx.fill();
+
+    ctx.strokeStyle = isReal ? "rgba(56, 189, 248, 0.6)" : isUpright ? (alpha === 1 ? "rgba(251, 191, 36, 0.6)" : "rgba(56, 189, 248, 0.6)") : "rgba(192, 132, 252, 0.6)";
+    ctx.lineWidth = 1 * scale;
+    ctx.stroke();
+
+    ctx.fillStyle = isReal ? "#38bdf8" : (alpha === 1 ? "#fef08a" : "#7dd3fc");
+    ctx.fillText(label, x, lblY);
 
     ctx.restore();
 }
@@ -1794,16 +1905,16 @@ function drawLaserBeam(ctx, x1, y1, x2, y2, color, width, alpha) {
     ctx.lineWidth = width;
     ctx.lineCap = "round";
     ctx.shadowColor = color;
-    ctx.shadowBlur = 12;
+    ctx.shadowBlur = 8;
     ctx.stroke();
 
     ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = Math.max(1, width * 0.35);
+    ctx.lineWidth = Math.max(0.75, width * 0.32);
     ctx.shadowBlur = 0;
     ctx.stroke();
 
     const angle = Math.atan2(y2 - y1, x2 - x1);
-    const arrowLen = 12 * (width / 3.5);
+    const arrowLen = 9 * (width / 3.0);
     const midX = (x1 + x2) / 2;
     const midY = (y1 + y2) / 2;
 
@@ -1813,7 +1924,7 @@ function drawLaserBeam(ctx, x1, y1, x2, y2, color, width, alpha) {
     ctx.moveTo(midX, midY);
     ctx.lineTo(midX - arrowLen * Math.cos(angle + Math.PI / 6), midY - arrowLen * Math.sin(angle + Math.PI / 6));
     ctx.strokeStyle = color;
-    ctx.lineWidth = width * 0.7;
+    ctx.lineWidth = Math.max(1, width * 0.6);
     ctx.stroke();
 
     ctx.restore();
