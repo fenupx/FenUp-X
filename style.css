@@ -2304,6 +2304,110 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     margin: 0;
 }
 
+/* Deney 7.7: Elektriklenme Özel Stilleri */
+.lab-electro-counters-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.lab-electro-card {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(71, 85, 105, 0.4);
+    border-radius: 10px;
+    padding: 10px 12px;
+    transition: all 0.25s ease;
+}
+.electro-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.electro-charge-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 6px;
+}
+.electro-charge-badge.neutral {
+    background: rgba(100, 116, 139, 0.25);
+    color: #94a3b8;
+    border: 1px solid rgba(100, 116, 139, 0.4);
+}
+.electro-charge-badge.positive {
+    background: rgba(239, 68, 68, 0.2);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.25);
+}
+.electro-charge-badge.negative {
+    background: rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.5);
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
+}
+.electro-charge-counts {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 6px;
+    align-items: center;
+    text-align: center;
+}
+.charge-count-item {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    padding: 4px 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.charge-count-item.pos {
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+.charge-count-item.neg {
+    border: 1px solid rgba(56, 189, 248, 0.3);
+}
+.charge-count-item .charge-sym {
+    font-size: 0.85rem;
+    font-weight: 900;
+    line-height: 1;
+}
+.charge-count-item.pos .charge-sym { color: #f87171; }
+.charge-count-item.neg .charge-sym { color: #38bdf8; }
+.charge-count-item .charge-num {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #f8fafc;
+    font-family: monospace;
+}
+.charge-count-item small {
+    font-size: 0.65rem;
+    color: #94a3b8;
+}
+.charge-net-item {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 6px;
+    padding: 6px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.charge-net-item small {
+    font-size: 0.65rem;
+    color: #94a3b8;
+}
+.charge-net-item strong {
+    font-size: 0.95rem;
+    font-family: monospace;
+    font-weight: 800;
+}
+
+
 
 
 

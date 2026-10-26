@@ -528,6 +528,27 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Canvas Altı Hızlı Elektriklenme Kontrol Barı (Deney 7.7) -->
+                    <div id="quick-controls-7-7" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group" id="group-modes-7-7">
+                                <button class="lab-toggle-btn active" id="btn-mode-friction" title="Sürtünme ile Elektriklenme"><i class="fas fa-bolt"></i> ⚡ Sürtünme Modu</button>
+                                <button class="lab-toggle-btn" id="btn-mode-conduction" title="Dokunma ile Elektriklenme"><i class="fas fa-handshake"></i> 🤝 Dokunma Modu</button>
+                            </div>
+                            <div class="lab-toggle-btn-group" id="group-controls-friction">
+                                <button class="lab-toggle-btn active" id="btn-pair-ebonite" title="Ebonit Çubuk + Yün Kumaş"><i class="fas fa-magic"></i> Ebonit + Yün</button>
+                                <button class="lab-toggle-btn" id="btn-pair-glass" title="Cam Çubuk + İpek Kumaş"><i class="fas fa-gem"></i> Cam + İpek</button>
+                                <button class="lab-toggle-btn" id="btn-electro-neutralize" title="Yükleri Sıfırla (Nötrle)"><i class="fas fa-redo"></i> Nötrle</button>
+                            </div>
+                            <div class="lab-toggle-btn-group is-hidden" id="group-controls-conduction">
+                                <button class="lab-toggle-btn active" id="btn-cond-preset-1" title="Küre 1: +6e | Küre 2: Nötr">+6e / 0</button>
+                                <button class="lab-toggle-btn" id="btn-cond-preset-2" title="Küre 1: -6e | Küre 2: Nötr">-6e / 0</button>
+                                <button class="lab-toggle-btn" id="btn-cond-preset-3" title="Küre 1: +6e | Küre 2: -2e">+6e / -2e</button>
+                                <button class="lab-toggle-btn" id="btn-cond-neutralize" title="Küreleri Nötrle"><i class="fas fa-redo"></i> Nötrle</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- SAĞ/ALT (%35): Kontrol Paneli & Veri Tablosu -->
@@ -1012,6 +1033,137 @@
                             </div>
                         </div>
 
+                        <!-- DENEY 7.7 DEĞİŞKENLERİ -->
+                        <div id="vars-container-7-7" class="is-hidden">
+                            <!-- Maarif Modeli Değişkenleri -->
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Sürtünen Maddelerin Cinsi (Ebonit/Yün veya Cam/İpek) / Dokunan Kürelerin İlk Yükü</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Maddelerin Kazandığı Yük Cinsi (+ / -) ve Elektron Akış Yönü</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Pozitif Yük (Proton) Sayısı (Çekirdekte Hareketsizdir, ASLA Aktarılmaz!)</div>
+                                </div>
+                            </div>
+
+                            <!-- Dinamik Pedagojik Çıkarım & Kritik Kural Kartı -->
+                            <div class="lab-pedagogical-card is-work" id="electro-pedagogical-box" style="margin-top: 12px;">
+                                <div class="pedagogical-icon" id="electro-pedagogical-icon"><i class="fas fa-atom"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="electro-pedagogical-title">⚡ Kritik Kural: Yalnızca Elektronlar Hareket Eder!</strong>
+                                    <p id="electro-pedagogical-text">Pozitif yükler (protonlar) atom çekirdeğinde sabittir, asla hareket etmez. Maddeler arasındaki tüm elektriklenme olayları negatif yüklerin (elektronların) transferiyle gerçekleşir!</p>
+                                </div>
+                            </div>
+
+                            <!-- Canlı Cisim Yük Sayaçları -->
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Canlı Yük Dağılımı ve Sayaçlar</h4>
+                                
+                                <!-- Sürtünme Sayaçları (Çubuk & Kumaş) -->
+                                <div class="lab-electro-counters-grid" id="counters-grid-friction">
+                                    <!-- 1. Cisim: Çubuk -->
+                                    <div class="lab-electro-card" id="card-electro-rod">
+                                        <div class="electro-card-header">
+                                            <strong id="label-electro-rod">Ebonit Çubuk</strong>
+                                            <span class="electro-charge-badge neutral" id="badge-electro-rod">Nötr</span>
+                                        </div>
+                                        <div class="electro-charge-counts">
+                                            <div class="charge-count-item pos">
+                                                <span class="charge-sym">+</span>
+                                                <span class="charge-num" id="cnt-rod-pos">10</span>
+                                                <small>Proton</small>
+                                            </div>
+                                            <div class="charge-count-item neg">
+                                                <span class="charge-sym">-</span>
+                                                <span class="charge-num" id="cnt-rod-neg">10</span>
+                                                <small>Elektron</small>
+                                            </div>
+                                            <div class="charge-net-item">
+                                                <small>Net Yük:</small>
+                                                <strong id="cnt-rod-net">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 2. Cisim: Kumaş -->
+                                    <div class="lab-electro-card" id="card-electro-cloth">
+                                        <div class="electro-card-header">
+                                            <strong id="label-electro-cloth">Yün Kumaş</strong>
+                                            <span class="electro-charge-badge neutral" id="badge-electro-cloth">Nötr</span>
+                                        </div>
+                                        <div class="electro-charge-counts">
+                                            <div class="charge-count-item pos">
+                                                <span class="charge-sym">+</span>
+                                                <span class="charge-num" id="cnt-cloth-pos">8</span>
+                                                <small>Proton</small>
+                                            </div>
+                                            <div class="charge-count-item neg">
+                                                <span class="charge-sym">-</span>
+                                                <span class="charge-num" id="cnt-cloth-neg">8</span>
+                                                <small>Elektron</small>
+                                            </div>
+                                            <div class="charge-net-item">
+                                                <small>Net Yük:</small>
+                                                <strong id="cnt-cloth-net">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Dokunma Sayaçları (Küre 1 & Küre 2) -->
+                                <div class="lab-electro-counters-grid is-hidden" id="counters-grid-conduction">
+                                    <!-- Küre 1 -->
+                                    <div class="lab-electro-card" id="card-electro-sphere1">
+                                        <div class="electro-card-header">
+                                            <strong>1. İletken Küre</strong>
+                                            <span class="electro-charge-badge positive" id="badge-sphere1">+6e</span>
+                                        </div>
+                                        <div class="electro-charge-counts">
+                                            <div class="charge-count-item pos">
+                                                <span class="charge-sym">+</span>
+                                                <span class="charge-num" id="cnt-sphere1-pos">12</span>
+                                                <small>Proton</small>
+                                            </div>
+                                            <div class="charge-count-item neg">
+                                                <span class="charge-sym">-</span>
+                                                <span class="charge-num" id="cnt-sphere1-neg">6</span>
+                                                <small>Elektron</small>
+                                            </div>
+                                            <div class="charge-net-item">
+                                                <small>Net Yük:</small>
+                                                <strong id="cnt-sphere1-net" style="color: #f87171;">+6e</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Küre 2 -->
+                                    <div class="lab-electro-card" id="card-electro-sphere2">
+                                        <div class="electro-card-header">
+                                            <strong>2. İletken Küre</strong>
+                                            <span class="electro-charge-badge neutral" id="badge-sphere2">0 (Nötr)</span>
+                                        </div>
+                                        <div class="electro-charge-counts">
+                                            <div class="charge-count-item pos">
+                                                <span class="charge-sym">+</span>
+                                                <span class="charge-num" id="cnt-sphere2-pos">10</span>
+                                                <small>Proton</small>
+                                            </div>
+                                            <div class="charge-count-item neg">
+                                                <span class="charge-sym">-</span>
+                                                <span class="charge-num" id="cnt-sphere2-neg">10</span>
+                                                <small>Elektron</small>
+                                            </div>
+                                            <div class="charge-net-item">
+                                                <small>Net Yük:</small>
+                                                <strong id="cnt-sphere2-net" style="color: #94a3b8;">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button id="btn-record-data-7-7" class="action-btn lab-record-action-btn" style="margin-top: 14px;"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- TAB 2: VERİ DEFTERİ VE ÖLÇÜM TABLOSU -->
@@ -1192,6 +1344,33 @@
                                 <div class="guide-item">
                                     <strong>5. Günlük Hayat ve Endüstrideki Uygulamalar:</strong>
                                     <p>Petrol rafinerilerinde ham petrolün benzin, mazot, gaz yağı ve asfalta ayrıştırılmasında <strong>ayrımsal damıtma</strong> kullanılır. Zeytinyağı fabrikalarında zeytin suyu ile yağın ayrılmasında <strong>yoğunluk farkı (dekantasyon/santrifüj)</strong> prensibinden faydalanılır.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 7.7 REHBERİ -->
+                        <div id="guide-container-7-7" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Elektriklenme Çeşitleri Bilimsel Rehberi</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Temel Kural: Sadece Elektronlar Hareket Eder!</strong>
+                                    <p>Atomun yapısında yer alan pozitif yüklü protonlar çekirdekte güçlü nükleer kuvvetlerle bağlıdır ve <strong>asla hareket etmez veya diğer maddelere aktarılamaz</strong>. Maddelerin elektrik yüklenmesi daima negatif yüklü elektronların alınıp verilmesiyle gerçekleşir.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Ebonit (Plastik) Çubuk ile Yün Kumaş:</strong>
+                                    <p>Ebonit çubuk yün kumaşa sürtüldüğünde yün kumaştan çubuğa <strong>elektron geçer</strong>. Elektron alan ebonit çubuk <strong>negatif (-)</strong>, elektron kaybeden yün kumaş ise <strong>pozitif (+)</strong> yüklenir.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>3. Cam Çubuk ile İpek Kumaş:</strong>
+                                    <p>Cam çubuk ipek kumaşa sürtüldüğünde cam çubuktan ipek kumaşa <strong>elektron geçer</strong>. Elektron veren cam çubuk <strong>pozitif (+)</strong>, elektron alan ipek kumaş ise <strong>negatif (-)</strong> yüklenir.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>4. Nötr Cisimleri Çekme (Kağıt Parçaları Etkisi):</strong>
+                                    <p>Elektrik yüklü bir cisim (ister pozitif ister negatif yüklü olsun), nötr hafif cisimleri (kağıt parçaları, saç teli vb.) elektriksel kutuplanma (etki ile yük ayrışması) nedeniyle <strong>kendine doğru çeker</strong>!</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>5. Dokunma ile Elektriklenme ve Yük Paylaşımı:</strong>
+                                    <p>Yüklü bir iletken nötr veya yüklü başka bir iletkene dokundurulduğunda fazla elektronlar temas yüzeyinden akarak iki cisim arasında paylaşılır. Özdeş iki iletken küre dokundurulup ayrıldığında <strong>toplam yükü eşit paylaşır</strong> ve mutlaka <strong>aynı cins yükle</strong> yüklenmiş olurlar.</p>
                                 </div>
                             </div>
                         </div>

@@ -175,10 +175,10 @@ export const EXPERIMENTS_DATABASE = [
     },
     {
         id: "7.7", grade: 7, unit: 6, unitName: "Elektriklenme",
-        title: "Sürtünme ve Dokunma ile Elektriklenme Laboratuvarı",
-        code: "FB.7.6.2", bookRef: "2. Kitap, s. 112–121",
-        active: false,
-        desc: "Ebonit çubuğu yün kumaşa, cam çubuğu ipek kumaşa sürterek elektron transferini ve yük cinslerini modelleyin."
+        title: "Sürtünme ve Dokunma ile Elektriklenme Simülatörü",
+        code: "FB.7.6.1 - FB.7.6.2", bookRef: "2. Kitap, s. 106–125",
+        active: true, // 🏆 AKTİF!
+        desc: "Ebonit çubuğu yün kumaşa, cam çubuğu ipek kumaşa sürterek elektron transferini, kağıt çekimini ve dokunma ile yük paylaşımını deneyimleyin."
     },
     {
         id: "7.8", grade: 7, unit: 6, unitName: "Elektriklenme",
@@ -399,6 +399,69 @@ export const labState = {
             bubbles: [],
             condenserDrops: [],
             collectionDrops: []
+        },
+
+        measurements: []
+    },
+
+    // DENEY 7.7: SÜRTÜNME VE DOKUNMA İLE ELEKTRİKLENME SİMÜLATÖRÜ
+    electro: {
+        mode: "friction", // "friction" | "conduction"
+
+        // Mod A: Sürtünme ile Elektriklenme
+        friction: {
+            pair: "ebonite", // "ebonite" (Ebonit+Yün) | "glass" (Cam+İpek)
+            rod: {
+                x: 240,
+                y: 160,
+                baseY: 160,
+                w: 320,
+                h: 36,
+                protons: 10,
+                electrons: 10,
+                isDragging: false
+            },
+            cloth: {
+                x: 90,
+                y: 135,
+                baseX: 90,
+                baseY: 135,
+                w: 105,
+                h: 85,
+                protons: 8,
+                electrons: 8,
+                isDragging: false
+            },
+            lastClothX: 90,
+            lastClothY: 135,
+            frictionDistance: 0,
+            sparks: [],
+            papers: []
+        },
+
+        // Mod B: Dokunma ile Elektriklenme
+        conduction: {
+            preset: "pos6_zero", // "pos6_zero" | "neg6_zero" | "pos6_neg2"
+            sphere1: {
+                x: 260,
+                baseX: 260,
+                y: 230,
+                r: 55,
+                protons: 12,
+                electrons: 6, // Net +6e
+                isDragging: false
+            },
+            sphere2: {
+                x: 540,
+                baseX: 540,
+                y: 230,
+                r: 55,
+                protons: 10,
+                electrons: 10, // Net 0 (Nötr)
+                isDragging: false
+            },
+            hasTouched: false,
+            touchSparks: []
         },
 
         measurements: []
@@ -662,6 +725,9 @@ function setupWorkspaceShellDOM() {
     // 9. DENEY 7.6 KONTROLLERİ (KARIŞIMLARIN AYRILMASI)
     setupSeparationControlsDOM();
 
+    // 10. DENEY 7.7 KONTROLLERİ (ELEKTRİKLENME)
+    setupElectroControlsDOM();
+
     // 7. Tablo Temizle
     const btnClearTable = document.getElementById('btn-clear-table');
     if (btnClearTable) btnClearTable.addEventListener('click', clearMeasurementTable);
@@ -826,6 +892,7 @@ export function openExperimentWorkspace(expId) {
     const is74 = (expId === "7.4");
     const is75 = (expId === "7.5");
     const is76 = (expId === "7.6");
+    const is77 = (expId === "7.7");
 
     // HUD Paneli (Sadece Deney 7.3)
     const hud73 = document.getElementById('hud-exp-7-3');
@@ -838,12 +905,14 @@ export function openExperimentWorkspace(expId) {
     const qc74 = document.getElementById('quick-controls-7-4');
     const qc75 = document.getElementById('quick-controls-7-5');
     const qc76 = document.getElementById('quick-controls-7-6');
+    const qc77 = document.getElementById('quick-controls-7-7');
     if (qc71) qc71.classList.toggle('is-hidden', !is71);
     if (qc72) qc72.classList.toggle('is-hidden', !is72);
     if (qc73) qc73.classList.toggle('is-hidden', !is73);
     if (qc74) qc74.classList.toggle('is-hidden', !is74);
     if (qc75) qc75.classList.toggle('is-hidden', !is75);
     if (qc76) qc76.classList.toggle('is-hidden', !is76);
+    if (qc77) qc77.classList.toggle('is-hidden', !is77);
 
     // Değişkenler Panelleri
     const vars71 = document.getElementById('vars-container-7-1');
@@ -852,12 +921,14 @@ export function openExperimentWorkspace(expId) {
     const vars74 = document.getElementById('vars-container-7-4');
     const vars75 = document.getElementById('vars-container-7-5');
     const vars76 = document.getElementById('vars-container-7-6');
+    const vars77 = document.getElementById('vars-container-7-7');
     if (vars71) vars71.classList.toggle('is-hidden', !is71);
     if (vars72) vars72.classList.toggle('is-hidden', !is72);
     if (vars73) vars73.classList.toggle('is-hidden', !is73);
     if (vars74) vars74.classList.toggle('is-hidden', !is74);
     if (vars75) vars75.classList.toggle('is-hidden', !is75);
     if (vars76) vars76.classList.toggle('is-hidden', !is76);
+    if (vars77) vars77.classList.toggle('is-hidden', !is77);
 
     // Rehber Panelleri
     const guide71 = document.getElementById('guide-container-7-1');
@@ -866,12 +937,14 @@ export function openExperimentWorkspace(expId) {
     const guide74 = document.getElementById('guide-container-7-4');
     const guide75 = document.getElementById('guide-container-7-5');
     const guide76 = document.getElementById('guide-container-7-6');
+    const guide77 = document.getElementById('guide-container-7-7');
     if (guide71) guide71.classList.toggle('is-hidden', !is71);
     if (guide72) guide72.classList.toggle('is-hidden', !is72);
     if (guide73) guide73.classList.toggle('is-hidden', !is73);
     if (guide74) guide74.classList.toggle('is-hidden', !is74);
     if (guide75) guide75.classList.toggle('is-hidden', !is75);
     if (guide76) guide76.classList.toggle('is-hidden', !is76);
+    if (guide77) guide77.classList.toggle('is-hidden', !is77);
 
     if (is71) {
         initWorkState();
@@ -881,6 +954,8 @@ export function openExperimentWorkspace(expId) {
         initDissolveState();
     } else if (is76) {
         initSeparationState();
+    } else if (is77) {
+        initElectroState();
     }
 
     // Veri Tablosu Başlıklarını Güncelle
@@ -917,6 +992,8 @@ function resetCurrentExperiment() {
         resetDissolveExperiment();
     } else if (labState.activeExperimentId === "7.6") {
         resetSeparationExperiment();
+    } else if (labState.activeExperimentId === "7.7") {
+        resetElectroExperiment();
     } else if (labState.activeExperimentId === "7.3") {
         labState.optics.medium1 = "air";
         labState.optics.medium2 = "water";
@@ -1002,6 +1079,8 @@ function initExperimentCanvas() {
         initDissolveState();
     } else if (labState.activeExperimentId === "7.6") {
         initSeparationState();
+    } else if (labState.activeExperimentId === "7.7") {
+        initElectroState();
     }
 
     startRenderLoop();
@@ -1039,6 +1118,9 @@ function startRenderLoop() {
             } else if (labState.activeExperimentId === "7.6") {
                 updateSeparationPhysics();
                 drawSeparationSimulation();
+            } else if (labState.activeExperimentId === "7.7") {
+                updateElectroPhysics();
+                drawElectroSimulation();
             }
         }
         if (labState.activeExperimentId) {
@@ -6120,6 +6202,909 @@ function drawDistillationIndicators(ctx, distill) {
     ctx.restore();
 }
 
+// --- 8.7. DENEY 7.7: SÜRTÜNME VE DOKUNMA İLE ELEKTRİKLENME MOTORU ---
+
+function setupElectroControlsDOM() {
+    // 1. Mod Geçiş Butonları (Sürtünme vs Dokunma)
+    const btnFriction = document.getElementById('btn-mode-friction');
+    const btnConduction = document.getElementById('btn-mode-conduction');
+
+    if (btnFriction) btnFriction.addEventListener('click', () => setElectroMode("friction"));
+    if (btnConduction) btnConduction.addEventListener('click', () => setElectroMode("conduction"));
+
+    // 2. Sürtünme Çifti Butonları
+    const btnEbonite = document.getElementById('btn-pair-ebonite');
+    const btnGlass = document.getElementById('btn-pair-glass');
+    const btnNeutralize = document.getElementById('btn-electro-neutralize');
+
+    if (btnEbonite) btnEbonite.addEventListener('click', () => setFrictionPair("ebonite"));
+    if (btnGlass) btnGlass.addEventListener('click', () => setFrictionPair("glass"));
+    if (btnNeutralize) btnNeutralize.addEventListener('click', neutralizeElectro);
+
+    // 3. Dokunma Modu Önayar Butonları
+    const btnP1 = document.getElementById('btn-cond-preset-1');
+    const btnP2 = document.getElementById('btn-cond-preset-2');
+    const btnP3 = document.getElementById('btn-cond-preset-3');
+    const btnCondNeut = document.getElementById('btn-cond-neutralize');
+
+    if (btnP1) btnP1.addEventListener('click', () => setConductionPreset("pos6_zero"));
+    if (btnP2) btnP2.addEventListener('click', () => setConductionPreset("neg6_zero"));
+    if (btnP3) btnP3.addEventListener('click', () => setConductionPreset("pos6_neg2"));
+    if (btnCondNeut) btnCondNeut.addEventListener('click', neutralizeConduction);
+
+    // 4. Veri Defterine Kaydet
+    const btnRecord77 = document.getElementById('btn-record-data-7-7');
+    if (btnRecord77) btnRecord77.addEventListener('click', recordMeasurement);
+}
+
+function setElectroMode(mode) {
+    labState.electro.mode = mode;
+    const isFriction = (mode === "friction");
+
+    const btnFriction = document.getElementById('btn-mode-friction');
+    const btnConduction = document.getElementById('btn-mode-conduction');
+    if (btnFriction) btnFriction.classList.toggle('active', isFriction);
+    if (btnConduction) btnConduction.classList.toggle('active', !isFriction);
+
+    const grpFriction = document.getElementById('group-controls-friction');
+    const grpConduction = document.getElementById('group-controls-conduction');
+    if (grpFriction) grpFriction.classList.toggle('is-hidden', !isFriction);
+    if (grpConduction) grpConduction.classList.toggle('is-hidden', isFriction);
+
+    const countersFriction = document.getElementById('counters-grid-friction');
+    const countersConduction = document.getElementById('counters-grid-conduction');
+    if (countersFriction) countersFriction.classList.toggle('is-hidden', !isFriction);
+    if (countersConduction) countersConduction.classList.toggle('is-hidden', isFriction);
+
+    updateElectroMetricsDOM();
+    updateElectroPedagogicalBox();
+    showLabToast(isFriction ? "⚡ Sürtünme ile Elektriklenme Modu Aktif" : "🤝 Dokunma ile Elektriklenme Modu Aktif");
+}
+
+function setFrictionPair(pair) {
+    const f = labState.electro.friction;
+    f.pair = pair;
+    const isEbonite = (pair === "ebonite");
+
+    const btnEb = document.getElementById('btn-pair-ebonite');
+    const btnGl = document.getElementById('btn-pair-glass');
+    if (btnEb) btnEb.classList.toggle('active', isEbonite);
+    if (btnGl) btnGl.classList.toggle('active', !isEbonite);
+
+    const lblRod = document.getElementById('label-electro-rod');
+    const lblCloth = document.getElementById('label-electro-cloth');
+    if (lblRod) lblRod.textContent = isEbonite ? "Ebonit (Plastik) Çubuk" : "Cam Çubuk";
+    if (lblCloth) lblCloth.textContent = isEbonite ? "Yün Kumaş" : "İpek Kumaş";
+
+    // Nötrle
+    f.rod.protons = 10;
+    f.rod.electrons = 10;
+    f.cloth.protons = 8;
+    f.cloth.electrons = 8;
+    f.rod.x = 240;
+    f.rod.y = 160;
+    f.cloth.x = 90;
+    f.cloth.y = 135;
+    f.sparks = [];
+
+    // Kağıtları masaya bırak
+    f.papers.forEach(p => {
+        p.isStuck = false;
+        p.y = p.baseY;
+    });
+
+    updateElectroMetricsDOM();
+    updateElectroPedagogicalBox();
+    showLabToast(isEbonite ? "🧤 Ebonit Çubuk + Yün Kumaş Çifti Seçildi" : "✨ Cam Çubuk + İpek Kumaş Çifti Seçildi");
+}
+
+function neutralizeElectro() {
+    const f = labState.electro.friction;
+    f.rod.electrons = f.rod.protons;
+    f.cloth.electrons = f.cloth.protons;
+    f.rod.x = 240;
+    f.rod.y = 160;
+    f.cloth.x = 90;
+    f.cloth.y = 135;
+    f.sparks = [];
+
+    f.papers.forEach(p => {
+        p.isStuck = false;
+        p.y = p.baseY;
+    });
+
+    updateElectroMetricsDOM();
+    updateElectroPedagogicalBox();
+    showLabToast("🔄 Yükler nötrlendi (Çubuk ve Kumaş Nötr)");
+}
+
+function setConductionPreset(presetKey) {
+    const c = labState.electro.conduction;
+    c.preset = presetKey;
+    c.hasTouched = false;
+    c.sphere1.x = 260;
+    c.sphere2.x = 540;
+    c.touchSparks = [];
+
+    ['btn-cond-preset-1', 'btn-cond-preset-2', 'btn-cond-preset-3'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+    });
+
+    if (presetKey === "pos6_zero") {
+        const el = document.getElementById('btn-cond-preset-1');
+        if (el) el.classList.add('active');
+        c.sphere1.protons = 12;
+        c.sphere1.electrons = 6;  // Net +6e
+        c.sphere2.protons = 10;
+        c.sphere2.electrons = 10; // Net 0
+    } else if (presetKey === "neg6_zero") {
+        const el = document.getElementById('btn-cond-preset-2');
+        if (el) el.classList.add('active');
+        c.sphere1.protons = 10;
+        c.sphere1.electrons = 16; // Net -6e
+        c.sphere2.protons = 10;
+        c.sphere2.electrons = 10; // Net 0
+    } else if (presetKey === "pos6_neg2") {
+        const el = document.getElementById('btn-cond-preset-3');
+        if (el) el.classList.add('active');
+        c.sphere1.protons = 14;
+        c.sphere1.electrons = 8;  // Net +6e
+        c.sphere2.protons = 10;
+        c.sphere2.electrons = 12; // Net -2e
+    }
+
+    updateElectroMetricsDOM();
+    updateElectroPedagogicalBox();
+    showLabToast("⚡ Kürelerin başlangıç yükleri ayarlandı");
+}
+
+function neutralizeConduction() {
+    const c = labState.electro.conduction;
+    c.sphere1.electrons = c.sphere1.protons;
+    c.sphere2.electrons = c.sphere2.protons;
+    c.sphere1.x = 260;
+    c.sphere2.x = 540;
+    c.hasTouched = false;
+    c.touchSparks = [];
+
+    ['btn-cond-preset-1', 'btn-cond-preset-2', 'btn-cond-preset-3'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.remove('active');
+    });
+
+    updateElectroMetricsDOM();
+    updateElectroPedagogicalBox();
+    showLabToast("🔄 Her iki iletken küre nötrlendi");
+}
+
+function resetElectroExperiment() {
+    if (labState.electro.mode === "friction") {
+        neutralizeElectro();
+    } else {
+        setConductionPreset("pos6_zero");
+    }
+}
+
+function initPaperBits() {
+    const f = labState.electro.friction;
+    f.papers = [];
+    const colors = ['#ffffff', '#f1f5f9', '#e2e8f0', '#cbd5e1'];
+    for (let i = 0; i < 18; i++) {
+        const px = 270 + Math.random() * 260;
+        const py = 432 + Math.random() * 4;
+        f.papers.push({
+            x: px,
+            y: py,
+            baseY: py,
+            w: 9 + Math.random() * 5,
+            h: 5 + Math.random() * 3,
+            rot: (Math.random() - 0.5) * 0.8,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            isStuck: false,
+            stuckOffsetX: 0,
+            vy: 0
+        });
+    }
+}
+
+function initElectroState() {
+    initPaperBits();
+    setElectroMode(labState.electro.mode || "friction");
+    updateElectroMetricsDOM();
+    updateElectroPedagogicalBox();
+}
+
+function updateElectroPedagogicalBox() {
+    const el = labState.electro;
+    const box = document.getElementById('electro-pedagogical-box');
+    const pIcon = document.getElementById('electro-pedagogical-icon');
+    const pTitle = document.getElementById('electro-pedagogical-title');
+    const pText = document.getElementById('electro-pedagogical-text');
+    if (!box || !pIcon || !pTitle || !pText) return;
+
+    if (el.mode === "friction") {
+        const f = el.friction;
+        const isEbonite = (f.pair === "ebonite");
+        const rodNet = f.rod.protons - f.rod.electrons; // negative = surplus electrons
+        const clothNet = f.cloth.protons - f.cloth.electrons;
+        const stuckCount = f.papers.filter(p => p.isStuck).length;
+
+        box.className = "lab-pedagogical-card is-work";
+
+        if (stuckCount > 0) {
+            pIcon.innerHTML = '<i class="fas fa-magnet"></i>';
+            pTitle.textContent = `⚡ Elektrostatik Çekim: ${stuckCount} Kağıt Parçası Yapıştı!`;
+            pText.textContent = "Elektrik yüklü çubuk masaya yaklaştırıldığında, nötr kağıt parçalarında etki ile yük ayrışması (kutuplanma) oluşur. Çubuk zıt kutupları çekerek yer çekimini yener!";
+        } else if (rodNet !== 0) {
+            if (isEbonite) {
+                pIcon.innerHTML = '<i class="fas fa-bolt"></i>';
+                pTitle.textContent = `⚡ Ebonit Çubuk (-) Yüklendi! (Net: -${Math.abs(rodNet)}e)`;
+                pText.textContent = "Yün kumaştan ebonit çubuğa elektron (e⁻) aktarıldı. Çubuk e⁻ alarak negatif (-), yün kumaş e⁻ vererek pozitif (+) yüklendi. Pozitif protonlar çekirdekte sabit kaldı!";
+            } else {
+                pIcon.innerHTML = '<i class="fas fa-sparkles"></i>';
+                pTitle.textContent = `✨ Cam Çubuk (+) Yüklendi! (Net: +${rodNet}e)`;
+                pText.textContent = "Cam çubuktan ipek kumaşa elektron (e⁻) aktarıldı. Cam çubuk e⁻ kaybederek pozitif (+), ipek kumaş e⁻ kazanarak negatif (-) yüklendi. Sadece elektronlar hareket etti!";
+            }
+        } else {
+            pIcon.innerHTML = '<i class="fas fa-hand-sparkles"></i>';
+            pTitle.textContent = "⚡ Kritik Kural: Yalnızca Elektronlar Hareket Eder!";
+            pText.textContent = "Maddeler başlangıçta nötrdür (proton ve elektron sayıları eşittir). Kumaşı parmağınızla/fareyle çubuğun üzerine sürterek elektriklenmeyi başlatın!";
+        }
+    } else {
+        const c = el.conduction;
+        box.className = "lab-pedagogical-card is-work";
+
+        if (c.hasTouched) {
+            const s1Net = c.sphere1.protons - c.sphere1.electrons;
+            const s2Net = c.sphere2.protons - c.sphere2.electrons;
+            const signText = s1Net > 0 ? `+${s1Net}e (Pozitif)` : s1Net < 0 ? `-${Math.abs(s1Net)}e (Negatif)` : "0 (Nötr)";
+
+            pIcon.innerHTML = '<i class="fas fa-handshake"></i>';
+            pTitle.textContent = `🤝 Dokunma Gerçekleşti: Yükler Eşit Paylaşıldı! (${signText})`;
+            pText.textContent = "Özdeş iletken küreler dokundurulduğunda fazla elektronlar temas noktasından akarak küreler arasında eşit bölündü. Küreler ayrıldığında her ikisi de AYNI CİNS yükle yüklendi!";
+        } else {
+            pIcon.innerHTML = '<i class="fas fa-arrows-alt-h"></i>';
+            pTitle.textContent = "🤝 Dokunma ile Elektriklenme: Küreleri Dokundurun";
+            pText.textContent = "İletken kürelerden birini diğerine doğru sürükleyip temas ettirin. Dokunma anında elektronların nasıl aktarıldığını ve toplam yükün nasıl paylaşıldığını gözlemleyin.";
+        }
+    }
+}
+
+function updateElectroMetricsDOM() {
+    const el = labState.electro;
+
+    if (el.mode === "friction") {
+        const f = el.friction;
+        const rodNet = f.rod.protons - f.rod.electrons;
+        const clothNet = f.cloth.protons - f.cloth.electrons;
+
+        const cRodPos = document.getElementById('cnt-rod-pos');
+        const cRodNeg = document.getElementById('cnt-rod-neg');
+        const cRodNet = document.getElementById('cnt-rod-net');
+        const bRod = document.getElementById('badge-electro-rod');
+
+        if (cRodPos) cRodPos.textContent = f.rod.protons;
+        if (cRodNeg) cRodNeg.textContent = f.rod.electrons;
+        if (cRodNet) {
+            cRodNet.textContent = rodNet === 0 ? "0" : rodNet > 0 ? `+${rodNet}e` : `-${Math.abs(rodNet)}e`;
+            cRodNet.style.color = rodNet > 0 ? '#f87171' : rodNet < 0 ? '#38bdf8' : '#94a3b8';
+        }
+        if (bRod) {
+            bRod.className = "electro-charge-badge " + (rodNet > 0 ? "positive" : rodNet < 0 ? "negative" : "neutral");
+            bRod.textContent = rodNet > 0 ? `+${rodNet}e (Pozitif)` : rodNet < 0 ? `-${Math.abs(rodNet)}e (Negatif)` : "Nötr";
+        }
+
+        const cClothPos = document.getElementById('cnt-cloth-pos');
+        const cClothNeg = document.getElementById('cnt-cloth-neg');
+        const cClothNet = document.getElementById('cnt-cloth-net');
+        const bCloth = document.getElementById('badge-electro-cloth');
+
+        if (cClothPos) cClothPos.textContent = f.cloth.protons;
+        if (cClothNeg) cClothNeg.textContent = f.cloth.electrons;
+        if (cClothNet) {
+            cClothNet.textContent = clothNet === 0 ? "0" : clothNet > 0 ? `+${clothNet}e` : `-${Math.abs(clothNet)}e`;
+            cClothNet.style.color = clothNet > 0 ? '#f87171' : clothNet < 0 ? '#38bdf8' : '#94a3b8';
+        }
+        if (bCloth) {
+            bCloth.className = "electro-charge-badge " + (clothNet > 0 ? "positive" : clothNet < 0 ? "negative" : "neutral");
+            bCloth.textContent = clothNet > 0 ? `+${clothNet}e (Pozitif)` : clothNet < 0 ? `-${Math.abs(clothNet)}e (Negatif)` : "Nötr";
+        }
+    } else {
+        const c = el.conduction;
+        const s1Net = c.sphere1.protons - c.sphere1.electrons;
+        const s2Net = c.sphere2.protons - c.sphere2.electrons;
+
+        const cS1Pos = document.getElementById('cnt-sphere1-pos');
+        const cS1Neg = document.getElementById('cnt-sphere1-neg');
+        const cS1Net = document.getElementById('cnt-sphere1-net');
+        const bS1 = document.getElementById('badge-sphere1');
+
+        if (cS1Pos) cS1Pos.textContent = c.sphere1.protons;
+        if (cS1Neg) cS1Neg.textContent = c.sphere1.electrons;
+        if (cS1Net) {
+            cS1Net.textContent = s1Net === 0 ? "0" : s1Net > 0 ? `+${s1Net}e` : `-${Math.abs(s1Net)}e`;
+            cS1Net.style.color = s1Net > 0 ? '#f87171' : s1Net < 0 ? '#38bdf8' : '#94a3b8';
+        }
+        if (bS1) {
+            bS1.className = "electro-charge-badge " + (s1Net > 0 ? "positive" : s1Net < 0 ? "negative" : "neutral");
+            bS1.textContent = s1Net > 0 ? `+${s1Net}e` : s1Net < 0 ? `-${Math.abs(s1Net)}e` : "Nötr";
+        }
+
+        const cS2Pos = document.getElementById('cnt-sphere2-pos');
+        const cS2Neg = document.getElementById('cnt-sphere2-neg');
+        const cS2Net = document.getElementById('cnt-sphere2-net');
+        const bS2 = document.getElementById('badge-sphere2');
+
+        if (cS2Pos) cS2Pos.textContent = c.sphere2.protons;
+        if (cS2Neg) cS2Neg.textContent = c.sphere2.electrons;
+        if (cS2Net) {
+            cS2Net.textContent = s2Net === 0 ? "0" : s2Net > 0 ? `+${s2Net}e` : `-${Math.abs(s2Net)}e`;
+            cS2Net.style.color = s2Net > 0 ? '#f87171' : s2Net < 0 ? '#38bdf8' : '#94a3b8';
+        }
+        if (bS2) {
+            bS2.className = "electro-charge-badge " + (s2Net > 0 ? "positive" : s2Net < 0 ? "negative" : "neutral");
+            bS2.textContent = s2Net > 0 ? `+${s2Net}e` : s2Net < 0 ? `-${Math.abs(s2Net)}e` : "Nötr";
+        }
+    }
+}
+
+function updateElectroPhysics() {
+    const el = labState.electro;
+
+    // --- MOD A: SÜRTÜNME FİZİĞİ ---
+    if (el.mode === "friction") {
+        const f = el.friction;
+
+        // Kumaş ile çubuk çakışma (overlap) kontrolü
+        const isOverlap = (f.cloth.x + f.cloth.w > f.rod.x) &&
+                          (f.cloth.x < f.rod.x + f.rod.w) &&
+                          (f.cloth.y + f.cloth.h > f.rod.y - 10) &&
+                          (f.cloth.y < f.rod.y + f.rod.h + 10);
+
+        if (isOverlap && f.cloth.isDragging) {
+            const moveDelta = Math.hypot(f.cloth.x - f.lastClothX, f.cloth.y - f.lastClothY);
+            f.frictionDistance += moveDelta;
+
+            // Her 35px sürtünme hareketinde 1 elektron transferi
+            if (f.frictionDistance >= 35) {
+                f.frictionDistance = 0;
+
+                if (f.pair === "ebonite") {
+                    // Yünden çubuğa elektron aktar (Maks 16 elektron)
+                    if (f.cloth.electrons > 2 && f.rod.electrons < 16) {
+                        f.cloth.electrons--;
+                        f.rod.electrons++;
+
+                        // Kıvılcım (kumaştan çubuğa)
+                        f.sparks.push({
+                            x: f.cloth.x + f.cloth.w / 2,
+                            y: f.cloth.y + f.cloth.h / 2,
+                            targetX: f.rod.x + Math.random() * f.rod.w,
+                            targetY: f.rod.y + f.rod.h / 2,
+                            progress: 0,
+                            color: '#38bdf8'
+                        });
+                        updateElectroMetricsDOM();
+                        updateElectroPedagogicalBox();
+                    }
+                } else {
+                    // Camdan ipeğe elektron aktar (Çubukta min 4 elektron)
+                    if (f.rod.electrons > 4 && f.cloth.electrons < 14) {
+                        f.rod.electrons--;
+                        f.cloth.electrons++;
+
+                        // Kıvılcım (çubuktan kumaşa)
+                        f.sparks.push({
+                            x: f.rod.x + Math.random() * f.rod.w,
+                            y: f.rod.y + f.rod.h / 2,
+                            targetX: f.cloth.x + f.cloth.w / 2,
+                            targetY: f.cloth.y + f.cloth.h / 2,
+                            progress: 0,
+                            color: '#facc15'
+                        });
+                        updateElectroMetricsDOM();
+                        updateElectroPedagogicalBox();
+                    }
+                }
+            }
+        }
+
+        f.lastClothX = f.cloth.x;
+        f.lastClothY = f.cloth.y;
+
+        // Kıvılcımları güncelle
+        for (let i = f.sparks.length - 1; i >= 0; i--) {
+            const s = f.sparks[i];
+            s.progress += 0.08;
+            if (s.progress >= 1.0) f.sparks.splice(i, 1);
+        }
+
+        // Kağıt Parçacıkları Çekim Fiziği
+        const rodNet = Math.abs(f.rod.protons - f.rod.electrons);
+        const rodBottomY = f.rod.y + f.rod.h;
+
+        f.papers.forEach(p => {
+            if (p.isStuck) {
+                // Yapışmış kağıt çubukla birlikte hareket eder
+                if (rodNet === 0) {
+                    p.isStuck = false; // Yük nötrlenince düşer
+                } else {
+                    p.x = f.rod.x + p.stuckOffsetX;
+                    p.y = rodBottomY + 2;
+                }
+            } else {
+                if (rodNet >= 1) {
+                    // Çubuk ile kağıt arasındaki mesafe
+                    const distY = p.y - rodBottomY;
+                    const isUnderRod = (p.x >= f.rod.x - 20 && p.x <= f.rod.x + f.rod.w + 20);
+
+                    if (isUnderRod && distY < 180 && distY > 0) {
+                        // Elektrostatik çekim kuvveti yer çekimini yener
+                        const force = (180 - distY) * 0.045 * (rodNet * 0.5);
+                        p.y -= force;
+                        p.rot += 0.08;
+
+                        if (p.y <= rodBottomY + 2) {
+                            p.isStuck = true;
+                            p.y = rodBottomY + 2;
+                            p.stuckOffsetX = Math.max(10, Math.min(f.rod.w - 10, p.x - f.rod.x));
+                            updateElectroPedagogicalBox();
+                        }
+                    } else if (p.y < p.baseY) {
+                        // Yer çekimiyle yavaşça geri düşer
+                        p.y = Math.min(p.baseY, p.y + 3);
+                    }
+                } else if (p.y < p.baseY) {
+                    p.y = Math.min(p.baseY, p.y + 4);
+                }
+            }
+        });
+    }
+    // --- MOD B: DOKUNMA FİZİĞİ ---
+    else {
+        const c = el.conduction;
+        const touchDist = c.sphere1.r + c.sphere2.r; // 110 px
+        const curDist = c.sphere2.x - c.sphere1.x;
+
+        if (curDist <= touchDist) {
+            // Dokunma gerçekleşti! Çakışmayı engelle
+            c.sphere1.x = c.sphere2.x - touchDist;
+
+            if (!c.hasTouched) {
+                c.hasTouched = true;
+
+                // Toplam elektronu iki özdeş küreye eşit böl
+                const totalE = c.sphere1.electrons + c.sphere2.electrons;
+                const halfE1 = Math.floor(totalE / 2);
+                const halfE2 = totalE - halfE1;
+
+                c.sphere1.electrons = halfE1;
+                c.sphere2.electrons = halfE2;
+
+                // Dokunma noktası kıvılcım patlaması
+                const touchX = (c.sphere1.x + c.sphere2.x) / 2;
+                for (let k = 0; k < 12; k++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = 2 + Math.random() * 4;
+                    c.touchSparks.push({
+                        x: touchX,
+                        y: 230,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        alpha: 1.0,
+                        color: (c.sphere1.protons > c.sphere1.electrons) ? '#f87171' : '#38bdf8'
+                    });
+                }
+
+                updateElectroMetricsDOM();
+                updateElectroPedagogicalBox();
+                showLabToast("🤝 Dokunma Anı! Fazla elektronlar iki iletken arasında eşit paylaşıldı.");
+            }
+        }
+
+        // Dokunma kıvılcımlarını güncelle
+        for (let i = c.touchSparks.length - 1; i >= 0; i--) {
+            const sp = c.touchSparks[i];
+            sp.x += sp.vx;
+            sp.y += sp.vy;
+            sp.alpha -= 0.04;
+            if (sp.alpha <= 0) c.touchSparks.splice(i, 1);
+        }
+    }
+}
+
+// --- 8.7.1. SAF CANVAS 2D ÇİZİM MOTORU ---
+
+function drawElectroSimulation() {
+    if (!ctx || !canvas) return;
+
+    const w = 800;
+    const h = 500;
+    ctx.save();
+    ctx.clearRect(0, 0, w, h);
+
+    // Arka Plan
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+    bgGrad.addColorStop(0, '#0a0f1d');
+    bgGrad.addColorStop(0.75, '#0f172a');
+    bgGrad.addColorStop(1, '#020617');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Ahşap Laboratuvar Masası Tezgahı (y = 440)
+    const tableGrad = ctx.createLinearGradient(0, 440, 0, h);
+    tableGrad.addColorStop(0, '#334155');
+    tableGrad.addColorStop(0.15, '#1e293b');
+    tableGrad.addColorStop(1, '#0f172a');
+    ctx.fillStyle = tableGrad;
+    ctx.fillRect(0, 440, w, 60);
+
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(0, 440);
+    ctx.lineTo(w, 440);
+    ctx.stroke();
+
+    const el = labState.electro;
+    if (el.mode === "friction") {
+        drawElectroFrictionSetup(ctx, el.friction);
+    } else {
+        drawElectroConductionSetup(ctx, el.conduction);
+    }
+
+    ctx.restore();
+}
+
+// --- SÜRTÜNME ÇİZİMLERİ ---
+
+function drawElectroFrictionSetup(ctx, f) {
+    // 1. Masada Duran Kağıt Parçacıkları
+    drawPaperBits(ctx, f.papers);
+
+    // 2. Yüklü Çubuk
+    drawElectroRod(ctx, f.rod, f.pair);
+
+    // 3. Kumaş
+    drawElectroCloth(ctx, f.cloth, f.pair);
+
+    // 4. Kıvılcım Transfer Parçacıkları
+    drawElectroSparks(ctx, f.sparks);
+
+    // 5. Bilgilendirme İpuçları
+    ctx.save();
+    ctx.font = 'bold 10px Inter, sans-serif';
+    ctx.fillStyle = 'rgba(148, 163, 184, 0.6)';
+    ctx.textAlign = 'center';
+    ctx.fillText("↔ Kumaşı çubuğa sürterek elektrikleyin", f.cloth.x + f.cloth.w / 2, f.cloth.y - 10);
+    ctx.fillText("↕ Çubuğu aşağı sürükleyip kağıtları çekebilirsiniz", f.rod.x + f.rod.w / 2, f.rod.y - 12);
+    ctx.fillText("Nötr Kağıt Parçaları (Masada)", 400, 458);
+    ctx.restore();
+}
+
+function drawElectroRod(ctx, rod, pair) {
+    ctx.save();
+    const isEbonite = (pair === "ebonite");
+
+    // Çubuk Gövdesi
+    const rodGrad = ctx.createLinearGradient(rod.x, rod.y, rod.x, rod.y + rod.h);
+    if (isEbonite) {
+        // Ebonit: Koyu volkanik siyah / antrasit plastik
+        rodGrad.addColorStop(0, '#334155');
+        rodGrad.addColorStop(0.3, '#1e293b');
+        rodGrad.addColorStop(0.7, '#0f172a');
+        rodGrad.addColorStop(1, '#020617');
+    } else {
+        // Cam: Işıltılı saydam cam / aqua
+        rodGrad.addColorStop(0, 'rgba(255, 255, 255, 0.6)');
+        rodGrad.addColorStop(0.3, 'rgba(186, 230, 253, 0.45)');
+        rodGrad.addColorStop(0.7, 'rgba(56, 189, 248, 0.35)');
+        rodGrad.addColorStop(1, 'rgba(14, 165, 233, 0.5)');
+    }
+
+    ctx.fillStyle = rodGrad;
+    ctx.strokeStyle = isEbonite ? '#475569' : 'rgba(255, 255, 255, 0.7)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(rod.x, rod.y, rod.w, rod.h, 12);
+    ctx.fill();
+    ctx.stroke();
+
+    // Üst Parlama Çizgisi
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(rod.x + 14, rod.y + 6);
+    ctx.lineTo(rod.x + rod.w - 14, rod.y + 6);
+    ctx.stroke();
+
+    // Çubuk İçindeki Yük Simgeleri
+    // Sabit Protonlar (+) Üst Sırada (10 adet)
+    const protonSpacing = (rod.w - 30) / (rod.protons - 1);
+    for (let i = 0; i < rod.protons; i++) {
+        const px = rod.x + 15 + i * protonSpacing;
+        const py = rod.y + 11;
+        drawChargeBadge(ctx, px, py, '+', '#ef4444', '#f87171');
+    }
+
+    // Elektronlar (-) Alt Sırada (rod.electrons adet)
+    const eCount = rod.electrons;
+    const eSpacing = (rod.w - 30) / Math.max(1, eCount - 1);
+    for (let i = 0; i < eCount; i++) {
+        const ex = rod.x + 15 + i * eSpacing;
+        const ey = rod.y + 25;
+        drawChargeBadge(ctx, ex, ey, '-', '#0284c7', '#38bdf8');
+    }
+
+    // Çubuk İsim Etiketi
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = isEbonite ? '#cbd5e1' : '#38bdf8';
+    ctx.textAlign = 'center';
+    ctx.fillText(isEbonite ? "Ebonit (Plastik) Çubuk" : "Cam Çubuk", rod.x + rod.w / 2, rod.y + rod.h + 16);
+
+    ctx.restore();
+}
+
+function drawElectroCloth(ctx, cloth, pair) {
+    ctx.save();
+    const isEbonite = (pair === "ebonite");
+
+    // Kumaş Katmanları ve Gövdesi
+    const clothGrad = ctx.createLinearGradient(cloth.x, cloth.y, cloth.x + cloth.w, cloth.y + cloth.h);
+    if (isEbonite) {
+        // Yün Kumaş: Sıcak krem / bal rengi dokulu kumaş
+        clothGrad.addColorStop(0, '#fef3c7');
+        clothGrad.addColorStop(0.5, '#fde68a');
+        clothGrad.addColorStop(1, '#f59e0b');
+    } else {
+        // İpek Kumaş: Mor / eflatun parlak ipek dokusu
+        clothGrad.addColorStop(0, '#f3e8ff');
+        clothGrad.addColorStop(0.5, '#d8b4fe');
+        clothGrad.addColorStop(1, '#a855f7');
+    }
+
+    ctx.fillStyle = clothGrad;
+    ctx.strokeStyle = isEbonite ? '#d97706' : '#7e22ce';
+    ctx.lineWidth = 2;
+
+    // Dalgalı kumaş şekli
+    ctx.beginPath();
+    ctx.roundRect(cloth.x, cloth.y, cloth.w, cloth.h, 10);
+    ctx.fill();
+    ctx.stroke();
+
+    // Kumaş Dikiş / Kat İzi Çizgileri
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cloth.x + 10, cloth.y + cloth.h * 0.4);
+    ctx.lineTo(cloth.x + cloth.w - 10, cloth.y + cloth.h * 0.4);
+    ctx.moveTo(cloth.x + 10, cloth.y + cloth.h * 0.7);
+    ctx.lineTo(cloth.x + cloth.w - 10, cloth.y + cloth.h * 0.7);
+    ctx.stroke();
+
+    // Kumaş İçi Yükler
+    // Protonlar (+) (8 adet)
+    const pSpacing = (cloth.w - 20) / 3;
+    for (let row = 0; row < 2; row++) {
+        for (let col = 0; col < 4; col++) {
+            const idx = row * 4 + col;
+            if (idx < cloth.protons) {
+                const px = cloth.x + 12 + col * pSpacing;
+                const py = cloth.y + 18 + row * 16;
+                drawChargeBadge(ctx, px, py, '+', '#ef4444', '#f87171');
+            }
+        }
+    }
+
+    // Elektronlar (-)
+    const eCount = cloth.electrons;
+    const eCols = Math.min(4, Math.ceil(eCount / 2));
+    const eSpacing = (cloth.w - 20) / Math.max(1, eCols - 1);
+    for (let i = 0; i < eCount; i++) {
+        const row = Math.floor(i / eCols);
+        const col = i % eCols;
+        const ex = cloth.x + 12 + col * eSpacing;
+        const ey = cloth.y + 52 + row * 15;
+        if (ey < cloth.y + cloth.h - 5) {
+            drawChargeBadge(ctx, ex, ey, '-', '#0284c7', '#38bdf8');
+        }
+    }
+
+    // Kumaş İsim Etiketi
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = isEbonite ? '#fef08a' : '#e9d5ff';
+    ctx.textAlign = 'center';
+    ctx.fillText(isEbonite ? "Yün Kumaş" : "İpek Kumaş", cloth.x + cloth.w / 2, cloth.y + cloth.h + 16);
+
+    ctx.restore();
+}
+
+function drawChargeBadge(ctx, x, y, symbol, bg, border) {
+    ctx.save();
+    ctx.fillStyle = bg;
+    ctx.strokeStyle = border;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(x, y, 5.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 9px monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(symbol, x, y);
+    ctx.restore();
+}
+
+function drawPaperBits(ctx, papers) {
+    ctx.save();
+    papers.forEach(p => {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 0.8;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.strokeRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+    });
+    ctx.restore();
+}
+
+function drawElectroSparks(ctx, sparks) {
+    ctx.save();
+    sparks.forEach(s => {
+        const curX = s.x + (s.targetX - s.x) * s.progress;
+        const curY = s.y + (s.targetY - s.y) * s.progress - Math.sin(s.progress * Math.PI) * 20;
+
+        ctx.fillStyle = s.color;
+        ctx.shadowColor = s.color;
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.arc(curX, curY, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // e- simgesi
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 8px monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText("e⁻", curX, curY - 6);
+    });
+    ctx.restore();
+}
+
+// --- DOKUNMA ÇİZİMLERİ ---
+
+function drawElectroConductionSetup(ctx, c) {
+    // 1. İki Küre Arası Mesafe Çizgisi
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(c.sphere1.x, 230);
+    ctx.lineTo(c.sphere2.x, 230);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // 2. Küre 1 (Sol)
+    drawConductionSphere(ctx, c.sphere1, "1. İletken Küre", '#f87171');
+
+    // 3. Küre 2 (Sağ)
+    drawConductionSphere(ctx, c.sphere2, "2. İletken Küre", '#38bdf8');
+
+    // 4. Dokunma Kıvılcımları
+    drawTouchSparks(ctx, c.touchSparks);
+
+    // 5. Bilgilendirme İpucu
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = 'rgba(148, 163, 184, 0.6)';
+    ctx.textAlign = 'center';
+    ctx.fillText("↔ Küreleri birbirine dokundurmak için sürükleyin", 400, 100);
+    ctx.fillText("Yalıtkan Ayaklar (Masada Sabit İletim Yok)", 400, 458);
+
+    ctx.restore();
+}
+
+function drawConductionSphere(ctx, sphere, label, netColor) {
+    ctx.save();
+    const cx = sphere.x;
+    const cy = sphere.y;
+    const r = sphere.r;
+
+    // Yalıtkan Sap (Pleksiglas / Akrilik Ayak)
+    const standGrad = ctx.createLinearGradient(cx - 8, 0, cx + 8, 0);
+    standGrad.addColorStop(0, 'rgba(251, 191, 36, 0.3)');
+    standGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.6)');
+    standGrad.addColorStop(1, 'rgba(251, 191, 36, 0.3)');
+    ctx.fillStyle = standGrad;
+    ctx.strokeStyle = 'rgba(245, 158, 11, 0.5)';
+    ctx.lineWidth = 1.5;
+    ctx.fillRect(cx - 7, cy + r - 5, 14, 435 - (cy + r));
+    ctx.strokeRect(cx - 7, cy + r - 5, 14, 435 - (cy + r));
+
+    // Yalıtkan Taban Plakası
+    ctx.fillStyle = '#1e293b';
+    ctx.strokeStyle = '#475569';
+    ctx.beginPath();
+    ctx.roundRect(cx - 35, 435, 70, 10, 3);
+    ctx.fill();
+    ctx.stroke();
+
+    // İletken Metal Küre (Krom Metalik Radyal Gradyan)
+    const sphereGrad = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.35, r * 0.1, cx, cy, r);
+    sphereGrad.addColorStop(0, '#ffffff');
+    sphereGrad.addColorStop(0.3, '#cbd5e1');
+    sphereGrad.addColorStop(0.7, '#64748b');
+    sphereGrad.addColorStop(1, '#1e293b');
+
+    ctx.fillStyle = sphereGrad;
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Küre Üzerindeki Yük Parçacıkları Dağılımı
+    // Protonlar (+)
+    const pCount = sphere.protons;
+    for (let i = 0; i < pCount; i++) {
+        const ang = (i / pCount) * Math.PI * 2 + 0.3;
+        const radDist = r * 0.65;
+        const qx = cx + Math.cos(ang) * radDist;
+        const qy = cy + Math.sin(ang) * radDist;
+        drawChargeBadge(ctx, qx, qy, '+', '#ef4444', '#f87171');
+    }
+
+    // Elektronlar (-)
+    const eCount = sphere.electrons;
+    for (let i = 0; i < eCount; i++) {
+        const ang = (i / Math.max(1, eCount)) * Math.PI * 2 + 0.8;
+        const radDist = r * 0.35;
+        const qx = cx + Math.cos(ang) * radDist;
+        const qy = cy + Math.sin(ang) * radDist;
+        drawChargeBadge(ctx, qx, qy, '-', '#0284c7', '#38bdf8');
+    }
+
+    // Küre Alt İsim ve Net Yük Rozeti
+    const net = sphere.protons - sphere.electrons;
+    const netStr = net === 0 ? "0 (Nötr)" : net > 0 ? `+${net}e` : `-${Math.abs(net)}e`;
+
+    ctx.font = 'bold 12px Inter, sans-serif';
+    ctx.fillStyle = '#f8fafc';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, cx, cy - r - 16);
+
+    ctx.fillStyle = netColor;
+    ctx.font = 'bold 13px Inter, monospace';
+    ctx.fillText(netStr, cx, cy - r - 2);
+
+    ctx.restore();
+}
+
+function drawTouchSparks(ctx, sparks) {
+    ctx.save();
+    sparks.forEach(s => {
+        ctx.fillStyle = s.color;
+        ctx.shadowColor = s.color;
+        ctx.shadowBlur = 10;
+        ctx.globalAlpha = Math.max(0, s.alpha);
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+    });
+    ctx.restore();
+}
+
+
+
 
 function setupCanvasPointerEvents() {
     const cvs = document.getElementById('lab-canvas');
@@ -6246,6 +7231,35 @@ function setupCanvasPointerEvents() {
                 calculateLensPhysics();
             }
         }
+        // Deney 7.7: Kumaş, Çubuk veya Küre Sürükleme
+        else if (labState.activeExperimentId === "7.7") {
+            const el = labState.electro;
+            if (el.mode === "friction") {
+                const f = el.friction;
+                if (f.cloth.isDragging) {
+                    const newX = canvasX - (f.cloth.dragOffsetX || (f.cloth.w / 2));
+                    const newY = canvasY - (f.cloth.dragOffsetY || (f.cloth.h / 2));
+                    f.cloth.x = Math.max(20, Math.min(680, newX));
+                    f.cloth.y = Math.max(50, Math.min(380, newY));
+                }
+                if (f.rod.isDragging) {
+                    const newX = canvasX - (f.rod.dragOffsetX || (f.rod.w / 2));
+                    const newY = canvasY - (f.rod.dragOffsetY || (f.rod.h / 2));
+                    f.rod.x = Math.max(100, Math.min(380, newX));
+                    f.rod.y = Math.max(80, Math.min(370, newY));
+                }
+            } else {
+                const c = el.conduction;
+                if (c.sphere1.isDragging) {
+                    const newX = canvasX - (c.sphere1.dragOffsetX || 0);
+                    c.sphere1.x = Math.max(80, Math.min(c.sphere2.x - 10, newX));
+                }
+                if (c.sphere2.isDragging) {
+                    const newX = canvasX - (c.sphere2.dragOffsetX || 0);
+                    c.sphere2.x = Math.max(c.sphere1.x + 10, Math.min(720, newX));
+                }
+            }
+        }
     };
 
     cvs.addEventListener('pointerdown', (e) => {
@@ -6272,13 +7286,52 @@ function setupCanvasPointerEvents() {
             }
         }
 
+        if (labState.activeExperimentId === "7.7") {
+            const rect = cvs.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            const scaleX = 800 / rect.width;
+            const scaleY = 500 / rect.height;
+            const canvasX = (clientX - rect.left) * scaleX;
+            const canvasY = (clientY - rect.top) * scaleY;
+
+            const el = labState.electro;
+            if (el.mode === "friction") {
+                const f = el.friction;
+                if (canvasX >= f.cloth.x - 15 && canvasX <= f.cloth.x + f.cloth.w + 15 &&
+                    canvasY >= f.cloth.y - 15 && canvasY <= f.cloth.y + f.cloth.h + 15) {
+                    f.cloth.isDragging = true;
+                    f.cloth.dragOffsetX = canvasX - f.cloth.x;
+                    f.cloth.dragOffsetY = canvasY - f.cloth.y;
+                } else if (canvasX >= f.rod.x - 15 && canvasX <= f.rod.x + f.rod.w + 15 &&
+                           canvasY >= f.rod.y - 15 && canvasY <= f.rod.y + f.rod.h + 15) {
+                    f.rod.isDragging = true;
+                    f.rod.dragOffsetX = canvasX - f.rod.x;
+                    f.rod.dragOffsetY = canvasY - f.rod.y;
+                }
+            } else {
+                const c = el.conduction;
+                if (Math.hypot(canvasX - c.sphere1.x, canvasY - c.sphere1.y) <= c.sphere1.r + 15) {
+                    c.sphere1.isDragging = true;
+                    c.sphere1.dragOffsetX = canvasX - c.sphere1.x;
+                } else if (Math.hypot(canvasX - c.sphere2.x, canvasY - c.sphere2.y) <= c.sphere2.r + 15) {
+                    c.sphere2.isDragging = true;
+                    c.sphere2.dragOffsetX = canvasX - c.sphere2.x;
+                }
+            }
+        }
+
         handlePointerAction(e);
     });
 
     cvs.addEventListener('pointermove', (e) => {
         const isDragging71 = (labState.activeExperimentId === "7.1" && labState.work.isDragging);
         const isDragging72 = (labState.activeExperimentId === "7.2" && (labState.energy.pendulum.isDragging || labState.energy.ramp.isDragging));
-        if (isDragging71 || isDragging72 || labState.optics.isDraggingLaser || labState.lens.isDraggingObject) {
+        const isDragging77 = (labState.activeExperimentId === "7.7" && (
+            (labState.electro.mode === "friction" && (labState.electro.friction.cloth.isDragging || labState.electro.friction.rod.isDragging)) ||
+            (labState.electro.mode === "conduction" && (labState.electro.conduction.sphere1.isDragging || labState.electro.conduction.sphere2.isDragging))
+        ));
+        if (isDragging71 || isDragging72 || isDragging77 || labState.optics.isDraggingLaser || labState.lens.isDraggingObject) {
             handlePointerAction(e);
         }
     });
@@ -6290,6 +7343,12 @@ function setupCanvasPointerEvents() {
         if (labState.energy) {
             labState.energy.pendulum.isDragging = false;
             labState.energy.ramp.isDragging = false;
+        }
+        if (labState.electro) {
+            labState.electro.friction.cloth.isDragging = false;
+            labState.electro.friction.rod.isDragging = false;
+            labState.electro.conduction.sphere1.isDragging = false;
+            labState.electro.conduction.sphere2.isDragging = false;
         }
         labState.optics.isDraggingLaser = false;
         labState.lens.isDraggingObject = false;
@@ -6369,6 +7428,17 @@ function updateTableHeader(expId) {
                 <th>Fiziksel Özellik Farkı</th>
                 <th>Ayrılan Bileşenler</th>
                 <th>Sonuç / Verim</th>
+            </tr>
+        `;
+    } else if (expId === "7.7") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Deney Modu</th>
+                <th>Kullanılan Cisimler</th>
+                <th>Başlangıç Yükleri</th>
+                <th>Elektron Akış Yönü</th>
+                <th>Son Yük Durumları</th>
             </tr>
         `;
     }
@@ -6552,6 +7622,48 @@ function recordMeasurement() {
             sep.measurements.push(row);
             showLabToast(`Damıtma Gözlemi #${row.id} deftere kaydedildi!`);
         }
+    } else if (expId === "7.7") {
+        const el = labState.electro;
+        if (el.mode === "friction") {
+            const f = el.friction;
+            const isEbonite = (f.pair === "ebonite");
+            const rodName = isEbonite ? "Ebonit Çubuk" : "Cam Çubuk";
+            const clothName = isEbonite ? "Yün Kumaş" : "İpek Kumaş";
+            const rodNet = f.rod.protons - f.rod.electrons; // positive if protons > electrons
+            const clothNet = f.cloth.protons - f.cloth.electrons;
+
+            let flowStr = isEbonite ? "Yün ➔ Çubuğa (e⁻ Geçişi)" : "Cam ➔ İpeğe (e⁻ Geçişi)";
+            const rodSign = rodNet < 0 ? `(-${Math.abs(rodNet)}e Negatif)` : rodNet > 0 ? `(+${rodNet}e Pozitif)` : "Nötr (0)";
+            const clothSign = clothNet < 0 ? `(-${Math.abs(clothNet)}e Negatif)` : clothNet > 0 ? `(+${clothNet}e Pozitif)` : "Nötr (0)";
+
+            const row = {
+                id: el.measurements.length + 1,
+                col1: "⚡ Sürtünme",
+                col2: `${rodName} + ${clothName}`,
+                col3: "Başlangıç: Her İkisi Nötr (0)",
+                col4: flowStr,
+                col5: `${rodName}: ${rodSign} · ${clothName}: ${clothSign}`
+            };
+            el.measurements.push(row);
+            showLabToast(`Sürtünme Gözlemi #${row.id} deftere kaydedildi!`);
+        } else {
+            const c = el.conduction;
+            const s1Net = c.sphere1.protons - c.sphere1.electrons;
+            const s2Net = c.sphere2.protons - c.sphere2.electrons;
+            const s1Sign = s1Net < 0 ? `-${Math.abs(s1Net)}e` : s1Net > 0 ? `+${s1Net}e` : "0 (Nötr)";
+            const s2Sign = s2Net < 0 ? `-${Math.abs(s2Net)}e` : s2Net > 0 ? `+${s2Net}e` : "0 (Nötr)";
+
+            const row = {
+                id: el.measurements.length + 1,
+                col1: "🤝 Dokunma",
+                col2: "2 Özdeş İletken Metal Küre",
+                col3: c.hasTouched ? "Dokunma Gerçekleşti" : "Dokunma Öncesi",
+                col4: "e⁻ Dağılımı (Sadece e⁻ Akışı)",
+                col5: `Küre 1: ${s1Sign} · Küre 2: ${s2Sign}`
+            };
+            el.measurements.push(row);
+            showLabToast(`Dokunma Gözlemi #${row.id} deftere kaydedildi!`);
+        }
     }
 
     renderMeasurementTable();
@@ -6574,6 +7686,8 @@ function renderMeasurementTable() {
         measurements = labState.dissolve.measurements;
     } else if (expId === "7.6") {
         measurements = labState.separation.measurements;
+    } else if (expId === "7.7") {
+        measurements = labState.electro.measurements;
     } else {
         measurements = labState.optics.measurements;
     }
@@ -6613,6 +7727,8 @@ function clearMeasurementTable() {
         labState.dissolve.measurements = [];
     } else if (expId === "7.6") {
         labState.separation.measurements = [];
+    } else if (expId === "7.7") {
+        labState.electro.measurements = [];
     } else {
         labState.optics.measurements = [];
     }
