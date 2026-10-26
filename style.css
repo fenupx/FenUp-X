@@ -1052,3 +1052,863 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .rank-2 .global-lb-avatar { border-color: #9ca3af; box-shadow: 0 0 15px rgba(156, 163, 175, 0.5);}
 .rank-3 .global-lb-rank { color: #b45309; text-shadow: 0 0 15px #b45309; font-size: 1.5rem;}
 .rank-3 .global-lb-avatar { border-color: #b45309; box-shadow: 0 0 15px rgba(180, 83, 9, 0.5);}
+
+/* ==========================================================================
+   🧪 SANAL BİLİM LABORATUVARI & İNTERAKTİF DENEY MODÜLÜ (MEB MAARİF MODELİ)
+   ========================================================================== */
+
+/* Ana Menü Laboratuvar Butonu */
+.module-btn.lab-active {
+    border-color: rgba(0, 210, 255, 0.4) !important;
+    background: linear-gradient(135deg, rgba(0, 210, 255, 0.12), rgba(157, 80, 187, 0.18)) !important;
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.25) !important;
+}
+.module-btn.lab-active:hover {
+    border-color: var(--neon-blue) !important;
+    box-shadow: 0 0 35px rgba(0, 210, 255, 0.45) !important;
+    transform: translateY(-4px) scale(1.02);
+}
+.module-btn.lab-active i.fa-flask {
+    color: var(--neon-blue);
+    text-shadow: 0 0 15px var(--neon-blue);
+    animation: pulseFlask 2.5s infinite ease-in-out;
+}
+@keyframes pulseFlask {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(6deg); }
+}
+
+/* Laboratuvar Ana Sahnesi (#lab-view) */
+.lab-view-scene {
+    width: 95vw !important;
+    max-width: 1400px !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 24px 28px !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+}
+
+.lab-subview {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Katalog Başlığı */
+.lab-nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.lab-title-group {
+    flex: 1;
+    text-align: center;
+}
+.lab-main-heading {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0;
+    text-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+.lab-main-heading i {
+    color: var(--neon-blue);
+}
+.lab-subheading {
+    font-size: 1rem;
+    color: #94a3b8;
+    margin-top: 4px;
+}
+.lab-header-spacer {
+    width: 110px;
+}
+
+/* Sınıf Seçici Büyük Butonlar */
+.lab-grade-selector {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    width: 100%;
+    margin: 6px 0;
+    flex-wrap: wrap;
+}
+.lab-grade-btn {
+    flex: 1;
+    max-width: 220px;
+    min-height: 52px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
+    color: #cbd5e1;
+    font-size: 1.15rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    touch-action: manipulation;
+}
+.lab-grade-btn:hover {
+    border-color: var(--neon-blue);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 0 18px rgba(0, 210, 255, 0.3);
+}
+.lab-grade-btn.active {
+    background: linear-gradient(135deg, rgba(0, 210, 255, 0.3), rgba(157, 80, 187, 0.4));
+    border-color: var(--neon-blue);
+    color: #fff;
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.45);
+}
+
+/* Ünite Filtre Rozetleri (Yatay Kaydırılabilir) */
+.lab-unit-filter-container {
+    width: 100%;
+    overflow-x: auto;
+    padding: 6px 0 10px 0;
+    -webkit-overflow-scrolling: touch;
+}
+.lab-unit-filter-container::-webkit-scrollbar {
+    height: 5px;
+}
+.lab-unit-filter-container::-webkit-scrollbar-thumb {
+    background: rgba(0, 210, 255, 0.3);
+    border-radius: 10px;
+}
+.lab-unit-pills {
+    display: flex;
+    gap: 10px;
+    white-space: nowrap;
+    width: max-content;
+}
+.lab-pill-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    color: #94a3b8;
+    padding: 8px 18px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+}
+.lab-pill-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border-color: rgba(0, 210, 255, 0.4);
+}
+.lab-pill-btn.active {
+    background: var(--neon-blue);
+    color: #030712;
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+}
+
+/* Deney Kartları Izgarası (Grid) */
+.lab-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 22px;
+    width: 100%;
+    margin-top: 10px;
+}
+.lab-card {
+    background: rgba(10, 16, 30, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 14px;
+    transition: all 0.3s ease;
+    position: relative;
+    box-sizing: border-box;
+}
+.lab-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Pilot Aktif Kart Vurgusu */
+.lab-card.pilot-active {
+    border: 2px solid var(--neon-blue);
+    background: linear-gradient(145deg, rgba(10, 25, 45, 0.9), rgba(20, 15, 35, 0.9));
+    box-shadow: 0 0 30px rgba(0, 210, 255, 0.25);
+}
+.lab-card.pilot-active:hover {
+    box-shadow: 0 0 45px rgba(0, 210, 255, 0.45);
+    border-color: #38bdf8;
+}
+
+.lab-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.lab-card-grade-badge {
+    background: rgba(255, 255, 255, 0.08);
+    color: #38bdf8;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+.lab-card-status-badge {
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.lab-card-status-badge.pilot {
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid #10b981;
+    color: #34d399;
+}
+.lab-card-status-badge.upcoming {
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    color: #fbbf24;
+}
+
+.lab-card-title {
+    font-size: 1.22rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.35;
+    margin: 4px 0;
+}
+.lab-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.85rem;
+    color: #94a3b8;
+}
+.lab-card-meta i {
+    color: var(--neon-blue);
+    width: 16px;
+}
+.lab-card-desc {
+    font-size: 0.92rem;
+    color: #cbd5e1;
+    line-height: 1.45;
+}
+.lab-card-footer {
+    margin-top: 6px;
+    display: flex;
+}
+.lab-card-footer .action-btn {
+    width: 100%;
+    margin: 0;
+    padding: 12px 18px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+}
+.lab-upcoming-btn {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #94a3b8 !important;
+    box-shadow: none !important;
+    cursor: pointer;
+}
+.lab-upcoming-btn:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+}
+
+/* ==========================================================================
+   🔬 ÇALIŞMA MASASI DÜZENİ (WORKSPACE SHELL & SPLIT LAYOUT)
+   ========================================================================== */
+
+.lab-workspace-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.lab-workspace-title-box {
+    flex: 1;
+    text-align: center;
+}
+.lab-badge {
+    display: inline-block;
+    background: rgba(0, 210, 255, 0.15);
+    border: 1px solid var(--neon-blue);
+    color: #38bdf8;
+    padding: 3px 12px;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+.lab-workspace-title-box h3 {
+    font-size: 1.55rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 2px 0;
+}
+.lab-workspace-title-box small {
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+.lab-workspace-actions {
+    display: flex;
+    gap: 10px;
+}
+.lab-action-pill {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    touch-action: manipulation;
+}
+.lab-action-pill:hover {
+    background: var(--neon-blue);
+    color: #030712;
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+}
+
+/* Mobil Tab Menüsü (< 1024px için) */
+.lab-mobile-tabs {
+    display: none;
+    width: 100%;
+    gap: 8px;
+    justify-content: center;
+    margin: 4px 0 10px 0;
+}
+.lab-tab-btn {
+    flex: 1;
+    max-width: 160px;
+    min-height: 44px;
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    color: #94a3b8;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    touch-action: manipulation;
+}
+.lab-tab-btn.active {
+    background: var(--neon-blue);
+    color: #030712;
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.35);
+}
+
+/* Çift Bölmeli Yerleşim (Split Layout - Desktop ≥ 1024px) */
+.lab-workspace-body {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    align-items: flex-start;
+    width: 100%;
+}
+.lab-canvas-section {
+    flex: 0 0 64%;
+    max-width: 64%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.lab-sidebar-section {
+    flex: 0 0 36%;
+    max-width: 36%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Canvas Sarmalayıcı */
+.lab-canvas-wrapper {
+    position: relative;
+    width: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 2px solid rgba(0, 210, 255, 0.4);
+    box-shadow: 0 0 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 210, 255, 0.2);
+    background: #030712;
+}
+#lab-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    touch-action: none; /* Akıllı tahta ve dokunmatik zırhı */
+    cursor: crosshair;
+}
+
+/* Canvas Üzeri HUD Şeritleri */
+.lab-canvas-overlay {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+    pointer-events: none;
+}
+.lab-hud-pill {
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    padding: 5px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+.lab-hud-pill strong {
+    color: var(--neon-blue);
+    font-weight: 800;
+}
+.lab-hud-status {
+    border-left: 3px solid #10b981;
+    font-weight: 700;
+    color: #fff;
+}
+
+/* Canvas Altı Hızlı Dokunmatik Açı Kontrol Barı */
+.lab-canvas-quick-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 10px 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.lab-btn-step {
+    min-width: 46px;
+    min-height: 44px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+}
+.lab-btn-step:hover {
+    background: var(--neon-blue);
+    color: #030712;
+    box-shadow: 0 0 12px rgba(0, 210, 255, 0.4);
+}
+.lab-angle-slider-wrap {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+.lab-angle-slider-wrap label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #cbd5e1;
+}
+.lab-angle-slider-wrap label span {
+    color: var(--neon-blue);
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+#lab-angle-range {
+    width: 100%;
+    height: 8px;
+    accent-color: var(--neon-blue);
+    cursor: pointer;
+}
+
+/* Sidebar Kontrol Kartları */
+.lab-panel-box {
+    background: rgba(10, 16, 30, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    box-sizing: border-box;
+}
+.lab-box-heading {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.lab-box-heading i {
+    color: var(--neon-blue);
+}
+
+/* Maarif Değişkenleri */
+.lab-vars-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    color: #cbd5e1;
+}
+.lab-var-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.var-badge {
+    font-weight: 800;
+    font-size: 0.82rem;
+    padding: 2px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    width: fit-content;
+}
+.var-badge.indep { background: rgba(157, 80, 187, 0.25); color: #d8b4fe; border: 1px solid #c084fc; }
+.var-badge.dep { background: rgba(0, 210, 255, 0.2); color: #38bdf8; border: 1px solid #38bdf8; }
+.var-badge.ctrl { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #34d399; }
+
+/* Ortam Seçimi */
+.lab-env-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.lab-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.lab-field-label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #94a3b8;
+}
+.lab-select {
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: #0f172a;
+    color: #fff;
+    font-size: 0.95rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+}
+.lab-select:focus {
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.4);
+}
+.lab-mini-btn {
+    min-height: 44px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: #fff;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 14px;
+    touch-action: manipulation;
+}
+.lab-mini-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--neon-blue);
+}
+.lab-mini-btn.danger {
+    color: #f87171;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+.lab-mini-btn.danger:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
+/* Anlık İstatistik Grid Kartları */
+.lab-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.lab-stat-chip {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.chip-label {
+    font-size: 0.78rem;
+    color: #94a3b8;
+}
+.chip-val {
+    font-size: 0.95rem;
+    color: #fff;
+    font-weight: 800;
+}
+.lab-record-action-btn {
+    width: 100% !important;
+    min-height: 48px;
+    font-size: 1.05rem;
+    margin-top: 6px !important;
+}
+
+/* Veri Defteri Tablosu */
+.lab-table-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.lab-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    max-height: 280px;
+    overflow-y: auto;
+}
+.lab-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    text-align: left;
+}
+.lab-data-table th {
+    background: rgba(15, 23, 42, 0.9);
+    color: var(--neon-blue);
+    font-weight: 800;
+    padding: 8px 10px;
+    border-bottom: 2px solid rgba(0, 210, 255, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+.lab-data-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: #cbd5e1;
+}
+.lab-data-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.lab-table-tag {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+}
+.lab-table-val.inc { color: #ff6b8b; font-weight: 800; }
+.lab-table-val.ref { color: #38bdf8; font-weight: 800; }
+.lab-empty-hint {
+    padding: 20px;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Bilimsel Rehber Metinleri */
+.lab-guide-text {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #cbd5e1;
+}
+.guide-item strong {
+    color: var(--neon-blue);
+    display: block;
+    margin-bottom: 2px;
+}
+.guide-item p {
+    margin: 0;
+}
+
+/* Toast Bildirimi */
+.lab-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    border: 2px solid var(--neon-blue);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    box-shadow: 0 0 30px rgba(0, 210, 255, 0.4);
+    z-index: 99999;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 90vw;
+    text-align: center;
+}
+.lab-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ==========================================================================
+   📱 DUYARLI VE MOBİL UYUM (RESPONSIVE BREAKPOINTS)
+   ========================================================================== */
+
+/* Tablet & Küçük Ekranlar (< 1024px Dikey) */
+@media (max-width: 1024px) {
+    .lab-view-scene {
+        padding: 16px 14px !important;
+        max-height: 92vh !important;
+    }
+    .lab-main-heading {
+        font-size: 1.7rem;
+    }
+    .lab-header-spacer {
+        display: none;
+    }
+    .lab-grade-btn {
+        max-width: none;
+        flex: 1 1 30%;
+        min-height: 48px;
+        font-size: 1rem;
+    }
+    .lab-workspace-body {
+        flex-direction: column !important;
+    }
+    .lab-canvas-section {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+    }
+    .lab-sidebar-section {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+    }
+    .lab-mobile-tabs {
+        display: flex !important;
+    }
+    /* Mobilde tab mantığı devrede: Aktif olmayan pane'ler gizlenir */
+    .lab-tab-pane.is-hidden {
+        display: none !important;
+    }
+}
+
+/* Mobil Yatay Ekranlar (Landscape: Masaüstü Düzeni) */
+@media (max-width: 1024px) and (orientation: landscape) {
+    .lab-view-scene {
+        max-height: 95vh !important;
+    }
+    .lab-workspace-body {
+        flex-direction: row !important;
+    }
+    .lab-canvas-section {
+        flex: 0 0 58% !important;
+        max-width: 58% !important;
+    }
+    .lab-sidebar-section {
+        flex: 0 0 42% !important;
+        max-width: 42% !important;
+    }
+    .lab-mobile-tabs {
+        display: flex !important;
+    }
+}
+
+/* Küçük Telefonlar (< 640px) */
+@media (max-width: 640px) {
+    .lab-grade-selector {
+        gap: 8px;
+    }
+    .lab-grade-btn {
+        flex: 1 1 100%;
+        min-height: 44px;
+        font-size: 0.95rem;
+    }
+    .lab-cards-grid {
+        grid-template-columns: 1fr;
+    }
+    .lab-workspace-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .lab-workspace-title-box {
+        text-align: left;
+    }
+    .lab-workspace-title-box h3 {
+        font-size: 1.25rem;
+    }
+    .lab-workspace-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    .lab-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -457,7 +457,15 @@ const btnOyunModulu = document.getElementById('btn-oyun-modulu');
 if(btnOyunModulu) btnOyunModulu.onclick = () => switchScene(scenes.home, scenes.crossroads);
 
 const btnDeneyModulu = document.getElementById('btn-deney-modulu');
-if(btnDeneyModulu) btnDeneyModulu.onclick = () => alert("İnteraktif Deney Modülü Çok Yakında!");
+if(btnDeneyModulu) btnDeneyModulu.onclick = () => {
+    const labView = document.getElementById('lab-view');
+    if (labView) {
+        switchScene(scenes.home, labView);
+        if (window.FenUpLab && typeof window.FenUpLab.openLabView === "function") {
+            window.FenUpLab.openLabView();
+        }
+    }
+};
 
 const btnModeBireysel = document.getElementById('btn-mode-bireysel');
 if(btnModeBireysel) btnModeBireysel.onclick = () => {
