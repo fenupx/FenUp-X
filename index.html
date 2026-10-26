@@ -443,6 +443,33 @@
                         </div>
                     </div>
 
+                    <!-- Canvas Altı Hızlı Dokunmatik İş ve Kuvvet Kontrol Barı (Deney 7.1) -->
+                    <div id="quick-controls-7-1" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group" id="group-scenarios-7-1">
+                                <button class="lab-toggle-btn active" id="btn-scenario-horizontal" title="Kutuyu Yatay İtme"><i class="fas fa-box"></i> 📦 Yatay İtme</button>
+                                <button class="lab-toggle-btn" id="btn-scenario-lift" title="Yerden Yukarı Kaldırma"><i class="fas fa-arrow-up"></i> 🏋️ Yukarı Kaldırma</button>
+                                <button class="lab-toggle-btn" id="btn-scenario-carry" title="Çantayla Yatay Yürüme"><i class="fas fa-walking"></i> 🎒 Çantayla Yürüme</button>
+                                <button class="lab-toggle-btn" id="btn-scenario-wall" title="Sabit Duvarı İtme"><i class="fas fa-hand-paper"></i> 🧱 Duvarı İtme</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-work-play-pause" title="Hareketi Başlat / Duraklat"><i class="fas fa-play"></i> <span id="label-work-play">Hareketi Başlat</span></button>
+                                <button class="lab-toggle-btn" id="btn-work-friction" title="Zemin Sürtünmesi"><i class="fas fa-wind"></i> Sürtünme: <span id="label-work-friction">Kapalı</span></button>
+                                <button class="lab-toggle-btn" id="btn-work-reset" title="Konumu Başa Al"><i class="fas fa-redo"></i> Başa Al</button>
+                            </div>
+                        </div>
+                        <div class="lab-lens-sliders-row">
+                            <div class="lab-angle-slider-wrap">
+                                <label for="lab-work-force-range">Uygulanan Kuvvet (F): <span id="lab-work-force-display">40 N</span></label>
+                                <input type="range" id="lab-work-force-range" min="10" max="100" value="40" step="5">
+                            </div>
+                            <div class="lab-angle-slider-wrap" id="wrap-work-distance">
+                                <label for="lab-work-distance-range"><span id="label-work-dist-title">Alınan Yol (Δx)</span>: <span id="lab-work-distance-display">5.0 m</span></label>
+                                <input type="range" id="lab-work-distance-range" min="1" max="10" value="5" step="0.5">
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Canvas Altı Hızlı Dokunmatik Enerji Kontrol Barı (Deney 7.2) -->
                     <div id="quick-controls-7-2" class="lab-canvas-quick-controls is-hidden">
                         <div class="lab-quick-lens-row">
@@ -475,6 +502,76 @@
                     <!-- TAB 1: DEĞİŞKENLER VE KONTROLLER -->
                     <div class="lab-tab-pane active" id="pane-vars">
                         
+                        <!-- DENEY 7.1 DEĞİŞKENLERİ -->
+                        <div id="vars-container-7-1" class="is-hidden">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Uygulanan Kuvvet (F), Alınan Yol (Δx), Kuvvet Doğrultusu ve Sürtünme</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Yapılan Fiziksel İş (W = F · Δx), Net İş (Wnet) ve İş Durumu (Yapıldı / Yapılmadı)</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Cisim Kütlesi (m = 10 kg), Yer Çekimi İvmesi (g = 10 m/s²)</div>
+                                </div>
+                            </div>
+
+                            <!-- Dinamik Maarif Pedagojik Çıkarım & Uyarı Kartı -->
+                            <div class="lab-pedagogical-card is-work" id="work-pedagogical-box">
+                                <div class="pedagogical-icon" id="work-pedagogical-icon"><i class="fas fa-check-circle"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="work-pedagogical-title">✅ Fiziksel Anlamda İş Yapıldı!</strong>
+                                    <p id="work-pedagogical-text">Uygulanan kuvvet ile cismin hareket doğrultusu aynıdır (yatay). Cisim uygulanan kuvvet yönünde yer değiştirdiği için fiziksel anlamda iş yapılmıştır (W = F · Δx).</p>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Kavram Yanılgısı Senaryoları</h4>
+                                <div class="lab-lens-controls-box">
+                                    <div class="lab-field-group">
+                                        <label class="lab-field-label">Senaryo Seçimi:</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                            <button class="lab-select-pill active" id="pill-scenario-horizontal">📦 1. Yatay İtme</button>
+                                            <button class="lab-select-pill" id="pill-scenario-lift">🏋️ 2. Yukarı Kaldırma</button>
+                                            <button class="lab-select-pill" id="pill-scenario-carry">🎒 3. Çantayla Yürüme</button>
+                                            <button class="lab-select-pill" id="pill-scenario-wall">🧱 4. Duvarı İtme</button>
+                                        </div>
+                                    </div>
+                                    <div class="lab-field-group" id="group-friction-pills" style="margin-top: 8px;">
+                                        <label class="lab-field-label">Zemin Sürtünmesi (Yatay İtme İçin):</label>
+                                        <div class="lab-select-pills">
+                                            <button class="lab-select-pill active" id="pill-work-friction-off">🛡️ Sürtünmesiz (İdeal)</button>
+                                            <button class="lab-select-pill" id="pill-work-friction-on">💨 Sürtünmeli (fs = 20 N)</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Anlık Ölçüm ve İş Değerleri</h4>
+                                <div class="lab-stats-grid">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Uygulanan Kuvvet (F)</span>
+                                        <strong class="chip-val" id="metric-work-force" style="color: #ef4444;">40.0 N</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Yer Değiştirme (Δx)</span>
+                                        <strong class="chip-val" id="metric-work-distance" style="color: #38bdf8;">5.0 m</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Doğrultu Uyumu</span>
+                                        <strong class="chip-val" id="metric-work-alignment" style="color: #10b981;">Aynı Doğrultu (0°)</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Sürtünme / Net Kuvvet</span>
+                                        <strong class="chip-val" id="metric-work-net-force" style="color: #cbd5e1;">Fnet = 40.0 N</strong>
+                                    </div>
+                                    <div class="lab-stat-chip" style="grid-column: span 2;">
+                                        <span class="chip-label">Yapılan Fiziksel İş (W)</span>
+                                        <strong class="chip-val" id="metric-work-joule" style="color: #10b981; font-size: 1.1rem;">W = 200.0 J (İş Yapıldı)</strong>
+                                    </div>
+                                </div>
+                                <button id="btn-record-data-7-1" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
                         <!-- DENEY 7.2 DEĞİŞKENLERİ -->
                         <div id="vars-container-7-2" class="is-hidden">
                             <div class="lab-panel-box">
@@ -709,6 +806,33 @@
 
                     <!-- TAB 3: BİLİMSEL REHBER -->
                     <div class="lab-tab-pane is-hidden" id="pane-guide">
+                        <!-- DENEY 7.1 REHBERİ -->
+                        <div id="guide-container-7-1" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Fiziksel Anlamda İş (W = F · Δx) Rehberi</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Fen Anlamında İş Nedir?</strong>
+                                    <p>Günlük hayatta "ders çalışmak", "düşünmek" veya "duvara yaslanıp beklemek" birer iş olarak nitelendirilebilir; ancak fen bilimlerinde işin kesin bir fiziksel tanımı vardır. Bir kuvvetin iş yapabilmesi için cisme kuvvet uygulanması ve cismin uygulanan <strong>kuvvet doğrultusunda yer değiştirmesi</strong> şarttır.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. İş Formülü ve Birimi:</strong>
+                                    <p>İş = Kuvvet × Yer Değiştirme ($W = F \cdot \Delta x$). Kuvvet birimi Newton (N), yer değiştirme birimi metre (m) alındığında, yapılan işin birimi <strong>Joule (J)</strong> olur ($1\text{ J} = 1\text{ N} \cdot \text{m}$).</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>3. Çantayla Düz Yürüme Yanılgısı (Kuvvet ⟂ Hareket):</strong>
+                                    <p>Öğrenci elinde veya omzunda çantayla yatay bir yolda sabit süratle yürürken, çantayı taşımak için uyguladığı kuvvet <strong>düşey yukarı yönlüdür</strong>; ancak çantanın yer değiştirmesi <strong>yataydır</strong>. Kuvvet ile hareket doğrultuları birbirine <strong>DİK ($90^\circ$)</strong> olduğu için çanta üzerinde fiziksel anlamda <strong>iş yapılmaz ($W = 0\text{ J}$)</strong>!</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>4. Duvarı İtme Yanılgısı (Yorulmak ≠ Fiziksel İş):</strong>
+                                    <p>Sabit bir duvara ne kadar büyük bir kuvvetle yüklenirseniz yüklenin, duvar yer değiştirmediği için ($\Delta x = 0\text{ m}$), fiziksel anlamda <strong>iş yapılmaz ($W = 0\text{ J}$)</strong>. Biyolojik olarak yorulmak ve enerji harcamak, cisim üzerinde fiziksel anlamda iş yapıldığı anlamına gelmez.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>5. Yer Çekimine Karşı Yapılan İş:</strong>
+                                    <p>Yerde duran bir cismi yukarı doğru kaldırırken uygulanan kuvvet yer çekimine zıttır ve cisim kuvvet doğrultusunda (düşeyde) yükselir. Bu durumda <strong>yer çekimine karşı iş yapılır</strong> ve bu iş cisimde <strong>çekim potansiyel enerjisi</strong> ($E_p = m \cdot g \cdot h$) olarak birikir.</p>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- DENEY 7.2 REHBERİ -->
                         <div id="guide-container-7-2" class="lab-panel-box is-hidden">
                             <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Mekanik Enerji ve Korunum Rehberi</h4>

@@ -134,9 +134,9 @@ export const EXPERIMENTS_DATABASE = [
     {
         id: "7.1", grade: 7, unit: 2, unitName: "Kuvvet ve Enerjiyi Keşfedelim",
         title: "Fiziksel Anlamda İş (W = F · Δx) Laboratuvarı",
-        code: "FB.7.2.1", bookRef: "1. Kitap, s. 46–59",
-        active: false,
-        desc: "Kuvvetin büyüklüğü, yönü ve yer değiştirme doğrultusunu kontrol ederek fen anlamında iş yapılıp yapılmadığını test edin."
+        code: "FB.7.2.1", bookRef: "1. Kitap, s. 60–71",
+        active: true, // 🏆 AKTİF!
+        desc: "Kuvvetin büyüklüğü, yönü ve yer değiştirme doğrultusunu kontrol ederek fen anlamında iş yapılıp yapılmadığını ve 4 temel kavram yanılgısını test edin."
     },
     {
         id: "7.2", grade: 7, unit: 2, unitName: "Kuvvet ve Enerjiyi Keşfedelim",
@@ -209,6 +209,37 @@ export const labState = {
     currentGrade: 7, // Varsayılan 7. sınıf
     currentUnitFilter: "all",
     activeExperimentId: null,
+
+    // Deney 7.1 Fizik Durumu (Fiziksel Anlamda İş: W = F · Δx)
+    work: {
+        scenario: "horizontal", // "horizontal" | "lift" | "carry" | "wall"
+        force: 40,              // 10 - 100 N
+        distance: 5.0,          // 1.0 - 10.0 m (veya h)
+        frictionEnabled: false, // Sürtünme açık/kapalı
+        frictionCoeff: 0.2,     // mu = 0.2
+        mass: 10,               // 10 kg
+        gravity: 10,            // 10 m/s^2 (G = 100 N)
+        frictionForceVal: 20,   // fs = 20 N
+
+        // Animasyon ve Hareket
+        isPlaying: false,
+        progress: 0,            // 0.0 -> 1.0 (mevcut yer değiştirme oranı)
+        animSpeed: 0.012,       // ilerleme hızı
+        currentDisplacement: 0, // progress * distance (m)
+        isDragging: false,
+        dragStartX: 0,
+
+        // Fiziksel Çıktılar
+        isWorkDone: true,
+        alignment: "same",      // "same", "lift", "perpendicular", "zero"
+        appliedWork: 200,       // Joule: F * distance
+        frictionForce: 0,       // fs (N)
+        netForce: 40,           // F_net (N)
+        netWork: 200,           // W_net (J)
+        heatWork: 0,            // W_fs (J)
+
+        measurements: []
+    },
 
     // Deney 7.2 Fizik Durumu (Mekanik Enerji: Sarkaç ve Rampa)
     energy: {
@@ -523,6 +554,9 @@ function setupWorkspaceShellDOM() {
     const btnRecord73 = document.getElementById('btn-record-data');
     if (btnRecord73) btnRecord73.addEventListener('click', recordMeasurement);
 
+    // 5. DENEY 7.1 KONTROLLERİ (FİZİKSEL ANLAMDA İŞ)
+    setupWorkControlsDOM();
+
     // 6. DENEY 7.2 KONTROLLERİ (MEKANİK ENERJİ DÖNÜŞÜMÜ)
     setupEnergyControlsDOM();
 
@@ -687,6 +721,7 @@ export function openExperimentWorkspace(expId) {
     if (expRef) expRef.textContent = exp.bookRef;
 
     // Deneye Göre Arayüz Panellerini Aç / Kapat
+    const is71 = (expId === "7.1");
     const is72 = (expId === "7.2");
     const is73 = (expId === "7.3");
     const is74 = (expId === "7.4");
@@ -696,30 +731,38 @@ export function openExperimentWorkspace(expId) {
     if (hud73) hud73.classList.toggle('is-hidden', !is73);
 
     // Hızlı Kontroller (Canvas Altı)
+    const qc71 = document.getElementById('quick-controls-7-1');
     const qc72 = document.getElementById('quick-controls-7-2');
     const qc73 = document.getElementById('quick-controls-7-3');
     const qc74 = document.getElementById('quick-controls-7-4');
+    if (qc71) qc71.classList.toggle('is-hidden', !is71);
     if (qc72) qc72.classList.toggle('is-hidden', !is72);
     if (qc73) qc73.classList.toggle('is-hidden', !is73);
     if (qc74) qc74.classList.toggle('is-hidden', !is74);
 
     // Değişkenler Panelleri
+    const vars71 = document.getElementById('vars-container-7-1');
     const vars72 = document.getElementById('vars-container-7-2');
     const vars73 = document.getElementById('vars-container-7-3');
     const vars74 = document.getElementById('vars-container-7-4');
+    if (vars71) vars71.classList.toggle('is-hidden', !is71);
     if (vars72) vars72.classList.toggle('is-hidden', !is72);
     if (vars73) vars73.classList.toggle('is-hidden', !is73);
     if (vars74) vars74.classList.toggle('is-hidden', !is74);
 
     // Rehber Panelleri
+    const guide71 = document.getElementById('guide-container-7-1');
     const guide72 = document.getElementById('guide-container-7-2');
     const guide73 = document.getElementById('guide-container-7-3');
     const guide74 = document.getElementById('guide-container-7-4');
+    if (guide71) guide71.classList.toggle('is-hidden', !is71);
     if (guide72) guide72.classList.toggle('is-hidden', !is72);
     if (guide73) guide73.classList.toggle('is-hidden', !is73);
     if (guide74) guide74.classList.toggle('is-hidden', !is74);
 
-    if (is72) {
+    if (is71) {
+        initWorkState();
+    } else if (is72) {
         initEnergyState();
     }
 
@@ -749,7 +792,9 @@ export function closeExperimentWorkspace() {
 }
 
 function resetCurrentExperiment() {
-    if (labState.activeExperimentId === "7.2") {
+    if (labState.activeExperimentId === "7.1") {
+        resetWorkExperiment();
+    } else if (labState.activeExperimentId === "7.2") {
         resetEnergyExperiment();
     } else if (labState.activeExperimentId === "7.3") {
         labState.optics.medium1 = "air";
@@ -824,7 +869,9 @@ function initExperimentCanvas() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    if (labState.activeExperimentId === "7.2") {
+    if (labState.activeExperimentId === "7.1") {
+        initWorkState();
+    } else if (labState.activeExperimentId === "7.2") {
         initEnergyState();
     } else if (labState.activeExperimentId === "7.3") {
         calculateOpticsPhysics();
@@ -851,7 +898,10 @@ function startRenderLoop() {
     const render = () => {
         animTime += 0.05;
         if (ctx && canvas) {
-            if (labState.activeExperimentId === "7.2") {
+            if (labState.activeExperimentId === "7.1") {
+                updateWorkPhysics();
+                drawWorkSimulation();
+            } else if (labState.activeExperimentId === "7.2") {
                 updateEnergyPhysics();
                 drawEnergySimulation();
             } else if (labState.activeExperimentId === "7.3") {
@@ -865,6 +915,1254 @@ function startRenderLoop() {
         }
     };
     animFrameId = requestAnimationFrame(render);
+}
+
+// --- 6.4. DENEY 7.1: FİZİKSEL ANLAMDA İŞ (W = F · Δx) MOTORU ---
+
+function setupWorkControlsDOM() {
+    // 1. Senaryo Butonları (Hızlı Bar & Sağ Panel)
+    const scenarios = ["horizontal", "lift", "carry", "wall"];
+    scenarios.forEach(scen => {
+        const btn = document.getElementById(`btn-scenario-${scen}`);
+        const pill = document.getElementById(`pill-scenario-${scen}`);
+        if (btn) btn.addEventListener('click', () => setWorkScenario(scen));
+        if (pill) pill.addEventListener('click', () => setWorkScenario(scen));
+    });
+
+    // 2. Oynat / Duraklat Butonu
+    const btnPlay = document.getElementById('btn-work-play-pause');
+    if (btnPlay) {
+        btnPlay.addEventListener('click', () => {
+            const work = labState.work;
+            if (work.scenario === "wall") {
+                showLabToast("🧱 Sabit duvar yer değiştirmez (Δx = 0 m)!");
+                return;
+            }
+            if (work.scenario === "horizontal" && work.frictionEnabled && work.force <= 20) {
+                showLabToast("⚠️ Uygulanan kuvvet sürtünme kuvvetini (20 N) yenemiyor!");
+                return;
+            }
+            work.isPlaying = !work.isPlaying;
+            if (work.isPlaying && work.progress >= 1.0) {
+                work.progress = 0;
+            }
+            updateWorkPlayButton(work.isPlaying);
+        });
+    }
+
+    // 3. Başa Al / Sıfırla Butonu
+    const btnReset = document.getElementById('btn-work-reset');
+    if (btnReset) {
+        btnReset.addEventListener('click', () => {
+            resetWorkMotion();
+            showLabToast("🔄 Konum ve hareket başa alındı");
+        });
+    }
+
+    // 4. Sürtünme Butonları (Yatay İtme için)
+    const setFriction = (enabled) => {
+        const work = labState.work;
+        work.frictionEnabled = enabled;
+
+        const btnFric = document.getElementById('btn-work-friction');
+        const labelFric = document.getElementById('label-work-friction');
+        if (btnFric) btnFric.classList.toggle('friction-active', enabled);
+        if (labelFric) labelFric.textContent = enabled ? "Açık (20 N)" : "Kapalı";
+
+        const pOff = document.getElementById('pill-work-friction-off');
+        const pOn = document.getElementById('pill-work-friction-on');
+        if (pOff) pOff.classList.toggle('active', !enabled);
+        if (pOn) pOn.classList.toggle('active', enabled);
+
+        calculateWorkPhysics();
+        showLabToast(enabled ? "💨 Zemin Sürtünmesi Açık (fs = 20.0 N)" : "🛡️ Sürtünmesiz İdeal Zemin (fs = 0 N)");
+    };
+
+    const btnFric = document.getElementById('btn-work-friction');
+    if (btnFric) btnFric.addEventListener('click', () => setFriction(!labState.work.frictionEnabled));
+
+    const pOff = document.getElementById('pill-work-friction-off');
+    if (pOff) pOff.addEventListener('click', () => setFriction(false));
+
+    const pOn = document.getElementById('pill-work-friction-on');
+    if (pOn) pOn.addEventListener('click', () => setFriction(true));
+
+    // 5. Kuvvet Slider'ı (F)
+    const forceRange = document.getElementById('lab-work-force-range');
+    const forceDisplay = document.getElementById('lab-work-force-display');
+    if (forceRange) {
+        forceRange.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            labState.work.force = val;
+            if (forceDisplay) forceDisplay.textContent = `${val.toFixed(0)} N`;
+            calculateWorkPhysics();
+        });
+    }
+
+    // 6. Yol / Yükseklik Slider'ı (Δx)
+    const distRange = document.getElementById('lab-work-distance-range');
+    const distDisplay = document.getElementById('lab-work-distance-display');
+    if (distRange) {
+        distRange.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            labState.work.distance = val;
+            if (distDisplay) distDisplay.textContent = `${val.toFixed(1)} m`;
+            calculateWorkPhysics();
+        });
+    }
+
+    // 7. Gözlemi Kaydet Butonu
+    const btnRecord = document.getElementById('btn-record-data-7-1');
+    if (btnRecord) {
+        btnRecord.addEventListener('click', recordMeasurement);
+    }
+}
+
+function updateWorkPlayButton(isPlaying) {
+    const btnPlay = document.getElementById('btn-work-play-pause');
+    const labelPlay = document.getElementById('label-work-play');
+    if (!btnPlay) return;
+    if (isPlaying) {
+        btnPlay.innerHTML = '<i class="fas fa-pause"></i> <span id="label-work-play">Duraklat</span>';
+        btnPlay.classList.add('active');
+        showLabToast("▶️ Canlandırma Başlatıldı");
+    } else {
+        btnPlay.innerHTML = '<i class="fas fa-play"></i> <span id="label-work-play">Hareketi Başlat</span>';
+        btnPlay.classList.remove('active');
+    }
+}
+
+function setWorkScenario(scenario) {
+    const work = labState.work;
+    work.scenario = scenario;
+    work.isPlaying = false;
+    work.progress = 0;
+    work.currentDisplacement = 0;
+    updateWorkPlayButton(false);
+
+    // Buton aktifliklerini senkronize et
+    ["horizontal", "lift", "carry", "wall"].forEach(s => {
+        const b = document.getElementById(`btn-scenario-${s}`);
+        const p = document.getElementById(`pill-scenario-${s}`);
+        if (b) b.classList.toggle('active', s === scenario);
+        if (p) p.classList.toggle('active', s === scenario);
+    });
+
+    // Slider ve Sürtünme etiketlerini güncelle
+    const wrapDist = document.getElementById('wrap-work-distance');
+    const labelDistTitle = document.getElementById('label-work-dist-title');
+    const groupFriction = document.getElementById('group-friction-pills');
+    const btnFric = document.getElementById('btn-work-friction');
+
+    if (scenario === "wall") {
+        if (wrapDist) wrapDist.style.display = 'none';
+        if (groupFriction) groupFriction.style.display = 'none';
+        if (btnFric) btnFric.style.display = 'none';
+    } else {
+        if (wrapDist) wrapDist.style.display = '';
+        if (labelDistTitle) {
+            labelDistTitle.textContent = (scenario === "lift") ? "Yükseklik (h)" : "Alınan Yol (Δx)";
+        }
+        if (scenario === "horizontal") {
+            if (groupFriction) groupFriction.style.display = '';
+            if (btnFric) btnFric.style.display = '';
+        } else {
+            if (groupFriction) groupFriction.style.display = 'none';
+            if (btnFric) btnFric.style.display = 'none';
+        }
+    }
+
+    calculateWorkPhysics();
+
+    const titles = {
+        horizontal: "📦 Senaryo 1: Kutuyu Yatay İtme",
+        lift: "🏋️ Senaryo 2: Yerden Yukarı Kaldırma",
+        carry: "🎒 Senaryo 3: Çantayla Yatay Yürüme",
+        wall: "🧱 Senaryo 4: Sabit Duvarı İtme"
+    };
+    showLabToast(titles[scenario] || "Senaryo değiştirildi");
+}
+
+function resetWorkMotion() {
+    const work = labState.work;
+    work.isPlaying = false;
+    work.progress = 0;
+    work.currentDisplacement = 0;
+    updateWorkPlayButton(false);
+}
+
+function resetWorkExperiment() {
+    const work = labState.work;
+    work.scenario = "horizontal";
+    work.force = 40;
+    work.distance = 5.0;
+    work.frictionEnabled = false;
+    work.isPlaying = false;
+    work.progress = 0;
+    work.currentDisplacement = 0;
+
+    const forceRange = document.getElementById('lab-work-force-range');
+    const forceDisplay = document.getElementById('lab-work-force-display');
+    if (forceRange) forceRange.value = 40;
+    if (forceDisplay) forceDisplay.textContent = "40 N";
+
+    const distRange = document.getElementById('lab-work-distance-range');
+    const distDisplay = document.getElementById('lab-work-distance-display');
+    if (distRange) distRange.value = 5;
+    if (distDisplay) distDisplay.textContent = "5.0 m";
+
+    const btnFric = document.getElementById('btn-work-friction');
+    const labelFric = document.getElementById('label-work-friction');
+    if (btnFric) btnFric.classList.remove('friction-active');
+    if (labelFric) labelFric.textContent = "Kapalı";
+
+    setWorkScenario("horizontal");
+    showLabToast("İş simülatörü sıfırlandı (Yatay İtme, 40 N, 5.0 m)");
+}
+
+function initWorkState() {
+    calculateWorkPhysics();
+    updateWorkPlayButton(labState.work.isPlaying);
+}
+
+function calculateWorkPhysics() {
+    const work = labState.work;
+    const F = work.force;
+    const dx = work.distance;
+    const scen = work.scenario;
+
+    const box = document.getElementById('work-pedagogical-box');
+    const icon = document.getElementById('work-pedagogical-icon');
+    const title = document.getElementById('work-pedagogical-title');
+    const text = document.getElementById('work-pedagogical-text');
+
+    const mForce = document.getElementById('metric-work-force');
+    const mDist = document.getElementById('metric-work-distance');
+    const mAlign = document.getElementById('metric-work-alignment');
+    const mNetForce = document.getElementById('metric-work-net-force');
+    const mJoule = document.getElementById('metric-work-joule');
+
+    if (mForce) mForce.textContent = `${F.toFixed(1)} N`;
+    if (mDist) mDist.textContent = `${dx.toFixed(1)} m`;
+
+    if (scen === "horizontal") {
+        work.frictionForce = work.frictionEnabled ? 20.0 : 0.0;
+        if (work.frictionEnabled) {
+            if (F > work.frictionForce) {
+                work.netForce = F - work.frictionForce;
+                work.appliedWork = F * dx;
+                work.netWork = work.netForce * dx;
+                work.heatWork = work.frictionForce * dx;
+                work.isWorkDone = true;
+                work.alignment = "same";
+                if (mNetForce) mNetForce.textContent = `Fnet = ${work.netForce.toFixed(1)} N (fs = 20 N)`;
+                if (mAlign) {
+                    mAlign.textContent = "Aynı Doğrultu (0°)";
+                    mAlign.style.color = "#10b981";
+                }
+                if (mJoule) {
+                    mJoule.textContent = `W = ${work.appliedWork.toFixed(1)} J (Net: ${work.netWork.toFixed(1)} J)`;
+                    mJoule.style.color = "#10b981";
+                }
+                if (box) {
+                    box.className = "lab-pedagogical-card is-work";
+                    if (icon) icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                    if (title) title.textContent = "✅ Net İş Yapıldı (Sürtünme Direncine Karşı)!";
+                    if (text) text.textContent = `Uygulanan ${F.toFixed(1)} N kuvvet, zemin sürtünmesini (20.0 N) yenmiş ve sandığı ${dx.toFixed(1)} m hareket ettirmiştir. Uygulanan kuvvet W = ${work.appliedWork.toFixed(1)} J iş yapmış; net iş Wnet = ${work.netWork.toFixed(1)} J olmuştur.`;
+                }
+            } else {
+                work.netForce = 0;
+                work.appliedWork = 0;
+                work.netWork = 0;
+                work.heatWork = 0;
+                work.isWorkDone = false;
+                work.alignment = "zero";
+                if (mNetForce) mNetForce.textContent = `Fnet = 0.0 N (F ≤ fs, Duruyor)`;
+                if (mAlign) {
+                    mAlign.textContent = "Hareketsiz (Δx = 0)";
+                    mAlign.style.color = "#ef4444";
+                }
+                if (mJoule) {
+                    mJoule.textContent = "W = 0.0 J (İş Yapılmadı)";
+                    mJoule.style.color = "#ef4444";
+                }
+                if (box) {
+                    box.className = "lab-pedagogical-card no-work";
+                    if (icon) icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+                    if (title) title.textContent = "❌ Fiziksel Anlamda İş Yapılmadı (Kuvvet Yetersiz)!";
+                    if (text) text.textContent = `Uygulanan ${F.toFixed(1)} N'luk kuvvet, 20.0 N olan statik sürtünme kuvvetini yenemediği için sandık hareket etmemiştir (Δx = 0 m). Cisim yer değiştirmediği için fiziksel anlamda iş yapılmaz (W = 0 Joule).`;
+                }
+            }
+        } else {
+            work.netForce = F;
+            work.appliedWork = F * dx;
+            work.netWork = work.appliedWork;
+            work.heatWork = 0;
+            work.isWorkDone = true;
+            work.alignment = "same";
+            if (mNetForce) mNetForce.textContent = `Fnet = ${F.toFixed(1)} N (Sürtünmesiz)`;
+            if (mAlign) {
+                mAlign.textContent = "Aynı Doğrultu (0°)";
+                mAlign.style.color = "#10b981";
+            }
+            if (mJoule) {
+                mJoule.textContent = `W = ${work.appliedWork.toFixed(1)} J (İş Yapıldı)`;
+                mJoule.style.color = "#10b981";
+            }
+            if (box) {
+                box.className = "lab-pedagogical-card is-work";
+                if (icon) icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                if (title) title.textContent = "✅ Fiziksel Anlamda İş Yapıldı!";
+                if (text) text.textContent = `Uygulanan yatay kuvvet ile sandığın hareket doğrultusu aynıdır (yatay). Sandık uygulanan kuvvet yönünde ${dx.toFixed(1)} m yer değiştirdiği için W = F · Δx = ${work.appliedWork.toFixed(1)} Joule fiziksel iş yapılmıştır.`;
+            }
+        }
+    } else if (scen === "lift") {
+        work.frictionForce = 0;
+        work.netForce = F;
+        work.appliedWork = F * dx;
+        work.netWork = work.appliedWork;
+        work.heatWork = 0;
+        work.isWorkDone = true;
+        work.alignment = "lift";
+        if (mNetForce) mNetForce.textContent = `F = ${F.toFixed(1)} N (Düşey Yukarı)`;
+        if (mAlign) {
+            mAlign.textContent = "Düşey Kaldırma (0°)";
+            mAlign.style.color = "#10b981";
+        }
+        if (mJoule) {
+            mJoule.textContent = `W = ${work.appliedWork.toFixed(1)} J (Yer Çekimine Karşı)`;
+            mJoule.style.color = "#10b981";
+        }
+        if (box) {
+            box.className = "lab-pedagogical-card is-work";
+            if (icon) icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+            if (title) title.textContent = "✅ Yer Çekimine Karşı İş Yapıldı!";
+            if (text) text.textContent = `Sandık düşey doğrultuda yukarı doğru ${dx.toFixed(1)} m yükseltilmiştir. Kuvvet ile hareket doğrultusu aynıdır (düşey). Yapılan ${work.appliedWork.toFixed(1)} Joule iş, cisimde çekim potansiyel enerjisi (Ep = m · g · h) olarak depolanır!`;
+        }
+    } else if (scen === "carry") {
+        work.frictionForce = 0;
+        work.netForce = F;
+        work.appliedWork = 0;
+        work.netWork = 0;
+        work.heatWork = 0;
+        work.isWorkDone = false;
+        work.alignment = "perpendicular";
+        if (mNetForce) mNetForce.textContent = `F = ${F.toFixed(1)} N (Düşey Taşıma)`;
+        if (mAlign) {
+            mAlign.textContent = "Kuvvet ⟂ Hareket (90° Dik)";
+            mAlign.style.color = "#ef4444";
+        }
+        if (mJoule) {
+            mJoule.textContent = "W = 0.0 J (İş Yapılmaz!)";
+            mJoule.style.color = "#ef4444";
+        }
+        if (box) {
+            box.className = "lab-pedagogical-card no-work";
+            if (icon) icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+            if (title) title.textContent = "❌ Fiziksel Anlamda İş Yapılmaz (Kuvvet ⟂ Hareket)!";
+            if (text) text.textContent = `Öğrencinin çantayı taşımak için uyguladığı kuvvet DÜŞEY yukarı yönlüdür, ancak hareket YATAYDIR. Kuvvet doğrultusu ile hareket doğrultusu birbirine DİK (90°) olduğu için çanta üzerinde fiziksel anlamda iş yapılmaz (W = 0 Joule).`;
+        }
+    } else if (scen === "wall") {
+        work.frictionForce = 0;
+        work.netForce = F;
+        work.appliedWork = 0;
+        work.netWork = 0;
+        work.heatWork = 0;
+        work.isWorkDone = false;
+        work.alignment = "zero";
+        if (mDist) mDist.textContent = "0.0 m (Sabit)";
+        if (mNetForce) mNetForce.textContent = `F = ${F.toFixed(1)} N (Sabit Duvar)`;
+        if (mAlign) {
+            mAlign.textContent = "Hareketsiz (Δx = 0 m)";
+            mAlign.style.color = "#ef4444";
+        }
+        if (mJoule) {
+            mJoule.textContent = "W = 0.0 J (İş Yapılmaz!)";
+            mJoule.style.color = "#ef4444";
+        }
+        if (box) {
+            box.className = "lab-pedagogical-card no-work";
+            if (icon) icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+            if (title) title.textContent = "❌ Fiziksel Anlamda İş Yapılmaz (Δx = 0 m)!";
+            if (text) text.textContent = `Sabit duvara ne kadar büyük bir kuvvetle (${F.toFixed(1)} N) yüklenilirse yüklenilsin, duvar hareket etmediği (yer değiştirmediği) için fiziksel anlamda iş yapılmış sayılmaz (W = 0 Joule). Yorulmak, fen anlamında iş değildir!`;
+        }
+    }
+}
+
+function updateWorkPhysics() {
+    const work = labState.work;
+    if (work.isPlaying) {
+        if (work.scenario === "wall" || (work.scenario === "horizontal" && work.frictionEnabled && work.force <= 20)) {
+            work.progress = 0;
+            work.currentDisplacement = 0;
+            work.isPlaying = false;
+            updateWorkPlayButton(false);
+            return;
+        }
+
+        work.progress += work.animSpeed;
+        if (work.progress >= 1.0) {
+            work.progress = 1.0;
+            work.isPlaying = false;
+            updateWorkPlayButton(false);
+        }
+        work.currentDisplacement = work.progress * work.distance;
+    } else {
+        work.currentDisplacement = work.progress * work.distance;
+    }
+}
+
+// --- DENEY 7.1 CANVAS 2D ÇİZİM MOTORU ---
+
+function drawWorkSimulation() {
+    if (!ctx || !canvas) return;
+    const work = labState.work;
+    const w = canvas.width;
+    const scale = w / 800;
+
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    // 1. Arka Plan
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 500);
+    bgGrad.addColorStop(0, '#090d16');
+    bgGrad.addColorStop(1, '#0f172a');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 800, 500);
+
+    // 2. Minimalist Sol Üst HUD Paneli
+    drawWorkHUD(ctx, work);
+
+    // 3. Zemin Çizgisi ve Izgara
+    const groundY = 390;
+    ctx.strokeStyle = 'rgba(71, 85, 105, 0.6)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(40, groundY);
+    ctx.lineTo(760, groundY);
+    ctx.stroke();
+
+    // Zemin altı tarama deseni
+    ctx.strokeStyle = 'rgba(51, 65, 85, 0.35)';
+    ctx.lineWidth = 1;
+    for (let x = 40; x <= 760; x += 15) {
+        ctx.beginPath();
+        ctx.moveTo(x, groundY);
+        ctx.lineTo(x - 10, groundY + 12);
+        ctx.stroke();
+    }
+
+    // 4. Senaryoya Göre Çizim
+    if (work.scenario === "horizontal") {
+        drawWorkHorizontal(ctx, work, groundY);
+    } else if (work.scenario === "lift") {
+        drawWorkLift(ctx, work, groundY);
+    } else if (work.scenario === "carry") {
+        drawWorkCarry(ctx, work, groundY);
+    } else if (work.scenario === "wall") {
+        drawWorkWall(ctx, work, groundY);
+    }
+
+    ctx.restore();
+}
+
+function drawWorkHUD(ctx, work) {
+    const isWork = work.isWorkDone;
+    const boxW = 160;
+    const boxH = 68;
+    const boxX = 24;
+    const boxY = 20;
+
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+    ctx.strokeStyle = isWork ? 'rgba(16, 185, 129, 0.5)' : 'rgba(239, 68, 68, 0.5)';
+    ctx.lineWidth = 1.5;
+
+    ctx.beginPath();
+    ctx.roundRect(boxX, boxY, boxW, boxH, 10);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = 'bold 10px Inter, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.textAlign = 'left';
+    ctx.fillText("FİZİKSEL İŞ (W)", boxX + 12, boxY + 18);
+
+    ctx.font = 'bold 20px Inter, monospace';
+    ctx.fillStyle = isWork ? '#10b981' : '#ef4444';
+    const valText = isWork ? `${work.appliedWork.toFixed(1)} J` : '0.0 J';
+    ctx.fillText(valText, boxX + 12, boxY + 42);
+
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = isWork ? '#6ee7b7' : '#fca5a5';
+    ctx.fillText(isWork ? '✅ İş Yapıldı' : '❌ İş Yapılmadı', boxX + 12, boxY + 59);
+}
+
+function drawWorkHorizontal(ctx, work, groundY) {
+    const x0 = 160;
+    const meterScale = 50;
+
+    // Metre cetveli çizimi
+    for (let m = 0; m <= 10; m++) {
+        const tx = x0 + m * meterScale;
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(tx, groundY);
+        ctx.lineTo(tx, groundY + 8);
+        ctx.stroke();
+
+        if (m % 2 === 0) {
+            ctx.font = '10px Inter, sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${m}m`, tx, groundY + 22);
+        }
+    }
+
+    const curDist = work.currentDisplacement;
+    const curX = x0 + curDist * meterScale;
+    const crateW = 64;
+    const crateH = 64;
+    const crateX = curX;
+    const crateY = groundY - crateH;
+
+    // Başlangıç hayalet izi
+    if (curDist > 0.2) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.strokeRect(x0, groundY - crateH, crateW, crateH);
+        ctx.restore();
+    }
+
+    // Karakter (İten Öğrenci)
+    const charX = crateX - 44;
+    drawWorkStudent(ctx, charX, groundY, "push", work.isPlaying ? animTime : 0);
+
+    // Sandık
+    drawWorkCrate(ctx, crateX, crateY, crateW, crateH);
+
+    // Vektör Oku: Uygulanan Kuvvet (F)
+    const arrowLen = 35 + (work.force * 0.8);
+    drawWorkVectorArrow(
+        ctx,
+        crateX + crateW,
+        crateY + crateH / 2,
+        crateX + crateW + arrowLen,
+        crateY + crateH / 2,
+        '#ef4444',
+        `F = ${work.force.toFixed(0)} N ➔`,
+        -14
+    );
+
+    // Vektör Oku: Sürtünme Kuvveti (fs)
+    if (work.frictionEnabled) {
+        drawWorkVectorArrow(
+            ctx,
+            crateX,
+            groundY - 6,
+            crateX - 45,
+            groundY - 6,
+            '#f59e0b',
+            `fs = 20 N ⬅`,
+            -12
+        );
+    }
+
+    // Vektör Oku: Yer Değiştirme (Δx)
+    if (curDist > 0.1) {
+        drawWorkVectorArrow(
+            ctx,
+            x0,
+            groundY + 36,
+            curX,
+            groundY + 36,
+            '#06b6d4',
+            `Δx = ${curDist.toFixed(1)} m ➔`,
+            16
+        );
+    }
+}
+
+function drawWorkLift(ctx, work, groundY) {
+    const centerX = 400;
+    const meterScale = 22; // 1m = 22px
+    const rulerX = 230;
+
+    // Düşey yükseklik cetveli
+    ctx.strokeStyle = 'rgba(71, 85, 105, 0.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(rulerX, groundY);
+    ctx.lineTo(rulerX, groundY - 240);
+    ctx.stroke();
+
+    for (let m = 0; m <= 10; m += 2) {
+        const ry = groundY - m * meterScale;
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(rulerX - 6, ry);
+        ctx.lineTo(rulerX, ry);
+        ctx.stroke();
+
+        ctx.font = '10px Inter, sans-serif';
+        ctx.fillStyle = '#94a3b8';
+        ctx.textAlign = 'right';
+        ctx.fillText(`${m}m`, rulerX - 10, ry + 3);
+    }
+
+    const curH = work.currentDisplacement;
+    const liftPx = curH * meterScale;
+    const crateW = 64;
+    const crateH = 64;
+    const crateX = centerX - crateW / 2;
+    const crateY = groundY - crateH - liftPx;
+
+    // Başlangıç hayalet sandık (yerde)
+    if (curH > 0.2) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.strokeRect(crateX, groundY - crateH, crateW, crateH);
+        ctx.restore();
+    }
+
+    // Karakter (Kaldıran Öğrenci)
+    drawWorkStudent(ctx, centerX, groundY, "lift", work.isPlaying ? animTime : 0, liftPx);
+
+    // Sandık
+    drawWorkCrate(ctx, crateX, crateY, crateW, crateH);
+
+    // Vektör Oku: Kaldırma Kuvveti (F - Düşey Yukarı)
+    const arrowLen = 35 + (work.force * 0.8);
+    drawWorkVectorArrow(
+        ctx,
+        centerX,
+        crateY,
+        centerX,
+        crateY - arrowLen,
+        '#ef4444',
+        `F = ${work.force.toFixed(0)} N ⬆`,
+        -10
+    );
+
+    // Vektör Oku: Yer Değiştirme / Yükseklik (h)
+    if (curH > 0.1) {
+        drawWorkVectorArrow(
+            ctx,
+            centerX + 65,
+            groundY,
+            centerX + 65,
+            crateY + crateH,
+            '#06b6d4',
+            `h = ${curH.toFixed(1)} m ⬆`,
+            12
+        );
+    }
+
+    // Ağırlık / Yerçekimi Kuvveti Oku (G = 100 N aşağı)
+    drawWorkVectorArrow(
+        ctx,
+        centerX,
+        crateY + crateH,
+        centerX,
+        crateY + crateH + 40,
+        '#64748b',
+        `G = 100 N ⬇`,
+        12
+    );
+}
+
+function drawWorkCarry(ctx, work, groundY) {
+    const x0 = 160;
+    const meterScale = 50;
+
+    // Metre cetveli çizimi
+    for (let m = 0; m <= 10; m++) {
+        const tx = x0 + m * meterScale;
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(tx, groundY);
+        ctx.lineTo(tx, groundY + 8);
+        ctx.stroke();
+
+        if (m % 2 === 0) {
+            ctx.font = '10px Inter, sans-serif';
+            ctx.fillStyle = '#94a3b8';
+            ctx.textAlign = 'center';
+            ctx.fillText(`${m}m`, tx, groundY + 22);
+        }
+    }
+
+    const curDist = work.currentDisplacement;
+    const curX = x0 + curDist * meterScale;
+
+    // Karakter (Çantayla Yürüyen Öğrenci)
+    drawWorkStudent(ctx, curX, groundY, "carry", work.isPlaying ? animTime : 0);
+
+    // Çantanın Askı Noktası
+    const bagHandX = curX + 18;
+    const bagHandY = groundY - 60;
+
+    // Vektör Oku: Çantayı Taşıma Kuvveti (F - Düşey Yukarı)
+    drawWorkVectorArrow(
+        ctx,
+        bagHandX,
+        bagHandY,
+        bagHandX,
+        bagHandY - 60,
+        '#ef4444',
+        `F = ${work.force.toFixed(0)} N ⬆ (Düşey)`,
+        -10
+    );
+
+    // Vektör Oku: Yer Değiştirme (Δx - Yatay Sağa)
+    if (curDist > 0.1) {
+        drawWorkVectorArrow(
+            ctx,
+            x0,
+            groundY + 36,
+            curX,
+            groundY + 36,
+            '#06b6d4',
+            `Δx = ${curDist.toFixed(1)} m ➔ (Yatay)`,
+            16
+        );
+    }
+
+    // DİK AÇI SEMBOLÜ (90° - Sarı kare köşe)
+    ctx.save();
+    ctx.strokeStyle = '#facc15';
+    ctx.lineWidth = 2;
+    const sqSize = 14;
+    ctx.beginPath();
+    ctx.moveTo(bagHandX, bagHandY - sqSize);
+    ctx.lineTo(bagHandX + sqSize, bagHandY - sqSize);
+    ctx.lineTo(bagHandX + sqSize, bagHandY);
+    ctx.stroke();
+
+    // Küçük nokta
+    ctx.fillStyle = '#facc15';
+    ctx.beginPath();
+    ctx.arc(bagHandX + sqSize / 2, bagHandY - sqSize / 2, 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 90° Etiketi
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = '#fef08a';
+    ctx.fillText("90° (Dik Açı ➔ W = 0 J)", bagHandX + 20, bagHandY - 8);
+    ctx.restore();
+}
+
+function drawWorkWall(ctx, work, groundY) {
+    const wallX = 520;
+    const wallW = 180;
+    const wallY = 90;
+    const wallH = groundY - wallY;
+
+    // Sabit Tuğla Duvar
+    drawWorkWallObstacle(ctx, wallX, wallY, wallW, wallH);
+
+    // Karakter (Duvarı İten Öğrenci)
+    const charX = wallX - 40;
+    drawWorkStudent(ctx, charX, groundY, "wall", work.isPlaying ? animTime : 0);
+
+    // Vektör Oku: Duvara Uygulanan Kuvvet (F)
+    const arrowLen = 35 + (work.force * 0.8);
+    drawWorkVectorArrow(
+        ctx,
+        charX + 30,
+        groundY - 70,
+        charX + 30 + arrowLen,
+        groundY - 70,
+        '#ef4444',
+        `F = ${work.force.toFixed(0)} N ➔`,
+        -12
+    );
+
+    // Hareketsiz Rozeti / Δx = 0
+    ctx.save();
+    ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 1.5;
+    const badgeX = wallX + 20;
+    const badgeY = groundY + 28;
+    ctx.beginPath();
+    ctx.roundRect(badgeX, badgeY, 140, 26, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = '#fca5a5';
+    ctx.textAlign = 'center';
+    ctx.fillText("❌ Δx = 0 m (Hareketsiz)", badgeX + 70, badgeY + 17);
+    ctx.restore();
+}
+
+function drawWorkVectorArrow(ctx, fromX, fromY, toX, toY, color, label, labelOffset = -12) {
+    ctx.save();
+    const headLen = 10;
+    const dx = toX - fromX;
+    const dy = toY - fromY;
+    const angle = Math.atan2(dy, dx);
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    if (dist < 4) {
+        ctx.restore();
+        return;
+    }
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3.5;
+    ctx.lineCap = 'round';
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 8;
+
+    // Ok gövdesi
+    ctx.beginPath();
+    ctx.moveTo(fromX, fromY);
+    ctx.lineTo(toX, toY);
+    ctx.stroke();
+
+    // Ok başı
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(toX, toY);
+    ctx.lineTo(toX - headLen * Math.cos(angle - Math.PI / 6), toY - headLen * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(toX - headLen * Math.cos(angle + Math.PI / 6), toY - headLen * Math.sin(angle + Math.PI / 6));
+    ctx.closePath();
+    ctx.fill();
+
+    // Metin etiketi
+    if (label) {
+        ctx.shadowBlur = 0;
+        ctx.font = 'bold 11px Inter, sans-serif';
+        const midX = (fromX + toX) / 2;
+        const midY = (fromY + toY) / 2;
+        const metrics = ctx.measureText(label);
+        const padX = 6;
+
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(
+            midX - metrics.width / 2 - padX,
+            midY + labelOffset - 11,
+            metrics.width + padX * 2,
+            16,
+            4
+        );
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = color;
+        ctx.textAlign = 'center';
+        ctx.fillText(label, midX, midY + labelOffset + 1);
+    }
+
+    ctx.restore();
+}
+
+function drawWorkStudent(ctx, x, y, pose, anim, extraOffset = 0) {
+    ctx.save();
+
+    // Renk paleti
+    const skinColor = '#fed7aa';
+    const hairColor = '#1e293b';
+    const shirtColor = '#0284c7';
+    const pantsColor = '#334155';
+    const shoeColor = '#0f172a';
+
+    if (pose === "push") {
+        // İtme Pozu (İleri eğik)
+        ctx.save();
+        ctx.translate(x, y);
+
+        // Bacaklar
+        ctx.strokeStyle = pantsColor;
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round';
+        // Sol bacak (önde bükülü)
+        ctx.beginPath();
+        ctx.moveTo(-4, -40);
+        ctx.lineTo(16, -20);
+        ctx.lineTo(20, 0);
+        ctx.stroke();
+        // Sağ bacak (arkada gergin)
+        ctx.beginPath();
+        ctx.moveTo(-10, -40);
+        ctx.lineTo(-24, -18);
+        ctx.lineTo(-28, 0);
+        ctx.stroke();
+
+        // Ayakkabılar
+        ctx.fillStyle = shoeColor;
+        ctx.beginPath();
+        ctx.roundRect(14, -5, 16, 5, 2);
+        ctx.roundRect(-34, -5, 14, 5, 2);
+        ctx.fill();
+
+        // Gövde (ileri eğik)
+        ctx.strokeStyle = shirtColor;
+        ctx.lineWidth = 14;
+        ctx.beginPath();
+        ctx.moveTo(-6, -42);
+        ctx.lineTo(10, -72);
+        ctx.stroke();
+
+        // Kollar (sandığa dayalı)
+        ctx.strokeStyle = shirtColor;
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(8, -68);
+        ctx.lineTo(36, -58);
+        ctx.stroke();
+        // Eller
+        ctx.fillStyle = skinColor;
+        ctx.beginPath();
+        ctx.arc(38, -58, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Baş
+        ctx.fillStyle = skinColor;
+        ctx.beginPath();
+        ctx.arc(16, -84, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Saç
+        ctx.fillStyle = hairColor;
+        ctx.beginPath();
+        ctx.arc(15, -87, 10, Math.PI * 0.8, Math.PI * 2.1);
+        ctx.fill();
+
+        ctx.restore();
+    } else if (pose === "lift") {
+        // Kaldırma Pozu
+        ctx.save();
+        ctx.translate(x, y);
+
+        // Bacaklar (omuz genişliğinde dik duruş)
+        ctx.strokeStyle = pantsColor;
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(-12, -45);
+        ctx.lineTo(-14, 0);
+        ctx.moveTo(12, -45);
+        ctx.lineTo(14, 0);
+        ctx.stroke();
+
+        // Ayakkabılar
+        ctx.fillStyle = shoeColor;
+        ctx.beginPath();
+        ctx.roundRect(-20, -5, 16, 5, 2);
+        ctx.roundRect(8, -5, 16, 5, 2);
+        ctx.fill();
+
+        // Gövde
+        ctx.strokeStyle = shirtColor;
+        ctx.lineWidth = 16;
+        ctx.beginPath();
+        ctx.moveTo(0, -45);
+        ctx.lineTo(0, -80);
+        ctx.stroke();
+
+        // Kollar (yukarı doğru sandığı tutuyor)
+        const handY = -80 - extraOffset * 0.65;
+        ctx.strokeStyle = shirtColor;
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(-6, -75);
+        ctx.lineTo(-24, handY);
+        ctx.moveTo(6, -75);
+        ctx.lineTo(24, handY);
+        ctx.stroke();
+
+        // Eller
+        ctx.fillStyle = skinColor;
+        ctx.beginPath();
+        ctx.arc(-24, handY, 4, 0, Math.PI * 2);
+        ctx.arc(24, handY, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Baş
+        ctx.fillStyle = skinColor;
+        ctx.beginPath();
+        ctx.arc(0, -94, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Saç
+        ctx.fillStyle = hairColor;
+        ctx.beginPath();
+        ctx.arc(0, -97, 10, Math.PI * 0.8, Math.PI * 2.2);
+        ctx.fill();
+
+        ctx.restore();
+    } else if (pose === "carry") {
+        // Çantayla Yürüme Pozu
+        ctx.save();
+        ctx.translate(x, y);
+
+        const legSwing = Math.sin(anim * 8) * 12;
+
+        // Bacaklar (adım atma animasyonu)
+        ctx.strokeStyle = pantsColor;
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(-4, -45);
+        ctx.lineTo(-4 + legSwing, 0);
+        ctx.moveTo(4, -45);
+        ctx.lineTo(4 - legSwing, 0);
+        ctx.stroke();
+
+        // Ayakkabılar
+        ctx.fillStyle = shoeColor;
+        ctx.beginPath();
+        ctx.roundRect(-10 + legSwing, -5, 15, 5, 2);
+        ctx.roundRect(0 - legSwing, -5, 15, 5, 2);
+        ctx.fill();
+
+        // Gövde (dik)
+        ctx.strokeStyle = shirtColor;
+        ctx.lineWidth = 15;
+        ctx.beginPath();
+        ctx.moveTo(0, -45);
+        ctx.lineTo(0, -80);
+        ctx.stroke();
+
+        // Sağ Kol (çantayı tutuyor)
+        ctx.strokeStyle = shirtColor;
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(6, -75);
+        ctx.lineTo(18, -48);
+        ctx.stroke();
+
+        // El
+        ctx.fillStyle = skinColor;
+        ctx.beginPath();
+        ctx.arc(18, -48, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Okul Çantası (Sırt / El çantası)
+        ctx.fillStyle = '#7c3aed';
+        ctx.strokeStyle = '#a78bfa';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(10, -45, 24, 30, 4);
+        ctx.fill();
+        ctx.stroke();
+
+        // Çanta askısı
+        ctx.strokeStyle = '#c4b5fd';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(14, -45);
+        ctx.lineTo(18, -48);
+        ctx.lineTo(26, -45);
+        ctx.stroke();
+
+        // Çanta logosu/çizgisi
+        ctx.fillStyle = '#facc15';
+        ctx.fillRect(14, -34, 16, 4);
+
+        // Baş
+        ctx.fillStyle = skinColor;
+        ctx.beginPath();
+        ctx.arc(0, -94, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Saç
+        ctx.fillStyle = hairColor;
+        ctx.beginPath();
+        ctx.arc(0, -97, 10, Math.PI * 0.8, Math.PI * 2.2);
+        ctx.fill();
+
+        ctx.restore();
+    } else if (pose === "wall") {
+        // Sabit Duvarı İtme Pozu (Büyük efor)
+        ctx.save();
+        ctx.translate(x, y);
+
+        // Bacaklar (duvara karşı sert dayalı)
+        ctx.strokeStyle = pantsColor;
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(4, -40);
+        ctx.lineTo(18, -20);
+        ctx.lineTo(22, 0);
+        ctx.moveTo(-6, -40);
+        ctx.lineTo(-26, -18);
+        ctx.lineTo(-32, 0);
+        ctx.stroke();
+
+        // Ayakkabılar
+        ctx.fillStyle = shoeColor;
+        ctx.beginPath();
+        ctx.roundRect(16, -5, 16, 5, 2);
+        ctx.roundRect(-38, -5, 15, 5, 2);
+        ctx.fill();
+
+        // Gövde (duvara doğru aşırı eğik)
+        ctx.strokeStyle = shirtColor;
+        ctx.lineWidth = 15;
+        ctx.beginPath();
+        ctx.moveTo(-2, -42);
+        ctx.lineTo(20, -72);
+        ctx.stroke();
+
+        // Kollar (duvara dayalı)
+        ctx.strokeStyle = shirtColor;
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(18, -68);
+        ctx.lineTo(44, -58);
+        ctx.stroke();
+
+        // Eller
+        ctx.fillStyle = skinColor;
+        ctx.beginPath();
+        ctx.arc(46, -58, 4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Baş
+        ctx.fillStyle = skinColor;
+        ctx.beginPath();
+        ctx.arc(26, -84, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Saç
+        ctx.fillStyle = hairColor;
+        ctx.beginPath();
+        ctx.arc(25, -87, 10, Math.PI * 0.8, Math.PI * 2.1);
+        ctx.fill();
+
+        // Ter damlası animasyonu
+        const sweatY = -86 - (Math.sin(anim * 6) * 3);
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(10, sweatY, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+    }
+
+    ctx.restore();
+}
+
+function drawWorkCrate(ctx, x, y, w, h) {
+    ctx.save();
+
+    // Ahşap sandık gövdesi
+    const woodGrad = ctx.createLinearGradient(x, y, x, y + h);
+    woodGrad.addColorStop(0, '#b45309');
+    woodGrad.addColorStop(1, '#78350f');
+    ctx.fillStyle = woodGrad;
+    ctx.strokeStyle = '#451a03';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    // Tahta şerit çizgileri
+    ctx.strokeStyle = 'rgba(69, 26, 3, 0.6)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(x, y + h * 0.33);
+    ctx.lineTo(x + w, y + h * 0.33);
+    ctx.moveTo(x, y + h * 0.66);
+    ctx.lineTo(x + w, y + h * 0.66);
+    ctx.stroke();
+
+    // Çapraz destek çıtası
+    ctx.strokeStyle = 'rgba(180, 83, 9, 0.4)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(x + 4, y + 4);
+    ctx.lineTo(x + w - 4, y + h - 4);
+    ctx.stroke();
+
+    // Metal köşe perçinleri
+    ctx.fillStyle = '#64748b';
+    const cSize = 10;
+    ctx.fillRect(x, y, cSize, cSize);
+    ctx.fillRect(x + w - cSize, y, cSize, cSize);
+    ctx.fillRect(x, y + h - cSize, cSize, cSize);
+    ctx.fillRect(x + w - cSize, y + h - cSize, cSize, cSize);
+
+    // Kütle Etiketi
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = '#fef08a';
+    ctx.textAlign = 'center';
+    ctx.fillText("📦 10 kg", x + w / 2, y + h / 2 + 4);
+
+    ctx.restore();
+}
+
+function drawWorkWallObstacle(ctx, x, y, w, h) {
+    ctx.save();
+
+    // Beton arka plan
+    ctx.fillStyle = '#334155';
+    ctx.fillRect(x, y, w, h);
+
+    // Tuğla örgü deseni
+    const brickH = 22;
+    const brickW = 44;
+    const rows = Math.floor(h / brickH);
+
+    for (let r = 0; r < rows; r++) {
+        const by = y + r * brickH;
+        const offset = (r % 2 === 0) ? 0 : -brickW / 2;
+        for (let bx = x + offset; bx < x + w; bx += brickW + 3) {
+            const rx = Math.max(x, bx);
+            const rw = Math.min(x + w - rx, (bx + brickW) - rx);
+            if (rw > 2) {
+                ctx.fillStyle = (r % 3 === 0) ? '#991b1b' : (r % 3 === 1) ? '#b91c1c' : '#7f1d1d';
+                ctx.fillRect(rx, by + 2, rw, brickH - 3);
+            }
+        }
+    }
+
+    // Sol duvar kenar zırhı
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y + h);
+    ctx.stroke();
+
+    // Metal Sabit Duvar Levhası
+    const signW = 140;
+    const signH = 34;
+    const signX = x + (w - signW) / 2;
+    const signY = y + 25;
+
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+    ctx.strokeStyle = '#f59e0b';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(signX, signY, signW, signH, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = 'bold 10px Inter, sans-serif';
+    ctx.fillStyle = '#fde68a';
+    ctx.textAlign = 'center';
+    ctx.fillText("🧱 SABİT DUVAR", signX + signW / 2, signY + 14);
+    ctx.font = '9px Inter, sans-serif';
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText("Yer Değiştirmez (Δx = 0)", signX + signW / 2, signY + 27);
+
+    ctx.restore();
 }
 
 // --- 6.5. DENEY 7.2: MEKANİK ENERJİ DÖNÜŞÜMÜ (SARKAÇ VE RAMPA) MOTORU ---
@@ -2692,8 +3990,40 @@ function setupCanvasPointerEvents() {
         const canvasX = x * scaleX;
         const canvasY = y * scaleY;
 
+        // Deney 7.1: Sandık veya Yük Taşıma Sürükleme
+        if (labState.activeExperimentId === "7.1") {
+            const work = labState.work;
+            if (work.scenario === "wall") return;
+            if (work.scenario === "horizontal" || work.scenario === "carry") {
+                const startX = 160;
+                const meterPx = 50;
+                const newDist = (canvasX - startX) / meterPx;
+                const clamped = Math.max(1, Math.min(10, Math.round(newDist * 2) / 2));
+                work.distance = clamped;
+                work.currentDisplacement = clamped;
+                work.progress = 1.0;
+                const distRange = document.getElementById('lab-work-distance-range');
+                const distDisplay = document.getElementById('lab-work-distance-display');
+                if (distRange) distRange.value = clamped;
+                if (distDisplay) distDisplay.textContent = `${clamped.toFixed(1)} m`;
+                calculateWorkPhysics();
+            } else if (work.scenario === "lift") {
+                const groundY = 390;
+                const meterPx = 24;
+                const newHeight = (groundY - canvasY) / meterPx;
+                const clamped = Math.max(1, Math.min(10, Math.round(newHeight * 2) / 2));
+                work.distance = clamped;
+                work.currentDisplacement = clamped;
+                work.progress = 1.0;
+                const distRange = document.getElementById('lab-work-distance-range');
+                const distDisplay = document.getElementById('lab-work-distance-display');
+                if (distRange) distRange.value = clamped;
+                if (distDisplay) distDisplay.textContent = `${clamped.toFixed(1)} m`;
+                calculateWorkPhysics();
+            }
+        }
         // Deney 7.2: Sarkaç Açısı veya Rampa Konumu Ayarı
-        if (labState.activeExperimentId === "7.2") {
+        else if (labState.activeExperimentId === "7.2") {
             const energy = labState.energy;
             if (energy.mode === "pendulum") {
                 const pivotX = 420;
@@ -2772,7 +4102,9 @@ function setupCanvasPointerEvents() {
 
     cvs.addEventListener('pointerdown', (e) => {
         cvs.setPointerCapture(e.pointerId);
-        if (labState.activeExperimentId === "7.2") {
+        if (labState.activeExperimentId === "7.1") {
+            labState.work.isDragging = true;
+        } else if (labState.activeExperimentId === "7.2") {
             labState.energy.pendulum.isDragging = true;
             labState.energy.ramp.isDragging = true;
         }
@@ -2782,13 +4114,17 @@ function setupCanvasPointerEvents() {
     });
 
     cvs.addEventListener('pointermove', (e) => {
+        const isDragging71 = (labState.activeExperimentId === "7.1" && labState.work.isDragging);
         const isDragging72 = (labState.activeExperimentId === "7.2" && (labState.energy.pendulum.isDragging || labState.energy.ramp.isDragging));
-        if (isDragging72 || labState.optics.isDraggingLaser || labState.lens.isDraggingObject) {
+        if (isDragging71 || isDragging72 || labState.optics.isDraggingLaser || labState.lens.isDraggingObject) {
             handlePointerAction(e);
         }
     });
 
     const stopDragging = (e) => {
+        if (labState.work) {
+            labState.work.isDragging = false;
+        }
         if (labState.energy) {
             labState.energy.pendulum.isDragging = false;
             labState.energy.ramp.isDragging = false;
@@ -2807,7 +4143,18 @@ function updateTableHeader(expId) {
     const thead = document.getElementById('lab-table-thead');
     if (!thead) return;
 
-    if (expId === "7.2") {
+    if (expId === "7.1") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Senaryo</th>
+                <th>Kuvvet (F)</th>
+                <th>Yer Değiştirme (Δx)</th>
+                <th>Doğrultu Uyumu</th>
+                <th>Yapılan İş (W)</th>
+            </tr>
+        `;
+    } else if (expId === "7.2") {
         thead.innerHTML = `
             <tr>
                 <th>#</th>
@@ -2847,7 +4194,40 @@ function recordMeasurement() {
     const expId = labState.activeExperimentId;
     const fmt = (n, dec = 1) => (typeof n === 'number' && !isNaN(n)) ? n.toFixed(dec) : '—';
 
-    if (expId === "7.2") {
+    if (expId === "7.1") {
+        const work = labState.work;
+        let scenarioName = "";
+        let alignStr = "";
+        if (work.scenario === "horizontal") {
+            scenarioName = "📦 Yatay İtme" + (work.frictionEnabled ? " (Sürtünmeli)" : "");
+            alignStr = "Aynı Doğrultu (0°)";
+        } else if (work.scenario === "lift") {
+            scenarioName = "🏋️ Yukarı Kaldırma";
+            alignStr = "Düşey Kaldırma (0°)";
+        } else if (work.scenario === "carry") {
+            scenarioName = "🎒 Çantayla Yürüme";
+            alignStr = "Kuvvet ⟂ Hareket (90°)";
+        } else if (work.scenario === "wall") {
+            scenarioName = "🧱 Duvarı İtme";
+            alignStr = "Hareketsiz (Δx = 0)";
+        }
+
+        const workStr = work.isWorkDone 
+            ? `${fmt(work.appliedWork, 1)} J (İş Var)` 
+            : `0.0 J (İş Yok)`;
+
+        const row = {
+            id: work.measurements.length + 1,
+            col1: scenarioName,
+            col2: `${fmt(work.force, 1)} N`,
+            col3: `${fmt(work.distance, 1)} m`,
+            col4: alignStr,
+            col5: workStr
+        };
+
+        work.measurements.push(row);
+        showLabToast(`İş Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "7.2") {
         const energy = labState.energy;
         const modeLabel = energy.mode === "pendulum" ? "🔄 Sarkaç" : "🛹 U-Rampa";
         const row = {
@@ -2939,7 +4319,9 @@ function renderMeasurementTable() {
 
     const expId = labState.activeExperimentId;
     let measurements = [];
-    if (expId === "7.2") {
+    if (expId === "7.1") {
+        measurements = labState.work.measurements;
+    } else if (expId === "7.2") {
         measurements = labState.energy.measurements;
     } else if (expId === "7.4") {
         measurements = labState.lens.measurements;
@@ -2972,7 +4354,9 @@ function renderMeasurementTable() {
 
 function clearMeasurementTable() {
     const expId = labState.activeExperimentId;
-    if (expId === "7.2") {
+    if (expId === "7.1") {
+        labState.work.measurements = [];
+    } else if (expId === "7.2") {
         labState.energy.measurements = [];
     } else if (expId === "7.4") {
         labState.lens.measurements = [];
