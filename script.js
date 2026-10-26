@@ -621,7 +621,7 @@ const unitNamesByGrade = {
     },
     "7": {
         "1": "Uzay Çağı",
-        "2": "Hücre ve Bölünmeler",
+        "2": "Kuvvet ve Enerjiyi Keşfedelim",
         "3": "Vücudumuzdaki Sistemler",
         "4": "Işığın Kırılması ve Mercekler",
         "5": "Maddenin Doğasına Yolculuk",
