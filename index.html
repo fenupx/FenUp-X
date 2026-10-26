@@ -510,6 +510,24 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Canvas Altı Hızlı Karışımların Ayrılması Kontrol Barı (Deney 7.6) -->
+                    <div id="quick-controls-7-6" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group" id="group-modes-7-6">
+                                <button class="lab-toggle-btn active" id="btn-mode-funnel" title="Ayırma Hunisi ile Yoğunluk Farkı"><i class="fas fa-filter"></i> 🧪 Ayırma Hunisi (Yoğunluk)</button>
+                                <button class="lab-toggle-btn" id="btn-mode-distill" title="Basit Damıtma ile Kaynama Noktası Farkı"><i class="fas fa-fire"></i> 🔥 Basit Damıtma (K.N. Farkı)</button>
+                            </div>
+                            <div class="lab-toggle-btn-group" id="group-controls-funnel">
+                                <button class="lab-toggle-btn active" id="btn-funnel-valve" title="Musluğu Aç / Kapat"><i class="fas fa-faucet"></i> <span id="label-funnel-valve">Musluğu Aç</span></button>
+                                <button class="lab-toggle-btn" id="btn-funnel-refill" title="Huniyi Tekrar Doldur"><i class="fas fa-redo"></i> Huniyi Doldur</button>
+                            </div>
+                            <div class="lab-toggle-btn-group is-hidden" id="group-controls-distill">
+                                <button class="lab-toggle-btn active" id="btn-distill-heater" title="Isıtıcıyı Başlat / Durdur"><i class="fas fa-fire-alt"></i> <span id="label-distill-heater">Isıtıcıyı Başlat</span></button>
+                                <button class="lab-toggle-btn" id="btn-distill-reset" title="Düzeneği Sıfırla"><i class="fas fa-redo"></i> Düzeneği Sıfırla</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- SAĞ/ALT (%35): Kontrol Paneli & Veri Tablosu -->
@@ -913,6 +931,87 @@
                             </div>
                         </div>
 
+                        <!-- DENEY 7.6 DEĞİŞKENLERİ -->
+                        <div id="vars-container-7-6" class="is-hidden">
+                            <!-- Maarif Modeli Değişkenleri -->
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Ayırma Yöntemi (Ayırma Hunisi vs Basit Damıtma) ve Fiziksel Ayırma Prensibi</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Karışımı Oluşturan Sıvıların Saflıkla Ayrılması ve Ayırma Verimi (%)</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Başlangıç Sıvı Hacimleri (100 mL + 100 mL) ve Ortam Basıncı (1 atm)</div>
+                                </div>
+                            </div>
+
+                            <!-- Yöntem ve Prensip Bilgi Kartı -->
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-atom"></i> Ayırma Yöntemi ve Temel Prensip</h4>
+                                <div class="lab-sep-principle-badge" id="sep-principle-badge">
+                                    <div class="principle-icon" id="sep-principle-icon"><i class="fas fa-filter"></i></div>
+                                    <div class="principle-text">
+                                        <strong id="sep-principle-title">YOĞUNLUK FARKI (Heterojen Sıvı-Sıvı)</strong>
+                                        <p id="sep-principle-desc">Birbirine karışmayan (emülsiyon) sıvılardan yoğunluğu büyük olan (Su, d=1.0 g/cm³) altta, yoğunluğu küçük olan (Zeytinyağı, d=0.9 g/cm³) üstte toplanır.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dinamik Pedagojik Çıkarım & Uyarı Kartı -->
+                            <div class="lab-pedagogical-card is-work" id="sep-pedagogical-box" style="margin-top: 12px;">
+                                <div class="pedagogical-icon" id="sep-pedagogical-icon"><i class="fas fa-check-circle"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="sep-pedagogical-title">🔬 Ayırma Süreci Başlamaya Hazır</strong>
+                                    <p id="sep-pedagogical-text">Musluğu açarak alttaki suyun erlene akmasını sağlayın. Arayüz çizgisi musluk seviyesine ulaştığında zeytinyağının erlene karışmaması için musluğu zamanında kapatın!</p>
+                                </div>
+                            </div>
+
+                            <!-- Anlık Canlı Metrikler (Stat Chips) -->
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Anlık Laboratuvar Metrikleri</h4>
+                                
+                                <!-- Huni Metrikleri -->
+                                <div class="lab-stats-grid" id="stats-grid-funnel">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Hunideki Su</span>
+                                        <strong class="chip-val" id="metric-funnel-water" style="color: #38bdf8;">100.0 mL</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Erlendeki Su</span>
+                                        <strong class="chip-val" id="metric-erlen-water" style="color: #2dd4bf;">0.0 mL</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Hunideki Yağ</span>
+                                        <strong class="chip-val" id="metric-funnel-oil" style="color: #facc15;">100.0 mL</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Ayırma Verimi</span>
+                                        <strong class="chip-val" id="metric-funnel-efficiency" style="color: #34d399;">%100 (Kusursuz)</strong>
+                                    </div>
+                                </div>
+
+                                <!-- Damıtma Metrikleri -->
+                                <div class="lab-stats-grid is-hidden" id="stats-grid-distill">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Balon Sıcaklığı</span>
+                                        <strong class="chip-val" id="metric-distill-temp" style="color: #fb923c;">20.0 °C</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Kaynayan Madde</span>
+                                        <strong class="chip-val" id="metric-distill-boiling" style="color: #94a3b8;">Yok (Isınıyor)</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Damıtılan Alkol</span>
+                                        <strong class="chip-val" id="metric-distill-alcohol" style="color: #38bdf8;">0.0 mL</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Balondaki Sıvı</span>
+                                        <strong class="chip-val" id="metric-distill-flask-liquid" style="color: #a78bfa;">200.0 mL</strong>
+                                    </div>
+                                </div>
+
+                                <button id="btn-record-data-7-6" class="action-btn lab-record-action-btn" style="margin-top: 14px;"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- TAB 2: VERİ DEFTERİ VE ÖLÇÜM TABLOSU -->
@@ -1066,6 +1165,33 @@
                                 <div class="guide-item">
                                     <strong>5. Bilimsel Kontrollü Deney Kuralı:</strong>
                                     <p>Bir faktör araştırılırken (örneğin sıcaklık), yalnız o faktör değiştirilir (<strong>bağımsız değişken</strong>). Diğer tüm değişkenler (su miktarı, şeker miktarı, şeker türü, karıştırma) eşit tutulur (<strong>kontrol edilen değişken</strong>). Böylece çözünme süresindeki değişimin (<strong>bağımlı değişken</strong>) araştırılan faktörden kaynaklandığı kesinleşir.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 7.6 REHBERİ -->
+                        <div id="guide-container-7-6" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Karışımların Ayrılması Bilimsel Rehberi</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Yoğunluk Farkı ile Ayırma (Ayırma Hunisi):</strong>
+                                    <p>Birbiri içinde çözünmeyen, yoğunlukları birbirinden farklı iki sıvıdan oluşan heterojen karışımlara (emülsiyon) uygulanır. En bilinen örnek <strong>zeytinyağı-su</strong> karışımıdır. Karışım ayırma hunisine konulduğunda yoğunluğu büyük olan su ($d = 1.0\text{ g/cm}^3$) dipte, yoğunluğu küçük olan zeytinyağı ($d = 0.9\text{ g/cm}^3$) üstte toplanır.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Ayırma Hunisinde Musluk Kontrolü ve Faz Sınırı:</strong>
+                                    <p>Huninin altındaki musluk açıldığında önce dipteki su erlenmayere akar. İki sıvının ayrılma çizgisi (faz sınırı) musluk hizasına geldiğinde <strong>musluk hemen kapatılmalıdır</strong>. Böylece su toplama kabında, zeytinyağı ise hunide kalarak tam saflıkla ayrılmış olur.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>3. Kaynama Noktası Farkı ile Ayırma (Basit Damıtma):</strong>
+                                    <p>Birbiri içinde homojen karışan (çözelti oluşturan) ve kaynama noktaları birbirinden farklı iki sıvıyı ayırmak için <strong>damıtma (destilasyon)</strong> yöntemi kullanılır. En yaygın örnek <strong>kolonya (etil alkol-su)</strong> karışımıdır.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>4. Hal Değişimi Süresince Sıcaklığın Sabit Kalması:</strong>
+                                    <p>Damıtma balonu ısıtıldığında sıcaklık $78^\circ\text{C}$'ye ulaştığında kaynama noktası daha düşük olan <strong>etil alkol kaynamaya başlar</strong>. Saf maddeler hal değiştirirken (kaynarken) <strong>sıcaklıkları sabit kalır</strong>! Bu nedenle alkol tamamen buharlaşıp kondenserde yoğuşarak toplama kabına akana kadar sıcaklık $78^\circ\text{C}$'de asılı kalır. Alkol bitince sıcaklık suyun kaynama noktası olan $100^\circ\text{C}$'ye doğru tırmanışa geçer.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>5. Günlük Hayat ve Endüstrideki Uygulamalar:</strong>
+                                    <p>Petrol rafinerilerinde ham petrolün benzin, mazot, gaz yağı ve asfalta ayrıştırılmasında <strong>ayrımsal damıtma</strong> kullanılır. Zeytinyağı fabrikalarında zeytin suyu ile yağın ayrılmasında <strong>yoğunluk farkı (dekantasyon/santrifüj)</strong> prensibinden faydalanılır.</p>
                                 </div>
                             </div>
                         </div>

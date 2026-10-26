@@ -2259,6 +2259,52 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
 }
 
+/* Deney 7.6: Karışımların Ayrılması Özel Stilleri */
+.lab-sep-principle-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 10px;
+    padding: 12px 14px;
+    transition: all 0.25s ease;
+}
+.lab-sep-principle-badge.distill-mode {
+    border-color: rgba(249, 115, 22, 0.35);
+}
+.lab-sep-principle-badge .principle-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    transition: all 0.25s ease;
+}
+.lab-sep-principle-badge.distill-mode .principle-icon {
+    background: rgba(249, 115, 22, 0.15);
+    color: #fb923c;
+}
+.lab-sep-principle-badge .principle-text strong {
+    display: block;
+    font-size: 0.88rem;
+    color: #f1f5f9;
+    margin-bottom: 3px;
+    font-weight: 800;
+}
+.lab-sep-principle-badge .principle-text p {
+    font-size: 0.76rem;
+    color: #94a3b8;
+    line-height: 1.4;
+    margin: 0;
+}
+
+
 
 
 

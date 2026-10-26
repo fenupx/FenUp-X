@@ -168,10 +168,10 @@ export const EXPERIMENTS_DATABASE = [
     },
     {
         id: "7.6", grade: 7, unit: 5, unitName: "Maddenin Doğasına Yolculuk",
-        title: "Karışımların Ayrılması (Ayırma Hunisi ve Buharlaştırma)",
-        code: "FB.7.5.5", bookRef: "2. Kitap, s. 80–93",
-        active: false,
-        desc: "Zeytinyağı-su gibi heterojen ve tuzlu su gibi homojen karışımları yoğunluk ve kaynama noktası farkıyla saflaştırın."
+        title: "Karışımların Ayrılması Simülatörü (Ayırma Hunisi ve Basit Damıtma)",
+        code: "FB.7.5.5", bookRef: "2. Kitap, s. 106–125",
+        active: true, // 🏆 AKTİF!
+        desc: "Zeytinyağı-su heterojen karışımını ayırma hunisinde yoğunluk farkıyla, homojen alkol-su çözeltisini basit damıtmada kaynama noktası farkıyla saflaştırın."
     },
     {
         id: "7.7", grade: 7, unit: 6, unitName: "Elektriklenme",
@@ -366,6 +366,40 @@ export const labState = {
                 stirAngle: 0
             }
         ],
+
+        measurements: []
+    },
+
+    // DENEY 7.6: KARIŞIMLARIN AYRILMASI (AYIRMA HUNİSİ & BASİT DAMITMA)
+    separation: {
+        mode: "funnel", // "funnel" | "distill"
+        
+        // Mod 1: Ayırma Hunisi (Yoğunluk Farkı - Zeytinyağı & Su)
+        funnel: {
+            isValveOpen: false,
+            valveAngle: 0,        // 0 = yatay/kapalı, Math.PI/2 = dikey/açık
+            waterVolume: 100.0,   // mL (huni içinde kalan su)
+            oilVolume: 100.0,     // mL (huni içinde kalan zeytinyağı)
+            collectedWater: 0.0,  // mL (erlende toplanan su)
+            leakedOil: 0.0,       // mL (musluk açık unutulursa erlene sızan yağ)
+            efficiency: 100.0,    // %
+            drainRate: 0.35,      // mL / frame
+            drops: []             // akan damlacıklar
+        },
+
+        // Mod 2: Basit Damıtma (Kaynama Noktası Farkı - Alkol & Su)
+        distillation: {
+            isHeating: false,
+            temp: 20.0,           // °C
+            alcoholVolume: 100.0, // mL balonda kalan alkol
+            waterVolume: 100.0,   // mL balonda kalan su
+            distilledAlcohol: 0.0,// mL toplama kabında biriken etil alkol
+            isBoiling: false,
+            boilingPhase: "warming", // "warming" | "alcohol_boiling" | "alcohol_finished" | "water_boiling"
+            bubbles: [],
+            condenserDrops: [],
+            collectionDrops: []
+        },
 
         measurements: []
     }
@@ -625,6 +659,9 @@ function setupWorkspaceShellDOM() {
     // 8. DENEY 7.5 KONTROLLERİ (ÇÖZÜNME HIZI)
     setupDissolveControlsDOM();
 
+    // 9. DENEY 7.6 KONTROLLERİ (KARIŞIMLARIN AYRILMASI)
+    setupSeparationControlsDOM();
+
     // 7. Tablo Temizle
     const btnClearTable = document.getElementById('btn-clear-table');
     if (btnClearTable) btnClearTable.addEventListener('click', clearMeasurementTable);
@@ -788,6 +825,7 @@ export function openExperimentWorkspace(expId) {
     const is73 = (expId === "7.3");
     const is74 = (expId === "7.4");
     const is75 = (expId === "7.5");
+    const is76 = (expId === "7.6");
 
     // HUD Paneli (Sadece Deney 7.3)
     const hud73 = document.getElementById('hud-exp-7-3');
@@ -799,11 +837,13 @@ export function openExperimentWorkspace(expId) {
     const qc73 = document.getElementById('quick-controls-7-3');
     const qc74 = document.getElementById('quick-controls-7-4');
     const qc75 = document.getElementById('quick-controls-7-5');
+    const qc76 = document.getElementById('quick-controls-7-6');
     if (qc71) qc71.classList.toggle('is-hidden', !is71);
     if (qc72) qc72.classList.toggle('is-hidden', !is72);
     if (qc73) qc73.classList.toggle('is-hidden', !is73);
     if (qc74) qc74.classList.toggle('is-hidden', !is74);
     if (qc75) qc75.classList.toggle('is-hidden', !is75);
+    if (qc76) qc76.classList.toggle('is-hidden', !is76);
 
     // Değişkenler Panelleri
     const vars71 = document.getElementById('vars-container-7-1');
@@ -811,11 +851,13 @@ export function openExperimentWorkspace(expId) {
     const vars73 = document.getElementById('vars-container-7-3');
     const vars74 = document.getElementById('vars-container-7-4');
     const vars75 = document.getElementById('vars-container-7-5');
+    const vars76 = document.getElementById('vars-container-7-6');
     if (vars71) vars71.classList.toggle('is-hidden', !is71);
     if (vars72) vars72.classList.toggle('is-hidden', !is72);
     if (vars73) vars73.classList.toggle('is-hidden', !is73);
     if (vars74) vars74.classList.toggle('is-hidden', !is74);
     if (vars75) vars75.classList.toggle('is-hidden', !is75);
+    if (vars76) vars76.classList.toggle('is-hidden', !is76);
 
     // Rehber Panelleri
     const guide71 = document.getElementById('guide-container-7-1');
@@ -823,11 +865,13 @@ export function openExperimentWorkspace(expId) {
     const guide73 = document.getElementById('guide-container-7-3');
     const guide74 = document.getElementById('guide-container-7-4');
     const guide75 = document.getElementById('guide-container-7-5');
+    const guide76 = document.getElementById('guide-container-7-6');
     if (guide71) guide71.classList.toggle('is-hidden', !is71);
     if (guide72) guide72.classList.toggle('is-hidden', !is72);
     if (guide73) guide73.classList.toggle('is-hidden', !is73);
     if (guide74) guide74.classList.toggle('is-hidden', !is74);
     if (guide75) guide75.classList.toggle('is-hidden', !is75);
+    if (guide76) guide76.classList.toggle('is-hidden', !is76);
 
     if (is71) {
         initWorkState();
@@ -835,6 +879,8 @@ export function openExperimentWorkspace(expId) {
         initEnergyState();
     } else if (is75) {
         initDissolveState();
+    } else if (is76) {
+        initSeparationState();
     }
 
     // Veri Tablosu Başlıklarını Güncelle
@@ -869,6 +915,8 @@ function resetCurrentExperiment() {
         resetEnergyExperiment();
     } else if (labState.activeExperimentId === "7.5") {
         resetDissolveExperiment();
+    } else if (labState.activeExperimentId === "7.6") {
+        resetSeparationExperiment();
     } else if (labState.activeExperimentId === "7.3") {
         labState.optics.medium1 = "air";
         labState.optics.medium2 = "water";
@@ -952,6 +1000,8 @@ function initExperimentCanvas() {
         calculateLensPhysics();
     } else if (labState.activeExperimentId === "7.5") {
         initDissolveState();
+    } else if (labState.activeExperimentId === "7.6") {
+        initSeparationState();
     }
 
     startRenderLoop();
@@ -986,6 +1036,9 @@ function startRenderLoop() {
             } else if (labState.activeExperimentId === "7.5") {
                 updateDissolvePhysics();
                 drawDissolveSimulation();
+            } else if (labState.activeExperimentId === "7.6") {
+                updateSeparationPhysics();
+                drawSeparationSimulation();
             }
         }
         if (labState.activeExperimentId) {
@@ -4791,7 +4844,1283 @@ function drawBeakerHeaderAndStopwatch(ctx, beaker, cx, topY) {
     ctx.restore();
 }
 
-// --- 9. POINTER VE TOUCH ETKİLEŞİMİ (AKILLI TAHTA & MOBİL) ---
+// --- 8.6. DENEY 7.6: KARIŞIMLARIN AYRILMASI (AYIRMA HUNİSİ & BASİT DAMITMA) MOTORU ---
+
+function setupSeparationControlsDOM() {
+    // 1. Mod Geçiş Butonları (Ayırma Hunisi vs Basit Damıtma)
+    const btnFunnel = document.getElementById('btn-mode-funnel');
+    const btnDistill = document.getElementById('btn-mode-distill');
+
+    if (btnFunnel) btnFunnel.addEventListener('click', () => setSeparationMode("funnel"));
+    if (btnDistill) btnDistill.addEventListener('click', () => setSeparationMode("distill"));
+
+    // 2. Ayırma Hunisi Kontrolleri
+    const btnValve = document.getElementById('btn-funnel-valve');
+    const btnRefill = document.getElementById('btn-funnel-refill');
+
+    if (btnValve) btnValve.addEventListener('click', toggleFunnelValve);
+    if (btnRefill) btnRefill.addEventListener('click', refillFunnel);
+
+    // 3. Basit Damıtma Kontrolleri
+    const btnHeater = document.getElementById('btn-distill-heater');
+    const btnResetDistill = document.getElementById('btn-distill-reset');
+
+    if (btnHeater) btnHeater.addEventListener('click', toggleDistillHeater);
+    if (btnResetDistill) btnResetDistill.addEventListener('click', resetDistillApparatus);
+
+    // 4. Veri Defterine Kaydet
+    const btnRecord76 = document.getElementById('btn-record-data-7-6');
+    if (btnRecord76) btnRecord76.addEventListener('click', recordMeasurement);
+}
+
+function setSeparationMode(mode) {
+    labState.separation.mode = mode;
+    const isFunnel = (mode === "funnel");
+
+    // Buton aktiflikleri
+    const btnFunnel = document.getElementById('btn-mode-funnel');
+    const btnDistill = document.getElementById('btn-mode-distill');
+    if (btnFunnel) btnFunnel.classList.toggle('active', isFunnel);
+    if (btnDistill) btnDistill.classList.toggle('active', !isFunnel);
+
+    // Hızlı kontrol grupları
+    const grpFunnel = document.getElementById('group-controls-funnel');
+    const grpDistill = document.getElementById('group-controls-distill');
+    if (grpFunnel) grpFunnel.classList.toggle('is-hidden', !isFunnel);
+    if (grpDistill) grpDistill.classList.toggle('is-hidden', isFunnel);
+
+    // Metrik panelleri
+    const statsFunnel = document.getElementById('stats-grid-funnel');
+    const statsDistill = document.getElementById('stats-grid-distill');
+    if (statsFunnel) statsFunnel.classList.toggle('is-hidden', !isFunnel);
+    if (statsDistill) statsDistill.classList.toggle('is-hidden', isFunnel);
+
+    // Prensip rozeti
+    const badge = document.getElementById('sep-principle-badge');
+    const pIcon = document.getElementById('sep-principle-icon');
+    const pTitle = document.getElementById('sep-principle-title');
+    const pDesc = document.getElementById('sep-principle-desc');
+
+    if (badge && pIcon && pTitle && pDesc) {
+        if (isFunnel) {
+            badge.classList.remove('distill-mode');
+            pIcon.innerHTML = '<i class="fas fa-filter"></i>';
+            pTitle.textContent = "YOĞUNLUK FARKI (Heterojen Sıvı-Sıvı)";
+            pDesc.textContent = "Birbirine karışmayan (emülsiyon) sıvılardan yoğunluğu büyük olan (Su, d=1.0 g/cm³) altta, yoğunluğu küçük olan (Zeytinyağı, d=0.9 g/cm³) üstte toplanır.";
+        } else {
+            badge.classList.add('distill-mode');
+            pIcon.innerHTML = '<i class="fas fa-fire"></i>';
+            pTitle.textContent = "KAYNAMA NOKTASI FARKI (Homojen Sıvı-Sıvı)";
+            pDesc.textContent = "Birbiri içinde homojen karışan (çözelti) sıvılardan kaynama noktası düşük olan (Etil Alkol, 78°C) önce buharlaşır ve kondenserde yoğuşarak saf olarak ayrılır.";
+        }
+    }
+
+    updateSeparationPedagogicalBox();
+    updateSeparationMetricsDOM();
+    showLabToast(isFunnel ? "🧪 Ayırma Hunisi (Yoğunluk Farkı) Modu Aktif" : "🔥 Basit Damıtma (Kaynama Noktası Farkı) Modu Aktif");
+}
+
+function toggleFunnelValve() {
+    const f = labState.separation.funnel;
+    f.isValveOpen = !f.isValveOpen;
+
+    const lblValve = document.getElementById('label-funnel-valve');
+    const btnValve = document.getElementById('btn-funnel-valve');
+    if (lblValve) lblValve.textContent = f.isValveOpen ? "Musluğu Kapat" : "Musluğu Aç";
+    if (btnValve) btnValve.classList.toggle('active', f.isValveOpen);
+
+    updateSeparationPedagogicalBox();
+    showLabToast(f.isValveOpen ? "🚰 Ayırma hunisi musluğu açıldı" : "🔒 Musluk kapatıldı");
+}
+
+function refillFunnel() {
+    const f = labState.separation.funnel;
+    f.isValveOpen = false;
+    f.waterVolume = 100.0;
+    f.oilVolume = 100.0;
+    f.collectedWater = 0.0;
+    f.leakedOil = 0.0;
+    f.efficiency = 100.0;
+    f.drops = [];
+
+    const lblValve = document.getElementById('label-funnel-valve');
+    const btnValve = document.getElementById('btn-funnel-valve');
+    if (lblValve) lblValve.textContent = "Musluğu Aç";
+    if (btnValve) btnValve.classList.remove('active');
+
+    updateSeparationPedagogicalBox();
+    updateSeparationMetricsDOM();
+    showLabToast("🔄 Ayırma hunisi 100 mL su ve 100 mL zeytinyağı ile yeniden dolduruldu");
+}
+
+function toggleDistillHeater() {
+    const d = labState.separation.distillation;
+    d.isHeating = !d.isHeating;
+
+    const lblHeater = document.getElementById('label-distill-heater');
+    const btnHeater = document.getElementById('btn-distill-heater');
+    if (lblHeater) lblHeater.textContent = d.isHeating ? "Isıtıcıyı Durdur" : "Isıtıcıyı Başlat";
+    if (btnHeater) btnHeater.classList.toggle('active', d.isHeating);
+
+    updateSeparationPedagogicalBox();
+    showLabToast(d.isHeating ? "🔥 Isıtıcı başlatıldı (Karışım ısınıyor)" : "❄️ Isıtıcı durduruldu");
+}
+
+function resetDistillApparatus() {
+    const d = labState.separation.distillation;
+    d.isHeating = false;
+    d.temp = 20.0;
+    d.alcoholVolume = 100.0;
+    d.waterVolume = 100.0;
+    d.distilledAlcohol = 0.0;
+    d.isBoiling = false;
+    d.boilingPhase = "warming";
+    d.bubbles = [];
+    d.condenserDrops = [];
+    d.collectionDrops = [];
+
+    const lblHeater = document.getElementById('label-distill-heater');
+    const btnHeater = document.getElementById('btn-distill-heater');
+    if (lblHeater) lblHeater.textContent = "Isıtıcıyı Başlat";
+    if (btnHeater) btnHeater.classList.remove('active');
+
+    updateSeparationPedagogicalBox();
+    updateSeparationMetricsDOM();
+    showLabToast("🔄 Damıtma düzeneği sıfırlandı (20°C, 200 mL karışım)");
+}
+
+function resetSeparationExperiment() {
+    if (labState.separation.mode === "funnel") {
+        refillFunnel();
+    } else {
+        resetDistillApparatus();
+    }
+}
+
+function initSeparationState() {
+    setSeparationMode(labState.separation.mode || "funnel");
+    updateSeparationMetricsDOM();
+    updateSeparationPedagogicalBox();
+}
+
+function updateSeparationPedagogicalBox() {
+    const sep = labState.separation;
+    const box = document.getElementById('sep-pedagogical-box');
+    const pIcon = document.getElementById('sep-pedagogical-icon');
+    const pTitle = document.getElementById('sep-pedagogical-title');
+    const pText = document.getElementById('sep-pedagogical-text');
+    if (!box || !pIcon || !pTitle || !pText) return;
+
+    if (sep.mode === "funnel") {
+        const f = sep.funnel;
+        if (f.isValveOpen) {
+            if (f.waterVolume > 12) {
+                box.className = "lab-pedagogical-card is-work";
+                pIcon.innerHTML = '<i class="fas fa-faucet"></i>';
+                pTitle.textContent = "🚰 Su Erlenmayere Boşalıyor...";
+                pText.textContent = `Yoğunluğu büyük olan su (d = 1.0 g/cm³) altta olduğu için musluktan ilk olarak akar. Arayüz çizgisi musluğa yaklaşırken dikkatli olun! (Kalan Su: ${f.waterVolume.toFixed(1)} mL)`;
+            } else if (f.waterVolume > 0) {
+                box.className = "lab-pedagogical-card no-work";
+                pIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+                pTitle.textContent = "⚠️ DİKKAT: Faz Sınırı Muslukta!";
+                pText.textContent = "Su tükenmek üzere! Zeytinyağının (0.9 g/cm³) erlenmayere sızmaması ve saflığın bozulmaması için musluğu HEMEN KAPATIN!";
+            } else if (f.leakedOil > 0) {
+                box.className = "lab-pedagogical-card no-work";
+                pIcon.innerHTML = '<i class="fas fa-times-circle"></i>';
+                pTitle.textContent = "❌ Zeytinyağı Sızdı! (Musluk Açık Unutuldu)";
+                pText.textContent = `Su bittiği halde musluk kapatılmadığı için zeytinyağı erlene aktı (${f.leakedOil.toFixed(1)} mL). Karışım tekrar bozuldu ve ayırma verimi düştü!`;
+            }
+        } else {
+            if (f.collectedWater >= 95 && f.leakedOil === 0) {
+                box.className = "lab-pedagogical-card is-work";
+                pIcon.innerHTML = '<i class="fas fa-award"></i>';
+                pTitle.textContent = "🏆 Mükemmel Ayırma Başarısı (%100 Verim)!";
+                pText.textContent = "Musluğu tam zamanında kapattınız! Su erlenmayerde, zeytinyağı ise ayırma hunisinde %100 saflıkla ayrıldı. Yoğunluk farkıyla ayırma kusursuz tamamlandı.";
+            } else if (f.collectedWater > 0 && f.leakedOil === 0) {
+                box.className = "lab-pedagogical-card is-work";
+                pIcon.innerHTML = '<i class="fas fa-info-circle"></i>';
+                pTitle.textContent = "ℹ️ Kısmi Ayırma (Musluk Erken Kapatıldı)";
+                pText.textContent = `Musluk biraz erken kapatıldığı için hunide ${f.waterVolume.toFixed(1)} mL su kaldı. Musluğu tekrar açarak suyu tamamlayabilirsiniz.`;
+            } else if (f.leakedOil > 0) {
+                box.className = "lab-pedagogical-card no-work";
+                pIcon.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+                pTitle.textContent = `⚠️ Eksik Saflık (Verim: %${f.efficiency.toFixed(0)})`;
+                pText.textContent = `Erlene ${f.leakedOil.toFixed(1)} mL zeytinyağı sızdı. Huniyi tekrar doldurarak musluğu tam zamanında kapatmayı deneyin.`;
+            } else {
+                box.className = "lab-pedagogical-card is-work";
+                pIcon.innerHTML = '<i class="fas fa-filter"></i>';
+                pTitle.textContent = "🔬 Ayırma Hunisi (Yoğunluk Farkı)";
+                pText.textContent = "Zeytinyağı (0.9 g/cm³) üstte, su (1.0 g/cm³) alttadır. Musluğu açarak deneyi başlatın ve faz sınırı musluğa ulaştığında kapatın.";
+            }
+        }
+    } else {
+        const d = sep.distillation;
+        if (d.isHeating) {
+            if (d.temp < 78.0) {
+                box.className = "lab-pedagogical-card is-work";
+                pIcon.innerHTML = '<i class="fas fa-temperature-high"></i>';
+                pTitle.textContent = `🔥 Karışım Isınıyor (${d.temp.toFixed(1)}°C)`;
+                pText.textContent = "Etil alkolün kaynama noktası 78°C, suyunki 100°C'dir. Sıcaklık 78°C'ye ulaşana kadar buharlaşma başlamaz.";
+            } else if (d.alcoholVolume > 0) {
+                box.className = "lab-pedagogical-card is-work";
+                pIcon.innerHTML = '<i class="fas fa-vial"></i>';
+                pTitle.textContent = "🧪 Hal Değişimi: Sıcaklık 78°C'de Sabit!";
+                pText.textContent = `Kaynama noktası düşük olan etil alkol önce kaynar ve kondenserde soğuyarak toplama kabına damlar. Tüm alkol bitene kadar sıcaklık 78.0°C'de SABİT KALIR! (Damıtılan: ${d.distilledAlcohol.toFixed(1)} mL)`;
+            } else {
+                box.className = "lab-pedagogical-card no-work";
+                pIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+                pTitle.textContent = "⚡ Alkol Bitti! Sıcaklık Yükseliyor";
+                pText.textContent = `Balondaki tüm alkol buharlaşıp toplandı (100 mL). Sıcaklık suyun kaynama noktasına (100°C) tırmanıyor. Saf suyun buharlaşmasını önlemek için ısıtıcıyı kapatın!`;
+            }
+        } else {
+            if (d.distilledAlcohol >= 95.0) {
+                box.className = "lab-pedagogical-card is-work";
+                pIcon.innerHTML = '<i class="fas fa-award"></i>';
+                pTitle.textContent = "🏆 Damıtma Başarıyla Tamamlandı!";
+                pText.textContent = "Etil alkol toplama kabında, saf su ise damıtma balonunda kalarak kaynama noktası farkıyla başarıyla saflaştırıldı.";
+            } else {
+                box.className = "lab-pedagogical-card is-work";
+                pIcon.innerHTML = '<i class="fas fa-fire-alt"></i>';
+                pTitle.textContent = "🔥 Basit Damıtma (Kaynama Noktası Farkı)";
+                pText.textContent = "Homojen alkol-su karışımında etil alkol (78°C) sudan (100°C) önce buharlaşır. Isıtıcıyı başlatarak damıtmayı başlatın.";
+            }
+        }
+    }
+}
+
+function updateSeparationMetricsDOM() {
+    const sep = labState.separation;
+    if (sep.mode === "funnel") {
+        const f = sep.funnel;
+        const mFunnelWater = document.getElementById('metric-funnel-water');
+        const mErlenWater = document.getElementById('metric-erlen-water');
+        const mFunnelOil = document.getElementById('metric-funnel-oil');
+        const mFunnelEff = document.getElementById('metric-funnel-efficiency');
+
+        if (mFunnelWater) mFunnelWater.textContent = `${f.waterVolume.toFixed(1)} mL`;
+        if (mErlenWater) mErlenWater.textContent = `${f.collectedWater.toFixed(1)} mL`;
+        if (mFunnelOil) mFunnelOil.textContent = `${f.oilVolume.toFixed(1)} mL`;
+        if (mFunnelEff) {
+            if (f.leakedOil > 0.5) {
+                mFunnelEff.textContent = `%${f.efficiency.toFixed(0)} (Yağ Sızdı)`;
+                mFunnelEff.style.color = "#ef4444";
+            } else if (f.collectedWater >= 95) {
+                mFunnelEff.textContent = `%100 (Kusursuz)`;
+                mFunnelEff.style.color = "#34d399";
+            } else {
+                mFunnelEff.textContent = `%${f.efficiency.toFixed(0)} (Kısmi)`;
+                mFunnelEff.style.color = "#facc15";
+            }
+        }
+    } else {
+        const d = sep.distillation;
+        const mTemp = document.getElementById('metric-distill-temp');
+        const mBoiling = document.getElementById('metric-distill-boiling');
+        const mAlcohol = document.getElementById('metric-distill-alcohol');
+        const mFlaskLiquid = document.getElementById('metric-distill-flask-liquid');
+
+        if (mTemp) mTemp.textContent = `${d.temp.toFixed(1)} °C`;
+        if (mBoiling) {
+            if (d.isBoiling) {
+                mBoiling.textContent = "Etil Alkol (Kaynıyor)";
+                mBoiling.style.color = "#38bdf8";
+            } else if (d.boilingPhase === "alcohol_finished") {
+                mBoiling.textContent = "Alkol Bitti";
+                mBoiling.style.color = "#facc15";
+            } else if (d.temp >= 99.5) {
+                mBoiling.textContent = "Su Kaynıyor (100°C)";
+                mBoiling.style.color = "#ef4444";
+            } else if (d.isHeating) {
+                mBoiling.textContent = "Isınıyor (Buhar Yok)";
+                mBoiling.style.color = "#fb923c";
+            } else {
+                mBoiling.textContent = "Yok (Durgun)";
+                mBoiling.style.color = "#94a3b8";
+            }
+        }
+        if (mAlcohol) mAlcohol.textContent = `${d.distilledAlcohol.toFixed(1)} mL`;
+        if (mFlaskLiquid) mFlaskLiquid.textContent = `${(d.alcoholVolume + d.waterVolume).toFixed(1)} mL`;
+    }
+}
+
+function updateSeparationPhysics() {
+    const sep = labState.separation;
+
+    // --- MOD 1: AYIRMA HUNİSİ FİZİĞİ ---
+    if (sep.mode === "funnel") {
+        const f = sep.funnel;
+
+        // Musluk açısı yumuşak geçişi
+        const targetAngle = f.isValveOpen ? Math.PI / 2 : 0;
+        f.valveAngle += (targetAngle - f.valveAngle) * 0.25;
+
+        if (f.isValveOpen) {
+            if (f.waterVolume > 0) {
+                f.waterVolume = Math.max(0, f.waterVolume - f.drainRate);
+                f.collectedWater = Math.min(100.0, 100.0 - f.waterVolume);
+
+                // Su damlaları üret
+                if (Math.random() < 0.6) {
+                    f.drops.push({
+                        x: 440 + (Math.random() - 0.5) * 2,
+                        y: 330,
+                        vy: 3 + Math.random() * 2,
+                        color: 'rgba(56, 189, 248, 0.85)',
+                        size: 3.5
+                    });
+                }
+            } else {
+                // Su bitti, yağ sızıyor
+                f.leakedOil += f.drainRate * 0.7;
+                f.oilVolume = Math.max(0, 100.0 - f.leakedOil);
+                f.efficiency = Math.max(0, 100.0 - f.leakedOil * 1.8);
+
+                // Yağ damlaları üret
+                if (Math.random() < 0.6) {
+                    f.drops.push({
+                        x: 440 + (Math.random() - 0.5) * 2,
+                        y: 330,
+                        vy: 2.8 + Math.random() * 1.8,
+                        color: 'rgba(250, 204, 21, 0.9)',
+                        size: 3.8
+                    });
+                }
+            }
+        }
+
+        // Damlaları güncelle
+        const groundErlenY = 430 - (f.collectedWater + f.leakedOil) * 0.45;
+        for (let i = f.drops.length - 1; i >= 0; i--) {
+            const drop = f.drops[i];
+            drop.y += drop.vy;
+            drop.vy += 0.25;
+            if (drop.y >= groundErlenY) {
+                f.drops.splice(i, 1);
+            }
+        }
+
+        // Verim hesabı (musluk kapalıyken)
+        if (!f.isValveOpen) {
+            if (f.leakedOil > 0.5) {
+                f.efficiency = Math.max(0, 100.0 - f.leakedOil * 2.0);
+            } else if (f.waterVolume <= 0.5) {
+                f.efficiency = 100.0;
+            } else {
+                f.efficiency = (f.collectedWater / 100.0) * 100.0;
+            }
+        }
+
+        updateSeparationMetricsDOM();
+        updateSeparationPedagogicalBox();
+    }
+    // --- MOD 2: BASİT DAMITMA FİZİĞİ ---
+    else {
+        const d = sep.distillation;
+
+        if (d.isHeating) {
+            if (d.temp < 78.0) {
+                d.temp = Math.min(78.0, d.temp + 0.35);
+                d.isBoiling = false;
+                d.boilingPhase = "warming";
+            } else if (d.alcoholVolume > 0) {
+                // SABİT SICAKLIK 78.0°C!
+                d.temp = 78.0;
+                d.isBoiling = true;
+                d.boilingPhase = "alcohol_boiling";
+
+                const rate = 0.12;
+                d.alcoholVolume = Math.max(0, d.alcoholVolume - rate);
+                d.distilledAlcohol = Math.min(100.0, 100.0 - d.alcoholVolume);
+
+                // Balon kabarcıkları üret
+                if (Math.random() < 0.4) {
+                    d.bubbles.push({
+                        x: 230 + (Math.random() - 0.5) * 50,
+                        y: 320 + Math.random() * 10,
+                        r: 2 + Math.random() * 3,
+                        vy: 1.5 + Math.random() * 2,
+                        alpha: 0.8
+                    });
+                }
+
+                // Kondenser içi yoğuşma damlaları
+                if (Math.random() < 0.3) {
+                    d.condenserDrops.push({
+                        progress: 0,
+                        speed: 0.015 + Math.random() * 0.01
+                    });
+                }
+
+                // Toplama kabına damlayan damla
+                if (Math.random() < 0.25) {
+                    d.collectionDrops.push({
+                        x: 560 + (Math.random() - 0.5) * 2,
+                        y: 350,
+                        vy: 3,
+                        size: 3.2
+                    });
+                }
+            } else {
+                // Alkol bitti, sıcaklık 100°C'ye doğru yükseliyor
+                d.alcoholVolume = 0;
+                d.distilledAlcohol = 100.0;
+                d.isBoiling = false;
+                d.boilingPhase = "alcohol_finished";
+
+                d.temp = Math.min(100.0, d.temp + 0.25);
+                if (d.temp >= 100.0) {
+                    d.boilingPhase = "water_boiling";
+                    if (Math.random() < 0.3) {
+                        d.bubbles.push({
+                            x: 230 + (Math.random() - 0.5) * 40,
+                            y: 320,
+                            r: 2 + Math.random() * 2,
+                            vy: 2,
+                            alpha: 0.7
+                        });
+                    }
+                }
+            }
+        } else {
+            d.isBoiling = false;
+            d.temp = Math.max(20.0, d.temp - 0.2);
+        }
+
+        // Kabarcıkları güncelle
+        for (let i = d.bubbles.length - 1; i >= 0; i--) {
+            const b = d.bubbles[i];
+            b.y -= b.vy;
+            b.alpha -= 0.015;
+            if (b.y <= 270 || b.alpha <= 0) {
+                d.bubbles.splice(i, 1);
+            }
+        }
+
+        // Kondenser damlalarını güncelle
+        for (let i = d.condenserDrops.length - 1; i >= 0; i--) {
+            const cd = d.condenserDrops[i];
+            cd.progress += cd.speed;
+            if (cd.progress >= 1.0) {
+                d.condenserDrops.splice(i, 1);
+            }
+        }
+
+        // Toplama kabı damlalarını güncelle
+        const groundCollY = 435 - d.distilledAlcohol * 0.5;
+        for (let i = d.collectionDrops.length - 1; i >= 0; i--) {
+            const cd = d.collectionDrops[i];
+            cd.y += cd.vy;
+            cd.vy += 0.25;
+            if (cd.y >= groundCollY) {
+                d.collectionDrops.splice(i, 1);
+            }
+        }
+
+        updateSeparationMetricsDOM();
+        updateSeparationPedagogicalBox();
+    }
+}
+
+// --- 8.6.1. SAF CANVAS 2D ÇİZİM MOTORU ---
+
+function drawSeparationSimulation() {
+    if (!ctx || !canvas) return;
+
+    const w = 800;
+    const h = 500;
+    ctx.save();
+    ctx.clearRect(0, 0, w, h);
+
+    // Zarif Arka Plan & Laboratuvar Zemin Gradyanı
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+    bgGrad.addColorStop(0, '#0a0f1d');
+    bgGrad.addColorStop(0.75, '#0f172a');
+    bgGrad.addColorStop(1, '#020617');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Laboratuvar Masası Tezgah Yüzeyi (y = 440)
+    const tableGrad = ctx.createLinearGradient(0, 440, 0, h);
+    tableGrad.addColorStop(0, '#1e293b');
+    tableGrad.addColorStop(0.1, '#334155');
+    tableGrad.addColorStop(1, '#0f172a');
+    ctx.fillStyle = tableGrad;
+    ctx.fillRect(0, 440, w, 60);
+
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.2)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(0, 440);
+    ctx.lineTo(w, 440);
+    ctx.stroke();
+
+    const sep = labState.separation;
+    if (sep.mode === "funnel") {
+        drawFunnelApparatus(ctx, sep.funnel);
+    } else {
+        drawDistillationApparatus(ctx, sep.distillation);
+    }
+
+    ctx.restore();
+}
+
+// --- MOD 1: AYIRMA HUNİSİ ÇİZİM RUTİNLERİ ---
+
+function drawFunnelApparatus(ctx, funnel) {
+    drawFunnelStatif(ctx);
+    drawSeparatoryFunnelBody(ctx, funnel);
+    drawFunnelStopcock(ctx, funnel);
+    drawFunnelStreamAndDrops(ctx, funnel);
+    drawCollectionErlenmeyer(ctx, funnel);
+    drawFunnelIndicators(ctx, funnel);
+}
+
+function drawFunnelStatif(ctx) {
+    ctx.save();
+
+    // Taban Plakası (Döküm Demir)
+    const baseGrad = ctx.createLinearGradient(230, 435, 230, 452);
+    baseGrad.addColorStop(0, '#475569');
+    baseGrad.addColorStop(0.5, '#1e293b');
+    baseGrad.addColorStop(1, '#0f172a');
+    ctx.fillStyle = baseGrad;
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(230, 435, 240, 16, 4);
+    ctx.fill();
+    ctx.stroke();
+
+    // Düşey Krom Statif Çubuğu
+    const rodGrad = ctx.createLinearGradient(278, 0, 290, 0);
+    rodGrad.addColorStop(0, '#94a3b8');
+    rodGrad.addColorStop(0.4, '#f8fafc');
+    rodGrad.addColorStop(1, '#475569');
+    ctx.fillStyle = rodGrad;
+    ctx.fillRect(280, 50, 10, 385);
+
+    // Destek Halkası Klemp Bağlantısı
+    ctx.fillStyle = '#1e293b';
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = 1.5;
+    ctx.fillRect(274, 138, 22, 18);
+    ctx.strokeRect(274, 138, 22, 18);
+
+    // Sıkıştırma Vidası Başlığı
+    ctx.fillStyle = '#f59e0b';
+    ctx.beginPath();
+    ctx.arc(270, 147, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Halka Kolu (Sağa uzanan çelik kol)
+    ctx.fillStyle = rodGrad;
+    ctx.fillRect(296, 144, 90, 6);
+
+    // Taşıyıcı Halka (Funnel gövdesini saran çember)
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.ellipse(440, 147, 56, 14, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function drawSeparatoryFunnelBody(ctx, funnel) {
+    ctx.save();
+
+    const cx = 440;
+    const topY = 60;
+    const bellyY = 140;
+    const neckY = 245;
+    const stopcockY = 265;
+
+    // 1. Cam Tıpa (Üst Kapak)
+    ctx.fillStyle = 'rgba(203, 213, 225, 0.5)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(cx - 14, topY - 14, 28, 14, 3);
+    ctx.fill();
+    ctx.stroke();
+
+    // 2. Armut Tipi Cam Ayırma Hunisi Yolu (Path)
+    const funnelPath = new Path2D();
+    // Üst ağız
+    funnelPath.moveTo(cx - 20, topY);
+    funnelPath.lineTo(cx + 20, topY);
+    // Üst boyun
+    funnelPath.lineTo(cx + 20, topY + 16);
+    // Göbek genişlemesi
+    funnelPath.bezierCurveTo(cx + 35, topY + 25, cx + 58, bellyY - 20, cx + 56, bellyY);
+    // Armut alt konisi (musluğa doğru daralma)
+    funnelPath.bezierCurveTo(cx + 54, bellyY + 35, cx + 18, neckY - 20, cx + 8, neckY);
+    funnelPath.lineTo(cx + 8, stopcockY - 10);
+    funnelPath.lineTo(cx - 8, stopcockY - 10);
+    funnelPath.lineTo(cx - 8, neckY);
+    funnelPath.bezierCurveTo(cx - 18, neckY - 20, cx - 54, bellyY + 35, cx - 56, bellyY);
+    funnelPath.bezierCurveTo(cx - 58, bellyY - 20, cx - 35, topY + 25, cx - 20, topY + 16);
+    funnelPath.closePath();
+
+    // Sıvı Alanını Kırp (Clip)
+    ctx.save();
+    ctx.clip(funnelPath);
+
+    // Huni tabanı = stopcockY - 10 (255)
+    // Su seviyesi yüksekliği: waterVolume (0-100 mL) -> 255'ten yukarı doğru
+    // Zeytinyağı seviyesi yüksekliği: oilVolume (0-100 mL) -> su seviyesinden yukarı doğru
+    const maxLiquidH = 150; // 200 mL için toplam piksel boyu
+    const waterH = (funnel.waterVolume / 100.0) * (maxLiquidH * 0.5);
+    const oilH = (funnel.oilVolume / 100.0) * (maxLiquidH * 0.5);
+
+    const waterTopY = 255 - waterH;
+    const oilTopY = waterTopY - oilH;
+
+    // Alt Sıvı: SU (Mavi Şeffaf)
+    if (funnel.waterVolume > 0) {
+        const waterGrad = ctx.createLinearGradient(cx - 60, 0, cx + 60, 0);
+        waterGrad.addColorStop(0, 'rgba(14, 165, 233, 0.75)');
+        waterGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.85)');
+        waterGrad.addColorStop(1, 'rgba(2, 132, 199, 0.75)');
+        ctx.fillStyle = waterGrad;
+        ctx.fillRect(cx - 65, waterTopY, 130, waterH + 15);
+    }
+
+    // Üst Sıvı: ZEYTİNYAĞI (Altın Sarısı Şeffaf)
+    if (funnel.oilVolume > 0) {
+        const oilGrad = ctx.createLinearGradient(cx - 60, 0, cx + 60, 0);
+        oilGrad.addColorStop(0, 'rgba(234, 179, 8, 0.8)');
+        oilGrad.addColorStop(0.5, 'rgba(250, 204, 21, 0.88)');
+        oilGrad.addColorStop(1, 'rgba(202, 138, 4, 0.8)');
+        ctx.fillStyle = oilGrad;
+        ctx.fillRect(cx - 65, oilTopY, 130, oilH);
+
+        // Yağ üst yüzey menisküsü
+        ctx.strokeStyle = 'rgba(254, 240, 138, 0.9)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(cx, oilTopY, 48, 6, 0, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    // Arayüz (Faz Sınırı) Menisküs Çizgisi
+    if (funnel.waterVolume > 0 && funnel.oilVolume > 0) {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        const interfaceRadius = Math.max(10, Math.min(52, 10 + (255 - waterTopY) * 0.45));
+        ctx.ellipse(cx, waterTopY, interfaceRadius, 4.5, 0, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    ctx.restore(); // Clip sonu
+
+    // 3. Cam Çeperi ve Parlama Efekti
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+    ctx.lineWidth = 2.5;
+    ctx.stroke(funnelPath);
+
+    // Sol Cam Yansıma Şeridi
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.bezierCurveTo(cx - 44, bellyY - 15, cx - 44, bellyY + 25, cx - 20, neckY - 20);
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function drawFunnelStopcock(ctx, funnel) {
+    ctx.save();
+    const cx = 440;
+    const cy = 265;
+
+    // Musluk Cam Gövdesi (Yatay manşon)
+    ctx.fillStyle = 'rgba(226, 232, 240, 0.35)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(cx - 16, cy - 8, 32, 16, 4);
+    ctx.fill();
+    ctx.stroke();
+
+    // Dönen Musluk Kulpu (Handle)
+    ctx.translate(cx, cy);
+    ctx.rotate(funnel.valveAngle);
+
+    // Kulp Çubuğu
+    const handleGrad = ctx.createLinearGradient(-18, 0, 18, 0);
+    if (funnel.isValveOpen) {
+        handleGrad.addColorStop(0, '#059669');
+        handleGrad.addColorStop(0.5, '#34d399');
+        handleGrad.addColorStop(1, '#059669');
+    } else {
+        handleGrad.addColorStop(0, '#dc2626');
+        handleGrad.addColorStop(0.5, '#f87171');
+        handleGrad.addColorStop(1, '#dc2626');
+    }
+    ctx.fillStyle = handleGrad;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(-20, -5, 40, 10, 5);
+    ctx.fill();
+    ctx.stroke();
+
+    // Kulp Tutma Kanatları
+    ctx.fillStyle = funnel.isValveOpen ? '#10b981' : '#ef4444';
+    ctx.beginPath();
+    ctx.arc(-20, 0, 6, 0, Math.PI * 2);
+    ctx.arc(20, 0, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    // Alt Damlalık Borusu (Musluktan erlene inen cam boru)
+    ctx.save();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx - 6, cy + 8);
+    ctx.lineTo(cx - 6, 330);
+    ctx.lineTo(cx + 6, 322); // Verev kesik uç
+    ctx.lineTo(cx + 6, cy + 8);
+    ctx.stroke();
+    ctx.restore();
+}
+
+function drawFunnelStreamAndDrops(ctx, funnel) {
+    ctx.save();
+    const cx = 440;
+
+    // Musluk açıkken ince akış şeridi
+    if (funnel.isValveOpen && (funnel.waterVolume > 0 || funnel.leakedOil > 0)) {
+        const streamColor = (funnel.waterVolume > 0) ? 'rgba(56, 189, 248, 0.85)' : 'rgba(250, 204, 21, 0.9)';
+        ctx.strokeStyle = streamColor;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(cx, 325);
+        ctx.lineTo(cx, 355);
+        ctx.stroke();
+    }
+
+    // Düşen damlacıklar
+    funnel.drops.forEach(d => {
+        ctx.fillStyle = d.color;
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.size, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    ctx.restore();
+}
+
+function drawCollectionErlenmeyer(ctx, funnel) {
+    ctx.save();
+    const cx = 440;
+    const neckTopY = 345;
+    const neckBottomY = 370;
+    const baseY = 435;
+    const baseW = 100;
+
+    // Erlenmayer Yolu (Path)
+    const erlenPath = new Path2D();
+    erlenPath.moveTo(cx - 18, neckTopY);
+    erlenPath.lineTo(cx + 18, neckTopY);
+    erlenPath.lineTo(cx + 18, neckBottomY);
+    erlenPath.lineTo(cx + (baseW / 2), baseY);
+    erlenPath.lineTo(cx - (baseW / 2), baseY);
+    erlenPath.lineTo(cx - 18, neckBottomY);
+    erlenPath.closePath();
+
+    // Sıvı Dolum Kırpması
+    ctx.save();
+    ctx.clip(erlenPath);
+
+    const totalLiquid = funnel.collectedWater + funnel.leakedOil;
+    const maxH = 65; // Maksimum sıvı derinliği
+    const totalH = (totalLiquid / 200.0) * maxH * 1.8;
+    const waterH = (funnel.collectedWater / 200.0) * maxH * 1.8;
+    const oilH = (funnel.leakedOil / 200.0) * maxH * 1.8;
+
+    // Erlendeki Su (Altta)
+    if (funnel.collectedWater > 0) {
+        const wGrad = ctx.createLinearGradient(cx - 50, 0, cx + 50, 0);
+        wGrad.addColorStop(0, 'rgba(14, 165, 233, 0.8)');
+        wGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.9)');
+        wGrad.addColorStop(1, 'rgba(2, 132, 199, 0.8)');
+        ctx.fillStyle = wGrad;
+        ctx.fillRect(cx - 60, baseY - waterH, 120, waterH + 5);
+    }
+
+    // Erlendeki Sızan Zeytinyağı (Üste çıkan sarı tabaka)
+    if (funnel.leakedOil > 0) {
+        const oGrad = ctx.createLinearGradient(cx - 50, 0, cx + 50, 0);
+        oGrad.addColorStop(0, 'rgba(234, 179, 8, 0.85)');
+        oGrad.addColorStop(0.5, 'rgba(250, 204, 21, 0.92)');
+        oGrad.addColorStop(1, 'rgba(202, 138, 4, 0.85)');
+        ctx.fillStyle = oGrad;
+        ctx.fillRect(cx - 60, baseY - waterH - oilH, 120, oilH);
+
+        // Sızan yağ üst yüzeyi
+        ctx.strokeStyle = 'rgba(254, 240, 138, 0.9)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.ellipse(cx, baseY - waterH - oilH, 35, 4, 0, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    ctx.restore(); // Erlen clip sonu
+
+    // Cam Çeperi
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+    ctx.lineWidth = 2;
+    ctx.stroke(erlenPath);
+
+    // Erlen Derecelendirme Çizgileri
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.lineWidth = 1;
+    [25, 50, 75, 100].forEach((ml, idx) => {
+        const markY = baseY - 12 - idx * 12;
+        ctx.beginPath();
+        ctx.moveTo(cx + 10, markY);
+        ctx.lineTo(cx + 26, markY);
+        ctx.stroke();
+    });
+
+    ctx.restore();
+}
+
+function drawFunnelIndicators(ctx, funnel) {
+    ctx.save();
+    const cx = 440;
+
+    // Zeytinyağı Etiketi (Sol tarafta, sarı)
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = '#facc15';
+    ctx.textAlign = 'right';
+    ctx.fillText("Zeytinyağı (d = 0.9 g/cm³)", cx - 68, 120);
+
+    // Su Etiketi (Sol tarafta, mavi)
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText("Su (d = 1.0 g/cm³)", cx - 68, 200);
+
+    // Arayüz Gösterge Oku (Sağ tarafta)
+    const waterH = (funnel.waterVolume / 100.0) * 75;
+    const waterTopY = 255 - waterH;
+
+    if (funnel.waterVolume > 0 && funnel.oilVolume > 0) {
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'left';
+        ctx.font = 'bold 11px Inter, sans-serif';
+        ctx.fillText("◀ Faz Sınırı (Arayüz)", cx + 58, waterTopY + 4);
+    }
+
+    // Toplama Kabı Etiketi
+    ctx.fillStyle = '#94a3b8';
+    ctx.textAlign = 'center';
+    ctx.font = '10px Inter, sans-serif';
+    ctx.fillText("Toplama Erlenmayeri", cx, 448);
+
+    ctx.restore();
+}
+
+// --- MOD 2: BASİT DAMITMA ÇİZİM RUTİNLERİ ---
+
+function drawDistillationApparatus(ctx, distill) {
+    drawDistillationStatifAndTripod(ctx, distill);
+    drawDistillationBurnerAndFlame(ctx, distill);
+    drawDistillationFlask(ctx, distill);
+    drawDistillationThermometer(ctx, distill);
+    drawLiebigCondenser(ctx, distill);
+    drawDistillationCollectionFlask(ctx, distill);
+    drawDistillationIndicators(ctx, distill);
+}
+
+function drawDistillationStatifAndTripod(ctx, distill) {
+    ctx.save();
+
+    // 1. Sol Statif (Damıtma balonunu tutan metal ayak)
+    const rodGrad = ctx.createLinearGradient(138, 0, 146, 0);
+    rodGrad.addColorStop(0, '#94a3b8');
+    rodGrad.addColorStop(0.5, '#f8fafc');
+    rodGrad.addColorStop(1, '#475569');
+
+    // Taban
+    ctx.fillStyle = '#1e293b';
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(90, 435, 100, 16, 4);
+    ctx.fill();
+    ctx.stroke();
+
+    // Düşey çubuk
+    ctx.fillStyle = rodGrad;
+    ctx.fillRect(138, 120, 8, 315);
+
+    // Balon Klemp Kolu
+    ctx.fillStyle = '#334155';
+    ctx.fillRect(134, 210, 16, 14);
+    ctx.fillStyle = rodGrad;
+    ctx.fillRect(146, 214, 50, 5);
+
+    // 2. Üçayak (Tripod)
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    // Sol bacak
+    ctx.moveTo(185, 435);
+    ctx.lineTo(205, 350);
+    // Orta bacak
+    ctx.lineTo(255, 350);
+    ctx.lineTo(275, 435);
+    ctx.stroke();
+
+    // Üçayak üst halkası & Seramik Tel Kafes
+    ctx.fillStyle = distill.isHeating ? 'rgba(249, 115, 22, 0.4)' : '#334155';
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(195, 346, 70, 7, 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function drawDistillationBurnerAndFlame(ctx, distill) {
+    ctx.save();
+    const bx = 230;
+    const by = 435;
+
+    // İspirto Ocağı Gövdesi (Cam hazne)
+    const burnerGrad = ctx.createLinearGradient(bx - 24, 0, bx + 24, 0);
+    burnerGrad.addColorStop(0, 'rgba(56, 189, 248, 0.3)');
+    burnerGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.5)');
+    burnerGrad.addColorStop(1, 'rgba(56, 189, 248, 0.3)');
+    ctx.fillStyle = burnerGrad;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(bx - 24, by - 55, 48, 55, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    // İspirto Sıvısı (Mavi yakıt)
+    ctx.fillStyle = 'rgba(14, 165, 233, 0.6)';
+    ctx.fillRect(bx - 22, by - 40, 44, 38);
+
+    // Fitil Kovanı (Metal Başlık)
+    ctx.fillStyle = '#f59e0b';
+    ctx.fillRect(bx - 6, by - 64, 12, 9);
+
+    // Canlı Alev Animasyonu (Isıtıcı Açıksa)
+    if (distill.isHeating) {
+        const flick = Math.sin(animTime * 12) * 3;
+        const flameH = 30 + flick;
+
+        // Dış Alev (Amber / Sarı)
+        const outerFlame = ctx.createRadialGradient(bx, by - 65, 2, bx, by - 65 - flameH * 0.6, flameH);
+        outerFlame.addColorStop(0, '#fef08a');
+        outerFlame.addColorStop(0.4, '#f59e0b');
+        outerFlame.addColorStop(0.8, '#ef4444');
+        outerFlame.addColorStop(1, 'rgba(239, 68, 68, 0)');
+
+        ctx.fillStyle = outerFlame;
+        ctx.beginPath();
+        ctx.moveTo(bx - 9, by - 64);
+        ctx.quadraticCurveTo(bx - 14, by - 64 - flameH * 0.5, bx, by - 64 - flameH);
+        ctx.quadraticCurveTo(bx + 14, by - 64 - flameH * 0.5, bx + 9, by - 64);
+        ctx.closePath();
+        ctx.fill();
+
+        // İç Alev Çekirdeği (Mavi Koni)
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.85)';
+        ctx.beginPath();
+        ctx.moveTo(bx - 5, by - 64);
+        ctx.quadraticCurveTo(bx - 6, by - 64 - 10, bx, by - 64 - 16);
+        ctx.quadraticCurveTo(bx + 6, by - 64 - 10, bx + 5, by - 64);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    ctx.restore();
+}
+
+function drawDistillationFlask(ctx, distill) {
+    ctx.save();
+    const cx = 230;
+    const cy = 295;
+    const r = 48;
+
+    // Balon Yolu: Yuvarlak dip + Üst Düşey Boyun + Yan Dirsek Kolu
+    const flaskPath = new Path2D();
+    flaskPath.arc(cx, cy, r, 0.15 * Math.PI, 0.85 * Math.PI, false); // Yuvarlak taban
+    flaskPath.lineTo(cx - 16, cy);
+    flaskPath.lineTo(cx - 16, 170); // Sol boyun
+    flaskPath.lineTo(cx + 16, 170); // Sağ boyun üstü
+    flaskPath.lineTo(cx + 16, 195); // Yan kol başlangıcı
+    flaskPath.lineTo(270, 210);    // Yan kol uzantısı (Liebig'e giden)
+    flaskPath.lineTo(268, 222);    // Yan kol altı
+    flaskPath.lineTo(cx + 16, 212);
+    flaskPath.lineTo(cx + 16, cy);
+    flaskPath.closePath();
+
+    // Balon İçi Sıvı Kırpması
+    ctx.save();
+    ctx.clip(flaskPath);
+
+    // Kalan sıvı hacmi (alkol + su) = 0 - 200 mL
+    const totalLiquid = distill.alcoholVolume + distill.waterVolume;
+    const maxLiquidH = 65;
+    const liquidH = (totalLiquid / 200.0) * maxLiquidH;
+    const liquidTopY = (cy + r) - liquidH;
+
+    // Homojen Alkol-Su Karışımı (Hafif Morumsu Su)
+    const liqGrad = ctx.createLinearGradient(cx - r, 0, cx + r, 0);
+    liqGrad.addColorStop(0, 'rgba(96, 165, 250, 0.65)');
+    liqGrad.addColorStop(0.5, 'rgba(192, 132, 252, 0.65)');
+    liqGrad.addColorStop(1, 'rgba(96, 165, 250, 0.65)');
+    ctx.fillStyle = liqGrad;
+    ctx.fillRect(cx - r, liquidTopY, r * 2, liquidH + 20);
+
+    // Kaynama Kabarcıkları (Bubbles)
+    distill.bubbles.forEach(b => {
+        ctx.fillStyle = `rgba(255, 255, 255, ${b.alpha})`;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    ctx.restore(); // Balon clip sonu
+
+    // Balon Cam Çeperi
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+    ctx.lineWidth = 2.5;
+    ctx.stroke(flaskPath);
+
+    // Balon Ağzındaki Delikli Kauçuk Tıpa
+    ctx.fillStyle = '#334155';
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 1;
+    ctx.fillRect(cx - 14, 160, 28, 12);
+    ctx.strokeRect(cx - 14, 160, 28, 12);
+
+    ctx.restore();
+}
+
+function drawDistillationThermometer(ctx, distill) {
+    ctx.save();
+    const cx = 230;
+
+    // Termometre Cam Borusu (Tıpanın içinden yan kol seviyesine inen)
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(cx, 120);
+    ctx.lineTo(cx, 205);
+    ctx.stroke();
+
+    // Termometre Cıva / İspirto Çizgisi (Kırmızı sütun)
+    const tempPercent = (distill.temp - 20) / (100 - 20);
+    const colH = Math.max(8, tempPercent * 70);
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, 205);
+    ctx.lineTo(cx, 205 - colH);
+    ctx.stroke();
+
+    // Termometre Haznesi (Kırmızı duyarga topu, tam yan kol kavşağında)
+    ctx.fillStyle = '#ef4444';
+    ctx.beginPath();
+    ctx.arc(cx, 205, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Dijital Sıcaklık Göstergesi Rozeti
+    const badgeW = 68;
+    const badgeH = 24;
+    const badgeX = cx - badgeW / 2;
+    const badgeY = 95;
+
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+    ctx.strokeStyle = distill.isBoiling ? '#38bdf8' : '#fb923c';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = distill.isBoiling ? '#38bdf8' : '#fb923c';
+    ctx.font = 'bold 12px Inter, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${distill.temp.toFixed(1)}°C`, cx, badgeY + 16);
+
+    ctx.restore();
+}
+
+function drawLiebigCondenser(ctx, distill) {
+    ctx.save();
+
+    const startX = 270;
+    const startY = 210;
+    const endX = 520;
+    const endY = 310;
+
+    const angle = Math.atan2(endY - startY, endX - startX);
+    const len = Math.hypot(endX - startX, endY - startY);
+
+    ctx.translate(startX, startY);
+    ctx.rotate(angle);
+
+    // 1. Dış Cam Su Ceketi (Geniş Soğutucu Boru)
+    const jacketGrad = ctx.createLinearGradient(0, -18, 0, 18);
+    jacketGrad.addColorStop(0, 'rgba(56, 189, 248, 0.2)');
+    jacketGrad.addColorStop(0.5, 'rgba(186, 230, 253, 0.35)');
+    jacketGrad.addColorStop(1, 'rgba(56, 189, 248, 0.2)');
+    ctx.fillStyle = jacketGrad;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(25, -16, len - 50, 32, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    // 2. Soğutma Suyu Giriş / Çıkış Nipelleri
+    // Soğuk Su Girişi (Altta, toplama kabına yakın uç)
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.lineWidth = 1.5;
+    ctx.fillRect(len - 45, 16, 10, 15);
+    ctx.strokeRect(len - 45, 16, 10, 15);
+
+    // Ilık Su Çıkışı (Üstte, balona yakın uç)
+    ctx.fillRect(35, -31, 10, 15);
+    ctx.strokeRect(35, -31, 10, 15);
+
+    // 3. İç Buhar Borusu (İnce Cam Boru)
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.rect(0, -5, len, 10);
+    ctx.fill();
+    ctx.stroke();
+
+    // 4. İç Boruda Yoğuşan Damlalar (Animasyon)
+    distill.condenserDrops.forEach(d => {
+        const dropX = 15 + d.progress * (len - 30);
+        ctx.fillStyle = 'rgba(125, 211, 252, 0.85)';
+        ctx.beginPath();
+        ctx.arc(dropX, 3, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    ctx.restore();
+
+    // Soğuk Su Giriş ve Ilık Su Çıkış Etiketleri
+    ctx.save();
+    ctx.font = 'bold 9px Inter, sans-serif';
+    ctx.fillStyle = '#38bdf8';
+    ctx.textAlign = 'center';
+    ctx.fillText("Soğuk Su Girişi ➔", 475, 345);
+
+    ctx.fillStyle = '#fb923c';
+    ctx.fillText("➔ Ilık Su Çıkışı", 310, 175);
+    ctx.restore();
+}
+
+function drawDistillationCollectionFlask(ctx, distill) {
+    ctx.save();
+
+    // Damıtma Dirseği (Bent Adapter)
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(520, 310);
+    ctx.lineTo(540, 325);
+    ctx.lineTo(560, 355);
+    ctx.stroke();
+
+    // Damıtma Dirseğinden Toplama Kabına Düşen Damlalar
+    distill.collectionDrops.forEach(cd => {
+        ctx.fillStyle = 'rgba(125, 211, 252, 0.9)';
+        ctx.beginPath();
+        ctx.arc(cd.x, cd.y, cd.size, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    // Toplama Erlenmayeri
+    const cx = 560;
+    const neckTopY = 365;
+    const neckBottomY = 385;
+    const baseY = 435;
+    const baseW = 85;
+
+    const collPath = new Path2D();
+    collPath.moveTo(cx - 15, neckTopY);
+    collPath.lineTo(cx + 15, neckTopY);
+    collPath.lineTo(cx + 15, neckBottomY);
+    collPath.lineTo(cx + (baseW / 2), baseY);
+    collPath.lineTo(cx - (baseW / 2), baseY);
+    collPath.lineTo(cx - 15, neckBottomY);
+    collPath.closePath();
+
+    // Saf Etil Alkol Sıvı Dolumu
+    ctx.save();
+    ctx.clip(collPath);
+
+    const alcH = (distill.distilledAlcohol / 100.0) * 45;
+    if (distill.distilledAlcohol > 0) {
+        const alcGrad = ctx.createLinearGradient(cx - 40, 0, cx + 40, 0);
+        alcGrad.addColorStop(0, 'rgba(56, 189, 248, 0.7)');
+        alcGrad.addColorStop(0.5, 'rgba(125, 211, 252, 0.85)');
+        alcGrad.addColorStop(1, 'rgba(56, 189, 248, 0.7)');
+        ctx.fillStyle = alcGrad;
+        ctx.fillRect(cx - 50, baseY - alcH, 100, alcH + 5);
+
+        // Sıvı Üst Yüzeyi
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.ellipse(cx, baseY - alcH, 25, 3.5, 0, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    ctx.restore(); // Erlen clip sonu
+
+    // Cam Çeperi
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
+    ctx.lineWidth = 2;
+    ctx.stroke(collPath);
+
+    ctx.restore();
+}
+
+function drawDistillationIndicators(ctx, distill) {
+    ctx.save();
+
+    // Balon Etiketi (Sol)
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillStyle = '#c084fc';
+    ctx.textAlign = 'center';
+    ctx.fillText("Alkol-Su Çözeltisi", 230, 380);
+
+    // Kondenser Etiketi (Orta)
+    ctx.fillStyle = '#94a3b8';
+    ctx.font = '10px Inter, sans-serif';
+    ctx.fillText("Liebig Soğutucu (Kondenser)", 400, 245);
+
+    // Toplama Kabı Etiketi (Sağ)
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = 'bold 11px Inter, sans-serif';
+    ctx.fillText("Saf Etil Alkol (K.N: 78°C)", 560, 450);
+
+    ctx.restore();
+}
+
+
 function setupCanvasPointerEvents() {
     const cvs = document.getElementById('lab-canvas');
     if (!cvs) return;
@@ -4929,6 +6258,20 @@ function setupCanvasPointerEvents() {
         }
         labState.optics.isDraggingLaser = true;
         labState.lens.isDraggingObject = true;
+
+        if (labState.activeExperimentId === "7.6" && labState.separation.mode === "funnel") {
+            const rect = cvs.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            const scaleX = 800 / rect.width;
+            const scaleY = 500 / rect.height;
+            const canvasX = (clientX - rect.left) * scaleX;
+            const canvasY = (clientY - rect.top) * scaleY;
+            if (Math.hypot(canvasX - 440, canvasY - 265) <= 35) {
+                toggleFunnelValve();
+            }
+        }
+
         handlePointerAction(e);
     });
 
@@ -5015,6 +6358,17 @@ function updateTableHeader(expId) {
                 <th>Şeker Türü</th>
                 <th>Karıştırma</th>
                 <th>Çözünme Süresi (t)</th>
+            </tr>
+        `;
+    } else if (expId === "7.6") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Yöntem</th>
+                <th>Karışım Türü</th>
+                <th>Fiziksel Özellik Farkı</th>
+                <th>Ayrılan Bileşenler</th>
+                <th>Sonuç / Verim</th>
             </tr>
         `;
     }
@@ -5153,6 +6507,51 @@ function recordMeasurement() {
             dissolve.measurements.push(row);
         });
         showLabToast("3 Beherin ölçüm sonuçları deftere kaydedildi!");
+    } else if (expId === "7.6") {
+        const sep = labState.separation;
+        if (sep.mode === "funnel") {
+            const f = sep.funnel;
+            let resultStr = "";
+            if (f.leakedOil > 0.5) {
+                resultStr = `Verim: %${fmt(f.efficiency, 0)} (Yağ Sızdı: ${fmt(f.leakedOil)} mL)`;
+            } else if (f.waterVolume <= 0.5) {
+                resultStr = `Verim: %100 (Kusursuz Ayrım)`;
+            } else {
+                resultStr = `Verim: %${fmt(f.efficiency, 0)} (Kısmi: ${fmt(f.waterVolume)} mL su kaldı)`;
+            }
+
+            const row = {
+                id: sep.measurements.length + 1,
+                col1: "🧪 Ayırma Hunisi",
+                col2: "Zeytinyağı + Su (Heterojen)",
+                col3: "Yoğunluk Farkı (d_su > d_yağ)",
+                col4: `Su: ${fmt(f.collectedWater)} mL · Yağ: ${fmt(f.oilVolume)} mL`,
+                col5: resultStr
+            };
+            sep.measurements.push(row);
+            showLabToast(`Ayırma Hunisi Gözlemi #${row.id} deftere kaydedildi!`);
+        } else {
+            const d = sep.distillation;
+            let resultStr = "";
+            if (d.distilledAlcohol >= 98.0) {
+                resultStr = `Tam Saflaşma (100 mL Etil Alkol)`;
+            } else if (d.distilledAlcohol > 0) {
+                resultStr = `Damıtma Sürüyor (${fmt(d.distilledAlcohol)} mL Alkol)`;
+            } else {
+                resultStr = `Isınma Aşaması (${fmt(d.temp)}°C)`;
+            }
+
+            const row = {
+                id: sep.measurements.length + 1,
+                col1: "🔥 Basit Damıtma",
+                col2: "Etil Alkol + Su (Homojen)",
+                col3: "Kaynama Noktası (78°C vs 100°C)",
+                col4: `Damıtılan Alkol: ${fmt(d.distilledAlcohol)} mL`,
+                col5: `${fmt(d.temp)}°C · ${resultStr}`
+            };
+            sep.measurements.push(row);
+            showLabToast(`Damıtma Gözlemi #${row.id} deftere kaydedildi!`);
+        }
     }
 
     renderMeasurementTable();
@@ -5173,6 +6572,8 @@ function renderMeasurementTable() {
         measurements = labState.lens.measurements;
     } else if (expId === "7.5") {
         measurements = labState.dissolve.measurements;
+    } else if (expId === "7.6") {
+        measurements = labState.separation.measurements;
     } else {
         measurements = labState.optics.measurements;
     }
@@ -5210,6 +6611,8 @@ function clearMeasurementTable() {
         labState.lens.measurements = [];
     } else if (expId === "7.5") {
         labState.dissolve.measurements = [];
+    } else if (expId === "7.6") {
+        labState.separation.measurements = [];
     } else {
         labState.optics.measurements = [];
     }
