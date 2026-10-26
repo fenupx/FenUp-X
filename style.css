@@ -224,6 +224,9 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   min-width: 0; box-sizing: border-box; overflow-wrap: anywhere;
 }
+.rules-summary-item span {
+  min-width: 0; box-sizing: border-box; overflow-wrap: anywhere;
+}
 .rules-summary-item i { color: var(--neon-blue); font-size: 1.1rem; flex-shrink: 0; }
 .rules-summary-item.rules-summary-danger {
   background: rgba(245, 158, 11, 0.12); border-color: rgba(245, 158, 11, 0.45);
@@ -956,7 +959,8 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     #btn-do-draw,
     .lobby-draw-box,
     .rules-summary-bar,
-    .rules-summary-item {
+    .rules-summary-item,
+    .rules-summary-item span {
         min-width: 0; box-sizing: border-box; overflow-wrap: anywhere;
     }
     .lobby-choice-group {

@@ -677,10 +677,19 @@ document.querySelectorAll('.unit-card').forEach(u => {
 
 function showRulesScreen() {
     switchScene(scenes.unit, scenes.rules);
+    const summaryBar = document.getElementById('rules-summary-bar');
     const content = document.getElementById('rules-content');
     if(!content) return;
     
     if (activeMode === "bireysel") {
+        if (summaryBar) {
+            summaryBar.innerHTML = `
+                <div class="rules-summary-item"><i class="fas fa-list-ol"></i> <span>10 Soru</span></div>
+                <div class="rules-summary-item"><i class="fas fa-magic"></i> <span>3 Başlangıç Jokeri</span></div>
+                <div class="rules-summary-item"><i class="fas fa-bolt"></i> <span>Yanlış Cevapta Biter</span></div>
+                <div class="rules-summary-item rules-summary-danger"><i class="fas fa-circle-notch"></i> <span>Kara Delik Tehlikesi</span></div>
+            `;
+        }
         content.innerHTML = `
             <ul style="list-style: none; padding: 0;">
                 <li style="margin-bottom: 15px;"><i class="fas fa-bullseye" style="color:#22c55e; margin-right:10px; width: 25px;"></i> <b>Puanlama ve Süre:</b> Toplam 10 soru seni bekliyor. İlk 4 soru 100 puan (40 sn), 5-8. sorular 200 puan (50 sn), finaldeki son 2 soru ise 400 puan (60 sn) değerindedir.</li>
@@ -691,6 +700,14 @@ function showRulesScreen() {
                 <li style="margin-bottom: 15px;"><i class="fas fa-meteor" style="color:#f59e0b; margin-right:10px; width: 25px;"></i> <b>Kara Delik (9. ve 10. Sorular):</b> 8. soruyu başarıyla geçtikten sonra Kara Delik bölgesi başlar! Son iki zorlu soruda istersen o ana kadar topladığın puanı kasaya kilitleyip yarışmadan çekilebilirsin. "Riski alıyorum" deyip devam edersen ve yanlış yaparsan, Kara Delik puanının <b>yarısını</b> yutar ve elenirsin!</li>
             </ul>`;
     } else {
+        if (summaryBar) {
+            summaryBar.innerHTML = `
+                <div class="rules-summary-item"><i class="fas fa-users"></i> <span>Sınıf İçi Karşılaşma</span></div>
+                <div class="rules-summary-item"><i class="fas fa-sync-alt"></i> <span>Tur Usulü / Sırayla Yarışma</span></div>
+                <div class="rules-summary-item"><i class="fas fa-chart-line"></i> <span>En Yüksek Skor Kazanır</span></div>
+                <div class="rules-summary-item rules-summary-danger"><i class="fas fa-trophy"></i> <span>Kupa & Şampiyonluk</span></div>
+            `;
+        }
         content.innerHTML = `
             <ul style="list-style: none; padding: 0;">
                 <li style="margin-bottom: 15px;"><i class="fas fa-chart-line" style="color:#22c55e; margin-right:10px; width: 25px;"></i> <b>Puanlama:</b> Takımlar 10 soruluk bir maratona çıkar. Soruların değeri giderek artar: İlk 4 soru 100 puan, 5-8. sorular 200 puan, 9. ve 10. sorular ise tam 400 puan değerindedir. (Tüm sorular için süre 45 saniyedir).</li>
