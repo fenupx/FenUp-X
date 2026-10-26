@@ -149,15 +149,15 @@ export const EXPERIMENTS_DATABASE = [
         id: "7.3", grade: 7, unit: 4, unitName: "Işığın Kırılması ve Mercekler",
         title: "Işığın Kırılması ve Sınır Açısı Simülatörü",
         code: "FB.7.4.1", bookRef: "2. Kitap, s. 16–29",
-        active: true, // 🏆 PİLOT DENEY AKTİF!
+        active: true, // 🏆 AKTİF!
         desc: "Farklı optik yoğunluktaki ortamlarda ışığın hızını, kırılma açısını, normale yaklaşma/uzaklaşma durumunu ve tam yansımayı keşfedin."
     },
     {
         id: "7.4", grade: 7, unit: 4, unitName: "Işığın Kırılması ve Mercekler",
-        title: "İnce ve Kalın Kenarlı Merceklerde Işığın Odaklanması",
+        title: "İnce ve Kalın Kenarlı Mercekler ve Odaklama Simülatörü",
         code: "FB.7.4.2 - FB.7.4.3", bookRef: "2. Kitap, s. 30–41",
-        active: false,
-        desc: "Yakınsak ve ıraksak merceklere paralel ışınlar göndererek odak noktası (F) ve görüntü oluşum mekanizmasını inceleyin."
+        active: true, // 🏆 AKTİF!
+        desc: "İnce ve kalın kenarlı merceklerde ışınların toplanma/dağılma fiziğini, odak noktasını (F) ve mum cisminin oluşan görüntüsünü inceleyin."
     },
     {
         id: "7.5", grade: 7, unit: 5, unitName: "Maddenin Doğasına Yolculuk",
@@ -198,63 +198,49 @@ export const EXPERIMENTS_DATABASE = [
 
 // --- 2. OPTİK FİZİK MOTORU SABİTLERİ (DENEY 7.3) ---
 const MEDIA_PROPERTIES = {
-    air: {
-        name: "Hava",
-        n: 1.00,
-        speed: 300000,
-        bgColor: "rgba(10, 20, 45, 0.45)",
-        highlightColor: "#60a5fa",
-        label: "Hava (Az Yoğun)"
-    },
-    water: {
-        name: "Su",
-        n: 1.33,
-        speed: 225564,
-        bgColor: "rgba(0, 95, 160, 0.45)",
-        highlightColor: "#38bdf8",
-        label: "Su (Çok Yoğun)"
-    },
-    glass: {
-        name: "Cam",
-        n: 1.50,
-        speed: 200000,
-        bgColor: "rgba(60, 50, 140, 0.5)",
-        highlightColor: "#c084fc",
-        label: "Cam (Çok Yoğun)"
-    },
-    diamond: {
-        name: "Elmas",
-        n: 2.42,
-        speed: 123967,
-        bgColor: "rgba(15, 140, 170, 0.55)",
-        highlightColor: "#2dd4bf",
-        label: "Elmas (Aşırı Yoğun)"
-    }
+    air: { name: "Hava", n: 1.00, speed: 300000, bgColor: "rgba(10, 20, 45, 0.45)", highlightColor: "#60a5fa", label: "Hava (Az Yoğun)" },
+    water: { name: "Su", n: 1.33, speed: 225564, bgColor: "rgba(0, 95, 160, 0.45)", highlightColor: "#38bdf8", label: "Su (Çok Yoğun)" },
+    glass: { name: "Cam", n: 1.50, speed: 200000, bgColor: "rgba(60, 50, 140, 0.5)", highlightColor: "#c084fc", label: "Cam (Çok Yoğun)" },
+    diamond: { name: "Elmas", n: 2.42, speed: 123967, bgColor: "rgba(15, 140, 170, 0.55)", highlightColor: "#2dd4bf", label: "Elmas (Aşırı Yoğun)" }
 };
 
 // --- 3. SANAL LABORATUVAR DURUM YÖNETİMİ (STATE) ---
 export const labState = {
-    currentGrade: 7, // Varsayılan olarak pilot deneyin olduğu 7. sınıf
+    currentGrade: 7, // Varsayılan 7. sınıf
     currentUnitFilter: "all",
     activeExperimentId: null,
 
-    // Deney 7.3 Fizik Durumu
+    // Deney 7.3 Fizik Durumu (Işığın Kırılması)
     optics: {
         medium1: "air",
         medium2: "water",
-        incidentAngle: 30, // Derece (0 - 85)
+        incidentAngle: 30, // 0 - 85
         refractedAngle: null,
         isTotalInternalReflection: false,
         criticalAngle: null,
         isDraggingLaser: false,
         measurements: []
+    },
+
+    // Deney 7.4 Fizik Durumu (Mercekler ve Odaklama)
+    lens: {
+        type: "convex", // "convex" (İnce / Yakınsak) veya "concave" (Kalın / Iraksak)
+        mode: "parallel", // "parallel" (Paralel Işın) veya "object" (Mum / Görüntü)
+        focalLength: 120, // 80 - 160 mm / px
+        objectDistance: 200, // 50 - 320 mm / px
+        objectHeight: 70,
+        imageDistance: null,
+        imageHeight: null,
+        magnification: null,
+        isDraggingObject: false,
+        measurements: []
     }
 };
 
-// Canvas & Animasyon Değişkenleri
 let canvas = null;
 let ctx = null;
 let animFrameId = null;
+let animTime = 0;
 
 // --- 4. KATALOG VE KABUK YÖNETİCİSİ (CATALOG CONTROLLER) ---
 export function initLabModule() {
@@ -281,12 +267,13 @@ function setupCatalogDOM() {
 }
 
 function renderCatalog() {
-    const grid = document.getElementById('lab-cards-grid');
+    const container = document.getElementById('lab-cards-grid');
     const pillsContainer = document.getElementById('lab-unit-pills');
-    if (!grid || !pillsContainer) return;
+    if (!container || !pillsContainer) return;
 
-    // 1. Ünite Filtre Rozetlerini Doldur
     const gradeExps = EXPERIMENTS_DATABASE.filter(e => e.grade === labState.currentGrade);
+
+    // 1. Üniteler Haritasını Çıkar
     const unitsMap = new Map();
     gradeExps.forEach(e => {
         if (!unitsMap.has(e.unit)) {
@@ -294,71 +281,105 @@ function renderCatalog() {
         }
     });
 
-    let pillsHTML = `<button class="lab-pill-btn ${labState.currentUnitFilter === 'all' ? 'active' : ''}" data-unit="all">Tüm Üniteler (${gradeExps.length})</button>`;
+    // 2. Üst Filtre Butonları (Tüm Deneyler + Ünite Butonları)
+    let pillsHTML = `<button class="lab-pill-btn ${labState.currentUnitFilter === 'all' ? 'active' : ''}" data-unit="all"><i class="fas fa-layer-group"></i> Tüm Deneyler (${gradeExps.length} Deney)</button>`;
     unitsMap.forEach((name, unitNum) => {
         const count = gradeExps.filter(e => e.unit === unitNum).length;
         const isActive = labState.currentUnitFilter === String(unitNum);
-        pillsHTML += `<button class="lab-pill-btn ${isActive ? 'active' : ''}" data-unit="${unitNum}">${unitNum}. Ünite: ${name} (${count})</button>`;
+        pillsHTML += `<button class="lab-pill-btn ${isActive ? 'active' : ''}" data-unit="${unitNum}">${unitNum}. Ünite (${count})</button>`;
     });
     pillsContainer.innerHTML = pillsHTML;
 
-    // Rozet Tıklama Olayları
+    // Rozet Tıklama Olayları (Filtreleme & Yumuşak Kaydırma)
     pillsContainer.querySelectorAll('.lab-pill-btn').forEach(pill => {
         pill.addEventListener('click', () => {
-            labState.currentUnitFilter = pill.dataset.unit;
+            const targetUnit = pill.dataset.unit;
+            labState.currentUnitFilter = targetUnit;
             renderCatalog();
+
+            if (targetUnit !== "all") {
+                const targetEl = document.getElementById(`unit-section-${targetUnit}`);
+                if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            } else {
+                const labView = document.getElementById('lab-view');
+                if (labView) labView.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         });
     });
 
-    // 2. Deney Kartlarını Doldur
-    let filteredExps = gradeExps;
+    // 3. Deney Kartlarını Ünite Başlık Şeritleri Altında Grupla
+    let displayedUnits = Array.from(unitsMap.keys()).sort((a, b) => a - b);
     if (labState.currentUnitFilter !== "all") {
-        filteredExps = gradeExps.filter(e => e.unit === parseInt(labState.currentUnitFilter, 10));
+        const selected = parseInt(labState.currentUnitFilter, 10);
+        displayedUnits = displayedUnits.filter(u => u === selected);
     }
 
-    if (filteredExps.length === 0) {
-        grid.innerHTML = `<div class="lab-empty-catalog"><i class="fas fa-flask"></i><p>Bu ünitede kayıtlı deney simülasyonu bulunmamaktadır.</p></div>`;
+    if (displayedUnits.length === 0) {
+        container.innerHTML = `<div class="lab-empty-catalog"><i class="fas fa-flask"></i><p>Bu filtreye uygun deney bulunamadı.</p></div>`;
         return;
     }
 
-    let cardsHTML = "";
-    filteredExps.forEach(exp => {
-        const isPilot = exp.active;
-        cardsHTML += `
-            <div class="lab-card ${isPilot ? 'pilot-active' : 'upcoming'}">
-                <div class="lab-card-header">
-                    <span class="lab-card-grade-badge">${exp.grade}. Sınıf / ${exp.unit}. Ünite</span>
-                    ${isPilot 
-                        ? '<span class="lab-card-status-badge pilot"><i class="fas fa-check-circle"></i> Canlı Pilot Deney</span>' 
-                        : '<span class="lab-card-status-badge upcoming"><i class="fas fa-tools"></i> Hazırlanıyor</span>'}
+    let fullHTML = "";
+    displayedUnits.forEach(unitNum => {
+        const unitName = unitsMap.get(unitNum);
+        const unitExps = gradeExps.filter(e => e.unit === unitNum);
+
+        let cardsHTML = "";
+        unitExps.forEach(exp => {
+            const isLive = exp.active;
+            cardsHTML += `
+                <div class="lab-card ${isLive ? 'pilot-active' : 'upcoming'}">
+                    <div class="lab-card-header">
+                        <span class="lab-card-grade-badge">${exp.grade}. Sınıf / ${exp.unit}. Ünite</span>
+                        ${isLive 
+                            ? '<span class="lab-card-status-badge pilot"><i class="fas fa-check-circle"></i> Canlı Simülasyon</span>' 
+                            : '<span class="lab-card-status-badge upcoming"><i class="fas fa-tools"></i> Hazırlanıyor</span>'}
+                    </div>
+                    <h3 class="lab-card-title">${exp.title}</h3>
+                    <div class="lab-card-meta">
+                        <span><i class="fas fa-book"></i> ${exp.bookRef}</span>
+                        <span><i class="fas fa-bullseye"></i> ${exp.code}</span>
+                    </div>
+                    <p class="lab-card-desc">${exp.desc}</p>
+                    <div class="lab-card-footer">
+                        ${isLive 
+                            ? `<button class="action-btn lab-launch-btn" data-exp-id="${exp.id}"><i class="fas fa-play"></i> Laboratuvara Başla</button>` 
+                            : `<button class="action-btn secondary lab-upcoming-btn" data-exp-id="${exp.id}"><i class="fas fa-lock"></i> Faz 2 Kapsamında</button>`}
+                    </div>
                 </div>
-                <h3 class="lab-card-title">${exp.title}</h3>
-                <div class="lab-card-meta">
-                    <span><i class="fas fa-book"></i> ${exp.bookRef}</span>
-                    <span><i class="fas fa-bullseye"></i> ${exp.code}</span>
+            `;
+        });
+
+        fullHTML += `
+            <div class="lab-unit-section" id="unit-section-${unitNum}">
+                <div class="lab-unit-section-header">
+                    <div class="lab-unit-header-left">
+                        <span class="lab-unit-num-badge">📌 ${unitNum}. ÜNİTE</span>
+                        <h3 class="lab-unit-heading">${unitName}</h3>
+                    </div>
+                    <span class="lab-unit-count-tag">${unitExps.length} Deney Simülasyonu</span>
                 </div>
-                <p class="lab-card-desc">${exp.desc}</p>
-                <div class="lab-card-footer">
-                    ${isPilot 
-                        ? `<button class="action-btn lab-launch-btn" data-exp-id="${exp.id}"><i class="fas fa-play"></i> Laboratuvara Başla</button>` 
-                        : `<button class="action-btn secondary lab-upcoming-btn" data-exp-id="${exp.id}"><i class="fas fa-lock"></i> Faz 2 Kapsamında</button>`}
+                <div class="lab-cards-grid">
+                    ${cardsHTML}
                 </div>
             </div>
         `;
     });
-    grid.innerHTML = cardsHTML;
+
+    container.innerHTML = fullHTML;
 
     // Kart Butonları Olay Dinleyicileri
-    grid.querySelectorAll('.lab-launch-btn').forEach(btn => {
+    container.querySelectorAll('.lab-launch-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            const expId = btn.dataset.expId;
-            openExperimentWorkspace(expId);
+            openExperimentWorkspace(btn.dataset.expId);
         });
     });
 
-    grid.querySelectorAll('.lab-upcoming-btn').forEach(btn => {
+    container.querySelectorAll('.lab-upcoming-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            showLabToast("🔬 Bu deney Maarif Modeli Faz 2 kapsamında geliştirilmektedir. Aktif olan 'Deney 7.3: Işığın Kırılması' pilot simülasyonunu şimdi inceleyebilirsiniz!");
+            showLabToast("🔬 Bu deney Maarif Modeli Faz 2 kapsamında geliştirilmektedir. Aktif olan Deney 7.3 veya Deney 7.4 simülatörlerini şimdi deneyebilirsiniz!");
         });
     });
 }
@@ -382,23 +403,17 @@ export function showLabToast(message) {
 
 // --- 5. ÇALIŞMA MASASI VE KABUK BAĞLANTILARI (WORKSPACE CONTROLLER) ---
 function setupWorkspaceShellDOM() {
-    // 1. Laboratuvara Dön Butonu
+    // 1. Geri Dön Butonu
     const btnBackCatalog = document.getElementById('btn-lab-back-catalog');
-    if (btnBackCatalog) {
-        btnBackCatalog.addEventListener('click', closeExperimentWorkspace);
-    }
+    if (btnBackCatalog) btnBackCatalog.addEventListener('click', closeExperimentWorkspace);
 
     // 2. Sıfırla Butonu
     const btnReset = document.getElementById('btn-lab-reset');
-    if (btnReset) {
-        btnReset.addEventListener('click', resetCurrentExperiment);
-    }
+    if (btnReset) btnReset.addEventListener('click', resetCurrentExperiment);
 
     // 3. Tam Ekran Butonu
     const btnFullscreen = document.getElementById('btn-lab-fullscreen');
-    if (btnFullscreen) {
-        btnFullscreen.addEventListener('click', toggleLabFullscreen);
-    }
+    if (btnFullscreen) btnFullscreen.addEventListener('click', toggleLabFullscreen);
 
     // 4. Mobil Tab Seçicileri
     document.querySelectorAll('.lab-tab-btn').forEach(tabBtn => {
@@ -407,15 +422,13 @@ function setupWorkspaceShellDOM() {
             document.querySelectorAll('.lab-tab-btn').forEach(b => b.classList.remove('active'));
             tabBtn.classList.add('active');
 
-            document.querySelectorAll('.lab-tab-pane').forEach(pane => {
-                pane.classList.add('is-hidden');
-            });
+            document.querySelectorAll('.lab-tab-pane').forEach(pane => pane.classList.add('is-hidden'));
             const targetPane = document.getElementById(`pane-${tabKey}`);
             if (targetPane) targetPane.classList.remove('is-hidden');
         });
     });
 
-    // 5. Deney 7.3 Ortam Seçicileri
+    // 5. DENEY 7.3 KONTROLLERİ (IŞIĞIN KIRILMASI)
     const selMed1 = document.getElementById('select-medium-1');
     const selMed2 = document.getElementById('select-medium-2');
     if (selMed1 && selMed2) {
@@ -429,7 +442,6 @@ function setupWorkspaceShellDOM() {
         });
     }
 
-    // Ortamları Değiş-Tokuş Et Butonu
     const btnSwap = document.getElementById('btn-swap-mediums');
     if (btnSwap && selMed1 && selMed2) {
         btnSwap.addEventListener('click', () => {
@@ -443,7 +455,6 @@ function setupWorkspaceShellDOM() {
         });
     }
 
-    // 6. Açı Kontrolleri (Slider & Hassas Adım Butonları)
     const angleRange = document.getElementById('lab-angle-range');
     if (angleRange) {
         angleRange.addEventListener('input', (e) => {
@@ -459,26 +470,110 @@ function setupWorkspaceShellDOM() {
     ];
     stepBindings.forEach(({ id, delta }) => {
         const btn = document.getElementById(id);
-        if (btn) {
-            btn.addEventListener('click', () => {
-                setIncidentAngle(labState.optics.incidentAngle + delta);
-            });
-        }
+        if (btn) btn.addEventListener('click', () => setIncidentAngle(labState.optics.incidentAngle + delta));
     });
 
-    // 7. Gözlemi Kaydet & Temizle Butonları
-    const btnRecord = document.getElementById('btn-record-data');
-    if (btnRecord) {
-        btnRecord.addEventListener('click', recordMeasurement);
-    }
+    const btnRecord73 = document.getElementById('btn-record-data');
+    if (btnRecord73) btnRecord73.addEventListener('click', recordMeasurement);
 
+    // 6. DENEY 7.4 KONTROLLERİ (MERCEKLER VE ODAKLAMA)
+    setupLensControlsDOM();
+
+    // 7. Tablo Temizle
     const btnClearTable = document.getElementById('btn-clear-table');
-    if (btnClearTable) {
-        btnClearTable.addEventListener('click', clearMeasurementTable);
-    }
+    if (btnClearTable) btnClearTable.addEventListener('click', clearMeasurementTable);
 
     // 8. Canvas Pointer (Mouse & Touch) Etkileşimi
     setupCanvasPointerEvents();
+}
+
+function setupLensControlsDOM() {
+    // Mercek Tipi Butonları (İnce / Kalın)
+    const setLensType = (type) => {
+        labState.lens.type = type;
+        const isConvex = type === "convex";
+        
+        ['btn-lens-convex', 'pill-lens-convex'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('active', isConvex);
+        });
+        ['btn-lens-concave', 'pill-lens-concave'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('active', !isConvex);
+        });
+
+        calculateLensPhysics();
+        showLabToast(isConvex ? "🔍 İnce Kenarlı (Yakınsak) Mercek Seçildi" : "👓 Kalın Kenarlı (Iraksak) Mercek Seçildi");
+    };
+
+    const bConv = document.getElementById('btn-lens-convex');
+    const pConv = document.getElementById('pill-lens-convex');
+    if (bConv) bConv.addEventListener('click', () => setLensType("convex"));
+    if (pConv) pConv.addEventListener('click', () => setLensType("convex"));
+
+    const bConc = document.getElementById('btn-lens-concave');
+    const pConc = document.getElementById('pill-lens-concave');
+    if (bConc) bConc.addEventListener('click', () => setLensType("concave"));
+    if (pConc) pConc.addEventListener('click', () => setLensType("concave"));
+
+    // Işık / Deney Modu Butonları (Paralel / Mum)
+    const setLensMode = (mode) => {
+        labState.lens.mode = mode;
+        const isParallel = mode === "parallel";
+
+        ['btn-mode-parallel', 'pill-mode-parallel'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('active', isParallel);
+        });
+        ['btn-mode-object', 'pill-mode-object'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('active', !isParallel);
+        });
+
+        const wrapObj = document.getElementById('wrap-object-distance');
+        if (wrapObj) wrapObj.style.display = isParallel ? "none" : "flex";
+
+        calculateLensPhysics();
+        showLabToast(isParallel ? "⚡ Paralel Işın Demeti Modu Aktif" : "🕯️ Mum ve Cisim Görüntüsü Modu Aktif");
+    };
+
+    const bPar = document.getElementById('btn-mode-parallel');
+    const pPar = document.getElementById('pill-mode-parallel');
+    if (bPar) bPar.addEventListener('click', () => setLensMode("parallel"));
+    if (pPar) pPar.addEventListener('click', () => setLensMode("parallel"));
+
+    const bObj = document.getElementById('btn-mode-object');
+    const pObj = document.getElementById('pill-mode-object');
+    if (bObj) bObj.addEventListener('click', () => setLensMode("object"));
+    if (pObj) pObj.addEventListener('click', () => setLensMode("object"));
+
+    // Cisim Mesafesi Slider'ı (do)
+    const objRange = document.getElementById('lab-object-range');
+    const objDisplay = document.getElementById('lab-object-display');
+    if (objRange) {
+        objRange.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value, 10);
+            labState.lens.objectDistance = val;
+            if (objDisplay) objDisplay.textContent = `${val} mm`;
+            calculateLensPhysics();
+        });
+    }
+
+    // Odak Uzaklığı Slider'ı (f)
+    const focalRange = document.getElementById('lab-focal-range');
+    const focalDisplay = document.getElementById('lab-focal-display');
+    if (focalRange) {
+        focalRange.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value, 10);
+            labState.lens.focalLength = val;
+            if (focalDisplay) focalDisplay.textContent = `${val} mm`;
+            calculateLensPhysics();
+        });
+    }
+
+    // Deney 7.4 Veri Kaydet Butonu
+    const btnRecord74 = document.getElementById('btn-record-data-7-4');
+    if (btnRecord74) btnRecord74.addEventListener('click', recordMeasurement);
 }
 
 export function openLabView() {
@@ -508,10 +603,40 @@ export function openExperimentWorkspace(expId) {
     if (expTitle) expTitle.textContent = `${exp.id}: ${exp.title}`;
     if (expRef) expRef.textContent = exp.bookRef;
 
-    // Pilot Deney Fizik Motorunu Başlat
-    if (expId === "7.3") {
-        initOpticsCanvas();
-    }
+    // Deneye Göre Arayüz Panellerini Aç / Kapat
+    const is73 = (expId === "7.3");
+    const is74 = (expId === "7.4");
+
+    // HUD Panelleri
+    const hud73 = document.getElementById('hud-exp-7-3');
+    const hud74 = document.getElementById('hud-exp-7-4');
+    if (hud73) hud73.classList.toggle('is-hidden', !is73);
+    if (hud74) hud74.classList.toggle('is-hidden', !is74);
+
+    // Hızlı Kontroller (Canvas Altı)
+    const qc73 = document.getElementById('quick-controls-7-3');
+    const qc74 = document.getElementById('quick-controls-7-4');
+    if (qc73) qc73.classList.toggle('is-hidden', !is73);
+    if (qc74) qc74.classList.toggle('is-hidden', !is74);
+
+    // Değişkenler Panelleri
+    const vars73 = document.getElementById('vars-container-7-3');
+    const vars74 = document.getElementById('vars-container-7-4');
+    if (vars73) vars73.classList.toggle('is-hidden', !is73);
+    if (vars74) vars74.classList.toggle('is-hidden', !is74);
+
+    // Rehber Panelleri
+    const guide73 = document.getElementById('guide-container-7-3');
+    const guide74 = document.getElementById('guide-container-7-4');
+    if (guide73) guide73.classList.toggle('is-hidden', !is73);
+    if (guide74) guide74.classList.toggle('is-hidden', !is74);
+
+    // Veri Tablosu Başlıklarını Güncelle
+    updateTableHeader(expId);
+    renderMeasurementTable();
+
+    // Canvas Fizik Motorunu Başlat
+    initExperimentCanvas();
 }
 
 export function closeExperimentWorkspace() {
@@ -544,6 +669,36 @@ function resetCurrentExperiment() {
 
         calculateOpticsPhysics();
         showLabToast("Simülasyon başlangıç ayarlarına sıfırlandı (Hava ➔ Su, 30°)");
+    } else if (labState.activeExperimentId === "7.4") {
+        labState.lens.type = "convex";
+        labState.lens.mode = "parallel";
+        labState.lens.focalLength = 120;
+        labState.lens.objectDistance = 200;
+
+        const objRange = document.getElementById('lab-object-range');
+        const focalRange = document.getElementById('lab-focal-range');
+        if (objRange) objRange.value = 200;
+        if (focalRange) focalRange.value = 120;
+
+        const objDisplay = document.getElementById('lab-object-display');
+        const focalDisplay = document.getElementById('lab-focal-display');
+        if (objDisplay) objDisplay.textContent = "200 mm";
+        if (focalDisplay) focalDisplay.textContent = "120 mm";
+
+        ['btn-lens-convex', 'pill-lens-convex', 'btn-mode-parallel', 'pill-mode-parallel'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('active');
+        });
+        ['btn-lens-concave', 'pill-lens-concave', 'btn-mode-object', 'pill-mode-object'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('active');
+        });
+
+        const wrapObj = document.getElementById('wrap-object-distance');
+        if (wrapObj) wrapObj.style.display = "none";
+
+        calculateLensPhysics();
+        showLabToast("Mercek simülatörü sıfırlandı (İnce Kenarlı, Paralel Işın, f = 120 mm)");
     }
 }
 
@@ -563,18 +718,22 @@ function toggleLabFullscreen() {
     }
 }
 
-// --- 6. PİLOT DENEY FİZİK VE GRAFİK MOTORU (DENEY 7.3: IŞIĞIN KIRILMASI) ---
-function initOpticsCanvas() {
+// --- 6. CANVAS ÇİZİM VE MOTOR BAŞLATICI ---
+function initExperimentCanvas() {
     canvas = document.getElementById('lab-canvas');
     if (!canvas) return;
     ctx = canvas.getContext('2d');
 
-    // Canvas çözünürlüğünü retina/HD ekranlara uyarla
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    calculateOpticsPhysics();
-    startOpticsRenderLoop();
+    if (labState.activeExperimentId === "7.3") {
+        calculateOpticsPhysics();
+    } else if (labState.activeExperimentId === "7.4") {
+        calculateLensPhysics();
+    }
+
+    startRenderLoop();
 }
 
 function resizeCanvas() {
@@ -587,6 +746,26 @@ function resizeCanvas() {
     }
 }
 
+function startRenderLoop() {
+    if (animFrameId) cancelAnimationFrame(animFrameId);
+
+    const render = () => {
+        animTime += 0.05;
+        if (ctx && canvas) {
+            if (labState.activeExperimentId === "7.3") {
+                drawOpticsSimulation();
+            } else if (labState.activeExperimentId === "7.4") {
+                drawLensSimulation();
+            }
+        }
+        if (labState.activeExperimentId) {
+            animFrameId = requestAnimationFrame(render);
+        }
+    };
+    animFrameId = requestAnimationFrame(render);
+}
+
+// --- 7. DENEY 7.3: IŞIĞIN KIRILMASI VE SINIR AÇISI MOTORU ---
 function setIncidentAngle(angle) {
     const clamped = Math.max(0, Math.min(85, Math.round(angle)));
     labState.optics.incidentAngle = clamped;
@@ -621,7 +800,6 @@ function calculateOpticsPhysics() {
     const sinTheta2 = (n1 / n2) * Math.sin(rad1);
 
     if (sinTheta2 > 1.000001) {
-        // Tam Yansıma!
         labState.optics.isTotalInternalReflection = true;
         labState.optics.refractedAngle = null;
     } else {
@@ -638,7 +816,6 @@ function updateOpticsHUDAndMetrics() {
     const med1 = MEDIA_PROPERTIES[medium1];
     const med2 = MEDIA_PROPERTIES[medium2];
 
-    // HUD Değerleri
     const hudInc = document.getElementById('hud-val-incident');
     const hudRef = document.getElementById('hud-val-refract');
     const hudStatus = document.getElementById('lab-hud-status');
@@ -677,7 +854,6 @@ function updateOpticsHUDAndMetrics() {
         hudStatus.style.borderColor = behaviorColor;
     }
 
-    // Sağ Panel Metrikleri
     const speed1El = document.getElementById('metric-speed-1');
     const speed2El = document.getElementById('metric-speed-2');
     const critEl = document.getElementById('metric-critical-angle');
@@ -692,153 +868,6 @@ function updateOpticsHUDAndMetrics() {
     }
 }
 
-// Gözlem Defteri Kayıt Fonksiyonu
-function recordMeasurement() {
-    const { medium1, medium2, incidentAngle, refractedAngle, isTotalInternalReflection, criticalAngle } = labState.optics;
-    const med1 = MEDIA_PROPERTIES[medium1];
-    const med2 = MEDIA_PROPERTIES[medium2];
-
-    let refractStr = "";
-    let behaviorStr = "";
-
-    if (incidentAngle === 0) {
-        refractStr = "0° (Doğrultu sabit)";
-        behaviorStr = med1.n === med2.n ? "Aynı Ortam" : "Hız Değişti, Doğrultu Sabit";
-    } else if (isTotalInternalReflection) {
-        refractStr = "Kırılma Yok";
-        behaviorStr = `Tam Yansıma (${incidentAngle}° ile yansıdı)`;
-    } else if (criticalAngle && Math.abs(incidentAngle - criticalAngle) < 0.5) {
-        refractStr = "90.0° (Sınır Açısı)";
-        behaviorStr = "Yüzeyi Yalar";
-    } else if (med1.n < med2.n) {
-        refractStr = `${refractedAngle.toFixed(1)}°`;
-        behaviorStr = "Normale Yaklaşır (Hız Azalır)";
-    } else {
-        refractStr = `${refractedAngle.toFixed(1)}°`;
-        behaviorStr = "Normalden Uzaklaşır (Hız Artar)";
-    }
-
-    const row = {
-        id: labState.optics.measurements.length + 1,
-        pair: `${med1.name} ➔ ${med2.name}`,
-        incident: `${incidentAngle}°`,
-        refract: refractStr,
-        speedChange: `${(med1.speed / 1000).toFixed(0)}k ➔ ${(med2.speed / 1000).toFixed(0)}k km/s`,
-        behavior: behaviorStr
-    };
-
-    labState.optics.measurements.push(row);
-    renderMeasurementTable();
-    showLabToast(`Gözlem #${row.id} deftere kaydedildi!`);
-}
-
-function renderMeasurementTable() {
-    const tbody = document.getElementById('lab-table-body');
-    const emptyMsg = document.getElementById('lab-table-empty');
-    if (!tbody || !emptyMsg) return;
-
-    if (labState.optics.measurements.length === 0) {
-        tbody.innerHTML = "";
-        emptyMsg.classList.remove('is-hidden');
-        return;
-    }
-
-    emptyMsg.classList.add('is-hidden');
-    let html = "";
-    labState.optics.measurements.forEach(m => {
-        html += `
-            <tr>
-                <td><strong>${m.id}</strong></td>
-                <td><span class="lab-table-tag">${m.pair}</span></td>
-                <td><span class="lab-table-val inc">${m.incident}</span></td>
-                <td><span class="lab-table-val ref">${m.refract}</span></td>
-                <td><small>${m.speedChange}</small></td>
-                <td><strong>${m.behavior}</strong></td>
-            </tr>
-        `;
-    });
-    tbody.innerHTML = html;
-}
-
-function clearMeasurementTable() {
-    labState.optics.measurements = [];
-    renderMeasurementTable();
-    showLabToast("Gözlem defteri temizlendi");
-}
-
-// --- 7. DOKUNMATİK VE FARE POINTER ETKİLEŞİMİ ---
-function setupCanvasPointerEvents() {
-    const cvs = document.getElementById('lab-canvas');
-    if (!cvs) return;
-
-    const handlePointerAction = (e) => {
-        const rect = cvs.getBoundingClientRect();
-        const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
-        const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
-
-        const x = clientX - rect.left;
-        const y = clientY - rect.top;
-
-        // Koordinatları 800x500 sanal Canvas ölçeğine oranla
-        const scaleX = 800 / rect.width;
-        const scaleY = 500 / rect.height;
-        const canvasX = x * scaleX;
-        const canvasY = y * scaleY;
-
-        const originX = 400;
-        const originY = 250;
-
-        // Yalnızca üst yarıda (Gelen ışın bölgesi) açı hesabı yap
-        if (canvasY < originY) {
-            const dx = originX - canvasX;
-            const dy = originY - canvasY;
-            if (dy > 4) {
-                let angleRad = Math.atan2(dx, dy);
-                let angleDeg = angleRad * (180 / Math.PI);
-                // 0 ile 85 derece aralığına sınırla
-                if (angleDeg < 0) angleDeg = 0;
-                if (angleDeg > 85) angleDeg = 85;
-                setIncidentAngle(angleDeg);
-            }
-        }
-    };
-
-    cvs.addEventListener('pointerdown', (e) => {
-        cvs.setPointerCapture(e.pointerId);
-        labState.optics.isDraggingLaser = true;
-        handlePointerAction(e);
-    });
-
-    cvs.addEventListener('pointermove', (e) => {
-        if (labState.optics.isDraggingLaser) {
-            handlePointerAction(e);
-        }
-    });
-
-    const stopDragging = (e) => {
-        if (labState.optics.isDraggingLaser) {
-            labState.optics.isDraggingLaser = false;
-            try { cvs.releasePointerCapture(e.pointerId); } catch (_) {}
-        }
-    };
-
-    cvs.addEventListener('pointerup', stopDragging);
-    cvs.addEventListener('pointercancel', stopDragging);
-}
-
-// --- 8. CANVASI 60 FPS RENDER ETME ÇİKLUSU ---
-function startOpticsRenderLoop() {
-    if (animFrameId) cancelAnimationFrame(animFrameId);
-
-    const render = () => {
-        if (labState.activeExperimentId === "7.3" && ctx && canvas) {
-            drawOpticsSimulation();
-            animFrameId = requestAnimationFrame(render);
-        }
-    };
-    animFrameId = requestAnimationFrame(render);
-}
-
 function drawOpticsSimulation() {
     const { medium1, medium2, incidentAngle, refractedAngle, isTotalInternalReflection } = labState.optics;
     const med1 = MEDIA_PROPERTIES[medium1];
@@ -846,7 +875,7 @@ function drawOpticsSimulation() {
 
     const W = canvas.width;
     const H = canvas.height;
-    const scale = W / 800; // 800x500 referans ölçeği
+    const scale = W / 800;
 
     ctx.save();
     ctx.clearRect(0, 0, W, H);
@@ -855,15 +884,13 @@ function drawOpticsSimulation() {
     const originY = 250 * scale;
     const radius = 190 * scale;
 
-    // 1. ÜST ORTAM (1. Ortam)
+    // Üst ve Alt Ortam Arka Planları
     ctx.fillStyle = med1.bgColor;
     ctx.fillRect(0, 0, W, originY);
-
-    // 2. ALT ORTAM (2. Ortam)
     ctx.fillStyle = med2.bgColor;
     ctx.fillRect(0, originY, W, H - originY);
 
-    // 3. Ortam Etiketleri
+    // Ortam Etiketleri
     ctx.font = `bold ${Math.max(13, 15 * scale)}px 'Nunito', sans-serif`;
     ctx.fillStyle = med1.highlightColor;
     ctx.fillText(`1. Ortam: ${med1.name} (n = ${med1.n.toFixed(2)}) · ${med1.speed.toLocaleString('tr-TR')} km/s`, 20 * scale, 35 * scale);
@@ -871,10 +898,10 @@ function drawOpticsSimulation() {
     ctx.fillStyle = med2.highlightColor;
     ctx.fillText(`2. Ortam: ${med2.name} (n = ${med2.n.toFixed(2)}) · ${med2.speed.toLocaleString('tr-TR')} km/s`, 20 * scale, originY + (35 * scale));
 
-    // 4. Açıölçer / Gönye Çizimi
+    // Açıölçer / Gönye
     drawProtractor(ctx, originX, originY, radius, scale);
 
-    // 5. Ayırıcı Yüzey Çizgisi
+    // Ayırıcı Yüzey
     ctx.beginPath();
     ctx.moveTo(0, originY);
     ctx.lineTo(W, originY);
@@ -887,7 +914,7 @@ function drawOpticsSimulation() {
     ctx.textAlign = "right";
     ctx.fillText("Ayırıcı Yüzey", W - (20 * scale), originY - (8 * scale));
 
-    // 6. Yüzey Normali (N)
+    // Yüzey Normali (N)
     ctx.beginPath();
     ctx.setLineDash([6 * scale, 6 * scale]);
     ctx.moveTo(originX, 30 * scale);
@@ -903,12 +930,11 @@ function drawOpticsSimulation() {
     ctx.fillText("N (Normal)", originX, 22 * scale);
     ctx.fillText("N", originX, H - (12 * scale));
 
-    // 7. Lazer Pozisyonu ve Gelen Işın
+    // Lazer ve Gelen Işın
     const rad1 = (incidentAngle * Math.PI) / 180;
     const laserX = originX - Math.sin(rad1) * radius;
     const laserY = originY - Math.cos(rad1) * radius;
 
-    // Açı Yayı (Gelme Açısı θ₁)
     if (incidentAngle > 2) {
         ctx.beginPath();
         ctx.arc(originX, originY, 45 * scale, -Math.PI / 2 - rad1, -Math.PI / 2, false);
@@ -923,37 +949,29 @@ function drawOpticsSimulation() {
         ctx.fillText(`i = ${incidentAngle}°`, originX + Math.cos(labelRad1) * (62 * scale), originY + Math.sin(labelRad1) * (62 * scale));
     }
 
-    // Gelen Işın
     drawLaserBeam(ctx, laserX, laserY, originX, originY, "#ff1744", 3.5 * scale, 1.0);
-
-    // Lazer Feneri Çizimi
     drawLaserDevice(ctx, laserX, laserY, originX, originY, scale);
 
-    // 8. Yansıyan Işın (Kısmi veya Tam Yansıma)
+    // Yansıyan Işın
     const reflectX = originX + Math.sin(rad1) * radius;
     const reflectY = originY - Math.cos(rad1) * radius;
 
     if (isTotalInternalReflection) {
-        // %100 Tam Yansıma Işını
         drawLaserBeam(ctx, originX, originY, reflectX, reflectY, "#ff0055", 4 * scale, 1.0);
-
-        // Tam Yansıma Parlama Rozeti
         ctx.font = `bold ${Math.max(14, 16 * scale)}px 'Nunito', sans-serif`;
         ctx.fillStyle = "#ff0055";
         ctx.textAlign = "center";
         ctx.fillText("⚡ TAM YANSIMA GERÇEKLEŞTİ", originX + (120 * scale), originY - (110 * scale));
     } else if (incidentAngle > 0) {
-        // Kısmi zayıf yansıma (Fresnel yansıması)
         drawLaserBeam(ctx, originX, originY, reflectX, reflectY, "rgba(255, 60, 100, 0.35)", 2 * scale, 0.4);
     }
 
-    // 9. Kırılan Işın (Eğer Tam Yansıma Yoksa)
+    // Kırılan Işın
     if (!isTotalInternalReflection && refractedAngle !== null) {
         const rad2 = (refractedAngle * Math.PI) / 180;
         const refractX = originX + Math.sin(rad2) * radius;
         const refractY = originY + Math.cos(rad2) * radius;
 
-        // Açı Yayı (Kırılma Açısı θ₂)
         if (refractedAngle > 2) {
             ctx.beginPath();
             ctx.arc(originX, originY, 45 * scale, Math.PI / 2 - rad2, Math.PI / 2, false);
@@ -968,14 +986,720 @@ function drawOpticsSimulation() {
             ctx.fillText(`r = ${refractedAngle.toFixed(1)}°`, originX + Math.cos(labelRad2) * (62 * scale), originY + Math.sin(labelRad2) * (62 * scale));
         }
 
-        // Kırılan Işın Çizimi
         drawLaserBeam(ctx, originX, originY, refractX, refractY, "#00e5ff", 3.5 * scale, 0.95);
     }
 
     ctx.restore();
 }
 
-// Açıölçer Yardımcı Çizimi
+// --- 8. DENEY 7.4: İNCE VE KALIN KENARLI MERCEKLER MOTORU ---
+function calculateLensPhysics() {
+    const { type, mode, focalLength, objectDistance, objectHeight } = labState.lens;
+    const isConvex = (type === "convex");
+    const fVal = isConvex ? focalLength : -focalLength;
+
+    let di = null;
+    let hi = null;
+    let mag = null;
+    let statusText = "";
+    let statusColor = "#38bdf8";
+
+    if (mode === "parallel") {
+        if (isConvex) {
+            statusText = "🔥 Işığı Odakta Toplar (Orman Yangını Riski!)";
+            statusColor = "#f59e0b";
+        } else {
+            statusText = "👓 Işınları Dağıtır (Miyop Gözlüğü İlkesi)";
+            statusColor = "#c084fc";
+        }
+    } else {
+        // Mum / Cisim Görüntüsü Fiziği
+        const delta = objectDistance - fVal;
+        if (isConvex && Math.abs(delta) < 4) {
+            di = null;
+            mag = null;
+            hi = null;
+            statusText = "Görüntü Sonsuzda (Işınlar Paralel, Oluşmaz)";
+            statusColor = "#94a3b8";
+        } else {
+            di = (fVal * objectDistance) / delta;
+            mag = -di / objectDistance;
+            hi = mag * objectHeight;
+
+            const isReal = di > 0;
+            const isErect = mag > 0;
+            const sizeDesc = Math.abs(mag) > 1.05 ? "Büyük" : Math.abs(mag) < 0.95 ? "Küçük" : "Eşit Boyda";
+
+            if (isConvex) {
+                if (isReal) {
+                    statusText = `Gerçek, Ters, ${sizeDesc}`;
+                    statusColor = "#10b981";
+                } else {
+                    statusText = `Sanal (Zahiri), Düz, Büyütülmüş (Büyüteç)`;
+                    statusColor = "#38bdf8";
+                }
+            } else {
+                statusText = "Sanal (Zahiri), Düz, Küçültülmüş";
+                statusColor = "#c084fc";
+            }
+        }
+    }
+
+    labState.lens.imageDistance = di;
+    labState.lens.imageHeight = hi;
+    labState.lens.magnification = mag;
+
+    // HUD ve Metrikleri Güncelle
+    const hudType = document.getElementById('hud-lens-type');
+    const hudFocal = document.getElementById('hud-lens-focal');
+    const hudStatus = document.getElementById('hud-lens-status');
+
+    if (hudType) hudType.textContent = isConvex ? "İnce Kenarlı (Yakınsak)" : "Kalın Kenarlı (Iraksak)";
+    if (hudFocal) hudFocal.textContent = `${focalLength} mm`;
+    if (hudStatus) {
+        hudStatus.textContent = statusText;
+        hudStatus.style.borderColor = statusColor;
+    }
+
+    const mType = document.getElementById('metric-lens-type');
+    const mF = document.getElementById('metric-lens-f');
+    const mDo = document.getElementById('metric-lens-do');
+    const mDi = document.getElementById('metric-lens-di');
+
+    if (mType) {
+        mType.textContent = isConvex ? "İnce Kenarlı" : "Kalın Kenarlı";
+        mType.style.color = isConvex ? "#38bdf8" : "#c084fc";
+    }
+    if (mF) mF.textContent = `${focalLength} mm`;
+    if (mDo) mDo.textContent = mode === "parallel" ? "Paralel (Sonsuz)" : `${objectDistance} mm`;
+    if (mDi) {
+        if (mode === "parallel") {
+            mDi.textContent = isConvex ? `Odakta Toplanır (F = ${focalLength} mm)` : `Uzantısı Odakta Dağılır`;
+            mDi.style.color = statusColor;
+        } else {
+            mDi.textContent = di !== null ? `${Math.round(Math.abs(di))} mm (${statusText})` : statusText;
+            mDi.style.color = statusColor;
+        }
+    }
+}
+
+function drawLensSimulation() {
+    const { type, mode, focalLength, objectDistance, objectHeight, imageDistance, imageHeight } = labState.lens;
+    const isConvex = (type === "convex");
+
+    const W = canvas.width;
+    const H = canvas.height;
+    const scale = W / 800;
+
+    ctx.save();
+    ctx.clearRect(0, 0, W, H);
+
+    // Koyu Uzay / Optik Masa Arka Planı
+    ctx.fillStyle = "#070c1b";
+    ctx.fillRect(0, 0, W, H);
+
+    const cx = 400 * scale;
+    const cy = 250 * scale;
+    const f = focalLength * scale;
+
+    // 1. Asal Eksen
+    ctx.beginPath();
+    ctx.moveTo(30 * scale, cy);
+    ctx.lineTo(W - (30 * scale), cy);
+    ctx.strokeStyle = "rgba(0, 210, 255, 0.4)";
+    ctx.lineWidth = 2 * scale;
+    ctx.stroke();
+
+    ctx.font = `${Math.max(11, 12 * scale)}px 'Nunito', sans-serif`;
+    ctx.fillStyle = "rgba(0, 210, 255, 0.7)";
+    ctx.textAlign = "right";
+    ctx.fillText("Asal Eksen ➔", W - (35 * scale), cy - (8 * scale));
+
+    // 2. Odak ve Merkez Noktaları (F1, 2F1, F2, 2F2, O)
+    drawFocalPoint(ctx, cx - f, cy, "F₁", scale);
+    drawFocalPoint(ctx, cx - (2 * f), cy, "2F₁", scale);
+    drawFocalPoint(ctx, cx + f, cy, "F₂", scale);
+    drawFocalPoint(ctx, cx + (2 * f), cy, "2F₂", scale);
+
+    // Optik Merkez (O)
+    ctx.beginPath();
+    ctx.arc(cx, cy, 3 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = "#fff";
+    ctx.fill();
+    ctx.font = `bold ${Math.max(11, 12 * scale)}px 'Nunito', sans-serif`;
+    ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+    ctx.textAlign = "center";
+    ctx.fillText("O", cx, cy + (18 * scale));
+
+    // 3. Merceğin Çizimi (Cam Gövde & Sembolik Oklar)
+    drawLensElement(ctx, cx, cy, isConvex, scale);
+
+    // 4. MODA GÖRE IŞINLARIN VE CİSMİN ÇİZİMİ
+    if (mode === "parallel") {
+        drawParallelRaysMode(ctx, cx, cy, f, isConvex, scale);
+    } else {
+        drawCandleObjectMode(ctx, cx, cy, f, isConvex, objectDistance * scale, objectHeight * scale, imageDistance !== null ? imageDistance * scale : null, imageHeight !== null ? imageHeight * scale : null, scale);
+    }
+
+    ctx.restore();
+}
+
+function drawFocalPoint(ctx, x, y, label, scale) {
+    ctx.beginPath();
+    ctx.arc(x, y, 4 * scale, 0, Math.PI * 2);
+    ctx.fillStyle = "var(--neon-blue)";
+    ctx.fill();
+
+    // Dikey küçük çentik
+    ctx.beginPath();
+    ctx.moveTo(x, y - (8 * scale));
+    ctx.lineTo(x, y + (8 * scale));
+    ctx.strokeStyle = "rgba(0, 210, 255, 0.6)";
+    ctx.lineWidth = 1.5 * scale;
+    ctx.stroke();
+
+    ctx.font = `bold ${Math.max(11, 13 * scale)}px 'Nunito', sans-serif`;
+    ctx.fillStyle = "#93c5fd";
+    ctx.textAlign = "center";
+    ctx.fillText(label, x, y + (22 * scale));
+}
+
+function drawLensElement(ctx, cx, cy, isConvex, scale) {
+    const lensH = 130 * scale;
+    ctx.save();
+
+    if (isConvex) {
+        // İnce Kenarlı Mercek (Ortası Kalın, Kenarları İnce)
+        const thickness = 18 * scale;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - lensH);
+        ctx.quadraticCurveTo(cx + thickness, cy, cx, cy + lensH);
+        ctx.quadraticCurveTo(cx - thickness, cy, cx, cy - lensH);
+        ctx.fillStyle = "rgba(56, 189, 248, 0.25)";
+        ctx.fill();
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.9)";
+        ctx.lineWidth = 2 * scale;
+        ctx.stroke();
+
+        // Çift Dışa Ok Sembolü (▲ ve ▼)
+        drawArrowHead(ctx, cx, cy - lensH, -Math.PI / 2, 10 * scale, "#38bdf8");
+        drawArrowHead(ctx, cx, cy + lensH, Math.PI / 2, 10 * scale, "#38bdf8");
+
+        ctx.font = `bold ${Math.max(12, 14 * scale)}px 'Nunito', sans-serif`;
+        ctx.fillStyle = "#38bdf8";
+        ctx.textAlign = "center";
+        ctx.fillText("İnce Kenarlı (Yakınsak) Mercek", cx, cy - lensH - (14 * scale));
+    } else {
+        // Kalın Kenarlı Mercek (Ortası İnce, Kenarları Kalın)
+        const edgeW = 18 * scale;
+        const centerW = 4 * scale;
+        ctx.beginPath();
+        ctx.moveTo(cx - edgeW, cy - lensH);
+        ctx.lineTo(cx + edgeW, cy - lensH);
+        ctx.quadraticCurveTo(cx + centerW, cy, cx + edgeW, cy + lensH);
+        ctx.lineTo(cx - edgeW, cy + lensH);
+        ctx.quadraticCurveTo(cx - centerW, cy, cx - edgeW, cy - lensH);
+        ctx.fillStyle = "rgba(192, 132, 252, 0.25)";
+        ctx.fill();
+        ctx.strokeStyle = "rgba(192, 132, 252, 0.9)";
+        ctx.lineWidth = 2 * scale;
+        ctx.stroke();
+
+        // İçe Doğru Ok Sembolleri (▼ ve ▲)
+        drawArrowHead(ctx, cx, cy - lensH, Math.PI / 2, 10 * scale, "#c084fc");
+        drawArrowHead(ctx, cx, cy + lensH, -Math.PI / 2, 10 * scale, "#c084fc");
+
+        ctx.font = `bold ${Math.max(12, 14 * scale)}px 'Nunito', sans-serif`;
+        ctx.fillStyle = "#c084fc";
+        ctx.textAlign = "center";
+        ctx.fillText("Kalın Kenarlı (Iraksak) Mercek", cx, cy - lensH - (14 * scale));
+    }
+    ctx.restore();
+}
+
+function drawArrowHead(ctx, x, y, angle, length, color) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x - length * Math.cos(angle - Math.PI / 6), y - length * Math.sin(angle - Math.PI / 6));
+    ctx.moveTo(x, y);
+    ctx.lineTo(x - length * Math.cos(angle + Math.PI / 6), y - length * Math.sin(angle + Math.PI / 6));
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+    ctx.restore();
+}
+
+function drawParallelRaysMode(ctx, cx, cy, f, isConvex, scale) {
+    const W = canvas.width;
+    const offsets = [-70, -35, 0, 35, 70].map(v => v * scale);
+
+    offsets.forEach(dy => {
+        const rayY = cy + dy;
+
+        // Soldan merceğe gelen paralel ışın
+        drawLaserBeam(ctx, 40 * scale, rayY, cx, rayY, "#ff3366", 3 * scale, 1.0);
+
+        if (dy === 0) {
+            // Asal eksen üzerindeki ışın kırılmadan dümdüz devam eder
+            drawLaserBeam(ctx, cx, cy, W - (40 * scale), cy, isConvex ? "#38bdf8" : "#c084fc", 3 * scale, 1.0);
+            return;
+        }
+
+        if (isConvex) {
+            // İNCE KENARLI: Işın F2 noktasından geçerek kırılır ve sağ kenara gider
+            const slope = -dy / f; // m = (cy - rayY) / f
+            const endX = W - (40 * scale);
+            const endY = cy + slope * (endX - (cx + f));
+
+            drawLaserBeam(ctx, cx, rayY, cx + f, cy, "#38bdf8", 3 * scale, 0.95);
+            drawLaserBeam(ctx, cx + f, cy, endX, endY, "#38bdf8", 2.5 * scale, 0.85);
+        } else {
+            // KALIN KENARLI: Işın uzantısı F1'den geçecek şekilde dağılır
+            const slope = dy / f;
+            const endX = W - (40 * scale);
+            const endY = rayY + slope * (endX - cx);
+
+            // Gerçek dağılan ışın
+            drawLaserBeam(ctx, cx, rayY, endX, endY, "#c084fc", 3 * scale, 0.95);
+
+            // Geriye doğru sanal odak uzantısı (Kesikli Çizgi)
+            ctx.save();
+            ctx.beginPath();
+            ctx.setLineDash([5 * scale, 5 * scale]);
+            ctx.moveTo(cx, rayY);
+            ctx.lineTo(cx - f, cy);
+            ctx.strokeStyle = "rgba(192, 132, 252, 0.55)";
+            ctx.lineWidth = 2 * scale;
+            ctx.stroke();
+            ctx.restore();
+        }
+    });
+
+    // İnce mercekte Odakta Parlama / Ateş Efekti (Orman Yangını Vurgusu)
+    if (isConvex) {
+        drawFireHeatEffect(ctx, cx + f, cy, scale);
+    }
+}
+
+function drawFireHeatEffect(ctx, x, y, scale) {
+    ctx.save();
+    const pulse = Math.sin(animTime * 3) * (5 * scale);
+    const radius = (18 * scale) + pulse;
+
+    // Işık / Isı Parıltı Çemberi
+    const grad = ctx.createRadialGradient(x, y, 2 * scale, x, y, radius);
+    grad.addColorStop(0, "rgba(255, 255, 255, 1)");
+    grad.addColorStop(0.3, "rgba(251, 191, 36, 0.9)");
+    grad.addColorStop(0.7, "rgba(239, 68, 68, 0.6)");
+    grad.addColorStop(1, "rgba(239, 68, 68, 0)");
+
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Kıvılcım parçacıkları
+    for (let i = 0; i < 6; i++) {
+        const sparkAngle = animTime * 2 + (i * (Math.PI / 3));
+        const sparkDist = (22 * scale) + Math.cos(animTime * 4 + i) * (8 * scale);
+        const sx = x + Math.cos(sparkAngle) * sparkDist;
+        const sy = y + Math.sin(sparkAngle) * sparkDist;
+        ctx.beginPath();
+        ctx.arc(sx, sy, 2 * scale, 0, Math.PI * 2);
+        ctx.fillStyle = "#fef08a";
+        ctx.fill();
+    }
+
+    // Eğitim Uyarısı Etiketi
+    ctx.font = `bold ${Math.max(11, 13 * scale)}px 'Nunito', sans-serif`;
+    ctx.fillStyle = "#f59e0b";
+    ctx.textAlign = "center";
+    ctx.fillText("🔥 IŞIĞI TOPLAR (Odak Noktası)", x, y - (30 * scale));
+    ctx.font = `${Math.max(10, 11 * scale)}px 'Nunito', sans-serif`;
+    ctx.fillStyle = "#fca5a5";
+    ctx.fillText("Güneş ışığını toplayarak orman yangınlarına yol açabilir!", x, y - (16 * scale));
+
+    ctx.restore();
+}
+
+function drawCandleObjectMode(ctx, cx, cy, f, isConvex, doVal, ho, diVal, hiVal, scale) {
+    const objX = cx - doVal;
+    const objY = cy - ho;
+
+    // 1. Cisim Mumun Çizimi
+    drawCandle(ctx, objX, cy, ho, true, 1.0, scale, "Cisim (Mum)");
+
+    // 2. Işın Çizimi (Işın 1: Paralel Gelen ➔ Odaktan Kırılan)
+    drawLaserBeam(ctx, objX, objY, cx, objY, "#ff3366", 2.5 * scale, 0.9);
+
+    if (isConvex) {
+        // İnce Mercekte Işın 1 F2'den Geçer
+        if (diVal !== null) {
+            const imgX = cx + diVal;
+            const imgY = cy - hiVal;
+
+            if (diVal > 0) {
+                // Gerçek Görüntü: Işın F2'den geçip görüntü tepesine ulaşır
+                drawLaserBeam(ctx, cx, objY, imgX, imgY, "#38bdf8", 2.5 * scale, 0.9);
+            } else {
+                // Sanal Görüntü: Işın sağa doğru kırılır, geriye doğru sanal uzantı kesişir
+                const slope = (cy - objY) / f;
+                const endX = cx + (250 * scale);
+                const endY = cy + slope * (endX - (cx + f));
+                drawLaserBeam(ctx, cx, objY, endX, endY, "#38bdf8", 2.5 * scale, 0.9);
+
+                // Geriye Sanal Kesikli Çizgi
+                ctx.save();
+                ctx.beginPath();
+                ctx.setLineDash([5 * scale, 5 * scale]);
+                ctx.moveTo(cx, objY);
+                ctx.lineTo(imgX, imgY);
+                ctx.strokeStyle = "rgba(56, 189, 248, 0.6)";
+                ctx.lineWidth = 2 * scale;
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // Işın 2 (Optik Merkezden Geçen Işın: Kırılmaz)
+            if (diVal > 0) {
+                drawLaserBeam(ctx, objX, objY, imgX, imgY, "#10b981", 2.5 * scale, 0.9);
+            } else {
+                const endX = cx + (250 * scale);
+                const slope2 = (cy - objY) / doVal;
+                const endY = cy + slope2 * (endX - cx);
+                drawLaserBeam(ctx, objX, objY, endX, endY, "#10b981", 2.5 * scale, 0.9);
+
+                // Geriye Sanal Kesikli Çizgi
+                ctx.save();
+                ctx.beginPath();
+                ctx.setLineDash([5 * scale, 5 * scale]);
+                ctx.moveTo(objX, objY);
+                ctx.lineTo(imgX, imgY);
+                ctx.strokeStyle = "rgba(16, 185, 129, 0.6)";
+                ctx.lineWidth = 2 * scale;
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // Görüntü Mumunun Çizimi
+            const isReal = diVal > 0;
+            drawCandle(ctx, imgX, cy, Math.abs(hiVal), isReal ? hiVal < 0 : true, isReal ? 0.95 : 0.65, scale, isReal ? "Gerçek Görüntü (Ters)" : "Sanal Görüntü (Büyüteç)", isReal);
+        }
+    } else {
+        // Kalın Mercekte: Işın 1 geriye F1'e uzanarak dağılır
+        if (diVal !== null) {
+            const imgX = cx + diVal;
+            const imgY = cy - hiVal;
+
+            const slope = (objY - cy) / f;
+            const endX = cx + (250 * scale);
+            const endY = objY + slope * (endX - cx);
+            drawLaserBeam(ctx, cx, objY, endX, endY, "#c084fc", 2.5 * scale, 0.9);
+
+            // Geriye Sanal Kesikli Çizgi
+            ctx.save();
+            ctx.beginPath();
+            ctx.setLineDash([5 * scale, 5 * scale]);
+            ctx.moveTo(cx, objY);
+            ctx.lineTo(cx - f, cy);
+            ctx.strokeStyle = "rgba(192, 132, 252, 0.6)";
+            ctx.lineWidth = 2 * scale;
+            ctx.stroke();
+            ctx.restore();
+
+            // Işın 2 (Optik Merkezden Geçen)
+            const slope2 = (cy - objY) / doVal;
+            const end2X = cx + (250 * scale);
+            const end2Y = cy + slope2 * (end2X - cx);
+            drawLaserBeam(ctx, objX, objY, end2X, end2Y, "#10b981", 2.5 * scale, 0.9);
+
+            // Görüntü Mumunun Çizimi (Daima Sanal, Düz, Küçük)
+            drawCandle(ctx, imgX, cy, Math.abs(hiVal), true, 0.7, scale, "Sanal Görüntü (Küçük)", false);
+        }
+    }
+}
+
+function drawCandle(ctx, x, baseY, height, isUpright, alpha, scale, label, isReal = false) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+
+    const candleW = 14 * scale;
+    const flameH = 20 * scale;
+    const dir = isUpright ? 1 : -1;
+
+    // Mum Gövdesi
+    const bodyH = Math.max(15 * scale, height - flameH);
+    const bodyTopY = baseY - (dir * bodyH);
+
+    ctx.fillStyle = isReal ? "#38bdf8" : "#fbbf24";
+    ctx.strokeStyle = isReal ? "#0284c7" : "#d97706";
+    ctx.lineWidth = 1.5 * scale;
+
+    ctx.beginPath();
+    ctx.roundRect(x - (candleW / 2), Math.min(baseY, bodyTopY), candleW, bodyH, 3 * scale);
+    ctx.fill();
+    ctx.stroke();
+
+    // Mum Fitili
+    const wickTopY = bodyTopY - (dir * (4 * scale));
+    ctx.beginPath();
+    ctx.moveTo(x, bodyTopY);
+    ctx.lineTo(x, wickTopY);
+    ctx.strokeStyle = "#fff";
+    ctx.lineWidth = 1.5 * scale;
+    ctx.stroke();
+
+    // Mum Alevi (Titreşen Animasyon)
+    const flicker = Math.sin(animTime * 10 + x) * (2 * scale);
+    const flameTipY = wickTopY - (dir * (flameH + flicker));
+
+    const flameGrad = ctx.createRadialGradient(x, wickTopY - (dir * (flameH / 2)), 2 * scale, x, wickTopY - (dir * (flameH / 2)), flameH);
+    flameGrad.addColorStop(0, "#ffffff");
+    flameGrad.addColorStop(0.3, "#fef08a");
+    flameGrad.addColorStop(0.7, "#f97316");
+    flameGrad.addColorStop(1, "rgba(239, 68, 68, 0)");
+
+    ctx.fillStyle = flameGrad;
+    ctx.beginPath();
+    ctx.moveTo(x - (6 * scale), wickTopY);
+    ctx.quadraticCurveTo(x - (8 * scale), wickTopY - (dir * (flameH * 0.6)), x, flameTipY);
+    ctx.quadraticCurveTo(x + (8 * scale), wickTopY - (dir * (flameH * 0.6)), x + (6 * scale), wickTopY);
+    ctx.closePath();
+    ctx.fill();
+
+    // Etiket
+    ctx.font = `bold ${Math.max(10, 12 * scale)}px 'Nunito', sans-serif`;
+    ctx.fillStyle = isReal ? "#38bdf8" : "#fef08a";
+    ctx.textAlign = "center";
+    const labelY = isUpright ? flameTipY - (10 * scale) : flameTipY + (18 * scale);
+    ctx.fillText(label, x, labelY);
+
+    ctx.restore();
+}
+
+// --- 9. POINTER VE TOUCH ETKİLEŞİMİ (AKILLI TAHTA & MOBİL) ---
+function setupCanvasPointerEvents() {
+    const cvs = document.getElementById('lab-canvas');
+    if (!cvs) return;
+
+    const handlePointerAction = (e) => {
+        const rect = cvs.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+        const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+
+        const scaleX = 800 / rect.width;
+        const scaleY = 500 / rect.height;
+        const canvasX = x * scaleX;
+        const canvasY = y * scaleY;
+
+        // Deney 7.3: Lazer Açısı Ayarı
+        if (labState.activeExperimentId === "7.3") {
+            const originX = 400;
+            const originY = 250;
+            if (canvasY < originY) {
+                const dx = originX - canvasX;
+                const dy = originY - canvasY;
+                if (dy > 4) {
+                    let angleDeg = Math.atan2(dx, dy) * (180 / Math.PI);
+                    if (angleDeg < 0) angleDeg = 0;
+                    if (angleDeg > 85) angleDeg = 85;
+                    setIncidentAngle(angleDeg);
+                }
+            }
+        }
+        // Deney 7.4: Mum / Cisim Pozisyonu Ayarı
+        else if (labState.activeExperimentId === "7.4" && labState.lens.mode === "object") {
+            const originX = 400;
+            if (canvasX < originX) {
+                const dist = Math.round(originX - canvasX);
+                const clamped = Math.max(50, Math.min(320, dist));
+                labState.lens.objectDistance = clamped;
+
+                const objRange = document.getElementById('lab-object-range');
+                const objDisplay = document.getElementById('lab-object-display');
+                if (objRange) objRange.value = clamped;
+                if (objDisplay) objDisplay.textContent = `${clamped} mm`;
+
+                calculateLensPhysics();
+            }
+        }
+    };
+
+    cvs.addEventListener('pointerdown', (e) => {
+        cvs.setPointerCapture(e.pointerId);
+        labState.optics.isDraggingLaser = true;
+        labState.lens.isDraggingObject = true;
+        handlePointerAction(e);
+    });
+
+    cvs.addEventListener('pointermove', (e) => {
+        if (labState.optics.isDraggingLaser || labState.lens.isDraggingObject) {
+            handlePointerAction(e);
+        }
+    });
+
+    const stopDragging = (e) => {
+        labState.optics.isDraggingLaser = false;
+        labState.lens.isDraggingObject = false;
+        try { cvs.releasePointerCapture(e.pointerId); } catch (_) {}
+    };
+
+    cvs.addEventListener('pointerup', stopDragging);
+    cvs.addEventListener('pointercancel', stopDragging);
+}
+
+// --- 10. GÖZLEM VE VERİ DEFTERİ YÖNETİMİ ---
+function updateTableHeader(expId) {
+    const thead = document.getElementById('lab-table-thead');
+    if (!thead) return;
+
+    if (expId === "7.3") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Ortamlar</th>
+                <th>Gelme (i)</th>
+                <th>Kırılma (r)</th>
+                <th>Sürat Değişimi</th>
+                <th>Işının Durumu</th>
+            </tr>
+        `;
+    } else if (expId === "7.4") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Mercek Türü</th>
+                <th>Deney Modu</th>
+                <th>Cisim (do)</th>
+                <th>Odak (f)</th>
+                <th>Görüntü (di) / Özellikleri</th>
+            </tr>
+        `;
+    }
+}
+
+function recordMeasurement() {
+    const expId = labState.activeExperimentId;
+
+    if (expId === "7.3") {
+        const { medium1, medium2, incidentAngle, refractedAngle, isTotalInternalReflection, criticalAngle } = labState.optics;
+        const med1 = MEDIA_PROPERTIES[medium1];
+        const med2 = MEDIA_PROPERTIES[medium2];
+
+        let refractStr = "";
+        let behaviorStr = "";
+
+        if (incidentAngle === 0) {
+            refractStr = "0° (Doğrultu sabit)";
+            behaviorStr = med1.n === med2.n ? "Aynı Ortam" : "Hız Değişti, Doğrultu Sabit";
+        } else if (isTotalInternalReflection) {
+            refractStr = "Kırılma Yok";
+            behaviorStr = `Tam Yansıma (${incidentAngle}° ile yansıdı)`;
+        } else if (criticalAngle && Math.abs(incidentAngle - criticalAngle) < 0.5) {
+            refractStr = "90.0° (Sınır Açısı)";
+            behaviorStr = "Yüzeyi Yalar";
+        } else if (med1.n < med2.n) {
+            refractStr = `${refractedAngle.toFixed(1)}°`;
+            behaviorStr = "Normale Yaklaşır (Hız Azalır)";
+        } else {
+            refractStr = `${refractedAngle.toFixed(1)}°`;
+            behaviorStr = "Normalden Uzaklaşır (Hız Artar)";
+        }
+
+        const row = {
+            id: labState.optics.measurements.length + 1,
+            col1: `${med1.name} ➔ ${med2.name}`,
+            col2: `${incidentAngle}°`,
+            col3: refractStr,
+            col4: `${(med1.speed / 1000).toFixed(0)}k ➔ ${(med2.speed / 1000).toFixed(0)}k km/s`,
+            col5: behaviorStr
+        };
+
+        labState.optics.measurements.push(row);
+        showLabToast(`Gözlem #${row.id} deftere kaydedildi!`);
+    } else if (expId === "7.4") {
+        const { type, mode, focalLength, objectDistance, imageDistance, magnification } = labState.lens;
+        const isConvex = (type === "convex");
+
+        let modeDesc = mode === "parallel" ? "Paralel Işın" : "Mum (Cisim)";
+        let doDesc = mode === "parallel" ? "Sonsuz" : `${objectDistance} mm`;
+        let diDesc = "";
+
+        if (mode === "parallel") {
+            diDesc = isConvex ? `Odakta Toplanır (f = ${focalLength} mm)` : `Odaktan Dağılır (f = -${focalLength} mm)`;
+        } else {
+            if (imageDistance === null) {
+                diDesc = "Sonsuzda (Görüntü Oluşmaz)";
+            } else {
+                const isReal = imageDistance > 0;
+                const sizeText = Math.abs(magnification) > 1.05 ? "Büyük" : Math.abs(magnification) < 0.95 ? "Küçük" : "Eşit";
+                diDesc = `${Math.round(Math.abs(imageDistance))} mm (${isReal ? 'Gerçek/Ters' : 'Sanal/Düz'}, ${sizeText})`;
+            }
+        }
+
+        const row = {
+            id: labState.lens.measurements.length + 1,
+            col1: isConvex ? "İnce Kenarlı" : "Kalın Kenarlı",
+            col2: modeDesc,
+            col3: doDesc,
+            col4: `${focalLength} mm`,
+            col5: diDesc
+        };
+
+        labState.lens.measurements.push(row);
+        showLabToast(`Mercek Gözlemi #${row.id} deftere kaydedildi!`);
+    }
+
+    renderMeasurementTable();
+}
+
+function renderMeasurementTable() {
+    const tbody = document.getElementById('lab-table-body');
+    const emptyMsg = document.getElementById('lab-table-empty');
+    if (!tbody || !emptyMsg) return;
+
+    const expId = labState.activeExperimentId;
+    const measurements = (expId === "7.4") ? labState.lens.measurements : labState.optics.measurements;
+
+    if (measurements.length === 0) {
+        tbody.innerHTML = "";
+        emptyMsg.classList.remove('is-hidden');
+        return;
+    }
+
+    emptyMsg.classList.add('is-hidden');
+    let html = "";
+    measurements.forEach(m => {
+        html += `
+            <tr>
+                <td><strong>${m.id}</strong></td>
+                <td><span class="lab-table-tag">${m.col1}</span></td>
+                <td><span class="lab-table-val inc">${m.col2}</span></td>
+                <td><span class="lab-table-val ref">${m.col3}</span></td>
+                <td><small>${m.col4}</small></td>
+                <td><strong>${m.col5}</strong></td>
+            </tr>
+        `;
+    });
+    tbody.innerHTML = html;
+}
+
+function clearMeasurementTable() {
+    const expId = labState.activeExperimentId;
+    if (expId === "7.4") {
+        labState.lens.measurements = [];
+    } else {
+        labState.optics.measurements = [];
+    }
+    renderMeasurementTable();
+    showLabToast("Gözlem defteri temizlendi");
+}
+
+// Yardımcı Çizimler
 function drawProtractor(ctx, cx, cy, r, scale) {
     ctx.save();
     ctx.beginPath();
@@ -984,45 +1708,31 @@ function drawProtractor(ctx, cx, cy, r, scale) {
     ctx.lineWidth = 1 * scale;
     ctx.stroke();
 
-    // 10 Derecelik Çentikler ve Derece Sayıları
     for (let deg = 0; deg <= 90; deg += 10) {
         const rad = (deg * Math.PI) / 180;
+        const tickLen = deg % 30 === 0 ? 14 * scale : 8 * scale;
 
-        // Üst Sol Bölge (Gelen Bölgesi)
-        const x1 = cx - Math.sin(rad) * r;
-        const y1 = cy - Math.cos(rad) * r;
-        const x2 = cx - Math.sin(rad) * (r - (deg % 30 === 0 ? 14 * scale : 8 * scale));
-        const y2 = cy - Math.cos(rad) * (r - (deg % 30 === 0 ? 14 * scale : 8 * scale));
-
+        // Üst Sol
         ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
+        ctx.moveTo(cx - Math.sin(rad) * r, cy - Math.cos(rad) * r);
+        ctx.lineTo(cx - Math.sin(rad) * (r - tickLen), cy - Math.cos(rad) * (r - tickLen));
         ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
         ctx.stroke();
 
-        // Üst Sağ Bölge (Yansıma Bölgesi)
-        const rx1 = cx + Math.sin(rad) * r;
-        const ry1 = cy - Math.cos(rad) * r;
-        const rx2 = cx + Math.sin(rad) * (r - (deg % 30 === 0 ? 14 * scale : 8 * scale));
-        const ry2 = cy - Math.cos(rad) * (r - (deg % 30 === 0 ? 14 * scale : 8 * scale));
+        // Üst Sağ
         ctx.beginPath();
-        ctx.moveTo(rx1, ry1);
-        ctx.lineTo(rx2, ry2);
+        ctx.moveTo(cx + Math.sin(rad) * r, cy - Math.cos(rad) * r);
+        ctx.lineTo(cx + Math.sin(rad) * (r - tickLen), cy - Math.cos(rad) * (r - tickLen));
         ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
         ctx.stroke();
 
-        // Alt Sağ Bölge (Kırılma Bölgesi)
-        const bx1 = cx + Math.sin(rad) * r;
-        const by1 = cy + Math.cos(rad) * r;
-        const bx2 = cx + Math.sin(rad) * (r - (deg % 30 === 0 ? 14 * scale : 8 * scale));
-        const by2 = cy + Math.cos(rad) * (r - (deg % 30 === 0 ? 14 * scale : 8 * scale));
+        // Alt Sağ
         ctx.beginPath();
-        ctx.moveTo(bx1, by1);
-        ctx.lineTo(bx2, by2);
+        ctx.moveTo(cx + Math.sin(rad) * r, cy + Math.cos(rad) * r);
+        ctx.lineTo(cx + Math.sin(rad) * (r - tickLen), cy + Math.cos(rad) * (r - tickLen));
         ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
         ctx.stroke();
 
-        // Derece Numaraları
         if (deg % 30 === 0 && deg > 0) {
             ctx.font = `${Math.max(9, 10 * scale)}px sans-serif`;
             ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
@@ -1034,7 +1744,6 @@ function drawProtractor(ctx, cx, cy, r, scale) {
     ctx.restore();
 }
 
-// Lazer Işını Çizimi (Neon Glow)
 function drawLaserBeam(ctx, x1, y1, x2, y2, color, width, alpha) {
     ctx.save();
     ctx.globalAlpha = alpha;
@@ -1049,13 +1758,11 @@ function drawLaserBeam(ctx, x1, y1, x2, y2, color, width, alpha) {
     ctx.shadowBlur = 12;
     ctx.stroke();
 
-    // Çekirdek Beyaz Hat
     ctx.strokeStyle = "#ffffff";
     ctx.lineWidth = Math.max(1, width * 0.35);
     ctx.shadowBlur = 0;
     ctx.stroke();
 
-    // Ok Başı (Işın Yönü)
     const angle = Math.atan2(y2 - y1, x2 - x1);
     const arrowLen = 12 * (width / 3.5);
     const midX = (x1 + x2) / 2;
@@ -1073,7 +1780,6 @@ function drawLaserBeam(ctx, x1, y1, x2, y2, color, width, alpha) {
     ctx.restore();
 }
 
-// Lazer Cihazı Gövdesi
 function drawLaserDevice(ctx, x, y, targetX, targetY, scale) {
     ctx.save();
     const angle = Math.atan2(targetY - y, targetX - x);
@@ -1081,7 +1787,6 @@ function drawLaserDevice(ctx, x, y, targetX, targetY, scale) {
     ctx.translate(x, y);
     ctx.rotate(angle);
 
-    // Lazer Feneri Metalik Gövdesi
     ctx.fillStyle = "#1e293b";
     ctx.strokeStyle = "#00d2ff";
     ctx.lineWidth = 2 * scale;
@@ -1091,13 +1796,11 @@ function drawLaserDevice(ctx, x, y, targetX, targetY, scale) {
     ctx.fill();
     ctx.stroke();
 
-    // Lens Kısmı
     ctx.fillStyle = "#ff1744";
     ctx.beginPath();
     ctx.arc(0, 0, 5 * scale, 0, Math.PI * 2);
     ctx.fill();
 
-    // Tutma / Döndürme Halkası (Handle)
     ctx.beginPath();
     ctx.arc(-20 * scale, 0, 18 * scale, 0, Math.PI * 2);
     ctx.strokeStyle = "rgba(0, 210, 255, 0.4)";
@@ -1107,7 +1810,7 @@ function drawLaserDevice(ctx, x, y, targetX, targetY, scale) {
     ctx.restore();
 }
 
-// Global Tarayıcı Erişimi için Nesne
+// Global Tarayıcı Erişimi
 if (typeof window !== "undefined") {
     window.FenUpLab = {
         initLabModule,
@@ -1121,7 +1824,6 @@ if (typeof window !== "undefined") {
         labState
     };
 
-    // DOM hazır olduğunda başlat
     if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", initLabModule);
     } else {

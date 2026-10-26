@@ -398,16 +398,24 @@
                 <div class="lab-canvas-section" id="lab-canvas-container">
                     <div class="lab-canvas-wrapper">
                         <canvas id="lab-canvas" width="800" height="500"></canvas>
-                        <!-- HUD Bilgi Şeritleri -->
-                        <div id="lab-canvas-overlay" class="lab-canvas-overlay">
+                        
+                        <!-- HUD Bilgi Şeritleri (Deney 7.3) -->
+                        <div id="hud-exp-7-3" class="lab-canvas-overlay">
                             <div class="lab-hud-pill">Gelme Açısı: <strong id="hud-val-incident">30°</strong></div>
                             <div class="lab-hud-pill">Kırılma Açısı: <strong id="hud-val-refract">22.1°</strong></div>
                             <div class="lab-hud-pill lab-hud-status" id="lab-hud-status">Normale Yaklaşıyor</div>
                         </div>
+
+                        <!-- HUD Bilgi Şeritleri (Deney 7.4) -->
+                        <div id="hud-exp-7-4" class="lab-canvas-overlay is-hidden">
+                            <div class="lab-hud-pill">Mercek: <strong id="hud-lens-type">İnce Kenarlı (Yakınsak)</strong></div>
+                            <div class="lab-hud-pill">Odak (f): <strong id="hud-lens-focal">120 mm</strong></div>
+                            <div class="lab-hud-pill lab-hud-status" id="hud-lens-status">🔥 Işığı Odakta Toplar</div>
+                        </div>
                     </div>
 
-                    <!-- Canvas Altı Hızlı Dokunmatik Açı Kontrol Barı -->
-                    <div class="lab-canvas-quick-controls">
+                    <!-- Canvas Altı Hızlı Dokunmatik Açı Kontrol Barı (Deney 7.3) -->
+                    <div id="quick-controls-7-3" class="lab-canvas-quick-controls">
                         <button class="lab-btn-step" id="btn-angle-minus-5" title="-5 Derece">-5°</button>
                         <button class="lab-btn-step" id="btn-angle-minus-1" title="-1 Derece">-1°</button>
                         <div class="lab-angle-slider-wrap">
@@ -417,68 +425,152 @@
                         <button class="lab-btn-step" id="btn-angle-plus-1" title="+1 Derece">+1°</button>
                         <button class="lab-btn-step" id="btn-angle-plus-5" title="+5 Derece">+5°</button>
                     </div>
+
+                    <!-- Canvas Altı Hızlı Dokunmatik Mercek Kontrol Barı (Deney 7.4) -->
+                    <div id="quick-controls-7-4" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-lens-convex" title="İnce Kenarlı (Yakınsak) Mercek"><i class="fas fa-search-plus"></i> İnce Kenarlı</button>
+                                <button class="lab-toggle-btn" id="btn-lens-concave" title="Kalın Kenarlı (Iraksak) Mercek"><i class="fas fa-glasses"></i> Kalın Kenarlı</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-mode-parallel" title="Paralel Işın Demeti"><i class="fas fa-bolt"></i> Paralel Işın</button>
+                                <button class="lab-toggle-btn" id="btn-mode-object" title="Mum ve Görüntü"><i class="fas fa-fire"></i> Mum & Görüntü</button>
+                            </div>
+                        </div>
+                        <div class="lab-lens-sliders-row">
+                            <div class="lab-angle-slider-wrap" id="wrap-object-distance" style="display: none;">
+                                <label for="lab-object-range">Cisim Mesafesi (do): <span id="lab-object-display">200 mm</span></label>
+                                <input type="range" id="lab-object-range" min="50" max="320" value="200" step="2">
+                            </div>
+                            <div class="lab-angle-slider-wrap">
+                                <label for="lab-focal-range">Odak Uzaklığı (f): <span id="lab-focal-display">120 mm</span></label>
+                                <input type="range" id="lab-focal-range" min="80" max="160" value="120" step="5">
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- SAĞ/ALT (%35): Kontrol Paneli & Veri Tablosu -->
                 <div class="lab-sidebar-section" id="lab-sidebar-section">
                     <!-- TAB 1: DEĞİŞKENLER VE KONTROLLER -->
                     <div class="lab-tab-pane active" id="pane-vars">
-                        <div class="lab-panel-box">
-                            <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
-                            <div class="lab-vars-list">
-                                <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Gelme açısı (i) ve ortam kırıcılık indisleri (n₁, n₂)</div>
-                                <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Kırılma açısı (r), ışık sürati (v) ve yayılma doğrultusu</div>
-                                <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Işık dalga boyu, yüzey ayırıcı düzlem ve normal (N)</div>
+                        
+                        <!-- DENEY 7.3 DEĞİŞKENLERİ -->
+                        <div id="vars-container-7-3">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Gelme açısı (i) ve ortam kırıcılık indisleri (n₁, n₂)</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Kırılma açısı (r), ışık sürati (v) ve yayılma doğrultusu</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Işık dalga boyu, yüzey ayırıcı düzlem ve normal (N)</div>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-layer-group"></i> Ortam Seçimi</h4>
+                                <div class="lab-env-grid">
+                                    <div class="lab-field-group">
+                                        <label for="select-medium-1" class="lab-field-label">1. Ortam (Üst / Gelen):</label>
+                                        <select id="select-medium-1" class="fenupx-input lab-select">
+                                            <option value="air" selected>Hava (n = 1.00 - Az Yoğun)</option>
+                                            <option value="water">Su (n = 1.33 - Çok Yoğun)</option>
+                                            <option value="glass">Cam (n = 1.50 - Çok Yoğun)</option>
+                                            <option value="diamond">Elmas (n = 2.42 - Aşırı Yoğun)</option>
+                                        </select>
+                                    </div>
+                                    <div class="lab-field-group">
+                                        <label for="select-medium-2" class="lab-field-label">2. Ortam (Alt / Kırılan):</label>
+                                        <select id="select-medium-2" class="fenupx-input lab-select">
+                                            <option value="air">Hava (n = 1.00 - Az Yoğun)</option>
+                                            <option value="water" selected>Su (n = 1.33 - Çok Yoğun)</option>
+                                            <option value="glass">Cam (n = 1.50 - Çok Yoğun)</option>
+                                            <option value="diamond">Elmas (n = 2.42 - Aşırı Yoğun)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button id="btn-swap-mediums" class="lab-mini-btn" title="Ortamları Birbiriyle Değiştir"><i class="fas fa-exchange-alt"></i> Ortamları Değiş-Tokuş Et</button>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Anlık Ölçüm ve Işık Sürati</h4>
+                                <div class="lab-stats-grid">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">1. Ortam Hızı (v₁)</span>
+                                        <strong class="chip-val" id="metric-speed-1">300.000 km/s</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">2. Ortam Hızı (v₂)</span>
+                                        <strong class="chip-val" id="metric-speed-2">225.564 km/s</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Sınır Açısı (θc)</span>
+                                        <strong class="chip-val" id="metric-critical-angle">—</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Işının Hareketi</span>
+                                        <strong class="chip-val" id="metric-behavior" style="color: var(--neon-blue);">Normale Yaklaşır</strong>
+                                    </div>
+                                </div>
+                                <button id="btn-record-data" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
                             </div>
                         </div>
 
-                        <div class="lab-panel-box">
-                            <h4 class="lab-box-heading"><i class="fas fa-layer-group"></i> Ortam Seçimi</h4>
-                            <div class="lab-env-grid">
-                                <div class="lab-field-group">
-                                    <label for="select-medium-1" class="lab-field-label">1. Ortam (Üst / Gelen):</label>
-                                    <select id="select-medium-1" class="fenupx-input lab-select">
-                                        <option value="air" selected>Hava (n = 1.00 - Az Yoğun)</option>
-                                        <option value="water">Su (n = 1.33 - Çok Yoğun)</option>
-                                        <option value="glass">Cam (n = 1.50 - Çok Yoğun)</option>
-                                        <option value="diamond">Elmas (n = 2.42 - Aşırı Yoğun)</option>
-                                    </select>
-                                </div>
-                                <div class="lab-field-group">
-                                    <label for="select-medium-2" class="lab-field-label">2. Ortam (Alt / Kırılan):</label>
-                                    <select id="select-medium-2" class="fenupx-input lab-select">
-                                        <option value="air">Hava (n = 1.00 - Az Yoğun)</option>
-                                        <option value="water" selected>Su (n = 1.33 - Çok Yoğun)</option>
-                                        <option value="glass">Cam (n = 1.50 - Çok Yoğun)</option>
-                                        <option value="diamond">Elmas (n = 2.42 - Aşırı Yoğun)</option>
-                                    </select>
+                        <!-- DENEY 7.4 DEĞİŞKENLERİ -->
+                        <div id="vars-container-7-4" class="is-hidden">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Mercek çeşidi (İnce/Kalın) ve Cisim mesafesi (do) / Işın modu</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Işınların davranışı (Toplama/Dağıtma), Odak noktası (F) ve Görüntü boyu/yönü</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Optik merkez (O), ışık kaynağı ve ortam (Hava)</div>
                                 </div>
                             </div>
-                            <button id="btn-swap-mediums" class="lab-mini-btn" title="Ortamları Birbiriyle Değiştir"><i class="fas fa-exchange-alt"></i> Ortamları Değiş-Tokuş Et</button>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-glasses"></i> Mercek ve Odak Ayarları</h4>
+                                <div class="lab-lens-controls-box">
+                                    <div class="lab-field-group">
+                                        <label class="lab-field-label">Mercek Türü Seç:</label>
+                                        <div class="lab-select-pills">
+                                            <button class="lab-select-pill active" id="pill-lens-convex">🔍 İnce Kenarlı</button>
+                                            <button class="lab-select-pill" id="pill-lens-concave">👓 Kalın Kenarlı</button>
+                                        </div>
+                                    </div>
+                                    <div class="lab-field-group" style="margin-top: 8px;">
+                                        <label class="lab-field-label">Işık Modu Seç:</label>
+                                        <div class="lab-select-pills">
+                                            <button class="lab-select-pill active" id="pill-mode-parallel">⚡ Paralel Işın</button>
+                                            <button class="lab-select-pill" id="pill-mode-object">🕯️ Mum & Görüntü</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-chart-line"></i> Anlık Optik Ölçüm ve Görüntü</h4>
+                                <div class="lab-stats-grid">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Mercek Tipi</span>
+                                        <strong class="chip-val" id="metric-lens-type" style="color: #38bdf8;">İnce Kenarlı</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Odak Uzaklığı (f)</span>
+                                        <strong class="chip-val" id="metric-lens-f">120 mm</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Cisim Mesafesi (do)</span>
+                                        <strong class="chip-val" id="metric-lens-do">200 mm</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Görüntü (di) / Durum</span>
+                                        <strong class="chip-val" id="metric-lens-di" style="color: #34d399;">Gerçek, Ters, Büyütülmüş</strong>
+                                    </div>
+                                </div>
+                                <button id="btn-record-data-7-4" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
                         </div>
 
-                        <div class="lab-panel-box">
-                            <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Anlık Ölçüm ve Işık Sürati</h4>
-                            <div class="lab-stats-grid">
-                                <div class="lab-stat-chip">
-                                    <span class="chip-label">1. Ortam Hızı (v₁)</span>
-                                    <strong class="chip-val" id="metric-speed-1">300.000 km/s</strong>
-                                </div>
-                                <div class="lab-stat-chip">
-                                    <span class="chip-label">2. Ortam Hızı (v₂)</span>
-                                    <strong class="chip-val" id="metric-speed-2">225.564 km/s</strong>
-                                </div>
-                                <div class="lab-stat-chip">
-                                    <span class="chip-label">Sınır Açısı (θc)</span>
-                                    <strong class="chip-val" id="metric-critical-angle">—</strong>
-                                </div>
-                                <div class="lab-stat-chip">
-                                    <span class="chip-label">Işının Hareketi</span>
-                                    <strong class="chip-val" id="metric-behavior" style="color: var(--neon-blue);">Normale Yaklaşır</strong>
-                                </div>
-                            </div>
-                            <button id="btn-record-data" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
-                        </div>
                     </div>
 
                     <!-- TAB 2: VERİ DEFTERİ VE ÖLÇÜM TABLOSU -->
@@ -490,7 +582,7 @@
                             </div>
                             <div class="lab-table-wrap">
                                 <table class="lab-data-table" id="lab-data-table">
-                                    <thead>
+                                    <thead id="lab-table-thead">
                                         <tr>
                                             <th>#</th>
                                             <th>Ortamlar</th>
@@ -513,7 +605,8 @@
 
                     <!-- TAB 3: BİLİMSEL REHBER -->
                     <div class="lab-tab-pane is-hidden" id="pane-guide">
-                        <div class="lab-panel-box">
+                        <!-- DENEY 7.3 REHBERİ -->
+                        <div id="guide-container-7-3" class="lab-panel-box">
                             <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Maarif Modeli Bilimsel Rehberi</h4>
                             <div class="lab-guide-text">
                                 <div class="guide-item">
@@ -531,6 +624,29 @@
                                 <div class="guide-item">
                                     <strong>4. Yüzeye Dik Gelen Işın (i = 0°):</strong>
                                     <p>Doğrultusunu ve yönünü değiştirmez (kırılmaz), ancak ortam yoğunlukları farklı ise sürati kesinlikle değişir!</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 7.4 REHBERİ -->
+                        <div id="guide-container-7-4" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Mercekler ve Odaklama Rehberi</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. İnce Kenarlı (Yakınsak) Mercekler:</strong>
+                                    <p>Ortası kenarlarından daha kalındır. Asal eksene paralel gelen ışınları <strong>tek bir noktada (Odak Noktası, F) toplar</strong>. Güneş ışığını odaklayarak yüksek sıcaklık üretir; bu nedenle ormanlara bırakılan cam şişeler ve kırık cam parçaları <strong>orman yangınlarına</strong> neden olur! Büyüteç, mikroskop, teleskop ve hipermetrop göz kusuru tedavisinde kullanılır.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Kalın Kenarlı (Iraksak) Mercekler:</strong>
+                                    <p>Ortası kenarlarından daha incedir. Asal eksene paralel gelen ışınları <strong>uzantıları odaktan geçecek şekilde dağıtır</strong>. Miyop göz kusuru düzeltmesinde, deniz fenerlerinde ve kapı dürbünlerinde kullanılır.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>3. Cisim ve Görüntü Oluşumu (Mum Modu):</strong>
+                                    <p>İnce mercekte cisim odaktan uzaktaysa (do &gt; f) <strong>ters ve gerçek</strong> görüntü oluşur (perdeye düşürülebilir). Cisim odak ile mercek arasındaysa (do &lt; f) <strong>düz, cisimden büyük ve sanal</strong> bir görüntü oluşur; bu durum büyütecin çalışma prensibidir! Kalın mercekte ise görüntü daima <strong>düz, küçük ve sanaldır</strong>.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>4. Orman Yangını Uyarısı:</strong>
+                                    <p>Ormanlık alanlara atılan su şişeleri ve cam atıklar ince kenarlı mercek görevi görerek kuru otları tutuşturabilir. Doğamızı korumak için cam atıkları asla doğaya bırakmamalıyız!</p>
                                 </div>
                             </div>
                         </div>

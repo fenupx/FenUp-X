@@ -1912,3 +1912,144 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
         grid-template-columns: 1fr;
     }
 }
+
+/* ==========================================================================
+   📐 ÜNİTE BAŞLIK ŞERİTLERİ VE DENEY 7.4 MERCEKLER STİLLERİ
+   ========================================================================== */
+
+/* Ünite Başlık Şeritleri */
+.lab-unit-section {
+    width: 100%;
+    margin-bottom: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+.lab-unit-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, rgba(0, 210, 255, 0.15), rgba(157, 80, 187, 0.18));
+    border: 1px solid rgba(0, 210, 255, 0.35);
+    border-left: 5px solid var(--neon-blue);
+    border-radius: 16px;
+    padding: 12px 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.lab-unit-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.lab-unit-num-badge {
+    background: var(--neon-blue);
+    color: #030712;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+}
+.lab-unit-heading {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0;
+    text-shadow: 0 0 12px rgba(0, 210, 255, 0.3);
+}
+.lab-unit-count-tag {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #cbd5e1;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+/* Deney 7.4 Mercek Kontrolleri */
+.lab-quick-lens-row {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.lab-toggle-btn-group {
+    display: flex;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 4px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
+}
+.lab-toggle-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 40px;
+    touch-action: manipulation;
+}
+.lab-toggle-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+}
+.lab-toggle-btn.active {
+    background: var(--neon-blue);
+    color: #030712;
+    box-shadow: 0 0 12px rgba(0, 210, 255, 0.4);
+}
+.lab-lens-sliders-row {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    margin-top: 6px;
+    flex-wrap: wrap;
+}
+.lab-select-pills {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+.lab-select-pill {
+    flex: 1;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    color: #cbd5e1;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    touch-action: manipulation;
+}
+.lab-select-pill:hover {
+    border-color: var(--neon-blue);
+    color: #fff;
+}
+.lab-select-pill.active {
+    background: linear-gradient(135deg, rgba(0, 210, 255, 0.25), rgba(157, 80, 187, 0.3));
+    border-color: var(--neon-blue);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.35);
+}
+
