@@ -854,8 +854,6 @@ async function startIndividual() {
     sessionMistakes = [];
     const qeRev = document.getElementById('quiz-end-review-container');
     if (qeRev) { qeRev.innerHTML = ""; qeRev.classList.add('is-hidden'); }
-    const lbRev = document.getElementById('leaderboard-review-container');
-    if (lbRev) { lbRev.innerHTML = ""; }
     quizState.index = 0; quizState.score = 0; quizState.totalTimeSpent = 0; quizState.currentTimeLeft = 0; quizState.riskAcceptedForCurrent = false; isTimerPaused = false;
     document.querySelectorAll('.joker-area button').forEach(btn => { btn.classList.remove('is-used', 'joker-spawn-anim'); btn.style.opacity = "1"; btn.style.pointerEvents = "auto"; btn.style.background = ""; });
     const jPause = document.getElementById('joker-pause');
@@ -1083,10 +1081,6 @@ async function finishIndividual(msg) {
         qeRev.innerHTML = reviewHtml;
         qeRev.classList.remove('is-hidden');
     }
-    const lbRev = document.getElementById('leaderboard-review-container');
-    if (lbRev) {
-        lbRev.innerHTML = reviewHtml;
-    }
     
     if(msg.includes("ŞAMPİYON") || msg.includes("ÇEKİLDİN")) playSound(sfx.cheer); else playSound(sfx.wrong);
 }
@@ -1106,8 +1100,6 @@ const btnShowLb = document.getElementById('btn-show-leaderboard');
 if(btnShowLb) {
     btnShowLb.onclick = () => { 
         stopSound(sfx.cheer); stopSound(sfx.wrong); const qe = document.getElementById('quiz-end'); if(qe) qe.classList.add('is-hidden'); 
-        const lbRev = document.getElementById('leaderboard-review-container');
-        if (lbRev) lbRev.innerHTML = buildQuestionReviewHTML();
         individualLeaderboard.sort((a, b) => b.score - a.score); 
         const list = document.getElementById('leaderboard-list'); if(list) { list.innerHTML = ''; 
             individualLeaderboard.forEach((p, i) => { 
