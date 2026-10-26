@@ -133,7 +133,7 @@ export const EXPERIMENTS_DATABASE = [
     // 7. SINIF (9 DENEY)
     {
         id: "7.1", grade: 7, unit: 2, unitName: "Kuvvet ve Enerjiyi Keşfedelim",
-        title: "Fiziksel Anlamda İş (W = F · Δx) Laboratuvarı",
+        title: "Fiziksel Anlamda İş ve Enerji Simülatörü",
         code: "FB.7.2.1", bookRef: "1. Kitap, s. 60–71",
         active: true, // 🏆 AKTİF!
         desc: "Kuvvetin büyüklüğü, yönü ve yer değiştirme doğrultusunu kontrol ederek fen anlamında iş yapılıp yapılmadığını ve 4 temel kavram yanılgısını test edin."
@@ -1510,7 +1510,7 @@ function calculateWorkPhysics() {
                 box.className = "lab-pedagogical-card is-work";
                 if (icon) icon.innerHTML = '<i class="fas fa-check-circle"></i>';
                 if (title) title.textContent = "✅ Fiziksel Anlamda İş Yapıldı!";
-                if (text) text.textContent = `Uygulanan yatay kuvvet ile sandığın hareket doğrultusu aynıdır (yatay). Sandık uygulanan kuvvet yönünde ${dx.toFixed(1)} m yer değiştirdiği için W = F · Δx = ${work.appliedWork.toFixed(1)} Joule fiziksel iş yapılmıştır.`;
+                if (text) text.textContent = `Uygulanan yatay kuvvet ile sandığın hareket doğrultusu aynıdır (yatay). Sandık uygulanan kuvvet yönünde ${dx.toFixed(1)} m yer değiştirdiği için ${work.appliedWork.toFixed(1)} Joule fiziksel iş yapılmıştır.`;
             }
         }
     } else if (scen === "lift") {
@@ -1534,7 +1534,7 @@ function calculateWorkPhysics() {
             box.className = "lab-pedagogical-card is-work";
             if (icon) icon.innerHTML = '<i class="fas fa-check-circle"></i>';
             if (title) title.textContent = "✅ Yer Çekimine Karşı İş Yapıldı!";
-            if (text) text.textContent = `Sandık düşey doğrultuda yukarı doğru ${dx.toFixed(1)} m yükseltilmiştir. Kuvvet ile hareket doğrultusu aynıdır (düşey). Yapılan ${work.appliedWork.toFixed(1)} Joule iş, cisimde çekim potansiyel enerjisi (Ep = m · g · h) olarak depolanır!`;
+            if (text) text.textContent = `Sandık düşey doğrultuda yukarı doğru ${dx.toFixed(1)} m yükseltilmiştir. Kuvvet ile hareket doğrultusu aynıdır (düşey). Yapılan ${work.appliedWork.toFixed(1)} Joule iş, cisimde çekim potansiyel enerjisi olarak depolanır!`;
         }
     } else if (scen === "carry") {
         work.frictionForce = 0;
@@ -1735,7 +1735,7 @@ function drawWorkHorizontal(ctx, work, groundY) {
 
     // Karakter (İten Öğrenci)
     const charX = crateX - 44;
-    drawWorkStudent(ctx, charX, groundY, "push", work.isPlaying ? animTime : 0);
+    drawWorkStudent(ctx, charX, groundY, "push", work.isPlaying ? animTime : 0, work.force);
 
     // Sandık
     drawWorkCrate(ctx, crateX, crateY, crateW, crateH);
@@ -1942,16 +1942,16 @@ function drawWorkCarry(ctx, work, groundY) {
     ctx.lineTo(bagHandX + sqSize, bagHandY);
     ctx.stroke();
 
-    // Küçük nokta
+    // Küçük merkez noktası
     ctx.fillStyle = '#facc15';
     ctx.beginPath();
     ctx.arc(bagHandX + sqSize / 2, bagHandY - sqSize / 2, 2, 0, Math.PI * 2);
     ctx.fill();
 
-    // 90° Etiketi
-    ctx.font = 'bold 11px Inter, sans-serif';
+    // Zarif minimal 90° etiketi
+    ctx.font = 'bold 10px Inter, sans-serif';
     ctx.fillStyle = '#fef08a';
-    ctx.fillText("90° (Dik Açı ➔ W = 0 J)", bagHandX + 20, bagHandY - 8);
+    ctx.fillText("90°", bagHandX + 18, bagHandY - 6);
     ctx.restore();
 }
 
@@ -1966,7 +1966,7 @@ function drawWorkWall(ctx, work, groundY) {
 
     // Karakter (Duvarı İten Öğrenci)
     const charX = wallX - 40;
-    drawWorkStudent(ctx, charX, groundY, "wall", work.isPlaying ? animTime : 0);
+    drawWorkStudent(ctx, charX, groundY, "wall", work.isPlaying ? animTime : 0, work.force);
 
     // Vektör Oku: Duvara Uygulanan Kuvvet (F)
     const arrowLen = 35 + (work.force * 0.8);
@@ -1980,24 +1980,6 @@ function drawWorkWall(ctx, work, groundY) {
         `F = ${work.force.toFixed(0)} N ➔`,
         -12
     );
-
-    // Hareketsiz Rozeti / Δx = 0
-    ctx.save();
-    ctx.fillStyle = 'rgba(239, 68, 68, 0.2)';
-    ctx.strokeStyle = '#ef4444';
-    ctx.lineWidth = 1.5;
-    const badgeX = wallX + 20;
-    const badgeY = groundY + 28;
-    ctx.beginPath();
-    ctx.roundRect(badgeX, badgeY, 140, 26, 6);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillStyle = '#fca5a5';
-    ctx.textAlign = 'center';
-    ctx.fillText("❌ Δx = 0 m (Hareketsiz)", badgeX + 70, badgeY + 17);
-    ctx.restore();
 }
 
 function drawWorkVectorArrow(ctx, fromX, fromY, toX, toY, color, label, labelOffset = -12) {
@@ -2076,9 +2058,27 @@ function drawWorkStudent(ctx, x, y, pose, anim, extraOffset = 0) {
     const shoeColor = '#0f172a';
 
     if (pose === "push") {
-        // İtme Pozu (İleri eğik)
+        // İtme Pozu (Kuvvete göre ölçeklenen eğim ve patinaj tozu)
         ctx.save();
         ctx.translate(x, y);
+
+        const force = (typeof extraOffset === 'number' && extraOffset > 0) ? extraOffset : 50;
+        const leanFactor = Math.max(0, Math.min(1, (force - 20) / 80)); // 0 (az eğik) -> 1 (maksimum eforla eğik)
+        const leanOffset = leanFactor * 8;
+
+        // Patinaj toz efektleri (hareket halindeyse)
+        if (anim > 0) {
+            ctx.strokeStyle = 'rgba(203, 213, 225, 0.45)';
+            ctx.lineWidth = 1.5;
+            for (let d = 0; d < 3; d++) {
+                const sx = -30 - d * 7 - ((anim * 18 + d * 5) % 12);
+                const sy = -2 - (d % 2) * 3;
+                ctx.beginPath();
+                ctx.moveTo(sx, sy);
+                ctx.lineTo(sx - 5, sy);
+                ctx.stroke();
+            }
+        }
 
         // Bacaklar
         ctx.strokeStyle = pantsColor;
@@ -2086,37 +2086,37 @@ function drawWorkStudent(ctx, x, y, pose, anim, extraOffset = 0) {
         ctx.lineCap = 'round';
         // Sol bacak (önde bükülü)
         ctx.beginPath();
-        ctx.moveTo(-4, -40);
-        ctx.lineTo(16, -20);
+        ctx.moveTo(-4 + leanOffset * 0.4, -40);
+        ctx.lineTo(16 + leanOffset * 0.5, -20);
         ctx.lineTo(20, 0);
         ctx.stroke();
         // Sağ bacak (arkada gergin)
         ctx.beginPath();
-        ctx.moveTo(-10, -40);
+        ctx.moveTo(-10 + leanOffset * 0.2, -40);
         ctx.lineTo(-24, -18);
-        ctx.lineTo(-28, 0);
+        ctx.lineTo(-28 - leanOffset * 0.5, 0);
         ctx.stroke();
 
         // Ayakkabılar
         ctx.fillStyle = shoeColor;
         ctx.beginPath();
         ctx.roundRect(14, -5, 16, 5, 2);
-        ctx.roundRect(-34, -5, 14, 5, 2);
+        ctx.roundRect(-34 - leanOffset * 0.5, -5, 14, 5, 2);
         ctx.fill();
 
-        // Gövde (ileri eğik)
+        // Gövde (kuvvete göre dinamik eğik)
         ctx.strokeStyle = shirtColor;
         ctx.lineWidth = 14;
         ctx.beginPath();
-        ctx.moveTo(-6, -42);
-        ctx.lineTo(10, -72);
+        ctx.moveTo(-6 + leanOffset * 0.3, -42);
+        ctx.lineTo(10 + leanOffset, -72);
         ctx.stroke();
 
         // Kollar (sandığa dayalı)
         ctx.strokeStyle = shirtColor;
         ctx.lineWidth = 6;
         ctx.beginPath();
-        ctx.moveTo(8, -68);
+        ctx.moveTo(8 + leanOffset, -68);
         ctx.lineTo(36, -58);
         ctx.stroke();
         // Eller
@@ -2128,30 +2128,51 @@ function drawWorkStudent(ctx, x, y, pose, anim, extraOffset = 0) {
         // Baş
         ctx.fillStyle = skinColor;
         ctx.beginPath();
-        ctx.arc(16, -84, 10, 0, Math.PI * 2);
+        ctx.arc(16 + leanOffset * 1.1, -84, 10, 0, Math.PI * 2);
         ctx.fill();
 
         // Saç
         ctx.fillStyle = hairColor;
         ctx.beginPath();
-        ctx.arc(15, -87, 10, Math.PI * 0.8, Math.PI * 2.1);
+        ctx.arc(15 + leanOffset * 1.1, -87, 10, Math.PI * 0.8, Math.PI * 2.1);
         ctx.fill();
 
         ctx.restore();
     } else if (pose === "lift") {
-        // Kaldırma Pozu
+        // Kaldırma Pozu (Dinamik Çömelmeden Doğrulma Kinematiği)
         ctx.save();
         ctx.translate(x, y);
 
-        // Bacaklar (omuz genişliğinde dik duruş)
+        const liftPx = Math.max(0, extraOffset);
+        // Çömelme faktörü: liftPx = 0 iken 1 (tam çömelmiş), liftPx >= 85 iken 0 (tam ayakta)
+        const squatFactor = Math.max(0, Math.min(1, 1 - (liftPx / 85)));
+        const squatY = squatFactor * 22; // Aşağı çökme miktarı
+
+        const hipY = -45 + squatY;
+        const kneeOut = squatFactor * 10;
+
+        // Bacaklar (çömelirken dizler bükülür, kalkarken düzelir)
         ctx.strokeStyle = pantsColor;
         ctx.lineWidth = 8;
         ctx.lineCap = 'round';
+
         ctx.beginPath();
-        ctx.moveTo(-12, -45);
-        ctx.lineTo(-14, 0);
-        ctx.moveTo(12, -45);
-        ctx.lineTo(14, 0);
+        if (squatFactor > 0.05) {
+            // Çömelmiş dizler
+            ctx.moveTo(-10, hipY);
+            ctx.lineTo(-18 - kneeOut, hipY + 12);
+            ctx.lineTo(-14, 0);
+
+            ctx.moveTo(10, hipY);
+            ctx.lineTo(18 + kneeOut, hipY + 12);
+            ctx.lineTo(14, 0);
+        } else {
+            // Dik duruş
+            ctx.moveTo(-12, -45);
+            ctx.lineTo(-14, 0);
+            ctx.moveTo(12, -45);
+            ctx.lineTo(14, 0);
+        }
         ctx.stroke();
 
         // Ayakkabılar
@@ -2162,21 +2183,28 @@ function drawWorkStudent(ctx, x, y, pose, anim, extraOffset = 0) {
         ctx.fill();
 
         // Gövde
+        const shoulderY = -80 + squatY * 0.8;
         ctx.strokeStyle = shirtColor;
         ctx.lineWidth = 16;
         ctx.beginPath();
-        ctx.moveTo(0, -45);
-        ctx.lineTo(0, -80);
+        ctx.moveTo(0, hipY);
+        ctx.lineTo(0, shoulderY);
         ctx.stroke();
 
-        // Kollar (yukarı doğru sandığı tutuyor)
-        const handY = -80 - extraOffset * 0.65;
+        // Kollar (sandık yerdeyken altta tutar, yükseldikçe yukarı kaldırır)
+        let handY;
+        if (liftPx < 50) {
+            handY = shoulderY + 22 - (liftPx * 0.4);
+        } else {
+            handY = -80 - (liftPx - 50) * 0.7;
+        }
+
         ctx.strokeStyle = shirtColor;
         ctx.lineWidth = 6;
         ctx.beginPath();
-        ctx.moveTo(-6, -75);
+        ctx.moveTo(-6, shoulderY + 5);
         ctx.lineTo(-24, handY);
-        ctx.moveTo(6, -75);
+        ctx.moveTo(6, shoulderY + 5);
         ctx.lineTo(24, handY);
         ctx.stroke();
 
@@ -2188,15 +2216,16 @@ function drawWorkStudent(ctx, x, y, pose, anim, extraOffset = 0) {
         ctx.fill();
 
         // Baş
+        const headY = shoulderY - 14;
         ctx.fillStyle = skinColor;
         ctx.beginPath();
-        ctx.arc(0, -94, 10, 0, Math.PI * 2);
+        ctx.arc(0, headY, 10, 0, Math.PI * 2);
         ctx.fill();
 
         // Saç
         ctx.fillStyle = hairColor;
         ctx.beginPath();
-        ctx.arc(0, -97, 10, Math.PI * 0.8, Math.PI * 2.2);
+        ctx.arc(0, headY - 3, 10, Math.PI * 0.8, Math.PI * 2.2);
         ctx.fill();
 
         ctx.restore();
@@ -2283,9 +2312,10 @@ function drawWorkStudent(ctx, x, y, pose, anim, extraOffset = 0) {
 
         ctx.restore();
     } else if (pose === "wall") {
-        // Sabit Duvarı İtme Pozu (Büyük efor)
+        // Sabit Duvarı İtme Pozu (Büyük efor, hafif titreme animasyonu)
         ctx.save();
-        ctx.translate(x, y);
+        const tremble = (anim > 0) ? Math.sin(anim * 16) * 0.8 : 0;
+        ctx.translate(x + tremble, y);
 
         // Bacaklar (duvara karşı sert dayalı)
         ctx.strokeStyle = pantsColor;
@@ -2436,28 +2466,6 @@ function drawWorkWallObstacle(ctx, x, y, w, h) {
     ctx.moveTo(x, y);
     ctx.lineTo(x, y + h);
     ctx.stroke();
-
-    // Metal Sabit Duvar Levhası
-    const signW = 140;
-    const signH = 34;
-    const signX = x + (w - signW) / 2;
-    const signY = y + 25;
-
-    ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
-    ctx.strokeStyle = '#f59e0b';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.roundRect(signX, signY, signW, signH, 6);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.font = 'bold 10px Inter, sans-serif';
-    ctx.fillStyle = '#fde68a';
-    ctx.textAlign = 'center';
-    ctx.fillText("🧱 SABİT DUVAR", signX + signW / 2, signY + 14);
-    ctx.font = '9px Inter, sans-serif';
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText("Yer Değiştirmez (Δx = 0)", signX + signW / 2, signY + 27);
 
     ctx.restore();
 }
@@ -2822,19 +2830,19 @@ function updateEnergyMetrics() {
             cardIcon.style.color = "#10b981";
             cardIcon.innerHTML = '<i class="fas fa-mountain"></i>';
             cardTitle.textContent = "⚡ Tepe Noktası (Maksimum Potansiyel Enerji):";
-            cardText.textContent = "Cisim dönüş anında anlık olarak durur (v = 0, Ek = 0). Mekanik enerjinin tamamı Çekim Potansiyel Enerjisi (Ep = mgh) hâlindedir.";
+            cardText.textContent = "Cisim dönüş anında anlık olarak durur (v = 0). Mekanik enerjinin tamamı Çekim Potansiyel Enerjisi hâlindedir.";
         } else if (energy.currentHeight < 0.04 || energy.kineticEnergy > energy.totalEnergy * 0.94) {
             cardBox.style.borderColor = "rgba(56, 189, 248, 0.65)";
             cardIcon.style.color = "#38bdf8";
             cardIcon.innerHTML = '<i class="fas fa-bolt"></i>';
             cardTitle.textContent = "🚀 Denge / Dip Konumu (Maksimum Kinetik Enerji):";
-            cardText.textContent = "Cisim en alçak noktadan geçerken (h = 0, Ep = 0) sürati ve kinetik enerjisi maksimuma ulaşır (Ek = ½mv²). Potansiyel enerjinin tamamı kinetik enerjiye dönüşmüştür!";
+            cardText.textContent = "Cisim en alçak noktadan geçerken sürati ve kinetik enerjisi maksimuma ulaşır. Potansiyel enerjinin tamamı kinetik enerjiye dönüşmüştür!";
         } else {
             cardBox.style.borderColor = "rgba(250, 204, 21, 0.5)";
             cardIcon.style.color = "#facc15";
             cardIcon.innerHTML = '<i class="fas fa-sync-alt"></i>';
             cardTitle.textContent = "🔄 Enerji Dönüşümü Devam Ediyor:";
-            cardText.textContent = "Potansiyel ve kinetik enerji sürekli olarak birbirine dönüşmektedir. Sürtünmesiz ortamda mekanik enerji toplamı (Ep + Ek) daima sabit kalır.";
+            cardText.textContent = "Potansiyel ve kinetik enerji sürekli olarak birbirine dönüşmektedir. Sürtünmesiz ortamda toplam mekanik enerji daima sabit kalır.";
         }
     }
 }
@@ -2882,15 +2890,6 @@ function drawEnergySimulation() {
     } else {
         drawRampSimulation(ctx, scale);
     }
-
-    // 5. Canvas Altı Zarif Etkileşim İpucu (Görsel Ergonomi Kuralı: Asla ortaya veya ışın/yörünge üstüne binmez)
-    ctx.save();
-    ctx.font = `${Math.max(10, 11 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "bottom";
-    ctx.fillText("👆 Sarkacı veya kaykaycıyı parmağınızla/fareyle yana çekip bırakabilirsiniz.", 450 * scale, h - (12 * scale));
-    ctx.restore();
 }
 
 function drawEnergyBarsGauge(ctx, scale) {
@@ -3021,7 +3020,7 @@ function drawPendulumSimulation(ctx, scale) {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // 4. Referans Denge / Zemin Seviyesi (h = 0)
+    // 4. Referans Denge / Zemin Seviyesi (h = 0 kesikli çizgisi)
     ctx.strokeStyle = "rgba(16, 185, 129, 0.35)";
     ctx.lineWidth = 1 * scale;
     ctx.setLineDash([3 * scale, 3 * scale]);
@@ -3030,11 +3029,6 @@ function drawPendulumSimulation(ctx, scale) {
     ctx.lineTo(cx + (160 * scale), lowestY);
     ctx.stroke();
     ctx.setLineDash([]);
-
-    ctx.font = `${Math.max(9, 10 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = "rgba(16, 185, 129, 0.7)";
-    ctx.textAlign = "left";
-    ctx.fillText("Denge Konumu (h = 0)", cx + (165 * scale), lowestY + (3 * scale));
 
     // 5. Yükseklik Farkı Gösterge Çizgisi (h)
     if (lowestY - by > 4 * scale) {
@@ -3083,8 +3077,17 @@ function drawPendulumSimulation(ctx, scale) {
     ctx.arc(cx, cy, 2.5 * scale, 0, Math.PI * 2);
     ctx.fill();
 
-    // 7. Sarkaç Küresi (3D Metalik Radial Gradyan)
+    // 7. Sarkaç Küresi (3D Metalik Radial Gradyan & Zemin Gölgesi)
     const bobR = (14 + energy.mass * 2.5) * scale;
+
+    // Zemin projeksiyon gölgesi (Küre yükseldikçe gölge hafifler ve küçülür)
+    const shadowDist = Math.max(0, lowestY - by);
+    const shadowAlpha = Math.max(0.08, 0.32 - (shadowDist / (L * 0.7)) * 0.22);
+    const shadowW = Math.max(bobR * 0.45, bobR * (1 - shadowDist / (L * 1.3)));
+    ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
+    ctx.beginPath();
+    ctx.ellipse(bx, lowestY + (12 * scale), shadowW, shadowW * 0.28, 0, 0, Math.PI * 2);
+    ctx.fill();
 
     // Dokunmatik sürükleme halkası
     if (p.isDragging) {
@@ -3098,16 +3101,17 @@ function drawPendulumSimulation(ctx, scale) {
     }
 
     const sphereGrad = ctx.createRadialGradient(
-        bx - (bobR * 0.35), by - (bobR * 0.35), bobR * 0.1,
+        bx - (bobR * 0.35), by - (bobR * 0.35), bobR * 0.05,
         bx, by, bobR
     );
     sphereGrad.addColorStop(0, "#ffffff");
-    sphereGrad.addColorStop(0.2, "#67e8f9");
-    sphereGrad.addColorStop(0.7, "#0891b2");
+    sphereGrad.addColorStop(0.18, "#a5f3fc");
+    sphereGrad.addColorStop(0.5, "#06b6d4");
+    sphereGrad.addColorStop(0.85, "#0e7490");
     sphereGrad.addColorStop(1, "#164e63");
 
     ctx.fillStyle = sphereGrad;
-    ctx.shadowColor = "rgba(0, 210, 255, 0.4)";
+    ctx.shadowColor = "rgba(0, 210, 255, 0.45)";
     ctx.shadowBlur = 10 * scale;
     ctx.beginPath();
     ctx.arc(bx, by, bobR, 0, Math.PI * 2);
@@ -3127,7 +3131,7 @@ function drawPendulumSimulation(ctx, scale) {
 
     // 8. Hız Vektörü Oku (Teğetsel Sürat)
     if (energy.currentSpeed > 0.15) {
-        const velLen = Math.min(65 * scale, energy.currentSpeed * 12 * scale);
+        const velLen = Math.min(60 * scale, energy.currentSpeed * 12 * scale);
         const dir = (p.omega >= 0) ? 1 : -1;
         const velAngle = angle + (dir * Math.PI / 2);
 
@@ -3150,9 +3154,6 @@ function drawPendulumSimulation(ctx, scale) {
         ctx.lineTo(vx - arrowSize * Math.cos(arrowAngle + Math.PI / 6), vy - arrowSize * Math.sin(arrowAngle + Math.PI / 6));
         ctx.closePath();
         ctx.fill();
-
-        ctx.font = `bold ${Math.max(8, 9 * scale)}px sans-serif`;
-        ctx.fillText(`v = ${energy.currentSpeed.toFixed(1)} m/s`, vx + (Math.sin(velAngle) * 12 * scale), vy + (Math.cos(velAngle) * 12 * scale));
     }
 
     ctx.restore();
@@ -3231,11 +3232,6 @@ function drawRampSimulation(ctx, scale) {
     ctx.lineTo(cx + (160 * scale), lowestY);
     ctx.stroke();
     ctx.setLineDash([]);
-
-    ctx.font = `${Math.max(9, 10 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = "rgba(16, 185, 129, 0.7)";
-    ctx.textAlign = "left";
-    ctx.fillText("Dip / En Düşük Nokta (h = 0)", cx + (165 * scale), lowestY + (3 * scale));
 
     // 4. Kaykaycı / Araç Konumu
     const cartX = cx + R * Math.sin(angle);
@@ -3355,9 +3351,6 @@ function drawRampSimulation(ctx, scale) {
         ctx.lineTo(vx - arrowSize * Math.cos(arrowAngle + Math.PI / 6), vy - arrowSize * Math.sin(arrowAngle + Math.PI / 6));
         ctx.closePath();
         ctx.fill();
-
-        ctx.font = `bold ${Math.max(8, 9 * scale)}px sans-serif`;
-        ctx.fillText(`v = ${energy.currentSpeed.toFixed(1)} m/s`, vx + (Math.sin(velAngle) * 12 * scale), vy + (Math.cos(velAngle) * 12 * scale));
     }
 
     ctx.restore();
@@ -3502,13 +3495,13 @@ function drawOpticsSimulation() {
     ctx.fillStyle = med2.bgColor;
     ctx.fillRect(0, originY, W, H - originY);
 
-    // Ortam Etiketleri
-    ctx.font = `bold ${Math.max(13, 15 * scale)}px 'Nunito', sans-serif`;
+    // Ortam Etiketleri (Kompakt Rozetler - Mobilde Gönye ve Normal ile Çarpışmaz)
+    ctx.font = `bold ${Math.max(11, 13 * scale)}px 'Nunito', sans-serif`;
     ctx.fillStyle = med1.highlightColor;
-    ctx.fillText(`1. Ortam: ${med1.name} (n = ${med1.n.toFixed(2)}) · ${med1.speed.toLocaleString('tr-TR')} km/s`, 20 * scale, 35 * scale);
+    ctx.fillText(`1. Ortam: ${med1.name}`, 18 * scale, 30 * scale);
 
     ctx.fillStyle = med2.highlightColor;
-    ctx.fillText(`2. Ortam: ${med2.name} (n = ${med2.n.toFixed(2)}) · ${med2.speed.toLocaleString('tr-TR')} km/s`, 20 * scale, originY + (35 * scale));
+    ctx.fillText(`2. Ortam: ${med2.name}`, 18 * scale, originY + (30 * scale));
 
     // Açıölçer / Gönye
     drawProtractor(ctx, originX, originY, radius, scale);
@@ -3845,35 +3838,66 @@ function drawLensElement(ctx, cx, cy, isConvex, scale) {
     ctx.save();
 
     if (isConvex) {
-        // İnce Kenarlı Mercek (Ortası Kalın, Kenarları İnce)
+        // İnce Kenarlı Mercek (3D Kavisli Cam Gövdesi & Bevel Yansımaları)
         const thickness = 18 * scale;
+        const lensGrad = ctx.createLinearGradient(cx - thickness, cy, cx + thickness, cy);
+        lensGrad.addColorStop(0, "rgba(255, 255, 255, 0.45)");
+        lensGrad.addColorStop(0.2, "rgba(56, 189, 248, 0.2)");
+        lensGrad.addColorStop(0.5, "rgba(255, 255, 255, 0.65)");
+        lensGrad.addColorStop(0.8, "rgba(14, 165, 233, 0.2)");
+        lensGrad.addColorStop(1, "rgba(56, 189, 248, 0.4)");
+
         ctx.beginPath();
         ctx.moveTo(cx, cy - lensH);
         ctx.quadraticCurveTo(cx + thickness, cy, cx, cy + lensH);
         ctx.quadraticCurveTo(cx - thickness, cy, cx, cy - lensH);
-        ctx.fillStyle = "rgba(56, 189, 248, 0.25)";
+        ctx.fillStyle = lensGrad;
         ctx.fill();
-        ctx.strokeStyle = "rgba(56, 189, 248, 0.9)";
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.95)";
         ctx.lineWidth = 2 * scale;
+        ctx.stroke();
+
+        // Cam Yansıma Çizgisi (Specular highlight)
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
+        ctx.lineWidth = 1.2 * scale;
+        ctx.beginPath();
+        ctx.moveTo(cx - 3 * scale, cy - lensH * 0.7);
+        ctx.quadraticCurveTo(cx - thickness * 0.5, cy, cx - 3 * scale, cy + lensH * 0.7);
         ctx.stroke();
 
         // Çift Dışa Ok Sembolü (▲ ve ▼)
         drawArrowHead(ctx, cx, cy - lensH, -Math.PI / 2, 10 * scale, "#38bdf8");
         drawArrowHead(ctx, cx, cy + lensH, Math.PI / 2, 10 * scale, "#38bdf8");
     } else {
-        // Kalın Kenarlı Mercek (Ortası İnce, Kenarları Kalın)
+        // Kalın Kenarlı Mercek (3D İçe Kavisli Cam Gövde)
         const edgeW = 18 * scale;
         const centerW = 4 * scale;
+
+        const lensGrad = ctx.createLinearGradient(cx - edgeW, cy, cx + edgeW, cy);
+        lensGrad.addColorStop(0, "rgba(255, 255, 255, 0.45)");
+        lensGrad.addColorStop(0.3, "rgba(192, 132, 252, 0.2)");
+        lensGrad.addColorStop(0.5, "rgba(255, 255, 255, 0.6)");
+        lensGrad.addColorStop(0.7, "rgba(168, 85, 247, 0.2)");
+        lensGrad.addColorStop(1, "rgba(192, 132, 252, 0.4)");
+
         ctx.beginPath();
         ctx.moveTo(cx - edgeW, cy - lensH);
         ctx.lineTo(cx + edgeW, cy - lensH);
         ctx.quadraticCurveTo(cx + centerW, cy, cx + edgeW, cy + lensH);
         ctx.lineTo(cx - edgeW, cy + lensH);
         ctx.quadraticCurveTo(cx - centerW, cy, cx - edgeW, cy - lensH);
-        ctx.fillStyle = "rgba(192, 132, 252, 0.25)";
+        ctx.fillStyle = lensGrad;
         ctx.fill();
-        ctx.strokeStyle = "rgba(192, 132, 252, 0.9)";
+        ctx.strokeStyle = "rgba(192, 132, 252, 0.95)";
         ctx.lineWidth = 2 * scale;
+        ctx.stroke();
+
+        // Yansıma ışıltısı
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
+        ctx.lineWidth = 1.2 * scale;
+        ctx.beginPath();
+        ctx.moveTo(cx - edgeW + 3 * scale, cy - lensH * 0.8);
+        ctx.quadraticCurveTo(cx - centerW * 0.5, cy, cx - edgeW + 3 * scale, cy + lensH * 0.8);
         ctx.stroke();
 
         // İçe Doğru Ok Sembolleri (▼ ve ▲)
@@ -4772,10 +4796,6 @@ function drawMagneticHotplate(ctx, cx, topY, temp, stirring) {
     ctx.fill();
 
     ctx.shadowBlur = 0;
-    ctx.font = '8px Inter, sans-serif';
-    ctx.fillStyle = '#94a3b8';
-    ctx.textAlign = 'right';
-    ctx.fillText("MANYETİK TABLA", cx + 70, topY + 13);
     ctx.restore();
 }
 
@@ -4969,42 +4989,36 @@ function drawMagneticStirBar(ctx, cx, y, stirring, angle) {
 function drawBeakerHeaderAndStopwatch(ctx, beaker, cx, topY) {
     ctx.save();
 
-    // Başlık ve Etiket Kutusu
-    const boxW = 140;
-    const boxH = 46;
-    const boxX = cx - boxW / 2;
-    const boxY = topY;
+    // Zarif Kompakt Dijital Kapsül (Pill HUD - Mobilde Asla Beheri Kapatmaz)
+    const pillW = 104;
+    const pillH = 22;
+    const pillX = cx - pillW / 2;
+    const pillY = topY + 18;
 
-    ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-    ctx.strokeStyle = beaker.isDissolved ? 'rgba(52, 211, 153, 0.6)' : 'rgba(71, 85, 105, 0.5)';
-    ctx.lineWidth = 1.5;
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+    ctx.strokeStyle = beaker.isDissolved ? 'rgba(52, 211, 153, 0.65)' : 'rgba(56, 189, 248, 0.4)';
+    ctx.lineWidth = 1.2;
     ctx.beginPath();
-    ctx.roundRect(boxX, boxY, boxW, boxH, 8);
+    ctx.roundRect(pillX, pillY, pillW, pillH, 11);
     ctx.fill();
     ctx.stroke();
 
-    // Başlık
-    ctx.font = 'bold 11px Inter, sans-serif';
+    // Beher İsim Rozeti
+    ctx.font = 'bold 10px Inter, sans-serif';
     ctx.fillStyle = beaker.id === "A" ? '#38bdf8' : beaker.id === "B" ? '#2dd4bf' : '#fb923c';
     ctx.textAlign = 'left';
-    ctx.fillText(beaker.name, boxX + 10, boxY + 16);
-
-    // Parametre özeti (örn: 60°C · Toz · Çalk.)
-    const sShort = beaker.sugar === "cube" ? "Küp" : beaker.sugar === "granulated" ? "Toz" : "Pudra";
-    const stirShort = beaker.stirring ? "🌀 Karışt." : "Durgun";
-    ctx.font = '9px Inter, sans-serif';
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText(`${beaker.temp}°C · ${sShort} · ${stirShort}`, boxX + 10, boxY + 36);
+    ctx.textBaseline = 'middle';
+    ctx.fillText(beaker.name, pillX + 10, pillY + pillH / 2);
 
     // Kronometre
-    ctx.font = 'bold 13px Inter, monospace';
+    ctx.font = 'bold 11px Inter, monospace';
     ctx.textAlign = 'right';
     if (beaker.isDissolved) {
         ctx.fillStyle = '#34d399';
-        ctx.fillText(`${beaker.targetTime.toFixed(1)}s ✓`, boxX + boxW - 8, boxY + 17);
+        ctx.fillText(`${beaker.targetTime.toFixed(1)}s ✓`, pillX + pillW - 10, pillY + pillH / 2);
     } else {
         ctx.fillStyle = '#facc15';
-        ctx.fillText(`${beaker.elapsedTime.toFixed(1)}s`, boxX + boxW - 8, boxY + 17);
+        ctx.fillText(`${beaker.elapsedTime.toFixed(1)}s`, pillX + pillW - 10, pillY + pillH / 2);
     }
 
     ctx.restore();
@@ -5858,37 +5872,7 @@ function drawCollectionErlenmeyer(ctx, funnel) {
 }
 
 function drawFunnelIndicators(ctx, funnel) {
-    ctx.save();
-    const cx = 440;
-
-    // Zeytinyağı Etiketi (Sol tarafta, sarı)
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillStyle = '#facc15';
-    ctx.textAlign = 'right';
-    ctx.fillText("Zeytinyağı (d = 0.9 g/cm³)", cx - 68, 120);
-
-    // Su Etiketi (Sol tarafta, mavi)
-    ctx.fillStyle = '#38bdf8';
-    ctx.fillText("Su (d = 1.0 g/cm³)", cx - 68, 200);
-
-    // Arayüz Gösterge Oku (Sağ tarafta)
-    const waterH = (funnel.waterVolume / 100.0) * 75;
-    const waterTopY = 255 - waterH;
-
-    if (funnel.waterVolume > 0 && funnel.oilVolume > 0) {
-        ctx.fillStyle = '#ffffff';
-        ctx.textAlign = 'left';
-        ctx.font = 'bold 11px Inter, sans-serif';
-        ctx.fillText("◀ Faz Sınırı (Arayüz)", cx + 58, waterTopY + 4);
-    }
-
-    // Toplama Kabı Etiketi
-    ctx.fillStyle = '#94a3b8';
-    ctx.textAlign = 'center';
-    ctx.font = '10px Inter, sans-serif';
-    ctx.fillText("Toplama Erlenmayeri", cx, 448);
-
-    ctx.restore();
+    // Zero-Canvas-Text Zırhı: Tüm faz ve bileşen bilgileri sağ panelde sunulur, tuval saf cam düzeneğe ayrılır
 }
 
 // --- MOD 2: BASİT DAMITMA ÇİZİM RUTİNLERİ ---
@@ -6265,25 +6249,7 @@ function drawDistillationCollectionFlask(ctx, distill) {
 }
 
 function drawDistillationIndicators(ctx, distill) {
-    ctx.save();
-
-    // Balon Etiketi (Sol)
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillStyle = '#c084fc';
-    ctx.textAlign = 'center';
-    ctx.fillText("Alkol-Su Çözeltisi", 230, 380);
-
-    // Kondenser Etiketi (Orta)
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = '10px Inter, sans-serif';
-    ctx.fillText("Liebig Soğutucu (Kondenser)", 400, 245);
-
-    // Toplama Kabı Etiketi (Sağ)
-    ctx.fillStyle = '#38bdf8';
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillText("Saf Etil Alkol (K.N: 78°C)", 560, 450);
-
-    ctx.restore();
+    // Zero-Canvas-Text Zırhı: Tüm damıtma ve yoğunlaşma bilgileri sağ panelde sunulur
 }
 
 // --- 8.7. DENEY 7.7: SÜRTÜNME VE DOKUNMA İLE ELEKTRİKLENME MOTORU ---
@@ -6855,16 +6821,6 @@ function drawElectroFrictionSetup(ctx, f) {
 
     // 4. Kıvılcım Transfer Parçacıkları
     drawElectroSparks(ctx, f.sparks);
-
-    // 5. Bilgilendirme İpuçları
-    ctx.save();
-    ctx.font = 'bold 10px Inter, sans-serif';
-    ctx.fillStyle = 'rgba(148, 163, 184, 0.6)';
-    ctx.textAlign = 'center';
-    ctx.fillText("↔ Kumaşı çubuğa sürterek elektrikleyin", f.cloth.x + f.cloth.w / 2, f.cloth.y - 10);
-    ctx.fillText("↕ Çubuğu aşağı sürükleyip kağıtları çekebilirsiniz", f.rod.x + f.rod.w / 2, f.rod.y - 12);
-    ctx.fillText("Nötr Kağıt Parçaları (Masada)", 400, 458);
-    ctx.restore();
 }
 
 function drawElectroRod(ctx, rod, pair) {
@@ -7085,15 +7041,6 @@ function drawElectroConductionSetup(ctx, c) {
 
     // 4. Dokunma Kıvılcımları
     drawTouchSparks(ctx, c.touchSparks);
-
-    // 5. Bilgilendirme İpucu
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillStyle = 'rgba(148, 163, 184, 0.6)';
-    ctx.textAlign = 'center';
-    ctx.fillText("↔ Küreleri birbirine dokundurmak için sürükleyin", 400, 100);
-    ctx.fillText("Yalıtkan Ayaklar (Masada Sabit İletim Yok)", 400, 458);
-
-    ctx.restore();
 }
 
 function drawConductionSphere(ctx, sphere, label, netColor) {
@@ -7268,17 +7215,21 @@ function setElectroscopeAction(action) {
     const activeBtn = document.getElementById(activeMap[action]);
     if (activeBtn) activeBtn.classList.add('active');
 
+    // Milimetrik teğet dokunma ve yaklaşma sınırları (Topuz cx=420, r=24 -> sol teğet=396; Çubuk rw=170)
     if (action === "approach") {
-        es.rod.x = 230;
-        es.rod.y = 110;
+        es.rod.targetX = 192; // 34px net hava aralığı
+        es.rod.targetY = 110;
+        if (es.rod.x === undefined) es.rod.x = 192;
     } else if (action === "touch") {
-        es.rod.x = 275;
-        es.rod.y = 110;
+        es.rod.targetX = 226; // 226 + 170 = 396 (Sıfır İhlal Teğet Temas!)
+        es.rod.targetY = 110;
+        if (es.rod.x === undefined) es.rod.x = 226;
         // Dokunma kıvılcımları üret
         spawnElectroscopeTouchSparks(es);
     } else if (action === "remove") {
-        es.rod.x = 120;
-        es.rod.y = 110;
+        es.rod.targetX = 70; // Güvenli uzak konum
+        es.rod.targetY = 110;
+        if (es.rod.x === undefined) es.rod.x = 70;
     }
 }
 
@@ -7358,8 +7309,10 @@ function resetElectroscopeExperiment() {
     const es = labState.electroscope;
     es.rod.type = "glass_pos";
     es.rod.charge = 6;
-    es.rod.x = 120;
+    es.rod.x = 70;
     es.rod.y = 110;
+    es.rod.targetX = 70;
+    es.rod.targetY = 110;
     es.rod.action = "remove";
     es.rod.isDragging = false;
 
@@ -7369,6 +7322,7 @@ function resetElectroscopeExperiment() {
     es.scope.leavesNet = 0;
     es.scope.leafAngle = 0;
     es.scope.targetAngle = 0;
+    es.scope.leafVelocity = 0;
 
     es.grounding.isActive = false;
     es.grounding.animTimer = 0;
@@ -7391,8 +7345,11 @@ function resetElectroscopeExperiment() {
 
 function initElectroscopeState() {
     const es = labState.electroscope;
-    es.rod.x = (es.rod.action === "approach") ? 230 : (es.rod.action === "touch") ? 275 : 120;
-    es.rod.y = 110;
+    es.rod.targetX = (es.rod.action === "approach") ? 192 : (es.rod.action === "touch") ? 226 : 70;
+    es.rod.targetY = 110;
+    es.rod.x = es.rod.targetX;
+    es.rod.y = es.rod.targetY;
+    es.scope.leafVelocity = 0;
     es.grounding.isActive = false;
     es.grounding.sparks = [];
     es.sparks = [];
@@ -7401,21 +7358,27 @@ function initElectroscopeState() {
 
 function spawnElectroscopeTouchSparks(es) {
     es.sparks = [];
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 18; i++) {
         es.sparks.push({
-            x: 400 + (Math.random() - 0.5) * 15,
-            y: 110 + (Math.random() - 0.5) * 15,
-            vx: (Math.random() - 0.5) * 5,
-            vy: (Math.random() - 0.5) * 5,
+            x: 396 + (Math.random() - 0.5) * 6,
+            y: 110 + (Math.random() - 0.5) * 12,
+            vx: (Math.random() - 0.6) * 3.5,
+            vy: (Math.random() - 0.5) * 3.5,
             alpha: 1.0,
-            color: es.rod.charge > 0 ? '#f87171' : es.rod.charge < 0 ? '#38bdf8' : '#e2e8f0',
-            size: 2 + Math.random() * 3
+            color: es.rod.charge > 0 ? '#f87171' : es.rod.charge < 0 ? '#38bdf8' : '#facc15',
+            size: 1.5 + Math.random() * 2.5
         });
     }
 }
 
 function updateElectroscopePhysics() {
     const es = labState.electroscope;
+
+    // 0. Çubuk Yumuşak Süzülme Hareketi (Lerp Glide)
+    if (!es.rod.isDragging && es.rod.targetX !== undefined) {
+        es.rod.x += (es.rod.targetX - es.rod.x) * 0.18;
+        es.rod.y += (es.rod.targetY - es.rod.y) * 0.18;
+    }
 
     // 1. Topraklama Parçacıkları Güncelleme
     if (es.grounding.animTimer > 0) {
@@ -7482,10 +7445,17 @@ function updateElectroscopePhysics() {
         es.scope.targetAngle = Math.min(60, Math.abs(es.scope.leavesNet) * 12.0);
     }
 
-    // 4. Yaprak Açısı Yumuşak Sönümleme
-    es.scope.leafAngle += (es.scope.targetAngle - es.scope.leafAngle) * 0.16;
-    if (Math.abs(es.scope.leafAngle - es.scope.targetAngle) < 0.1) {
+    // 4. Yaprak Açısı Sönümlü Harmonik Titreşim (Damped Harmonic Oscillation)
+    if (es.scope.leafVelocity === undefined) es.scope.leafVelocity = 0;
+    const diff = es.scope.targetAngle - es.scope.leafAngle;
+    const springK = 0.14;
+    const damping = 0.80;
+    es.scope.leafVelocity += diff * springK;
+    es.scope.leafVelocity *= damping;
+    es.scope.leafAngle += es.scope.leafVelocity;
+    if (Math.abs(diff) < 0.05 && Math.abs(es.scope.leafVelocity) < 0.05) {
         es.scope.leafAngle = es.scope.targetAngle;
+        es.scope.leafVelocity = 0;
     }
 
     updateElectroscopeMetricsDOM();
@@ -7609,6 +7579,26 @@ function drawElectroscopeSimulation() {
     // 6. Yaklaştırılan / Dokundurulan Çubuk
     drawElectroscopeRod(ctx, es);
 
+    // 6.5. Elektrostatik Alan Çizgileri (Hava Aralığı Etkileşimi)
+    const tipX = es.rod.x + es.rod.w;
+    const airGap = 396 - tipX;
+    if (airGap > 6 && airGap < 90 && es.rod.charge !== 0) {
+        ctx.save();
+        const isPos = es.rod.charge > 0;
+        ctx.strokeStyle = isPos ? 'rgba(248, 113, 113, 0.65)' : 'rgba(56, 189, 248, 0.65)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([3, 3]);
+        const animOffset = (animTime * 15) % 6;
+        ctx.lineDashOffset = isPos ? -animOffset : animOffset;
+        [-10, 0, 10].forEach(dy => {
+            ctx.beginPath();
+            ctx.moveTo(tipX, 110 + dy);
+            ctx.quadraticCurveTo(tipX + airGap / 2, 110 + dy * 1.5, 396, 110 + dy * 0.8);
+            ctx.stroke();
+        });
+        ctx.restore();
+    }
+
     // 7. Topraklama Teli ve Levhası
     drawElectroscopeGroundWire(ctx, es);
 
@@ -7714,11 +7704,6 @@ function drawElectroscopeStopper(ctx, cx, y) {
     ctx.fill();
     ctx.stroke();
 
-    // Yalıtkan Etiketi
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-    ctx.font = 'bold 9px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText("Yalıtkan Tıpa", cx, y + 30);
     ctx.restore();
 }
 
@@ -7770,12 +7755,6 @@ function drawElectroscopeKnobAndStem(ctx, cx, es) {
             drawChargeBadge(ctx, qx, qy, sign, color, border);
         }
     }
-
-    // Topuz Etiketi
-    ctx.fillStyle = '#f8fafc';
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText("İletken Topuz", cx, knobY - r - 8);
 
     ctx.restore();
 }
@@ -7869,12 +7848,6 @@ function drawElectroscopeLeaves(ctx, cx, pivotY, es) {
         ctx.textAlign = 'center';
         ctx.fillText(`α = ${(angDeg * 2).toFixed(0)}°`, cx, pivotY + 48);
     }
-
-    // Yapraklar Açıklama Metni
-    ctx.fillStyle = '#cbd5e1';
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText("Altın/Alüminyum Yapraklar", cx, 395);
 
     ctx.restore();
 }
@@ -7983,11 +7956,6 @@ function drawElectroscopeGroundWire(ctx, es) {
     ctx.moveTo(groundX - 4, groundY + 14);
     ctx.lineTo(groundX + 4, groundY + 14);
     ctx.stroke();
-
-    ctx.fillStyle = isGrounded ? '#34d399' : '#94a3b8';
-    ctx.font = 'bold 10px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText("Topraklama", groundX, groundY + 34);
 
     // İletken Tel: Topraktan Topuza
     ctx.save();
@@ -8708,31 +8676,23 @@ function drawPyramidDecomposers(ctx, isSelected) {
 
     ctx.shadowBlur = 0;
 
-    // Kutu İçi Metinler
+    // Kutu İçi Metinler (Zarif ve Sadeleştirilmiş)
     ctx.fillStyle = '#e9d5ff';
-    ctx.font = 'bold 13px Inter, sans-serif';
+    ctx.font = 'bold 12px Inter, sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText("🍄 Ayrıştırıcılar", bx + bw / 2, by + 30);
+    ctx.fillText("🍄 Ayrıştırıcılar", bx + bw / 2, by + 34);
 
     ctx.fillStyle = '#c084fc';
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillText("Bakteri & Mantar", bx + bw / 2, by + 50);
-
-    // Açıklama
-    ctx.fillStyle = '#94a3b8';
     ctx.font = '10px Inter, sans-serif';
-    ctx.fillText("Ölü organik atıkları", bx + bw / 2, by + 100);
-    ctx.fillText("inorganik minerallere", bx + bw / 2, by + 116);
-    ctx.fillText("dönüştürür.", bx + bw / 2, by + 132);
+    ctx.fillText("Bakteri & Mantarlar", bx + bw / 2, by + 54);
 
     ctx.fillStyle = '#34d399';
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillText("🔄 Madde Döngüsü", bx + bw / 2, by + 180);
-    ctx.fillText("Sağlayıcısı", bx + bw / 2, by + 196);
+    ctx.font = 'bold 10px Inter, sans-serif';
+    ctx.fillText("🔄 Madde Döngüsü", bx + bw / 2, by + 120);
 
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
     ctx.font = '9px Inter, sans-serif';
-    ctx.fillText("Tüm Basamaklara Bağlı", bx + bw / 2, by + 224);
+    ctx.fillText("Tüm Basamaklara Bağlı", bx + bw / 2, by + 215);
 
     // 4 basamaktan ayrıştırıcılara bağlanan mor bağlantı hatları
     ctx.strokeStyle = 'rgba(139, 92, 246, 0.45)';
@@ -8901,10 +8861,15 @@ function drawPyramidBioaccumulation(ctx, fp) {
     ctx.closePath();
     ctx.fill();
 
+    // Dikey Yön Rozeti (Mobilde Asla Piramide veya Sol Kenara Binmez)
+    ctx.save();
+    ctx.translate(arrX - 12, 250);
+    ctx.rotate(-Math.PI / 2);
     ctx.fillStyle = '#fca5a5';
     ctx.font = 'bold 10px Inter, sans-serif';
-    ctx.textAlign = 'right';
-    ctx.fillText("Biyolojik Birikim (Zehir) KATLANARAK ARTAR ➔", arrX - 10, 245);
+    ctx.textAlign = 'center';
+    ctx.fillText("▲ Biyobirikim (Zehir) Artar", 0, 0);
+    ctx.restore();
 
     ctx.restore();
 }
@@ -9110,15 +9075,16 @@ function setupCanvasPointerEvents() {
             if (es.rod.isDragging) {
                 const newX = canvasX - (es.rod.dragOffsetX || (es.rod.w / 2));
                 const newY = canvasY - (es.rod.dragOffsetY || (es.rod.h / 2));
-                es.rod.x = Math.max(20, Math.min(340, newX));
+                // Sıfır İhlal Zırhı: Çubuk ucu asla topuz yüzeyini (396) aşamaz (226 + 170 = 396)
+                es.rod.x = Math.max(20, Math.min(226, newX));
                 es.rod.y = Math.max(40, Math.min(220, newY));
+                es.rod.targetX = es.rod.x;
+                es.rod.targetY = es.rod.y;
 
                 const tipX = es.rod.x + es.rod.w;
-                const tipY = es.rod.y + es.rod.h / 2;
-                const distToKnob = Math.hypot(tipX - 420, tipY - 110);
-                if (distToKnob <= 28) {
+                if (tipX >= 394) {
                     setElectroscopeAction("touch");
-                } else if (distToKnob <= 130) {
+                } else if (tipX >= 300) {
                     setElectroscopeAction("approach");
                 } else {
                     setElectroscopeAction("remove");
@@ -9776,23 +9742,40 @@ function drawProtractor(ctx, cx, cy, r, scale) {
 
 function drawLaserBeam(ctx, x1, y1, x2, y2, color, width, alpha) {
     ctx.save();
+
+    // 1. Dış Yaygın Neon Halesi (Diffuse Bloom)
+    ctx.globalAlpha = alpha * 0.45;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width * 2.8;
+    ctx.lineCap = "round";
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 14;
+    ctx.stroke();
+
+    // 2. Doygun Neon Işın Gövdesi (Saturated Beam Core)
+    ctx.globalAlpha = alpha * 0.9;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = width * 1.25;
+    ctx.shadowBlur = 6;
+    ctx.stroke();
+
+    // 3. Yoğun Akkor Beyaz Filament Çekirdeği (Hot White Filament Center)
     ctx.globalAlpha = alpha;
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
-
-    ctx.strokeStyle = color;
-    ctx.lineWidth = width;
-    ctx.lineCap = "round";
-    ctx.shadowColor = color;
-    ctx.shadowBlur = 8;
-    ctx.stroke();
-
     ctx.strokeStyle = "#ffffff";
-    ctx.lineWidth = Math.max(0.75, width * 0.32);
+    ctx.lineWidth = Math.max(0.9, width * 0.38);
     ctx.shadowBlur = 0;
     ctx.stroke();
 
+    // Foton İlerleme Yön Oku (Minimal Directional Photon)
     const angle = Math.atan2(y2 - y1, x2 - x1);
     const arrowLen = 9 * (width / 3.0);
     const midX = (x1 + x2) / 2;
@@ -9803,8 +9786,8 @@ function drawLaserBeam(ctx, x1, y1, x2, y2, color, width, alpha) {
     ctx.lineTo(midX - arrowLen * Math.cos(angle - Math.PI / 6), midY - arrowLen * Math.sin(angle - Math.PI / 6));
     ctx.moveTo(midX, midY);
     ctx.lineTo(midX - arrowLen * Math.cos(angle + Math.PI / 6), midY - arrowLen * Math.sin(angle + Math.PI / 6));
-    ctx.strokeStyle = color;
-    ctx.lineWidth = Math.max(1, width * 0.6);
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = Math.max(1.2, width * 0.5);
     ctx.stroke();
 
     ctx.restore();

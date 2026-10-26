@@ -606,8 +606,8 @@
                                 <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
                                 <div class="lab-vars-list">
                                     <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Uygulanan Kuvvet (F), Alınan Yol (Δx), Kuvvet Doğrultusu ve Sürtünme</div>
-                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Yapılan Fiziksel İş (W = F · Δx), Net İş (Wnet) ve İş Durumu (Yapıldı / Yapılmadı)</div>
-                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Cisim Kütlesi (m = 10 kg), Yer Çekimi İvmesi (g = 10 m/s²)</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Yapılan Fiziksel İş (Kuvvet ve Alınan Yol Etkisi) ve İş Durumu (Yapıldı / Yapılmadı)</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Cisim Kütlesi (m = 10 kg), Yer Çekimi İvmesi</div>
                                 </div>
                             </div>
 
@@ -616,7 +616,7 @@
                                 <div class="pedagogical-icon" id="work-pedagogical-icon"><i class="fas fa-check-circle"></i></div>
                                 <div class="pedagogical-content">
                                     <strong id="work-pedagogical-title">✅ Fiziksel Anlamda İş Yapıldı!</strong>
-                                    <p id="work-pedagogical-text">Uygulanan kuvvet ile cismin hareket doğrultusu aynıdır (yatay). Cisim uygulanan kuvvet yönünde yer değiştirdiği için fiziksel anlamda iş yapılmıştır (W = F · Δx).</p>
+                                    <p id="work-pedagogical-text">Uygulanan kuvvet ile cismin hareket doğrultusu aynıdır (yatay). Cisim uygulanan kuvvet doğrultusunda yer değiştirdiği için fiziksel anlamda iş yapılmıştır.</p>
                                 </div>
                             </div>
 
@@ -1381,27 +1381,27 @@
                     <div class="lab-tab-pane is-hidden" id="pane-guide">
                         <!-- DENEY 7.1 REHBERİ -->
                         <div id="guide-container-7-1" class="lab-panel-box is-hidden">
-                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Fiziksel Anlamda İş (W = F · Δx) Rehberi</h4>
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Fiziksel Anlamda İş ve Enerji Rehberi</h4>
                             <div class="lab-guide-text">
                                 <div class="guide-item">
                                     <strong>1. Fen Anlamında İş Nedir?</strong>
                                     <p>Günlük hayatta "ders çalışmak", "düşünmek" veya "duvara yaslanıp beklemek" birer iş olarak nitelendirilebilir; ancak fen bilimlerinde işin kesin bir fiziksel tanımı vardır. Bir kuvvetin iş yapabilmesi için cisme kuvvet uygulanması ve cismin uygulanan <strong>kuvvet doğrultusunda yer değiştirmesi</strong> şarttır.</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>2. İş Formülü ve Birimi:</strong>
-                                    <p>İş = Kuvvet × Yer Değiştirme ($W = F \cdot \Delta x$). Kuvvet birimi Newton (N), yer değiştirme birimi metre (m) alındığında, yapılan işin birimi <strong>Joule (J)</strong> olur ($1\text{ J} = 1\text{ N} \cdot \text{m}$).</p>
+                                    <strong>2. Kuvvet, Yol ve İş İlişkisi:</strong>
+                                    <p>Uygulanan kuvvet arttıkça veya cismin kuvvet doğrultusunda aldığı yol uzadıkça yapılan fiziksel iş artar. Yapılan işin birimi <strong>Joule (J)</strong>'dür.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>3. Çantayla Düz Yürüme Yanılgısı (Kuvvet ⟂ Hareket):</strong>
-                                    <p>Öğrenci elinde veya omzunda çantayla yatay bir yolda sabit süratle yürürken, çantayı taşımak için uyguladığı kuvvet <strong>düşey yukarı yönlüdür</strong>; ancak çantanın yer değiştirmesi <strong>yataydır</strong>. Kuvvet ile hareket doğrultuları birbirine <strong>DİK ($90^\circ$)</strong> olduğu için çanta üzerinde fiziksel anlamda <strong>iş yapılmaz ($W = 0\text{ J}$)</strong>!</p>
+                                    <p>Öğrenci elinde veya omzunda çantayla yatay bir yolda sabit süratle yürürken, çantayı taşımak için uyguladığı kuvvet <strong>düşey yukarı yönlüdür</strong>; ancak çantanın yer değiştirmesi <strong>yataydır</strong>. Kuvvet ile hareket doğrultuları birbirine <strong>DİK ($90^\circ$)</strong> olduğu için çanta üzerinde fiziksel anlamda <strong>iş yapılmaz</strong>!</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>4. Duvarı İtme Yanılgısı (Yorulmak ≠ Fiziksel İş):</strong>
-                                    <p>Sabit bir duvara ne kadar büyük bir kuvvetle yüklenirseniz yüklenin, duvar yer değiştirmediği için ($\Delta x = 0\text{ m}$), fiziksel anlamda <strong>iş yapılmaz ($W = 0\text{ J}$)</strong>. Biyolojik olarak yorulmak ve enerji harcamak, cisim üzerinde fiziksel anlamda iş yapıldığı anlamına gelmez.</p>
+                                    <p>Sabit bir duvara ne kadar büyük bir kuvvetle yüklenirseniz yüklenin, duvar yer değiştirmediği için ($\Delta x = 0\text{ m}$), fiziksel anlamda <strong>iş yapılmaz</strong>. Biyolojik olarak yorulmak ve enerji harcamak, cisim üzerinde fiziksel anlamda iş yapıldığı anlamına gelmez.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>5. Yer Çekimine Karşı Yapılan İş:</strong>
-                                    <p>Yerde duran bir cismi yukarı doğru kaldırırken uygulanan kuvvet yer çekimine zıttır ve cisim kuvvet doğrultusunda (düşeyde) yükselir. Bu durumda <strong>yer çekimine karşı iş yapılır</strong> ve bu iş cisimde <strong>çekim potansiyel enerjisi</strong> ($E_p = m \cdot g \cdot h$) olarak birikir.</p>
+                                    <p>Yerde duran bir cismi yukarı doğru kaldırırken uygulanan kuvvet yer çekimine zıttır ve cisim kuvvet doğrultusunda (düşeyde) yükselir. Bu durumda <strong>yer çekimine karşı iş yapılır</strong> ve bu iş cisimde <strong>çekim potansiyel enerjisi</strong> olarak depolanır.</p>
                                 </div>
                             </div>
                         </div>
@@ -1411,16 +1411,16 @@
                             <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Mekanik Enerji ve Korunum Rehberi</h4>
                             <div class="lab-guide-text">
                                 <div class="guide-item">
-                                    <strong>1. Çekim Potansiyel Enerjisi (Ep = m · g · h):</strong>
-                                    <p>Bir cismin konumundan (yüksekliğinden) dolayı sahip olduğu enerjidir. Cismin kütlesi (m) ve yerden yüksekliği (h) arttıkça potansiyel enerjisi de artar. En yüksek noktada (tepe) potansiyel enerji maksimum, sürat sıfır olduğu için kinetik enerji sıfırdır.</p>
+                                    <strong>1. Çekim Potansiyel Enerjisi (Kütle ve Yükseklik İlişkisi):</strong>
+                                    <p>Bir cismin konumundan (yüksekliğinden) dolayı sahip olduğu enerjidir. Cismin kütlesi ve yerden yüksekliği arttıkça potansiyel enerjisi de artar. En yüksek noktada (tepe) potansiyel enerji maksimum, sürat sıfır olduğu için kinetik enerji sıfırdır.</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>2. Kinetik Enerji (Ek = ½ · m · v²):</strong>
-                                    <p>Hareketli cisimlerin süratlerinden dolayı sahip olduğu enerjidir. Cismin kütlesi (m) ve süratinin karesi (v²) ile doğru orantılıdır. Cisim alçaldıkça potansiyel enerji kinetik enerjiye dönüşür; en alt (denge) noktasında kinetik enerji maksimum değere ulaşır.</p>
+                                    <strong>2. Kinetik Enerji (Sürat ve Kütle İlişkisi):</strong>
+                                    <p>Hareketli cisimlerin süratlerinden dolayı sahip olduğu enerjidir. Cismin kütlesi ve sürati arttıkça kinetik enerjisi de artar. Cisim alçaldıkça potansiyel enerji kinetik enerjiye dönüşür; en alt (denge) noktasında kinetik enerji maksimum değere ulaşır.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>3. Mekanik Enerjinin Korunumu Kanunu:</strong>
-                                    <p>Sürtünmelerin ihmal edildiği ideal bir ortamda kinetik enerji ile potansiyel enerjinin toplamı (Emek = Ep + Ek) daima <strong>sabit kalır</strong>. Enerji yoktan var edilemez, var olan enerji yok olamaz; yalnızca bir türden diğerine dönüşür.</p>
+                                    <p>Sürtünmelerin ihmal edildiği ideal bir ortamda kinetik enerji ile potansiyel enerjinin toplamı (toplam mekanik enerji) daima <strong>sabit kalır</strong>. Enerji yoktan var edilemez, var olan enerji yok olamaz; yalnızca bir türden diğerine dönüşür.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>4. Sürtünme Kuvvetinin Etkisi (Isıya Dönüşüm):</strong>
