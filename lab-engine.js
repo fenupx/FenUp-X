@@ -403,9 +403,12 @@ export function showLabToast(message) {
 
 // --- 5. ÇALIŞMA MASASI VE KABUK BAĞLANTILARI (WORKSPACE CONTROLLER) ---
 function setupWorkspaceShellDOM() {
-    // 1. Geri Dön Butonu
+    // 1. Geri Dön Butonları
     const btnBackCatalog = document.getElementById('btn-lab-back-catalog');
     if (btnBackCatalog) btnBackCatalog.addEventListener('click', closeExperimentWorkspace);
+
+    const btnLabBackHome = document.getElementById('btn-lab-back-home');
+    if (btnLabBackHome) btnLabBackHome.addEventListener('click', closeLabView);
 
     // 2. Sıfırla Butonu
     const btnReset = document.getElementById('btn-lab-reset');
@@ -580,8 +583,38 @@ export function openLabView() {
     renderCatalog();
     const catalogView = document.getElementById('lab-catalog-view');
     const workspaceView = document.getElementById('lab-workspace-view');
+    const labView = document.getElementById('lab-view');
     if (catalogView) catalogView.classList.remove('is-hidden');
     if (workspaceView) workspaceView.classList.add('is-hidden');
+    if (labView) {
+        labView.classList.remove('is-hidden');
+        labView.scrollTop = 0;
+    }
+    window.scrollTo(0, 0);
+}
+
+export function closeLabView() {
+    if (animFrameId) {
+        cancelAnimationFrame(animFrameId);
+        animFrameId = null;
+    }
+    labState.activeExperimentId = null;
+
+    const labView = document.getElementById('lab-view');
+    const catalogView = document.getElementById('lab-catalog-view');
+    const workspaceView = document.getElementById('lab-workspace-view');
+    const homeScene = (window.scenes && window.scenes.home) || document.getElementById('scene-home');
+
+    if (catalogView) catalogView.classList.add('is-hidden');
+    if (workspaceView) workspaceView.classList.add('is-hidden');
+
+    if (typeof window.switchScene === "function" && labView && homeScene) {
+        window.switchScene(labView, homeScene);
+    } else {
+        if (labView) labView.classList.add('is-hidden');
+        if (homeScene) homeScene.classList.remove('is-hidden');
+    }
+    window.scrollTo(0, 0);
 }
 
 export function openExperimentWorkspace(expId) {
@@ -592,8 +625,11 @@ export function openExperimentWorkspace(expId) {
 
     const catalogView = document.getElementById('lab-catalog-view');
     const workspaceView = document.getElementById('lab-workspace-view');
+    const labView = document.getElementById('lab-view');
     if (catalogView) catalogView.classList.add('is-hidden');
     if (workspaceView) workspaceView.classList.remove('is-hidden');
+    if (labView) labView.scrollTop = 0;
+    window.scrollTo(0, 0);
 
     // Başlık ve Rozetleri Güncelle
     const expBadge = document.getElementById('lab-exp-badge');
@@ -648,9 +684,12 @@ export function closeExperimentWorkspace() {
 
     const catalogView = document.getElementById('lab-catalog-view');
     const workspaceView = document.getElementById('lab-workspace-view');
+    const labView = document.getElementById('lab-view');
     if (catalogView) catalogView.classList.remove('is-hidden');
     if (workspaceView) workspaceView.classList.add('is-hidden');
     renderCatalog();
+    if (labView) labView.scrollTop = 0;
+    window.scrollTo(0, 0);
 }
 
 function resetCurrentExperiment() {
@@ -1815,6 +1854,7 @@ if (typeof window !== "undefined") {
     window.FenUpLab = {
         initLabModule,
         openLabView,
+        closeLabView,
         openExperimentWorkspace,
         closeExperimentWorkspace,
         resetCurrentExperiment,

@@ -395,6 +395,8 @@ function switchScene(from, to) {
         }
     }
 }
+window.switchScene = switchScene;
+window.scenes = scenes;
 if (topControls) topControls.style.display = "none"; 
 
 // --- 4. MASTER PAUSE ---
@@ -478,7 +480,15 @@ if(btnModeBireysel) btnModeBireysel.onclick = () => {
 const btnModeTurnuva = document.getElementById('btn-mode-turnuva');
 if(btnModeTurnuva) btnModeTurnuva.onclick = () => { activeMode = "turnuva"; initTournamentLobby(); switchScene(scenes.crossroads, scenes.tournamentLobby); };
 
-document.querySelectorAll('.btn-back-home').forEach(btn => btn.onclick = () => switchScene(btn.closest('.scene'), scenes.home));
+document.querySelectorAll('.btn-back-home').forEach(btn => {
+    btn.onclick = () => {
+        if (btn.id === 'btn-lab-back-home' && window.FenUpLab && typeof window.FenUpLab.closeLabView === "function") {
+            window.FenUpLab.closeLabView();
+        } else {
+            switchScene(btn.closest('.scene'), scenes.home);
+        }
+    };
+});
 document.querySelectorAll('.btn-back-cross').forEach(btn => btn.onclick = () => switchScene(btn.closest('.scene'), scenes.crossroads));
 
 const btnBackClass = document.getElementById('btn-back-class');

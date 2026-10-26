@@ -1078,26 +1078,64 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     50% { transform: scale(1.1) rotate(6deg); }
 }
 
-/* Laboratuvar Ana Sahnesi (#lab-view) */
+/* Laboratuvar Ana Sahnesi (#lab-view) & İZOLASYON ZIRHI */
+#lab-view.is-hidden,
+.lab-view-scene.is-hidden,
+#lab-catalog-view.is-hidden,
+#lab-workspace-view.is-hidden,
+.lab-subview.is-hidden,
+.scene.is-hidden {
+    display: none !important;
+}
+
 .lab-view-scene {
-    width: 95vw !important;
-    max-width: 1400px !important;
-    max-height: 90vh !important;
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    padding: 24px 28px !important;
-    box-sizing: border-box !important;
-    text-align: left !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: stretch !important;
+    width: 95vw;
+    max-width: 1400px;
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 24px 28px;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.lab-view-scene:not(.is-hidden) {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
 .lab-subview {
     width: 100%;
+}
+
+.lab-subview:not(.is-hidden) {
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+/* Belirgin Ana Sayfaya Dön Butonu */
+.btn-lab-nav-home {
+    background: rgba(0, 210, 255, 0.12) !important;
+    border: 1.5px solid var(--neon-blue) !important;
+    color: #fff !important;
+    padding: 8px 18px !important;
+    border-radius: 12px !important;
+    font-size: 0.95rem !important;
+    font-weight: 800 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    transition: all 0.25s ease !important;
+    cursor: pointer !important;
+    box-shadow: 0 0 12px rgba(0, 210, 255, 0.2) !important;
+}
+.btn-lab-nav-home:hover {
+    background: var(--neon-blue) !important;
+    color: #030712 !important;
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.5) !important;
+    transform: translateX(-3px);
 }
 
 /* Katalog Başlığı */
