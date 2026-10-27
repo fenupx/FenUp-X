@@ -57,6 +57,14 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
   opacity: 0 !important;
 }
 
+.modal-overlay.is-open {
+  display: flex !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 2000 !important;
+}
+
 .modal-overlay.is-hidden,
 .modal-overlay:not(.is-open),
 #cookie-consent.is-hidden,
@@ -67,6 +75,8 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
 #quiz-end.is-hidden {
   display: none !important;
   pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
 }
 
 .glass-panel {
@@ -415,12 +425,23 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
 .t-team-input:focus { border-color: var(--neon-blue); outline: none; }
 
 /* TURNUVA KARTLARI KISA EKRAN/AKILLI TAHTA UYUMU */
-#t-teams-container {
-  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; width: 100%;
-  overflow: visible; padding: 5px; 
+#t-teams-container,
+.tournament-answers-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  padding: 10px 5px !important;
+  box-sizing: border-box !important;
 }
-#t-teams-container::-webkit-scrollbar { width: 8px; }
-#t-teams-container::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+#t-teams-container::-webkit-scrollbar,
+.tournament-answers-grid::-webkit-scrollbar { width: 8px; }
+#t-teams-container::-webkit-scrollbar-thumb,
+.tournament-answers-grid::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
 
 #inter-leaderboard-list {
   max-height: 50vh; overflow-y: auto; padding-right: 15px;
@@ -436,13 +457,29 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     animation: slideUpFade 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
-.t-team-card {
-  background: rgba(15, 23, 42, 0.9); border: 2px solid rgba(255,255,255,0.2);
-  padding: 10px; border-radius: 12px; min-width: 120px; flex: 1 1 15%; max-width: 180px;
-  text-align: center; transition: 0.4s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+.t-team-card,
+.tournament-group-card {
+  background: rgba(15, 23, 42, 0.9);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  padding: 12px 10px;
+  border-radius: 12px;
+  flex: 0 1 auto !important;
+  min-width: 185px !important;
+  max-width: 220px !important;
+  box-sizing: border-box !important;
+  text-align: center;
+  transition: 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   position: relative;
 }
-.t-team-card h3 { font-size: 1.1rem; margin-bottom: 5px; color: #fff; word-break: break-word;}
+.t-team-card h3,
+.tournament-group-card h3 {
+  font-size: 1.15rem;
+  margin-bottom: 8px;
+  color: #fff;
+  word-break: break-word;
+  font-weight: 700;
+}
 
 .t-score { display: none; }
 
@@ -454,13 +491,43 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
 .floating-point { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-weight: 900; font-size: 2.5rem; animation: floatAndFade 2s forwards; z-index: 100; text-shadow: 0 0 10px rgba(0,0,0,0.8); pointer-events: none;}
 @keyframes floatAndFade { 0% { opacity: 1; transform: translate(-50%, -50%) scale(0.5); } 30% { opacity: 1; transform: translate(-50%, -100%) scale(1.2); } 100% { opacity: 0; transform: translate(-50%, -200%) scale(1); } }
 
-.t-answers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; pointer-events: none; opacity: 0.5; transition: 0.3s;}
-.t-answers.active { pointer-events: auto; opacity: 1; }
+.t-answers,
+.tournament-answers-group {
+  display: flex !important;
+  justify-content: space-between !important;
+  gap: 6px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  pointer-events: none;
+  opacity: 0.5;
+  transition: 0.3s;
+}
+.t-answers.active,
+.tournament-answers-group.active {
+  pointer-events: auto;
+  opacity: 1;
+}
 
 .t-ans-btn {
-  background: rgba(0,0,0,0.6); border: 2px solid #555; color: white;
-  padding: 9px 0; min-height: 40px; border-radius: 6px; cursor: pointer; font-size: 1.15rem; font-weight: bold; transition:0.2s;
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #555;
+  color: white;
+  padding: 8px 0 !important;
+  min-height: 40px !important;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.15rem !important;
+  font-weight: 800;
+  transition: 0.2s;
+  box-sizing: border-box !important;
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 .t-ans-btn.selected { background: var(--neon-blue); border-color: var(--neon-blue); color: #000; box-shadow: 0 0 15px var(--neon-blue); }
 .t-ans-btn.correct { background: #22c55e !important; border-color: #22c55e !important; color: white!important; box-shadow: 0 0 20px #22c55e; }
@@ -538,6 +605,32 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     max-height: 88vh; overflow-y: auto;
 }
 
+/* --- KULLANICI PROFİL VE AÇILIR MENÜ (DROPDOWN) --- */
+.user-profile-container {
+    position: relative;
+    display: inline-block;
+}
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 220px;
+    background: rgba(10, 10, 30, 0.95);
+    border: 1px solid var(--neon-blue);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 500;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+.dropdown-menu.is-hidden {
+    display: none !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
 /* --- KESİN MODAL SCROLL ÇÖZÜMÜ (SAFARI/MAC FLEXBUG FIX) --- */
 .modal-overlay {
     position: fixed !important; 
@@ -545,7 +638,7 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     width: 100vw !important; height: 100vh !important;
     overflow: hidden !important; 
     background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
-    z-index: 2000; display: flex; justify-content: center; align-items: center;
+    z-index: 2000 !important; display: flex; justify-content: center; align-items: center;
     transition: opacity 0.3s ease;
 }
 
@@ -859,15 +952,26 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     .joker-area { gap: 5px !important; flex-wrap: wrap !important; justify-content: center !important;}
     .joker-area .action-btn { flex: 1 1 40% !important; font-size: 0.9rem !important; padding: 8px !important; margin: 0 !important; }
     
-    #t-teams-container { 
+    #t-teams-container,
+    .tournament-answers-grid { 
         display: grid !important; 
         grid-template-columns: 1fr 1fr !important; 
         gap: 10px !important; 
         padding: 5px !important;
+        width: 100% !important;
     }
-    .t-team-card { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 10px !important;}
-    .t-team-card h3 { font-size: 1.1rem !important; }
-    .t-ans-btn { font-size: 1.1rem !important; padding: 8px 0 !important; }
+    .t-team-card,
+    .tournament-group-card {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10px 8px !important;
+        box-sizing: border-box !important;
+    }
+    .t-team-card h3,
+    .tournament-group-card h3 { font-size: 1.1rem !important; }
+    .t-ans-btn { font-size: 1.1rem !important; padding: 8px 0 !important; min-width: 0 !important; }
 
     .back-link { position: static !important; display: block !important; margin-bottom: 15px !important; text-align: left !important;}
 
@@ -2639,7 +2743,6 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     .lab-cards-grid,
     .avatar-grid,
     .duel-answers,
-    .t-answers,
     .difficulty-cards,
     .class-grid,
     .unit-grid,
@@ -2750,7 +2853,6 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     .mode-btn,
     .action-btn,
     .answer-btn,
-    .t-ans-btn,
     .lab-pill-btn,
     .lab-ctrl-btn,
     .lab-step-btn,
@@ -2759,10 +2861,15 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
         min-height: 48px;
         min-width: 48px;
     }
-    .answer-btn,
-    .t-ans-btn {
+    .answer-btn {
         font-size: clamp(1rem, 1.25vw, 1.35rem) !important;
         padding: 14px 20px !important;
+    }
+    .t-ans-btn {
+        min-height: 42px !important;
+        min-width: 0 !important;
+        padding: 8px 0 !important;
+        font-size: clamp(1.1rem, 1.2vw, 1.3rem) !important;
     }
     .lab-main-heading {
         font-size: clamp(2rem, 2.4vw, 2.9rem) !important;

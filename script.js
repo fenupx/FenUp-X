@@ -1402,12 +1402,12 @@ function revealTeamsForVoting() {
             t.answer = null; 
             
             const card = document.createElement('div');
-            card.className = `t-team-card ${t.isEliminated ? 'eliminated' : ''} ${t.isOnFire ? 'on-fire' : ''}`;
+            card.className = `t-team-card tournament-group-card ${t.isEliminated ? 'eliminated' : ''} ${t.isOnFire ? 'on-fire' : ''}`;
             card.id = `t-card-${t.id}`;
             card.innerHTML = `
                 <h3>${t.name}</h3>
                 <div class="t-score" id="t-score-${t.id}"></div>
-                <div class="t-answers active" id="t-ans-group-${t.id}">
+                <div class="t-answers active tournament-answers-group" id="t-ans-group-${t.id}">
                     <button class="t-ans-btn" data-tid="${t.id}" data-opt="A">A</button>
                     <button class="t-ans-btn" data-tid="${t.id}" data-opt="B">B</button>
                     <button class="t-ans-btn" data-tid="${t.id}" data-opt="C">C</button>
@@ -1686,10 +1686,10 @@ function renderDuelQuestion() {
         tState.tiedTeams.forEach(t => {
             t.isEliminated = false; 
             const card = document.createElement('div');
-            card.className = "t-team-card"; card.id = `t-card-${t.id}`;
+            card.className = "t-team-card tournament-group-card"; card.id = `t-card-${t.id}`;
             card.innerHTML = `
                 <h3>${t.name}</h3>
-                <div class="t-answers active" id="t-ans-group-${t.id}">
+                <div class="t-answers active tournament-answers-group" id="t-ans-group-${t.id}">
                     <button class="t-ans-btn" data-tid="${t.id}" data-opt="A">A</button>
                     <button class="t-ans-btn" data-tid="${t.id}" data-opt="B">B</button>
                     <button class="t-ans-btn" data-tid="${t.id}" data-opt="C">C</button>
@@ -1807,6 +1807,20 @@ if(btnAcceptCookies) {
     };
 }
 
+function showModal(modal) {
+    if (!modal) return;
+    modal.classList.remove('is-hidden');
+    modal.classList.add('is-open', 'active');
+    modal.style.display = 'flex';
+}
+
+function hideModal(modal) {
+    if (!modal) return;
+    modal.classList.add('is-hidden');
+    modal.classList.remove('is-open', 'active');
+    modal.style.display = 'none';
+}
+
 const policyModal = document.getElementById('policy-modal');
 const modalTitle = document.getElementById('modal-title');
 const modalBody = document.getElementById('modal-body');
@@ -1857,20 +1871,32 @@ function openModal(policyKey) {
     
     if(modalTitle) modalTitle.textContent = policies[policyKey].title;
     if(modalBody) modalBody.innerHTML = policies[policyKey].content;
-    if(policyModal) policyModal.classList.remove('is-hidden');
+    showModal(policyModal);
 }
 
-if(btnCloseModal) btnCloseModal.onclick = () => { if(policyModal) policyModal.classList.add('is-hidden'); };
+if(btnCloseModal) btnCloseModal.onclick = () => { hideModal(policyModal); };
 
 if(policyModal) {
     policyModal.onclick = (e) => { 
-        if (e.target === policyModal) policyModal.classList.add('is-hidden'); 
+        if (e.target === policyModal) hideModal(policyModal); 
     };
 }
 
-document.querySelectorAll('.btn-kvkk-open').forEach(btn => btn.onclick = () => openModal('kvkk'));
-document.querySelectorAll('.btn-terms-open').forEach(btn => btn.onclick = () => openModal('terms'));
-document.querySelectorAll('.btn-cookies-open').forEach(btn => btn.onclick = () => openModal('cookies'));
+document.querySelectorAll('.btn-kvkk-open').forEach(btn => btn.onclick = (e) => {
+    if(e) e.stopPropagation();
+    if(profileDropdown) profileDropdown.classList.add('is-hidden');
+    openModal('kvkk');
+});
+document.querySelectorAll('.btn-terms-open').forEach(btn => btn.onclick = (e) => {
+    if(e) e.stopPropagation();
+    if(profileDropdown) profileDropdown.classList.add('is-hidden');
+    openModal('terms');
+});
+document.querySelectorAll('.btn-cookies-open').forEach(btn => btn.onclick = (e) => {
+    if(e) e.stopPropagation();
+    if(profileDropdown) profileDropdown.classList.add('is-hidden');
+    openModal('cookies');
+});
 
 const cookiePolicyLink = document.getElementById('cookie-policy-link');
 if(cookiePolicyLink) {
@@ -1887,6 +1913,15 @@ const userDisplayName = document.getElementById('user-display-name');
 const userDisplayRole = document.getElementById('user-display-role');
 const authModal = document.getElementById('auth-modal');
 const btnCloseAuth = document.getElementById('btn-close-auth');
+
+if(btnUyelik) {
+    btnUyelik.onclick = () => { 
+        const sq = document.getElementById('scene-quiz');
+        const stq = document.getElementById('scene-tournament-quiz');
+        if(isGlobalPaused === false && ((sq && !sq.classList.contains('is-hidden')) || (stq && !stq.classList.contains('is-hidden')))) { toggleMasterPause(); }
+        showModal(authModal); 
+    };
+}
 
 function uygunIsimMi(metin) {
     if(!metin || metin.length < 2) return false;
@@ -2201,7 +2236,7 @@ onAuthStateChanged(auth, async (user) => {
                         const sq = document.getElementById('scene-quiz');
                         const stq = document.getElementById('scene-tournament-quiz');
                         if(isGlobalPaused === false && ((sq && !sq.classList.contains('is-hidden')) || (stq && !stq.classList.contains('is-hidden')))) { toggleMasterPause(); }
-                        if(authModal) authModal.classList.remove('is-hidden'); 
+                        showModal(authModal); 
                     };
                 }
             }
@@ -2213,7 +2248,7 @@ onAuthStateChanged(auth, async (user) => {
                 const sq = document.getElementById('scene-quiz');
                 const stq = document.getElementById('scene-tournament-quiz');
                 if(isGlobalPaused === false && ((sq && !sq.classList.contains('is-hidden')) || (stq && !stq.classList.contains('is-hidden')))) { toggleMasterPause(); }
-                if(authModal) authModal.classList.remove('is-hidden'); 
+                showModal(authModal); 
             };
         }
         if(profileDropdown) profileDropdown.classList.add('is-hidden');
@@ -2225,8 +2260,10 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 
-document.addEventListener('click', () => {
+document.addEventListener('click', (e) => {
     if(profileDropdown && !profileDropdown.classList.contains('is-hidden')) {
+        if(btnUyelik && (e.target === btnUyelik || btnUyelik.contains(e.target))) return;
+        if(profileDropdown.contains(e.target)) return;
         profileDropdown.classList.add('is-hidden');
     }
 });
@@ -2235,15 +2272,26 @@ if(profileDropdown) {
 }
 
 const btnLogout = document.getElementById('btn-logout');
-if(btnLogout) btnLogout.onclick = () => signOut(auth).then(() => location.reload());
+if(btnLogout) {
+    btnLogout.onclick = (e) => {
+        e.stopPropagation();
+        if(profileDropdown) profileDropdown.classList.add('is-hidden');
+        signOut(auth).then(() => {
+            location.reload();
+        }).catch(err => {
+            console.error("Logout error:", err);
+            location.reload();
+        });
+    };
+}
 
 if(btnCloseAuth) {
-    btnCloseAuth.onclick = () => { if(authModal) authModal.classList.add('is-hidden'); };
+    btnCloseAuth.onclick = () => { hideModal(authModal); };
 }
 
 if(authModal) {
     authModal.onclick = (e) => { 
-        if (e.target === authModal) authModal.classList.add('is-hidden'); 
+        if (e.target === authModal) hideModal(authModal); 
     };
 }
 
@@ -2315,7 +2363,7 @@ const linkPlayGuest = document.getElementById('link-play-guest');
 if (linkPlayGuest) {
     linkPlayGuest.onclick = (e) => {
         e.preventDefault();
-        if (authModal) authModal.classList.add('is-hidden');
+        hideModal(authModal);
     };
 }
 
@@ -2430,14 +2478,25 @@ function showDeleteError(msg) {
     }
 }
 
+const btnOpenProfile = document.getElementById('btn-open-profile');
+if (btnOpenProfile) {
+    btnOpenProfile.onclick = (e) => {
+        e.stopPropagation();
+        resetDeleteAccountBox();
+        updateEmailVerifyBox(auth.currentUser);
+        if(profileDropdown) profileDropdown.classList.add('is-hidden');
+        showModal(profileModal);
+    };
+}
+
 document.querySelectorAll('.dropdown-item').forEach(item => {
-    if (item.textContent.includes("Profilim")) {
+    if (item.textContent.includes("Profilim") && item !== btnOpenProfile) {
         item.onclick = (e) => {
             e.stopPropagation();
             resetDeleteAccountBox();
             updateEmailVerifyBox(auth.currentUser);
             if(profileDropdown) profileDropdown.classList.add('is-hidden');
-            if(profileModal) profileModal.classList.remove('is-hidden');
+            showModal(profileModal);
         };
     }
 });
@@ -2445,8 +2504,17 @@ document.querySelectorAll('.dropdown-item').forEach(item => {
 const clProfile = document.getElementById('close-profile');
 if(clProfile) clProfile.onclick = () => {
     resetDeleteAccountBox();
-    if(profileModal) profileModal.classList.add('is-hidden');
+    hideModal(profileModal);
 };
+
+if(profileModal) {
+    profileModal.onclick = (e) => {
+        if(e.target === profileModal) {
+            resetDeleteAccountBox();
+            hideModal(profileModal);
+        }
+    };
+}
 
 const btnSaveProf = document.getElementById('btn-save-profile');
 if(btnSaveProf) {
@@ -2585,7 +2653,7 @@ if (btnConfirmDelFinal) {
             btnConfirmDelFinal.textContent = 'Siliniyor...';
             await deleteDoc(doc(db, "users", user.uid));
             await deleteUser(user);
-            if (profileModal) profileModal.classList.add('is-hidden');
+            hideModal(profileModal);
             alert("Hesabınız, yarışmacı profiliniz ve tüm puan kayıtlarınız kalıcı olarak silindi.");
             location.reload();
         } catch (err) {
@@ -2609,7 +2677,7 @@ if(btnStuSub) {
         try {
             if(isStudentLoginMode) {
                 await signInWithEmailAndPassword(auth, email, pass);
-                if(authModal) authModal.classList.add('is-hidden');
+                hideModal(authModal);
             } else {
                 const fn = document.getElementById('student-first-name');
                 const ln = document.getElementById('student-last-name');
@@ -2634,7 +2702,7 @@ if(btnStuSub) {
                     name: fName, surname: lName, nickname: nick, email: email, role: "student", totalScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
                 });
                 updateEmailVerifyBox(cred.user);
-                if(authModal) authModal.classList.add('is-hidden');
+                hideModal(authModal);
                 alert("Hesabınız oluşturuldu! E-posta adresinize bir doğrulama bağlantısı gönderdik. Hemen yarışmaya başlayabilirsiniz; puanlarınızın Şampiyonlar Ligi liderlik tablosuna kaydedilmesi için e-postanızı doğrulamanız yeterlidir.");
             }
         } catch(err) { 
@@ -2654,7 +2722,7 @@ if(btnGoogleLog) {
             const userSnap = await getDoc(userRef);
             
             if (!userSnap.exists()) {
-                if(authModal) authModal.classList.add('is-hidden');
+                hideModal(authModal);
                 
                 const gName = result.user.displayName || "Kozmik Astronot";
                 const nameParts = gName.split(' ');
@@ -2669,7 +2737,7 @@ if(btnGoogleLog) {
                 location.reload();
             } else {
                 sessionStorage.removeItem('google_auth_in_progress');
-                if(authModal) authModal.classList.add('is-hidden');
+                hideModal(authModal);
             }
         } catch(err) { 
             sessionStorage.removeItem('google_auth_in_progress'); 
@@ -2689,13 +2757,13 @@ if(btnAdminPanel) {
     btnAdminPanel.onclick = (e) => {
         e.stopPropagation();
         if(profileDropdown) profileDropdown.classList.add('is-hidden');
-        if(adminModal) adminModal.classList.remove('is-hidden');
+        showModal(adminModal);
         loadAdminUsers();
     };
 }
 
-if(btnCloseAdmin) btnCloseAdmin.onclick = () => { if(adminModal) adminModal.classList.add('is-hidden'); };
-if(adminModal) adminModal.onclick = (e) => { if (e.target === adminModal) adminModal.classList.add('is-hidden'); };
+if(btnCloseAdmin) btnCloseAdmin.onclick = () => { hideModal(adminModal); };
+if(adminModal) adminModal.onclick = (e) => { if (e.target === adminModal) hideModal(adminModal); };
 
 if(adminSearchInput) adminSearchInput.oninput = (e) => { renderAdminUsers(e.target.value); };
 
@@ -2831,7 +2899,7 @@ lbTabBtns.forEach(btn => {
     };
 });
 
-if(lbGuestPromo) lbGuestPromo.onclick = () => { if(authModal) authModal.classList.remove('is-hidden'); };
+if(lbGuestPromo) lbGuestPromo.onclick = () => { showModal(authModal); };
 
 async function loadGlobalLeaderboard(type = 'weekly') {
     if(!lbListEl) return;
@@ -3051,8 +3119,17 @@ document.body.appendChild(reportModal);
 const clReport = document.getElementById('close-report');
 if(clReport) {
     clReport.onclick = () => {
-        if(reportModal) reportModal.classList.add('is-hidden');
+        hideModal(reportModal);
         if(isGlobalPaused) toggleMasterPause(); // Bildirim penceresi kapanınca oyunu devam ettir
+    };
+}
+
+if(reportModal) {
+    reportModal.onclick = (e) => {
+        if(e.target === reportModal) {
+            hideModal(reportModal);
+            if(isGlobalPaused) toggleMasterPause();
+        }
     };
 }
 
@@ -3065,7 +3142,7 @@ function openReportModal(questionData) {
     if(!isGlobalPaused) toggleMasterPause();
     
     currentReportedQuestion = questionData;
-    if(reportModal) reportModal.classList.remove('is-hidden');
+    showModal(reportModal);
     
     // Modal açıldığında radyo butonunu sıfırla ve metni temizle
     const firstRadio = document.querySelector('input[name="reportType"][value="hatali_soru"]');
@@ -3114,7 +3191,7 @@ if(btnSubmitReport) {
             btnSubmitReport.textContent = "BİLDİRİMİ GÖNDER";
             btnSubmitReport.style.opacity = "1";
             
-            if(reportModal) reportModal.classList.add('is-hidden');
+            hideModal(reportModal);
             if(isGlobalPaused) toggleMasterPause(); // Bildirim gönderilip modal kapanınca oyunu devam ettir
         }
     };
