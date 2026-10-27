@@ -67,53 +67,53 @@ export const EXPERIMENTS_DATABASE = [
 
     // 6. SINIF (9 DENEY)
     {
-        id: "6.1", grade: 6, unit: 1, unitName: "Güneş Sistemi ve Tutulmalar",
+        id: "6.1", grade: 6, unit: 2, unitName: "Kuvvet ve Hareket",
+        title: "Sabit Süratli Hareket Simülatörü",
+        code: "FB.6.2.1", bookRef: "1. Kitap, s. 70–85",
+        active: true, // 🏆 AKTİF!
+        desc: "100 metrelik ölçüm pistinde sabit süratle ilerleyen aracın yol-zaman ve sürat-zaman grafiklerini eşzamanlı inceleyin."
+    },
+    {
+        id: "6.2", grade: 6, unit: 2, unitName: "Kuvvet ve Hareket",
+        title: "Bileşke Kuvvet ve Halat Çekmece",
+        code: "FB.6.2.2", bookRef: "1. Kitap, s. 54–69",
+        active: true, // 🏆 AKTİF!
+        desc: "Doğu ve batı yönlü kuvvetleri cisme uygulayarak bileşke kuvveti (R), hareket yönünü ve dengelenmiş / dengelenmemiş kuvvet durumlarını test edin."
+    },
+    {
+        id: "6.3", grade: 6, unit: 3, unitName: "Madde ve Isı",
+        title: "Sıvıların Yoğunluğu ve Yoğunluk Kulesi",
+        code: "FB.6.3.2", bookRef: "1. Kitap, s. 126–139",
+        active: true, // 🏆 AKTİF!
+        desc: "Bal, gliserin, su ve zeytinyağını aynı silindire dökerek tabakalaşmayı ve içine bırakılan cisimlerin yüzme-batma hallerini gözlemleyin."
+    },
+    {
+        id: "6.4", grade: 6, unit: 3, unitName: "Madde ve Isı",
+        title: "Isı İletkenliği ve Yalıtım Simülatörü",
+        code: "FB.6.4.1", bookRef: "1. Kitap, s. 140–155",
+        active: true, // 🏆 AKTİF!
+        desc: "Bakır, alüminyum ve demir çubuklarda ısının iletim hızını balmumuna bağlı bilyelerin düşmesiyle ve binalarda ısı yalıtımını karşılaştırın."
+    },
+    {
+        id: "6.5", grade: 6, unit: 1, unitName: "Güneş Sistemi ve Tutulmalar",
         title: "Güneş ve Ay Tutulması Geometrisi Simülatörü",
         code: "FB.6.1.1", bookRef: "1. Kitap, s. 16–29",
         active: false,
         desc: "Güneş, Dünya ve Ay'ın yörünge düğüm noktalarını hizalayarak tam ve parçalı tutulmaların oluşumunu simüle edin."
     },
     {
-        id: "6.2", grade: 6, unit: 2, unitName: "Kuvvet ve Hareket",
-        title: "Bileşke Kuvvet (R) ve Halat Çekme Laboratuvarı",
-        code: "FB.6.2.1 - FB.6.2.2", bookRef: "1. Kitap, s. 54–69",
-        active: false,
-        desc: "Doğu ve batı yönlü kuvvetleri cisme uygulayarak net kuvveti, hareket yönünü ve dengelenmiş kuvvet durumunu ölçün."
-    },
-    {
-        id: "6.3", grade: 6, unit: 2, unitName: "Kuvvet ve Hareket",
-        title: "Sabit Süratli Hareket ve Yol-Zaman Grafiği",
-        code: "FB.6.2.3", bookRef: "1. Kitap, s. 70–85",
-        active: false,
-        desc: "Eşit zaman aralıklarında eşit yollar alan hareketlinin hız-zaman ve yol-zaman grafiklerini gerçek zamanlı çizin."
-    },
-    {
-        id: "6.4", grade: 6, unit: 4, unitName: "Işık ve Ses",
+        id: "6.6", grade: 6, unit: 4, unitName: "Işık ve Ses",
         title: "Düzlem Aynada Yansıma Kanunları (i = r)",
         code: "FB.6.4.1", bookRef: "2. Kitap, s. 14–29",
         active: false,
         desc: "Açıölçer üzerinde lazer ışınını aynaya göndererek gelme açısı ile yansıma açısının eşitliğini doğrulayın."
     },
     {
-        id: "6.5", grade: 6, unit: 4, unitName: "Işık ve Ses",
+        id: "6.7", grade: 6, unit: 4, unitName: "Işık ve Ses",
         title: "Işığın Soğurulması ve Renklerin Isınma Etkisi",
         code: "FB.6.4.2", bookRef: "2. Kitap, s. 30–43",
         active: false,
         desc: "Siyah, beyaz ve renkli kumaşların ışığı soğurma miktarlarını sıcaklık artışı sensörleriyle eşzamanlı izleyin."
-    },
-    {
-        id: "6.6", grade: 6, unit: 3, unitName: "Madde ve Isı",
-        title: "Sıvı ve Katı Maddelerin Yoğunluk Ölçümü (d = m/V)",
-        code: "FB.6.3.1", bookRef: "1. Kitap, s. 110–125",
-        active: false,
-        desc: "Taşma kabı ve dijital teraziyle kütle-hacim değerlerini ölçerek maddelerin ayırt edici yoğunluklarını hesaplayın."
-    },
-    {
-        id: "6.7", grade: 6, unit: 3, unitName: "Madde ve Isı",
-        title: "Sıvı Yoğunluk Kulesi ve Yüzme-Batma Simülatörü",
-        code: "FB.6.3.2", bookRef: "1. Kitap, s. 126–139",
-        active: false,
-        desc: "Bal, su ve zeytinyağını aynı kaba dökerek tabakalaşmayı ve içine atılan cisimlerin askıda kalma/batma hallerini inceleyin."
     },
     {
         id: "6.8", grade: 6, unit: 6, unitName: "Madde ve Elektrik",
@@ -511,6 +511,79 @@ export const labState = {
         heatArrows: [],       // her basamaktan çıkan %90 ısı okları
         poisonParticles: [],  // dokularda biriken zehir tanecikleri
         measurements: []
+    },
+
+    // DENEY 6.1: SABİT SÜRATLİ HAREKET SİMÜLATÖRÜ (FB.6.2.1)
+    motion: {
+        isPlaying: false,
+        speed: 10,              // m/s (2 - 25)
+        trackLength: 100,       // m (50, 100, 150)
+        elapsedTime: 0.0,       // saniye
+        distanceTraveled: 0.0,  // metre
+        graphMode: "xt",        // "xt" (Yol-Zaman) | "vt" (Sürat-Zaman)
+        history: [],            // [{ t, x, v }]
+        car: {
+            x: 80,              // canvas px
+            y: 220,             // canvas px
+            w: 110,
+            h: 46,
+            wheelAngle: 0,
+            exhaustParticles: [],
+            isDragging: false
+        },
+        measurements: []
+    },
+
+    // DENEY 6.2: BİLEŞKE KUVVET VE HALAT ÇEKMECE (FB.6.2.2)
+    tugOfWar: {
+        isPlaying: false,
+        fWest: 20,              // N (0 - 50) Batı (Mavi - Sol)
+        fEast: 20,              // N (0 - 50) Doğu (Kırmızı - Sağ)
+        netForce: 0,            // N: fEast - fWest
+        boxX: 420,              // canvas orta nokta px
+        boxBaseX: 420,
+        boxSpeed: 0,            // px/s
+        isDragging: false,
+        winner: null,           // null | "west" | "east"
+        cheerParticles: [],
+        measurements: []
+    },
+
+    // DENEY 6.3: SIVILARIN YOĞUNLUĞU VE YOĞUNLUK KULESİ (FB.6.3.2)
+    densityTower: {
+        activeLiquids: [],       // eklenen sıralı katmanlar
+        pouringLiquid: null,     // dökülen sıvı animasyonu
+        pourProgress: 0,         // 0 -> 1
+        objects: [],             // bırakılan katı cisimler [{ type, density, y, targetY, vy }]
+        cylinder: {
+            x: 330,
+            y: 50,
+            w: 160,
+            h: 360
+        },
+        measurements: []
+    },
+
+    // DENEY 6.4: ISI İLETKENLİĞİ VE YALITIM SİMÜLATÖRÜ (FB.6.4.1)
+    heatTransfer: {
+        mode: "metals",          // "metals" | "insulation"
+        isHeating: false,
+        burnerIntensity: 1.0,    // Alev gücü
+        flameParticles: [],
+        rods: [
+            { id: "copper", name: "Bakır", k: 385, color: "#f97316", temp: 20, waxMelted: false, ballDropped: false, ballY: 0, dropTime: null },
+            { id: "aluminum", name: "Alüminyum", k: 205, color: "#cbd5e1", temp: 20, waxMelted: false, ballDropped: false, ballY: 0, dropTime: null },
+            { id: "iron", name: "Demir", k: 80, color: "#94a3b8", temp: 20, waxMelted: false, ballDropped: false, ballY: 0, dropTime: null }
+        ],
+        elapsedHeatingTime: 0.0,
+        insulation: {
+            materials: [
+                { id: "bare", name: "Sac / Yalıtımsız", rVal: 0.1, tempInside: 20, heatLossRate: 0.45 },
+                { id: "wood", name: "Ahşap Kaplama", rVal: 0.5, tempInside: 20, heatLossRate: 0.22 },
+                { id: "foam", name: "Taş Yünü / Strafor", rVal: 1.0, tempInside: 20, heatLossRate: 0.07 }
+            ]
+        },
+        measurements: []
     }
 };
 
@@ -780,6 +853,12 @@ function setupWorkspaceShellDOM() {
     // 12. DENEY 7.9 KONTROLLERİ (BESİN PİRAMİDİ VE BİYOBİRİKİM)
     setupFoodPyramidControlsDOM();
 
+    // 13. 6. SINIF KONTROLLERİ (DENEY 6.1 - 6.4)
+    setupMotionControlsDOM();
+    setupTugOfWarControlsDOM();
+    setupDensityTowerControlsDOM();
+    setupHeatTransferControlsDOM();
+
     // 7. Tablo Temizle
     const btnClearTable = document.getElementById('btn-clear-table');
     if (btnClearTable) btnClearTable.addEventListener('click', clearMeasurementTable);
@@ -938,6 +1017,10 @@ export function openExperimentWorkspace(expId) {
     if (expRef) expRef.textContent = exp.bookRef;
 
     // Deneye Göre Arayüz Panellerini Aç / Kapat
+    const is61 = (expId === "6.1");
+    const is62 = (expId === "6.2");
+    const is63 = (expId === "6.3");
+    const is64 = (expId === "6.4");
     const is71 = (expId === "7.1");
     const is72 = (expId === "7.2");
     const is73 = (expId === "7.3");
@@ -949,12 +1032,24 @@ export function openExperimentWorkspace(expId) {
     const is79 = (expId === "7.9");
 
     // Metrik Şeritleri (Canvas Altı Responsive Barlar)
+    const mbar61 = document.getElementById('metrics-bar-6-1');
+    const mbar62 = document.getElementById('metrics-bar-6-2');
+    const mbar63 = document.getElementById('metrics-bar-6-3');
+    const mbar64 = document.getElementById('metrics-bar-6-4');
     const mbar73 = document.getElementById('metrics-bar-7-3');
     const mbar71 = document.getElementById('metrics-bar-7-1');
+    if (mbar61) mbar61.classList.toggle('is-hidden', !is61);
+    if (mbar62) mbar62.classList.toggle('is-hidden', !is62);
+    if (mbar63) mbar63.classList.toggle('is-hidden', !is63);
+    if (mbar64) mbar64.classList.toggle('is-hidden', !is64);
     if (mbar73) mbar73.classList.toggle('is-hidden', !is73);
     if (mbar71) mbar71.classList.toggle('is-hidden', !is71);
 
     // Hızlı Kontroller (Canvas Altı)
+    const qc61 = document.getElementById('quick-controls-6-1');
+    const qc62 = document.getElementById('quick-controls-6-2');
+    const qc63 = document.getElementById('quick-controls-6-3');
+    const qc64 = document.getElementById('quick-controls-6-4');
     const qc71 = document.getElementById('quick-controls-7-1');
     const qc72 = document.getElementById('quick-controls-7-2');
     const qc73 = document.getElementById('quick-controls-7-3');
@@ -964,6 +1059,10 @@ export function openExperimentWorkspace(expId) {
     const qc77 = document.getElementById('quick-controls-7-7');
     const qc78 = document.getElementById('quick-controls-7-8');
     const qc79 = document.getElementById('quick-controls-7-9');
+    if (qc61) qc61.classList.toggle('is-hidden', !is61);
+    if (qc62) qc62.classList.toggle('is-hidden', !is62);
+    if (qc63) qc63.classList.toggle('is-hidden', !is63);
+    if (qc64) qc64.classList.toggle('is-hidden', !is64);
     if (qc71) qc71.classList.toggle('is-hidden', !is71);
     if (qc72) qc72.classList.toggle('is-hidden', !is72);
     if (qc73) qc73.classList.toggle('is-hidden', !is73);
@@ -975,6 +1074,10 @@ export function openExperimentWorkspace(expId) {
     if (qc79) qc79.classList.toggle('is-hidden', !is79);
 
     // Değişkenler Panelleri
+    const vars61 = document.getElementById('vars-container-6-1');
+    const vars62 = document.getElementById('vars-container-6-2');
+    const vars63 = document.getElementById('vars-container-6-3');
+    const vars64 = document.getElementById('vars-container-6-4');
     const vars71 = document.getElementById('vars-container-7-1');
     const vars72 = document.getElementById('vars-container-7-2');
     const vars73 = document.getElementById('vars-container-7-3');
@@ -984,6 +1087,10 @@ export function openExperimentWorkspace(expId) {
     const vars77 = document.getElementById('vars-container-7-7');
     const vars78 = document.getElementById('vars-container-7-8');
     const vars79 = document.getElementById('vars-container-7-9');
+    if (vars61) vars61.classList.toggle('is-hidden', !is61);
+    if (vars62) vars62.classList.toggle('is-hidden', !is62);
+    if (vars63) vars63.classList.toggle('is-hidden', !is63);
+    if (vars64) vars64.classList.toggle('is-hidden', !is64);
     if (vars71) vars71.classList.toggle('is-hidden', !is71);
     if (vars72) vars72.classList.toggle('is-hidden', !is72);
     if (vars73) vars73.classList.toggle('is-hidden', !is73);
@@ -995,6 +1102,10 @@ export function openExperimentWorkspace(expId) {
     if (vars79) vars79.classList.toggle('is-hidden', !is79);
 
     // Rehber Panelleri
+    const guide61 = document.getElementById('guide-container-6-1');
+    const guide62 = document.getElementById('guide-container-6-2');
+    const guide63 = document.getElementById('guide-container-6-3');
+    const guide64 = document.getElementById('guide-container-6-4');
     const guide71 = document.getElementById('guide-container-7-1');
     const guide72 = document.getElementById('guide-container-7-2');
     const guide73 = document.getElementById('guide-container-7-3');
@@ -1004,6 +1115,10 @@ export function openExperimentWorkspace(expId) {
     const guide77 = document.getElementById('guide-container-7-7');
     const guide78 = document.getElementById('guide-container-7-8');
     const guide79 = document.getElementById('guide-container-7-9');
+    if (guide61) guide61.classList.toggle('is-hidden', !is61);
+    if (guide62) guide62.classList.toggle('is-hidden', !is62);
+    if (guide63) guide63.classList.toggle('is-hidden', !is63);
+    if (guide64) guide64.classList.toggle('is-hidden', !is64);
     if (guide71) guide71.classList.toggle('is-hidden', !is71);
     if (guide72) guide72.classList.toggle('is-hidden', !is72);
     if (guide73) guide73.classList.toggle('is-hidden', !is73);
@@ -1014,7 +1129,15 @@ export function openExperimentWorkspace(expId) {
     if (guide78) guide78.classList.toggle('is-hidden', !is78);
     if (guide79) guide79.classList.toggle('is-hidden', !is79);
 
-    if (is71) {
+    if (is61) {
+        initMotionState();
+    } else if (is62) {
+        initTugOfWarState();
+    } else if (is63) {
+        initDensityTowerState();
+    } else if (is64) {
+        initHeatTransferState();
+    } else if (is71) {
         initWorkState();
     } else if (is72) {
         initEnergyState();
@@ -1056,7 +1179,15 @@ export function closeExperimentWorkspace() {
 }
 
 function resetCurrentExperiment() {
-    if (labState.activeExperimentId === "7.1") {
+    if (labState.activeExperimentId === "6.1") {
+        resetMotionExperiment();
+    } else if (labState.activeExperimentId === "6.2") {
+        resetTugOfWarExperiment();
+    } else if (labState.activeExperimentId === "6.3") {
+        resetDensityTowerExperiment();
+    } else if (labState.activeExperimentId === "6.4") {
+        resetHeatTransferExperiment();
+    } else if (labState.activeExperimentId === "7.1") {
         resetWorkExperiment();
     } else if (labState.activeExperimentId === "7.2") {
         resetEnergyExperiment();
@@ -1143,7 +1274,15 @@ function initExperimentCanvas() {
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
 
-    if (labState.activeExperimentId === "7.1") {
+    if (labState.activeExperimentId === "6.1") {
+        initMotionState();
+    } else if (labState.activeExperimentId === "6.2") {
+        initTugOfWarState();
+    } else if (labState.activeExperimentId === "6.3") {
+        initDensityTowerState();
+    } else if (labState.activeExperimentId === "6.4") {
+        initHeatTransferState();
+    } else if (labState.activeExperimentId === "7.1") {
         initWorkState();
     } else if (labState.activeExperimentId === "7.2") {
         initEnergyState();
@@ -1182,7 +1321,19 @@ function startRenderLoop() {
     const render = () => {
         animTime += 0.05;
         if (ctx && canvas) {
-            if (labState.activeExperimentId === "7.1") {
+            if (labState.activeExperimentId === "6.1") {
+                updateMotionPhysics();
+                drawMotionSimulation();
+            } else if (labState.activeExperimentId === "6.2") {
+                updateTugOfWarPhysics();
+                drawTugOfWarSimulation();
+            } else if (labState.activeExperimentId === "6.3") {
+                updateDensityTowerPhysics();
+                drawDensityTowerSimulation();
+            } else if (labState.activeExperimentId === "6.4") {
+                updateHeatTransferPhysics();
+                drawHeatTransferSimulation();
+            } else if (labState.activeExperimentId === "7.1") {
                 updateWorkPhysics();
                 drawWorkSimulation();
             } else if (labState.activeExperimentId === "7.2") {
@@ -1214,6 +1365,2210 @@ function startRenderLoop() {
         }
     };
     animFrameId = requestAnimationFrame(render);
+}
+
+// ============================================================================
+// --- 6.1. DENEY 6.1: SABİT SÜRATLİ HAREKET SİMÜLATÖRÜ (FB.6.2.1) ---
+// ============================================================================
+
+function initMotionState() {
+    const m = labState.motion;
+    m.isPlaying = false;
+    m.speed = 10;
+    m.trackLength = 100;
+    m.elapsedTime = 0.0;
+    m.distanceTraveled = 0.0;
+    m.graphMode = "xt";
+    m.history = [{ t: 0, x: 0, v: 10 }];
+    m.car.x = 80;
+    m.car.y = 230;
+    m.car.wheelAngle = 0;
+    m.car.exhaustParticles = [];
+    m.car.isDragging = false;
+
+    updateMotionDOMControls();
+    updateMotionMetricsDOM();
+}
+
+function resetMotionExperiment() {
+    const m = labState.motion;
+    m.isPlaying = false;
+    m.elapsedTime = 0.0;
+    m.distanceTraveled = 0.0;
+    m.history = [{ t: 0, x: 0, v: m.speed }];
+    m.car.x = 80;
+    m.car.wheelAngle = 0;
+    m.car.exhaustParticles = [];
+    m.car.isDragging = false;
+
+    const btnPlay = document.getElementById('btn-motion-play-pause');
+    const labelPlay = document.getElementById('label-motion-play');
+    if (btnPlay) btnPlay.classList.remove('active');
+    if (labelPlay) labelPlay.textContent = "Başlat";
+
+    updateMotionMetricsDOM();
+    showLabToast("Pist ve araç başlangıç çizgisine sıfırlandı!");
+}
+
+function updateMotionDOMControls() {
+    const m = labState.motion;
+    const slider = document.getElementById('slider-motion-speed');
+    const labelVal = document.getElementById('label-motion-speed-val');
+    if (slider) slider.value = m.speed;
+    if (labelVal) labelVal.textContent = `${m.speed} m/s`;
+
+    // Sürat Hızlı Butonları
+    [5, 10, 20].forEach(spd => {
+        const btn = document.getElementById(`btn-motion-speed-${spd}`);
+        if (btn) btn.classList.toggle('active', m.speed === spd);
+    });
+
+    // Pist Uzunluğu Butonları
+    [50, 100, 150].forEach(len => {
+        const pill = document.getElementById(`pill-track-${len}`);
+        if (pill) pill.classList.toggle('active', m.trackLength === len);
+    });
+
+    // Grafik Butonları
+    const pillXt = document.getElementById('pill-graph-xt');
+    const pillVt = document.getElementById('pill-graph-vt');
+    if (pillXt) pillXt.classList.toggle('active', m.graphMode === "xt");
+    if (pillVt) pillVt.classList.toggle('active', m.graphMode === "vt");
+}
+
+function setupMotionControlsDOM() {
+    // 1. Oynat / Duraklat
+    const btnPlay = document.getElementById('btn-motion-play-pause');
+    const labelPlay = document.getElementById('label-motion-play');
+    if (btnPlay) {
+        btnPlay.addEventListener('click', () => {
+            const m = labState.motion;
+            if (m.distanceTraveled >= m.trackLength) {
+                // Pist bitmişse başa alıp başlat
+                m.elapsedTime = 0.0;
+                m.distanceTraveled = 0.0;
+                m.history = [{ t: 0, x: 0, v: m.speed }];
+            }
+            m.isPlaying = !m.isPlaying;
+            btnPlay.classList.toggle('active', m.isPlaying);
+            if (labelPlay) labelPlay.textContent = m.isPlaying ? "Duraklat" : "Başlat";
+            updateMotionMetricsDOM();
+        });
+    }
+
+    // 2. Başa Al
+    const btnReset = document.getElementById('btn-motion-reset');
+    if (btnReset) btnReset.addEventListener('click', resetMotionExperiment);
+
+    // 3. Hızlı Sürat Butonları (5, 10, 20 m/s)
+    [5, 10, 20].forEach(spd => {
+        const btn = document.getElementById(`btn-motion-speed-${spd}`);
+        if (btn) {
+            btn.addEventListener('click', () => {
+                labState.motion.speed = spd;
+                updateMotionDOMControls();
+                updateMotionMetricsDOM();
+                showLabToast(`Sabit Sürat: ${spd} m/s olarak ayarlandı`);
+            });
+        }
+    });
+
+    // 4. Sürat Kaydırıcısı
+    const speedSlider = document.getElementById('slider-motion-speed');
+    const speedLabel = document.getElementById('label-motion-speed-val');
+    if (speedSlider) {
+        speedSlider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value, 10);
+            labState.motion.speed = val;
+            if (speedLabel) speedLabel.textContent = `${val} m/s`;
+            [5, 10, 20].forEach(spd => {
+                const btn = document.getElementById(`btn-motion-speed-${spd}`);
+                if (btn) btn.classList.toggle('active', val === spd);
+            });
+            updateMotionMetricsDOM();
+        });
+    }
+
+    // 5. Pist Uzunluğu Butonları (50, 100, 150 m)
+    [50, 100, 150].forEach(len => {
+        const pill = document.getElementById(`pill-track-${len}`);
+        if (pill) {
+            pill.addEventListener('click', () => {
+                labState.motion.trackLength = len;
+                resetMotionExperiment();
+                updateMotionDOMControls();
+                showLabToast(`Pist Uzunluğu: ${len} metre`);
+            });
+        }
+    });
+
+    // 6. Grafik Modu Seçicileri (x-t vs v-t)
+    const pillXt = document.getElementById('pill-graph-xt');
+    const pillVt = document.getElementById('pill-graph-vt');
+    if (pillXt) {
+        pillXt.addEventListener('click', () => {
+            labState.motion.graphMode = "xt";
+            updateMotionDOMControls();
+            showLabToast("Canlı Grafik: Yol - Zaman (x - t) eğrisi");
+        });
+    }
+    if (pillVt) {
+        pillVt.addEventListener('click', () => {
+            labState.motion.graphMode = "vt";
+            updateMotionDOMControls();
+            showLabToast("Canlı Grafik: Sürat - Zaman (v - t) eğrisi");
+        });
+    }
+
+    // 7. Gözlem Kayıt Butonu
+    const btnRecord = document.getElementById('btn-record-data-6-1');
+    if (btnRecord) btnRecord.addEventListener('click', recordMeasurement);
+}
+
+function updateMotionPhysics() {
+    const m = labState.motion;
+    if (m.isPlaying) {
+        const dt = 0.05; // 20 FPS simülasyon zaman adımı
+        if (m.distanceTraveled < m.trackLength) {
+            m.elapsedTime += dt;
+            m.distanceTraveled = Math.min(m.trackLength, m.distanceTraveled + m.speed * dt);
+
+            // Tekerlek dönüşü
+            m.car.wheelAngle += (m.speed * dt * 0.25);
+
+            // Periyodik grafik veri kaydı (her ~0.2 saniyede bir nokta)
+            const lastPoint = m.history[m.history.length - 1];
+            if (!lastPoint || m.elapsedTime - lastPoint.t >= 0.2) {
+                m.history.push({ t: m.elapsedTime, x: m.distanceTraveled, v: m.speed });
+            }
+
+            // Temiz enerji egzoz aurası parçacığı
+            if (Math.random() < 0.4) {
+                m.car.exhaustParticles.push({
+                    x: m.car.x - 15,
+                    y: m.car.y + 14 + (Math.random() - 0.5) * 6,
+                    vx: -1.5 - Math.random() * 2,
+                    vy: (Math.random() - 0.5) * 0.8,
+                    life: 1.0,
+                    size: 3 + Math.random() * 3
+                });
+            }
+
+            if (m.distanceTraveled >= m.trackLength) {
+                m.isPlaying = false;
+                const btnPlay = document.getElementById('btn-motion-play-pause');
+                const labelPlay = document.getElementById('label-motion-play');
+                if (btnPlay) btnPlay.classList.remove('active');
+                if (labelPlay) labelPlay.textContent = "Baştan Başlat";
+                showLabToast(`🏁 ${m.trackLength} m pist tamamlandı! Süre: ${m.elapsedTime.toFixed(1)} sn`);
+            }
+        }
+    }
+
+    // Parçacıkları güncelle
+    for (let i = m.car.exhaustParticles.length - 1; i >= 0; i--) {
+        const p = m.car.exhaustParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.04;
+        if (p.life <= 0) m.car.exhaustParticles.splice(i, 1);
+    }
+
+    // Araç X koordinatı (Canvas ölçeği: 80px -> 700px arası)
+    const trackStartPx = 90;
+    const trackEndPx = 690;
+    const trackWidthPx = trackEndPx - trackStartPx;
+    m.car.x = trackStartPx + (m.distanceTraveled / m.trackLength) * trackWidthPx;
+
+    updateMotionMetricsDOM();
+}
+
+function updateMotionMetricsDOM() {
+    const m = labState.motion;
+    const fmt = (n, d = 1) => Number(n).toFixed(d);
+
+    // Canvas Altı Responsive Metrik Şeridi (#metrics-bar-6-1)
+    const mbDist = document.getElementById('mbar-61-dist');
+    const mbTime = document.getElementById('mbar-61-time');
+    const mbSpeed = document.getElementById('mbar-61-speed');
+    const mbStatus = document.getElementById('mbar-61-status');
+
+    if (mbDist) mbDist.textContent = `${fmt(m.distanceTraveled, 1)} m`;
+    if (mbTime) mbTime.textContent = `${fmt(m.elapsedTime, 1)} s`;
+    if (mbSpeed) mbSpeed.textContent = `${fmt(m.speed, 1)} m/s`;
+    if (mbStatus) {
+        if (m.distanceTraveled >= m.trackLength) {
+            mbStatus.textContent = "🏁 Bitiş Çizgisine Ulaştı";
+            mbStatus.style.borderLeftColor = "#f59e0b";
+        } else if (m.isPlaying) {
+            mbStatus.textContent = "⚡ Sabit Süratle İlerliyor";
+            mbStatus.style.borderLeftColor = "#10b981";
+        } else {
+            mbStatus.textContent = "Hazır (Bekliyor)";
+            mbStatus.style.borderLeftColor = "#38bdf8";
+        }
+    }
+
+    // Sağ Panel Metrikleri
+    const pTime = document.getElementById('metric-61-time');
+    const pDist = document.getElementById('metric-61-dist');
+    const pSpeed = document.getElementById('metric-61-speed');
+    const pStatus = document.getElementById('metric-61-status');
+    if (pTime) pTime.textContent = `${fmt(m.elapsedTime, 1)} s`;
+    if (pDist) pDist.textContent = `${fmt(m.distanceTraveled, 1)} m`;
+    if (pSpeed) pSpeed.textContent = `${fmt(m.speed, 1)} m/s`;
+    if (pStatus) {
+        pStatus.textContent = m.distanceTraveled >= m.trackLength ? "Bitişe Ulaştı" : (m.isPlaying ? "Hareketli" : "Başlangıçta");
+    }
+}
+
+function drawMotionSimulation() {
+    const w = canvas.width;
+    const h = canvas.height;
+    const scale = w / 800;
+
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    // 1. Zemin ve Gökyüzü Arka Planı
+    const skyGrad = ctx.createLinearGradient(0, 0, 0, 240);
+    skyGrad.addColorStop(0, "#090d16");
+    skyGrad.addColorStop(1, "#111827");
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, 800, 240);
+
+    // Arka plan teknolojik laboratuvar çizgileri (grid)
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.06)";
+    ctx.lineWidth = 1;
+    for (let x = 40; x < 800; x += 40) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, 240);
+        ctx.stroke();
+    }
+
+    // 2. Ölçüm Pisti ve Asfalt Yolu
+    drawMotionTrack(ctx);
+
+    // 3. Canlı Dinamik Grafik HUD (Zero-Canvas-Text: Sadece net koordinat ve grafik eğrisi)
+    drawMotionLiveGraph(ctx);
+
+    // 4. Parçacıklar (Temiz Enerji / İtici Aurası)
+    const m = labState.motion;
+    m.car.exhaustParticles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(56, 189, 248, ${p.life * 0.7})`;
+        ctx.shadowColor = "#38bdf8";
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+    });
+
+    // 5. Stilize Modern Deney Arabası
+    drawMotionCar(ctx, m.car.x, m.car.y, m.car.wheelAngle);
+
+    ctx.restore();
+}
+
+function drawMotionTrack(ctx) {
+    const m = labState.motion;
+
+    // Asfalt Tabanı (Y: 240 -> 440)
+    const roadGrad = ctx.createLinearGradient(0, 240, 0, 440);
+    roadGrad.addColorStop(0, "#1e293b");
+    roadGrad.addColorStop(1, "#0f172a");
+    ctx.fillStyle = roadGrad;
+    ctx.fillRect(0, 240, 800, 200);
+
+    // Yolun Üst Bordür Şeridi
+    ctx.fillStyle = "#334155";
+    ctx.fillRect(0, 238, 800, 4);
+
+    // Yolun Alt Bordür Şeridi
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(0, 438, 800, 4);
+
+    // Yol Ortası Kesikli Çizgi (Lazer Neon Amber)
+    ctx.strokeStyle = "rgba(250, 204, 21, 0.55)";
+    ctx.lineWidth = 3;
+    ctx.setLineDash([20, 16]);
+    ctx.beginPath();
+    ctx.moveTo(0, 340);
+    ctx.lineTo(800, 340);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Başlangıç Sensör Kapısı (X = 90)
+    ctx.strokeStyle = "#38bdf8";
+    ctx.lineWidth = 3;
+    ctx.shadowColor = "#38bdf8";
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.moveTo(90, 200);
+    ctx.lineTo(90, 420);
+    ctx.stroke();
+
+    // Başlangıç Sensör Direkleri
+    ctx.fillStyle = "#0284c7";
+    ctx.fillRect(86, 190, 8, 20);
+    ctx.fillRect(86, 410, 8, 20);
+    ctx.shadowBlur = 0;
+
+    // Bitiş Sensör Kapısı (X = 690) - Damalı & Neon Aurası
+    ctx.strokeStyle = "#f59e0b";
+    ctx.lineWidth = 3;
+    ctx.shadowColor = "#f59e0b";
+    ctx.shadowBlur = 12;
+    ctx.beginPath();
+    ctx.moveTo(690, 200);
+    ctx.lineTo(690, 420);
+    ctx.stroke();
+
+    ctx.fillStyle = "#d97706";
+    ctx.fillRect(686, 190, 8, 20);
+    ctx.fillRect(686, 410, 8, 20);
+    ctx.shadowBlur = 0;
+
+    // Pist Üzeri Mesafe Çentikleri (0%, 25%, 50%, 75%, 100%)
+    const trackStart = 90;
+    const trackWidth = 600;
+    for (let i = 0; i <= 4; i++) {
+        const cx = trackStart + (i / 4) * trackWidth;
+        ctx.strokeStyle = (i === 0 || i === 4) ? "#facc15" : "rgba(255, 255, 255, 0.4)";
+        ctx.lineWidth = (i === 0 || i === 4) ? 2.5 : 1.5;
+        ctx.beginPath();
+        ctx.moveTo(cx, 420);
+        ctx.lineTo(cx, 436);
+        ctx.stroke();
+
+        // Çentik altı LED nokta
+        ctx.fillStyle = (i === 0 || i === 4) ? "#facc15" : "#38bdf8";
+        ctx.beginPath();
+        ctx.arc(cx, 442, 3, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+function drawMotionCar(ctx, x, y, wheelAngle) {
+    ctx.save();
+    ctx.translate(x, y);
+
+    // Araba Zemin Gölgesi
+    ctx.fillStyle = "rgba(0, 0, 0, 0.55)";
+    ctx.beginPath();
+    ctx.ellipse(0, 40, 56, 10, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 1. Aerodinamik Gövde (Metalik Camgöbeği & Lacivert Gradyan)
+    const bodyGrad = ctx.createLinearGradient(-50, -10, 50, 30);
+    bodyGrad.addColorStop(0, "#0284c7");
+    bodyGrad.addColorStop(0.5, "#0369a1");
+    bodyGrad.addColorStop(1, "#082f49");
+
+    ctx.fillStyle = bodyGrad;
+    ctx.strokeStyle = "#38bdf8";
+    ctx.lineWidth = 1.8;
+
+    ctx.beginPath();
+    ctx.moveTo(-48, 25);
+    ctx.lineTo(-48, 8);
+    ctx.quadraticCurveTo(-46, -4, -30, -5); // Arka tavan geçişi
+    ctx.lineTo(-12, -18);                   // Arka cam eğimi
+    ctx.quadraticCurveTo(0, -22, 20, -18);   // Tavan kubbesi
+    ctx.lineTo(36, -2);                    // Ön cam eğimi
+    ctx.quadraticCurveTo(52, 6, 52, 20);    // Ön burun
+    ctx.lineTo(50, 26);
+    ctx.quadraticCurveTo(46, 28, 40, 28);
+    ctx.arc(28, 26, 14, 0, Math.PI, true); // Ön tekerlek yuvası
+    ctx.lineTo(-14, 28);
+    ctx.arc(-28, 26, 14, 0, Math.PI, true); // Arka tekerlek yuvası
+    ctx.lineTo(-44, 28);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // 2. Yarış Şeridi & Gövde Neon Çizgisi
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.7)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(-45, 14);
+    ctx.lineTo(48, 14);
+    ctx.stroke();
+
+    // 3. Ön ve Arka Camlar (Siyah Tint & Yansıma)
+    ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.lineWidth = 1;
+
+    // Ön Cam
+    ctx.beginPath();
+    ctx.moveTo(8, -16);
+    ctx.lineTo(32, -3);
+    ctx.lineTo(30, 8);
+    ctx.lineTo(8, 8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Cam Yansıması
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(14, -14);
+    ctx.lineTo(26, -2);
+    ctx.stroke();
+
+    // 4. Ön Far ve Lazer Huzmesi
+    ctx.fillStyle = "#38bdf8";
+    ctx.shadowColor = "#38bdf8";
+    ctx.shadowBlur = 12;
+    ctx.beginPath();
+    ctx.ellipse(50, 16, 3, 5, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Farın Önündeki Işık Konisi
+    const coneGrad = ctx.createLinearGradient(54, 16, 130, 26);
+    coneGrad.addColorStop(0, "rgba(56, 189, 248, 0.35)");
+    coneGrad.addColorStop(1, "rgba(56, 189, 248, 0.0)");
+    ctx.fillStyle = coneGrad;
+    ctx.beginPath();
+    ctx.moveTo(52, 12);
+    ctx.lineTo(130, 4);
+    ctx.lineTo(130, 40);
+    ctx.lineTo(52, 22);
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // 5. Arka Stop Lambası
+    ctx.fillStyle = "#ef4444";
+    ctx.shadowColor = "#ef4444";
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    ctx.fillRect(-49, 10, 3, 8);
+    ctx.shadowBlur = 0;
+
+    // 6. Tekerlekler (Alaşım Jant ve Dönen Kollar)
+    drawCarWheel(ctx, -28, 26, wheelAngle);
+    drawCarWheel(ctx, 28, 26, wheelAngle);
+
+    ctx.restore();
+}
+
+function drawCarWheel(ctx, cx, cy, angle) {
+    ctx.save();
+    ctx.translate(cx, cy);
+
+    // Lastik (Kauçuk Siyah Dış Halka)
+    ctx.fillStyle = "#0f172a";
+    ctx.strokeStyle = "#334155";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(0, 0, 11, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Jant (Gümüş Alaşım)
+    ctx.rotate(angle);
+    ctx.fillStyle = "#94a3b8";
+    ctx.beginPath();
+    ctx.arc(0, 0, 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Jant Kolları (4 Kol)
+    ctx.strokeStyle = "#1e293b";
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    ctx.moveTo(-6, 0); ctx.lineTo(6, 0);
+    ctx.moveTo(0, -6); ctx.lineTo(0, 6);
+    ctx.stroke();
+
+    // Merkez Göbek
+    ctx.fillStyle = "#38bdf8";
+    ctx.beginPath();
+    ctx.arc(0, 0, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+}
+
+function drawMotionLiveGraph(ctx) {
+    const m = labState.motion;
+    const gx = 520;
+    const gy = 25;
+    const gw = 245;
+    const gh = 135;
+
+    // Cam Kart Arka Planı
+    ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.35)";
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.roundRect(gx, gy, gw, gh, 10);
+    ctx.fill();
+    ctx.stroke();
+
+    // İç Grafik Koordinat Sistemi
+    const px = gx + 30;
+    const py = gy + 20;
+    const pw = gw - 45;
+    const ph = gh - 35;
+
+    // Eksen Çizgileri
+    ctx.strokeStyle = "rgba(148, 163, 184, 0.4)";
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(px, py + ph);
+    ctx.lineTo(px + pw, py + ph);
+    ctx.stroke();
+
+    // İnce Kılavuz Çizgileri
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+    ctx.lineWidth = 1;
+    for (let r = 1; r <= 3; r++) {
+        const yLine = py + ph - (r / 3) * ph;
+        ctx.beginPath();
+        ctx.moveTo(px, yLine);
+        ctx.lineTo(px + pw, yLine);
+        ctx.stroke();
+    }
+    for (let c = 1; c <= 3; c++) {
+        const xLine = px + (c / 3) * pw;
+        ctx.beginPath();
+        ctx.moveTo(xLine, py);
+        ctx.lineTo(xLine, py + ph);
+        ctx.stroke();
+    }
+
+    if (m.history.length === 0) return;
+
+    // Maksimum Eksen Değerleri
+    const maxT = Math.max(10, m.trackLength / m.speed);
+    const maxX = m.trackLength;
+    const maxV = 30;
+
+    // Eğri Çizimi
+    ctx.beginPath();
+    if (m.graphMode === "xt") {
+        // YOL - ZAMAN (x - t) Grafiği: Luminous Neon Cyan Doğru
+        ctx.strokeStyle = "#38bdf8";
+        ctx.lineWidth = 2.5;
+        ctx.shadowColor = "#38bdf8";
+        ctx.shadowBlur = 8;
+
+        m.history.forEach((pt, idx) => {
+            const plotX = px + (pt.t / maxT) * pw;
+            const plotY = py + ph - (pt.x / maxX) * ph;
+            if (idx === 0) ctx.moveTo(plotX, plotY);
+            else ctx.lineTo(plotX, plotY);
+        });
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // Anlık Konum Noktası
+        const currentPt = m.history[m.history.length - 1];
+        if (currentPt) {
+            const curPlotX = px + (currentPt.t / maxT) * pw;
+            const curPlotY = py + ph - (currentPt.x / maxX) * ph;
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(curPlotX, curPlotY, 4, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else {
+        // SÜRAT - ZAMAN (v - t) Grafiği: Luminous Amber Yatay Doğru
+        ctx.strokeStyle = "#fbbf24";
+        ctx.lineWidth = 2.5;
+        ctx.shadowColor = "#fbbf24";
+        ctx.shadowBlur = 8;
+
+        const fixedV = m.speed;
+        const plotY = py + ph - (fixedV / maxV) * ph;
+        const endPlotX = px + (m.elapsedTime / maxT) * pw;
+
+        ctx.moveTo(px, plotY);
+        ctx.lineTo(Math.min(px + pw, endPlotX), plotY);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        // Eğri altı taralı alan (Alınan Yol = Sürat x Zaman görselleştirmesi)
+        ctx.fillStyle = "rgba(251, 191, 36, 0.15)";
+        ctx.beginPath();
+        ctx.moveTo(px, py + ph);
+        ctx.lineTo(px, plotY);
+        ctx.lineTo(Math.min(px + pw, endPlotX), plotY);
+        ctx.lineTo(Math.min(px + pw, endPlotX), py + ph);
+        ctx.closePath();
+        ctx.fill();
+    }
+}
+
+// ============================================================================
+// --- 6.2. DENEY 6.2: BİLEŞKE KUVVET VE HALAT ÇEKMECE (FB.6.2.2) ---
+// ============================================================================
+
+function initTugOfWarState() {
+    const tow = labState.tugOfWar;
+    tow.isPlaying = false;
+    tow.fWest = 20;
+    tow.fEast = 20;
+    tow.netForce = 0;
+    tow.boxX = 400;
+    tow.boxBaseX = 400;
+    tow.boxSpeed = 0;
+    tow.isDragging = false;
+    tow.winner = null;
+    tow.cheerParticles = [];
+
+    updateTugDOMControls();
+    updateTugMetricsDOM();
+}
+
+function resetTugOfWarExperiment() {
+    const tow = labState.tugOfWar;
+    tow.isPlaying = false;
+    tow.boxX = 400;
+    tow.boxSpeed = 0;
+    tow.winner = null;
+    tow.cheerParticles = [];
+
+    const btnPlay = document.getElementById('btn-tug-play-pause');
+    const labelPlay = document.getElementById('label-tug-play');
+    if (btnPlay) btnPlay.classList.remove('active');
+    if (labelPlay) labelPlay.textContent = "Çek";
+
+    updateTugMetricsDOM();
+    showLabToast("Kutu ve halat merkez çizgisine (0 m) sıfırlandı!");
+}
+
+function updateTugDOMControls() {
+    const tow = labState.tugOfWar;
+    const sWest = document.getElementById('slider-tug-west');
+    const sEast = document.getElementById('slider-tug-east');
+    const lWest = document.getElementById('label-tug-west-val');
+    const lEast = document.getElementById('label-tug-east-val');
+
+    if (sWest) sWest.value = tow.fWest;
+    if (sEast) sEast.value = tow.fEast;
+    if (lWest) lWest.textContent = `${tow.fWest} N`;
+    if (lEast) lEast.textContent = `${tow.fEast} N`;
+
+    // Senaryo buton durumları
+    const isBalanced = (tow.fWest === 20 && tow.fEast === 20);
+    const isEastDom = (tow.fWest === 10 && tow.fEast === 30);
+    const isWestDom = (tow.fWest === 30 && tow.fEast === 10);
+
+    const btnBal = document.getElementById('btn-tug-preset-balanced');
+    const btnEast = document.getElementById('btn-tug-preset-east');
+    const btnWest = document.getElementById('btn-tug-preset-west');
+    if (btnBal) btnBal.classList.toggle('active', isBalanced);
+    if (btnEast) btnEast.classList.toggle('active', isEastDom);
+    if (btnWest) btnWest.classList.toggle('active', isWestDom);
+
+    const pillBal = document.getElementById('pill-tug-bal');
+    const pillEast = document.getElementById('pill-tug-east');
+    const pillWest = document.getElementById('pill-tug-west');
+    if (pillBal) pillBal.classList.toggle('active', isBalanced);
+    if (pillEast) pillEast.classList.toggle('active', isEastDom);
+    if (pillWest) pillWest.classList.toggle('active', isWestDom);
+}
+
+function setupTugOfWarControlsDOM() {
+    // 1. Oynat / Duraklat
+    const btnPlay = document.getElementById('btn-tug-play-pause');
+    const labelPlay = document.getElementById('label-tug-play');
+    if (btnPlay) {
+        btnPlay.addEventListener('click', () => {
+            const tow = labState.tugOfWar;
+            tow.isPlaying = !tow.isPlaying;
+            btnPlay.classList.toggle('active', tow.isPlaying);
+            if (labelPlay) labelPlay.textContent = tow.isPlaying ? "Durdur" : "Çek";
+            updateTugMetricsDOM();
+        });
+    }
+
+    // 2. Sıfırla
+    const btnReset = document.getElementById('btn-tug-reset');
+    if (btnReset) btnReset.addEventListener('click', resetTugOfWarExperiment);
+
+    // 3. Hazır Senaryolar (Denge, Doğu Üstün, Batı Üstün)
+    const setScenario = (west, east) => {
+        const tow = labState.tugOfWar;
+        tow.fWest = west;
+        tow.fEast = east;
+        tow.netForce = east - west;
+        updateTugDOMControls();
+        updateTugMetricsDOM();
+        showLabToast(`Kuvvetler: Batı ${west} N vs Doğu ${east} N (Bileşke: ${Math.abs(tow.netForce)} N)`);
+    };
+
+    ['btn-tug-preset-balanced', 'pill-tug-bal'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => setScenario(20, 20));
+    });
+
+    ['btn-tug-preset-east', 'pill-tug-east'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => setScenario(10, 30));
+    });
+
+    ['btn-tug-preset-west', 'pill-tug-west'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => setScenario(30, 10));
+    });
+
+    // 4. Kuvvet Kaydırıcıları
+    const sWest = document.getElementById('slider-tug-west');
+    const sEast = document.getElementById('slider-tug-east');
+    if (sWest) {
+        sWest.addEventListener('input', (e) => {
+            labState.tugOfWar.fWest = parseInt(e.target.value, 10);
+            labState.tugOfWar.netForce = labState.tugOfWar.fEast - labState.tugOfWar.fWest;
+            updateTugDOMControls();
+            updateTugMetricsDOM();
+        });
+    }
+    if (sEast) {
+        sEast.addEventListener('input', (e) => {
+            labState.tugOfWar.fEast = parseInt(e.target.value, 10);
+            labState.tugOfWar.netForce = labState.tugOfWar.fEast - labState.tugOfWar.fWest;
+            updateTugDOMControls();
+            updateTugMetricsDOM();
+        });
+    }
+
+    // 5. Gözlem Kayıt Butonu
+    const btnRecord = document.getElementById('btn-record-data-6-2');
+    if (btnRecord) btnRecord.addEventListener('click', recordMeasurement);
+}
+
+function updateTugOfWarPhysics() {
+    const tow = labState.tugOfWar;
+    tow.netForce = tow.fEast - tow.fWest;
+
+    if (tow.isPlaying) {
+        // İvme hesabı (a = R / m), sürtünme sönümlemesi
+        const mass = 15; // kg
+        const accel = (tow.netForce / mass) * 0.8;
+        tow.boxSpeed += accel * 0.05;
+        tow.boxSpeed *= 0.94; // Sürtünme sönümlenmesi
+        tow.boxX += tow.boxSpeed * 8;
+
+        // Pisti Aşma ve Kazanan Kontrolü
+        if (tow.boxX >= 590 && !tow.winner) {
+            tow.winner = "east";
+            tow.isPlaying = false;
+            triggerTugCheerParticles(tow.boxX, 280, "#ef4444");
+            showLabToast("🚩 DOĞU TAKIMI KAZANDI! (Dengelenmemiş kuvvetler yönünde hızlandı)");
+        } else if (tow.boxX <= 210 && !tow.winner) {
+            tow.winner = "west";
+            tow.isPlaying = false;
+            triggerTugCheerParticles(tow.boxX, 280, "#38bdf8");
+            showLabToast("🚩 BATI TAKIMI KAZANDI! (Dengelenmemiş kuvvetler yönünde hızlandı)");
+        }
+    }
+
+    // Kutlama parçacıkları güncelle
+    for (let i = tow.cheerParticles.length - 1; i >= 0; i--) {
+        const p = tow.cheerParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.2; // yerçekimi
+        p.life -= 0.03;
+        if (p.life <= 0) tow.cheerParticles.splice(i, 1);
+    }
+
+    updateTugMetricsDOM();
+}
+
+function triggerTugCheerParticles(x, y, color) {
+    const tow = labState.tugOfWar;
+    for (let i = 0; i < 40; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const spd = 3 + Math.random() * 6;
+        tow.cheerParticles.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * spd,
+            vy: Math.sin(angle) * spd - 3,
+            color: color,
+            life: 1.0,
+            size: 3 + Math.random() * 4
+        });
+    }
+}
+
+function updateTugMetricsDOM() {
+    const tow = labState.tugOfWar;
+    const mbWest = document.getElementById('mbar-62-west');
+    const mbEast = document.getElementById('mbar-62-east');
+    const mbNet = document.getElementById('mbar-62-net');
+    const mbStatus = document.getElementById('mbar-62-status');
+
+    if (mbWest) mbWest.textContent = `${tow.fWest} N`;
+    if (mbEast) mbEast.textContent = `${tow.fEast} N`;
+    if (mbNet) mbNet.textContent = `${Math.abs(tow.netForce)} N`;
+
+    if (mbStatus) {
+        if (tow.netForce === 0) {
+            mbStatus.textContent = "⚖️ Dengelenmiş Kuvvetler (R = 0 N)";
+            mbStatus.style.borderLeftColor = "#10b981";
+        } else if (tow.netForce > 0) {
+            mbStatus.textContent = `⚡ Doğuya Dengelenmemiş (R = ${tow.netForce} N)`;
+            mbStatus.style.borderLeftColor = "#ef4444";
+        } else {
+            mbStatus.textContent = `⚡ Batıya Dengelenmemiş (R = ${Math.abs(tow.netForce)} N)`;
+            mbStatus.style.borderLeftColor = "#38bdf8";
+        }
+    }
+
+    // Sağ Panel Metrikleri
+    const pWest = document.getElementById('metric-62-west');
+    const pEast = document.getElementById('metric-62-east');
+    const pNet = document.getElementById('metric-62-net');
+    const pType = document.getElementById('metric-62-type');
+    if (pWest) pWest.textContent = `${tow.fWest} N`;
+    if (pEast) pEast.textContent = `${tow.fEast} N`;
+    if (pNet) pNet.textContent = `${Math.abs(tow.netForce)} N`;
+    if (pType) pType.textContent = (tow.netForce === 0) ? "Dengelenmiş" : "Dengelenmemiş";
+}
+
+function drawTugOfWarSimulation() {
+    const w = canvas.width;
+    const h = canvas.height;
+    const scale = w / 800;
+
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    // 1. Zemin (Spor Salonu Parke / Laboratuvar Zemini)
+    const floorGrad = ctx.createLinearGradient(0, 0, 0, 500);
+    floorGrad.addColorStop(0, "#0f172a");
+    floorGrad.addColorStop(0.55, "#1e293b");
+    floorGrad.addColorStop(1, "#0b0f19");
+    ctx.fillStyle = floorGrad;
+    ctx.fillRect(0, 0, 800, 500);
+
+    // Çizgili Parke Tahtası Çizgileri
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.04)";
+    ctx.lineWidth = 1;
+    for (let y = 300; y < 500; y += 35) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(800, y);
+        ctx.stroke();
+    }
+
+    // Orta Eksen ve Mesafe Çizgisi (0 m Merkezi, -5m Batı, +5m Doğu)
+    ctx.strokeStyle = "rgba(148, 163, 184, 0.3)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(100, 390);
+    ctx.lineTo(700, 390);
+    ctx.stroke();
+
+    // Merkez 0 Çizgisi
+    ctx.strokeStyle = "#facc15";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(400, 240);
+    ctx.lineTo(400, 420);
+    ctx.stroke();
+
+    // 2. Halat
+    drawTugRope(ctx);
+
+    // 3. Ortadaki Kutu & Zafer Bayrağı
+    drawTugBoxAndFlag(ctx);
+
+    // 4. Batı Takımı (Mavi / Sol - 2 Sporcu)
+    drawTugAthletes(ctx, "west");
+
+    // 5. Doğu Takımı (Kırmızı / Sağ - 2 Sporcu)
+    drawTugAthletes(ctx, "east");
+
+    // 6. Kuvvet Vektör Okları
+    drawTugForceVectors(ctx);
+
+    // 7. Kutlama Parçacıkları
+    const tow = labState.tugOfWar;
+    tow.cheerParticles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 6;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+    });
+
+    ctx.restore();
+}
+
+function drawTugRope(ctx) {
+    const tow = labState.tugOfWar;
+    const ropeY = 320;
+
+    ctx.save();
+    ctx.strokeStyle = "#d97706"; // Kenevir sarısı
+    ctx.lineWidth = 9;
+    ctx.lineCap = "round";
+
+    // Halat örgüsü gölgesi
+    ctx.shadowColor = "rgba(0, 0, 0, 0.45)";
+    ctx.shadowBlur = 6;
+    ctx.beginPath();
+    ctx.moveTo(120, ropeY);
+    ctx.lineTo(680, ropeY);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Halat kıvrım detay çizgisi
+    ctx.strokeStyle = "#b45309";
+    ctx.lineWidth = 3;
+    ctx.setLineDash([8, 8]);
+    ctx.beginPath();
+    ctx.moveTo(120, ropeY);
+    ctx.lineTo(680, ropeY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.restore();
+}
+
+function drawTugBoxAndFlag(ctx) {
+    const tow = labState.tugOfWar;
+    const bx = tow.boxX;
+    const by = 300;
+
+    ctx.save();
+
+    // Kutu Zemin Gölgesi
+    ctx.fillStyle = "rgba(0, 0, 0, 0.55)";
+    ctx.beginPath();
+    ctx.ellipse(bx, 385, 36, 10, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Ahşap Sandık
+    const crateGrad = ctx.createLinearGradient(bx - 30, by, bx + 30, by + 65);
+    crateGrad.addColorStop(0, "#d97706");
+    crateGrad.addColorStop(1, "#92400e");
+    ctx.fillStyle = crateGrad;
+    ctx.strokeStyle = "#451a03";
+    ctx.lineWidth = 2.5;
+
+    ctx.beginPath();
+    ctx.roundRect(bx - 30, by, 60, 65, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    // Sandık Çapraz Takviye Çıtaları
+    ctx.strokeStyle = "rgba(69, 26, 3, 0.6)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(bx - 26, by + 6);
+    ctx.lineTo(bx + 26, by + 59);
+    ctx.moveTo(bx + 26, by + 6);
+    ctx.lineTo(bx - 26, by + 59);
+    ctx.stroke();
+
+    // Metal Köşe Destekleri
+    ctx.fillStyle = "#94a3b8";
+    [[-30, by], [22, by], [-30, by + 57], [22, by + 57]].forEach(([cx, cy]) => {
+        ctx.fillRect(cx, cy, 8, 8);
+    });
+
+    // Tekerlekler (Ağır Yük Rulmanı)
+    ctx.fillStyle = "#475569";
+    ctx.beginPath();
+    ctx.arc(bx - 20, 375, 7, 0, Math.PI * 2);
+    ctx.arc(bx + 20, 375, 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Kırmızı Merkez Zafer Bayrağı
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(bx, by);
+    ctx.lineTo(bx, by - 45);
+    ctx.stroke();
+
+    ctx.fillStyle = "#ef4444";
+    ctx.shadowColor = "#ef4444";
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.moveTo(bx, by - 45);
+    ctx.lineTo(bx + 26, by - 33);
+    ctx.lineTo(bx, by - 21);
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.restore();
+}
+
+function drawTugAthletes(ctx, team) {
+    const tow = labState.tugOfWar;
+    const isWest = (team === "west");
+    const force = isWest ? tow.fWest : tow.fEast;
+
+    // Kuvvet miktarına göre sporcuların geriye yatma açısı (Lean angle)
+    const leanAngle = (force / 50) * 0.35 * (isWest ? -1 : 1);
+    const teamColor = isWest ? "#38bdf8" : "#f87171";
+    const teamDark = isWest ? "#0284c7" : "#dc2626";
+
+    // İki sporcunun pozisyonları
+    const positions = isWest ? [170, 250] : [550, 630];
+
+    positions.forEach((px, idx) => {
+        ctx.save();
+        ctx.translate(px, 370);
+        ctx.rotate(leanAngle);
+
+        // Ayak Zemin Teması ve Spor Ayakkabı
+        ctx.fillStyle = "#0f172a";
+        ctx.fillRect(isWest ? -18 : 6, 0, 20, 8);
+
+        // Bükülen Bacaklar
+        ctx.strokeStyle = "#334155";
+        ctx.lineWidth = 7;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(isWest ? -12 : 12, -26);
+        ctx.lineTo(0, -48);
+        ctx.stroke();
+
+        // Gövde (Forma)
+        const jerseyGrad = ctx.createLinearGradient(-15, -48, 15, -85);
+        jerseyGrad.addColorStop(0, teamDark);
+        jerseyGrad.addColorStop(1, teamColor);
+        ctx.fillStyle = jerseyGrad;
+        ctx.beginPath();
+        ctx.roundRect(-12, -85, 24, 38, 4);
+        ctx.fill();
+
+        // Çeken Kollar ve Halatı Kavrayan Eller
+        ctx.strokeStyle = "#fed7aa"; // Ten rengi
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(0, -78);
+        ctx.lineTo(isWest ? 14 : -14, -58);
+        ctx.lineTo(isWest ? 24 : -24, -50);
+        ctx.stroke();
+
+        // Kafa ve Sporcu Saç/Bandana
+        ctx.fillStyle = "#fed7aa";
+        ctx.beginPath();
+        ctx.arc(0, -96, 11, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Saç / Bandana
+        ctx.fillStyle = teamColor;
+        ctx.beginPath();
+        ctx.arc(0, -99, 11, Math.PI, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+    });
+}
+
+function drawTugForceVectors(ctx) {
+    const tow = labState.tugOfWar;
+    const bx = tow.boxX;
+    const arrowY = 220;
+
+    // Batı Kuvvet Vektörü (Mavi Ok - Sola)
+    if (tow.fWest > 0) {
+        const lenW = (tow.fWest / 50) * 120;
+        drawNeonArrow(ctx, bx - 35, arrowY, bx - 35 - lenW, arrowY, "#38bdf8", 4);
+    }
+
+    // Doğu Kuvvet Vektörü (Kırmızı Ok - Sağa)
+    if (tow.fEast > 0) {
+        const lenE = (tow.fEast / 50) * 120;
+        drawNeonArrow(ctx, bx + 35, arrowY, bx + 35 + lenE, arrowY, "#f87171", 4);
+    }
+
+    // Net Bileşke Kuvvet Vektörü (Altın Neon Ok)
+    if (Math.abs(tow.netForce) > 0) {
+        const isEast = (tow.netForce > 0);
+        const lenNet = (Math.abs(tow.netForce) / 50) * 140;
+        const netStartX = bx;
+        const netEndX = isEast ? bx + lenNet : bx - lenNet;
+        drawNeonArrow(ctx, netStartX, arrowY - 40, netEndX, arrowY - 40, "#facc15", 5);
+    } else {
+        // Denge Sembolü (Terazi / Halka)
+        ctx.save();
+        ctx.fillStyle = "#10b981";
+        ctx.shadowColor = "#10b981";
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.arc(bx, arrowY - 40, 9, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.restore();
+    }
+}
+
+function drawNeonArrow(ctx, x1, y1, x2, y2, color, width) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = width;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 10;
+    ctx.lineCap = "round";
+
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+
+    // Ok Başı
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    const headLen = 14;
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - headLen * Math.cos(angle - Math.PI / 6), y2 - headLen * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(x2 - headLen * Math.cos(angle + Math.PI / 6), y2 - headLen * Math.sin(angle + Math.PI / 6));
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+}
+
+// ============================================================================
+// --- 6.3. DENEY 6.3: SIVILARIN YOĞUNLUĞU VE YOĞUNLUK KULESİ (FB.6.3.2) ---
+// ============================================================================
+
+const DENSITY_LIQUIDS_DEF = {
+    honey: { id: "honey", name: "Bal", density: 1.40, color: "rgba(217, 119, 6, 0.90)", highlight: "#f59e0b", label: "Bal (1.40 g/cm³)" },
+    glycerin: { id: "glycerin", name: "Gliserin", density: 1.26, color: "rgba(168, 85, 247, 0.85)", highlight: "#c084fc", label: "Gliserin (1.26 g/cm³)" },
+    water: { id: "water", name: "Renkli Su", density: 1.00, color: "rgba(56, 189, 248, 0.75)", highlight: "#38bdf8", label: "Su (1.00 g/cm³)" },
+    oil: { id: "oil", name: "Zeytinyağı", density: 0.90, color: "rgba(234, 179, 8, 0.80)", highlight: "#facc15", label: "Zeytinyağı (0.90 g/cm³)" }
+};
+
+const DENSITY_OBJECTS_DEF = {
+    wood: { id: "wood", name: "Tahta Blok", density: 0.70, color: "#b45309", label: "Tahta (0.70 g/cm³ - Yüzer)" },
+    plastic: { id: "plastic", name: "Plastik Kapak", density: 0.95, color: "#ef4444", label: "Plastik (0.95 g/cm³ - Askıda)" },
+    iron: { id: "iron", name: "Demir Vida", density: 7.80, color: "#94a3b8", label: "Demir Vida (7.80 g/cm³ - Batar)" }
+};
+
+function initDensityTowerState() {
+    const dt = labState.densityTower;
+    dt.activeLiquids = [];
+    dt.pouringLiquid = null;
+    dt.pourProgress = 0;
+    dt.objects = [];
+    dt.cylinder = { x: 320, y: 55, w: 160, h: 360 };
+
+    updateDensityTowerDOMControls();
+    updateDensityMetricsDOM();
+}
+
+function resetDensityTowerExperiment() {
+    const dt = labState.densityTower;
+    dt.activeLiquids = [];
+    dt.pouringLiquid = null;
+    dt.pourProgress = 0;
+    dt.objects = [];
+
+    updateDensityTowerDOMControls();
+    updateDensityMetricsDOM();
+    showLabToast("Dereceli silindir tamamen boşaltıldı ve temizlendi!");
+}
+
+function updateDensityTowerDOMControls() {
+    const dt = labState.densityTower;
+    const addedIds = dt.activeLiquids.map(l => l.id);
+
+    // Dökme butonları aktiflik durumu
+    ['honey', 'glycerin', 'water', 'oil'].forEach(id => {
+        const btn = document.getElementById(`btn-pour-${id}`);
+        const pill = document.getElementById(`pill-add-${id}`);
+        const isAdded = addedIds.includes(id);
+        if (btn) btn.classList.toggle('active', isAdded);
+        if (pill) pill.classList.toggle('active', isAdded);
+    });
+
+    // Cisim butonları durumu
+    const droppedIds = dt.objects.map(o => o.id);
+    ['wood', 'plastic', 'iron'].forEach(id => {
+        const btn = document.getElementById(`btn-drop-${id}`);
+        const pill = document.getElementById(`pill-drop-${id}`);
+        const isDropped = droppedIds.includes(id);
+        if (btn) btn.classList.toggle('active', isDropped);
+        if (pill) pill.classList.toggle('active', isDropped);
+    });
+}
+
+function setupDensityTowerControlsDOM() {
+    // Sıvı Ekleme Butonları (Hem hızlı bar hem sağ panel)
+    ['honey', 'glycerin', 'water', 'oil'].forEach(liquidKey => {
+        const btn = document.getElementById(`btn-pour-${liquidKey}`);
+        const pill = document.getElementById(`pill-add-${liquidKey}`);
+        if (btn) btn.addEventListener('click', () => pourDensityLiquid(liquidKey));
+        if (pill) pill.addEventListener('click', () => pourDensityLiquid(liquidKey));
+    });
+
+    // Cisim Bırakma Butonları
+    ['wood', 'plastic', 'iron'].forEach(objectKey => {
+        const btn = document.getElementById(`btn-drop-${objectKey}`);
+        const pill = document.getElementById(`pill-drop-${objectKey}`);
+        if (btn) btn.addEventListener('click', () => dropDensityObject(objectKey));
+        if (pill) pill.addEventListener('click', () => dropDensityObject(objectKey));
+    });
+
+    // Silindiri Boşalt
+    const btnEmpty1 = document.getElementById('btn-density-reset');
+    const btnEmpty2 = document.getElementById('btn-density-empty-all');
+    if (btnEmpty1) btnEmpty1.addEventListener('click', resetDensityTowerExperiment);
+    if (btnEmpty2) btnEmpty2.addEventListener('click', resetDensityTowerExperiment);
+
+    // Gözlem Kayıt Butonu
+    const btnRecord = document.getElementById('btn-record-data-6-3');
+    if (btnRecord) btnRecord.addEventListener('click', recordMeasurement);
+}
+
+function pourDensityLiquid(liquidKey) {
+    const dt = labState.densityTower;
+    if (dt.pouringLiquid) return; // Zaten dökülüyor
+
+    const def = DENSITY_LIQUIDS_DEF[liquidKey];
+    if (!def) return;
+
+    if (dt.activeLiquids.some(l => l.id === liquidKey)) {
+        showLabToast(`⚠️ ${def.name} zaten silindire eklendi!`);
+        return;
+    }
+
+    dt.pouringLiquid = {
+        id: liquidKey,
+        name: def.name,
+        density: def.density,
+        color: def.color,
+        highlight: def.highlight
+    };
+    dt.pourProgress = 0;
+    showLabToast(`🧪 ${def.name} silindire dökülüyor...`);
+}
+
+function dropDensityObject(objectKey) {
+    const dt = labState.densityTower;
+    const def = DENSITY_OBJECTS_DEF[objectKey];
+    if (!def) return;
+
+    if (dt.objects.some(o => o.id === objectKey)) {
+        showLabToast(`⚠️ ${def.name} zaten silindir içinde!`);
+        return;
+    }
+
+    dt.objects.push({
+        id: objectKey,
+        name: def.name,
+        density: def.density,
+        color: def.color,
+        x: dt.cylinder.x + dt.cylinder.w * 0.5 + (dt.objects.length * 28 - 28),
+        y: dt.cylinder.y - 30, // Silindirin üstünden düşmeye başlar
+        targetY: 0,
+        vy: 0,
+        settled: false
+    });
+
+    updateDensityTowerDOMControls();
+    updateDensityMetricsDOM();
+    showLabToast(`📦 ${def.name} silindire bırakıldı!`);
+}
+
+function updateDensityTowerPhysics() {
+    const dt = labState.densityTower;
+
+    // 1. Sıvı Dökülme Animasyonu
+    if (dt.pouringLiquid) {
+        dt.pourProgress += 0.035;
+        if (dt.pourProgress >= 1.0) {
+            // Sıvıyı listeye ekle
+            dt.activeLiquids.push(dt.pouringLiquid);
+            // Yoğunluğa göre büyükten küçüğe sırala (Ağır olan dibe çöker)
+            dt.activeLiquids.sort((a, b) => b.density - a.density);
+            dt.pouringLiquid = null;
+            dt.pourProgress = 0;
+            updateDensityTowerDOMControls();
+            showLabToast("💧 Sıvı yoğunluk farkı nedeniyle kendi katmanına yerleşti!");
+        }
+    }
+
+    // 2. Katı Cisimlerin Yüzme/Batma Denge Konumu Fiziği
+    const cyl = dt.cylinder;
+    const baseBottomY = cyl.y + cyl.h;
+    const totalLiquids = dt.activeLiquids.length;
+
+    dt.objects.forEach(obj => {
+        let equilibriumY = baseBottomY - 14; // Sıvı yoksa silindirin dibinde durur
+
+        if (totalLiquids > 0) {
+            const layerH = cyl.h / Math.max(4, totalLiquids);
+            const surfaceTopY = baseBottomY - totalLiquids * layerH;
+
+            if (obj.density < dt.activeLiquids[dt.activeLiquids.length - 1].density) {
+                // En hafif sıvıdan da hafif (Örn: Tahta < Zeytinyağı): Yüzeyde yüzer
+                equilibriumY = surfaceTopY - 6;
+            } else if (obj.density > dt.activeLiquids[0].density) {
+                // En ağır sıvıdan da ağır (Örn: Demir vida): Dibe batar
+                equilibriumY = baseBottomY - 14;
+            } else {
+                // Katmanlar arasında askıda kalır: Yoğunluğunun sıvılar arasındaki ara yüzeyini bul
+                for (let i = 0; i < dt.activeLiquids.length - 1; i++) {
+                    const lowerLiquid = dt.activeLiquids[i];     // Daha yoğun (altta)
+                    const upperLiquid = dt.activeLiquids[i + 1]; // Daha az yoğun (üstte)
+                    if (obj.density >= upperLiquid.density && obj.density <= lowerLiquid.density) {
+                        const interfaceY = baseBottomY - (i + 1) * layerH;
+                        equilibriumY = interfaceY - 7;
+                        break;
+                    }
+                }
+            }
+        }
+
+        obj.targetY = equilibriumY;
+
+        // Sönümlü harmonik yay hareketi ile denge konumuna inme
+        if (!obj.settled) {
+            obj.vy += (obj.targetY - obj.y) * 0.12;
+            obj.vy *= 0.82; // Sıvı vizkozitesi sürtünmesi
+            obj.y += obj.vy;
+            if (Math.abs(obj.targetY - obj.y) < 0.5 && Math.abs(obj.vy) < 0.2) {
+                obj.y = obj.targetY;
+                obj.settled = true;
+            }
+        } else {
+            // Yüzen cisimlere hafif mikroskobik su salınımı
+            obj.y = obj.targetY + Math.sin(animTime * 3 + obj.x) * 1.2;
+        }
+    });
+
+    updateDensityMetricsDOM();
+}
+
+function updateDensityMetricsDOM() {
+    const dt = labState.densityTower;
+    const count = dt.activeLiquids.length;
+
+    // Canvas Altı Responsive Metrik Şeridi (#metrics-bar-6-3)
+    const mbCount = document.getElementById('mbar-63-liquid-count');
+    const mbBottom = document.getElementById('mbar-63-bottom-layer');
+    const mbTop = document.getElementById('mbar-63-top-layer');
+    const mbStatus = document.getElementById('mbar-63-status');
+
+    if (mbCount) mbCount.textContent = `${count} / 4`;
+    if (mbBottom) {
+        mbBottom.textContent = count > 0 ? `${dt.activeLiquids[0].name} (1.40)` : "—";
+    }
+    if (mbTop) {
+        mbTop.textContent = count > 0 ? `${dt.activeLiquids[count - 1].name} (${dt.activeLiquids[count - 1].density})` : "—";
+    }
+    if (mbStatus) {
+        if (count === 4) {
+            mbStatus.textContent = "🏆 Kule Tamamlandı (4 Katman)";
+            mbStatus.style.borderLeftColor = "#10b981";
+        } else if (count > 0) {
+            mbStatus.textContent = `🧪 ${count} Katmanlı Sıvı Kulesi`;
+            mbStatus.style.borderLeftColor = "#38bdf8";
+        } else {
+            mbStatus.textContent = "Silindir Boş (Sıvı Ekleyin)";
+            mbStatus.style.borderLeftColor = "#f59e0b";
+        }
+    }
+
+    // Sağ Panel Metrikleri
+    const pCount = document.getElementById('metric-63-count');
+    const pBottom = document.getElementById('metric-63-bottom');
+    const pTop = document.getElementById('metric-63-top');
+    const pObj = document.getElementById('metric-63-object');
+    if (pCount) pCount.textContent = `${count} / 4`;
+    if (pBottom) pBottom.textContent = count > 0 ? dt.activeLiquids[0].name : "—";
+    if (pTop) pTop.textContent = count > 0 ? dt.activeLiquids[count - 1].name : "—";
+    if (pObj) {
+        pObj.textContent = dt.objects.length > 0 ? dt.objects.map(o => o.name).join(', ') : "Yok";
+    }
+}
+
+function drawDensityTowerSimulation() {
+    const w = canvas.width;
+    const h = canvas.height;
+    const scale = w / 800;
+
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    // 1. Laboratuvar Zemin ve Duvar Arka Planı
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 500);
+    bgGrad.addColorStop(0, "#090d16");
+    bgGrad.addColorStop(0.65, "#0f172a");
+    bgGrad.addColorStop(1, "#1e293b");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 800, 500);
+
+    // Laboratuvar Tezgah Masası (Y: 420 -> 500)
+    const benchGrad = ctx.createLinearGradient(0, 420, 0, 500);
+    benchGrad.addColorStop(0, "#334155");
+    benchGrad.addColorStop(1, "#1e293b");
+    ctx.fillStyle = benchGrad;
+    ctx.fillRect(0, 420, 800, 80);
+
+    ctx.fillStyle = "rgba(56, 189, 248, 0.4)";
+    ctx.fillRect(0, 418, 800, 2); // Tezgah LED aydınlatması
+
+    // 2. Silindir İçindeki Sıvı Katmanları
+    drawDensityLayers(ctx);
+
+    // 3. Büyük Şeffaf Dereceli Silindir Gövdesi
+    drawGraduatedCylinder(ctx);
+
+    // 4. Bırakılan Katı Cisimler
+    drawDensityObjects(ctx);
+
+    // 5. Sıvı Dökme Animasyonu (Beher ve Akış Huzmesi)
+    drawPouringStream(ctx);
+
+    ctx.restore();
+}
+
+function drawDensityLayers(ctx) {
+    const dt = labState.densityTower;
+    const cyl = dt.cylinder;
+    const count = dt.activeLiquids.length;
+    if (count === 0) return;
+
+    const baseBottomY = cyl.y + cyl.h;
+    const layerH = cyl.h / Math.max(4, count);
+
+    ctx.save();
+
+    // Silindir içi dairesel kırpma (Sıvıların cam sınırları dışına taşmaması için)
+    ctx.beginPath();
+    ctx.roundRect(cyl.x + 2, cyl.y + 4, cyl.w - 4, cyl.h - 4, [0, 0, 14, 14]);
+    ctx.clip();
+
+    // Katmanlar: dt.activeLiquids[0] en yoğun (altta), sonuncu en hafif (üstte)
+    for (let i = 0; i < count; i++) {
+        const liquid = dt.activeLiquids[i];
+        const layerBottomY = baseBottomY - i * layerH;
+        const layerTopY = layerBottomY - layerH;
+
+        // Katman Dolgusu
+        const liqGrad = ctx.createLinearGradient(cyl.x, layerTopY, cyl.x + cyl.w, layerBottomY);
+        liqGrad.addColorStop(0, liquid.color);
+        liqGrad.addColorStop(1, liquid.highlight);
+        ctx.fillStyle = liqGrad;
+        ctx.fillRect(cyl.x, layerTopY, cyl.w, layerH);
+
+        // İç bükey menisküs kavisli yüzey çizgisi
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.45)";
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.ellipse(cyl.x + cyl.w * 0.5, layerTopY, cyl.w * 0.48, 5, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Sıvı içi mikro baloncuklar
+        for (let b = 0; b < 4; b++) {
+            const bx = cyl.x + 20 + ((b * 37 + (i * 23)) % (cyl.w - 40));
+            const by = layerTopY + 8 + ((b * 19 + animTime * 15) % (layerH - 16));
+            ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+            ctx.beginPath();
+            ctx.arc(bx, by, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    ctx.restore();
+}
+
+function drawGraduatedCylinder(ctx) {
+    const dt = labState.densityTower;
+    const cyl = dt.cylinder;
+
+    ctx.save();
+
+    // Cam Silindir Tabanı (Geniş Ayak)
+    ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.45)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(cyl.x + cyl.w * 0.5, cyl.y + cyl.h + 6, cyl.w * 0.65, 12, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // Cam Duvarlar
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(cyl.x, cyl.y, cyl.w, cyl.h, [4, 4, 16, 16]);
+    ctx.stroke();
+
+    // Sol Cam Yansıması (Specular Highlight)
+    const glassRef = ctx.createLinearGradient(cyl.x, 0, cyl.x + 30, 0);
+    glassRef.addColorStop(0, "rgba(255, 255, 255, 0.45)");
+    glassRef.addColorStop(1, "rgba(255, 255, 255, 0.0)");
+    ctx.fillStyle = glassRef;
+    ctx.fillRect(cyl.x + 3, cyl.y + 4, 24, cyl.h - 8);
+
+    // Sağ Cam Yansıması
+    const rightRef = ctx.createLinearGradient(cyl.x + cyl.w - 20, 0, cyl.x + cyl.w, 0);
+    rightRef.addColorStop(0, "rgba(255, 255, 255, 0.0)");
+    rightRef.addColorStop(1, "rgba(255, 255, 255, 0.35)");
+    ctx.fillStyle = rightRef;
+    ctx.fillRect(cyl.x + cyl.w - 20, cyl.y + 4, 18, cyl.h - 8);
+
+    // Cam Üst Ağız Halkası
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.75)";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.ellipse(cyl.x + cyl.w * 0.5, cyl.y, cyl.w * 0.5, 7, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Dereceli Ölçek Çizgileri (0 - 500 mL)
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+    for (let m = 0; m <= 10; m++) {
+        const my = cyl.y + cyl.h - (m / 10) * (cyl.h - 20) - 10;
+        const tickLen = (m % 2 === 0) ? 14 : 7;
+        ctx.lineWidth = (m % 2 === 0) ? 1.8 : 1.0;
+        ctx.beginPath();
+        ctx.moveTo(cyl.x + 6, my);
+        ctx.lineTo(cyl.x + 6 + tickLen, my);
+        ctx.stroke();
+    }
+
+    ctx.restore();
+}
+
+function drawDensityObjects(ctx) {
+    const dt = labState.densityTower;
+    dt.objects.forEach(obj => {
+        ctx.save();
+        ctx.translate(obj.x, obj.y);
+
+        if (obj.id === "wood") {
+            // Tahta Blok
+            ctx.fillStyle = "#b45309";
+            ctx.strokeStyle = "#78350f";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.roundRect(-14, -14, 28, 28, 4);
+            ctx.fill();
+            ctx.stroke();
+
+            // Ahşap Damar Çizgileri
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(-10, -6); ctx.lineTo(10, -6);
+            ctx.moveTo(-8, 4); ctx.lineTo(8, 4);
+            ctx.stroke();
+        } else if (obj.id === "plastic") {
+            // Plastik Şişe Kapağı (Kırmızı Tırtıklı)
+            ctx.fillStyle = "#ef4444";
+            ctx.strokeStyle = "#991b1b";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 15, 9, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath();
+            ctx.arc(0, 0, 4, 0, Math.PI * 2);
+            ctx.fill();
+        } else if (obj.id === "iron") {
+            // Demir Vida
+            ctx.fillStyle = "#94a3b8";
+            ctx.strokeStyle = "#475569";
+            ctx.lineWidth = 1.5;
+
+            // Vida Başı
+            ctx.beginPath();
+            ctx.roundRect(-8, -12, 16, 5, 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Vida Gövdesi ve Dişler
+            ctx.beginPath();
+            ctx.moveTo(-4, -7);
+            ctx.lineTo(-4, 10);
+            ctx.lineTo(0, 14);
+            ctx.lineTo(4, 10);
+            ctx.lineTo(4, -7);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+
+            // Vida Diş Çizgileri
+            ctx.strokeStyle = "#334155";
+            ctx.lineWidth = 1.2;
+            for (let t = -4; t <= 8; t += 3) {
+                ctx.beginPath();
+                ctx.moveTo(-4, t);
+                ctx.lineTo(4, t + 1.5);
+                ctx.stroke();
+            }
+        }
+
+        ctx.restore();
+    });
+}
+
+function drawPouringStream(ctx) {
+    const dt = labState.densityTower;
+    if (!dt.pouringLiquid) return;
+
+    const cyl = dt.cylinder;
+    const progress = dt.pourProgress;
+
+    ctx.save();
+
+    // Dökülen Beher Pozisyonu (Sağ üstte)
+    const beakerX = cyl.x + cyl.w + 40;
+    const beakerY = cyl.y - 35;
+
+    // Beher Gövdesi (Eğilmiş)
+    ctx.save();
+    ctx.translate(beakerX, beakerY);
+    ctx.rotate(-0.55); // 30 derece dökme açısı
+
+    ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.75)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(-25, -35, 50, 70, [2, 2, 8, 8]);
+    ctx.fill();
+    ctx.stroke();
+
+    // Beher İçi Kalan Sıvı
+    ctx.fillStyle = dt.pouringLiquid.color;
+    ctx.beginPath();
+    ctx.moveTo(-23, 10);
+    ctx.lineTo(23, -15);
+    ctx.lineTo(23, 30);
+    ctx.lineTo(-23, 30);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+
+    // Kavisli Sıvı Akış Huzmesi (Stream)
+    const streamStartX = beakerX - 25;
+    const streamStartY = beakerY + 15;
+    const targetBottomY = cyl.y + cyl.h - (dt.activeLiquids.length * (cyl.h / 4));
+
+    const currentEndY = streamStartY + progress * (targetBottomY - streamStartY);
+
+    ctx.strokeStyle = dt.pouringLiquid.highlight;
+    ctx.lineWidth = 5;
+    ctx.shadowColor = dt.pouringLiquid.highlight;
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.moveTo(streamStartX, streamStartY);
+    ctx.quadraticCurveTo(cyl.x + cyl.w * 0.5 + 20, cyl.y - 10, cyl.x + cyl.w * 0.5, currentEndY);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Sıçrayan damlacıklar
+    for (let d = 0; d < 3; d++) {
+        const dx = cyl.x + cyl.w * 0.5 + (Math.random() - 0.5) * 16;
+        const dy = currentEndY - Math.random() * 8;
+        ctx.fillStyle = dt.pouringLiquid.highlight;
+        ctx.beginPath();
+        ctx.arc(dx, dy, 2, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    ctx.restore();
+}
+
+// ============================================================================
+// --- 6.4. DENEY 6.4: ISI İLETKENLİĞİ VE YALITIM SİMÜLATÖRÜ (FB.6.4.1) ---
+// ============================================================================
+
+function initHeatTransferState() {
+    const ht = labState.heatTransfer;
+    ht.mode = "metals";
+    ht.isHeating = false;
+    ht.burnerIntensity = 1.0;
+    ht.flameParticles = [];
+    ht.elapsedHeatingTime = 0.0;
+
+    ht.rods = [
+        { id: "copper", name: "Bakır", k: 385, color: "#f97316", temp: 20, waxMelted: false, ballDropped: false, ballY: 0, ballVy: 0, dropTime: null },
+        { id: "aluminum", name: "Alüminyum", k: 205, color: "#cbd5e1", temp: 20, waxMelted: false, ballDropped: false, ballY: 0, ballVy: 0, dropTime: null },
+        { id: "iron", name: "Demir", k: 80, color: "#94a3b8", temp: 20, waxMelted: false, ballDropped: false, ballY: 0, ballVy: 0, dropTime: null }
+    ];
+
+    ht.insulation = {
+        materials: [
+            { id: "bare", name: "Sac / Yalıtımsız", rVal: 0.1, tempInside: 20, heatLossRate: 0.45 },
+            { id: "wood", name: "Ahşap Kaplama", rVal: 0.5, tempInside: 20, heatLossRate: 0.22 },
+            { id: "foam", name: "Taş Yünü / Strafor", rVal: 1.0, tempInside: 20, heatLossRate: 0.07 }
+        ]
+    };
+
+    updateHeatTransferDOMControls();
+    updateHeatMetricsDOM();
+}
+
+function resetHeatTransferExperiment() {
+    initHeatTransferState();
+    showLabToast("Isı düzeneği soğutuldu ve balmumuna bağlı bilyeler yenilendi!");
+}
+
+function updateHeatTransferDOMControls() {
+    const ht = labState.heatTransfer;
+    const isMetals = (ht.mode === "metals");
+
+    // Mod Butonları
+    const btnMetals = document.getElementById('btn-heat-mode-metals');
+    const btnInsul = document.getElementById('btn-heat-mode-insulation');
+    const pillMetals = document.getElementById('pill-heat-mode-metals');
+    const pillInsul = document.getElementById('pill-heat-mode-insulation');
+
+    if (btnMetals) btnMetals.classList.toggle('active', isMetals);
+    if (btnInsul) btnInsul.classList.toggle('active', !isMetals);
+    if (pillMetals) pillMetals.classList.toggle('active', isMetals);
+    if (pillInsul) pillInsul.classList.toggle('active', !isMetals);
+
+    // Ocak Butonları
+    const btnBurner = document.getElementById('btn-heat-toggle-burner');
+    const labelBurner = document.getElementById('label-heat-burner');
+    const pillOn = document.getElementById('pill-heat-burner-on');
+    const pillOff = document.getElementById('pill-heat-burner-off');
+
+    if (btnBurner) btnBurner.classList.toggle('active', ht.isHeating);
+    if (labelBurner) labelBurner.textContent = ht.isHeating ? "Ocağı Söndür" : "Ocağı Yak";
+    if (pillOn) pillOn.classList.toggle('active', ht.isHeating);
+    if (pillOff) pillOff.classList.toggle('active', !ht.isHeating);
+}
+
+function setupHeatTransferControlsDOM() {
+    // 1. Mod Değiştirici (Metaller vs Binalarda Yalıtım)
+    const setMode = (mode) => {
+        labState.heatTransfer.mode = mode;
+        initHeatTransferState();
+        updateHeatTransferDOMControls();
+        showLabToast(mode === "metals" ? "1. Mod: Metallerde Isı İletimi Simülasyonu" : "2. Mod: Binalarda Isı Yalıtımı Testi");
+    };
+
+    ['btn-heat-mode-metals', 'pill-heat-mode-metals'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => setMode("metals"));
+    });
+
+    ['btn-heat-mode-insulation', 'pill-heat-mode-insulation'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => setMode("insulation"));
+    });
+
+    // 2. Ocak Aç / Kapat
+    const toggleBurner = (state) => {
+        const ht = labState.heatTransfer;
+        ht.isHeating = (state !== undefined) ? state : !ht.isHeating;
+        updateHeatTransferDOMControls();
+        updateHeatMetricsDOM();
+        showLabToast(ht.isHeating ? "🔥 İspirto ocağı yakıldı!" : "Ocak söndürüldü.");
+    };
+
+    const btnBurner = document.getElementById('btn-heat-toggle-burner');
+    if (btnBurner) btnBurner.addEventListener('click', () => toggleBurner());
+
+    const pillOn = document.getElementById('pill-heat-burner-on');
+    const pillOff = document.getElementById('pill-heat-burner-off');
+    if (pillOn) pillOn.addEventListener('click', () => toggleBurner(true));
+    if (pillOff) pillOff.addEventListener('click', () => toggleBurner(false));
+
+    // 3. Sıfırla
+    const btnReset = document.getElementById('btn-heat-reset');
+    if (btnReset) btnReset.addEventListener('click', resetHeatTransferExperiment);
+
+    // 4. Gözlem Kayıt Butonu
+    const btnRecord = document.getElementById('btn-record-data-6-4');
+    if (btnRecord) btnRecord.addEventListener('click', recordMeasurement);
+}
+
+function updateHeatTransferPhysics() {
+    const ht = labState.heatTransfer;
+
+    if (ht.isHeating) {
+        ht.elapsedHeatingTime += 0.05;
+
+        // Alev parçacıkları üret
+        for (let i = 0; i < 3; i++) {
+            ht.flameParticles.push({
+                x: 180 + (Math.random() - 0.5) * 20,
+                y: (ht.mode === "metals") ? 320 : 340,
+                vx: (Math.random() - 0.5) * 1.5,
+                vy: -3 - Math.random() * 3,
+                life: 1.0,
+                size: 4 + Math.random() * 5
+            });
+        }
+
+        if (ht.mode === "metals") {
+            // Metallerde Isı İletim Fiziği
+            // Isı iletim hızları: Bakır (k=385) > Alüminyum (k=205) > Demir (k=80)
+            const heatRates = [0.18, 0.095, 0.045]; // Bakır, Alüminyum, Demir ısınma katsayıları
+
+            ht.rods.forEach((rod, idx) => {
+                const rate = heatRates[idx];
+                rod.temp = Math.min(100, rod.temp + rate);
+
+                // Balmumu erime sıcaklığı = 60°C
+                if (rod.temp >= 60 && !rod.waxMelted) {
+                    rod.waxMelted = true;
+                    rod.ballDropped = true;
+                    rod.dropTime = ht.elapsedHeatingTime;
+                    rod.ballVy = 0;
+                    showLabToast(`🥇 ${rod.name} çubuktaki balmumu eridi ve bilye düştü! (${rod.dropTime.toFixed(1)} sn)`);
+                }
+            });
+        } else {
+            // Yalıtım Modu Fiziği: Binalar/Odalar ısınıyor
+            ht.insulation.materials.forEach(mat => {
+                mat.tempInside = Math.min(80, mat.tempInside + (0.5 * mat.rVal));
+            });
+        }
+    } else {
+        // Isıtıcı kapalıysa soğuma
+        if (ht.mode === "metals") {
+            ht.rods.forEach(rod => {
+                rod.temp = Math.max(20, rod.temp - 0.1);
+            });
+        } else {
+            // Yalıtım malzemeleri ısı koruma testi (Soğuma hızları)
+            ht.insulation.materials.forEach(mat => {
+                mat.tempInside = Math.max(20, mat.tempInside - mat.heatLossRate);
+            });
+        }
+    }
+
+    // Düşen Bilyeler için Yer Çekimi Fiziği
+    ht.rods.forEach(rod => {
+        if (rod.ballDropped && rod.ballY < 90) {
+            rod.ballVy += 0.55; // yer çekimi ivmesi
+            rod.ballY += rod.ballVy;
+            if (rod.ballY >= 90) {
+                rod.ballY = 90;
+                rod.ballVy = -rod.ballVy * 0.35; // hafif tepsi sekmesi
+            }
+        }
+    });
+
+    // Alev parçacıkları güncelle
+    for (let i = ht.flameParticles.length - 1; i >= 0; i--) {
+        const p = ht.flameParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.06;
+        if (p.life <= 0) ht.flameParticles.splice(i, 1);
+    }
+
+    updateHeatMetricsDOM();
+}
+
+function updateHeatMetricsDOM() {
+    const ht = labState.heatTransfer;
+    const fmt = (n, d = 1) => Number(n).toFixed(d);
+
+    // Canvas Altı Responsive Metrik Şeridi (#metrics-bar-6-4)
+    const mbBurner = document.getElementById('mbar-64-burner');
+    const mbCopper = document.getElementById('mbar-64-copper');
+    const mbAl = document.getElementById('mbar-64-aluminum');
+    const mbIron = document.getElementById('mbar-64-iron');
+
+    if (mbBurner) {
+        mbBurner.textContent = ht.isHeating ? "🔥 Yanıyor" : "Sönük";
+        mbBurner.style.color = ht.isHeating ? "#ef4444" : "#94a3b8";
+    }
+
+    const c = ht.rods[0];
+    const al = ht.rods[1];
+    const fe = ht.rods[2];
+
+    if (mbCopper) {
+        mbCopper.textContent = c.ballDropped ? `🥇 Düştü (${fmt(c.dropTime, 1)} s)` : `${fmt(c.temp, 0)}°C`;
+    }
+    if (mbAl) {
+        mbAl.textContent = al.ballDropped ? `🥈 Düştü (${fmt(al.dropTime, 1)} s)` : `${fmt(al.temp, 0)}°C`;
+    }
+    if (mbIron) {
+        mbIron.textContent = fe.ballDropped ? `🥉 Düştü (${fmt(fe.dropTime, 1)} s)` : `${fmt(fe.temp, 0)}°C`;
+    }
+
+    // Sağ Panel Metrikleri
+    const pCop = document.getElementById('metric-64-copper');
+    const pAl = document.getElementById('metric-64-aluminum');
+    const pFe = document.getElementById('metric-64-iron');
+    const pFlame = document.getElementById('metric-64-flame');
+
+    if (pCop) pCop.textContent = c.ballDropped ? `Düştü (${fmt(c.dropTime, 1)} s)` : `${fmt(c.temp, 0)}°C`;
+    if (pAl) pAl.textContent = al.ballDropped ? `Düştü (${fmt(al.dropTime, 1)} s)` : `${fmt(al.temp, 0)}°C`;
+    if (pFe) pFe.textContent = fe.ballDropped ? `Düştü (${fmt(fe.dropTime, 1)} s)` : `${fmt(fe.temp, 0)}°C`;
+    if (pFlame) pFlame.textContent = ht.isHeating ? "Yanıyor" : "Sönük";
+}
+
+function drawHeatTransferSimulation() {
+    const w = canvas.width;
+    const h = canvas.height;
+    const scale = w / 800;
+
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    // 1. Zemin Arka Planı
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 500);
+    bgGrad.addColorStop(0, "#090d16");
+    bgGrad.addColorStop(1, "#111827");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 800, 500);
+
+    // Isıya Dayanıklı Seramik Masa Tablası (Y: 380 -> 500)
+    const tableGrad = ctx.createLinearGradient(0, 380, 0, 500);
+    tableGrad.addColorStop(0, "#1e293b");
+    tableGrad.addColorStop(1, "#0f172a");
+    ctx.fillStyle = tableGrad;
+    ctx.fillRect(0, 380, 800, 120);
+
+    ctx.fillStyle = "#334155";
+    ctx.fillRect(0, 378, 800, 2);
+
+    const ht = labState.heatTransfer;
+
+    if (ht.mode === "metals") {
+        // Mod 1: 3 Metal Çubuk (Bakır, Alüminyum, Demir)
+        drawMetalRodsAndWaxBalls(ctx);
+        drawBunsenBurner(ctx, 180, 380, ht.isHeating);
+    } else {
+        // Mod 2: Binalarda Isı Yalıtımı Testi
+        drawBuildingInsulationTest(ctx);
+    }
+
+    ctx.restore();
+}
+
+function drawMetalRodsAndWaxBalls(ctx) {
+    const ht = labState.heatTransfer;
+    const rodStartX = 180;
+    const rodLen = 420;
+    const rodH = 16;
+    const startY = 160;
+    const gapY = 65;
+
+    ctx.save();
+
+    // Çubukları Tutan Sol ve Sağ Laboratuvar Destek Ayakları (Statif Ayak)
+    ctx.fillStyle = "#475569";
+    ctx.fillRect(rodStartX - 15, 140, 12, 240);
+    ctx.fillRect(rodStartX + rodLen + 10, 140, 12, 240);
+
+    // Bilye Toplama Tepsisi (Y: 360)
+    ctx.fillStyle = "#334155";
+    ctx.strokeStyle = "#64748b";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(rodStartX + rodLen - 50, 360, 90, 18, 4);
+    ctx.fill();
+    ctx.stroke();
+
+    ht.rods.forEach((rod, idx) => {
+        const ry = startY + idx * gapY;
+
+        // Çubuk Gövdesi ve Isı Yayılım Gradyanı
+        // Sıcak uca (sol) doğru alev parlaması, soğuk uca (sağ) doğru metalik renk
+        const heatRatio = (rod.temp - 20) / 80; // 0.0 -> 1.0
+        const rodGrad = ctx.createLinearGradient(rodStartX, ry, rodStartX + rodLen, ry);
+
+        if (ht.isHeating) {
+            rodGrad.addColorStop(0, "#ffffff"); // Akkor beyaz alev ucu
+            rodGrad.addColorStop(Math.min(0.8, heatRatio * 0.9), "#ef4444"); // Sıcak kırmızı dalga
+            rodGrad.addColorStop(Math.min(1.0, heatRatio * 1.2), rod.color); // Kendi metal rengi
+        } else {
+            rodGrad.addColorStop(0, rod.color);
+            rodGrad.addColorStop(1, rod.color);
+        }
+
+        ctx.fillStyle = rodGrad;
+        ctx.strokeStyle = "rgba(0, 0, 0, 0.4)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(rodStartX, ry, rodLen, rodH, 4);
+        ctx.fill();
+        ctx.stroke();
+
+        // Üst Işık Yansıması (Metalik Derinlik)
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(rodStartX + 4, ry + 3);
+        ctx.lineTo(rodStartX + rodLen - 4, ry + 3);
+        ctx.stroke();
+
+        // Sağ Uçtaki Balmumu Damlası ve Çelik Bilye
+        const ballBaseX = rodStartX + rodLen - 12;
+        const ballBaseY = ry + rodH + 4;
+
+        if (!rod.waxMelted) {
+            // Erimemiş Balmumu Tutucu (Sarımsı Krem)
+            ctx.fillStyle = "#fef08a";
+            ctx.beginPath();
+            ctx.ellipse(ballBaseX, ry + rodH, 7, 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Çelik Bilye (Krom Küre)
+        const currentBallY = ballBaseY + rod.ballY;
+        drawChromeBall(ctx, ballBaseX, currentBallY, 8);
+    });
+
+    ctx.restore();
+}
+
+function drawChromeBall(ctx, cx, cy, r) {
+    ctx.save();
+
+    // Küre Radyal Metalik Gradyan
+    const ballGrad = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, r * 0.1, cx, cy, r);
+    ballGrad.addColorStop(0, "#ffffff");
+    ballGrad.addColorStop(0.4, "#cbd5e1");
+    ballGrad.addColorStop(1, "#334155");
+
+    ctx.fillStyle = ballGrad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function drawBunsenBurner(ctx, x, y, isLit) {
+    ctx.save();
+    ctx.translate(x, y);
+
+    // 1. Ağır Döküm Pirinç Ayak
+    ctx.fillStyle = "#78350f";
+    ctx.strokeStyle = "#d97706";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(-24, -12, 48, 12, [2, 2, 0, 0]);
+    ctx.fill();
+    ctx.stroke();
+
+    // 2. Dikey Pirinç Ocak Borusu
+    ctx.fillStyle = "#b45309";
+    ctx.fillRect(-6, -75, 12, 63);
+
+    // Hava Ayar Bileziği
+    ctx.fillStyle = "#d97706";
+    ctx.fillRect(-8, -35, 16, 10);
+
+    // 3. Alev (Eğer Yanıyorsa)
+    if (isLit) {
+        // Dış Turuncu Alev
+        const flameGrad = ctx.createLinearGradient(0, -75, 0, -145);
+        flameGrad.addColorStop(0, "rgba(56, 189, 248, 0.95)"); // Mavi dip
+        flameGrad.addColorStop(0.3, "#f97316");                 // Turuncu orta
+        flameGrad.addColorStop(1, "rgba(239, 68, 68, 0)");     // Kırmızı sivri uç
+
+        ctx.fillStyle = flameGrad;
+        ctx.shadowColor = "#f97316";
+        ctx.shadowBlur = 18;
+
+        const flicker = Math.sin(animTime * 14) * 4;
+        ctx.beginPath();
+        ctx.moveTo(-9, -75);
+        ctx.quadraticCurveTo(-14 + flicker, -110, 0, -145 + flicker);
+        ctx.quadraticCurveTo(14 - flicker, -110, 9, -75);
+        ctx.closePath();
+        ctx.fill();
+
+        // İç Yoğun Mavi Alev Konisi
+        ctx.fillStyle = "#38bdf8";
+        ctx.shadowColor = "#38bdf8";
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.moveTo(-5, -75);
+        ctx.quadraticCurveTo(-7, -95, 0, -110);
+        ctx.quadraticCurveTo(7, -95, 5, -75);
+        ctx.closePath();
+        ctx.fill();
+        ctx.shadowBlur = 0;
+    }
+
+    ctx.restore();
+}
+
+function drawBuildingInsulationTest(ctx) {
+    const ht = labState.heatTransfer;
+    const mats = ht.insulation.materials;
+    const startX = 140;
+    const gapX = 200;
+    const baseY = 360;
+
+    ctx.save();
+
+    mats.forEach((mat, idx) => {
+        const bx = startX + idx * gapX;
+
+        // Model Ev Gövdesi (Yalıtım Duvarları)
+        const houseW = 120;
+        const houseH = 110;
+
+        // Duvar Rengi / Malzeme Dokusu
+        let wallColor = "#94a3b8"; // Sac
+        if (mat.id === "wood") wallColor = "#b45309"; // Ahşap
+        if (mat.id === "foam") wallColor = "#10b981"; // Taş Yünü / Strafor
+
+        // Dış Duvar
+        ctx.fillStyle = wallColor;
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(bx - houseW * 0.5, baseY - houseH, houseW, houseH, 6);
+        ctx.fill();
+        ctx.stroke();
+
+        // İç Oda Boşluğu (Sıcaklık Gradiyenti: mat.tempInside)
+        const innerRatio = (mat.tempInside - 20) / 60;
+        const innerGrad = ctx.createRadialGradient(bx, baseY - houseH * 0.5, 5, bx, baseY - houseH * 0.5, 45);
+        innerGrad.addColorStop(0, `rgba(239, 68, 68, ${Math.min(0.9, 0.15 + innerRatio * 0.75)})`);
+        innerGrad.addColorStop(1, "rgba(15, 23, 42, 0.85)");
+
+        ctx.fillStyle = innerGrad;
+        ctx.beginPath();
+        ctx.roundRect(bx - houseW * 0.5 + 14, baseY - houseH + 14, houseW - 28, houseH - 28, 4);
+        ctx.fill();
+
+        // İç Termometre (Cıvalı Sütun)
+        const tHeight = (mat.tempInside / 100) * 45;
+        ctx.fillStyle = "#ef4444";
+        ctx.fillRect(bx - 3, baseY - 25 - tHeight, 6, tHeight);
+        ctx.beginPath();
+        ctx.arc(bx, baseY - 22, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Isı Kaybı Kaçak Okları (Duvardan çıkan ısı sızıntısı)
+        if (mat.tempInside > 25) {
+            const arrowColor = mat.id === "bare" ? "#ef4444" : mat.id === "wood" ? "#f59e0b" : "#10b981";
+            const arrowLen = mat.id === "bare" ? 22 : mat.id === "wood" ? 14 : 7;
+            drawNeonArrow(ctx, bx + houseW * 0.5, baseY - houseH * 0.5, bx + houseW * 0.5 + arrowLen, baseY - houseH * 0.5, arrowColor, 2);
+        }
+    });
+
+    ctx.restore();
 }
 
 // --- 6.4. DENEY 7.1: FİZİKSEL ANLAMDA İŞ (W = F · Δx) MOTORU ---
@@ -8882,6 +11237,25 @@ function setupCanvasPointerEvents() {
         const canvasX = x * scaleX;
         const canvasY = y * scaleY;
 
+        // Deney 6.1: Araç Konumu Manuel Sürükleme
+        if (labState.activeExperimentId === "6.1" && labState.motion.car.isDragging) {
+            const m = labState.motion;
+            const clampedX = Math.max(90, Math.min(690, canvasX));
+            m.distanceTraveled = ((clampedX - 90) / 600) * m.trackLength;
+            m.elapsedTime = m.distanceTraveled / m.speed;
+            m.car.wheelAngle += 0.2;
+            updateMotionMetricsDOM();
+            return;
+        }
+
+        // Deney 6.2: Halat / Kutu Manuel Sürükleme
+        if (labState.activeExperimentId === "6.2" && labState.tugOfWar.isDragging) {
+            const tow = labState.tugOfWar;
+            tow.boxX = Math.max(200, Math.min(600, canvasX));
+            updateTugMetricsDOM();
+            return;
+        }
+
         // Deney 7.1: Sandık veya Yük Taşıma Sürükleme
         if (labState.activeExperimentId === "7.1") {
             const work = labState.work;
@@ -9046,7 +11420,44 @@ function setupCanvasPointerEvents() {
 
     cvs.addEventListener('pointerdown', (e) => {
         cvs.setPointerCapture(e.pointerId);
-        if (labState.activeExperimentId === "7.1") {
+
+        if (labState.activeExperimentId === "6.1") {
+            const rect = cvs.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            const scaleX = 800 / rect.width;
+            const scaleY = 500 / rect.height;
+            const canvasX = (clientX - rect.left) * scaleX;
+            const canvasY = (clientY - rect.top) * scaleY;
+            if (Math.hypot(canvasX - labState.motion.car.x, canvasY - labState.motion.car.y) <= 65) {
+                labState.motion.car.isDragging = true;
+            }
+        } else if (labState.activeExperimentId === "6.2") {
+            const rect = cvs.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            const scaleX = 800 / rect.width;
+            const scaleY = 500 / rect.height;
+            const canvasX = (clientX - rect.left) * scaleX;
+            const canvasY = (clientY - rect.top) * scaleY;
+            if (Math.abs(canvasX - labState.tugOfWar.boxX) <= 50 && Math.abs(canvasY - 330) <= 55) {
+                labState.tugOfWar.isDragging = true;
+            }
+        } else if (labState.activeExperimentId === "6.4") {
+            const rect = cvs.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            const scaleX = 800 / rect.width;
+            const scaleY = 500 / rect.height;
+            const canvasX = (clientX - rect.left) * scaleX;
+            const canvasY = (clientY - rect.top) * scaleY;
+            if (Math.hypot(canvasX - 180, canvasY - 340) <= 45) {
+                labState.heatTransfer.isHeating = !labState.heatTransfer.isHeating;
+                updateHeatTransferDOMControls();
+                updateHeatMetricsDOM();
+                showLabToast(labState.heatTransfer.isHeating ? "🔥 İspirto ocağı yakıldı!" : "Ocak söndürüldü.");
+            }
+        } else if (labState.activeExperimentId === "7.1") {
             labState.work.isDragging = true;
         } else if (labState.activeExperimentId === "7.2") {
             labState.energy.pendulum.isDragging = true;
@@ -9152,6 +11563,8 @@ function setupCanvasPointerEvents() {
     });
 
     cvs.addEventListener('pointermove', (e) => {
+        const isDragging61 = (labState.activeExperimentId === "6.1" && labState.motion && labState.motion.car.isDragging);
+        const isDragging62 = (labState.activeExperimentId === "6.2" && labState.tugOfWar && labState.tugOfWar.isDragging);
         const isDragging71 = (labState.activeExperimentId === "7.1" && labState.work.isDragging);
         const isDragging72 = (labState.activeExperimentId === "7.2" && (labState.energy.pendulum.isDragging || labState.energy.ramp.isDragging));
         const isDragging77 = (labState.activeExperimentId === "7.7" && (
@@ -9159,12 +11572,18 @@ function setupCanvasPointerEvents() {
             (labState.electro.mode === "conduction" && (labState.electro.conduction.sphere1.isDragging || labState.electro.conduction.sphere2.isDragging))
         ));
         const isDragging78 = (labState.activeExperimentId === "7.8" && labState.electroscope && labState.electroscope.rod.isDragging);
-        if (isDragging71 || isDragging72 || isDragging77 || isDragging78 || labState.optics.isDraggingLaser || labState.lens.isDraggingObject) {
+        if (isDragging61 || isDragging62 || isDragging71 || isDragging72 || isDragging77 || isDragging78 || labState.optics.isDraggingLaser || labState.lens.isDraggingObject) {
             handlePointerAction(e);
         }
     });
 
     const stopDragging = (e) => {
+        if (labState.motion) {
+            labState.motion.car.isDragging = false;
+        }
+        if (labState.tugOfWar) {
+            labState.tugOfWar.isDragging = false;
+        }
         if (labState.work) {
             labState.work.isDragging = false;
         }
@@ -9195,7 +11614,51 @@ function updateTableHeader(expId) {
     const thead = document.getElementById('lab-table-thead');
     if (!thead) return;
 
-    if (expId === "7.1") {
+    if (expId === "6.1") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Pist Uzunluğu</th>
+                <th>Geçen Süre (t)</th>
+                <th>Alınan Yol (x)</th>
+                <th>Sabit Sürat (v)</th>
+                <th>Hareket Durumu</th>
+            </tr>
+        `;
+    } else if (expId === "6.2") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>F_batı (Batı)</th>
+                <th>F_doğu (Doğu)</th>
+                <th>Bileşke Kuvvet (R)</th>
+                <th>Kuvvet Durumu</th>
+                <th>Cismin Hareketi</th>
+            </tr>
+        `;
+    } else if (expId === "6.3") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Eklenen Sıvılar</th>
+                <th>Kule Katmanları</th>
+                <th>En Yoğun (Dip)</th>
+                <th>En Az Yoğun (Üst)</th>
+                <th>Bırakılan Cisimler</th>
+            </tr>
+        `;
+    } else if (expId === "6.4") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Deney Modu</th>
+                <th>Isı Kaynağı</th>
+                <th>Bakır (k=385)</th>
+                <th>Alüminyum (k=205)</th>
+                <th>Demir (k=80)</th>
+            </tr>
+        `;
+    } else if (expId === "7.1") {
         thead.innerHTML = `
             <tr>
                 <th>#</th>
@@ -9301,7 +11764,61 @@ function recordMeasurement() {
     const expId = labState.activeExperimentId;
     const fmt = (n, dec = 1) => (typeof n === 'number' && !isNaN(n)) ? n.toFixed(dec) : '—';
 
-    if (expId === "7.1") {
+    if (expId === "6.1") {
+        const m = labState.motion;
+        const row = {
+            id: m.measurements.length + 1,
+            col1: `${m.trackLength} m Pist`,
+            col2: `${fmt(m.elapsedTime, 1)} s`,
+            col3: `${fmt(m.distanceTraveled, 1)} m`,
+            col4: `${fmt(m.speed, 1)} m/s`,
+            col5: m.distanceTraveled >= m.trackLength ? "🏁 Pisti Tamamladı" : (m.isPlaying ? "⚡ Sabit Süratli Hareket" : "Bekliyor")
+        };
+        m.measurements.push(row);
+        showLabToast(`Sabit Sürat Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "6.2") {
+        const tow = labState.tugOfWar;
+        const netDir = tow.netForce > 0 ? "Doğu" : (tow.netForce < 0 ? "Batı" : "Sıfır");
+        const row = {
+            id: tow.measurements.length + 1,
+            col1: `${tow.fWest} N (Batı)`,
+            col2: `${tow.fEast} N (Doğu)`,
+            col3: `${Math.abs(tow.netForce)} N (${netDir})`,
+            col4: tow.netForce === 0 ? "⚖️ Dengelenmiş" : "⚡ Dengelenmemiş",
+            col5: tow.netForce === 0 ? "Durgun (a = 0)" : (tow.netForce > 0 ? "Doğuya Hızlanan" : "Batıya Hızlanan")
+        };
+        tow.measurements.push(row);
+        showLabToast(`Kuvvet Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "6.3") {
+        const dt = labState.densityTower;
+        const names = dt.activeLiquids.map(l => l.name);
+        const objNames = dt.objects.map(o => o.name);
+        const row = {
+            id: dt.measurements.length + 1,
+            col1: `${dt.activeLiquids.length} / 4 Sıvı`,
+            col2: names.length > 0 ? names.join(' > ') : "Silindir Boş",
+            col3: dt.activeLiquids[0] ? `${dt.activeLiquids[0].name} (d=${dt.activeLiquids[0].density})` : "—",
+            col4: dt.activeLiquids.length > 0 ? `${dt.activeLiquids[dt.activeLiquids.length - 1].name} (d=${dt.activeLiquids[dt.activeLiquids.length - 1].density})` : "—",
+            col5: objNames.length > 0 ? objNames.join(', ') : "Cisim Bırakılmadı"
+        };
+        dt.measurements.push(row);
+        showLabToast(`Yoğunluk Kulesi Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "6.4") {
+        const ht = labState.heatTransfer;
+        const c = ht.rods[0];
+        const al = ht.rods[1];
+        const fe = ht.rods[2];
+        const row = {
+            id: ht.measurements.length + 1,
+            col1: ht.mode === "metals" ? "🥇 Metallerde İletim" : "🏠 Binalarda Yalıtım",
+            col2: ht.isHeating ? "🔥 Ocak Yanıyor" : "Sönük",
+            col3: c.ballDropped ? `Düştü (${fmt(c.dropTime, 1)} s)` : `${fmt(c.temp, 0)}°C (Isınıyor)`,
+            col4: al.ballDropped ? `Düştü (${fmt(al.dropTime, 1)} s)` : `${fmt(al.temp, 0)}°C (Isınıyor)`,
+            col5: fe.ballDropped ? `Düştü (${fmt(fe.dropTime, 1)} s)` : `${fmt(fe.temp, 0)}°C (Isınıyor)`
+        };
+        ht.measurements.push(row);
+        showLabToast(`Isı İletimi Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "7.1") {
         const work = labState.work;
         let scenarioName = "";
         let alignStr = "";
@@ -9569,7 +12086,15 @@ function renderMeasurementTable() {
 
     const expId = labState.activeExperimentId;
     let measurements = [];
-    if (expId === "7.1") {
+    if (expId === "6.1") {
+        measurements = labState.motion.measurements;
+    } else if (expId === "6.2") {
+        measurements = labState.tugOfWar.measurements;
+    } else if (expId === "6.3") {
+        measurements = labState.densityTower.measurements;
+    } else if (expId === "6.4") {
+        measurements = labState.heatTransfer.measurements;
+    } else if (expId === "7.1") {
         measurements = labState.work.measurements;
     } else if (expId === "7.2") {
         measurements = labState.energy.measurements;
