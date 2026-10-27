@@ -1055,12 +1055,13 @@ function setupWorkspaceShellDOM() {
     const btnFullscreen = document.getElementById('btn-lab-fullscreen');
     if (btnFullscreen) btnFullscreen.addEventListener('click', toggleLabFullscreen);
 
-    // 4. Mobil Tab Seçicileri
+    // 4. Panel ve Mobil Tab Seçicileri (Masaüstü + Mobil Senkronize)
     document.querySelectorAll('.lab-tab-btn').forEach(tabBtn => {
         tabBtn.addEventListener('click', () => {
             const tabKey = tabBtn.dataset.tab;
-            document.querySelectorAll('.lab-tab-btn').forEach(b => b.classList.remove('active'));
-            tabBtn.classList.add('active');
+            document.querySelectorAll('.lab-tab-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.tab === tabKey);
+            });
 
             document.querySelectorAll('.lab-tab-pane').forEach(pane => pane.classList.add('is-hidden'));
             const targetPane = document.getElementById(`pane-${tabKey}`);
@@ -1315,6 +1316,14 @@ export function openExperimentWorkspace(expId) {
     if (workspaceView) workspaceView.classList.remove('is-hidden');
     if (labView) labView.scrollTop = 0;
     window.scrollTo(0, 0);
+
+    // Sekmeleri Değişkenler (vars) moduna sıfırla
+    document.querySelectorAll('.lab-tab-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tab === 'vars');
+    });
+    document.querySelectorAll('.lab-tab-pane').forEach(pane => pane.classList.add('is-hidden'));
+    const paneVars = document.getElementById('pane-vars');
+    if (paneVars) paneVars.classList.remove('is-hidden');
 
     // Başlık ve Rozetleri Güncelle
     const expBadge = document.getElementById('lab-exp-badge');
@@ -3643,6 +3652,27 @@ function updateTugMetricsDOM() {
     if (pEast) pEast.textContent = `${tow.fEast} N`;
     if (pNet) pNet.textContent = `${Math.abs(tow.netForce)} N`;
     if (pType) pType.textContent = (tow.netForce === 0) ? "Dengelenmiş" : "Dengelenmemiş";
+
+    // Dinamik Pedagojik Çıkarım Kartı
+    const pTitle = document.getElementById('tug-pedagogical-title');
+    const pText = document.getElementById('tug-pedagogical-text');
+    const pIcon = document.getElementById('tug-pedagogical-icon');
+    if (pTitle && pText) {
+        if (tow.netForce === 0) {
+            pTitle.textContent = "⚖️ Dengelenmiş Kuvvetler (R = 0 N)";
+            pText.textContent = "Zıt yönlü kuvvetlerin büyüklükleri eşittir (F_batı = F_doğu). Net kuvvet sıfır olduğu için cisim duruyorsa durmaya devam eder.";
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-balance-scale" style="color: #10b981;"></i>';
+        } else if (tow.netForce > 0) {
+            pTitle.textContent = `⚡ Dengelenmemiş Kuvvetler (R = ${tow.netForce} N Doğu)`;
+            pText.textContent = `Doğu yönündeki kuvvet (${tow.fEast} N), Batı yönündeki kuvvetten (${tow.fWest} N) büyüktür. Halat ve kutu net kuvvet yönünde (Doğu) hızlanan hareket yapar.`;
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-arrow-right" style="color: #ef4444;"></i>';
+        } else {
+            const netW = Math.abs(tow.netForce);
+            pTitle.textContent = `⚡ Dengelenmemiş Kuvvetler (R = ${netW} N Batı)`;
+            pText.textContent = `Batı yönündeki kuvvet (${tow.fWest} N), Doğu yönündeki kuvvetten (${tow.fEast} N) büyüktür. Halat ve kutu net kuvvet yönünde (Batı) hızlanan hareket yapar.`;
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-arrow-left" style="color: #38bdf8;"></i>';
+        }
+    }
 }
 
 function drawTugOfWarSimulation() {
@@ -4163,8 +4193,6 @@ function updateReflectionMetricsDOM() {
         mirrorName = "Düzlem Ayna";
         reflType = (r.subMode === "smooth") ? "Düzgün Yansıma" : "Dağınık Yansıma";
         imageStatus = (r.subMode === "smooth") ? "Düz, Eşit Boyut, Simetrik" : "Görüntü Net Değil (Saçılma)";
-        if (mbInci) mbInci.textContent = `${r.incidentAngle}°`;
-        if (mbRefl) mbRefl.textContent = `${r.incidentAngle}°`;
     } else if (isConcave) {
         mirrorName = "Çukur (İçbükey) Ayna";
         reflType = "Işığı Toplar (Yakınsak)";
@@ -4175,14 +4203,32 @@ function updateReflectionMetricsDOM() {
         else if (d < 2 * f) imageStatus = "Ters ve Büyük Görüntü";
         else if (d === 2 * f) imageStatus = "Ters ve Eşit Boyut (Merkez)";
         else imageStatus = "Ters ve Küçük Görüntü (Kaşık İçi)";
-        if (mbInci) mbInci.textContent = `d: ${d}mm`;
-        if (mbRefl) mbRefl.textContent = `f: ${f}mm`;
     } else {
         mirrorName = "Tümsek (Dışbükey) Ayna";
         reflType = "Işığı Dağıtır (Iraksak)";
         imageStatus = "Daima Düz, Küçük ve Geniş Görüş";
-        if (mbInci) mbInci.textContent = `d: ${r.objectDistance}mm`;
-        if (mbRefl) mbRefl.textContent = `f: -${r.focalLength}mm`;
+    }
+
+    const pillRay = document.getElementById('mbar-64-ray-pill');
+    if (pillRay) {
+        if (isPlane) {
+            pillRay.innerHTML = `<i class="fas fa-compass"></i> i: <strong id="mbar-64-inci">${r.incidentAngle}°</strong> · r: <strong id="mbar-64-refl">${r.incidentAngle}°</strong> <span class="pill-sub">(i = r)</span>`;
+        } else if (isConcave) {
+            pillRay.innerHTML = `<i class="fas fa-arrows-alt-h"></i> Cisim (do): <strong id="mbar-64-inci">${r.objectDistance} mm</strong> · Odak (f): <strong id="mbar-64-refl">${r.focalLength} mm</strong>`;
+        } else {
+            pillRay.innerHTML = `<i class="fas fa-arrows-alt-h"></i> Cisim (do): <strong id="mbar-64-inci">${r.objectDistance} mm</strong> · Odak (f): <strong id="mbar-64-refl">-${r.focalLength} mm</strong>`;
+        }
+    } else {
+        if (isPlane) {
+            if (mbInci) mbInci.textContent = `${r.incidentAngle}°`;
+            if (mbRefl) mbRefl.textContent = `${r.incidentAngle}°`;
+        } else if (isConcave) {
+            if (mbInci) mbInci.textContent = `${r.objectDistance} mm`;
+            if (mbRefl) mbRefl.textContent = `${r.focalLength} mm`;
+        } else {
+            if (mbInci) mbInci.textContent = `${r.objectDistance} mm`;
+            if (mbRefl) mbRefl.textContent = `-${r.focalLength} mm`;
+        }
     }
 
     if (mbMirror) mbMirror.textContent = mirrorName;
@@ -4198,8 +4244,16 @@ function updateReflectionMetricsDOM() {
     const pMirror = document.getElementById('metric-64-mirror');
     const pImage = document.getElementById('metric-64-image');
 
-    if (pInci) pInci.textContent = isPlane ? `${r.incidentAngle}°` : `${r.objectDistance} mm`;
-    if (pRefl) pRefl.textContent = isPlane ? `${r.incidentAngle}°` : `${r.focalLength} mm`;
+    if (pInci) {
+        pInci.textContent = isPlane ? `${r.incidentAngle}°` : `${r.objectDistance} mm`;
+        const lbl = pInci.previousElementSibling;
+        if (lbl) lbl.textContent = isPlane ? "Gelme Açısı (i)" : "Cisim Mesafesi (do)";
+    }
+    if (pRefl) {
+        pRefl.textContent = isPlane ? `${r.incidentAngle}°` : (isConcave ? `${r.focalLength} mm` : `-${r.focalLength} mm`);
+        const lbl = pRefl.previousElementSibling;
+        if (lbl) lbl.textContent = isPlane ? "Yansıma Açısı (r)" : "Odak Uzaklığı (f)";
+    }
     if (pMirror) pMirror.textContent = mirrorName;
     if (pImage) pImage.textContent = imageStatus;
 
@@ -5452,30 +5506,12 @@ function updateHeatMetricsDOM() {
     const ht = labState.heatTransfer;
     const fmt = (n, d = 1) => Number(n).toFixed(d);
 
-    // Canvas Altı Responsive Metrik Şeridi (#metrics-bar-6-4)
+    // Canvas Altı Responsive Metrik Şeridi (#metrics-bar-5-9)
     const mbBurner = document.getElementById('mbar-59-burner');
     const mbCopper = document.getElementById('mbar-59-copper');
     const mbAl = document.getElementById('mbar-59-aluminum');
     const mbIron = document.getElementById('mbar-59-iron');
-
-    if (mbBurner) {
-        mbBurner.textContent = ht.isHeating ? "🔥 Yanıyor" : "Sönük";
-        mbBurner.style.color = ht.isHeating ? "#ef4444" : "#94a3b8";
-    }
-
-    const c = ht.rods[0];
-    const al = ht.rods[1];
-    const fe = ht.rods[2];
-
-    if (mbCopper) {
-        mbCopper.textContent = c.ballDropped ? `🥇 Düştü (${fmt(c.dropTime, 1)} s)` : `${fmt(c.temp, 0)}°C`;
-    }
-    if (mbAl) {
-        mbAl.textContent = al.ballDropped ? `🥈 Düştü (${fmt(al.dropTime, 1)} s)` : `${fmt(al.temp, 0)}°C`;
-    }
-    if (mbIron) {
-        mbIron.textContent = fe.ballDropped ? `🥉 Düştü (${fmt(fe.dropTime, 1)} s)` : `${fmt(fe.temp, 0)}°C`;
-    }
+    const mbStatus = document.getElementById('mbar-59-status');
 
     // Sağ Panel Metrikleri
     const pCop = document.getElementById('metric-59-copper');
@@ -5483,10 +5519,104 @@ function updateHeatMetricsDOM() {
     const pFe = document.getElementById('metric-59-iron');
     const pFlame = document.getElementById('metric-59-flame');
 
-    if (pCop) pCop.textContent = c.ballDropped ? `Düştü (${fmt(c.dropTime, 1)} s)` : `${fmt(c.temp, 0)}°C`;
-    if (pAl) pAl.textContent = al.ballDropped ? `Düştü (${fmt(al.dropTime, 1)} s)` : `${fmt(al.temp, 0)}°C`;
-    if (pFe) pFe.textContent = fe.ballDropped ? `Düştü (${fmt(fe.dropTime, 1)} s)` : `${fmt(fe.temp, 0)}°C`;
-    if (pFlame) pFlame.textContent = ht.isHeating ? "Yanıyor" : "Sönük";
+    // Dinamik Pedagojik Kart
+    const pTitle = document.getElementById('heat-pedagogical-title');
+    const pText = document.getElementById('heat-pedagogical-text');
+    const pIcon = document.getElementById('heat-pedagogical-icon');
+
+    if (ht.mode === "insulation") {
+        const mat0 = ht.insulation.materials[0]; // Sac
+        const mat1 = ht.insulation.materials[1]; // Ahşap
+        const mat2 = ht.insulation.materials[2]; // Taş yünü / Strafor
+
+        if (mbBurner) {
+            mbBurner.textContent = ht.isHeating ? "Isıtıcı: Aktif" : "Isıtıcı: Kapalı";
+            mbBurner.style.color = ht.isHeating ? "#ef4444" : "#94a3b8";
+        }
+        if (mbCopper) mbCopper.textContent = `Sac Ev: ${fmt(mat0.tempInside, 0)}°C`;
+        if (mbAl) mbAl.textContent = `Ahşap Ev: ${fmt(mat1.tempInside, 0)}°C`;
+        if (mbIron) mbIron.textContent = `Strafor Ev: ${fmt(mat2.tempInside, 0)}°C`;
+        if (mbStatus) {
+            mbStatus.textContent = "🏠 Yalıtımlı binalar (Taş yünü / Strafor) ısı kaybını önleyerek enerji tasarrufu sağlar";
+            mbStatus.style.color = "#34d399";
+        }
+
+        if (pCop) {
+            pCop.textContent = `${fmt(mat0.tempInside, 0)}°C`;
+            const lbl = pCop.previousElementSibling;
+            if (lbl) lbl.textContent = "Sac (Yalıtımsız)";
+        }
+        if (pAl) {
+            pAl.textContent = `${fmt(mat1.tempInside, 0)}°C`;
+            const lbl = pAl.previousElementSibling;
+            if (lbl) lbl.textContent = "Ahşap Kaplama";
+        }
+        if (pFe) {
+            pFe.textContent = `${fmt(mat2.tempInside, 0)}°C`;
+            const lbl = pFe.previousElementSibling;
+            if (lbl) lbl.textContent = "Taş Yünü / Strafor";
+        }
+        if (pFlame) {
+            pFlame.textContent = ht.isHeating ? "Aktif" : "Kapalı";
+            const lbl = pFlame.previousElementSibling;
+            if (lbl) lbl.textContent = "İç Isıtıcı";
+        }
+
+        if (pTitle && pText && pIcon) {
+            pIcon.innerHTML = '<i class="fas fa-home" style="color: #38bdf8;"></i>';
+            pTitle.textContent = "🏠 Binalarda Isı Yalıtımı ve Enerji Verimliliği";
+            pText.textContent = "Strafor ve taş yünü gibi yalıtım malzemeleri tanecik boşlukları sayesinde ısının binadan kaçmasını engeller. Yalıtımsız sac ev hızla soğurken, yalıtımlı ev iç sıcaklığını uzun süre korur.";
+        }
+    } else {
+        const c = ht.rods[0];
+        const al = ht.rods[1];
+        const fe = ht.rods[2];
+
+        if (mbBurner) {
+            mbBurner.textContent = ht.isHeating ? "🔥 Yanıyor" : "Sönük";
+            mbBurner.style.color = ht.isHeating ? "#ef4444" : "#94a3b8";
+        }
+        if (mbCopper) {
+            mbCopper.textContent = c.ballDropped ? `🥇 Düştü (${fmt(c.dropTime, 1)} s)` : `${fmt(c.temp, 0)}°C`;
+        }
+        if (mbAl) {
+            mbAl.textContent = al.ballDropped ? `🥈 Düştü (${fmt(al.dropTime, 1)} s)` : `${fmt(al.temp, 0)}°C`;
+        }
+        if (mbIron) {
+            mbIron.textContent = fe.ballDropped ? `🥉 Düştü (${fmt(fe.dropTime, 1)} s)` : `${fmt(fe.temp, 0)}°C`;
+        }
+        if (mbStatus) {
+            mbStatus.textContent = "🔥 Isı metallerde iletim yoluyla yayılır; iletkenlik sıralaması: Bakır > Alüminyum > Demir";
+            mbStatus.style.color = "#facc15";
+        }
+
+        if (pCop) {
+            pCop.textContent = c.ballDropped ? `Düştü (${fmt(c.dropTime, 1)} s)` : `${fmt(c.temp, 0)}°C`;
+            const lbl = pCop.previousElementSibling;
+            if (lbl) lbl.textContent = "Bakır Çubuk";
+        }
+        if (pAl) {
+            pAl.textContent = al.ballDropped ? `Düştü (${fmt(al.dropTime, 1)} s)` : `${fmt(al.temp, 0)}°C`;
+            const lbl = pAl.previousElementSibling;
+            if (lbl) lbl.textContent = "Alüminyum Çubuk";
+        }
+        if (pFe) {
+            pFe.textContent = fe.ballDropped ? `Düştü (${fmt(fe.dropTime, 1)} s)` : `${fmt(fe.temp, 0)}°C`;
+            const lbl = pFe.previousElementSibling;
+            if (lbl) lbl.textContent = "Demir Çubuk";
+        }
+        if (pFlame) {
+            pFlame.textContent = ht.isHeating ? "Yanıyor" : "Sönük";
+            const lbl = pFlame.previousElementSibling;
+            if (lbl) lbl.textContent = "İspirto Ocağı";
+        }
+
+        if (pTitle && pText && pIcon) {
+            pIcon.innerHTML = '<i class="fas fa-fire" style="color: #f97316;"></i>';
+            pTitle.textContent = "🔥 Metallerde Isı İletim Hızı";
+            pText.textContent = "Tüm metaller ısıyı iletir fakat iletkenlik hızları farklıdır. Bakır en hızlı, demir ise aralarında en yavaş iletendir. Balmumları bu iletkenlik sırasına göre erir.";
+        }
+    }
 }
 
 function drawHeatTransferSimulation() {
@@ -5915,10 +6045,17 @@ function updateGerminationMetricsDOM() {
             elStatus.style.borderColor = "#38bdf8";
             elStatus.style.color = "#38bdf8";
         } else {
-            let reason = !curDish.water ? "Su Yok (Kuru)" : (curDish.temp === 0 ? "Çok Soğuk (0°C)" : "Çok Sıcak (50°C)");
-            elStatus.textContent = `❌ Çimlenme Yok (${reason})`;
-            elStatus.style.borderColor = "#ef4444";
-            elStatus.style.color = "#ef4444";
+            const canSprout = (curDish.water === true) && (curDish.temp === 25) && (curDish.oxygen === true);
+            if (canSprout && g.currentDay === 1) {
+                elStatus.textContent = `⏳ 1. Gün: Şartlar Uygun (Su, 25°C, Oksijen). Günleri ilerletin!`;
+                elStatus.style.borderColor = "#38bdf8";
+                elStatus.style.color = "#38bdf8";
+            } else {
+                let reason = !curDish.water ? "Su Yok (Kuru)" : (curDish.temp === 0 ? "Çok Soğuk (0°C)" : (curDish.temp >= 40 ? "Çok Sıcak (50°C)" : "Sıcaklık Uygun Değil"));
+                elStatus.textContent = `❌ Çimlenme Yok (${reason})`;
+                elStatus.style.borderColor = "#ef4444";
+                elStatus.style.color = "#ef4444";
+            }
         }
     }
 
@@ -5932,8 +6069,20 @@ function updateGerminationMetricsDOM() {
     if (mWater) mWater.textContent = curDish.water ? "Islak Pamuk" : "Kuru Pamuk";
     if (mTemp) mTemp.textContent = `${curDish.temp}°C`;
     if (mSprout) {
-        mSprout.textContent = isSprouted ? "Filizlendi 🌱" : (isGrowing ? "Kök Çıkıyor" : "Çimlenmedi ❌");
-        mSprout.style.color = isSprouted ? "#4ade80" : (isGrowing ? "#38bdf8" : "#f87171");
+        const canSprout = (curDish.water === true) && (curDish.temp === 25) && (curDish.oxygen === true);
+        if (isSprouted) {
+            mSprout.textContent = "Filizlendi 🌱";
+            mSprout.style.color = "#4ade80";
+        } else if (isGrowing) {
+            mSprout.textContent = "Kök Çıkıyor";
+            mSprout.style.color = "#38bdf8";
+        } else if (canSprout && g.currentDay === 1) {
+            mSprout.textContent = "Hazır (Bekliyor)";
+            mSprout.style.color = "#38bdf8";
+        } else {
+            mSprout.textContent = "Çimlenmedi ❌";
+            mSprout.style.color = "#f87171";
+        }
     }
 
     // Dinamik Pedagojik Kutu
@@ -8528,29 +8677,45 @@ function updateWorkMetricsBar() {
     const mForce = document.getElementById('mbar-work-force');
     const mDisp = document.getElementById('mbar-work-dist');
 
+    const curD = work.currentDisplacement !== undefined ? work.currentDisplacement : (work.progress * work.distance);
+    const actualWork = work.isWorkDone ? (work.appliedWork * (work.distance > 0 ? (curD / work.distance) : 0)) : 0.0;
+
     if (mJoule) {
-        mJoule.textContent = work.isWorkDone ? `${work.appliedWork.toFixed(1)} J` : '0.0 J';
-        mJoule.style.color = work.isWorkDone ? '#10b981' : '#ef4444';
+        if (!work.isWorkDone) {
+            mJoule.textContent = "0.0 J (İş Yok)";
+            mJoule.style.color = "#ef4444";
+        } else if (work.progress >= 1.0) {
+            mJoule.textContent = `${work.appliedWork.toFixed(1)} J (Tamamlandı)`;
+            mJoule.style.color = "#10b981";
+        } else if (work.isPlaying) {
+            mJoule.textContent = `${actualWork.toFixed(1)} J (Hedef: ${work.appliedWork.toFixed(0)} J)`;
+            mJoule.style.color = "#38bdf8";
+        } else {
+            mJoule.textContent = `0.0 J (Hedef: ${work.appliedWork.toFixed(0)} J)`;
+            mJoule.style.color = "#facc15";
+        }
     }
     if (mStatus) {
         const textSpan = document.getElementById('mbar-work-status-text');
         const targetEl = textSpan || mStatus;
         if (work.isPlaying) {
-            targetEl.textContent = "⏳ Hareket Ediyor...";
+            targetEl.textContent = `⏳ Hareket Ediyor (%${Math.round(work.progress * 100)})`;
             mStatus.style.color = "#38bdf8";
-        } else if (work.isWorkDone) {
+        } else if (!work.isWorkDone) {
+            targetEl.textContent = "❌ İş Yapılmadı";
+            mStatus.style.color = "#ef4444";
+        } else if (work.progress >= 1.0) {
             targetEl.textContent = "✅ İş Yapıldı";
             mStatus.style.color = "#10b981";
         } else {
-            targetEl.textContent = "❌ İş Yapılmadı";
-            mStatus.style.color = "#ef4444";
+            targetEl.textContent = "🏁 Başlamaya Hazır (Oynatın)";
+            mStatus.style.color = "#38bdf8";
         }
     }
     if (mForce) {
         mForce.textContent = `${work.force.toFixed(0)} N`;
     }
     if (mDisp) {
-        const curD = work.currentDisplacement !== undefined ? work.currentDisplacement : (work.progress * work.distance);
         mDisp.textContent = `${curD.toFixed(1)} m`;
     }
 }
@@ -11462,15 +11627,21 @@ function updateDissolveStopwatchDOM() {
     const sugarNames = { powder: "Pudra", granulated: "Toz", cube: "Küp" };
     if (mb1 && b[0]) {
         const timeStr = b[0].isDissolved ? `${b[0].targetTime.toFixed(1)}s ✓` : `${b[0].elapsedTime.toFixed(1)}s`;
-        mb1.textContent = `${b[0].temperature}°C · ${sugarNames[b[0].sugar] || b[0].sugar}${b[0].isStirred ? ' · 🌀' : ''} (${timeStr})`;
+        const tVal = b[0].temp !== undefined ? b[0].temp : b[0].temperature;
+        const isStir = b[0].stirring !== undefined ? b[0].stirring : b[0].isStirred;
+        mb1.textContent = `${tVal}°C · ${sugarNames[b[0].sugar] || b[0].sugar}${isStir ? ' · 🌀' : ''} (${timeStr})`;
     }
     if (mb2 && b[1]) {
         const timeStr = b[1].isDissolved ? `${b[1].targetTime.toFixed(1)}s ✓` : `${b[1].elapsedTime.toFixed(1)}s`;
-        mb2.textContent = `${b[1].temperature}°C · ${sugarNames[b[1].sugar] || b[1].sugar}${b[1].isStirred ? ' · 🌀' : ''} (${timeStr})`;
+        const tVal = b[1].temp !== undefined ? b[1].temp : b[1].temperature;
+        const isStir = b[1].stirring !== undefined ? b[1].stirring : b[1].isStirred;
+        mb2.textContent = `${tVal}°C · ${sugarNames[b[1].sugar] || b[1].sugar}${isStir ? ' · 🌀' : ''} (${timeStr})`;
     }
     if (mb3 && b[2]) {
         const timeStr = b[2].isDissolved ? `${b[2].targetTime.toFixed(1)}s ✓` : `${b[2].elapsedTime.toFixed(1)}s`;
-        mb3.textContent = `${b[2].temperature}°C · ${sugarNames[b[2].sugar] || b[2].sugar}${b[2].isStirred ? ' · 🌀' : ''} (${timeStr})`;
+        const tVal = b[2].temp !== undefined ? b[2].temp : b[2].temperature;
+        const isStir = b[2].stirring !== undefined ? b[2].stirring : b[2].isStirred;
+        mb3.textContent = `${tVal}°C · ${sugarNames[b[2].sugar] || b[2].sugar}${isStir ? ' · 🌀' : ''} (${timeStr})`;
     }
     if (mbStatus) {
         if (b.every(bk => bk.isDissolved)) {
@@ -12247,7 +12418,7 @@ function updateSeparationMetricsDOM() {
     } else {
         const d = sep.distillation;
         if (mbMethod) mbMethod.textContent = "Basit Damıtma (K.N. Farkı)";
-        if (mbSubstances) mbSubstances.textContent = `Alkol (${d.temp.toFixed(1)}°C) + Su (100°C)`;
+        if (mbSubstances) mbSubstances.textContent = `Karışım: ${d.temp.toFixed(1)}°C (Ref: Etanol 78°C / Su 100°C)`;
         if (mbPhase) mbPhase.textContent = d.isBoiling ? "Alkol Kaynıyor (78°C)" : (d.distilledAlcohol >= 95 ? "Alkol Saflaştırıldı" : (d.isHeating ? "Isınıyor" : "Durgun"));
         if (mbStatus) {
             if (d.distilledAlcohol >= 95) {
@@ -13262,6 +13433,15 @@ function setElectroMode(mode) {
     if (countersFriction) countersFriction.classList.toggle('is-hidden', !isFriction);
     if (countersConduction) countersConduction.classList.toggle('is-hidden', !isConduction);
     if (countersInduction) countersInduction.classList.toggle('is-hidden', !isInduction);
+
+    // Diğer modların eski yüklerini ve artıklarını temizle
+    if (isFriction) {
+        neutralizeElectro();
+    } else if (isConduction) {
+        setConductionPreset("pos6_zero");
+    } else if (isInduction) {
+        neutralizeInduction();
+    }
 
     updateElectroMetricsDOM();
     updateElectroPedagogicalBox();
@@ -17821,7 +18001,36 @@ function updateFrictionPhysics() {
     const mState = document.getElementById('metric-53-status');
     if (mFric) mFric.textContent = fLevels[fr.surface];
     if (mDist) mDist.textContent = `${fr.distanceTraveled.toFixed(1)} m`;
-    if (mState) mState.textContent = fr.carState === 'stopped' ? "Tamamlandı" : "Hazır";
+    if (mState) {
+        if (fr.carState === 'stopped') mState.textContent = `Durdu (${fr.distanceTraveled.toFixed(1)} m)`;
+        else if (fr.carState === 'rolling') mState.textContent = "Rampadan İniyor";
+        else if (fr.carState === 'sliding') mState.textContent = "Pistte İlerliyor";
+        else mState.textContent = "Hazır (Rampa Başında)";
+    }
+
+    // Dinamik Pedagojik Çıkarım Kartı
+    const pTitle = document.getElementById('friction-pedagogical-title');
+    const pText = document.getElementById('friction-pedagogical-text');
+    const pIcon = document.getElementById('friction-pedagogical-icon');
+    if (pTitle && pText) {
+        if (fr.surface === 'ice') {
+            pTitle.textContent = "🧊 Pürüzsüz Zemin (Buz Pisti / Cam)";
+            pText.textContent = `Pürüzsüz ve son derece kaygan yüzeylerde sürtünme kuvveti çok azdır. Araç neredeyse direnç görmez${fr.carState === 'stopped' ? ` ve en uzun mesafeyi (${fr.distanceTraveled.toFixed(1)} m) katetti.` : ' ve en uzun mesafeyi kateder.'}`;
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-snowflake" style="color: #38bdf8;"></i>';
+        } else if (fr.surface === 'wood') {
+            pTitle.textContent = "🪵 Az Pürüzlü Zemin (Cilalı Ahşap)";
+            pText.textContent = `Cilalı ahşap yüzeyde orta düzeyde sürtünme direnci oluşur. Araç dengeli şekilde yavaşlar${fr.carState === 'stopped' ? ` ve ${fr.distanceTraveled.toFixed(1)} m mesafede durdu.` : '.'}`;
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-tree" style="color: #fbbf24;"></i>';
+        } else if (fr.surface === 'sand') {
+            pTitle.textContent = "📜 Pürüzlü Zemin (Zımpara Kağıdı)";
+            pText.textContent = `Zımparanın pütürlü dokusu tekerleklere yüksek sürtünme kuvveti uygular. Araç hızla yavaşlar${fr.carState === 'stopped' ? ` ve ${fr.distanceTraveled.toFixed(1)} m mesafede durdu.` : '.'}`;
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-scroll" style="color: #f97316;"></i>';
+        } else if (fr.surface === 'carpet') {
+            pTitle.textContent = "🧶 Aşırı Pürüzlü Zemin (Kumaş / Halı)";
+            pText.textContent = `Kumaş ve halı lifleri tekerleğe güçlü bir karşı koyma direnci uygular. Sürtünme kuvveti çok yüksektir${fr.carState === 'stopped' ? ` ve araç kısa sürede (${fr.distanceTraveled.toFixed(1)} m) durdu.` : '.'}`;
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-rug" style="color: #ec4899;"></i>';
+        }
+    }
 }
 
 // MEB 1. Kitap s. 80 Birebir Düzenek: Üst üste ders kitapları, mukavva rampa, gerçekçi kaplamalar ve model araba
@@ -18294,7 +18503,11 @@ function updateLightRectPhysics() {
 
     const mAlign = document.getElementById('metric-54-align');
     const mState = document.getElementById('metric-54-state');
-    if (mAlign) mAlign.textContent = lr.cardsAligned ? "Aynı Doğrultuda" : "Hizasız";
+    if (mAlign) {
+        mAlign.textContent = (lr.mode === "cards") 
+            ? (lr.cardsAligned ? "Aynı Doğrultuda" : "Hizasız") 
+            : (!lr.hoseCurved ? "Düz / Doğrusal" : "Kıvrık / Bükük");
+    }
     if (mState) mState.textContent = beamText;
 }
 
@@ -18622,9 +18835,27 @@ function updateShadowPhysics() {
     if (sliderScr) sliderScr.value = sh.screenDist;
 
     const mSize = document.getElementById('metric-55-size');
+    const mType = document.getElementById('metric-55-type');
     const mTrend = document.getElementById('metric-55-trend');
-    if (mSize) mSize.textContent = sh.lampOn ? `${sh.shadowDiameter} cm` : "—";
-    if (mTrend) mTrend.textContent = ratio >= 2.5 ? "Büyük Boy" : (ratio <= 1.6 ? "Küçük Boy" : "Orta Boy");
+    if (mSize) mSize.textContent = sh.lampOn ? `${sh.shadowDiameter} cm` : "0 cm (Yok)";
+    if (mType) mType.textContent = sh.lampOn ? "Tam Gölge" : "Işık Kapalı / Gölge Yok";
+    if (mTrend) mTrend.textContent = sh.lampOn ? (ratio >= 2.5 ? "Büyük Boy" : (ratio <= 1.6 ? "Küçük Boy" : "Orta Boy")) : "Oluşmaz";
+
+    // Dinamik Pedagojik Çıkarım Kartı
+    const pTitle = document.getElementById('shadow-pedagogical-title');
+    const pText = document.getElementById('shadow-pedagogical-text');
+    const pIcon = document.getElementById('shadow-pedagogical-icon');
+    if (pTitle && pText) {
+        if (!sh.lampOn) {
+            pTitle.textContent = "💡 Işık Kaynağı Kapalı";
+            pText.textContent = "Işık kaynağı olmadan opak cisimlerin arkasında gölge oluşamaz. Işığın doğrusal yayılması sonucu opak engelin arkasında gölge oluşur.";
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-lightbulb" style="color: #64748b;"></i>';
+        } else {
+            pTitle.textContent = `🌑 Tam Gölgenin Boyutu (${sh.shadowDiameter} cm)`;
+            pText.textContent = "Işık kaynağı cisme yaklaştıkça perdedeki tam gölgenin alanı büyür. Cisim perdeye yaklaştıkça veya ışıktan uzaklaştıkça tam gölge küçülür.";
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-circle" style="color: #38bdf8;"></i>';
+        }
+    }
 }
 
 function drawShadowSimulation() {
@@ -18946,7 +19177,31 @@ function updateCompressibilityPhysics() {
     if (slider) slider.value = cp.forcePercent;
 
     const mVol = document.getElementById('metric-56-vol');
+    const mGap = document.getElementById('metric-56-gap');
+    const mComp = document.getElementById('metric-56-compress');
     if (mVol) mVol.textContent = `%${Math.round(cp.plungerPos * 100)}`;
+    if (mGap) mGap.textContent = (cp.state === 'gas') ? "Çok Fazla" : (cp.state === 'liquid' ? "Çok Az" : "Yok Denecek Kadar Az");
+    if (mComp) mComp.textContent = (cp.state === 'gas') ? "Sıkıştırılabilir" : "Sıkıştırılamaz";
+
+    // Dinamik Pedagojik Çıkarım Kartı
+    const pTitle = document.getElementById('compress-pedagogical-title');
+    const pText = document.getElementById('compress-pedagogical-text');
+    const pIcon = document.getElementById('compress-pedagogical-icon');
+    if (pTitle && pText) {
+        if (cp.state === 'gas') {
+            pTitle.textContent = "💨 Gazların Tanecikli Yapısı";
+            pText.textContent = "Gaz tanecikleri arasındaki boşluk çok fazladır; bu nedenle gazlar dış kuvvet etkisiyle kolayca sıkıştırılabilir ve hacmi küçülür.";
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-wind" style="color: #38bdf8;"></i>';
+        } else if (cp.state === 'liquid') {
+            pTitle.textContent = "💧 Sıvıların Sıkıştırılamazlığı";
+            pText.textContent = "Sıvı tanecikleri birbiriyle sürekli temas hâlindedir ve aralarında kayda değer boşluk yoktur. Bu yüzden sıvılar sıkıştırılamaz kabul edilir.";
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-tint" style="color: #06b6d4;"></i>';
+        } else {
+            pTitle.textContent = "🪵 Katıların Düzenli ve Sıkı Yapısı";
+            pText.textContent = "Katı tanecikleri belirli bir düzen içinde ve birbirine son derece yakın dizilmiştir; aralarında boşluk yoktur. Katılar kesinlikle sıkıştırılamaz.";
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-cube" style="color: #fbbf24;"></i>';
+        }
+    }
 }
 
 function drawCompressibilitySimulation() {
@@ -19220,7 +19475,11 @@ function updateHeatExchangePhysics() {
     if (valT1) valT1.textContent = `${he.t1}°C`;
     if (valT2) valT2.textContent = `${he.t2}°C`;
 
+    const mT1 = document.getElementById('metric-57-t1');
+    const mT2 = document.getElementById('metric-57-t2');
     const mTeq = document.getElementById('metric-57-teq');
+    if (mT1) mT1.textContent = `${he.t1}°C (${he.vol1} ml)`;
+    if (mT2) mT2.textContent = `${he.t2}°C (${he.vol2} ml)`;
     if (mTeq) mTeq.textContent = `${he.currentTeq.toFixed(1)}°C`;
 }
 
@@ -19382,9 +19641,13 @@ function setupWaterStateControlsDOM() {
     if (btnIce) {
         btnIce.addEventListener('click', () => {
             ws.temp = -10.0;
-            ws.elapsedMinutes = 0;
+            ws.phase = "solid";
+            ws.iceMeltRatio = 0.0;
+            ws.elapsedMinutes = 0.0;
             ws.history = [{ t: 0, temp: -10.0 }];
+            ws.isHeating = false;
             updateWaterStatePhysics();
+            showLabToast("🧊 -10°C Katı Buz başlangıç durumuna getirildi.");
         });
     }
 
@@ -19392,9 +19655,13 @@ function setupWaterStateControlsDOM() {
     if (btnWater) {
         btnWater.addEventListener('click', () => {
             ws.temp = 20.0;
-            ws.elapsedMinutes = 4.0;
-            ws.history = [{ t: 0, temp: -10.0 }, { t: 2, temp: 0 }, { t: 3.5, temp: 0 }, { t: 4, temp: 20 }];
+            ws.phase = "liquid";
+            ws.iceMeltRatio = 1.0;
+            ws.elapsedMinutes = 0.0;
+            ws.history = [{ t: 0, temp: 20.0 }];
+            ws.isHeating = false;
             updateWaterStatePhysics();
+            showLabToast("💧 20°C Sıvı Su başlangıç durumuna getirildi.");
         });
     }
 
@@ -19477,6 +19744,13 @@ function updateWaterStatePhysics() {
         if (b.life <= 0 || b.y <= 270) ws.bubbleParticles.splice(i, 1);
     }
 
+    if (!ws.isHeating) {
+        if (ws.temp < 0) ws.phase = "solid";
+        else if (ws.temp === 0 && ws.iceMeltRatio < 1.0) ws.phase = "melting";
+        else if (ws.temp >= 100) ws.phase = "boiling";
+        else ws.phase = "liquid";
+    }
+
     const phaseNames = {
         solid: "Katı (Buz)",
         melting: "Erime Hâli (Buz + Su)",
@@ -19504,6 +19778,30 @@ function updateWaterStatePhysics() {
     if (mTemp) mTemp.textContent = `${ws.temp.toFixed(1)}°C`;
     if (mState) mState.textContent = phaseNames[ws.phase];
     if (mTime) mTime.textContent = `${ws.elapsedMinutes.toFixed(1)} dk`;
+
+    // Dinamik Pedagojik Çıkarım Kartı
+    const pTitle = document.getElementById('waterstate-pedagogical-title');
+    const pText = document.getElementById('waterstate-pedagogical-text');
+    const pIcon = document.getElementById('waterstate-pedagogical-icon');
+    if (pTitle && pText) {
+        if (ws.phase === "solid") {
+            pTitle.textContent = "🧊 Katı Hâli (-10°C -> 0°C Buz Isınıyor)";
+            pText.textContent = "Buz ısıtıldıkça sıcaklığı yükselir. Taneciklerin titreşim enerjisi artar ve erime noktası olan 0°C'ye ulaşır.";
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-snowflake" style="color: #38bdf8;"></i>';
+        } else if (ws.phase === "melting") {
+            pTitle.textContent = "🧊 Erime Hâli (0°C Sabit Sıcaklık Platosu)";
+            pText.textContent = "Saf maddeler erirken sıcaklıkları sabit kalır. Alınan ısı enerjisi sıcaklığı artırmak yerine buz tanecikleri arasındaki bağları zayıflatmak için kullanılır.";
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-icicles" style="color: #06b6d4;"></i>';
+        } else if (ws.phase === "liquid") {
+            pTitle.textContent = `💧 Sıvı Hâli (${ws.temp.toFixed(1)}°C Su Isınıyor)`;
+            pText.textContent = "Buzun tamamı eridikten sonra suyun sıcaklığı 0°C'den 100°C kaynama noktasına doğru hızla yükselir.";
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-tint" style="color: #3b82f6;"></i>';
+        } else if (ws.phase === "boiling") {
+            pTitle.textContent = "♨️ Kaynama Hâli (100°C Sabit Sıcaklık Platosu)";
+            pText.textContent = "Su 100°C'ye ulaştığında kaynamaya başlar ve hâl değişimi boyunca sıcaklık 100°C'de sabit kalır. Sıvı hızla buharlaşır.";
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-fire" style="color: #f97316;"></i>';
+        }
+    }
 }
 
 function drawWaterStateSimulation() {
@@ -21368,6 +21666,14 @@ function setWaterFootprintMode(mode) {
     if (boxAqua) boxAqua.classList.toggle('is-hidden', !isAqua);
     if (boxTech) boxTech.classList.toggle('is-hidden', !isTech);
     if (boxFoot) boxFoot.classList.toggle('is-hidden', !isFoot);
+
+    // Hızlı Kontrol Barındaki Alt Grupları Moduna Göre Aç/Kapat
+    const grpAqua = document.getElementById('group-water-sub-aqueduct');
+    const grpTech = document.getElementById('group-water-sub-tech');
+    const grpFoot = document.getElementById('group-water-sub-footprint');
+    if (grpAqua) grpAqua.classList.toggle('is-hidden', !isAqua);
+    if (grpTech) grpTech.classList.toggle('is-hidden', !isTech);
+    if (grpFoot) grpFoot.classList.toggle('is-hidden', !isFoot);
 
     updateWaterFootprintDOM();
     showLabToast(isAqua ? "🏛️ Mimar Sinan Mağlova Su Kemeri Modu" : (isTech ? "💧 Tasarruf Teknolojileri Modu" : "⚖️ Arjen Hoekstra Su Ayak İzi Terazisi"));

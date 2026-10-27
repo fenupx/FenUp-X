@@ -1580,6 +1580,21 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
 }
 
+/* Masaüstü Panel Sekmeleri (≥ 1024px) */
+.lab-panel-tabs {
+    display: flex;
+    width: 100%;
+    gap: 8px;
+    justify-content: stretch;
+    margin-bottom: 6px;
+}
+.lab-panel-tabs .lab-tab-btn {
+    max-width: none;
+}
+.lab-tab-pane.is-hidden {
+    display: none !important;
+}
+
 /* Mobil Tab Menüsü (< 1024px için) */
 .lab-mobile-tabs {
     display: none;
@@ -2078,6 +2093,9 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     }
     .lab-mobile-tabs {
         display: flex !important;
+    }
+    .lab-panel-tabs {
+        display: none !important;
     }
     /* Mobilde tab mantığı devrede: Aktif olmayan pane'ler gizlenir */
     .lab-tab-pane.is-hidden {

@@ -65,7 +65,7 @@
             <button id="btn-deney-modulu" class="module-btn secondary lab-active">
                 <i class="fas fa-flask"></i>
                 <span>🧪 Sanal Laboratuvar</span>
-                <small class="module-summary-tag">26 İnteraktif Deney · 2D Simülasyon · Maarif Modeli</small>
+                <small class="module-summary-tag">30 İnteraktif Deney · 2D Simülasyon · Maarif Modeli</small>
                 <span class="module-cta-badge">Laboratuvara Gir <i class="fas fa-arrow-right" style="font-size: 0.85em;"></i></span>
             </button>
         </div>
@@ -510,7 +510,7 @@
                     <!-- Canvas Altı Responsive Metrik Şeridi (Deney 6.4 - Yansıma Kanunları ve Aynalar Simülatörü) -->
                     <div id="metrics-bar-6-4" class="lab-canvas-metrics-bar is-hidden">
                         <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-clone"></i> Ayna: <strong id="mbar-64-mirror">Düzlem Ayna</strong></div>
-                        <div class="metrics-pill" style="color: #4ade80;"><i class="fas fa-compass"></i> i: <strong id="mbar-64-inci">40°</strong> · r: <strong id="mbar-64-refl">40°</strong> <span class="pill-sub">(i = r)</span></div>
+                        <div class="metrics-pill" id="mbar-64-ray-pill" style="color: #4ade80;"><i class="fas fa-compass"></i> i: <strong id="mbar-64-inci">40°</strong> · r: <strong id="mbar-64-refl">40°</strong> <span class="pill-sub">(i = r)</span></div>
                         <div class="metrics-pill" style="color: #fbbf24;"><i class="fas fa-vector-square"></i> Tür: <strong id="mbar-64-type">Düzgün Yansıma</strong></div>
                         <div class="metrics-pill status" id="mbar-64-status">Düz ve Eşit Boyut</div>
                     </div>
@@ -1206,6 +1206,13 @@
 
                 <!-- SAĞ/ALT (%35): Kontrol Paneli & Veri Tablosu -->
                 <div class="lab-sidebar-section" id="lab-sidebar-section">
+                    <!-- Masaüstü Panel Sekmeleri (Değişkenler, Veri Defteri, Rehber) -->
+                    <div class="lab-panel-tabs" id="lab-panel-tabs">
+                        <button class="lab-tab-btn active" data-tab="vars"><i class="fas fa-sliders-h"></i> 🎛️ Değişkenler</button>
+                        <button class="lab-tab-btn" data-tab="data"><i class="fas fa-table"></i> 📊 Veri Defteri</button>
+                        <button class="lab-tab-btn" data-tab="guide"><i class="fas fa-info-circle"></i> ℹ️ Rehber</button>
+                    </div>
+
                     <!-- TAB 1: DEĞİŞKENLER VE KONTROLLER -->
                     <div class="lab-tab-pane active" id="pane-vars">
                         
@@ -2547,7 +2554,7 @@
                                 <div class="lab-lens-controls-box">
                                     <div class="lab-field-group">
                                         <label class="lab-field-label">Işık Kaynağı Gücü: <span id="label-absorb-power-val" style="color:var(--neon-blue); font-weight:800;">%100</span></label>
-                                        <input type="range" id="slider-absorb-power" min="0" max="100" step="10" value="100" style="width:100%;">
+                                        <input type="range" id="slider-absorb-power" min="0" max="100" step="5" value="100" style="width:100%;">
                                     </div>
                                     <div class="lab-field-group" style="margin-top: 8px;">
                                         <label class="lab-field-label">Hızlı Işık Ayarı:</label>
