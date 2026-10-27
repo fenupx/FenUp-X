@@ -1525,16 +1525,72 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     cursor: crosshair;
 }
 
+/* Canvas Altı Responsive Metrik Şeritleri */
+.lab-canvas-metrics-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 2px;
+}
+.lab-canvas-metrics-bar.is-hidden {
+    display: none !important;
+}
+.metrics-pill {
+    background: rgba(15, 23, 42, 0.88);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    color: #e2e8f0;
+    font-size: 0.82rem;
+    padding: 6px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    white-space: nowrap;
+}
+.metrics-pill strong {
+    color: var(--neon-blue);
+    font-weight: 800;
+}
+.metrics-pill .pill-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+.metrics-pill.med1 .pill-dot {
+    background: #38bdf8;
+    box-shadow: 0 0 8px #38bdf8;
+}
+.metrics-pill.med2 .pill-dot {
+    background: #c084fc;
+    box-shadow: 0 0 8px #c084fc;
+}
+.metrics-pill .pill-sub {
+    color: #94a3b8;
+    font-size: 0.76rem;
+}
+.metrics-pill.status {
+    border-left: 3px solid #10b981;
+    font-weight: 700;
+    color: #fff;
+}
+.metrics-pill.work-val strong {
+    color: #10b981;
+}
+.metrics-pill.work-status {
+    border-left: 3px solid #10b981;
+    font-weight: 700;
+}
+
 /* Canvas Üzeri HUD Şeritleri */
 .lab-canvas-overlay {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: flex-end;
-    pointer-events: none;
+    display: none !important;
 }
 .lab-hud-pill {
     background: rgba(15, 23, 42, 0.85);
@@ -1949,6 +2005,43 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     }
     .lab-stats-grid {
         grid-template-columns: 1fr;
+    }
+    /* Mobilde Tuval Altı Kontrol ve Metrik Zırhı */
+    .lab-canvas-quick-controls {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        padding: 8px 10px !important;
+        gap: 8px !important;
+    }
+    .lab-quick-lens-row {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+    }
+    .lab-toggle-btn-group {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        width: 100% !important;
+    }
+    .lab-toggle-btn {
+        flex: 1 1 calc(50% - 6px) !important;
+        min-height: 44px !important;
+        font-size: 0.82rem !important;
+        justify-content: center !important;
+    }
+    .lab-btn-step {
+        min-height: 44px !important;
+        min-width: 44px !important;
+        flex: 0 0 auto !important;
+    }
+    .lab-angle-slider-wrap {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+    .metrics-pill {
+        font-size: 0.76rem !important;
+        padding: 5px 10px !important;
     }
 }
 

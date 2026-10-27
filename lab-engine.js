@@ -948,9 +948,11 @@ export function openExperimentWorkspace(expId) {
     const is78 = (expId === "7.8");
     const is79 = (expId === "7.9");
 
-    // HUD Paneli (Sadece Deney 7.3)
-    const hud73 = document.getElementById('hud-exp-7-3');
-    if (hud73) hud73.classList.toggle('is-hidden', !is73);
+    // Metrik Şeritleri (Canvas Altı Responsive Barlar)
+    const mbar73 = document.getElementById('metrics-bar-7-3');
+    const mbar71 = document.getElementById('metrics-bar-7-1');
+    if (mbar73) mbar73.classList.toggle('is-hidden', !is73);
+    if (mbar71) mbar71.classList.toggle('is-hidden', !is71);
 
     // Hızlı Kontroller (Canvas Altı)
     const qc71 = document.getElementById('quick-controls-7-1');
@@ -1584,6 +1586,39 @@ function calculateWorkPhysics() {
             if (text) text.textContent = `Sabit duvara ne kadar büyük bir kuvvetle (${F.toFixed(1)} N) yüklenilirse yüklenilsin, duvar hareket etmediği (yer değiştirmediği) için fiziksel anlamda iş yapılmış sayılmaz (W = 0 Joule). Yorulmak, fen anlamında iş değildir!`;
         }
     }
+    updateWorkMetricsBar();
+}
+
+function updateWorkMetricsBar() {
+    const work = labState.work;
+    const mJoule = document.getElementById('mbar-work-joule');
+    const mStatus = document.getElementById('mbar-work-status');
+    const mForce = document.getElementById('mbar-work-force');
+    const mDisp = document.getElementById('mbar-work-disp');
+
+    if (mJoule) {
+        mJoule.textContent = work.isWorkDone ? `${work.appliedWork.toFixed(1)} J` : '0.0 J';
+        mJoule.style.color = work.isWorkDone ? '#10b981' : '#ef4444';
+    }
+    if (mStatus) {
+        if (work.isPlaying) {
+            mStatus.textContent = "Hareket Ediyor...";
+            mStatus.style.color = "#38bdf8";
+        } else if (work.isWorkDone) {
+            mStatus.textContent = "✅ İş Yapıldı";
+            mStatus.style.color = "#10b981";
+        } else {
+            mStatus.textContent = "❌ İş Yapılmadı";
+            mStatus.style.color = "#ef4444";
+        }
+    }
+    if (mForce) {
+        mForce.textContent = `${work.force.toFixed(0)} N`;
+    }
+    if (mDisp) {
+        const curD = work.currentDisplacement !== undefined ? work.currentDisplacement : (work.progress * work.distance);
+        mDisp.textContent = `${curD.toFixed(1)} m`;
+    }
 }
 
 function updateWorkPhysics() {
@@ -1594,6 +1629,7 @@ function updateWorkPhysics() {
             work.currentDisplacement = 0;
             work.isPlaying = false;
             updateWorkPlayButton(false);
+            updateWorkMetricsBar();
             return;
         }
 
@@ -1607,6 +1643,7 @@ function updateWorkPhysics() {
     } else {
         work.currentDisplacement = work.progress * work.distance;
     }
+    updateWorkMetricsBar();
 }
 
 // --- DENEY 7.1 CANVAS 2D ÇİZİM MOTORU ---
@@ -1627,8 +1664,7 @@ function drawWorkSimulation() {
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, 800, 500);
 
-    // 2. Minimalist Sol Üst HUD Paneli
-    drawWorkHUD(ctx, work);
+    // 2. Sıfır Metin - Zero-Canvas-Text: HUD paneli canvas dışındaki HTML şeridine taşınmıştır
 
     // 3. Zemin Çizgisi ve Izgara
     const groundY = 390;
@@ -1664,34 +1700,7 @@ function drawWorkSimulation() {
 }
 
 function drawWorkHUD(ctx, work) {
-    const isWork = work.isWorkDone;
-    const boxW = 160;
-    const boxH = 68;
-    const boxX = 24;
-    const boxY = 20;
-
-    ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-    ctx.strokeStyle = isWork ? 'rgba(16, 185, 129, 0.5)' : 'rgba(239, 68, 68, 0.5)';
-    ctx.lineWidth = 1.5;
-
-    ctx.beginPath();
-    ctx.roundRect(boxX, boxY, boxW, boxH, 10);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.font = 'bold 10px Inter, sans-serif';
-    ctx.fillStyle = '#94a3b8';
-    ctx.textAlign = 'left';
-    ctx.fillText("FİZİKSEL İŞ (W)", boxX + 12, boxY + 18);
-
-    ctx.font = 'bold 20px Inter, monospace';
-    ctx.fillStyle = isWork ? '#10b981' : '#ef4444';
-    const valText = isWork ? `${work.appliedWork.toFixed(1)} J` : '0.0 J';
-    ctx.fillText(valText, boxX + 12, boxY + 42);
-
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillStyle = isWork ? '#6ee7b7' : '#fca5a5';
-    ctx.fillText(isWork ? '✅ İş Yapıldı' : '❌ İş Yapılmadı', boxX + 12, boxY + 59);
+    // Zero-Canvas-Text: HUD paneli canvas dışındaki HTML şeridine (#metrics-bar-7-1) taşınmıştır
 }
 
 function drawWorkHorizontal(ctx, work, groundY) {
@@ -1749,7 +1758,7 @@ function drawWorkHorizontal(ctx, work, groundY) {
         crateX + crateW + arrowLen,
         crateY + crateH / 2,
         '#ef4444',
-        `F = ${work.force.toFixed(0)} N ➔`,
+        'F ➔',
         -14
     );
 
@@ -1762,7 +1771,7 @@ function drawWorkHorizontal(ctx, work, groundY) {
             crateX - 45,
             groundY - 6,
             '#f59e0b',
-            `fs = 20 N ⬅`,
+            'fs ⬅',
             -12
         );
     }
@@ -1776,7 +1785,7 @@ function drawWorkHorizontal(ctx, work, groundY) {
             curX,
             groundY + 36,
             '#06b6d4',
-            `Δx = ${curDist.toFixed(1)} m ➔`,
+            'Δx ➔',
             16
         );
     }
@@ -1842,7 +1851,7 @@ function drawWorkLift(ctx, work, groundY) {
         centerX,
         crateY - arrowLen,
         '#ef4444',
-        `F = ${work.force.toFixed(0)} N ⬆`,
+        'F ⬆',
         -10
     );
 
@@ -1855,7 +1864,7 @@ function drawWorkLift(ctx, work, groundY) {
             centerX + 65,
             crateY + crateH,
             '#06b6d4',
-            `h = ${curH.toFixed(1)} m ⬆`,
+            'h ⬆',
             12
         );
     }
@@ -1868,7 +1877,7 @@ function drawWorkLift(ctx, work, groundY) {
         centerX,
         crateY + crateH + 40,
         '#64748b',
-        `G = 100 N ⬇`,
+        'G ⬇',
         12
     );
 }
@@ -1913,7 +1922,7 @@ function drawWorkCarry(ctx, work, groundY) {
         bagHandX,
         bagHandY - 60,
         '#ef4444',
-        `F = ${work.force.toFixed(0)} N ⬆ (Düşey)`,
+        'F ⬆',
         -10
     );
 
@@ -1926,15 +1935,17 @@ function drawWorkCarry(ctx, work, groundY) {
             curX,
             groundY + 36,
             '#06b6d4',
-            `Δx = ${curDist.toFixed(1)} m ➔ (Yatay)`,
+            'Δx ➔',
             16
         );
     }
 
-    // DİK AÇI SEMBOLÜ (90° - Sarı kare köşe)
+    // DİK AÇI SEMBOLÜ (90° - Parlak neon dik köşe indikatörü)
     ctx.save();
     ctx.strokeStyle = '#facc15';
-    ctx.lineWidth = 2;
+    ctx.shadowColor = '#facc15';
+    ctx.shadowBlur = 8;
+    ctx.lineWidth = 2.5;
     const sqSize = 14;
     ctx.beginPath();
     ctx.moveTo(bagHandX, bagHandY - sqSize);
@@ -1947,11 +1958,6 @@ function drawWorkCarry(ctx, work, groundY) {
     ctx.beginPath();
     ctx.arc(bagHandX + sqSize / 2, bagHandY - sqSize / 2, 2, 0, Math.PI * 2);
     ctx.fill();
-
-    // Zarif minimal 90° etiketi
-    ctx.font = 'bold 10px Inter, sans-serif';
-    ctx.fillStyle = '#fef08a';
-    ctx.fillText("90°", bagHandX + 18, bagHandY - 6);
     ctx.restore();
 }
 
@@ -1977,7 +1983,7 @@ function drawWorkWall(ctx, work, groundY) {
         charX + 30 + arrowLen,
         groundY - 70,
         '#ef4444',
-        `F = ${work.force.toFixed(0)} N ➔`,
+        'F ➔',
         -12
     );
 }
@@ -2050,11 +2056,13 @@ function drawWorkVectorArrow(ctx, fromX, fromY, toX, toY, color, label, labelOff
 function drawWorkStudent(ctx, x, y, pose, anim, extraOffset = 0) {
     ctx.save();
 
-    // Renk paleti
+    // Renk paleti (Modern stilize bilim üniforması / laboratuvar önlüğü)
     const skinColor = '#fed7aa';
     const hairColor = '#1e293b';
-    const shirtColor = '#0284c7';
-    const pantsColor = '#334155';
+    const coatColor = '#f8fafc'; // Beyaz laboratuvar önlüğü
+    const shirtColor = coatColor;
+    const shirtTrim = '#0284c7'; // Cyan yaka/ayrıntı
+    const pantsColor = '#1e293b'; // Koyu lacivert pantolon
     const shoeColor = '#0f172a';
 
     if (pose === "push") {
@@ -2387,9 +2395,10 @@ function drawWorkStudent(ctx, x, y, pose, anim, extraOffset = 0) {
 function drawWorkCrate(ctx, x, y, w, h) {
     ctx.save();
 
-    // Ahşap sandık gövdesi
+    // 1. Zengin Ahşap Sandık Gövdesi
     const woodGrad = ctx.createLinearGradient(x, y, x, y + h);
     woodGrad.addColorStop(0, '#b45309');
+    woodGrad.addColorStop(0.5, '#92400e');
     woodGrad.addColorStop(1, '#78350f');
     ctx.fillStyle = woodGrad;
     ctx.strokeStyle = '#451a03';
@@ -2399,38 +2408,55 @@ function drawWorkCrate(ctx, x, y, w, h) {
     ctx.fill();
     ctx.stroke();
 
-    // Tahta şerit çizgileri
-    ctx.strokeStyle = 'rgba(69, 26, 3, 0.6)';
-    ctx.lineWidth = 1.5;
+    // 2. Yatay Ahşap Tahta Şeritleri (Planks)
+    ctx.strokeStyle = 'rgba(69, 26, 3, 0.7)';
+    ctx.lineWidth = 1.8;
+    for (let i = 1; i < 3; i++) {
+        const py = y + (h * (i / 3));
+        ctx.beginPath();
+        ctx.moveTo(x + 2, py);
+        ctx.lineTo(x + w - 2, py);
+        ctx.stroke();
+    }
+
+    // 3. Çapraz Ahşap Destek Kirişi
+    ctx.strokeStyle = 'rgba(217, 119, 6, 0.45)';
+    ctx.lineWidth = 4;
     ctx.beginPath();
-    ctx.moveTo(x, y + h * 0.33);
-    ctx.lineTo(x + w, y + h * 0.33);
-    ctx.moveTo(x, y + h * 0.66);
-    ctx.lineTo(x + w, y + h * 0.66);
+    ctx.moveTo(x + 8, y + 8);
+    ctx.lineTo(x + w - 8, y + h - 8);
     ctx.stroke();
 
-    // Çapraz destek çıtası
-    ctx.strokeStyle = 'rgba(180, 83, 9, 0.4)';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.moveTo(x + 4, y + 4);
-    ctx.lineTo(x + w - 4, y + h - 4);
-    ctx.stroke();
-
-    // Metal köşe perçinleri
+    // 4. Fırçalanmış Çelik Köşe Braketleri (Brackets)
+    const bracketSize = 14;
     ctx.fillStyle = '#64748b';
-    const cSize = 10;
-    ctx.fillRect(x, y, cSize, cSize);
-    ctx.fillRect(x + w - cSize, y, cSize, cSize);
-    ctx.fillRect(x, y + h - cSize, cSize, cSize);
-    ctx.fillRect(x + w - cSize, y + h - cSize, cSize, cSize);
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 1;
+    [
+        [x, y],
+        [x + w - bracketSize, y],
+        [x, y + h - bracketSize],
+        [x + w - bracketSize, y + h - bracketSize]
+    ].forEach(([bx, by]) => {
+        ctx.fillRect(bx, by, bracketSize, bracketSize);
+        ctx.strokeRect(bx, by, bracketSize, bracketSize);
 
-    // Kütle Etiketi
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillStyle = '#fef08a';
-    ctx.textAlign = 'center';
-    ctx.fillText("📦 10 kg", x + w / 2, y + h / 2 + 4);
+        // Perçin vidası (Rivet)
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.arc(bx + bracketSize / 2, by + bracketSize / 2, 1.8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#64748b';
+    });
 
+    // 5. Yan Metal Taşıma Kulpu (Handle)
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.roundRect(x + w / 2 - 12, y + h / 2 - 5, 24, 10, 3);
+    ctx.stroke();
+
+    // Zero-Canvas-Text: "10 kg" yazısı kaldırıldı, net değer paneldedir.
     ctx.restore();
 }
 
@@ -3052,11 +3078,6 @@ function drawPendulumSimulation(ctx, scale) {
         ctx.moveTo(indX, lowestY);
         ctx.lineTo(indX, by);
         ctx.stroke();
-
-        ctx.font = `bold ${Math.max(9, 10 * scale)}px 'Nunito', sans-serif`;
-        ctx.fillStyle = "#38bdf8";
-        ctx.textAlign = "center";
-        ctx.fillText(`h = ${energy.currentHeight.toFixed(2)} m`, indX + (Math.sin(angle) > 0 ? -30 * scale : 30 * scale), (lowestY + by) / 2 + (4 * scale));
     }
 
     // 6. Sarkaç Kolu (İnce Metal Çubuk / İp)
@@ -3077,7 +3098,7 @@ function drawPendulumSimulation(ctx, scale) {
     ctx.arc(cx, cy, 2.5 * scale, 0, Math.PI * 2);
     ctx.fill();
 
-    // 7. Sarkaç Küresi (3D Metalik Radial Gradyan & Zemin Gölgesi)
+    // 7. Sarkaç Küresi (Metalik Gümüş Çok Katmanlı Radyal Gradyan & Zemin Projeksiyon Gölgesi)
     const bobR = (14 + energy.mass * 2.5) * scale;
 
     // Zemin projeksiyon gölgesi (Küre yükseldikçe gölge hafifler ve küçülür)
@@ -3100,34 +3121,34 @@ function drawPendulumSimulation(ctx, scale) {
         ctx.setLineDash([]);
     }
 
+    // Yüksek Gerçeklikli Metalik Krom / Gümüş Radyal Gradyan
     const sphereGrad = ctx.createRadialGradient(
         bx - (bobR * 0.35), by - (bobR * 0.35), bobR * 0.05,
         bx, by, bobR
     );
     sphereGrad.addColorStop(0, "#ffffff");
-    sphereGrad.addColorStop(0.18, "#a5f3fc");
-    sphereGrad.addColorStop(0.5, "#06b6d4");
-    sphereGrad.addColorStop(0.85, "#0e7490");
-    sphereGrad.addColorStop(1, "#164e63");
+    sphereGrad.addColorStop(0.2, "#f1f5f9");
+    sphereGrad.addColorStop(0.45, "#94a3b8");
+    sphereGrad.addColorStop(0.75, "#475569");
+    sphereGrad.addColorStop(1, "#1e293b");
 
     ctx.fillStyle = sphereGrad;
-    ctx.shadowColor = "rgba(0, 210, 255, 0.45)";
-    ctx.shadowBlur = 10 * scale;
+    ctx.shadowColor = "rgba(0, 210, 255, 0.35)";
+    ctx.shadowBlur = 8 * scale;
     ctx.beginPath();
     ctx.arc(bx, by, bobR, 0, Math.PI * 2);
     ctx.fill();
     ctx.shadowBlur = 0;
 
-    ctx.strokeStyle = "#cffafe";
-    ctx.lineWidth = 1.5 * scale;
-    ctx.stroke();
-
-    // Kütle Etiketi (Kürenin içinde)
-    ctx.font = `bold ${Math.max(8, 10 * scale)}px sans-serif`;
+    // Speküler Parlama Noktası (Star Flash)
     ctx.fillStyle = "#ffffff";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(`${energy.mass.toFixed(1)} kg`, bx, by);
+    ctx.beginPath();
+    ctx.arc(bx - (bobR * 0.32), by - (bobR * 0.32), 2.2 * scale, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+    ctx.lineWidth = 1.2 * scale;
+    ctx.stroke();
 
     // 8. Hız Vektörü Oku (Teğetsel Sürat)
     if (energy.currentSpeed > 0.15) {
@@ -3256,12 +3277,32 @@ function drawRampSimulation(ctx, scale) {
         ctx.moveTo(indX, lowestY);
         ctx.lineTo(indX, cartY);
         ctx.stroke();
-
-        ctx.font = `bold ${Math.max(9, 10 * scale)}px 'Nunito', sans-serif`;
-        ctx.fillStyle = "#38bdf8";
-        ctx.textAlign = "center";
-        ctx.fillText(`h = ${energy.currentHeight.toFixed(2)} m`, indX + (Math.sin(angle) > 0 ? -30 * scale : 30 * scale), (lowestY + cartY) / 2 + (4 * scale));
     }
+
+    // 4.5. Hareket İzi (Motion Trail - Hızlı salınımda hafif neon izler)
+    if (!r.trail) r.trail = [];
+    if (energy.isPlaying && energy.currentSpeed > 0.3) {
+        r.trail.push({ x: cartX, y: cartY, angle: angle });
+        if (r.trail.length > 6) r.trail.shift();
+    } else if (!energy.isPlaying || energy.currentSpeed <= 0.1) {
+        r.trail = [];
+    }
+
+    const cartW = 34 * scale;
+    const cartH = 6 * scale;
+    const wheelR = 4.5 * scale;
+
+    r.trail.forEach((t, idx) => {
+        ctx.save();
+        ctx.translate(t.x, t.y);
+        ctx.rotate(-t.angle);
+        const trailAlpha = ((idx + 1) / r.trail.length) * 0.24;
+        ctx.fillStyle = `rgba(56, 189, 248, ${trailAlpha})`;
+        ctx.beginPath();
+        ctx.roundRect(-cartW / 2, -(wheelR * 2 + cartH), cartW, cartH, 2 * scale);
+        ctx.fill();
+        ctx.restore();
+    });
 
     // 5. Kaykaycı / Deney Arabası Çizimi
     ctx.save();
@@ -3279,7 +3320,6 @@ function drawRampSimulation(ctx, scale) {
     }
 
     // Tekerlekler
-    const wheelR = 4.5 * scale;
     ctx.fillStyle = "#00d2ff";
     ctx.shadowColor = "#00d2ff";
     ctx.shadowBlur = 4 * scale;
@@ -3291,8 +3331,6 @@ function drawRampSimulation(ctx, scale) {
     ctx.shadowBlur = 0;
 
     // Şasi
-    const cartW = 34 * scale;
-    const cartH = 6 * scale;
     ctx.fillStyle = "#0f172a";
     ctx.strokeStyle = "#38bdf8";
     ctx.lineWidth = 1.5 * scale;
@@ -3459,6 +3497,15 @@ function updateOpticsHUDAndMetrics() {
         hudStatus.style.borderColor = behaviorColor;
     }
 
+    const mMed1Name = document.getElementById('mbar-med1-name');
+    const mMed1N = document.getElementById('mbar-med1-n');
+    const mMed2Name = document.getElementById('mbar-med2-name');
+    const mMed2N = document.getElementById('mbar-med2-n');
+    if (mMed1Name) mMed1Name.textContent = med1.name;
+    if (mMed1N) mMed1N.textContent = med1.n.toFixed(2);
+    if (mMed2Name) mMed2Name.textContent = med2.name;
+    if (mMed2N) mMed2N.textContent = med2.n.toFixed(2);
+
     const speed1El = document.getElementById('metric-speed-1');
     const speed2El = document.getElementById('metric-speed-2');
     const critEl = document.getElementById('metric-critical-angle');
@@ -3495,14 +3542,6 @@ function drawOpticsSimulation() {
     ctx.fillStyle = med2.bgColor;
     ctx.fillRect(0, originY, W, H - originY);
 
-    // Ortam Etiketleri (Kompakt Rozetler - Mobilde Gönye ve Normal ile Çarpışmaz)
-    ctx.font = `bold ${Math.max(11, 13 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = med1.highlightColor;
-    ctx.fillText(`1. Ortam: ${med1.name}`, 18 * scale, 30 * scale);
-
-    ctx.fillStyle = med2.highlightColor;
-    ctx.fillText(`2. Ortam: ${med2.name}`, 18 * scale, originY + (30 * scale));
-
     // Açıölçer / Gönye
     drawProtractor(ctx, originX, originY, radius, scale);
 
@@ -3514,11 +3553,6 @@ function drawOpticsSimulation() {
     ctx.lineWidth = 2 * scale;
     ctx.stroke();
 
-    ctx.font = `${Math.max(11, 12 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
-    ctx.textAlign = "right";
-    ctx.fillText("Ayırıcı Yüzey", W - (20 * scale), originY - (8 * scale));
-
     // Yüzey Normali (N)
     ctx.beginPath();
     ctx.setLineDash([6 * scale, 6 * scale]);
@@ -3528,12 +3562,6 @@ function drawOpticsSimulation() {
     ctx.lineWidth = 2 * scale;
     ctx.stroke();
     ctx.setLineDash([]);
-
-    ctx.font = `bold ${Math.max(12, 14 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = "var(--neon-blue)";
-    ctx.textAlign = "center";
-    ctx.fillText("N (Normal)", originX, 22 * scale);
-    ctx.fillText("N", originX, H - (12 * scale));
 
     // Lazer ve Gelen Işın
     const rad1 = (incidentAngle * Math.PI) / 180;
@@ -3769,13 +3797,6 @@ function drawLensSimulation() {
     ctx.strokeStyle = "rgba(0, 210, 255, 0.4)";
     ctx.lineWidth = 1.5 * scale;
     ctx.stroke();
-
-    // Asal Eksen etiketi (Sadece sol kenarda, eksenin 18px altında çok silik/minimal)
-    ctx.font = `${Math.max(9, 10 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = "rgba(148, 163, 184, 0.45)";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "top";
-    ctx.fillText("Asal Eksen", 28 * scale, cy + (18 * scale));
 
     // 2. MODA GÖRE IŞINLARIN VE CİSMİN ÇİZİMİ (Işınlar altta akar)
     if (mode === "parallel") {
@@ -4167,36 +4188,7 @@ function drawCandleObjectMode(ctx, cx, cy, f, isConvex, doVal, ho, diVal, hiVal,
 }
 
 function drawFarImageIndicator(ctx, x, cy, text, align, scale) {
-    ctx.save();
-    const fontSize = Math.max(9, 11 * scale);
-    ctx.font = `bold ${fontSize}px 'Nunito', sans-serif`;
-    const textW = ctx.measureText(text).width;
-    const padX = 8 * scale;
-    const padY = 4 * scale;
-    const boxW = textW + (padX * 2);
-    const boxH = fontSize + (padY * 2);
-
-    let boxX = x;
-    if (align === "right") {
-        boxX = x - boxW;
-    } else if (align === "center") {
-        boxX = x - (boxW / 2);
-    }
-    const boxY = cy - (boxH / 2);
-
-    ctx.fillStyle = "rgba(10, 16, 30, 0.92)";
-    ctx.strokeStyle = "rgba(56, 189, 248, 0.75)";
-    ctx.lineWidth = 1.2 * scale;
-    ctx.beginPath();
-    ctx.roundRect(boxX, boxY, boxW, boxH, 6 * scale);
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.fillStyle = "#38bdf8";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(text, boxX + (boxW / 2), cy);
-    ctx.restore();
+    // Zero-Canvas-Text: Sonsuzluk durumu sağ paneldeki pedagojik bilgi kartında bildirilmektedir
 }
 
 function drawCandle(ctx, x, baseY, height, isUpright, alpha, scale, label, isReal = false) {
@@ -4267,29 +4259,7 @@ function drawCandle(ctx, x, baseY, height, isUpright, alpha, scale, label, isRea
     ctx.closePath();
     ctx.fill();
 
-    // Etiket (Işınların ve alevin üzerine binmeyen koruyucu şık rozet)
-    const lblFontSize = Math.max(9, 11 * scale);
-    ctx.font = `bold ${lblFontSize}px 'Nunito', sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    const lblW = ctx.measureText(label).width;
-    const lblPadX = 6 * scale;
-    const lblPadY = 3 * scale;
-    const lblY = isUpright ? flameTipY - (14 * scale) : flameTipY + (14 * scale);
-
-    ctx.fillStyle = "rgba(7, 12, 27, 0.88)";
-    ctx.beginPath();
-    ctx.roundRect(x - (lblW / 2) - lblPadX, lblY - (lblFontSize / 2) - lblPadY, lblW + (lblPadX * 2), lblFontSize + (lblPadY * 2), 4 * scale);
-    ctx.fill();
-
-    ctx.strokeStyle = isReal ? "rgba(56, 189, 248, 0.6)" : isUpright ? (alpha === 1 ? "rgba(251, 191, 36, 0.6)" : "rgba(56, 189, 248, 0.6)") : "rgba(192, 132, 252, 0.6)";
-    ctx.lineWidth = 1 * scale;
-    ctx.stroke();
-
-    ctx.fillStyle = isReal ? "#38bdf8" : (alpha === 1 ? "#fef08a" : "#7dd3fc");
-    ctx.fillText(label, x, lblY);
-
+    // Zero-Canvas-Text: Mum üzerindeki etiket kaldırılmıştır, görsel saflık ve mobil optik netliği korunur.
     ctx.restore();
 }
 
@@ -4900,6 +4870,19 @@ function drawBeakerVortex(ctx, cx, waterTop, beakerBottom) {
     ctx.ellipse(cx, midY - 20, 35, 8, 0, 0, Math.PI * 2);
     ctx.ellipse(cx, midY + 15, 22, 6, 0, 0, Math.PI * 2);
     ctx.stroke();
+
+    // Dönen mikro hava kabarcıkları (Vektörel girdap partikülleri)
+    for (let i = 0; i < 14; i++) {
+        const bPhase = animTime * 4 + i * (Math.PI * 2 / 14);
+        const bRad = 10 + (i % 3) * 9;
+        const bx = cx + Math.cos(bPhase) * bRad;
+        const by = waterTop + 15 + ((animTime * 20 + i * 11) % (beakerBottom - waterTop - 25));
+        const bSize = 1.0 + (i % 3) * 0.6;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+        ctx.beginPath();
+        ctx.arc(bx, by, bSize, 0, Math.PI * 2);
+        ctx.fill();
+    }
     ctx.restore();
 }
 
@@ -6168,17 +6151,7 @@ function drawLiebigCondenser(ctx, distill) {
     });
 
     ctx.restore();
-
-    // Soğuk Su Giriş ve Ilık Su Çıkış Etiketleri
-    ctx.save();
-    ctx.font = 'bold 9px Inter, sans-serif';
-    ctx.fillStyle = '#38bdf8';
-    ctx.textAlign = 'center';
-    ctx.fillText("Soğuk Su Girişi ➔", 475, 345);
-
-    ctx.fillStyle = '#fb923c';
-    ctx.fillText("➔ Ilık Su Çıkışı", 310, 175);
-    ctx.restore();
+    // Zero-Canvas-Text: Soğuk su giriş ve ılık su çıkış yönleri cam nipellerle sezgisel gösterilir, tuval metinleri kaldırıldı.
 }
 
 function drawDistillationCollectionFlask(ctx, distill) {
@@ -6877,12 +6850,7 @@ function drawElectroRod(ctx, rod, pair) {
         drawChargeBadge(ctx, ex, ey, '-', '#0284c7', '#38bdf8');
     }
 
-    // Çubuk İsim Etiketi
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillStyle = isEbonite ? '#cbd5e1' : '#38bdf8';
-    ctx.textAlign = 'center';
-    ctx.fillText(isEbonite ? "Ebonit (Plastik) Çubuk" : "Cam Çubuk", rod.x + rod.w / 2, rod.y + rod.h + 16);
-
+    // Zero-Canvas-Text: Çubuk türü aktif kontrol düğmelerinde vurgulanır
     ctx.restore();
 }
 
@@ -6952,12 +6920,7 @@ function drawElectroCloth(ctx, cloth, pair) {
         }
     }
 
-    // Kumaş İsim Etiketi
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.fillStyle = isEbonite ? '#fef08a' : '#e9d5ff';
-    ctx.textAlign = 'center';
-    ctx.fillText(isEbonite ? "Yün Kumaş" : "İpek Kumaş", cloth.x + cloth.w / 2, cloth.y + cloth.h + 16);
-
+    // Zero-Canvas-Text: Kumaş türü panelde belirtilir
     ctx.restore();
 }
 
@@ -7108,15 +7071,7 @@ function drawConductionSphere(ctx, sphere, label, netColor) {
     const net = sphere.protons - sphere.electrons;
     const netStr = net === 0 ? "0 (Nötr)" : net > 0 ? `+${net}e` : `-${Math.abs(net)}e`;
 
-    ctx.font = 'bold 12px Inter, sans-serif';
-    ctx.fillStyle = '#f8fafc';
-    ctx.textAlign = 'center';
-    ctx.fillText(label, cx, cy - r - 16);
-
-    ctx.fillStyle = netColor;
-    ctx.font = 'bold 13px Inter, monospace';
-    ctx.fillText(netStr, cx, cy - r - 2);
-
+    // Zero-Canvas-Text: Küre net yük değerleri ve isimleri sağ panel rozetlerinde canlı gösterilir
     ctx.restore();
 }
 
@@ -7780,7 +7735,7 @@ function drawElectroscopeLeaves(ctx, cx, pivotY, es) {
     leafGrad.addColorStop(0.5, '#fbbf24');
     leafGrad.addColorStop(1, '#d97706');
 
-    // Sol Yaprak
+    // Sol Yaprak (Hafif kavisli ve merkez omurga çizgili altın varak)
     ctx.save();
     ctx.translate(cx, pivotY);
     ctx.rotate(-rad);
@@ -7790,10 +7745,19 @@ function drawElectroscopeLeaves(ctx, cx, pivotY, es) {
 
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.lineTo(-leafWidth / 2, leafLen);
+    ctx.quadraticCurveTo(-leafWidth * 0.7, leafLen * 0.5, -leafWidth / 2, leafLen);
     ctx.lineTo(leafWidth / 2, leafLen);
+    ctx.quadraticCurveTo(leafWidth * 0.2, leafLen * 0.5, 0, 0);
     ctx.closePath();
     ctx.fill();
+    ctx.stroke();
+
+    // Merkez omurga çizgisi
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, 2);
+    ctx.lineTo(0, leafLen - 4);
     ctx.stroke();
 
     // Sol yapraktaki yük simgeleri
@@ -7817,10 +7781,19 @@ function drawElectroscopeLeaves(ctx, cx, pivotY, es) {
 
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.lineTo(-leafWidth / 2, leafLen);
+    ctx.quadraticCurveTo(leafWidth * 0.2, leafLen * 0.5, -leafWidth / 2, leafLen);
     ctx.lineTo(leafWidth / 2, leafLen);
+    ctx.quadraticCurveTo(leafWidth * 0.7, leafLen * 0.5, 0, 0);
     ctx.closePath();
     ctx.fill();
+    ctx.stroke();
+
+    // Merkez omurga çizgisi
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, 2);
+    ctx.lineTo(0, leafLen - 4);
     ctx.stroke();
 
     // Sağ yapraktaki yük simgeleri
@@ -7842,11 +7815,7 @@ function drawElectroscopeLeaves(ctx, cx, pivotY, es) {
         ctx.arc(cx, pivotY, 35, Math.PI / 2 - rad, Math.PI / 2 + rad);
         ctx.stroke();
         ctx.setLineDash([]);
-
-        ctx.fillStyle = '#facc15';
-        ctx.font = 'bold 11px monospace';
-        ctx.textAlign = 'center';
-        ctx.fillText(`α = ${(angDeg * 2).toFixed(0)}°`, cx, pivotY + 48);
+        // Zero-Canvas-Text: alfa derece metni sağ panel rozetine aktarıldı
     }
 
     ctx.restore();
@@ -7872,7 +7841,6 @@ function drawElectroscopeRod(ctx, es) {
     // Çubuk Gövdesi
     let rodGrad;
     let rodBorder;
-    let label;
 
     if (rod.type === "glass_pos") {
         // Cam Çubuk (Şeffaf / Buz Mavisi)
@@ -7881,7 +7849,6 @@ function drawElectroscopeRod(ctx, es) {
         rodGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.9)');
         rodGrad.addColorStop(1, 'rgba(192, 132, 252, 0.7)');
         rodBorder = '#c084fc';
-        label = "(+) Cam Çubuk";
     } else if (rod.type === "ebonite_neg") {
         // Ebonit Çubuk (Sert Plastik / Mat Siyah)
         rodGrad = ctx.createLinearGradient(rx + 45, ry, rx + rw, ry);
@@ -7889,7 +7856,6 @@ function drawElectroscopeRod(ctx, es) {
         rodGrad.addColorStop(0.5, '#312e81');
         rodGrad.addColorStop(1, '#0f172a');
         rodBorder = '#6366f1';
-        label = "(-) Ebonit Çubuk";
     } else {
         // Nötr Çubuk
         rodGrad = ctx.createLinearGradient(rx + 45, ry, rx + rw, ry);
@@ -7897,7 +7863,6 @@ function drawElectroscopeRod(ctx, es) {
         rodGrad.addColorStop(0.5, '#64748b');
         rodGrad.addColorStop(1, '#334155');
         rodBorder = '#94a3b8';
-        label = "Nötr Çubuk";
     }
 
     ctx.fillStyle = rodGrad;
@@ -7918,12 +7883,7 @@ function drawElectroscopeRod(ctx, es) {
         }
     }
 
-    // Çubuk İsim Etiketi
-    ctx.fillStyle = '#f8fafc';
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(label, rx + rw / 2 + 15, ry - 8);
-
+    // Zero-Canvas-Text: Çubuk türü etiket düğmesinde parlar, tuval metni kaldırıldı
     ctx.restore();
 }
 
@@ -8617,32 +8577,27 @@ function drawPyramidTierTrapezoid(ctx, tier, isSelected, fp) {
     ctx.lineTo(xTR - 4, yT + 1);
     ctx.stroke();
 
-    // Basamak İçi Metinler
+    // Basamak İçi Metinler (Zarif ve Sadeleştirilmiş)
     const midY = (yT + yB) / 2;
     ctx.fillStyle = '#f8fafc';
     ctx.font = 'bold 12px Inter, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    ctx.fillText(tier.shortName, cx, midY - 10);
+    ctx.fillText(tier.shortName, cx, midY - 7);
 
-    // Canlı Örnekleri
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
-    ctx.font = '10px Inter, sans-serif';
-    ctx.fillText(tier.examples, cx, midY + 8);
-
-    // Mod Bilgisi (Enerji veya Zehir Değeri)
+    // Mod Bilgisi (Enerji veya Zehir Değeri - Zero-Canvas-Text: Örnekler sağ panele bırakıldı)
     if (fp.mode === "energy") {
         const curE = fp.sunlight * tier.energyFraction;
         ctx.fillStyle = '#fef08a';
-        ctx.font = 'bold 12px monospace';
-        ctx.fillText(`⚡ ${Math.round(curE).toLocaleString('tr-TR')} J`, cx, midY + 24);
+        ctx.font = 'bold 11px monospace';
+        ctx.fillText(`⚡ ${Math.round(curE).toLocaleString('tr-TR')} J`, cx, midY + 11);
     } else {
         const mult = (fp.pesticideDose === "low") ? 0.5 : (fp.pesticideDose === "high") ? 2.5 : 1.0;
         const ppm = (tier.ppmBase * mult).toFixed(2);
         ctx.fillStyle = tier.id === 3 ? '#fca5a5' : '#fef08a';
-        ctx.font = 'bold 12px monospace';
-        ctx.fillText(`☠️ ${ppm} ppm ${tier.id === 3 ? '(ÖLÜMCÜL!)' : ''}`, cx, midY + 24);
+        ctx.font = 'bold 11px monospace';
+        ctx.fillText(`☠️ ${ppm} ppm`, cx, midY + 11);
     }
 
     ctx.restore();
@@ -8800,11 +8755,7 @@ function drawPyramidEnergyFlow(ctx, fp) {
         ctx.lineTo(startX + 60, ha.y - 10);
         ctx.closePath();
         ctx.fill();
-
-        ctx.fillStyle = '#f87171';
-        ctx.font = 'bold 9px monospace';
-        ctx.textAlign = 'left';
-        ctx.fillText(`🔥 %90 Isı: ${ha.loss} J`, startX + 20, ha.y - 28);
+        // Zero-Canvas-Text: Isı kaybı okları ve duman parçacıkları yönü gösterir, metinler dışarıdadır
     });
 
     // Dinamik Isı Duman Parçacıkları
@@ -9726,16 +9677,6 @@ function drawProtractor(ctx, cx, cy, r, scale) {
         ctx.lineTo(cx - Math.sin(rad) * (r - tickLen), cy + Math.cos(rad) * (r - tickLen));
         ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
         ctx.stroke();
-
-        if (deg % 30 === 0 && deg > 0) {
-            ctx.font = `${Math.max(9, 10 * scale)}px sans-serif`;
-            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
-            ctx.textAlign = "center";
-            ctx.fillText(`${deg}°`, cx - Math.sin(rad) * (r - 24 * scale), cy - Math.cos(rad) * (r - 24 * scale) + 4 * scale);
-            ctx.fillText(`${deg}°`, cx + Math.sin(rad) * (r - 24 * scale), cy - Math.cos(rad) * (r - 24 * scale) + 4 * scale);
-            ctx.fillText(`${deg}°`, cx + Math.sin(rad) * (r - 24 * scale), cy + Math.cos(rad) * (r - 24 * scale) + 4 * scale);
-            ctx.fillText(`${deg}°`, cx - Math.sin(rad) * (r - 24 * scale), cy + Math.cos(rad) * (r - 24 * scale) + 4 * scale);
-        }
     }
     ctx.restore();
 }

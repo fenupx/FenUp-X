@@ -398,13 +398,21 @@
                 <div class="lab-canvas-section" id="lab-canvas-container">
                     <div class="lab-canvas-wrapper">
                         <canvas id="lab-canvas" width="800" height="500"></canvas>
-                        
-                        <!-- HUD Bilgi Şeritleri (Deney 7.3) -->
-                        <div id="hud-exp-7-3" class="lab-canvas-overlay">
-                            <div class="lab-hud-pill">Gelme Açısı: <strong id="hud-val-incident">30°</strong></div>
-                            <div class="lab-hud-pill">Kırılma Açısı: <strong id="hud-val-refract">22.1°</strong></div>
-                            <div class="lab-hud-pill lab-hud-status" id="lab-hud-status">Normale Yaklaşıyor</div>
-                        </div>
+                    </div>
+
+                    <!-- Canvas Altı Responsive Metrik Şeridi (Deney 7.3 - Mobilde Tuvali Asla Kapatmaz) -->
+                    <div id="metrics-bar-7-3" class="lab-canvas-metrics-bar">
+                        <div class="metrics-pill med1"><span class="pill-dot"></span> 1. Ortam: <strong id="mbar-med1-name">Hava</strong> <span class="pill-sub">(n=<span id="mbar-med1-n">1.00</span>)</span></div>
+                        <div class="metrics-pill med2"><span class="pill-dot"></span> 2. Ortam: <strong id="mbar-med2-name">Cam</strong> <span class="pill-sub">(n=<span id="mbar-med2-n">1.50</span>)</span></div>
+                        <div class="metrics-pill angle"><i class="fas fa-compass"></i> i: <strong id="hud-val-incident">30°</strong> · r: <strong id="hud-val-refract">19.5°</strong></div>
+                        <div class="metrics-pill status" id="lab-hud-status">Normale Yaklaşıyor</div>
+                    </div>
+
+                    <!-- Canvas Altı Responsive Metrik Şeridi (Deney 7.1 - Fiziksel İş) -->
+                    <div id="metrics-bar-7-1" class="lab-canvas-metrics-bar is-hidden">
+                        <div class="metrics-pill work-val"><i class="fas fa-bolt"></i> Yapılan İş: <strong id="mbar-work-joule">0.0 J</strong></div>
+                        <div class="metrics-pill work-status" id="mbar-work-status"><span id="mbar-work-status-text">⏳ Hareketsiz</span></div>
+                        <div class="metrics-pill work-force"><i class="fas fa-arrows-alt-h"></i> F = <strong id="mbar-work-force">40 N</strong> · Yol = <strong id="mbar-work-dist">0.0 m</strong></div>
                     </div>
 
                     <!-- Canvas Altı Hızlı Dokunmatik Açı Kontrol Barı (Deney 7.3) -->
