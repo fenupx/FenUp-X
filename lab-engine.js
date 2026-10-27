@@ -6092,7 +6092,7 @@ function updateGerminationMetricsDOM() {
     if (pBox && pTitle && pText) {
         if (curDish.id === 1 || curDish.id === 4) {
             pTitle.textContent = curDish.light ? "☀️ 4. Kap: Işıklı Ortamda Çimlenme" : "🌑 1. Kap: Karanlık Ortamda Çimlenme";
-            pText.textContent = "Fasulye tohumları hem karanlıkta (1. Kap) hem de ışıkta (4. Kap) eşit şekilde çimlenir. Bu durum, tohumun çimlenmesi için IŞIĞIN GEREKLİ OLMADIĞINI (çimlenme için S.O.S: Su, Oksijen, Sıcaklık yeterlidir) ispatlar!";
+            pText.textContent = "Bu fasulye tohumu modelinde tohumlar hem karanlıkta (1. Kap) hem de ışıkta (4. Kap) eşit şekilde çimlenir (S.O.S: Su, Oksijen, Uygun Sıcaklık yeterlidir). Ancak bazı bitki tohumları çimlenmek için ışığa ihtiyaç duyar; ayrıca çimlenen fidenin sağlıklı fotosentez yapıp büyüyebilmesi için ışık şarttır.";
         } else if (curDish.id === 2) {
             pTitle.textContent = "🏜️ 2. Kap: Susuz Ortam Deneyi";
             pText.textContent = "Pamuk kuru bırakıldığında tohum su alıp şişemez ve metabolik faaliyetler başlayamaz. Su (nem) çimlenmenin vazgeçilmez şartıdır!";
@@ -7914,7 +7914,7 @@ function updateResistanceMetricsDOM() {
     if (pTitle && pText) {
         if (isWire) {
             pTitle.textContent = "💡 İletkenin Direncini Etkileyen Faktörler";
-            pText.textContent = "Telin boyu uzadıkça elektronların çarpışma sayısı artar ve DİRENÇ ARTAR (ampul sönükleşir). Tel kalınlaştıkça (kesit alanı büyüdükçe) geçiş kolaylaşır ve DİRENÇ AZALIR (ampul parlar). Bakır en az direnç gösteren maddedir.";
+            pText.textContent = "Telin boyu uzadıkça elektronların çarpışma sayısı artar ve DİRENÇ ARTAR (ampul sönükleşir). Tel kalınlaştıkça (kesit alanı büyüdükçe) geçiş kolaylaşır ve DİRENÇ AZALIR (ampul parlar). Bu modelde aynı boy ve kesitteki teller karşılaştırıldığında bakır en az direnci gösterir.";
         } else {
             pTitle.textContent = "🎛️ Reosta: Ayarlanabilir Direnç";
             pText.textContent = "Reosta, devredeki telin uzunluğunu sürgü yardımıyla değiştirerek devre direncini ayarlayan araçtır. Sürgüyü sola kaydırdığınızda tel kısalır (direnç azalır, lamba parlar); sağa kaydırdığınızda tel uzar (direnç artar, lamba söner).";
@@ -8322,6 +8322,10 @@ function setupWorkControlsDOM() {
                 showLabToast("⚠️ Uygulanan kuvvet sürtünme kuvvetini (20 N) yenemiyor!");
                 return;
             }
+            if (work.scenario === "lift" && work.force < (work.mass * work.gravity)) {
+                showLabToast(`⚠️ Uygulanan kuvvet (${work.force} N) cismin ağırlığını (G = 100 N) yenemiyor! Cisim kaldırılamaz.`);
+                return;
+            }
             work.isPlaying = !work.isPlaying;
             if (work.isPlaying && work.progress >= 1.0) {
                 work.progress = 0;
@@ -8433,6 +8437,28 @@ function setWorkScenario(scenario) {
     const labelDistTitle = document.getElementById('label-work-dist-title');
     const groupFriction = document.getElementById('group-friction-pills');
     const btnFric = document.getElementById('btn-work-friction');
+    const forceRange = document.getElementById('lab-work-force-range');
+    const forceDisplay = document.getElementById('lab-work-force-display');
+
+    if (scenario === "lift") {
+        if (forceRange) {
+            forceRange.min = "50";
+            forceRange.max = "200";
+            forceRange.step = "10";
+            if (work.force < 100) work.force = 100;
+            forceRange.value = work.force;
+        }
+        if (forceDisplay) forceDisplay.textContent = `${work.force} N`;
+    } else {
+        if (forceRange) {
+            forceRange.min = "10";
+            forceRange.max = "100";
+            forceRange.step = "5";
+            if (work.force > 100) work.force = 40;
+            forceRange.value = work.force;
+        }
+        if (forceDisplay) forceDisplay.textContent = `${work.force} N`;
+    }
 
     if (scenario === "wall") {
         if (wrapDist) wrapDist.style.display = 'none';
@@ -8598,26 +8624,51 @@ function calculateWorkPhysics() {
         }
     } else if (scen === "lift") {
         work.frictionForce = 0;
-        work.netForce = F;
-        work.appliedWork = F * dx;
-        work.netWork = work.appliedWork;
-        work.heatWork = 0;
-        work.isWorkDone = true;
-        work.alignment = "lift";
-        if (mNetForce) mNetForce.textContent = `F = ${F.toFixed(1)} N (Düşey Yukarı)`;
-        if (mAlign) {
-            mAlign.textContent = "Düşey Kaldırma (0°)";
-            mAlign.style.color = "#10b981";
-        }
-        if (mJoule) {
-            mJoule.textContent = `W = ${work.appliedWork.toFixed(1)} J (Yer Çekimine Karşı)`;
-            mJoule.style.color = "#10b981";
-        }
-        if (box) {
-            box.className = "lab-pedagogical-card is-work";
-            if (icon) icon.innerHTML = '<i class="fas fa-check-circle"></i>';
-            if (title) title.textContent = "✅ Yer Çekimine Karşı İş Yapıldı!";
-            if (text) text.textContent = `Sandık düşey doğrultuda yukarı doğru ${dx.toFixed(1)} m yükseltilmiştir. Kuvvet ile hareket doğrultusu aynıdır (düşey). Yapılan ${work.appliedWork.toFixed(1)} Joule iş, cisimde çekim potansiyel enerjisi olarak depolanır!`;
+        const weight = work.mass * work.gravity; // 10 kg * 10 m/s^2 = 100 N
+        if (F >= weight) {
+            work.netForce = F - weight;
+            work.appliedWork = F * dx;
+            work.netWork = work.appliedWork;
+            work.heatWork = 0;
+            work.isWorkDone = true;
+            work.alignment = "lift";
+            if (mNetForce) mNetForce.textContent = `F = ${F.toFixed(1)} N (Ağırlık G = 100 N)`;
+            if (mAlign) {
+                mAlign.textContent = "Düşey Kaldırma (0°)";
+                mAlign.style.color = "#10b981";
+            }
+            if (mJoule) {
+                mJoule.textContent = `W = ${work.appliedWork.toFixed(1)} J (Yer Çekimine Karşı)`;
+                mJoule.style.color = "#10b981";
+            }
+            if (box) {
+                box.className = "lab-pedagogical-card is-work";
+                if (icon) icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                if (title) title.textContent = "✅ Yer Çekimine Karşı İş Yapıldı!";
+                if (text) text.textContent = `10 kg kütleli sandık (Ağırlık G = 100 N), uygulanan ${F.toFixed(1)} N düşey kuvvet ile yukarı doğru ${dx.toFixed(1)} m yükseltilmiştir. Kuvvet ile hareket doğrultusu aynıdır (düşey). Yapılan ${work.appliedWork.toFixed(1)} Joule iş, cisimde çekim potansiyel enerjisi olarak depolanır!`;
+            }
+        } else {
+            work.netForce = 0;
+            work.appliedWork = 0;
+            work.netWork = 0;
+            work.heatWork = 0;
+            work.isWorkDone = false;
+            work.alignment = "zero";
+            if (mNetForce) mNetForce.textContent = `Fnet = 0.0 N (F < G = 100 N, Kalkmaz)`;
+            if (mAlign) {
+                mAlign.textContent = "Hareketsiz (Δh = 0)";
+                mAlign.style.color = "#ef4444";
+            }
+            if (mJoule) {
+                mJoule.textContent = "W = 0.0 J (İş Yapılmadı)";
+                mJoule.style.color = "#ef4444";
+            }
+            if (box) {
+                box.className = "lab-pedagogical-card no-work";
+                if (icon) icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+                if (title) title.textContent = "❌ Fiziksel Anlamda İş Yapılmadı (Kuvvet Ağırlıktan Küçük)!";
+                if (text) text.textContent = `Sandığın ağırlığı G = m · g = 10 kg · 10 m/s² = 100 N'dur. Uygulanan ${F.toFixed(1)} N düşey kuvvet cismin ağırlığından küçük olduğu için sandık yerden kaldırılamaz (Δh = 0 m). Cisim yer değiştirmediği için fiziksel anlamda iş yapılmaz (W = 0 Joule).`;
+            }
         }
     } else if (scen === "carry") {
         work.frictionForce = 0;
@@ -8723,7 +8774,7 @@ function updateWorkMetricsBar() {
 function updateWorkPhysics() {
     const work = labState.work;
     if (work.isPlaying) {
-        if (work.scenario === "wall" || (work.scenario === "horizontal" && work.frictionEnabled && work.force <= 20)) {
+        if (work.scenario === "wall" || (work.scenario === "horizontal" && work.frictionEnabled && work.force <= 20) || (work.scenario === "lift" && work.force < (work.mass * work.gravity))) {
             work.progress = 0;
             work.currentDisplacement = 0;
             work.isPlaying = false;
@@ -12324,12 +12375,12 @@ function updateSeparationPedagogicalBox() {
                 box.className = "lab-pedagogical-card is-work";
                 pIcon.innerHTML = '<i class="fas fa-award"></i>';
                 pTitle.textContent = "🏆 Damıtma Başarıyla Tamamlandı!";
-                pText.textContent = "Etil alkol toplama kabında, saf su ise damıtma balonunda kalarak kaynama noktası farkıyla başarıyla saflaştırıldı.";
+                pText.textContent = "Ayrımsal damıtma yöntemiyle kaynama noktası farkından yararlanılarak alkolce zengin sıvı elde edildi. (Basit damıtmada su buharı da bir miktar eşlik ettiğinden çok yüksek saflık için fraksiyonel kolon gereklidir).";
             } else {
                 box.className = "lab-pedagogical-card is-work";
                 pIcon.innerHTML = '<i class="fas fa-fire-alt"></i>';
-                pTitle.textContent = "🔥 Basit Damıtma (Kaynama Noktası Farkı)";
-                pText.textContent = "Homojen alkol-su karışımında etil alkol (78°C) sudan (100°C) önce buharlaşır. Isıtıcıyı başlatarak damıtmayı başlatın.";
+                pTitle.textContent = "🔥 Ayrımsal Damıtma (Kaynama Noktası Farkı)";
+                pText.textContent = "Homojen alkol-su karışımında kaynama noktası daha düşük olan etil alkol (78°C) sudan (100°C) önce buharlaşır. Ayrımsal damıtma yöntemiyle kaynama noktası farkından yararlanılarak alkolce zengin sıvı elde edilir.";
             }
         }
     }
@@ -15948,10 +15999,10 @@ function updateFoodPyramidMetricsDOM() {
     }
     if (mbStatus) {
         if (fp.mode === "energy") {
-            mbStatus.textContent = "⚡ %10 Kuralı: Enerjinin %90'ı ısı olarak kaybolur, sadece %10'u aktarılır";
+            mbStatus.textContent = "⚡ %10 Kuralı: Enerjinin %90'ı ısı olarak kaybolur, yaklaşık %10'u aktarılır (Temsilî Model)";
             mbStatus.style.color = "#facc15";
         } else {
-            mbStatus.textContent = "☠️ Biyolojik Birikim: Parçalanamayan toksinler tepe avcıda ölümcül seviyede birikir";
+            mbStatus.textContent = "☠️ Biyolojik Birikim: Parçalanamayan toksinler tepe avcılara doğru katlanarak artar";
             mbStatus.style.color = "#ef4444";
         }
     }
@@ -15968,19 +16019,19 @@ function updateFoodPyramidMetricsDOM() {
             if (tier.id === 0) {
                 pIcon.innerHTML = '<i class="fas fa-seedling" style="color: #10b981;"></i>';
                 pTitle.textContent = "🌱 Üreticiler: Fotosentez ile Enerji Girişi";
-                pText.textContent = `Güneşten gelen enerjinin (~${sun.toLocaleString('tr-TR')} J) yaklaşık %10'unu (10.000 J) bağlayarak besin zincirine katan tek gruptur. Toplam biyokütle ve birey sayısı en büyüktür.`;
+                pText.textContent = `Klorofilli üreticiler güneş enerjisini fotosentez ile kimyasal bağ enerjisine çevirerek besin zincirine aktaran tek gruptur (Bu modelde temsilî olarak ${sun.toLocaleString('tr-TR')} J güneş enerjisinden 10.000 J üretici biyokütlesine aktarılmıştır). Biyokütle ve birey sayısı en büyüktür.`;
             } else if (tier.id === 1) {
                 pIcon.innerHTML = '<i class="fas fa-bug" style="color: #f59e0b;"></i>';
                 pTitle.textContent = "🦗 1. Tüketiciler (Otçullar): %10 Enerji Aktarımı";
-                pText.textContent = "Üreticilerdeki 10.000 J enerjinin yalnızca %10'u (1.000 J) otçulun dokularına aktarılır. Kalan %90'lık devasa kısım (9.000 J) yaşamsal faaliyetlerde (solunum, hareket, boşaltım) ISI OLARAK çevreye yayılır!";
+                pText.textContent = "Üreticilerdeki 10.000 J enerjinin yalnızca yaklaşık %10'u (1.000 J) otçulun dokularına aktarılır. Kalan %90'lık devasa kısım (9.000 J) yaşamsal faaliyetlerde (solunum, hareket, boşaltım) ISI OLARAK çevreye yayılır!";
             } else if (tier.id === 2) {
                 pIcon.innerHTML = '<i class="fas fa-frog" style="color: #f97316;"></i>';
                 pTitle.textContent = "🐸 2. Tüketiciler (Etçiller): Enerji Hızla Azalıyor";
-                pText.textContent = "Otçuldaki 1.000 J enerjinin yalnızca 100 J'lük kısmı etçile geçer. Piramitte yukarı çıkıldıkça aktarılan enerji hızla azaldığı için etçil birey sayısı da otçullardan azdır.";
+                pText.textContent = "Otçuldaki 1.000 J enerjinin yalnızca yaklaşık 100 J'lük kısmı etçile geçer. Piramitte yukarı çıkıldıkça aktarılan enerji hızla azaldığı için etçil birey sayısı da otçullardan azdır.";
             } else if (tier.id === 3) {
                 pIcon.innerHTML = '<i class="fas fa-feather-alt" style="color: #ef4444;"></i>';
                 pTitle.textContent = "🦅 3. Tüketiciler (Tepe Avcı): En Az Enerji Zirvede!";
-                pText.textContent = `Güneşin ${sun.toLocaleString('tr-TR')} J enerjisinden tepe avcının payına yalnızca 10 J kalmıştır! Enerji kaybı çok yüksek olduğu için tepe avcıların sayısı ekosistemde daima en azdır.`;
+                pText.textContent = `Güneşin ${sun.toLocaleString('tr-TR')} J enerjisinden tepe avcının payına temsilî modelde yalnızca 10 J kalmıştır! Enerji kaybı çok yüksek olduğu için tepe avcıların sayısı ekosistemde daima en azdır.`;
             } else {
                 pIcon.innerHTML = '<i class="fas fa-recycle" style="color: #8b5cf6;"></i>';
                 pTitle.textContent = "🍄 Ayrıştırıcılar: Ekosistemin Geri Dönüşüm Fabrikası";
@@ -15990,8 +16041,8 @@ function updateFoodPyramidMetricsDOM() {
             // Biyobirikim (Zehir) Modu
             if (tier.id === 3) {
                 pIcon.innerHTML = '<i class="fas fa-skull-crossbones" style="color: #ef4444;"></i>';
-                pTitle.textContent = "☠️ Tepe Avcıda Ölümcül Toksik Birikim (50.0 ppm)!";
-                pText.textContent = "DDT ve ağır metaller gibi zehirler canlı vücudunda parçalanamaz ve atılamaz. Besin zincirinde yukarı çıkıldıkça katlanarak birikir ve EN ÜST BASAMAKTAKİ CANLIDA EN YÜKSEK (Ölümcül) seviyeye ulaşır!";
+                pTitle.textContent = `☠️ Tepe Avcılarda En Yüksek Toksik Birikim (${curPpm} ppm)`;
+                pText.textContent = "DDT ve ağır metaller gibi zehirli maddeler canlı vücudunda parçalanamaz ve atılamaz. Tepe avcılara doğru çıkıldıkça toksik madde yoğunluğu katlanarak artar ve tepe basamakta en yüksek seviyeye ulaşır.";
             } else if (tier.id === 0) {
                 pIcon.innerHTML = '<i class="fas fa-shield-alt" style="color: #10b981;"></i>';
                 pTitle.textContent = "🌿 Üreticilerde Zehir Yoğunluğu En Düşüktür (0.05 ppm)";
@@ -17597,9 +17648,10 @@ function updateDynamometerPhysics() {
 
     const typeLabels = { thin: "İnce Yay", medium: "Orta Yay", thick: "Kalın Yay" };
     let statusText = `⚖️ ${dm.force} N kuvvet etkisiyle yay ${dm.currentStretch.toFixed(1)} cm uzadı`;
+    const isExceeded = (dm.springType === 'thin' && dm.force > 10);
 
-    if (dm.springType === 'thin' && dm.force > 12) {
-        statusText = "⚠️ Dikkat: İnce yayın esneklik sınırı aşıldı! Yay kalıcı bozulabilir.";
+    if (isExceeded) {
+        statusText = "⚠️ Esneklik Sınırı Aşıldı (Kapasite Aşımı)! İnce yay (maks. 10 N) kalıcı deforme oldu; ölçüm güvenilir değildir.";
     }
 
     const mbSpring = document.getElementById('mbar-52-spring');
@@ -17612,7 +17664,10 @@ function updateDynamometerPhysics() {
     if (mbSpring) mbSpring.textContent = typeLabels[dm.springType];
     if (mbForce) mbForce.textContent = `${dm.force} N (${dm.weightsCount} Ağırlık)`;
     if (mbStretch) mbStretch.textContent = `${dm.currentStretch.toFixed(1)} cm`;
-    if (mbStatus) mbStatus.textContent = statusText;
+    if (mbStatus) {
+        mbStatus.textContent = statusText;
+        mbStatus.style.borderLeftColor = isExceeded ? "#ef4444" : "#10b981";
+    }
     if (valForce) valForce.textContent = `${dm.force} N`;
     if (slider) slider.value = dm.force;
 
@@ -17621,7 +17676,26 @@ function updateDynamometerPhysics() {
     const mDivs = document.getElementById('metric-52-divs');
     if (mForce) mForce.textContent = `${dm.force} N`;
     if (mStretch) mStretch.textContent = `${dm.currentStretch.toFixed(1)} cm`;
-    if (mDivs) mDivs.textContent = `${dm.divisionCount} Bölme`;
+    if (mDivs) {
+        mDivs.textContent = isExceeded ? `⚠️ Aşım (${dm.divisionCount} Bölme)` : `${dm.divisionCount} Bölme`;
+        mDivs.style.color = isExceeded ? "#ef4444" : "#38bdf8";
+    }
+
+    // Dinamik Pedagojik Uyarı Kartı
+    const pedBox = document.getElementById('dynamometer-pedagogical-box');
+    const pedTitle = document.getElementById('dynamometer-pedagogical-title');
+    const pedText = document.getElementById('dynamometer-pedagogical-text');
+    if (pedBox && pedTitle && pedText) {
+        if (isExceeded) {
+            pedBox.className = "lab-pedagogical-card no-work";
+            pedTitle.textContent = "⚠️ Esneklik Sınırı Aşıldı (Kapasite Aşımı)";
+            pedText.textContent = "İnce yay maksimum 10 N ölçüm kapasitesine sahiptir. 10 N üzerindeki kuvvetler yayın esneklik sınırını aşarak kalıcı deformasyona neden olur ve dinamometre ölçümü güvenilmez hale gelir.";
+        } else {
+            pedBox.className = "lab-pedagogical-card is-work";
+            pedTitle.textContent = "⚖️ Esneklik ve Kuvvet Ölçümü";
+            pedText.textContent = "Yay esneklik sınırını aşmadıkça asılan ağırlık arttıkça uzama miktarı doğru orantılı artar. İnce yay hassas kuvvetleri ölçerken, kalın yay büyük kuvvetleri ölçer.";
+        }
+    }
 }
 
 function drawDynamometerSimulation() {
@@ -21827,37 +21901,38 @@ function updateWaterFootprintDOM() {
         }
     } else if (wf.mode === "tech") {
         const tc = wf.tech;
-        let totalSaving = 0;
-        if (tc.aerator) totalSaving += 50;
-        if (tc.drip) totalSaving += 65;
-        if (tc.greywater) totalSaving += 30;
+        // Evsel kişi başı tüketim ve tarımsal damla sulama oranları bağımsız iki kalemdir
+        let domesticSavingPct = 0;
+        if (tc.aerator && tc.greywater) domesticSavingPct = 50;
+        else if (tc.aerator) domesticSavingPct = 30;
+        else if (tc.greywater) domesticSavingPct = 25;
 
-        const effectiveSaving = Math.min(85, totalSaving);
-        const baseUsage = 150; // L/gün
-        const currentUsage = Math.round(baseUsage * (1 - effectiveSaving / 100));
+        const baseDomestic = 150; // L/gün
+        const domesticUsage = Math.round(baseDomestic * (1 - domesticSavingPct / 100));
+        const dripSavingPct = tc.drip ? 65 : 0;
 
         if (mbMode) mbMode.textContent = "Tasarruf Teknolojileri";
-        if (mbFlow) mbFlow.textContent = `${currentUsage} L/gün Tüketim`;
-        if (mbSaving) mbSaving.textContent = `Toplam %${effectiveSaving} Tasarruf`;
-        if (mbType) mbType.textContent = tc.greywater ? "Gri Su Geri Kazanıldı" : "Şebeke Suyu";
+        if (mbFlow) mbFlow.textContent = `${domesticUsage} L/gün Evsel`;
+        if (mbSaving) mbSaving.textContent = `Evsel: %${domesticSavingPct} | Tarım: %${dripSavingPct}`;
+        if (mbType) mbType.textContent = tc.drip ? "Damla Sulama (%65)" : (tc.greywater ? "Gri Su Geri Kazanımı" : "Şebeke Suyu");
 
-        if (lbl1) lbl1.textContent = "Kişi Başı Günlük Su";
-        if (val1) val1.textContent = `${currentUsage} Litre`;
-        if (lbl2) lbl2.textContent = "Net Tasarruf Oranı";
-        if (val2) val2.textContent = `%${effectiveSaving}`;
-        if (lbl3) lbl3.textContent = "Tasarruf Yöntemi";
-        if (val3) val3.textContent = tc.aerator && tc.drip ? "Perlatör + Damla Sulama" : (tc.aerator ? "Perlatörlü Musluk" : (tc.drip ? "Damla Sulama" : "Geleneksel Tüketim"));
-        if (lbl4) lbl4.textContent = "Sürdürülebilirlik Puanı";
-        if (val4) val4.textContent = effectiveSaving >= 50 ? "A+ (Mükemmel Tasarruf)" : (effectiveSaving > 0 ? "B (İyi Seviye)" : "D (Aşırı İsraf)");
+        if (lbl1) lbl1.textContent = "Evsel Su Tüketimi";
+        if (val1) val1.textContent = `${domesticUsage} L/gün`;
+        if (lbl2) lbl2.textContent = "Evsel Tasarruf Oranı";
+        if (val2) val2.textContent = `%${domesticSavingPct}`;
+        if (lbl3) lbl3.textContent = "Tarımsal Sulama";
+        if (val3) val3.textContent = tc.drip ? "%65 Tasarruf (Damla)" : "%0 (Vahşi Salma)";
+        if (lbl4) lbl4.textContent = "Sürdürülebilirlik Notu";
+        if (val4) val4.textContent = (domesticSavingPct >= 30 && tc.drip) ? "A+ (Bütünsel Tasarruf)" : ((domesticSavingPct > 0 || tc.drip) ? "B (İyi Seviye)" : "D (Aşırı Tüketim)");
 
         if (pBox && pIcon && pTitle && pText) {
             pIcon.innerHTML = '<i class="fas fa-faucet-drip"></i>';
-            if (effectiveSaving >= 50) {
-                pTitle.textContent = "🌱 Harika Tasarruf! Su Kaynakları Güvence Altında";
-                pText.textContent = "Perlatör musluk debisini %50 azaltırken basınç hissini korur. Damla sulama ise suyu buharlaşmadan doğrudan köke vererek %65 su tasarrufu sağlar.";
+            if (domesticSavingPct > 0 || tc.drip) {
+                pTitle.textContent = "🌱 Bağımsız Tasarruf Kalemleri Devrede";
+                pText.textContent = `Evsel tüketim ve tarımsal sulama iki bağımsız ana tüketim kalemidir. Perlatör ve gri su evsel tüketimi günde ${domesticUsage} litreye düşürürken; damla sulama sistemi tarımsal su tüketiminde %65 tasarruf sağlar.`;
             } else {
-                pTitle.textContent = "🚰 Geleneksel Kullanım: Su Ayak İzinizi Küçültün!";
-                pText.textContent = "Perlatör takarak ve vahşi salma sulama yerine damla sulama sistemine geçerek su tüketiminizi %60'ın üzerinde düşürebilirsiniz.";
+                pTitle.textContent = "🚰 Geleneksel Kullanım: İki Ayrı Kalemde Tasarruf";
+                pText.textContent = "Evsel şebekede perlatör musluk debisini %50 azaltır; tarımda ise damla sulama buharlaşmayı önleyerek vahşi sulamaya göre %65 su tasarrufu sağlar.";
             }
         }
     } else {
@@ -21875,13 +21950,13 @@ function updateWaterFootprintDOM() {
         if (val2) val2.textContent = `${p.liters.toLocaleString('tr-TR')} Litre`;
         if (lbl3) lbl3.textContent = "En Büyük Bileşen";
         if (val3) val3.textContent = p.green >= p.blue ? `Yeşil Su (%${p.green})` : `Mavi Su (%${p.blue})`;
-        if (lbl4) lbl4.textContent = "Üretim Açıklaması";
-        if (val4) val4.textContent = p.note;
+        if (lbl4) lbl4.textContent = "Veri Niteliği";
+        if (val4) val4.textContent = "Küresel Yaklaşık Ortalama";
 
         if (pBox && pIcon && pTitle && pText) {
             pIcon.innerHTML = '<i class="fas fa-balance-scale"></i>';
-            pTitle.textContent = `📦 ${p.name}: ${p.liters.toLocaleString('tr-TR')} Litre Gizli Su!`;
-            pText.textContent = `Prof. Arjen Hoekstra modeline göre 1 adet ${p.name} soframıza/gardırobumuza gelene kadar doğrudan ve dolaylı olarak ${p.liters.toLocaleString('tr-TR')} litre tatlı su tüketilir. İsrafı önlemek devasa su tasarrufu sağlar!`;
+            pTitle.textContent = `📦 ${p.name}: ~${p.liters.toLocaleString('tr-TR')} Litre Gizli Su`;
+            pText.textContent = `Prof. Arjen Hoekstra modeline göre 1 adet ${p.name} için doğrudan ve dolaylı olarak tüketilen küresel ortalama sanal su yaklaşık ${p.liters.toLocaleString('tr-TR')} litredir. (Not: Küresel yaklaşık ortalama değerlerdir; coğrafi bölgeye ve üretim teknolojisine göre değişebilir).`;
         }
     }
 

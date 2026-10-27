@@ -1369,7 +1369,7 @@
                                 <div class="lab-vars-list">
                                     <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Gelme açısı (i) ve ortam kırıcılık indisleri (n₁, n₂)</div>
                                     <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Kırılma açısı (r), ışık sürati (v) ve yayılma doğrultusu</div>
-                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Işık dalga boyu, yüzey ayırıcı düzlem ve normal (N)</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Işık Kaynağının Rengi / Frekansı, yüzey ayırıcı düzlem ve normal (N)</div>
                                 </div>
                             </div>
 
@@ -1492,7 +1492,7 @@
                             <div class="lab-panel-box">
                                 <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
                                 <div class="lab-vars-list">
-                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Ayırma Yöntemi (Ayırma Hunisi vs Basit Damıtma) ve Fiziksel Ayırma Prensibi</div>
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Ayırma Yöntemi (Ayırma Hunisi vs Ayrımsal Damıtma) ve Fiziksel Ayırma Prensibi</div>
                                     <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Karışımı Oluşturan Sıvıların Saflıkla Ayrılması ve Ayırma Verimi (%)</div>
                                     <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Başlangıç Sıvı Hacimleri (100 mL + 100 mL) ve Ortam Basıncı (1 atm)</div>
                                 </div>
@@ -1958,7 +1958,7 @@
                                 <div class="lab-vars-list">
                                     <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> İncelenen Trofik Basamak (Üretici, 1., 2., 3. Tüketici) ve Pestisit (Tarım İlacı) Dozu</div>
                                     <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Aktarılan Enerji (J), Metabolik Isı Kaybı (J), Biyolojik Birikim (ppm) ve Biyokütle</div>
-                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> %10 Enerji Aktarım Yasası (Lindeman Kuralı: Enerjinin %90'ı Yaşamsal Isı Olarak Kaybolur)</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Temsilî Enerji Aktarım Modeli (Trofik Basamaklar Arası ~%10 Aktarım)</div>
                                 </div>
                             </div>
 
@@ -2074,6 +2074,7 @@
                                     <button class="lab-select-pill" id="pill-prod-apple">🍎 1 Adet Elma (125 L)</button>
                                     <button class="lab-select-pill" id="pill-prod-paper" style="grid-column: span 2;">📄 1 Adet A4 Kağıt (10 L)</button>
                                 </div>
+                                <small style="color: #94a3b8; font-size: 0.75rem; display: block; margin-top: 6px;"><em>* Değerler Prof. Arjen Hoekstra modeline dayalı küresel yaklaşık ortalama değerlerdir.</em></small>
                             </div>
 
                             <!-- Canlı Metrik Kartı -->
@@ -2394,7 +2395,7 @@
                                 <div class="pedagogical-icon" id="density-pedagogical-icon"><i class="fas fa-layer-group"></i></div>
                                 <div class="pedagogical-content">
                                     <strong id="density-pedagogical-title">🧪 Sıvı Yoğunluğu İlkesi</strong>
-                                    <p id="density-pedagogical-text">Birbiri içinde çözünmeyen sıvılarda yoğunluğu büyük olan sıvı daima en altta toplanır; küçük olan en üstte yüzer.</p>
+                                    <p id="density-pedagogical-text">Birbiri içinde çözünmeyen sıvılarda yoğunluğu büyük olan sıvı daima en altta toplanır; küçük olan en üstte yüzer. (Pedagojik Not: Bu modelde tabakalaşmanın gözlenmesi için temsilî sıvılar kullanılmıştır; gliserin ve su normalde birbiri içinde çözünür.)</p>
                                 </div>
                             </div>
 
@@ -2464,7 +2465,7 @@
                                 <div class="pedagogical-icon" id="germ-pedagogical-icon"><i class="fas fa-seedling"></i></div>
                                 <div class="pedagogical-content">
                                     <strong id="germ-pedagogical-title">🌱 Çimlenme Şartları (S.O.S İlkesi)</strong>
-                                    <p id="germ-pedagogical-text">Tohumun çimlenmesi için Su (Nem), Oksijen ve uygun Sıcaklık gereklidir. IŞIK çimlenme için gerekli DEĞİLDİR; tohumlar karanlıkta da çimlenir!</p>
+                                    <p id="germ-pedagogical-text">Bu fasulye tohumu modelinde çimlenme karanlık ortamda da gerçekleşir (S.O.S: Su, Oksijen, Uygun Sıcaklık yeterlidir); ancak bazı bitki tohumları çimlenmek için ışığa ihtiyaç duyar. Sağlıklı bir fidenin fotosentez yapıp gelişebilmesi için ise ışık şarttır.</p>
                                 </div>
                             </div>
 
@@ -3376,6 +3377,10 @@
                                     <strong>4. Yüzeye Dik Gelen Işın (i = 0°):</strong>
                                     <p>Doğrultusunu ve yönünü değiştirmez (kırılmaz), ancak ortam yoğunlukları farklı ise sürati kesinlikle değişir!</p>
                                 </div>
+                                <div class="guide-item">
+                                    <strong>5. Işığın Frekansı ve Dalga Boyu Değişimi:</strong>
+                                    <p>Işık bir ortamdan diğerine geçerken <strong>kaynağa bağlı olan frekansı ve rengi asla değişmez</strong> (sabit tutulan değişken). Ortam yoğunluğu değiştikçe ışığın yayılma sürati ($v$) değişir; sürat değişimine bağlı olarak dalga boyu ($\lambda = v / f$) da aynı oranda değişir.</p>
+                                </div>
                             </div>
                         </div>
 
@@ -3415,8 +3420,8 @@
                                     <p>Huninin altındaki musluk açıldığında önce dipteki su erlenmayere akar. İki sıvının ayrılma çizgisi (faz sınırı) musluk hizasına geldiğinde <strong>musluk hemen kapatılmalıdır</strong>. Böylece su toplama kabında, zeytinyağı ise hunide kalarak tam saflıkla ayrılmış olur.</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>3. Kaynama Noktası Farkı ile Ayırma (Basit Damıtma):</strong>
-                                    <p>Birbiri içinde homojen karışan (çözelti oluşturan) ve kaynama noktaları birbirinden farklı iki sıvıyı ayırmak için <strong>damıtma (destilasyon)</strong> yöntemi kullanılır. En yaygın örnek <strong>kolonya (etil alkol-su)</strong> karışımıdır.</p>
+                                    <strong>3. Kaynama Noktası Farkı ile Ayırma (Ayrımsal Damıtma):</strong>
+                                    <p>Birbiri içinde homojen karışan (çözelti) ve kaynama noktaları birbirine yakın (etil alkol 78°C, su 100°C) sıvıları ayırmak için <strong>ayrımsal damıtma</strong> yöntemi kullanılır. Ayrımsal damıtma yöntemiyle kaynama noktası farkından yararlanılarak alkolce zengin sıvı elde edilir. (Tek kademeli basit damıtmada su buharı da bir miktar eşlik ettiğinden %100 saf alkol elde edilemez; yüksek saflık için fraksiyonel kolon gereklidir).</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>4. Hal Değişimi Süresince Sıcaklığın Sabit Kalması:</strong>
@@ -3555,11 +3560,12 @@
                                 <div class="guide-item">
                                     <strong>3. Sanal (Gizli) Su Tüketimi:</strong>
                                     <p>Günlük hayatta yalnız musluktan içtiğimiz veya kullandığımız suyu değil; satın aldığımız kıyafet ve gıdaların üretimindeki gizli suyu da tüketiriz:
-                                    <br>• <strong>1 Pamuklu Tişört:</strong> 2.700 Litre su
-                                    <br>• <strong>1 kg Dana Eti:</strong> 15.400 Litre su (yem bitkileri ve bakım suyu)
-                                    <br>• <strong>1 Fincan Kahve:</strong> 140 Litre su
-                                    <br>• <strong>1 Adet Elma:</strong> 125 Litre su
-                                    <br>• <strong>1 Adet A4 Kağıt:</strong> 10 Litre su</p>
+                                    <br>• <strong>1 Pamuklu Tişört:</strong> ~2.700 Litre su
+                                    <br>• <strong>1 kg Dana Eti:</strong> ~15.400 Litre su (yem bitkileri ve bakım suyu)
+                                    <br>• <strong>1 Fincan Kahve:</strong> ~140 Litre su
+                                    <br>• <strong>1 Adet Elma:</strong> ~125 Litre su
+                                    <br>• <strong>1 Adet A4 Kağıt:</strong> ~10 Litre su
+                                    <br><small style="color: #cbd5e1; display: inline-block; margin-top: 4px;"><em>* Not: Bu değerler Prof. Arjen Hoekstra / Water Footprint Network modeline dayalı küresel yaklaşık ortalama değerlerdir.</em></small></p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>4. Modern Su Tasarruf Teknolojileri:</strong>
@@ -3701,7 +3707,7 @@
                                 </div>
                                 <div class="guide-item">
                                     <strong>3. Yoğunluk Kulesi İlkesi:</strong>
-                                    <p>Birbiri içinde çözünmeyen ve karışmayan sıvılar aynı kaba konulduğunda; <strong>yoğunluğu en büyük olan sıvı en alta</strong> çöker, <strong>yoğunluğu en küçük olan sıvı ise en üstte</strong> toplanır. Sıvıların kaba hangi sırayla döküldüğü sonucu değiştirmez; yer çekimi etkisiyle sıvılar yoğunluklarına göre otomatik sıralanır.</p>
+                                    <p>Birbiri içinde çözünmeyen ve karışmayan sıvılar aynı kaba konulduğunda; <strong>yoğunluğu en büyük olan sıvı en alta</strong> çöker, <strong>yoğunluğu en küçük olan sıvı ise en üstte</strong> toplanır. Sıvıların kaba hangi sırayla döküldüğü sonucu değiştirmez; yer çekimi etkisiyle sıvılar yoğunluklarına göre otomatik sıralanır.<br><small style="color: #cbd5e1; display: inline-block; margin-top: 4px;"><em>* Pedagojik Not: Bu modelde tabakalaşmanın gözlenmesi için temsilî sıvılar kullanılmıştır; gliserin ve su kimyasal olarak polar yapıda olduklarından normalde birbiri içinde çözünür.</em></small></p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>4. Cisimlerin Sıvıdaki Konumu (Yüzme - Askıda Kalma - Batma):</strong>
@@ -3732,8 +3738,8 @@
                                     • <strong>S (Uygun Sıcaklık):</strong> Enzimlerin çalışabilmesi için genellikle 15°C–25°C arası idealdir. Donma noktasında (0°C) veya aşırı sıcakta çimlenme durur.</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>3. Hayati Pedagojik Yanılgı: Işık Gerekli midir?</strong>
-                                    <p><strong>HAYIR! Çimlenme için ışık gerekli DEĞİLDİR!</strong> Tohumlar toprak altında tamamen karanlıkta çimlenir. Embriyo ilk yapraklarını çıkarıp fotosenteze başlayana kadar tohumun çeneklerindeki (endosperm) hazır besin deposunu tüketir. Işık, çimlenme bittikten sonra bitkinin <strong>büyüme ve fotosentez</strong> evresinde gereklidir.</p>
+                                    <strong>3. Pedagojik İnceleme: Çimlenmede Işığın Rolü:</strong>
+                                    <p>Bu fasulye tohumu modelinde çimlenme karanlık ortamda da gerçekleşir (S.O.S: Su, Oksijen, Uygun Sıcaklık). Tohumlar toprak altında karanlıkta çimlenirken çeneklerindeki (endosperm) hazır besin deposunu tüketir. Ancak doğadaki bazı bitki tohumları (örneğin marul, tütün ve bazı kır çiçekleri) çimlenmek için ışık uyarısına ihtiyaç duyar. Çimlenme sonrasında fidenin klorofil sentezleyip fotosentezle büyümesi ve sağlıklı gelişmesi için ise ışık kesinlikle şarttır.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>4. Çimlenme Sürecinin Aşamaları:</strong>
@@ -3829,7 +3835,7 @@
                                     <strong>2. Direnci Etkileyen 3 Temel Faktör:</strong>
                                     <p>• <strong>1. Telin Boyu (L):</strong> Telin boyu uzadıkça elektronların atomlarla çarpışma sayısı artar; direnç artar ve ampul parlaklığı azalır ($R \propto L$). Uzun tel = Yüksek Direnç = Sönük Ampul.<br>
                                     • <strong>2. Telin Dik Kesit Alanı / Kalınlığı (S):</strong> Tel kalınlaştıkça elektronlar daha geniş bir alandan rahatça geçer; direnç azalır ve ampul parlaklığı artar ($R \propto 1/S$). Kalın tel = Düşük Direnç = Parlak Ampul.<br>
-                                    • <strong>3. Telin Cinsi (Öz Direnç):</strong> Farklı metallerin atomik yapıları farklıdır. Bakır çok düşük direnç gösterirken, demir orta, nikel-krom tel çok yüksek direnç gösterir.</p>
+                                    • <strong>3. Telin Cinsi (Öz Direnç):</strong> Farklı iletkenlerin atomik yapıları farklıdır. Bu modelde aynı boy ve kesitteki teller karşılaştırıldığında bakır en az direnci gösterirken, demir orta, nikel-krom tel çok yüksek direnç gösterir.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>3. Reosta (Ayarlanabilir Direnç):</strong>
