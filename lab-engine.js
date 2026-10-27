@@ -137,20 +137,20 @@ export const EXPERIMENTS_DATABASE = [
         desc: "İletken telin boyu (L), dik kesit alanı (S) ve cinsi (bakır, demir, nikel-krom) değiştikçe devredeki direnci ve ampul parlaklığını inceleyin; reosta sürgüsünü kaydırarak direnci canlı ayarlayın."
     },
 
-    // 7. SINIF (9 DENEY)
+    // 7. SINIF (9 DENEY — TAMAMI AKTİF & MAARİF MÜFREDAT SENKRON)
     {
         id: "7.1", grade: 7, unit: 2, unitName: "Kuvvet ve Enerjiyi Keşfedelim",
         title: "Fiziksel Anlamda İş ve Enerji Simülatörü",
-        code: "FB.7.2.1", bookRef: "1. Kitap, s. 60–71",
+        code: "FB.7.2.1", bookRef: "1. Kitap, s. 58–69",
         active: true, // 🏆 AKTİF!
-        desc: "Kuvvetin büyüklüğü, yönü ve yer değiştirme doğrultusunu kontrol ederek fen anlamında iş yapılıp yapılmadığını ve 4 temel kavram yanılgısını test edin."
+        desc: "Kuvvetin büyüklüğü, doğrultusu ve cismin yer değiştirme yönünü kontrol ederek fen anlamında iş yapılıp yapılmadığını ve 4 temel kavram yanılgısını nitel olarak keşfedin."
     },
     {
         id: "7.2", grade: 7, unit: 2, unitName: "Kuvvet ve Enerjiyi Keşfedelim",
-        title: "Mekanik Enerji Dönüşümü (Sarkaç ve Rampa)",
-        code: "FB.7.2.2 - FB.7.2.3", bookRef: "1. Kitap, s. 60–77",
+        title: "Mekanik Enerji Dönüşümü ve Korunumu (Sarkaç ve Rampa)",
+        code: "FB.7.2.2 - FB.7.2.3", bookRef: "1. Kitap, s. 70–85",
         active: true, // 🏆 AKTİF!
-        desc: "Salınan sarkaç veya kaykaycı üzerinde potansiyel ve kinetik enerjinin birbirine dönüşümünü ve sürtünme etkisini inceleyin."
+        desc: "Salınan sarkaç veya kaykaycı üzerinde potansiyel ve kinetik enerjinin birbirine dönüşümünü, sürtünmeyle ısıya aktarımını ve enerjinin korunumunu nitel olarak gözlemleyin."
     },
     {
         id: "7.3", grade: 7, unit: 4, unitName: "Işığın Kırılması ve Mercekler",
@@ -164,26 +164,26 @@ export const EXPERIMENTS_DATABASE = [
         title: "İnce ve Kalın Kenarlı Mercekler ve Odaklama Simülatörü",
         code: "FB.7.4.2 - FB.7.4.3", bookRef: "2. Kitap, s. 30–41",
         active: true, // 🏆 AKTİF!
-        desc: "İnce ve kalın kenarlı merceklerde ışınların toplanma/dağılma fiziğini, odak noktasını (F) ve mum cisminin oluşan görüntüsünü inceleyin."
+        desc: "İnce ve kalın kenarlı merceklerde ışınların toplanma/dağılma fiziğini, odak noktasını (F) ve cismin oluşan görüntüsünü (düz-büyük büyüteç veya ters-küçük) nitel olarak inceleyin."
     },
     {
         id: "7.5", grade: 7, unit: 5, unitName: "Maddenin Doğasına Yolculuk",
         title: "Çözünme Hızını Etkileyen Faktörler Simülatörü",
-        code: "FB.7.5.4 - FB.7.5.9", bookRef: "2. Kitap, s. 90–105",
+        code: "FB.7.5.9", bookRef: "2. Kitap, s. 78–89",
         active: true, // 🏆 AKTİF!
         desc: "Sıcaklık, temas yüzeyi (pudra/toz/küp şeker) ve karıştırmanın çözünme süresine etkisini 3 beherli kontrollü deney düzeneğinde eşzamanlı test edin."
     },
     {
         id: "7.6", grade: 7, unit: 5, unitName: "Maddenin Doğasına Yolculuk",
         title: "Karışımların Ayrılması Simülatörü (Ayırma Hunisi ve Basit Damıtma)",
-        code: "FB.7.5.5", bookRef: "2. Kitap, s. 106–125",
+        code: "FB.7.5.10", bookRef: "2. Kitap, s. 90–101",
         active: true, // 🏆 AKTİF!
         desc: "Zeytinyağı-su heterojen karışımını ayırma hunisinde yoğunluk farkıyla, homojen alkol-su çözeltisini basit damıtmada kaynama noktası farkıyla saflaştırın."
     },
     {
         id: "7.7", grade: 7, unit: 6, unitName: "Elektriklenme",
         title: "Sürtünme ve Dokunma ile Elektriklenme Simülatörü",
-        code: "FB.7.6.1 - FB.7.6.2", bookRef: "2. Kitap, s. 106–125",
+        code: "FB.7.6.1 - FB.7.6.2", bookRef: "2. Kitap, s. 106–119",
         active: true, // 🏆 AKTİF!
         desc: "Ebonit çubuğu yün kumaşa, cam çubuğu ipek kumaşa sürterek elektron transferini, kağıt çekimini ve dokunma ile yük paylaşımını deneyimleyin."
     },
@@ -196,10 +196,10 @@ export const EXPERIMENTS_DATABASE = [
     },
     {
         id: "7.9", grade: 7, unit: 7, unitName: "Sürdürülebilir Yaşam ve Enerji",
-        title: "Besin Piramidinde Enerji Akışı ve Biyobirikim Simülatörü",
+        title: "Besin Piramidinde Enerji Akışı ve Biyolojik Birikim Simülatörü",
         code: "FB.7.7.1", bookRef: "2. Kitap, s. 136–149",
         active: true, // 🏆 AKTİF!
-        desc: "Üreticiden tepe avcıya aktarılan enerjinin azalışını (%10 kuralı) ve tarım ilacı zehirlerinin katlanarak birikimini gözlemleyin."
+        desc: "Üreticiden tepe avcıya aktarılan enerjinin azalışını (%10 kuralı) ve tarım ilacı zehirlerinin katlanarak birikimini nitel olarak gözlemleyin."
     }
 ];
 
@@ -1156,8 +1156,15 @@ export function openExperimentWorkspace(expId) {
     const mbar68 = document.getElementById('metrics-bar-6-8');
     const mbar69 = document.getElementById('metrics-bar-6-9');
     const mbar610 = document.getElementById('metrics-bar-6-10');
-    const mbar73 = document.getElementById('metrics-bar-7-3');
     const mbar71 = document.getElementById('metrics-bar-7-1');
+    const mbar72 = document.getElementById('metrics-bar-7-2');
+    const mbar73 = document.getElementById('metrics-bar-7-3');
+    const mbar74 = document.getElementById('metrics-bar-7-4');
+    const mbar75 = document.getElementById('metrics-bar-7-5');
+    const mbar76 = document.getElementById('metrics-bar-7-6');
+    const mbar77 = document.getElementById('metrics-bar-7-7');
+    const mbar78 = document.getElementById('metrics-bar-7-8');
+    const mbar79 = document.getElementById('metrics-bar-7-9');
     if (mbar61) mbar61.classList.toggle('is-hidden', !is61);
     if (mbar62) mbar62.classList.toggle('is-hidden', !is62);
     if (mbar63) mbar63.classList.toggle('is-hidden', !is63);
@@ -1168,8 +1175,15 @@ export function openExperimentWorkspace(expId) {
     if (mbar68) mbar68.classList.toggle('is-hidden', !is68);
     if (mbar69) mbar69.classList.toggle('is-hidden', !is69);
     if (mbar610) mbar610.classList.toggle('is-hidden', !is610);
-    if (mbar73) mbar73.classList.toggle('is-hidden', !is73);
     if (mbar71) mbar71.classList.toggle('is-hidden', !is71);
+    if (mbar72) mbar72.classList.toggle('is-hidden', !is72);
+    if (mbar73) mbar73.classList.toggle('is-hidden', !is73);
+    if (mbar74) mbar74.classList.toggle('is-hidden', !is74);
+    if (mbar75) mbar75.classList.toggle('is-hidden', !is75);
+    if (mbar76) mbar76.classList.toggle('is-hidden', !is76);
+    if (mbar77) mbar77.classList.toggle('is-hidden', !is77);
+    if (mbar78) mbar78.classList.toggle('is-hidden', !is78);
+    if (mbar79) mbar79.classList.toggle('is-hidden', !is79);
 
     // Hızlı Kontroller (Canvas Altı)
     const qc61 = document.getElementById('quick-controls-6-1');
@@ -8114,21 +8128,23 @@ function updateWorkMetricsBar() {
     const mJoule = document.getElementById('mbar-work-joule');
     const mStatus = document.getElementById('mbar-work-status');
     const mForce = document.getElementById('mbar-work-force');
-    const mDisp = document.getElementById('mbar-work-disp');
+    const mDisp = document.getElementById('mbar-work-dist');
 
     if (mJoule) {
         mJoule.textContent = work.isWorkDone ? `${work.appliedWork.toFixed(1)} J` : '0.0 J';
         mJoule.style.color = work.isWorkDone ? '#10b981' : '#ef4444';
     }
     if (mStatus) {
+        const textSpan = document.getElementById('mbar-work-status-text');
+        const targetEl = textSpan || mStatus;
         if (work.isPlaying) {
-            mStatus.textContent = "Hareket Ediyor...";
+            targetEl.textContent = "⏳ Hareket Ediyor...";
             mStatus.style.color = "#38bdf8";
         } else if (work.isWorkDone) {
-            mStatus.textContent = "✅ İş Yapıldı";
+            targetEl.textContent = "✅ İş Yapıldı";
             mStatus.style.color = "#10b981";
         } else {
-            mStatus.textContent = "❌ İş Yapılmadı";
+            targetEl.textContent = "❌ İş Yapılmadı";
             mStatus.style.color = "#ef4444";
         }
     }
@@ -8227,22 +8243,15 @@ function drawWorkHorizontal(ctx, work, groundY) {
     const x0 = 160;
     const meterScale = 50;
 
-    // Metre cetveli çizimi
+    // Metre cetveli çizimi (Zero-Canvas-Text: Çentik çizgileriyle görsel cetvel, değerler alt barda)
     for (let m = 0; m <= 10; m++) {
         const tx = x0 + m * meterScale;
-        ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
-        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = (m % 2 === 0) ? 'rgba(56, 189, 248, 0.6)' : 'rgba(148, 163, 184, 0.4)';
+        ctx.lineWidth = (m % 2 === 0) ? 2 : 1.2;
         ctx.beginPath();
         ctx.moveTo(tx, groundY);
-        ctx.lineTo(tx, groundY + 8);
+        ctx.lineTo(tx, groundY + (m % 2 === 0 ? 12 : 6));
         ctx.stroke();
-
-        if (m % 2 === 0) {
-            ctx.font = '10px Inter, sans-serif';
-            ctx.fillStyle = '#94a3b8';
-            ctx.textAlign = 'center';
-            ctx.fillText(`${m}m`, tx, groundY + 22);
-        }
     }
 
     const curDist = work.currentDisplacement;
@@ -8326,17 +8335,12 @@ function drawWorkLift(ctx, work, groundY) {
 
     for (let m = 0; m <= 10; m += 2) {
         const ry = groundY - m * meterScale;
-        ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
-        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.6)';
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(rulerX - 6, ry);
+        ctx.moveTo(rulerX - 10, ry);
         ctx.lineTo(rulerX, ry);
         ctx.stroke();
-
-        ctx.font = '10px Inter, sans-serif';
-        ctx.fillStyle = '#94a3b8';
-        ctx.textAlign = 'right';
-        ctx.fillText(`${m}m`, rulerX - 10, ry + 3);
     }
 
     const curH = work.currentDisplacement;
@@ -8406,22 +8410,15 @@ function drawWorkCarry(ctx, work, groundY) {
     const x0 = 160;
     const meterScale = 50;
 
-    // Metre cetveli çizimi
+    // Metre cetveli çizimi (Zero-Canvas-Text: Çentik çizgileriyle görsel cetvel, değerler alt barda)
     for (let m = 0; m <= 10; m++) {
         const tx = x0 + m * meterScale;
-        ctx.strokeStyle = 'rgba(148, 163, 184, 0.4)';
-        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = (m % 2 === 0) ? 'rgba(56, 189, 248, 0.6)' : 'rgba(148, 163, 184, 0.4)';
+        ctx.lineWidth = (m % 2 === 0) ? 2 : 1.2;
         ctx.beginPath();
         ctx.moveTo(tx, groundY);
-        ctx.lineTo(tx, groundY + 8);
+        ctx.lineTo(tx, groundY + (m % 2 === 0 ? 12 : 6));
         ctx.stroke();
-
-        if (m % 2 === 0) {
-            ctx.font = '10px Inter, sans-serif';
-            ctx.fillStyle = '#94a3b8';
-            ctx.textAlign = 'center';
-            ctx.fillText(`${m}m`, tx, groundY + 22);
-        }
     }
 
     const curDist = work.currentDisplacement;
@@ -8542,34 +8539,7 @@ function drawWorkVectorArrow(ctx, fromX, fromY, toX, toY, color, label, labelOff
     ctx.closePath();
     ctx.fill();
 
-    // Metin etiketi
-    if (label) {
-        ctx.shadowBlur = 0;
-        ctx.font = 'bold 11px Inter, sans-serif';
-        const midX = (fromX + toX) / 2;
-        const midY = (fromY + toY) / 2;
-        const metrics = ctx.measureText(label);
-        const padX = 6;
-
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.roundRect(
-            midX - metrics.width / 2 - padX,
-            midY + labelOffset - 11,
-            metrics.width + padX * 2,
-            16,
-            4
-        );
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.fillStyle = color;
-        ctx.textAlign = 'center';
-        ctx.fillText(label, midX, midY + labelOffset + 1);
-    }
-
+    // Zero-Canvas-Text: Vektör oku yalın ve keskin çizilir; yön ve büyüklük alt metrik şeridinde (#metrics-bar-7-1) gösterilir.
     ctx.restore();
 }
 
@@ -9391,6 +9361,33 @@ function updateEnergyMetrics() {
             cardText.textContent = "Potansiyel ve kinetik enerji sürekli olarak birbirine dönüşmektedir. Sürtünmesiz ortamda toplam mekanik enerji daima sabit kalır.";
         }
     }
+
+    // Metrik Şeridi (#metrics-bar-7-2) Güncellemesi
+    const mbEp = document.getElementById('mbar-72-ep');
+    const mbEk = document.getElementById('mbar-72-ek');
+    const mbEtot = document.getElementById('mbar-72-etot');
+    const mbSpeed = document.getElementById('mbar-72-speed');
+    const mbStatus = document.getElementById('mbar-72-status');
+
+    if (mbEp) mbEp.textContent = `${energy.potentialEnergy.toFixed(1)} J`;
+    if (mbEk) mbEk.textContent = `${energy.kineticEnergy.toFixed(1)} J`;
+    if (mbEtot) mbEtot.textContent = `${energy.totalEnergy.toFixed(1)} J`;
+    if (mbSpeed) mbSpeed.textContent = `${energy.currentSpeed.toFixed(1)} m/s`;
+    if (mbStatus) {
+        if (energy.frictionEnabled && energy.heatEnergy > 0.4) {
+            mbStatus.textContent = "🔥 Sürtünmeyle Mekanik Enerji Isıya Dönüşüyor";
+            mbStatus.style.color = "#ef4444";
+        } else if (energy.currentSpeed < 0.25) {
+            mbStatus.textContent = "⚡ Tepe Noktası: Maksimum Potansiyel Enerji (v ≈ 0)";
+            mbStatus.style.color = "#10b981";
+        } else if (energy.kineticEnergy > energy.totalEnergy * 0.9) {
+            mbStatus.textContent = "🚀 Dip Noktası: Maksimum Kinetik Enerji";
+            mbStatus.style.color = "#38bdf8";
+        } else {
+            mbStatus.textContent = "🔄 Ep ⇄ Ek Dönüşümü Gerçekleşiyor (E_top Sabit)";
+            mbStatus.style.color = "#facc15";
+        }
+    }
 }
 
 function drawEnergySimulation() {
@@ -9442,8 +9439,8 @@ function drawEnergyBarsGauge(ctx, scale) {
     const energy = labState.energy;
     const boxX = 20 * scale;
     const boxY = 45 * scale;
-    const boxW = 124 * scale;
-    const boxH = 270 * scale;
+    const boxW = 110 * scale;
+    const boxH = 180 * scale;
 
     ctx.save();
 
@@ -9452,23 +9449,17 @@ function drawEnergyBarsGauge(ctx, scale) {
     ctx.strokeStyle = "rgba(0, 210, 255, 0.25)";
     ctx.lineWidth = 1.5 * scale;
     ctx.beginPath();
-    ctx.roundRect(boxX, boxY, boxW, boxH, 14 * scale);
+    ctx.roundRect(boxX, boxY, boxW, boxH, 12 * scale);
     ctx.fill();
     ctx.stroke();
 
-    // Başlık
-    ctx.font = `bold ${Math.max(9, 11 * scale)}px 'Nunito', sans-serif`;
-    ctx.fillStyle = "#38bdf8";
-    ctx.textAlign = "center";
-    ctx.fillText("⚡ ENERJİ (J)", boxX + (boxW / 2), boxY + (20 * scale));
-
-    // Çubuk Parametreleri
+    // Çubuk Parametreleri (Zero-Canvas-Text: Seviye çubukları nitel görsel kılavuzdur, sayısal değerler alt metrik şeridindedir)
     const maxVal = Math.max(15, energy.initialTotalEnergy * 1.05);
-    const barW = 18 * scale;
-    const gap = 8 * scale;
-    const maxBarH = 160 * scale;
-    const startX = boxX + (14 * scale);
-    const bottomY = boxY + boxH - (34 * scale);
+    const barW = 16 * scale;
+    const gap = 7 * scale;
+    const maxBarH = 140 * scale;
+    const startX = boxX + (12 * scale);
+    const bottomY = boxY + boxH - (20 * scale);
 
     const bars = [
         { label: "Ek", val: energy.kineticEnergy, color: "#38bdf8", glow: "rgba(56, 189, 248, 0.4)" },
@@ -9500,18 +9491,11 @@ function drawEnergyBarsGauge(ctx, scale) {
             ctx.shadowBlur = 0;
         }
 
-        // Çubuk üstü sayısal değer
-        ctx.font = `bold ${Math.max(8, 9 * scale)}px sans-serif`;
-        ctx.fillStyle = "#e2e8f0";
-        ctx.textAlign = "center";
-        const valText = b.val >= 10 ? b.val.toFixed(0) : b.val.toFixed(1);
-        ctx.fillText(valText, bx + (barW / 2), Math.min(by - (4 * scale), bottomY - 6 * scale));
-
-        // Çubuk altı etiket
-        ctx.font = `bold ${Math.max(9, 10 * scale)}px 'Nunito', sans-serif`;
+        // Çubuk altı renkli gösterge noktası (Zero-Canvas-Text)
         ctx.fillStyle = b.color;
-        ctx.textAlign = "center";
-        ctx.fillText(b.label, bx + (barW / 2), bottomY + (16 * scale));
+        ctx.beginPath();
+        ctx.arc(bx + (barW / 2), bottomY + (10 * scale), 3 * scale, 0, Math.PI * 2);
+        ctx.fill();
     });
 
     ctx.restore();
@@ -9875,12 +9859,13 @@ function drawRampSimulation(ctx, scale) {
     ctx.fill();
     ctx.stroke();
 
-    // Kütle Yazısı
-    ctx.font = `bold ${Math.max(8, 9 * scale)}px sans-serif`;
-    ctx.fillStyle = "#ffffff";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(`${energy.mass.toFixed(1)} kg`, 0, blockY + (massBoxH / 2));
+    // Mekanik Ağırlık Yivi (Zero-Canvas-Text: Kütle sayısal değeri alt barda ve kontrollerdedir)
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.45)";
+    ctx.lineWidth = 1 * scale;
+    ctx.beginPath();
+    ctx.moveTo(-massBoxW / 3, blockY + (massBoxH / 2));
+    ctx.lineTo(massBoxW / 3, blockY + (massBoxH / 2));
+    ctx.stroke();
 
     ctx.restore();
 
@@ -10094,12 +10079,6 @@ function drawOpticsSimulation() {
         ctx.strokeStyle = "rgba(255, 50, 100, 0.85)";
         ctx.lineWidth = 3 * scale;
         ctx.stroke();
-
-        ctx.font = `bold ${Math.max(12, 13 * scale)}px 'Nunito', sans-serif`;
-        ctx.fillStyle = "#ff6b8b";
-        ctx.textAlign = "center";
-        const labelRad1 = -Math.PI / 2 - (rad1 / 2);
-        ctx.fillText(`i = ${incidentAngle}°`, originX + Math.cos(labelRad1) * (62 * scale), originY + Math.sin(labelRad1) * (62 * scale));
     }
 
     drawLaserBeam(ctx, laserX, laserY, originX, originY, "#ff1744", 3.5 * scale, 1.0);
@@ -10134,12 +10113,6 @@ function drawOpticsSimulation() {
             ctx.strokeStyle = "rgba(56, 189, 248, 0.85)";
             ctx.lineWidth = 3 * scale;
             ctx.stroke();
-
-            ctx.font = `bold ${Math.max(12, 13 * scale)}px 'Nunito', sans-serif`;
-            ctx.fillStyle = "#38bdf8";
-            ctx.textAlign = "center";
-            const labelRad2 = Math.PI / 2 - (rad2 / 2);
-            ctx.fillText(`r = ${refractedAngle.toFixed(1)}°`, originX + Math.cos(labelRad2) * (62 * scale), originY + Math.sin(labelRad2) * (62 * scale));
         }
 
         drawLaserBeam(ctx, originX, originY, refractX, refractY, "#00e5ff", 3.5 * scale, 0.95);
@@ -10279,6 +10252,38 @@ function calculateLensPhysics() {
             }
         }
     }
+
+    // Metrik Şeridi (#metrics-bar-7-4) Güncellemesi
+    const mbType = document.getElementById('mbar-74-type');
+    const mbFocus = document.getElementById('mbar-74-focus');
+    const mbDo = document.getElementById('mbar-74-do');
+    const mbImgProp = document.getElementById('mbar-74-img-prop');
+    const mbStatus = document.getElementById('mbar-74-status');
+
+    if (mbType) {
+        mbType.textContent = isConvex ? "İnce Kenarlı" : "Kalın Kenarlı";
+        mbType.style.color = isConvex ? "#38bdf8" : "#c084fc";
+    }
+    if (mbFocus) mbFocus.textContent = `${focalLength} mm`;
+    if (mbDo) mbDo.textContent = mode === "parallel" ? "Sonsuz (Paralel)" : `${objectDistance} mm`;
+    if (mbImgProp) {
+        if (mode === "parallel") {
+            mbImgProp.textContent = isConvex ? "Odakta Noktasal" : "Uzantısı Odakta";
+            mbImgProp.style.color = isConvex ? "#f59e0b" : "#c084fc";
+        } else {
+            mbImgProp.textContent = statusText;
+            mbImgProp.style.color = statusColor;
+        }
+    }
+    if (mbStatus) {
+        if (mode === "parallel") {
+            mbStatus.textContent = isConvex ? "🔥 Işığı Odakta Toplar (Yangın Riski)" : "👓 Işığı Dağıtır (Iraksak)";
+            mbStatus.style.color = isConvex ? "#f59e0b" : "#c084fc";
+        } else {
+            mbStatus.textContent = isConvex ? (di > 0 ? "🕯️ Gerçek ve Ters Görüntü (Perdede Oluşur)" : "🔍 Büyüteç Modu: Düz ve Dev Görüntü") : "👓 Daima Düz, Küçük ve Sanal";
+            mbStatus.style.color = isConvex ? (di > 0 ? "#10b981" : "#38bdf8") : "#c084fc";
+        }
+    }
 }
 
 function drawLensSimulation() {
@@ -10334,17 +10339,11 @@ function drawLensSimulation() {
     drawFocalPoint(ctx, cx + f, cy, "F₂", scale);
     drawFocalPoint(ctx, cx + (2 * f), cy, "2F₂", scale);
 
-    // Optik Merkez (O)
+    // Optik Merkez (O) (Zero-Canvas-Text: Pürüzsüz vektör optik merkez diski)
     ctx.beginPath();
     ctx.arc(cx, cy, 2.5 * scale, 0, Math.PI * 2);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
-
-    ctx.font = `bold ${Math.max(10, 11 * scale)}px 'Nunito', sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-    ctx.fillText("O", cx, cy + (18 * scale));
 
     ctx.restore();
 }
@@ -10357,7 +10356,7 @@ function drawFocalPoint(ctx, x, y, label, scale) {
     ctx.fillStyle = "#00d2ff";
     ctx.fill();
 
-    // 2. Dikey Minimal Çentik
+    // 2. Dikey Minimal Çentik (Zero-Canvas-Text: Odak mesafesi alt barda yer alır)
     ctx.beginPath();
     ctx.moveTo(x, y - (4 * scale));
     ctx.lineTo(x, y + (4 * scale));
@@ -10365,12 +10364,6 @@ function drawFocalPoint(ctx, x, y, label, scale) {
     ctx.lineWidth = 1.5 * scale;
     ctx.stroke();
 
-    // 3. Etiket (Eksen çizgisinin net 18px altında)
-    ctx.font = `bold ${Math.max(10, 11 * scale)}px 'Nunito', sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    ctx.fillStyle = "#93c5fd";
-    ctx.fillText(label, x, y + (18 * scale));
     ctx.restore();
 }
 
@@ -11061,6 +11054,38 @@ function updateDissolveStopwatchDOM() {
             c.style.borderColor = 'rgba(250, 204, 21, 0.3)';
         }
     });
+
+    // Metrik Şeridi (#metrics-bar-7-5) Güncellemesi
+    const mb1 = document.getElementById('mbar-75-b1');
+    const mb2 = document.getElementById('mbar-75-b2');
+    const mb3 = document.getElementById('mbar-75-b3');
+    const mbStatus = document.getElementById('mbar-75-status');
+
+    const sugarNames = { powder: "Pudra", granulated: "Toz", cube: "Küp" };
+    if (mb1 && b[0]) {
+        const timeStr = b[0].isDissolved ? `${b[0].targetTime.toFixed(1)}s ✓` : `${b[0].elapsedTime.toFixed(1)}s`;
+        mb1.textContent = `${b[0].temperature}°C · ${sugarNames[b[0].sugar] || b[0].sugar}${b[0].isStirred ? ' · 🌀' : ''} (${timeStr})`;
+    }
+    if (mb2 && b[1]) {
+        const timeStr = b[1].isDissolved ? `${b[1].targetTime.toFixed(1)}s ✓` : `${b[1].elapsedTime.toFixed(1)}s`;
+        mb2.textContent = `${b[1].temperature}°C · ${sugarNames[b[1].sugar] || b[1].sugar}${b[1].isStirred ? ' · 🌀' : ''} (${timeStr})`;
+    }
+    if (mb3 && b[2]) {
+        const timeStr = b[2].isDissolved ? `${b[2].targetTime.toFixed(1)}s ✓` : `${b[2].elapsedTime.toFixed(1)}s`;
+        mb3.textContent = `${b[2].temperature}°C · ${sugarNames[b[2].sugar] || b[2].sugar}${b[2].isStirred ? ' · 🌀' : ''} (${timeStr})`;
+    }
+    if (mbStatus) {
+        if (b.every(bk => bk.isDissolved)) {
+            mbStatus.textContent = "🏆 Çözünme Tamamlandı: Sıcaklık yüksek, tanecik küçük (pudra) ve karıştırılan beher en hızlı çözündü!";
+            mbStatus.style.color = "#34d399";
+        } else if (labState.dissolve.isPlaying) {
+            mbStatus.textContent = "⏱️ Çözünme Sürüyor: Tanecikler çözücü içine dağılıyor...";
+            mbStatus.style.color = "#facc15";
+        } else {
+            mbStatus.textContent = "🧪 Sıcaklık, Temas Yüzeyi ve Karıştırma Çözünmeyi Hızlandırır";
+            mbStatus.style.color = "#38bdf8";
+        }
+    }
 }
 
 function initBeakerParticles(beaker) {
@@ -11328,14 +11353,9 @@ function drawBeakerGlassware(ctx, x, y, w, h, cx, waterTop) {
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(x + w - 18, t.ty);
+        ctx.moveTo(x + w - 14, t.ty);
         ctx.lineTo(x + w, t.ty);
         ctx.stroke();
-
-        ctx.font = '8px Inter, sans-serif';
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
-        ctx.textAlign = 'right';
-        ctx.fillText(t.ml, x + w - 22, t.ty + 3);
     });
 
     ctx.restore();
@@ -11358,25 +11378,26 @@ function drawDigitalThermometer(ctx, x, y, temp) {
     ctx.arc(x, y + 160, 3.5, 0, Math.PI * 2);
     ctx.fill();
 
-    // Dijital Başlık Kutusu
+    // Dijital Başlık Kutusu ve LED Seviye İndikatörü (Zero-Canvas-Text: Sayısal sıcaklık alt metrik şeridinde ve kontrollerdedir)
     const headW = 44;
     const headH = 26;
     const headX = x - headW / 2;
     const headY = y;
 
     ctx.fillStyle = '#0f172a';
-    ctx.strokeStyle = '#38bdf8';
+    ctx.strokeStyle = temp >= 60 ? '#fb923c' : temp >= 40 ? '#facc15' : '#38bdf8';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.roundRect(headX, headY, headW, headH, 4);
     ctx.fill();
     ctx.stroke();
 
-    // Sıcaklık Yazısı
-    ctx.font = 'bold 11px Inter, monospace';
+    // LED İndikatör Çubuğu
     ctx.fillStyle = temp >= 60 ? '#fb923c' : temp >= 40 ? '#facc15' : '#38bdf8';
-    ctx.textAlign = 'center';
-    ctx.fillText(`${temp}°C`, headX + headW / 2, headY + 17);
+    ctx.beginPath();
+    ctx.roundRect(headX + 8, headY + 8, headW - 16, headH - 16, 2);
+    ctx.fill();
+
     ctx.restore();
 }
 
@@ -11491,39 +11512,13 @@ function drawMagneticStirBar(ctx, cx, y, stirring, angle) {
 
 function drawBeakerHeaderAndStopwatch(ctx, beaker, cx, topY) {
     ctx.save();
-
-    // Zarif Kompakt Dijital Kapsül (Pill HUD - Mobilde Asla Beheri Kapatmaz)
-    const pillW = 104;
-    const pillH = 22;
-    const pillX = cx - pillW / 2;
-    const pillY = topY + 18;
-
-    ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
-    ctx.strokeStyle = beaker.isDissolved ? 'rgba(52, 211, 153, 0.65)' : 'rgba(56, 189, 248, 0.4)';
-    ctx.lineWidth = 1.2;
+    // Zero-Canvas-Text: Beher kimliği ve kronometre süresi alt metrik şeridinde (#metrics-bar-7-5) yer alır.
+    // Tuval üzerinde sadece minimal renkli durum diski çizilir.
+    const discColor = beaker.isDissolved ? '#34d399' : (beaker.id === "A" ? '#38bdf8' : beaker.id === "B" ? '#2dd4bf' : '#fb923c');
+    ctx.fillStyle = discColor;
     ctx.beginPath();
-    ctx.roundRect(pillX, pillY, pillW, pillH, 11);
+    ctx.arc(cx, topY + 22, 5, 0, Math.PI * 2);
     ctx.fill();
-    ctx.stroke();
-
-    // Beher İsim Rozeti
-    ctx.font = 'bold 10px Inter, sans-serif';
-    ctx.fillStyle = beaker.id === "A" ? '#38bdf8' : beaker.id === "B" ? '#2dd4bf' : '#fb923c';
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(beaker.name, pillX + 10, pillY + pillH / 2);
-
-    // Kronometre
-    ctx.font = 'bold 11px Inter, monospace';
-    ctx.textAlign = 'right';
-    if (beaker.isDissolved) {
-        ctx.fillStyle = '#34d399';
-        ctx.fillText(`${beaker.targetTime.toFixed(1)}s ✓`, pillX + pillW - 10, pillY + pillH / 2);
-    } else {
-        ctx.fillStyle = '#facc15';
-        ctx.fillText(`${beaker.elapsedTime.toFixed(1)}s`, pillX + pillW - 10, pillY + pillH / 2);
-    }
-
     ctx.restore();
 }
 
@@ -11823,6 +11818,54 @@ function updateSeparationMetricsDOM() {
         }
         if (mAlcohol) mAlcohol.textContent = `${d.distilledAlcohol.toFixed(1)} mL`;
         if (mFlaskLiquid) mFlaskLiquid.textContent = `${(d.alcoholVolume + d.waterVolume).toFixed(1)} mL`;
+    }
+
+    // Metrik Şeridi (#metrics-bar-7-6) Güncellemesi
+    const mbMethod = document.getElementById('mbar-76-method');
+    const mbSubstances = document.getElementById('mbar-76-substances');
+    const mbPhase = document.getElementById('mbar-76-phase');
+    const mbStatus = document.getElementById('mbar-76-status');
+
+    if (sep.mode === "funnel") {
+        const f = sep.funnel;
+        if (mbMethod) mbMethod.textContent = "Ayırma Hunisi (Yoğunluk Farkı)";
+        if (mbSubstances) mbSubstances.textContent = "Zeytinyağı (d=0.9) + Su (d=1.0)";
+        if (mbPhase) mbPhase.textContent = f.isValveOpen ? `Musluk Açık (Su: ${f.collectedWater.toFixed(1)} mL)` : (f.collectedWater >= 95 ? "Ayrım Tamamlandı" : "Musluk Kapalı");
+        if (mbStatus) {
+            if (f.leakedOil > 0.5) {
+                mbStatus.textContent = "⚠️ Yağ erlene sızdı! Musluğu zamanında kapatmalısınız.";
+                mbStatus.style.color = "#ef4444";
+            } else if (f.collectedWater >= 95) {
+                mbStatus.textContent = "🏆 Başarılı: Yoğunluğu büyük olan su alttan tamamen ayrıldı!";
+                mbStatus.style.color = "#34d399";
+            } else if (f.isValveOpen) {
+                mbStatus.textContent = "💧 Su erlene akıyor, faz sınır çizgisine dikkat edin!";
+                mbStatus.style.color = "#38bdf8";
+            } else {
+                mbStatus.textContent = "🧪 Yoğunluk farkıyla birbirine karışmayan heterojen sıvılar ayrılır";
+                mbStatus.style.color = "#facc15";
+            }
+        }
+    } else {
+        const d = sep.distillation;
+        if (mbMethod) mbMethod.textContent = "Basit Damıtma (K.N. Farkı)";
+        if (mbSubstances) mbSubstances.textContent = `Alkol (${d.temp.toFixed(1)}°C) + Su (100°C)`;
+        if (mbPhase) mbPhase.textContent = d.isBoiling ? "Alkol Kaynıyor (78°C)" : (d.distilledAlcohol >= 95 ? "Alkol Saflaştırıldı" : (d.isHeating ? "Isınıyor" : "Durgun"));
+        if (mbStatus) {
+            if (d.distilledAlcohol >= 95) {
+                mbStatus.textContent = "🏆 Başarılı: Etil alkol kaynama noktası farkıyla toplandı!";
+                mbStatus.style.color = "#34d399";
+            } else if (d.isBoiling) {
+                mbStatus.textContent = "🔥 78°C: Alkol buharlaşıp soğutucuda yoğuşarak ayrılıyor";
+                mbStatus.style.color = "#38bdf8";
+            } else if (d.isHeating) {
+                mbStatus.textContent = "⏳ Sıcaklık 78°C'ye yaklaşıyor, kaynama başlayacak";
+                mbStatus.style.color = "#fb923c";
+            } else {
+                mbStatus.textContent = "💧 Kaynama noktaları farklı homojen sıvılar damıtmayla ayrılır";
+                mbStatus.style.color = "#facc15";
+            }
+        }
     }
 }
 
@@ -12591,24 +12634,24 @@ function drawDistillationThermometer(ctx, distill) {
     ctx.arc(cx, 205, 4, 0, Math.PI * 2);
     ctx.fill();
 
-    // Dijital Sıcaklık Göstergesi Rozeti
-    const badgeW = 68;
-    const badgeH = 24;
+    // Dijital Sıcaklık LED Göstergesi (Zero-Canvas-Text: Sayısal sıcaklık alt metrik şeridinde yer alır)
+    const badgeW = 36;
+    const badgeH = 16;
     const badgeX = cx - badgeW / 2;
-    const badgeY = 95;
+    const badgeY = 98;
 
     ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
     ctx.strokeStyle = distill.isBoiling ? '#38bdf8' : '#fb923c';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 6);
+    ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 4);
     ctx.fill();
     ctx.stroke();
 
     ctx.fillStyle = distill.isBoiling ? '#38bdf8' : '#fb923c';
-    ctx.font = 'bold 12px Inter, monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText(`${distill.temp.toFixed(1)}°C`, cx, badgeY + 16);
+    ctx.beginPath();
+    ctx.roundRect(badgeX + 5, badgeY + 4, badgeW - 10, badgeH - 8, 2);
+    ctx.fill();
 
     ctx.restore();
 }
@@ -13090,6 +13133,73 @@ function updateElectroMetricsDOM() {
             bS2.textContent = s2Net > 0 ? `+${s2Net}e` : s2Net < 0 ? `-${Math.abs(s2Net)}e` : "Nötr";
         }
     }
+
+    // Metrik Şeridi (#metrics-bar-7-7) Güncellemesi
+    const mbRod = document.getElementById('mbar-77-rod');
+    const mbCloth = document.getElementById('mbar-77-cloth');
+    const mbTransfer = document.getElementById('mbar-77-transfer');
+    const mbStatus = document.getElementById('mbar-77-status');
+
+    if (el.mode === "friction") {
+        const f = el.friction;
+        const rodNet = f.rod.protons - f.rod.electrons;
+        const clothNet = f.cloth.protons - f.cloth.electrons;
+        const rodLabel = f.materialPair === "ebonite_wool" ? "Ebonit (Plastik)" : "Cam Çubuk";
+        const clothLabel = f.materialPair === "ebonite_wool" ? "Yün Kumaş" : "İpek Kumaş";
+
+        if (mbRod) {
+            mbRod.textContent = rodNet === 0 ? `${rodLabel} (Nötr)` : `${rodLabel}: ${rodNet > 0 ? '+' : ''}${rodNet}e (${rodNet > 0 ? 'Pozitif' : 'Negatif'})`;
+            mbRod.style.color = rodNet > 0 ? '#f87171' : rodNet < 0 ? '#38bdf8' : '#cbd5e1';
+        }
+        if (mbCloth) {
+            mbCloth.textContent = clothNet === 0 ? `${clothLabel} (Nötr)` : `${clothLabel}: ${clothNet > 0 ? '+' : ''}${clothNet}e (${clothNet > 0 ? 'Pozitif' : 'Negatif'})`;
+            mbCloth.style.color = clothNet > 0 ? '#f87171' : clothNet < 0 ? '#38bdf8' : '#cbd5e1';
+        }
+        if (mbTransfer) {
+            if (f.materialPair === "ebonite_wool") {
+                mbTransfer.textContent = f.frictionRubCount > 0 ? "Elektronlar: Yün ➔ Ebonit (-)" : "Sürtünme Bekleniyor";
+            } else {
+                mbTransfer.textContent = f.frictionRubCount > 0 ? "Elektronlar: Cam ➔ İpek (-)" : "Sürtünme Bekleniyor";
+            }
+        }
+        if (mbStatus) {
+            if (Math.abs(rodNet) >= 3) {
+                mbStatus.textContent = "🧲 Çubuk Elektriklendi: Nötr kağıt parçalarını elektrostatik çekimle çeker!";
+                mbStatus.style.color = "#34d399";
+            } else if (f.frictionRubCount > 0) {
+                mbStatus.textContent = "⚡ Elektron transferi gerçekleşti, zıt elektrik yükü oluştu";
+                mbStatus.style.color = "#facc15";
+            } else {
+                mbStatus.textContent = "🧲 Kumaşı çubuğa sürterek elektron aktarımını başlatın";
+                mbStatus.style.color = "#38bdf8";
+            }
+        }
+    } else {
+        const c = el.conduction;
+        const s1Net = c.sphere1.protons - c.sphere1.electrons;
+        const s2Net = c.sphere2.protons - c.sphere2.electrons;
+
+        if (mbRod) {
+            mbRod.textContent = `1. Küre: ${s1Net > 0 ? '+' : ''}${s1Net}e`;
+            mbRod.style.color = s1Net > 0 ? '#f87171' : s1Net < 0 ? '#38bdf8' : '#cbd5e1';
+        }
+        if (mbCloth) {
+            mbCloth.textContent = `2. Küre: ${s2Net > 0 ? '+' : ''}${s2Net}e`;
+            mbCloth.style.color = s2Net > 0 ? '#f87171' : s2Net < 0 ? '#38bdf8' : '#cbd5e1';
+        }
+        if (mbTransfer) {
+            mbTransfer.textContent = c.hasTouched ? "Dokunmayla Yük Paylaşıldı" : "Küreleri Birbirine Yaklaştırın";
+        }
+        if (mbStatus) {
+            if (c.hasTouched) {
+                mbStatus.textContent = "🤝 Dokunma ile Elektriklenme: Toplam yük iletken küreler arasında paylaşıldı!";
+                mbStatus.style.color = "#34d399";
+            } else {
+                mbStatus.textContent = "⚡ Küreleri sürükleyip birbirine dokundurun";
+                mbStatus.style.color = "#facc15";
+            }
+        }
+    }
 }
 
 function updateElectroPhysics() {
@@ -13454,11 +13564,17 @@ function drawChargeBadge(ctx, x, y, symbol, bg, border) {
     ctx.fill();
     ctx.stroke();
 
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 9px monospace';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(symbol, x, y);
+    // Zero-Canvas-Text: Vektör çizgiyle artı (+) ve eksi (-) yük sembolleri
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.3;
+    ctx.beginPath();
+    ctx.moveTo(x - 2.5, y);
+    ctx.lineTo(x + 2.5, y);
+    if (symbol === '+') {
+        ctx.moveTo(x, y - 2.5);
+        ctx.lineTo(x, y + 2.5);
+    }
+    ctx.stroke();
     ctx.restore();
 }
 
@@ -13491,13 +13607,12 @@ function drawElectroSparks(ctx, sparks) {
         ctx.arc(curX, curY, 3.5, 0, Math.PI * 2);
         ctx.fill();
 
-        // e- simgesi
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 8px monospace';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText("e⁻", curX, curY - 6);
+        // Parçacık ışıma halkası (Zero-Canvas-Text)
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(curX, curY, 5.5, 0, Math.PI * 2);
+        ctx.stroke();
     });
     ctx.restore();
 }
@@ -14016,6 +14131,46 @@ function updateElectroscopeMetricsDOM() {
                 pTitle.textContent = "⚖️ Elektroskop Nötr Durumda";
                 pText.textContent = "Elektroskop yüksüzdür (nötr). Yapraklarda net yük bulunmadığı için yapraklar tamamen kapalıdır (α = 0°).";
             }
+        }
+    }
+
+    // Metrik Şeridi (#metrics-bar-7-8) Güncellemesi
+    const mbKnob = document.getElementById('mbar-78-knob');
+    const mbLeaves = document.getElementById('mbar-78-leaves');
+    const mbAngle = document.getElementById('mbar-78-angle');
+    const mbStatus = document.getElementById('mbar-78-status');
+
+    const k = es.scope.knobNet;
+    const l = es.scope.leavesNet;
+    const ang = Math.max(0, es.scope.leafAngle);
+
+    if (mbKnob) {
+        mbKnob.textContent = k === 0 ? "Nötr (0)" : (k > 0 ? `+${k}e (Pozitif)` : `${k}e (Negatif)`);
+        mbKnob.style.color = k > 0 ? '#f87171' : k < 0 ? '#38bdf8' : '#cbd5e1';
+    }
+    if (mbLeaves) {
+        mbLeaves.textContent = l === 0 ? "Kapalı (Nötr)" : (l > 0 ? `Açık (+${l}e)` : `Açık (${l}e)`);
+        mbLeaves.style.color = l > 0 ? '#f87171' : l < 0 ? '#38bdf8' : '#cbd5e1';
+    }
+    if (mbAngle) {
+        mbAngle.textContent = `${ang.toFixed(1)}°`;
+    }
+    if (mbStatus) {
+        if (es.grounding.isActive) {
+            mbStatus.textContent = "⚡ Topraklama Yapıldı: Elektroskop tamamen nötrlendi (Yapraklar Kapalı)";
+            mbStatus.style.color = "#34d399";
+        } else if (es.rod.action === "touch") {
+            mbStatus.textContent = `🤝 Dokunma ile Elektriklenme: Elektroskop kalıcı ${es.scope.totalNet > 0 ? 'pozitif' : 'negatif'} yüklendi`;
+            mbStatus.style.color = "#facc15";
+        } else if (es.rod.action === "approach") {
+            mbStatus.textContent = `🧲 Etki ile Kutuplanma: Topuz (${k > 0 ? '+' : '-'}) ve Yapraklar (${l > 0 ? '+' : '-'}) zıt kutuplandı`;
+            mbStatus.style.color = "#38bdf8";
+        } else if (es.scope.totalNet !== 0) {
+            mbStatus.textContent = `⚡ Elektroskop Yüklü: Aynı cins yapraklar birbirini iter (${ang.toFixed(1)}°)`;
+            mbStatus.style.color = "#facc15";
+        } else {
+            mbStatus.textContent = "⚖️ Elektroskop Nötr: Yapraklar Kapalı (0°)";
+            mbStatus.style.color = "#94a3b8";
         }
     }
 }
@@ -14898,6 +15053,42 @@ function updateFoodPyramidMetricsDOM() {
         mBiomass.style.color = '#cbd5e1';
     }
 
+    // Metrik Şeridi (#metrics-bar-7-9) Güncellemesi
+    const mbTier = document.getElementById('mbar-79-tier');
+    const mbEnergy = document.getElementById('mbar-79-energy');
+    const mbBioaccum = document.getElementById('mbar-79-bioaccum');
+    const mbBiomass = document.getElementById('mbar-79-biomass');
+    const mbStatus = document.getElementById('mbar-79-status');
+
+    if (mbTier) {
+        mbTier.textContent = tier.shortName;
+        mbTier.style.color = tier.color || '#38bdf8';
+    }
+    if (mbEnergy) {
+        if (tier.id === 4) {
+            mbEnergy.textContent = "Madde Döngüsü";
+        } else {
+            const curE = sun * tier.energyFraction;
+            mbEnergy.textContent = `${Math.round(curE).toLocaleString('tr-TR')} J (${(tier.energyFraction * 100).toFixed(1)}%)`;
+        }
+    }
+    if (mbBioaccum) {
+        mbBioaccum.textContent = `${curPpm} ppm`;
+        mbBioaccum.style.color = tier.id === 3 ? '#ef4444' : tier.id === 2 ? '#fb923c' : tier.id === 1 ? '#facc15' : '#38bdf8';
+    }
+    if (mbBiomass) {
+        mbBiomass.textContent = tier.biomass;
+    }
+    if (mbStatus) {
+        if (fp.mode === "energy") {
+            mbStatus.textContent = "⚡ %10 Kuralı: Enerjinin %90'ı ısı olarak kaybolur, sadece %10'u aktarılır";
+            mbStatus.style.color = "#facc15";
+        } else {
+            mbStatus.textContent = "☠️ Biyolojik Birikim: Parçalanamayan toksinler tepe avcıda ölümcül seviyede birikir";
+            mbStatus.style.color = "#ef4444";
+        }
+    }
+
     // Pedagojik Çıkarım Kartı
     const pBox = document.getElementById('pyramid-pedagogical-box');
     const pTitle = document.getElementById('pyramid-pedagogical-title');
@@ -15030,15 +15221,7 @@ function drawPyramidSun(ctx, sunlight) {
     ctx.arc(sx, sy, r, 0, Math.PI * 2);
     ctx.fill();
 
-    // Güneş Enerji Etiketi
-    ctx.fillStyle = '#fef08a';
-    ctx.font = 'bold 11px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText("Güneş Enerjisi", sx, sy + r + 15);
-    ctx.fillStyle = '#facc15';
-    ctx.font = 'bold 12px monospace';
-    ctx.fillText(`${(sunlight / 1000).toFixed(0)}k J`, sx, sy + r + 29);
-
+    // Zero-Canvas-Text: Güneş enerjisi alt metrik şeridinde (#metrics-bar-7-9) gösterilir
     ctx.restore();
 }
 
@@ -15097,28 +15280,15 @@ function drawPyramidTierTrapezoid(ctx, tier, isSelected, fp) {
     ctx.lineTo(xTR - 4, yT + 1);
     ctx.stroke();
 
-    // Basamak İçi Metinler (Zarif ve Sadeleştirilmiş)
+    // Zero-Canvas-Text: Basamak merkezi ışıma diski (İsim ve metrikler alt metrik şeridinde yer alır)
     const midY = (yT + yB) / 2;
-    ctx.fillStyle = '#f8fafc';
-    ctx.font = 'bold 12px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-
-    ctx.fillText(tier.shortName, cx, midY - 7);
-
-    // Mod Bilgisi (Enerji veya Zehir Değeri - Zero-Canvas-Text: Örnekler sağ panele bırakıldı)
-    if (fp.mode === "energy") {
-        const curE = fp.sunlight * tier.energyFraction;
-        ctx.fillStyle = '#fef08a';
-        ctx.font = 'bold 11px monospace';
-        ctx.fillText(`⚡ ${Math.round(curE).toLocaleString('tr-TR')} J`, cx, midY + 11);
-    } else {
-        const mult = (fp.pesticideDose === "low") ? 0.5 : (fp.pesticideDose === "high") ? 2.5 : 1.0;
-        const ppm = (tier.ppmBase * mult).toFixed(2);
-        ctx.fillStyle = tier.id === 3 ? '#fca5a5' : '#fef08a';
-        ctx.font = 'bold 11px monospace';
-        ctx.fillText(`☠️ ${ppm} ppm`, cx, midY + 11);
-    }
+    ctx.fillStyle = isSelected ? '#ffffff' : tier.color;
+    ctx.shadowColor = tier.color;
+    ctx.shadowBlur = isSelected ? 10 : 4;
+    ctx.beginPath();
+    ctx.arc(cx, midY, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
 
     ctx.restore();
 }
@@ -15151,23 +15321,12 @@ function drawPyramidDecomposers(ctx, isSelected) {
 
     ctx.shadowBlur = 0;
 
-    // Kutu İçi Metinler (Zarif ve Sadeleştirilmiş)
-    ctx.fillStyle = '#e9d5ff';
-    ctx.font = 'bold 12px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText("🍄 Ayrıştırıcılar", bx + bw / 2, by + 34);
-
-    ctx.fillStyle = '#c084fc';
-    ctx.font = '10px Inter, sans-serif';
-    ctx.fillText("Bakteri & Mantarlar", bx + bw / 2, by + 54);
-
-    ctx.fillStyle = '#34d399';
-    ctx.font = 'bold 10px Inter, sans-serif';
-    ctx.fillText("🔄 Madde Döngüsü", bx + bw / 2, by + 120);
-
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-    ctx.font = '9px Inter, sans-serif';
-    ctx.fillText("Tüm Basamaklara Bağlı", bx + bw / 2, by + 215);
+    // Zero-Canvas-Text: Ayrıştırıcılar odası geri dönüşüm çemberi (Metinler ve açıklamalar alt metrik şeridindedir)
+    ctx.strokeStyle = isSelected ? '#facc15' : 'rgba(192, 132, 252, 0.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(bx + bw / 2, by + bh / 2, 22, 0, Math.PI * 1.5);
+    ctx.stroke();
 
     // 4 basamaktan ayrıştırıcılara bağlanan mor bağlantı hatları
     ctx.strokeStyle = 'rgba(139, 92, 246, 0.45)';
@@ -15242,11 +15401,6 @@ function drawPyramidEnergyFlow(ctx, fp) {
         ctx.lineTo(arrowX + 4, tr.yTo + 4);
         ctx.closePath();
         ctx.fill();
-
-        ctx.fillStyle = '#7dd3fc';
-        ctx.font = 'bold 9px Inter, sans-serif';
-        ctx.textAlign = 'right';
-        ctx.fillText(tr.label, arrowX - 8, (tr.yFrom + tr.yTo) / 2 + 3);
     });
 
     // 4. Her Basamaktan Çıkan %90 Isı Kaybı Okları ve Dumanı (Sağ Taraf)
@@ -15332,16 +15486,7 @@ function drawPyramidBioaccumulation(ctx, fp) {
     ctx.closePath();
     ctx.fill();
 
-    // Dikey Yön Rozeti (Mobilde Asla Piramide veya Sol Kenara Binmez)
-    ctx.save();
-    ctx.translate(arrX - 12, 250);
-    ctx.rotate(-Math.PI / 2);
-    ctx.fillStyle = '#fca5a5';
-    ctx.font = 'bold 10px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText("▲ Biyobirikim (Zehir) Artar", 0, 0);
-    ctx.restore();
-
+    // Zero-Canvas-Text: Yükselen dikey ok biyobirikimin tepeye doğru arttığını nitel olarak gösterir
     ctx.restore();
 }
 
@@ -15359,7 +15504,7 @@ function drawPyramidBiomassBar(ctx) {
     ctx.lineTo(bx + 15, byBottom);
     ctx.stroke();
 
-    // Üstte dar, altta geniş sembolü
+    // Üstte dar, altta geniş sembolü (Zero-Canvas-Text: Nitel daralan kama)
     ctx.fillStyle = '#94a3b8';
     ctx.beginPath();
     ctx.moveTo(bx + 15, byTop);
@@ -15368,16 +15513,6 @@ function drawPyramidBiomassBar(ctx) {
     ctx.closePath();
     ctx.strokeStyle = 'rgba(148, 163, 184, 0.3)';
     ctx.stroke();
-
-    // Dikey Metin (Yukarı Çıkıldıkça Azalanlar)
-    ctx.save();
-    ctx.translate(bx - 12, (byTop + byBottom) / 2);
-    ctx.rotate(-Math.PI / 2);
-    ctx.fillStyle = '#94a3b8';
-    ctx.font = 'bold 10px Inter, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText("▲ Biyokütle & Birey Sayısı Azalır", 0, 0);
-    ctx.restore();
 
     ctx.restore();
 }
