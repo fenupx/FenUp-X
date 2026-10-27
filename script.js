@@ -50,7 +50,7 @@ styleEnjektor.innerHTML = `
     .dropdown-menu {
         position: absolute; top: 60px; right: 0; width: 220px;
         background: rgba(10, 10, 30, 0.95); border: 1px solid var(--neon-blue);
-        border-radius: 15px; backdrop-filter: blur(10px); z-index: 1000;
+        border-radius: 15px; backdrop-filter: blur(10px); z-index: 500;
         box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden;
     }
     .dropdown-header { padding: 15px; background: rgba(0, 210, 255, 0.1); border-bottom: 1px solid rgba(255,255,255,0.1); text-align:left; }
@@ -83,7 +83,7 @@ styleEnjektor.innerHTML = `
     .info-icon { position: absolute; right: 15px; color: #f59e0b; font-size: 1.2rem; cursor: help; z-index: 5; }
     .tooltiptext {
         visibility: hidden; width: 250px; background-color: rgba(0,0,0,0.95); color: #f59e0b; text-align: left;
-        border-radius: 10px; padding: 12px; position: absolute; z-index: 100; bottom: 120%; right: 0;
+        border-radius: 10px; padding: 12px; position: absolute; z-index: 500; bottom: 120%; right: 0;
         font-size: 0.9rem; border: 1px solid #f59e0b; box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
         opacity: 0; transition: opacity 0.3s; pointer-events: none;
     }
@@ -288,22 +288,65 @@ function updateVolumes() {
     }
 }
 
-const fullScreenBtn = document.getElementById('fullscreen-btn');
-if (fullScreenBtn) {
-    fullScreenBtn.onclick = () => {
-        let elem = document.documentElement;
-        if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
-            if (elem.requestFullscreen) { elem.requestFullscreen(); }
-            else if (elem.msRequestFullscreen) { elem.msRequestFullscreen(); }
-            else if (elem.mozRequestFullScreen) { elem.mozRequestFullScreen(); }
-            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT); }
-        } else {
-            if (document.exitFullscreen) { document.exitFullscreen(); }
-            else if (document.msExitFullscreen) { document.msExitFullscreen(); }
-            else if (document.mozCancelFullScreen) { document.mozCancelFullScreen(); }
-            else if (document.webkitExitFullscreen) { document.webkitExitFullscreen(); }
+// --- EVRENSEL TAM EKRAN (FULLSCREEN API) VE İKON SENKRONİZASYONU (KURAL 7.3) ---
+function toggleGlobalFullscreen() {
+    const elem = document.documentElement;
+    const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+    if (!isFull) {
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen().catch(() => {});
+        } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen();
+        } else if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+        } else if (elem.msRequestFullscreen) {
+            elem.msRequestFullscreen();
         }
-    };
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen().catch(() => {});
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen) {
+            document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    }
+}
+
+function updateFullscreenIcons() {
+    const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+    const btns = [
+        document.getElementById('btn-global-fullscreen'),
+        document.getElementById('fullscreen-btn')
+    ];
+    btns.forEach(btn => {
+        if (!btn) return;
+        const icon = btn.querySelector('i');
+        if (icon) {
+            icon.className = isFull ? 'fas fa-compress' : 'fas fa-expand';
+        }
+        btn.setAttribute('title', isFull ? 'Tam Ekrandan Çık (ESC / F11)' : 'Tam Ekran (F11)');
+    });
+
+    const labFsBtn = document.getElementById('btn-lab-fullscreen');
+    if (labFsBtn) {
+        const icon = labFsBtn.querySelector('i');
+        const text = labFsBtn.querySelector('span');
+        if (icon) icon.className = isFull ? 'fas fa-compress' : 'fas fa-expand';
+        if (text) text.textContent = isFull ? 'Küçült' : 'Tam Ekran';
+        labFsBtn.setAttribute('title', isFull ? 'Tam Ekrandan Çık' : 'Tam Ekran');
+    }
+}
+
+['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
+    document.addEventListener(evt, updateFullscreenIcons);
+});
+
+const globalFsBtn = document.getElementById('btn-global-fullscreen') || document.getElementById('fullscreen-btn');
+if (globalFsBtn) {
+    globalFsBtn.onclick = toggleGlobalFullscreen;
 }
 
 function playSound(obj) { 
@@ -404,7 +447,7 @@ let isGlobalPaused = false;
 
 const pauseOverlay = document.createElement('div');
 pauseOverlay.id = "master-pause-overlay";
-pauseOverlay.style.cssText = "position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.95); z-index:10000; display:flex; justify-content:center; align-items:center; flex-direction:column; backdrop-filter:blur(10px);";
+pauseOverlay.style.cssText = "position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.95); z-index:2000; display:flex; justify-content:center; align-items:center; flex-direction:column; backdrop-filter:blur(10px);";
 pauseOverlay.innerHTML = `
     <i class="fas fa-pause-circle" style="font-size:7rem; color:#00d2ff; margin-bottom:20px;"></i>
     <h1 style="color:#fff; font-size:4.5rem; text-shadow:0 0 20px #00d2ff; margin:0; text-align:center;">YARIŞMA DURDURULDU</h1>
@@ -441,7 +484,7 @@ function toggleMasterPause() {
     }
 }
 
-masterPauseBtn.onclick = toggleMasterPause;
+if(masterPauseBtn) masterPauseBtn.onclick = toggleMasterPause;
 const btnMasterResume = document.getElementById('btn-master-resume');
 if(btnMasterResume) btnMasterResume.onclick = toggleMasterPause;
 

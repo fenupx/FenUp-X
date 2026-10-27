@@ -1250,17 +1250,20 @@ function resetCurrentExperiment() {
 }
 
 function toggleLabFullscreen() {
-    const labView = document.getElementById('lab-view');
-    if (!document.fullscreenElement) {
-        if (labView.requestFullscreen) {
-            labView.requestFullscreen();
-        } else if (labView.webkitRequestFullscreen) {
-            labView.webkitRequestFullscreen();
+    const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+    if (!isFull) {
+        const elem = document.documentElement;
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen().catch(() => {});
+        } else if (elem.webkitRequestFullscreen) {
+            elem.webkitRequestFullscreen();
         }
         showLabToast("Laboratuvar tam ekran moduna alındı");
     } else {
         if (document.exitFullscreen) {
-            document.exitFullscreen();
+            document.exitFullscreen().catch(() => {});
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
         }
     }
 }

@@ -6,8 +6,8 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Nunito', sans-serif; outline: none !important; -webkit-tap-highlight-color: transparent; }
-button, .mode-btn, .class-card, .unit-card, .answer-btn, .t-ans-btn, .action-btn, .module-btn, .preset-btn, .lb-tab-btn, .text-btn, .icon-btn, .back-link, .close-btn, .f-btn, .dropdown-item { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
-body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
+button, .mode-btn, .class-card, .unit-card, .answer-btn, .t-ans-btn, .action-btn, .module-btn, .preset-btn, .lb-tab-btn, .text-btn, .icon-btn, .back-link, .close-btn, .f-btn, .dropdown-item, .lab-pill-btn, .lab-ctrl-btn, .lab-step-btn, .unit-pill, .difficulty-pill, .control-btn, .lab-tool-btn, .lab-preset-btn, .lab-toggle-btn, .nav-tab, .tab-btn, .mode-card, .btn-action, .social-icon, .toggle-pass-icon { touch-action: manipulation; user-select: none; -webkit-user-select: none; }
+body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; overflow-x: hidden; overflow-y: auto; }
 #starfield { position: fixed; top: 0; left: 0; z-index: -1; width: 100%; height: 100%; }
 
 .top-header {
@@ -26,22 +26,48 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .fenupx-footer { position: fixed; bottom: 20px; left: 0; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 50; transition: opacity 0.4s ease; }
 .social-icon { color: rgba(255,255,255,0.5); font-size: 2rem; transition: 0.3s; }
 .social-icon:hover { color: var(--neon-blue); transform: scale(1.2); }
-.hidden-footer { opacity: 0; pointer-events: none; }
+.hidden-footer { display: none !important; opacity: 0; pointer-events: none !important; }
 
 .top-controls { display: flex; gap: 10px; }
 .volume-control { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; display:flex; align-items: center; gap: 10px; }
 .icon-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition:0.3s; }
 .icon-btn:hover { color: var(--neon-blue); }
 
-/* SCENE VE PANEL OPTİMİZASYONLARI */
+/* SCENE VE PANEL OPTİMİZASYONLARI (KURAL 7.2 DİKEY AKIŞ VE PARDUS ETAP EMNİYETİ) */
 .scene {
-  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 90vw; max-width: 1200px;
-  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  position: relative;
+  margin: 100px auto 40px auto;
+  width: 90vw;
+  max-width: 1200px;
+  min-height: calc(100dvh - 160px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   transition: 0.3s ease;
+  padding-bottom: 80px;
+  box-sizing: border-box;
 }
 
-.is-hidden { display: none !important; }
+/* KURAL 7.1 GÖRÜNMEZ KATMAN VE TIKLAMA İLETME ZIRHI */
+.is-hidden {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+.modal-overlay.is-hidden,
+.modal-overlay:not(.is-open),
+#cookie-consent.is-hidden,
+.cookie-banner.is-hidden,
+#master-pause-overlay.is-hidden,
+#cards-overlay.is-hidden,
+#blackhole-overlay.is-hidden,
+#quiz-end.is-hidden {
+  display: none !important;
+  pointer-events: none !important;
+}
 
 .glass-panel {
   background: var(--glass); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -484,7 +510,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .cookie-banner {
     position: fixed; bottom: 16px; right: 16px; left: auto; transform: none;
     background: rgba(15, 23, 42, 0.96); border: 1px solid rgba(0, 210, 255, 0.6);
-    padding: 12px 16px; border-radius: 14px; z-index: 10000;
+    padding: 12px 16px; border-radius: 14px; z-index: 1000;
     display: flex; align-items: center; gap: 12px; box-shadow: 0 8px 28px rgba(0, 0, 0, 0.85);
     width: auto; max-width: 420px; backdrop-filter: blur(10px); transition: 0.4s ease;
     min-width: 0; box-sizing: border-box;
@@ -519,7 +545,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     width: 100vw !important; height: 100vh !important;
     overflow: hidden !important; 
     background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
-    z-index: 200000; display: flex; justify-content: center; align-items: center;
+    z-index: 2000; display: flex; justify-content: center; align-items: center;
     transition: opacity 0.3s ease;
 }
 
@@ -1091,10 +1117,10 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 .lab-view-scene {
     width: 95vw;
     max-width: 1400px;
-    max-height: 90vh;
+    min-height: calc(100dvh - 140px);
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 24px 28px;
+    padding: 24px 28px 80px 28px;
     box-sizing: border-box;
     text-align: left;
 }
@@ -1900,7 +1926,7 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     font-size: 0.95rem;
     font-weight: 700;
     box-shadow: 0 0 30px rgba(0, 210, 255, 0.4);
-    z-index: 99999;
+    z-index: 1000;
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -1919,8 +1945,8 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 /* Tablet & Küçük Ekranlar (< 1024px Dikey) */
 @media (max-width: 1024px) {
     .lab-view-scene {
-        padding: 16px 14px !important;
-        max-height: 92vh !important;
+        padding: 16px 14px 80px 14px !important;
+        max-height: none !important;
     }
     .lab-main-heading {
         font-size: 1.7rem;
@@ -1957,7 +1983,8 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
 /* Mobil Yatay Ekranlar (Landscape: Masaüstü Düzeni) */
 @media (max-width: 1024px) and (orientation: landscape) {
     .lab-view-scene {
-        max-height: 95vh !important;
+        max-height: none !important;
+        padding-bottom: 80px !important;
     }
     .lab-workspace-body {
         flex-direction: row !important;
@@ -2585,6 +2612,169 @@ body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
     flex-direction: column;
     gap: 8px;
 }
+
+/* ==========================================================================
+   📱 4 KADEMELİ KIRILIM VE DİNAMİK TİPOGRAFİ PROTOKOLÜ (KURAL 7.4 & 7.5)
+   ========================================================================== */
+
+/* 1. KADEME: ULTRA-KOMPAKT MOBİL (≤ 400px) */
+@media (max-width: 400px) {
+    .scene {
+        width: 96vw !important;
+        margin-top: 75px !important;
+        margin-bottom: 25px !important;
+        padding-bottom: 85px !important;
+    }
+    .top-header {
+        padding: 10px 14px !important;
+    }
+    .logo {
+        font-size: 1.55rem !important;
+    }
+    .glass-panel {
+        padding: 16px 12px !important;
+        border-radius: 18px !important;
+    }
+    /* Izgaralar zorunlu tek kolon */
+    .lab-cards-grid,
+    .avatar-grid,
+    .duel-answers,
+    .t-answers,
+    .difficulty-cards,
+    .class-grid,
+    .unit-grid,
+    .mode-cards-grid,
+    .lab-stats-grid {
+        grid-template-columns: 1fr !important;
+    }
+    /* Metrikler ve buton grupları alt alta esnek sarım */
+    .lab-canvas-metrics-bar,
+    .lab-canvas-quick-controls,
+    .metrics-bar,
+    .lab-metric-badge-group,
+    .top-controls,
+    .header-right {
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+    }
+    .metrics-pill,
+    .lab-metric-badge {
+        width: 100% !important;
+        text-align: center;
+        font-size: 0.75rem !important;
+        padding: 6px 10px !important;
+    }
+    .lab-quick-btn,
+    .lab-btn-step,
+    .lab-toggle-btn {
+        min-height: 44px !important;
+        font-size: 0.8rem !important;
+    }
+    .cookie-banner {
+        left: 10px !important;
+        right: 10px !important;
+        bottom: 10px !important;
+        max-width: none !important;
+        flex-direction: column !important;
+        text-align: center !important;
+    }
+}
+
+/* 2. KADEME: STANDART MOBİL (≤ 768px) */
+@media (max-width: 768px) {
+    .scene {
+        margin: 85px auto 30px auto;
+        padding-bottom: 80px;
+        width: 94vw;
+        min-height: calc(100dvh - 130px);
+    }
+    .split-scene {
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+    .lab-workspace-body {
+        flex-direction: column !important;
+    }
+    .lab-canvas-section,
+    .lab-sidebar-section {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .top-header {
+        padding: 12px 20px;
+    }
+    .logo {
+        font-size: 1.8rem;
+    }
+}
+
+/* 3. KADEME: YATAY KOMPAKT / LANDSCAPE (max-height: 520px) */
+@media (max-height: 520px) and (orientation: landscape) {
+    .top-header {
+        padding: 6px 20px !important;
+        background: rgba(0, 0, 0, 0.95) !important;
+    }
+    .logo {
+        font-size: 1.35rem !important;
+    }
+    .scene {
+        margin: 55px auto 20px auto !important;
+        padding-bottom: 40px !important;
+        min-height: auto !important;
+    }
+    .glass-panel {
+        padding: 12px 18px !important;
+    }
+    .lab-view-scene {
+        padding: 6px 12px 40px 12px !important;
+        max-height: none !important;
+    }
+    .lab-workspace-body {
+        flex-direction: row !important;
+        gap: 12px !important;
+    }
+    .lab-canvas-section {
+        flex: 0 0 55% !important;
+        max-width: 55% !important;
+    }
+    .lab-sidebar-section {
+        flex: 0 0 45% !important;
+        max-width: 45% !important;
+    }
+}
+
+/* 4. KADEME: AKILLI TAHTA / 1080P VE GENİŞ EKRANLAR (≥ 1200px) */
+@media (min-width: 1200px) {
+    /* Buton ve dokunmatik hedefler asgari 48px, arka sıralardan okunabilir dinamik tipografi */
+    button,
+    .mode-btn,
+    .action-btn,
+    .answer-btn,
+    .t-ans-btn,
+    .lab-pill-btn,
+    .lab-ctrl-btn,
+    .lab-step-btn,
+    .lab-grade-btn,
+    .icon-btn {
+        min-height: 48px;
+        min-width: 48px;
+    }
+    .answer-btn,
+    .t-ans-btn {
+        font-size: clamp(1rem, 1.25vw, 1.35rem) !important;
+        padding: 14px 20px !important;
+    }
+    .lab-main-heading {
+        font-size: clamp(2rem, 2.4vw, 2.9rem) !important;
+    }
+    .scene {
+        max-width: 1350px;
+    }
+    .lab-view-scene {
+        max-width: 1500px;
+    }
+}
+
 
 
 
