@@ -15849,12 +15849,12 @@ function setupCanvasPointerEvents() {
         const canvasX = x * scaleX;
         const canvasY = y * scaleY;
 
-        // Deney 5.1: Ay Yörünge Açısı Manuel Sürükleme
+        // Deney 5.1: Ay Yörünge Açısı Manuel Sürükleme (Saat yönünün tersi, 0° = Yeni Ay)
         if (labState.activeExperimentId === "5.1" && labState.moonPhases && labState.moonPhases.isDragging) {
             const mp = labState.moonPhases;
             const dx = canvasX - 360;
             const dy = canvasY - 250;
-            const deg = Math.round((Math.atan2(dy, dx) * 180 / Math.PI + 360) % 360);
+            const deg = Math.round((Math.atan2(dy, -dx) * 180 / Math.PI + 360) % 360);
             mp.angle = deg;
             mp.isPlaying = false;
             updateMoonPhasesDOMControls();
@@ -15878,7 +15878,7 @@ function setupCanvasPointerEvents() {
         // Deney 5.6: Şırınga Pistonu Manuel İtme / Çekme
         if (labState.activeExperimentId === "5.6" && labState.compressibility && labState.compressibility.isDragging) {
             const cp = labState.compressibility;
-            const pct = Math.max(0, Math.min(100, Math.round((540 - canvasX) / 2.5)));
+            const pct = Math.max(0, Math.min(100, Math.round(((420 + 154) - canvasX) / 1.8)));
             cp.forcePercent = pct;
             updateCompressibilityPhysics();
             return;
@@ -16333,8 +16333,8 @@ function setupCanvasPointerEvents() {
             const canvasX = (clientX - rect.left) * scaleX;
             const canvasY = (clientY - rect.top) * scaleY;
             const cp = labState.compressibility;
-            const plungerX = 540 - cp.plungerPos * 250;
-            if (Math.abs(canvasX - (plungerX + 204)) <= 50 && Math.abs(canvasY - 240) <= 70) {
+            const plungerX = 420 - cp.plungerPos * 180;
+            if (Math.abs(canvasX - (plungerX + 154)) <= 50 && Math.abs(canvasY - 240) <= 70) {
                 cp.isDragging = true;
             }
         }
@@ -16567,36 +16567,39 @@ function updateMoonPhasesPhysics() {
         mp.angle = (mp.angle + mp.orbitSpeed) % 360;
     }
 
-    const a = mp.angle;
+    const a = (mp.angle % 360 + 360) % 360;
     let name = "Yeni Ay";
-    let illum = 0;
-    let iconClass = "fa-moon";
-    let statusText = "🌑 Ay Güneş ile Dünya arasındadır; Dünya'ya bakan yüzü karanlıktır";
+    let illum = Math.round(((1 - Math.cos(a * Math.PI / 180)) / 2) * 100);
+    let statusText = "🌑 Yeni Ay: Ay, Güneş ile Dünya arasındadır; Dünya'dan bakıldığında görünmez (0. Gün)";
 
     if (a >= 337.5 || a < 22.5) {
-        name = "Yeni Ay"; illum = 0;
-        statusText = "🌑 Yeni Ay: Ay Güneş ile Dünya arasındadır; Dünya'dan görülmez (0. Gün)";
+        name = "Yeni Ay";
+        illum = 0;
+        statusText = "🌑 Yeni Ay: Ay, Güneş ile Dünya'nın tam arasındadır; Dünya'dan bakıldığında ışık alan yüzü görünmez (0% aydınlık, 0. Gün)";
     } else if (a >= 22.5 && a < 67.5) {
-        name = "Hilal (Büyüyen)"; illum = 25;
-        statusText = "🌒 Hilal: Güneş'in batışından hemen sonra batı ufkunda C şeklinde görünür";
+        name = "Hilal (Büyüyen)";
+        statusText = "🌒 Hilal: Dünya'dan bakıldığında batı ufkunda sağ tarafı aydınlık ince hilal (ters C) görülür (~3. Gün)";
     } else if (a >= 67.5 && a < 112.5) {
-        name = "İlk Dördün"; illum = 50;
-        statusText = "🌓 İlk Dördün: Ay'ın sağ yarısı aydınlık (D harfi şeklinde) görünür (7. Gün)";
+        name = "İlk Dördün";
+        illum = 50;
+        statusText = "🌓 İlk Dördün: Dünya'dan bakıldığında sağ tarafı aydınlık 'D' harfi şeklinde yarım daire görünür (7. Gün)";
     } else if (a >= 112.5 && a < 157.5) {
-        name = "Şişkin Ay (Büyüyen)"; illum = 75;
-        statusText = "🌔 Şişkin Ay: Aydınlık alan yarıdan fazla; dolunaya doğru büyüyor";
+        name = "Şişkin Ay (Büyüyen)";
+        statusText = "🌔 Şişkin Ay: Aydınlık alan yarım daireden büyük; Dolunay'a doğru büyümektedir (~10. Gün)";
     } else if (a >= 157.5 && a < 202.5) {
-        name = "Dolunay"; illum = 100;
-        statusText = "🌕 Dolunay: Ay'ın Dünya'ya bakan yüzü tamamen aydınlıktır (14. Gün)";
+        name = "Dolunay";
+        illum = 100;
+        statusText = "🌕 Dolunay: Dünya, Güneş ile Ay'ın arasındadır; Ay'ın Dünya'ya bakan tüm yüzü aydınlıktır (14. Gün)";
     } else if (a >= 202.5 && a < 247.5) {
-        name = "Şişkin Ay (Küçülen)"; illum = 75;
-        statusText = "🌖 Şişkin Ay: Dolunaydan sonra aydınlık alan küçülmeye başlar";
+        name = "Şişkin Ay (Küçülen)";
+        statusText = "🌖 Şişkin Ay: Dolunay'dan sonra aydınlık alan küçülmeye başlar (~18. Gün)";
     } else if (a >= 247.5 && a < 292.5) {
-        name = "Son Dördün"; illum = 50;
-        statusText = "🌗 Son Dördün: Ay'ın sol yarısı aydınlık (ters D şeklinde) görünür (21. Gün)";
+        name = "Son Dördün";
+        illum = 50;
+        statusText = "🌗 Son Dördün: Dünya'dan bakıldığında sol tarafı aydınlık 'ters D' şeklinde yarım daire görünür (21. Gün)";
     } else {
-        name = "Hilal (Küçülen)"; illum = 25;
-        statusText = "🌘 Hilal: Sabah Güneş doğmadan önce doğu ufkunda ters C şeklinde görünür";
+        name = "Hilal (Küçülen)";
+        statusText = "🌘 Hilal: Sabah Güneş doğmadan önce doğu ufkunda 'C' harfi şeklinde ince aydınlık görülür (~25. Gün)";
     }
 
     mp.phaseName = name;
@@ -16701,11 +16704,11 @@ function drawMoonPhasesSimulation() {
     ctx.arc(earthX, earthY, earthR, 0, Math.PI * 2);
     ctx.clip();
 
-    // Gece tarafı
+    // Gece tarafı (Sağ yarı)
     ctx.fillStyle = "#0f172a";
     ctx.fillRect(earthX - earthR, earthY - earthR, earthR * 2, earthR * 2);
 
-    // Gündüz tarafı (Sol yarı)
+    // Gündüz tarafı (Sol yarı - Güneş'e bakan taraf)
     ctx.fillStyle = "#0284c7";
     ctx.fillRect(earthX - earthR, earthY - earthR, earthR, earthR * 2);
 
@@ -16743,22 +16746,33 @@ function drawMoonPhasesSimulation() {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Yörünge Yönü Oku (Saat yönünün tersine)
-    const arrowAng = Math.PI * 1.5;
-    const ax = earthX + orbitR * Math.cos(arrowAng);
-    const ay = earthY + orbitR * Math.sin(arrowAng);
-    ctx.fillStyle = "rgba(148, 163, 184, 0.6)";
+    // Yörünge Yönü Okları (Saat Yönünün Tersi - CCW)
+    // 1. Ok: Alt noktada (6 o'clock: x=earthX, y=earthY+orbitR), hareket Sağa (+X)
+    ctx.fillStyle = "rgba(56, 189, 248, 0.7)";
     ctx.beginPath();
-    ctx.moveTo(ax - 8, ay - 4);
-    ctx.lineTo(ax + 4, ay);
-    ctx.lineTo(ax - 8, ay + 4);
+    ctx.moveTo(earthX + 8, earthY + orbitR);
+    ctx.lineTo(earthX - 4, earthY + orbitR - 5);
+    ctx.lineTo(earthX - 4, earthY + orbitR + 5);
+    ctx.closePath();
+    ctx.fill();
+
+    // 2. Ok: Üst noktada (12 o'clock: x=earthX, y=earthY-orbitR), hareket Sola (-X)
+    ctx.beginPath();
+    ctx.moveTo(earthX - 8, earthY - orbitR);
+    ctx.lineTo(earthX + 4, earthY - orbitR - 5);
+    ctx.lineTo(earthX + 4, earthY - orbitR + 5);
     ctx.closePath();
     ctx.fill();
 
     // 5. Yörüngedeki Ay
+    // Saat Yönünün Tersi Astronomik Eksen:
+    // a=0°: Güneş ile Dünya arasında (Sol: x = earthX - orbitR, y = earthY) -> YENİ AY
+    // a=90°: Alt noktada (x = earthX, y = earthY + orbitR) -> İLK DÖRDÜN
+    // a=180°: Dünya'nın arkasında (Sağ: x = earthX + orbitR, y = earthY) -> DOLUNAY
+    // a=270°: Üst noktada (x = earthX, y = earthY - orbitR) -> SON DÖRDÜN
     const mp = labState.moonPhases;
     const rad = (mp.angle * Math.PI) / 180;
-    const moonX = earthX + orbitR * Math.cos(rad);
+    const moonX = earthX - orbitR * Math.cos(rad);
     const moonY = earthY + orbitR * Math.sin(rad);
     const moonR = 16;
 
@@ -16783,7 +16797,7 @@ function drawMoonPhasesSimulation() {
     ctx.arc(0, 0, moonR, -Math.PI * 0.5, Math.PI * 0.5);
     ctx.fill();
 
-    // Aydınlık yüz (sol)
+    // Aydınlık yüz (sol - Güneş'e bakan taraf)
     ctx.fillStyle = "#f8fafc";
     ctx.beginPath();
     ctx.arc(0, 0, moonR, Math.PI * 0.5, -Math.PI * 0.5);
@@ -16839,12 +16853,7 @@ function drawMoonPhasesSimulation() {
     ctx.lineTo(viewX, viewY + viewR);
     ctx.stroke();
 
-    // Dünya'dan Görünen Ay
-    // Yörünge açısı a:
-    // a=0: Yeni Ay (tam karanlık)
-    // a=90: İlk Dördün (sağ aydınlık, sol karanlık)
-    // a=180: Dolunay (tam aydınlık)
-    // a=270: Son Dördün (sol aydınlık, sağ karanlık)
+    // Dünya'dan Görünen Ay Diski
     const diskR = 50;
 
     // Taban (Karanlık Ay Diski)
@@ -16853,27 +16862,54 @@ function drawMoonPhasesSimulation() {
     ctx.arc(viewX, viewY, diskR, 0, Math.PI * 2);
     ctx.fill();
 
-    // Aydınlık Kısım Çizimi (Matematiksel Evre Şekillendirici)
-    const phi = mp.angle * (Math.PI / 180);
-    const cosPhi = Math.cos(phi);
+    // Aydınlık Kısım Çizimi (Matematiksel Evre Geometrisi)
+    const curAngle = (mp.angle % 360 + 360) % 360;
+    const curRad = curAngle * (Math.PI / 180);
+    const cosA = Math.cos(curRad);
 
     ctx.fillStyle = "#f8fafc";
 
-    if (mp.angle <= 180) {
-        // Yeniay -> Dolunay (Sağ taraf aydınlanıyor)
+    if (curAngle > 0.5 && curAngle < 179.5) {
+        // 0° < a < 180°: Büyüyen Evreler (Dünya'dan bakıldığında SAĞ taraf aydınlık)
+        if (curAngle < 90) {
+            // Hilal (0 < a < 90): Sağda ince hilal (ters C)
+            ctx.beginPath();
+            ctx.arc(viewX, viewY, diskR, -Math.PI * 0.5, Math.PI * 0.5, false);
+            ctx.ellipse(viewX, viewY, Math.max(0.5, cosA * diskR), diskR, 0, Math.PI * 0.5, -Math.PI * 0.5, true);
+            ctx.closePath();
+            ctx.fill();
+        } else {
+            // İlk Dördün ve Şişkin Ay (90 <= a < 180): Sağ yarım daire + sola taşan elips ('D' harfi)
+            ctx.beginPath();
+            ctx.arc(viewX, viewY, diskR, -Math.PI * 0.5, Math.PI * 0.5, false);
+            ctx.ellipse(viewX, viewY, Math.max(0.5, Math.abs(cosA) * diskR), diskR, 0, Math.PI * 0.5, -Math.PI * 0.5, false);
+            ctx.closePath();
+            ctx.fill();
+        }
+    } else if (curAngle >= 179.5 && curAngle <= 180.5) {
+        // Dolunay (a = 180°): Tam aydınlık beyaz daire (100%)
         ctx.beginPath();
-        ctx.arc(viewX, viewY, diskR, -Math.PI * 0.5, Math.PI * 0.5, false); // sağ yarım daire
-        // İç eğri
-        ctx.ellipse(viewX, viewY, Math.abs(cosPhi) * diskR, diskR, 0, Math.PI * 0.5, -Math.PI * 0.5, cosPhi > 0);
+        ctx.arc(viewX, viewY, diskR, 0, Math.PI * 2);
         ctx.fill();
-    } else {
-        // Dolunay -> Yeniay (Sol taraf aydınlık kalıyor)
-        ctx.beginPath();
-        ctx.arc(viewX, viewY, diskR, Math.PI * 0.5, -Math.PI * 0.5, false); // sol yarım daire
-        // İç eğri
-        ctx.ellipse(viewX, viewY, Math.abs(cosPhi) * diskR, diskR, 0, -Math.PI * 0.5, Math.PI * 0.5, cosPhi < 0);
-        ctx.fill();
+    } else if (curAngle > 180.5 && curAngle < 359.5) {
+        // 180° < a < 360°: Küçülen Evreler (Dünya'dan bakıldığında SOL taraf aydınlık)
+        if (curAngle < 270) {
+            // Şişkin Ay (180 < a < 270): Sol yarım daire + sağa taşan elips
+            ctx.beginPath();
+            ctx.arc(viewX, viewY, diskR, Math.PI * 0.5, -Math.PI * 0.5, false);
+            ctx.ellipse(viewX, viewY, Math.max(0.5, Math.abs(cosA) * diskR), diskR, 0, -Math.PI * 0.5, Math.PI * 0.5, false);
+            ctx.closePath();
+            ctx.fill();
+        } else {
+            // Son Dördün ve Hilal (270 <= a < 360): Solda yarım daire ('ters D') veya ince hilal ('C' harfi)
+            ctx.beginPath();
+            ctx.arc(viewX, viewY, diskR, Math.PI * 0.5, -Math.PI * 0.5, false);
+            ctx.ellipse(viewX, viewY, Math.max(0.5, Math.abs(cosA) * diskR), diskR, 0, -Math.PI * 0.5, Math.PI * 0.5, true);
+            ctx.closePath();
+            ctx.fill();
+        }
     }
+    // a <= 0.5 veya a >= 359.5: Yeni Ay (Ay tamamen karanlık taban diskinde kalır)
 
     // Ay Kraterleri / Yüzey Gölgeleri
     if (mp.illuminationPercent > 20) {
@@ -17054,69 +17090,76 @@ function drawDynamometerSimulation() {
     ctx.strokeStyle = "#64748b";
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.roundRect(160, 440, 480, 24, 6);
+    ctx.roundRect(160, 445, 480, 20, 5);
     ctx.fill();
     ctx.stroke();
 
-    // Dikey Metalik Destek Mili
+    // Dikey Metalik Destek Mili (Yukarı taşınmış tavan bağlantısı)
     const rodX = 250;
-    const rodGrad = ctx.createLinearGradient(rodX - 7, 0, rodX + 7, 0);
+    const rodGrad = ctx.createLinearGradient(rodX - 6, 0, rodX + 6, 0);
     rodGrad.addColorStop(0, "#cbd5e1");
     rodGrad.addColorStop(0.5, "#ffffff");
     rodGrad.addColorStop(1, "#64748b");
     ctx.fillStyle = rodGrad;
-    ctx.fillRect(rodX - 7, 50, 14, 390);
+    ctx.fillRect(rodX - 6, 32, 12, 413);
 
-    // Üst Yatay Askı Kolu ve Kelepçe
+    // Üst Yatay Askı Kolu ve Kelepçe (Y: 34-45px)
     ctx.fillStyle = "#475569";
-    ctx.fillRect(rodX - 12, 65, 24, 20); // kelepçe
-    ctx.fillRect(rodX, 71, 160, 8);      // kol
+    ctx.fillRect(rodX - 10, 34, 20, 16); // kelepçe
+    ctx.fillRect(rodX, 39, 150, 6);       // kol
 
     // Dinamometre Askı Halkası
     const dynX = 400;
     ctx.strokeStyle = "#cbd5e1";
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.arc(dynX, 86, 7, 0, Math.PI * 2);
+    ctx.arc(dynX, 51, 6, 0, Math.PI * 2);
     ctx.stroke();
 
-    // 2. Dinamometre Şeffaf Silindirik Gövdesi (Y: 96 -> 300, H: 204, W: 56)
-    const dynY = 96;
-    const dynW = 56;
-    const dynH = 204;
+    // 2. Dinamometre Şeffaf Silindirik Gövdesi (Y: 58 -> 196, H: 138, W: 46)
+    const dynY = 58;
+    const dynW = 46;
+    const dynH = 138;
 
     // Üst ve Alt Metal Başlıklar
     ctx.fillStyle = "#475569";
-    ctx.fillRect(dynX - dynW * 0.5 - 2, dynY, dynW + 4, 12);
-    ctx.fillRect(dynX - dynW * 0.5 - 2, dynY + dynH - 12, dynW + 4, 12);
+    ctx.fillRect(dynX - dynW * 0.5 - 2, dynY, dynW + 4, 10);
+    ctx.fillRect(dynX - dynW * 0.5 - 2, dynY + dynH - 10, dynW + 4, 10);
 
     // Şeffaf Akrilik Tüp Gövdesi
     ctx.fillStyle = "rgba(56, 189, 248, 0.08)";
-    ctx.fillRect(dynX - dynW * 0.5, dynY + 12, dynW, dynH - 24);
+    ctx.fillRect(dynX - dynW * 0.5, dynY + 10, dynW, dynH - 20);
 
     ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(dynX - dynW * 0.5, dynY + 12, dynW, dynH - 24);
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(dynX - dynW * 0.5, dynY + 10, dynW, dynH - 20);
 
     // 10 Eşit Bölmeli Dinamometre Ölçek Çizgileri (0 ctx.fillText)
     ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+    const scaleTopY = dynY + 18;
+    const scaleHeight = dynH - 36;
     for (let i = 0; i <= 10; i++) {
-        const ty = dynY + 24 + i * 16;
+        const ty = scaleTopY + (i / 10) * scaleHeight;
         const isMajor = (i % 2 === 0);
         ctx.lineWidth = isMajor ? 2 : 1;
         ctx.beginPath();
-        ctx.moveTo(dynX - dynW * 0.5 + 4, ty);
-        ctx.lineTo(dynX - dynW * 0.5 + (isMajor ? 16 : 9), ty);
+        ctx.moveTo(dynX - dynW * 0.5 + 3, ty);
+        ctx.lineTo(dynX - dynW * 0.5 + (isMajor ? 13 : 8), ty);
         ctx.stroke();
     }
 
-    // 3. Helezonik Sarmal Yay Çizimi
+    // 3. Helezonik Sarmal Yay ve Uzama Hesaplaması
     const dm = labState.dynamometer;
-    const springStartY = dynY + 16;
-    const stretchPx = dm.currentStretch * 8; // cm to px
-    const springEndY = springStartY + 60 + stretchPx;
+    const springStartY = dynY + 14;
 
-    const springWireWidth = { thin: 2.2, medium: 3.8, thick: 5.5 }[dm.springType] || 3.8;
+    // Uzama piksel hesabı: skala boyutu ile orantılı
+    const maxTravelPx = scaleHeight;
+    const maxReferenceStretch = 30.0;
+    const stretchRatio = Math.min(1.0, Math.max(0, dm.currentStretch / maxReferenceStretch));
+    const stretchPx = stretchRatio * maxTravelPx;
+    const springEndY = springStartY + 24 + stretchPx;
+
+    const springWireWidth = { thin: 2.0, medium: 3.2, thick: 4.8 }[dm.springType] || 3.2;
     const springColor = { thin: "#38bdf8", medium: "#facc15", thick: "#ef4444" }[dm.springType] || "#facc15";
 
     ctx.save();
@@ -17128,73 +17171,81 @@ function drawDynamometerSimulation() {
     ctx.beginPath();
     ctx.moveTo(dynX, springStartY);
 
-    const coils = 12;
+    const coils = 11;
     const coilH = (springEndY - springStartY) / coils;
     for (let c = 0; c < coils; c++) {
         const cy = springStartY + c * coilH;
         const dir = (c % 2 === 0) ? 1 : -1;
         ctx.bezierCurveTo(
-            dynX + 16 * dir, cy + coilH * 0.25,
-            dynX + 16 * dir, cy + coilH * 0.75,
+            dynX + 13 * dir, cy + coilH * 0.25,
+            dynX + 13 * dir, cy + coilH * 0.75,
             dynX, cy + coilH
         );
     }
     ctx.stroke();
     ctx.restore();
 
-    // 4. İbre Mili ve Kırmızı Gösterge Oku
-    ctx.strokeStyle = "#cbd5e1";
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    ctx.moveTo(dynX, springEndY);
-    ctx.lineTo(dynX, dynY + dynH + 15 + stretchPx);
-    ctx.stroke();
-
-    // Kırmızı İbre (Ölçeği Gösteren Ok)
+    // 4. Kırmızı İbre Oku (Ölçek hizasında)
     ctx.fillStyle = "#ef4444";
     ctx.beginPath();
-    ctx.moveTo(dynX - dynW * 0.5 + 14, springEndY);
+    ctx.moveTo(dynX - dynW * 0.5 + 12, springEndY);
     ctx.lineTo(dynX - dynW * 0.5 + 2, springEndY - 4);
     ctx.lineTo(dynX - dynW * 0.5 + 2, springEndY + 4);
     ctx.closePath();
     ctx.fill();
 
-    // 5. Alt Kanca
-    const hookY = dynY + dynH + 15 + stretchPx;
+    // 5. Alt Kanca ve Ağırlık Bounding Box Clamping (Kesin Tuval Emniyeti)
+    const weightH = 12;
+    const weightGap = 3;
+    const totalWeights = Math.max(0, dm.weightsCount);
+    const totalWeightHeight = totalWeights * (weightH + weightGap);
+
+    // Tuval altından kesinlikle en az 45px yukarıda durdurma garantisi (500 - 45 = 455)
+    const maxBottomY = 445;
+    const maxHookY = maxBottomY - 16 - totalWeightHeight;
+    const desiredHookY = dynY + dynH + 8 + stretchPx * 0.65;
+    const hookY = Math.min(desiredHookY, maxHookY);
+
+    // Göstergeden Kancaya İnen Metal Mil
     ctx.strokeStyle = "#cbd5e1";
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2.2;
     ctx.beginPath();
-    ctx.arc(dynX, hookY + 8, 8, Math.PI * 1.5, Math.PI * 0.8, false);
+    ctx.moveTo(dynX, springEndY);
+    ctx.lineTo(dynX, hookY);
     ctx.stroke();
 
-    // 6. Asılı Ağırlıklar (Her biri 2 N)
-    const weightH = 16;
-    const weightW = 44;
-    const startWeightY = hookY + 22;
+    // Alt Kanca Çengeli
+    ctx.beginPath();
+    ctx.arc(dynX, hookY + 6, 6, Math.PI * 1.5, Math.PI * 0.8, false);
+    ctx.stroke();
 
-    for (let w = 0; w < dm.weightsCount; w++) {
-        const wy = startWeightY + w * (weightH + 4);
+    // 6. Asılı Ağırlık Diskleri (Her biri 2 N)
+    const weightW = 40;
+    const startWeightY = hookY + 16;
 
-        // Ağırlık Kütlesi (Gümüş/Bronz Disk)
+    for (let w = 0; w < totalWeights; w++) {
+        const wy = startWeightY + w * (weightH + weightGap);
+
+        // Ağırlık Kütlesi (Metalik Disk)
         const wGrad = ctx.createLinearGradient(dynX - weightW * 0.5, 0, dynX + weightW * 0.5, 0);
         wGrad.addColorStop(0, "#94a3b8");
-        wGrad.addColorStop(0.5, "#f1f5f9");
+        wGrad.addColorStop(0.5, "#f8fafc");
         wGrad.addColorStop(1, "#475569");
         ctx.fillStyle = wGrad;
         ctx.strokeStyle = "#334155";
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 1.2;
 
         ctx.beginPath();
-        ctx.roundRect(dynX - weightW * 0.5, wy, weightW, weightH, 4);
+        ctx.roundRect(dynX - weightW * 0.5, wy, weightW, weightH, 3);
         ctx.fill();
         ctx.stroke();
 
         // Ağırlık Askı Çengeli
         ctx.strokeStyle = "#cbd5e1";
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(dynX, wy);
-        ctx.lineTo(dynX, wy - 4);
+        ctx.lineTo(dynX, wy - 3);
         ctx.stroke();
     }
 
@@ -18062,13 +18113,13 @@ function drawShadowSimulation() {
 
     // Pozisyonlar:
     // Fener: sabit x=120, y=250
-    // Cisim: x = 120 + sourceDist * 6.5
-    // Perde: x = cisimX + screenDist * 6.5
+    // Cisim: x = 120 + sourceDist * 6.0
+    // Perde: x = cisimX + screenDist * 6.0 (Tuval sınırına clamp)
     const fenerX = 120;
     const fenerY = 250;
-    const cisimX = fenerX + sh.sourceDist * 6.0;
+    const cisimX = Math.min(480, fenerX + sh.sourceDist * 6.0);
     const cisimY = 250;
-    const perdeX = cisimX + sh.screenDist * 6.0;
+    const perdeX = Math.min(730, cisimX + sh.screenDist * 6.0);
     const perdeY = 250;
     const objR = sh.objectRadius;
 
@@ -18089,10 +18140,12 @@ function drawShadowSimulation() {
     ctx.fillRect(fenerX - 35, fenerY + 14, 8, 120);
 
     if (sh.lampOn) {
-        // Işık Konisi ve Teğet Işınlar
-        const tanAngle = Math.asin(objR / (cisimX - fenerX));
-        const upperPerdeY = fenerY - Math.tan(tanAngle) * (perdeX - fenerX);
-        const lowerPerdeY = fenerY + Math.tan(tanAngle) * (perdeX - fenerX);
+        // Işık Konisi ve Teğet Işınlar (Sınır Güvenceli Trigonometri)
+        const dx = Math.max(objR + 15, cisimX - fenerX);
+        const sinVal = Math.min(0.92, objR / dx);
+        const tanAngle = Math.tan(Math.asin(sinVal));
+        const upperPerdeY = Math.max(105, fenerY - tanAngle * (perdeX - fenerX));
+        const lowerPerdeY = Math.min(375, fenerY + tanAngle * (perdeX - fenerX));
 
         // Işık Hüzmesi Gradyanı
         const beamGrad = ctx.createLinearGradient(fenerX, fenerY, perdeX, fenerY);
@@ -18207,12 +18260,12 @@ function initCompressibilityState() {
     cp.plungerPos = 0.0;
     cp.targetPlungerPos = 0.0;
 
-    // 35 parçacık üret
+    // 35 parçacık üret (140 -> 440 aralığına uygun)
     cp.particles = [];
     for (let i = 0; i < 35; i++) {
         cp.particles.push({
-            x: 230 + Math.random() * 200,
-            y: 190 + Math.random() * 90,
+            x: 160 + Math.random() * 180,
+            y: 195 + Math.random() * 85,
             vx: (Math.random() - 0.5) * 2.5,
             vy: (Math.random() - 0.5) * 2.5,
             r: 4
@@ -18312,10 +18365,10 @@ function updateCompressibilityPhysics() {
     cp.plungerPos += (cp.targetPlungerPos - cp.plungerPos) * 0.15;
 
     // Parçacık Hareketi
-    const barrelLeft = 210;
-    const barrelRight = 540 - cp.plungerPos * 250;
-    const barrelTop = 195;
-    const barrelBottom = 285;
+    const barrelLeft = 148;
+    const barrelRight = 420 - cp.plungerPos * 180 - 10;
+    const barrelTop = 192;
+    const barrelBottom = 288;
 
     cp.particles.forEach(p => {
         if (cp.state === 'gas') {
@@ -18374,16 +18427,16 @@ function drawCompressibilitySimulation() {
 
     const cp = labState.compressibility;
 
-    // Şırınga Boyutları:
-    // Nozul: x=140 -> 200, y=230 -> 250
-    // Gövde: x=200 -> 560, y=180 -> 300 (W: 360, H: 120)
-    const barrelX = 200;
-    const barrelY = 180;
-    const barrelW = 360;
-    const barrelH = 120;
+    // Şırınga Boyutları (Tuval İçinde Emniyetli Konumlandırma):
+    // Nozul: x=105 -> 140, y=230 -> 250
+    // Gövde: x=140 -> 440, y=185 -> 295 (W: 300, H: 110)
+    const barrelX = 140;
+    const barrelY = 185;
+    const barrelW = 300;
+    const barrelH = 110;
 
-    // Piston Pozisyonu (X: 540 -> 380)
-    const plungerX = 540 - cp.plungerPos * 250;
+    // Piston Pozisyonu (X: 420 -> 320)
+    const plungerX = 420 - cp.plungerPos * 180;
 
     // 1. Şırınga İçi Madde Doldurma
     ctx.save();
@@ -18411,9 +18464,9 @@ function drawCompressibilitySimulation() {
         // Sıvı içi düzenli yakın tanecikler
         ctx.fillStyle = "rgba(255, 255, 255, 0.55)";
         for (let row = 0; row < 5; row++) {
-            for (let col = 0; col < 14; col++) {
-                const px = barrelX + 16 + col * 24;
-                const py = barrelY + 16 + row * 22;
+            for (let col = 0; col < 13; col++) {
+                const px = barrelX + 16 + col * 21;
+                const py = barrelY + 16 + row * 20;
                 ctx.beginPath();
                 ctx.arc(px, py, 4, 0, Math.PI * 2);
                 ctx.fill();
@@ -18427,9 +18480,9 @@ function drawCompressibilitySimulation() {
         // Kristalize Sıkı Kafes Tanecikleri
         ctx.fillStyle = "#fde68a";
         for (let row = 0; row < 6; row++) {
-            for (let col = 0; col < 16; col++) {
-                const px = barrelX + 12 + col * 21;
-                const py = barrelY + 12 + row * 19;
+            for (let col = 0; col < 15; col++) {
+                const px = barrelX + 12 + col * 19;
+                const py = barrelY + 12 + row * 17;
                 ctx.beginPath();
                 ctx.arc(px, py, 4, 0, Math.PI * 2);
                 ctx.fill();
@@ -18445,15 +18498,15 @@ function drawCompressibilitySimulation() {
 
     // Nozul Ucu ve Kapalı Tıpa / Parmak
     ctx.fillStyle = "#334155";
-    ctx.fillRect(160, 230, 40, 20); // nozul
+    ctx.fillRect(105, 230, 35, 20); // nozul
     ctx.fillStyle = "#ef4444";
-    ctx.fillRect(145, 225, 15, 30); // kırmızı sızdırmaz tıkaç
+    ctx.fillRect(90, 225, 15, 30);  // kırmızı sızdırmaz tıkaç
 
     // Dereceli Hacim Çizgileri (0 ctx.fillText)
     ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
-    for (let t = 1; t <= 10; t++) {
-        const tx = barrelX + t * 32;
-        const tH = (t % 2 === 0) ? 18 : 10;
+    for (let t = 1; t <= 9; t++) {
+        const tx = barrelX + t * 28;
+        const tH = (t % 2 === 0) ? 16 : 9;
         ctx.lineWidth = (t % 2 === 0) ? 2 : 1;
         ctx.beginPath();
         ctx.moveTo(tx, barrelY);
@@ -18471,25 +18524,25 @@ function drawCompressibilitySimulation() {
     ctx.fill();
     ctx.stroke();
 
-    // Piston Mili
+    // Piston Mili (150px boyunda, dışarı taşmaz)
     ctx.fillStyle = "#94a3b8";
-    ctx.fillRect(plungerX + 4, barrelY + barrelH * 0.5 - 10, 200, 20);
+    ctx.fillRect(plungerX + 4, barrelY + barrelH * 0.5 - 9, 150, 18);
 
     // Başparmak Basma Tablası
     ctx.fillStyle = "#64748b";
-    ctx.fillRect(plungerX + 204, barrelY + 10, 16, barrelH - 20);
+    ctx.fillRect(plungerX + 154, barrelY + 10, 14, barrelH - 20);
 
-    // İtme Kuvveti Oku
+    // İtme Kuvveti Oku (Maksimum X: ~655px <= 800px Tuval Sınırı)
     if (cp.forcePercent > 0) {
         ctx.fillStyle = "#ef4444";
         ctx.beginPath();
-        ctx.moveTo(plungerX + 225, barrelY + barrelH * 0.5);
-        ctx.lineTo(plungerX + 265, barrelY + barrelH * 0.5 - 14);
-        ctx.lineTo(plungerX + 265, barrelY + barrelH * 0.5 - 6);
-        ctx.lineTo(plungerX + 295, barrelY + barrelH * 0.5 - 6);
-        ctx.lineTo(plungerX + 295, barrelY + barrelH * 0.5 + 6);
-        ctx.lineTo(plungerX + 265, barrelY + barrelH * 0.5 + 6);
-        ctx.lineTo(plungerX + 265, barrelY + barrelH * 0.5 + 14);
+        ctx.moveTo(plungerX + 172, barrelY + barrelH * 0.5);
+        ctx.lineTo(plungerX + 205, barrelY + barrelH * 0.5 - 12);
+        ctx.lineTo(plungerX + 205, barrelY + barrelH * 0.5 - 5);
+        ctx.lineTo(plungerX + 235, barrelY + barrelH * 0.5 - 5);
+        ctx.lineTo(plungerX + 235, barrelY + barrelH * 0.5 + 5);
+        ctx.lineTo(plungerX + 205, barrelY + barrelH * 0.5 + 5);
+        ctx.lineTo(plungerX + 205, barrelY + barrelH * 0.5 + 12);
         ctx.closePath();
         ctx.fill();
     }
@@ -19041,8 +19094,13 @@ function drawWaterStateSimulation() {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Grafik Eğrisi Çizimi (Neon Çizgi)
+    // Grafik Eğrisi Çizimi (Neon Çizgi - Sınır Taşma Korumalı)
     if (ws.history.length > 1) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(gx, gy, gw, gh);
+        ctx.clip();
+
         ctx.strokeStyle = "#facc15";
         ctx.lineWidth = 3;
         ctx.shadowColor = "#facc15";
@@ -19052,13 +19110,13 @@ function drawWaterStateSimulation() {
         ws.history.forEach((pt, idx) => {
             // t: 0 -> 12 dk (gx -> gx + gw)
             // temp: -20°C -> 120°C (gy + gh -> gy)
-            const px = gx + (pt.t / 12) * gw;
-            const py = y0 - (pt.temp / 100) * (y0 - y100);
+            const px = Math.min(gx + gw, Math.max(gx, gx + (pt.t / 12) * gw));
+            const py = Math.min(gy + gh, Math.max(gy, y0 - (pt.temp / 100) * (y0 - y100)));
             if (idx === 0) ctx.moveTo(px, py);
             else ctx.lineTo(px, py);
         });
         ctx.stroke();
-        ctx.shadowBlur = 0;
+        ctx.restore();
     }
 
     ctx.restore();
@@ -19691,7 +19749,7 @@ function recordMeasurement() {
             col1: mp.phaseName,
             col2: `${Math.round(mp.angle)}°`,
             col3: `%${mp.illuminationPercent}`,
-            col4: mp.phaseName.includes("Dördün") ? "Yarım Daire" : (mp.phaseName === "Dolunay" ? "Tam Daire" : "Hilal / Karanlık"),
+            col4: mp.phaseName.includes("Dördün") ? "Yarım Daire" : (mp.phaseName === "Dolunay" ? "Tam Daire" : (mp.phaseName === "Yeni Ay" ? "Karanlık (Görülmez)" : (mp.phaseName.includes("Hilal") ? "Hilal (İnce Yay)" : "Şişkin Daire"))),
             col5: `~${Math.round((mp.angle / 360) * 29.5)} Gün`
         };
         mp.measurements.push(row);
