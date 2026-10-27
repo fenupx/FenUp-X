@@ -65,55 +65,55 @@ export const EXPERIMENTS_DATABASE = [
         desc: "Seri bağlı pil ve ampul sayılarını bağımsız değişken olarak değiştirip devre parlaklığını test edin."
     },
 
-    // 6. SINIF (9 DENEY)
+    // 6. SINIF (9 DENEY — İLK 5 DENEY AKTİF)
     {
-        id: "6.1", grade: 6, unit: 2, unitName: "Kuvvet ve Hareket",
-        title: "Sabit Süratli Hareket Simülatörü",
-        code: "FB.6.2.1", bookRef: "1. Kitap, s. 70–85",
+        id: "6.1", grade: 6, unit: 1, unitName: "Güneş Sistemi ve Tutulmalar",
+        title: "Güneş ve Ay Tutulmaları Simülatörü",
+        code: "FB.6.1.3 - FB.6.1.4", bookRef: "1. Kitap, s. 30–36",
         active: true, // 🏆 AKTİF!
-        desc: "100 metrelik ölçüm pistinde sabit süratle ilerleyen aracın yol-zaman ve sürat-zaman grafiklerini eşzamanlı inceleyin."
+        desc: "Güneş, Dünya ve Ay'ın yörünge konumlarını kontrol ederek Güneş Tutulması (Ay ortada, Yeniay, gündüz dar alanda tam/yarı gölge) ve Ay Tutulması (Dünya ortada, Dolunay, gece geniş konide kızıl/kanlı Ay) olaylarını canlı inceleyin."
     },
     {
         id: "6.2", grade: 6, unit: 2, unitName: "Kuvvet ve Hareket",
         title: "Bileşke Kuvvet ve Halat Çekmece",
-        code: "FB.6.2.2", bookRef: "1. Kitap, s. 54–69",
+        code: "FB.6.2.1 - FB.6.2.2", bookRef: "1. Kitap, s. 46–61",
         active: true, // 🏆 AKTİF!
         desc: "Doğu ve batı yönlü kuvvetleri cisme uygulayarak bileşke kuvveti (R), hareket yönünü ve dengelenmiş / dengelenmemiş kuvvet durumlarını test edin."
     },
     {
-        id: "6.3", grade: 6, unit: 3, unitName: "Madde ve Isı",
+        id: "6.3", grade: 6, unit: 2, unitName: "Kuvvet ve Hareket",
+        title: "Sabit Süratli Hareket Simülatörü",
+        code: "FB.6.2.3", bookRef: "1. Kitap, s. 63–73",
+        active: true, // 🏆 AKTİF!
+        desc: "100 metrelik ölçüm pistinde sabit süratle ilerleyen aracın yol-zaman ve sürat-zaman grafiklerini eşzamanlı inceleyin."
+    },
+    {
+        id: "6.4", grade: 6, unit: 4, unitName: "Işığın Yansıması ve Aynalar",
+        title: "Yansıma Kanunları ve Aynalar Simülatörü",
+        code: "FB.6.4.1 - FB.6.4.3", bookRef: "1. Kitap, s. 136–161",
+        active: true, // 🏆 AKTİF!
+        desc: "Düzlem aynada gelen ve yansıyan ışın ile yüzey normali arasındaki gelme=yansıma (i=r) kanununu, düzgün/dağınık yansımayı ve çukur/tümsek aynalarda cisim mesafesine göre görüntü özelliklerini simüle edin."
+    },
+    {
+        id: "6.5", grade: 6, unit: 5, unitName: "Maddenin Doğası ve Yoğunluk",
         title: "Sıvıların Yoğunluğu ve Yoğunluk Kulesi",
-        code: "FB.6.3.2", bookRef: "1. Kitap, s. 126–139",
+        code: "FB.6.5.3 - FB.6.5.4", bookRef: "2. Kitap, s. 38–59",
         active: true, // 🏆 AKTİF!
         desc: "Bal, gliserin, su ve zeytinyağını aynı silindire dökerek tabakalaşmayı ve içine bırakılan cisimlerin yüzme-batma hallerini gözlemleyin."
     },
     {
-        id: "6.4", grade: 6, unit: 3, unitName: "Madde ve Isı",
-        title: "Isı İletkenliği ve Yalıtım Simülatörü",
-        code: "FB.6.4.1", bookRef: "1. Kitap, s. 140–155",
-        active: true, // 🏆 AKTİF!
-        desc: "Bakır, alüminyum ve demir çubuklarda ısının iletim hızını balmumuna bağlı bilyelerin düşmesiyle ve binalarda ısı yalıtımını karşılaştırın."
-    },
-    {
-        id: "6.5", grade: 6, unit: 1, unitName: "Güneş Sistemi ve Tutulmalar",
-        title: "Güneş ve Ay Tutulması Geometrisi Simülatörü",
-        code: "FB.6.1.1", bookRef: "1. Kitap, s. 16–29",
-        active: false,
-        desc: "Güneş, Dünya ve Ay'ın yörünge düğüm noktalarını hizalayarak tam ve parçalı tutulmaların oluşumunu simüle edin."
-    },
-    {
-        id: "6.6", grade: 6, unit: 4, unitName: "Işık ve Ses",
-        title: "Düzlem Aynada Yansıma Kanunları (i = r)",
-        code: "FB.6.4.1", bookRef: "2. Kitap, s. 14–29",
-        active: false,
-        desc: "Açıölçer üzerinde lazer ışınını aynaya göndererek gelme açısı ile yansıma açısının eşitliğini doğrulayın."
-    },
-    {
-        id: "6.7", grade: 6, unit: 4, unitName: "Işık ve Ses",
+        id: "6.6", grade: 6, unit: 4, unitName: "Işığın Yansıması ve Renkler",
         title: "Işığın Soğurulması ve Renklerin Isınma Etkisi",
-        code: "FB.6.4.2", bookRef: "2. Kitap, s. 30–43",
+        code: "FB.6.4.4 - FB.6.4.6", bookRef: "2. Kitap, s. 14–29",
         active: false,
         desc: "Siyah, beyaz ve renkli kumaşların ışığı soğurma miktarlarını sıcaklık artışı sensörleriyle eşzamanlı izleyin."
+    },
+    {
+        id: "6.7", grade: 6, unit: 5, unitName: "Maddenin Doğası ve Yoğunluk",
+        title: "Katı Maddelerin Yoğunluk Ölçüm İstasyonu (d = m / V)",
+        code: "FB.6.5.1 - FB.6.5.2", bookRef: "2. Kitap, s. 30–37",
+        active: false,
+        desc: "Eşit kollu terazi ve dereceli silindir kullanarak düzgün ve düzgün olmayan katıların kütle ve hacmini ölçüp yoğunluğunu hesaplayın."
     },
     {
         id: "6.8", grade: 6, unit: 6, unitName: "Madde ve Elektrik",
@@ -513,7 +513,34 @@ export const labState = {
         measurements: []
     },
 
-    // DENEY 6.1: SABİT SÜRATLİ HAREKET SİMÜLATÖRÜ (FB.6.2.1)
+    // DENEY 6.1: GÜNEŞ VE AY TUTULMALARI SİMÜLATÖRÜ (FB.6.1.3 - FB.6.1.4)
+    eclipse: {
+        mode: "solar",           // "solar" (Güneş Tutulması) | "lunar" (Ay Tutulması)
+        isPlaying: true,
+        orbitAngle: 0.0,         // derece (-30° ile +30° arası yörünge eğrisi)
+        orbitSpeed: 0.12,        // animasyon hızı
+        zoom: 1.0,
+        isDragging: false,
+        alignmentThreshold: 3.5, // derece içinde tam tutulma
+        measurements: []
+    },
+
+    // DENEY 6.2: BİLEŞKE KUVVET VE HALAT ÇEKMECE (FB.6.2.1 - FB.6.2.2)
+    tugOfWar: {
+        isPlaying: false,
+        fWest: 20,              // N (0 - 50) Batı (Mavi - Sol)
+        fEast: 20,              // N (0 - 50) Doğu (Kırmızı - Sağ)
+        netForce: 0,            // N: fEast - fWest
+        boxX: 420,              // canvas orta nokta px
+        boxBaseX: 420,
+        boxSpeed: 0,            // px/s
+        isDragging: false,
+        winner: null,           // null | "west" | "east"
+        cheerParticles: [],
+        measurements: []
+    },
+
+    // DENEY 6.3: SABİT SÜRATLİ HAREKET SİMÜLATÖRÜ (FB.6.2.3)
     motion: {
         isPlaying: false,
         speed: 10,              // m/s (2 - 25)
@@ -534,22 +561,20 @@ export const labState = {
         measurements: []
     },
 
-    // DENEY 6.2: BİLEŞKE KUVVET VE HALAT ÇEKMECE (FB.6.2.2)
-    tugOfWar: {
-        isPlaying: false,
-        fWest: 20,              // N (0 - 50) Batı (Mavi - Sol)
-        fEast: 20,              // N (0 - 50) Doğu (Kırmızı - Sağ)
-        netForce: 0,            // N: fEast - fWest
-        boxX: 420,              // canvas orta nokta px
-        boxBaseX: 420,
-        boxSpeed: 0,            // px/s
+    // DENEY 6.4: YANSIMA KANUNLARI VE AYNALAR SİMÜLATÖRÜ (FB.6.4.1 - FB.6.4.3)
+    reflection: {
+        mirrorType: "plane",     // "plane" | "concave" | "convex"
+        subMode: "smooth",       // "smooth" | "diffuse" (düzlem ayna için)
+        sphericalMode: "rays",   // "rays" (Paralel Işınlar) | "candle" (Mum ve Görüntü)
+        incidentAngle: 40,       // derece (0 - 75)
+        objectDistance: 160,     // mm (50 - 320)
+        focalLength: 100,        // mm
+        candleHeight: 52,        // px
         isDragging: false,
-        winner: null,           // null | "west" | "east"
-        cheerParticles: [],
         measurements: []
     },
 
-    // DENEY 6.3: SIVILARIN YOĞUNLUĞU VE YOĞUNLUK KULESİ (FB.6.3.2)
+    // DENEY 6.5: SIVILARIN YOĞUNLUĞU VE YOĞUNLUK KULESİ (FB.6.5.3 - FB.6.5.4)
     densityTower: {
         activeLiquids: [],       // eklenen sıralı katmanlar
         pouringLiquid: null,     // dökülen sıvı animasyonu
@@ -564,7 +589,7 @@ export const labState = {
         measurements: []
     },
 
-    // DENEY 6.4: ISI İLETKENLİĞİ VE YALITIM SİMÜLATÖRÜ (FB.6.4.1)
+    // REZERVE (5. SINIF 5. ÜNİTE İÇİN SAKLANDI): ISI İLETKENLİĞİ VE YALITIM SİMÜLATÖRÜ
     heatTransfer: {
         mode: "metals",          // "metals" | "insulation"
         isHeating: false,
@@ -853,9 +878,11 @@ function setupWorkspaceShellDOM() {
     // 12. DENEY 7.9 KONTROLLERİ (BESİN PİRAMİDİ VE BİYOBİRİKİM)
     setupFoodPyramidControlsDOM();
 
-    // 13. 6. SINIF KONTROLLERİ (DENEY 6.1 - 6.4)
-    setupMotionControlsDOM();
+    // 13. 6. SINIF KONTROLLERİ (DENEY 6.1 - 6.5)
+    setupEclipseControlsDOM();
     setupTugOfWarControlsDOM();
+    setupMotionControlsDOM();
+    setupReflectionControlsDOM();
     setupDensityTowerControlsDOM();
     setupHeatTransferControlsDOM();
 
@@ -1021,6 +1048,7 @@ export function openExperimentWorkspace(expId) {
     const is62 = (expId === "6.2");
     const is63 = (expId === "6.3");
     const is64 = (expId === "6.4");
+    const is65 = (expId === "6.5");
     const is71 = (expId === "7.1");
     const is72 = (expId === "7.2");
     const is73 = (expId === "7.3");
@@ -1036,12 +1064,14 @@ export function openExperimentWorkspace(expId) {
     const mbar62 = document.getElementById('metrics-bar-6-2');
     const mbar63 = document.getElementById('metrics-bar-6-3');
     const mbar64 = document.getElementById('metrics-bar-6-4');
+    const mbar65 = document.getElementById('metrics-bar-6-5');
     const mbar73 = document.getElementById('metrics-bar-7-3');
     const mbar71 = document.getElementById('metrics-bar-7-1');
     if (mbar61) mbar61.classList.toggle('is-hidden', !is61);
     if (mbar62) mbar62.classList.toggle('is-hidden', !is62);
     if (mbar63) mbar63.classList.toggle('is-hidden', !is63);
     if (mbar64) mbar64.classList.toggle('is-hidden', !is64);
+    if (mbar65) mbar65.classList.toggle('is-hidden', !is65);
     if (mbar73) mbar73.classList.toggle('is-hidden', !is73);
     if (mbar71) mbar71.classList.toggle('is-hidden', !is71);
 
@@ -1050,6 +1080,7 @@ export function openExperimentWorkspace(expId) {
     const qc62 = document.getElementById('quick-controls-6-2');
     const qc63 = document.getElementById('quick-controls-6-3');
     const qc64 = document.getElementById('quick-controls-6-4');
+    const qc65 = document.getElementById('quick-controls-6-5');
     const qc71 = document.getElementById('quick-controls-7-1');
     const qc72 = document.getElementById('quick-controls-7-2');
     const qc73 = document.getElementById('quick-controls-7-3');
@@ -1063,6 +1094,7 @@ export function openExperimentWorkspace(expId) {
     if (qc62) qc62.classList.toggle('is-hidden', !is62);
     if (qc63) qc63.classList.toggle('is-hidden', !is63);
     if (qc64) qc64.classList.toggle('is-hidden', !is64);
+    if (qc65) qc65.classList.toggle('is-hidden', !is65);
     if (qc71) qc71.classList.toggle('is-hidden', !is71);
     if (qc72) qc72.classList.toggle('is-hidden', !is72);
     if (qc73) qc73.classList.toggle('is-hidden', !is73);
@@ -1078,6 +1110,7 @@ export function openExperimentWorkspace(expId) {
     const vars62 = document.getElementById('vars-container-6-2');
     const vars63 = document.getElementById('vars-container-6-3');
     const vars64 = document.getElementById('vars-container-6-4');
+    const vars65 = document.getElementById('vars-container-6-5');
     const vars71 = document.getElementById('vars-container-7-1');
     const vars72 = document.getElementById('vars-container-7-2');
     const vars73 = document.getElementById('vars-container-7-3');
@@ -1091,6 +1124,7 @@ export function openExperimentWorkspace(expId) {
     if (vars62) vars62.classList.toggle('is-hidden', !is62);
     if (vars63) vars63.classList.toggle('is-hidden', !is63);
     if (vars64) vars64.classList.toggle('is-hidden', !is64);
+    if (vars65) vars65.classList.toggle('is-hidden', !is65);
     if (vars71) vars71.classList.toggle('is-hidden', !is71);
     if (vars72) vars72.classList.toggle('is-hidden', !is72);
     if (vars73) vars73.classList.toggle('is-hidden', !is73);
@@ -1106,6 +1140,7 @@ export function openExperimentWorkspace(expId) {
     const guide62 = document.getElementById('guide-container-6-2');
     const guide63 = document.getElementById('guide-container-6-3');
     const guide64 = document.getElementById('guide-container-6-4');
+    const guide65 = document.getElementById('guide-container-6-5');
     const guide71 = document.getElementById('guide-container-7-1');
     const guide72 = document.getElementById('guide-container-7-2');
     const guide73 = document.getElementById('guide-container-7-3');
@@ -1119,6 +1154,7 @@ export function openExperimentWorkspace(expId) {
     if (guide62) guide62.classList.toggle('is-hidden', !is62);
     if (guide63) guide63.classList.toggle('is-hidden', !is63);
     if (guide64) guide64.classList.toggle('is-hidden', !is64);
+    if (guide65) guide65.classList.toggle('is-hidden', !is65);
     if (guide71) guide71.classList.toggle('is-hidden', !is71);
     if (guide72) guide72.classList.toggle('is-hidden', !is72);
     if (guide73) guide73.classList.toggle('is-hidden', !is73);
@@ -1130,13 +1166,15 @@ export function openExperimentWorkspace(expId) {
     if (guide79) guide79.classList.toggle('is-hidden', !is79);
 
     if (is61) {
-        initMotionState();
+        initEclipseState();
     } else if (is62) {
         initTugOfWarState();
     } else if (is63) {
-        initDensityTowerState();
+        initMotionState();
     } else if (is64) {
-        initHeatTransferState();
+        initReflectionState();
+    } else if (is65) {
+        initDensityTowerState();
     } else if (is71) {
         initWorkState();
     } else if (is72) {
@@ -1180,13 +1218,15 @@ export function closeExperimentWorkspace() {
 
 function resetCurrentExperiment() {
     if (labState.activeExperimentId === "6.1") {
-        resetMotionExperiment();
+        resetEclipseExperiment();
     } else if (labState.activeExperimentId === "6.2") {
         resetTugOfWarExperiment();
     } else if (labState.activeExperimentId === "6.3") {
-        resetDensityTowerExperiment();
+        resetMotionExperiment();
     } else if (labState.activeExperimentId === "6.4") {
-        resetHeatTransferExperiment();
+        resetReflectionExperiment();
+    } else if (labState.activeExperimentId === "6.5") {
+        resetDensityTowerExperiment();
     } else if (labState.activeExperimentId === "7.1") {
         resetWorkExperiment();
     } else if (labState.activeExperimentId === "7.2") {
@@ -1278,13 +1318,15 @@ function initExperimentCanvas() {
     window.addEventListener('resize', resizeCanvas);
 
     if (labState.activeExperimentId === "6.1") {
-        initMotionState();
+        initEclipseState();
     } else if (labState.activeExperimentId === "6.2") {
         initTugOfWarState();
     } else if (labState.activeExperimentId === "6.3") {
-        initDensityTowerState();
+        initMotionState();
     } else if (labState.activeExperimentId === "6.4") {
-        initHeatTransferState();
+        initReflectionState();
+    } else if (labState.activeExperimentId === "6.5") {
+        initDensityTowerState();
     } else if (labState.activeExperimentId === "7.1") {
         initWorkState();
     } else if (labState.activeExperimentId === "7.2") {
@@ -1325,17 +1367,20 @@ function startRenderLoop() {
         animTime += 0.05;
         if (ctx && canvas) {
             if (labState.activeExperimentId === "6.1") {
-                updateMotionPhysics();
-                drawMotionSimulation();
+                updateEclipsePhysics();
+                drawEclipseSimulation();
             } else if (labState.activeExperimentId === "6.2") {
                 updateTugOfWarPhysics();
                 drawTugOfWarSimulation();
             } else if (labState.activeExperimentId === "6.3") {
+                updateMotionPhysics();
+                drawMotionSimulation();
+            } else if (labState.activeExperimentId === "6.4") {
+                updateReflectionPhysics();
+                drawReflectionSimulation();
+            } else if (labState.activeExperimentId === "6.5") {
                 updateDensityTowerPhysics();
                 drawDensityTowerSimulation();
-            } else if (labState.activeExperimentId === "6.4") {
-                updateHeatTransferPhysics();
-                drawHeatTransferSimulation();
             } else if (labState.activeExperimentId === "7.1") {
                 updateWorkPhysics();
                 drawWorkSimulation();
@@ -1371,7 +1416,780 @@ function startRenderLoop() {
 }
 
 // ============================================================================
-// --- 6.1. DENEY 6.1: SABİT SÜRATLİ HAREKET SİMÜLATÖRÜ (FB.6.2.1) ---
+// --- 6.1. DENEY 6.1: GÜNEŞ VE AY TUTULMALARI SİMÜLATÖRÜ (FB.6.1.3 - FB.6.1.4) ---
+// ============================================================================
+
+function initEclipseState() {
+    const ec = labState.eclipse;
+    ec.mode = "solar";
+    ec.isPlaying = true;
+    ec.orbitAngle = 0.0;
+    ec.orbitSpeed = 0.12;
+    ec.direction = 1;
+    ec.isDragging = false;
+    ec.alignmentThreshold = 3.5;
+
+    updateEclipseDOMControls();
+    updateEclipseMetricsDOM();
+}
+
+function resetEclipseExperiment() {
+    const ec = labState.eclipse;
+    ec.orbitAngle = 0.0;
+    ec.isPlaying = false;
+    ec.direction = 1;
+    ec.isDragging = false;
+
+    const btnPlay = document.getElementById('btn-eclipse-play-pause');
+    const labelPlay = document.getElementById('label-eclipse-play');
+    if (btnPlay) btnPlay.classList.remove('active');
+    if (labelPlay) labelPlay.textContent = "Başlat";
+
+    updateEclipseDOMControls();
+    updateEclipseMetricsDOM();
+    showLabToast("Yörünge tam tutulma hizasına (0.0°) sıfırlandı!");
+}
+
+function updateEclipseDOMControls() {
+    const ec = labState.eclipse;
+    const isSolar = (ec.mode === "solar");
+
+    // Tutulma Türü Butonları (Hızlı Bar & Sağ Panel)
+    const btnSolar = document.getElementById('btn-eclipse-mode-solar');
+    const btnLunar = document.getElementById('btn-eclipse-mode-lunar');
+    const pillSolar = document.getElementById('pill-eclipse-solar');
+    const pillLunar = document.getElementById('pill-eclipse-lunar');
+    if (btnSolar) btnSolar.classList.toggle('active', isSolar);
+    if (btnLunar) btnLunar.classList.toggle('active', !isSolar);
+    if (pillSolar) pillSolar.classList.toggle('active', isSolar);
+    if (pillLunar) pillLunar.classList.toggle('active', !isSolar);
+
+    // Kaydırıcı ve Açı Değeri
+    const slider = document.getElementById('slider-eclipse-angle');
+    const labelVal = document.getElementById('label-eclipse-angle-val');
+    if (slider) slider.value = ec.orbitAngle;
+    if (labelVal) {
+        const isAligned = Math.abs(ec.orbitAngle) <= ec.alignmentThreshold;
+        labelVal.textContent = `${ec.orbitAngle.toFixed(1)}° ${isAligned ? "(Tam Hizada)" : ""}`;
+        labelVal.style.color = isAligned ? "#10b981" : "var(--neon-blue)";
+    }
+
+    // Oynat / Durdur Butonu
+    const btnPlay = document.getElementById('btn-eclipse-play-pause');
+    const labelPlay = document.getElementById('label-eclipse-play');
+    if (btnPlay) btnPlay.classList.toggle('active', ec.isPlaying);
+    if (labelPlay) labelPlay.textContent = ec.isPlaying ? "Durdur" : "Başlat";
+
+    // Simülasyon Hızı Butonları
+    const spdSlow = document.getElementById('pill-eclipse-speed-slow');
+    const spdNorm = document.getElementById('pill-eclipse-speed-normal');
+    const spdFast = document.getElementById('pill-eclipse-speed-fast');
+    if (spdSlow) spdSlow.classList.toggle('active', Math.abs(ec.orbitSpeed - 0.06) < 0.01);
+    if (spdNorm) spdNorm.classList.toggle('active', Math.abs(ec.orbitSpeed - 0.12) < 0.01);
+    if (spdFast) spdFast.classList.toggle('active', Math.abs(ec.orbitSpeed - 0.24) < 0.01);
+}
+
+function setupEclipseControlsDOM() {
+    // 1. Mod Değişimi: Güneş vs Ay Tutulması
+    const setEclipseMode = (mode) => {
+        labState.eclipse.mode = mode;
+        labState.eclipse.orbitAngle = 0.0;
+        updateEclipseDOMControls();
+        updateEclipseMetricsDOM();
+        showLabToast(mode === "solar" ? "☀️ Güneş Tutulması Modu (Ay Ortada, Yeniay Evresi)" : "🌕 Ay Tutulması Modu (Dünya Ortada, Dolunay Evresi)");
+    };
+
+    ['btn-eclipse-mode-solar', 'pill-eclipse-solar'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => setEclipseMode("solar"));
+    });
+
+    ['btn-eclipse-mode-lunar', 'pill-eclipse-lunar'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => setEclipseMode("lunar"));
+    });
+
+    // 2. Oynat / Durdur
+    const btnPlay = document.getElementById('btn-eclipse-play-pause');
+    if (btnPlay) {
+        btnPlay.addEventListener('click', () => {
+            const ec = labState.eclipse;
+            ec.isPlaying = !ec.isPlaying;
+            updateEclipseDOMControls();
+        });
+    }
+
+    // 3. Adım Butonları (◀ / ▶)
+    const btnStepBack = document.getElementById('btn-eclipse-step-back');
+    const btnStepFwd = document.getElementById('btn-eclipse-step-fwd');
+    if (btnStepBack) {
+        btnStepBack.addEventListener('click', () => {
+            const ec = labState.eclipse;
+            ec.isPlaying = false;
+            ec.orbitAngle = Math.max(-28, ec.orbitAngle - 2.0);
+            updateEclipseDOMControls();
+            updateEclipseMetricsDOM();
+        });
+    }
+    if (btnStepFwd) {
+        btnStepFwd.addEventListener('click', () => {
+            const ec = labState.eclipse;
+            ec.isPlaying = false;
+            ec.orbitAngle = Math.min(28, ec.orbitAngle + 2.0);
+            updateEclipseDOMControls();
+            updateEclipseMetricsDOM();
+        });
+    }
+
+    // 4. Tam Tutulma Hizala
+    const btnAlign = document.getElementById('btn-eclipse-align');
+    if (btnAlign) {
+        btnAlign.addEventListener('click', () => {
+            const ec = labState.eclipse;
+            ec.orbitAngle = 0.0;
+            updateEclipseDOMControls();
+            updateEclipseMetricsDOM();
+            showLabToast("🎯 Güneş, Dünya ve Ay tam aynı doğrultuya getirildi!");
+        });
+    }
+
+    // 5. Sıfırla
+    const btnReset = document.getElementById('btn-eclipse-reset');
+    if (btnReset) btnReset.addEventListener('click', resetEclipseExperiment);
+
+    // 6. Yörünge Açısı Kaydırıcısı
+    const slider = document.getElementById('slider-eclipse-angle');
+    if (slider) {
+        slider.addEventListener('input', (e) => {
+            const ec = labState.eclipse;
+            ec.orbitAngle = parseFloat(e.target.value);
+            ec.isPlaying = false;
+            updateEclipseDOMControls();
+            updateEclipseMetricsDOM();
+        });
+    }
+
+    // 7. Simülasyon Hızı Butonları
+    const setSpeed = (spd) => {
+        labState.eclipse.orbitSpeed = spd;
+        updateEclipseDOMControls();
+    };
+    const sSlow = document.getElementById('pill-eclipse-speed-slow');
+    const sNorm = document.getElementById('pill-eclipse-speed-normal');
+    const sFast = document.getElementById('pill-eclipse-speed-fast');
+    if (sSlow) sSlow.addEventListener('click', () => setSpeed(0.06));
+    if (sNorm) sNorm.addEventListener('click', () => setSpeed(0.12));
+    if (sFast) sFast.addEventListener('click', () => setSpeed(0.24));
+
+    // 8. Gözlem Kayıt Butonu
+    const btnRecord = document.getElementById('btn-record-data-6-1');
+    if (btnRecord) btnRecord.addEventListener('click', recordMeasurement);
+}
+
+function updateEclipsePhysics() {
+    const ec = labState.eclipse;
+    if (ec.isPlaying && !ec.isDragging) {
+        if (!ec.direction) ec.direction = 1;
+        ec.orbitAngle += ec.orbitSpeed * ec.direction;
+        if (ec.orbitAngle >= 26) {
+            ec.orbitAngle = 26;
+            ec.direction = -1;
+        } else if (ec.orbitAngle <= -26) {
+            ec.orbitAngle = -26;
+            ec.direction = 1;
+        }
+        updateEclipseDOMControls();
+    }
+    updateEclipseMetricsDOM();
+}
+
+function updateEclipseMetricsDOM() {
+    const ec = labState.eclipse;
+    const isSolar = (ec.mode === "solar");
+    const isTotal = Math.abs(ec.orbitAngle) <= ec.alignmentThreshold;
+    const isPartial = !isTotal && Math.abs(ec.orbitAngle) <= 15;
+
+    // Canvas Altı Responsive Metrik Şeridi (#metrics-bar-6-1)
+    const mbMode = document.getElementById('mbar-61-mode');
+    const mbOrder = document.getElementById('mbar-61-order');
+    const mbPhase = document.getElementById('mbar-61-phase');
+    const mbStatus = document.getElementById('mbar-61-status');
+
+    if (mbMode) mbMode.textContent = isSolar ? "Güneş Tutulması" : "Ay Tutulması";
+    if (mbOrder) mbOrder.textContent = isSolar ? "Güneş — Ay — Dünya" : "Güneş — Dünya — Ay";
+    if (mbPhase) mbPhase.textContent = isSolar ? "Yeniay Evresi" : "Dolunay Evresi";
+
+    if (mbStatus) {
+        if (isTotal) {
+            mbStatus.textContent = isSolar ? "☀️ Tam Tutulma (Korona Halkası)" : "🌕 Tam Tutulma (Kızıl / Kanlı Ay)";
+            mbStatus.style.borderLeftColor = "#10b981";
+        } else if (isPartial) {
+            mbStatus.textContent = "🌓 Parçalı Tutulma (Yarı Gölge)";
+            mbStatus.style.borderLeftColor = "#f59e0b";
+        } else {
+            mbStatus.textContent = "✨ Tutulma Yok (Hizalanma Dışında)";
+            mbStatus.style.borderLeftColor = "#38bdf8";
+        }
+    }
+
+    // Sağ Panel Veri Çipleri
+    const pOrder = document.getElementById('metric-61-order');
+    const pPhase = document.getElementById('metric-61-phase');
+    const pTimeRegion = document.getElementById('metric-61-time-region');
+    const pShadow = document.getElementById('metric-61-shadow-type');
+
+    if (pOrder) pOrder.textContent = isSolar ? "Güneş-Ay-Dünya" : "Güneş-Dünya-Ay";
+    if (pPhase) pPhase.textContent = isSolar ? "Yeniay" : "Dolunay";
+    if (pTimeRegion) pTimeRegion.textContent = isSolar ? "Gündüz (Dar Alan)" : "Gece (Geniş Alan)";
+    if (pShadow) {
+        pShadow.textContent = isTotal ? "Tam Gölge (Umbra)" : (isPartial ? "Yarı Gölge (Penumbra)" : "Aydınlık");
+    }
+
+    // Pedagojik Çıkarım Kartı
+    const pTitle = document.getElementById('eclipse-pedagogical-title');
+    const pText = document.getElementById('eclipse-pedagogical-text');
+    const pIcon = document.getElementById('eclipse-pedagogical-icon');
+
+    if (pTitle && pText && pIcon) {
+        if (isSolar) {
+            pIcon.innerHTML = `<i class="fas fa-sun" style="color:#facc15;"></i>`;
+            pTitle.textContent = "☀️ Güneş Tutulması (Yeniay Evresi)";
+            if (isTotal) {
+                pText.textContent = "Ay, Güneş ile Dünya arasına girerek Güneş'i tamamen örtmüştür. Gündüz vakti Dünya'nın dar bir bölgesinde tam gölge oluşur ve parlak korona tacı belirir.";
+            } else if (isPartial) {
+                pText.textContent = "Güneş, Ay ve Dünya kısmen hizalanmıştır. Yarı gölgede kalan bölgelerde parçalı Güneş tutulması gözlemlenir.";
+            } else {
+                pText.textContent = "Ay yörüngesi eğik olduğu için her yeniayda Güneş tutulması gerçekleşmez; üç gök cisminin tam aynı doğrultuya gelmesi gerekir.";
+            }
+        } else {
+            pIcon.innerHTML = `<i class="fas fa-moon" style="color:#cbd5e1;"></i>`;
+            pTitle.textContent = "🌕 Ay Tutulması (Dolunay Evresi)";
+            if (isTotal) {
+                pText.textContent = "Dünya, Güneş ile Ay arasına girmiştir. Ay, Dünya'nın geniş tam gölge konisine girerek Güneş ışığı alamaz ve atmosferik kırılma nedeniyle kızıl (Kanlı Ay) renge bürünür.";
+            } else if (isPartial) {
+                pText.textContent = "Ay, Dünya'nın gölge konisinin bir kısmından geçmektedir. Ay'ın bir yüzeyi gölgede kalırken diğer kısmı ışık almaya devam eder.";
+            } else {
+                pText.textContent = "Ay yörüngesi eğik olduğu için her dolunayda Ay tutulması gerçekleşmez; Dünya'nın gölgesine girebilmesi için doğrusal hizalanma şarttır.";
+            }
+        }
+    }
+}
+
+function drawEclipseSimulation() {
+    const w = canvas.width;
+    const h = canvas.height;
+    const scale = w / 800;
+
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    const ec = labState.eclipse;
+    const isSolar = (ec.mode === "solar");
+
+    // 1. Kozmik Uzay Arka Planı (Derin Lacivert Gradyan & Yıldız Tozu)
+    const spaceGrad = ctx.createRadialGradient(400, 250, 40, 400, 250, 480);
+    spaceGrad.addColorStop(0, "#080e1e");
+    spaceGrad.addColorStop(0.6, "#040711");
+    spaceGrad.addColorStop(1, "#020307");
+    ctx.fillStyle = spaceGrad;
+    ctx.fillRect(0, 0, 800, 500);
+
+    // Arka Plan Yıldızları (Sabit seed benzeri koordinatlar)
+    ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
+    const starCoords = [
+        [40, 50], [90, 120], [180, 45], [260, 95], [340, 40], [450, 80], [530, 35], [620, 90], [720, 160],
+        [60, 420], [150, 460], [240, 410], [310, 470], [490, 430], [580, 465], [670, 420], [750, 450],
+        [210, 200], [480, 170], [540, 310], [670, 220], [770, 290]
+    ];
+    starCoords.forEach(([sx, sy], idx) => {
+        const twinkle = 0.5 + 0.5 * Math.sin(animTime * 2 + idx);
+        ctx.globalAlpha = twinkle * 0.7;
+        ctx.beginPath();
+        ctx.arc(sx, sy, (idx % 3 === 0) ? 1.5 : 1.0, 0, Math.PI * 2);
+        ctx.fill();
+    });
+    ctx.globalAlpha = 1.0;
+
+    // 2. Yörünge Kılavuz Yayı (Dashed Orbit Guide)
+    ctx.save();
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.22)";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 6]);
+    ctx.beginPath();
+    const orbitCenterX = isSolar ? 620 : 380;
+    const orbitR = isSolar ? 260 : 260;
+    ctx.arc(orbitCenterX, 250, orbitR, Math.PI * 0.85, Math.PI * 1.15, isSolar);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+
+    // Geometrik Koordinatlar
+    const sunX = 110, sunY = 250, sunR = 48;
+    let moonX, moonY, moonR = 15;
+    let earthX, earthY, earthR = 36;
+
+    if (isSolar) {
+        // Güneş (sol) — Ay (orta) — Dünya (sağ)
+        earthX = 620; earthY = 250;
+        moonX = 360;
+        moonY = 250 + (ec.orbitAngle / 30) * 110;
+    } else {
+        // Güneş (sol) — Dünya (orta) — Ay (sağ)
+        earthX = 380; earthY = 250;
+        moonX = 640;
+        moonY = 250 + (ec.orbitAngle / 30) * 115;
+    }
+
+    // 3. Işık Işınları ve Gölge Konileri (Umbra & Penumbra)
+    drawEclipseLightAndShadows(ctx, ec, sunX, sunY, sunR, moonX, moonY, moonR, earthX, earthY, earthR);
+
+    // 4. Güneş Çizimi
+    drawEclipseSun(ctx, sunX, sunY, sunR);
+
+    // 5. Dünya Çizimi (Güneş'ten gelen ışığa göre aydınlanma)
+    drawEclipseEarth(ctx, earthX, earthY, earthR, true);
+
+    // 6. Ay Çizimi
+    const isAligned = Math.abs(ec.orbitAngle) <= ec.alignmentThreshold;
+    drawEclipseMoon(ctx, moonX, moonY, moonR, isSolar, isAligned);
+
+    // 7. Gökyüzü İçi Mini Gözlemevi Monitörü ("Dünya'dan Görünüm")
+    drawEclipseSkyViewfinder(ctx, ec, isSolar, isAligned);
+
+    ctx.restore();
+}
+
+function drawEclipseLightAndShadows(ctx, ec, sunX, sunY, sunR, moonX, moonY, moonR, earthX, earthY, earthR) {
+    const isSolar = (ec.mode === "solar");
+
+    ctx.save();
+
+    if (isSolar) {
+        // Güneş Tutulması Işık Geometrisi (Güneş -> Ay -> Dünya)
+        // A. Yarı Gölge (Penumbra) Geniş Işınları
+        ctx.fillStyle = "rgba(250, 204, 21, 0.05)";
+        ctx.beginPath();
+        ctx.moveTo(sunX, sunY - sunR);
+        ctx.lineTo(moonX, moonY + moonR);
+        ctx.lineTo(earthX + 80, earthY + 120);
+        ctx.lineTo(earthX + 80, earthY - 120);
+        ctx.lineTo(moonX, moonY - moonR);
+        ctx.lineTo(sunX, sunY + sunR);
+        ctx.closePath();
+        ctx.fill();
+
+        // B. Ay'ın Penumbra Gölge Alanı (Dünya'ya vuran)
+        ctx.fillStyle = "rgba(15, 23, 42, 0.45)";
+        ctx.beginPath();
+        ctx.moveTo(moonX, moonY - moonR);
+        ctx.lineTo(earthX, earthY - 55);
+        ctx.lineTo(earthX, earthY + 55);
+        ctx.lineTo(moonX, moonY + moonR);
+        ctx.closePath();
+        ctx.fill();
+
+        // C. Ay'ın Tam Gölge (Umbra) Konisi (Dar, sivri koni)
+        // Güneş üst -> Ay üst, Güneş alt -> Ay alt
+        const umbraSlopeTop = (moonY - moonR - (sunY - sunR)) / (moonX - sunX);
+        const umbraSlopeBtm = (moonY + moonR - (sunY + sunR)) / (moonX - sunX);
+        const umbraApexX = moonX + (moonR * 2 * (moonX - sunX)) / ((sunR - moonR) * 2);
+        const umbraApexY = moonY;
+
+        ctx.fillStyle = "rgba(5, 8, 16, 0.78)";
+        ctx.beginPath();
+        ctx.moveTo(moonX, moonY - moonR);
+        ctx.lineTo(Math.min(earthX + 20, umbraApexX), (moonY - moonR) + umbraSlopeTop * (Math.min(earthX + 20, umbraApexX) - moonX));
+        ctx.lineTo(Math.min(earthX + 20, umbraApexX), (moonY + moonR) + umbraSlopeBtm * (Math.min(earthX + 20, umbraApexX) - moonX));
+        ctx.lineTo(moonX, moonY + moonR);
+        ctx.closePath();
+        ctx.fill();
+
+        // Tam Tutulma Vurma Noktası (Dünya üzerinde odaklanan tam gölge beneği)
+        if (Math.abs(ec.orbitAngle) <= ec.alignmentThreshold) {
+            ctx.fillStyle = "#020617";
+            ctx.shadowColor = "#000000";
+            ctx.shadowBlur = 8;
+            ctx.beginPath();
+            ctx.ellipse(earthX - earthR + 3, earthY, 5, 8, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Halka Halesi Vektör İllüstrasyonu
+            ctx.strokeStyle = "rgba(250, 204, 21, 0.4)";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+    } else {
+        // Ay Tutulması Işık Geometrisi (Güneş -> Dünya -> Ay)
+        // Dünya'nın Uzaya Ulaşan Geniş Tam Gölge (Umbra) Konisi
+        const shadowApexX = earthX + 380;
+        const shadowTopY = earthY - 14;
+        const shadowBtmY = earthY + 14;
+
+        // Penumbra (Yarı gölge)
+        ctx.fillStyle = "rgba(15, 23, 42, 0.38)";
+        ctx.beginPath();
+        ctx.moveTo(earthX, earthY - earthR);
+        ctx.lineTo(760, earthY - 95);
+        ctx.lineTo(760, earthY + 95);
+        ctx.lineTo(earthX, earthY + earthR);
+        ctx.closePath();
+        ctx.fill();
+
+        // Umbra (Tam gölge konisi)
+        const umbraGrad = ctx.createLinearGradient(earthX, earthY, shadowApexX, earthY);
+        umbraGrad.addColorStop(0, "rgba(3, 7, 18, 0.88)");
+        umbraGrad.addColorStop(0.7, "rgba(69, 10, 10, 0.55)"); // Atmosferik kızıl kırılma
+        umbraGrad.addColorStop(1, "rgba(15, 23, 42, 0.2)");
+        ctx.fillStyle = umbraGrad;
+        ctx.beginPath();
+        ctx.moveTo(earthX, earthY - earthR);
+        ctx.lineTo(shadowApexX, shadowTopY);
+        ctx.lineTo(shadowApexX, shadowBtmY);
+        ctx.lineTo(earthX, earthY + earthR);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    ctx.restore();
+}
+
+function drawEclipseSun(ctx, x, y, r) {
+    ctx.save();
+
+    // 1. Dış Plazma Korona ve Işıma Çemberi (Pulsating Corona Aura)
+    const pulse = 1.0 + 0.05 * Math.sin(animTime * 3);
+    const coronaGrad = ctx.createRadialGradient(x, y, r * 0.8, x, y, r * 2.4 * pulse);
+    coronaGrad.addColorStop(0, "rgba(255, 230, 100, 0.75)");
+    coronaGrad.addColorStop(0.25, "rgba(245, 158, 11, 0.35)");
+    coronaGrad.addColorStop(0.6, "rgba(239, 68, 68, 0.12)");
+    coronaGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
+    ctx.fillStyle = coronaGrad;
+    ctx.beginPath();
+    ctx.arc(x, y, r * 2.4 * pulse, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2. Güneş Korona Alev Işınları (Stylized Flare Spikes)
+    ctx.strokeStyle = "rgba(253, 224, 71, 0.35)";
+    ctx.lineWidth = 1.5;
+    for (let i = 0; i < 16; i++) {
+        const ang = (i * Math.PI / 8) + animTime * 0.1;
+        const len = r + 14 + 10 * Math.sin(animTime * 2 + i);
+        ctx.beginPath();
+        ctx.moveTo(x + Math.cos(ang) * (r + 4), y + Math.sin(ang) * (r + 4));
+        ctx.lineTo(x + Math.cos(ang) * len, y + Math.sin(ang) * len);
+        ctx.stroke();
+    }
+
+    // 3. Akkor Güneş Çekirdeği
+    const coreGrad = ctx.createRadialGradient(x - r * 0.25, y - r * 0.25, 4, x, y, r);
+    coreGrad.addColorStop(0, "#ffffff");
+    coreGrad.addColorStop(0.3, "#fef08a");
+    coreGrad.addColorStop(0.7, "#f59e0b");
+    coreGrad.addColorStop(1, "#b45309");
+    ctx.fillStyle = coreGrad;
+    ctx.shadowColor = "#f59e0b";
+    ctx.shadowBlur = 24;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    ctx.restore();
+}
+
+function drawEclipseEarth(ctx, x, y, r, isSunlightFromLeft) {
+    ctx.save();
+
+    // 1. Mavi Atmosfer Halesi
+    const atmoGrad = ctx.createRadialGradient(x, y, r * 0.95, x, y, r * 1.25);
+    atmoGrad.addColorStop(0, "rgba(56, 189, 248, 0.45)");
+    atmoGrad.addColorStop(1, "rgba(56, 189, 248, 0)");
+    ctx.fillStyle = atmoGrad;
+    ctx.beginPath();
+    ctx.arc(x, y, r * 1.25, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2. Okyanus Gövdesi
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = "#0284c7";
+    ctx.fill();
+
+    // 3. Stilize Kıtalar (Yeşil/Kahve landmass)
+    ctx.save();
+    ctx.clip(); // Küre içine kırp
+
+    ctx.fillStyle = "#10b981";
+    // Kıta 1 (Kuzey Amerika / Avrupa)
+    ctx.beginPath();
+    ctx.arc(x - 12, y - 10, 14, 0, Math.PI * 2);
+    ctx.arc(x - 4, y - 18, 10, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Kıta 2 (Afrika / Asya)
+    ctx.beginPath();
+    ctx.arc(x + 10, y + 6, 15, 0, Math.PI * 2);
+    ctx.arc(x + 16, y - 8, 12, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Kutup Buzulu
+    ctx.fillStyle = "#f8fafc";
+    ctx.beginPath();
+    ctx.arc(x, y - r + 3, 10, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 4. Gece/Gündüz Gölgelendirmesi (Terminatör Eğrisi)
+    // Güneş soldan geldiği için sağ taraf gölgede
+    const termGrad = ctx.createLinearGradient(x - r, y, x + r, y);
+    termGrad.addColorStop(0, "rgba(0, 0, 0, 0)");
+    termGrad.addColorStop(0.48, "rgba(5, 10, 20, 0.2)");
+    termGrad.addColorStop(0.55, "rgba(2, 6, 18, 0.88)");
+    termGrad.addColorStop(1, "rgba(2, 4, 12, 0.96)");
+    ctx.fillStyle = termGrad;
+    ctx.fillRect(x - r, y - r, r * 2, r * 2);
+
+    ctx.restore(); // clip sonu
+
+    // 5. Atmosfer Kenar Çizgisi
+    ctx.strokeStyle = "rgba(186, 230, 253, 0.5)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function drawEclipseMoon(ctx, x, y, r, isSolar, isAligned) {
+    ctx.save();
+
+    // Sürükleme Tutacağı Halesi
+    const ec = labState.eclipse;
+    if (ec.isDragging) {
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.8)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(x, y, r + 8, 0, Math.PI * 2);
+        ctx.stroke();
+    }
+
+    if (isSolar) {
+        // Güneş Tutulmasında Ay (Yeniay Evresi - Dünya'ya bakan yüzü karanlık)
+        // Güneş solunda olduğu için sol ince bir hilal aydınlığı, Dünya'ya bakan sağ yüzeyi karanlık
+        ctx.fillStyle = "#0f172a";
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Krater Dokuları (Hafif gri)
+        ctx.fillStyle = "rgba(30, 41, 59, 0.6)";
+        ctx.beginPath();
+        ctx.arc(x - 3, y - 4, 3, 0, Math.PI * 2);
+        ctx.arc(x + 4, y + 2, 2.5, 0, Math.PI * 2);
+        ctx.arc(x - 2, y + 5, 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Sol tarafta Güneş'e bakan ince ışık hilali
+        ctx.strokeStyle = "rgba(254, 240, 138, 0.55)";
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.arc(x, y, r, Math.PI * 0.65, Math.PI * 1.35);
+        ctx.stroke();
+    } else {
+        // Ay Tutulmasında Ay (Dolunay veya Kanlı Ay)
+        if (isAligned) {
+            // Tam Ay Tutulması: Atmosferden kırılan kızıl ışıkla kızıla bürünen "Kanlı Ay"
+            const bloodGrad = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, 2, x, y, r);
+            bloodGrad.addColorStop(0, "#f87171");
+            bloodGrad.addColorStop(0.5, "#dc2626");
+            bloodGrad.addColorStop(1, "#7f1d1d");
+            ctx.fillStyle = bloodGrad;
+            ctx.shadowColor = "#ef4444";
+            ctx.shadowBlur = 12;
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Kızıl Kraterler
+            ctx.fillStyle = "rgba(69, 10, 10, 0.7)";
+            ctx.beginPath();
+            ctx.arc(x - 4, y - 3, 3.5, 0, Math.PI * 2);
+            ctx.arc(x + 3, y + 3, 2.8, 0, Math.PI * 2);
+            ctx.fill();
+        } else {
+            // Normal Aydınlık Dolunay
+            const moonGrad = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, 2, x, y, r);
+            moonGrad.addColorStop(0, "#f8fafc");
+            moonGrad.addColorStop(0.6, "#cbd5e1");
+            moonGrad.addColorStop(1, "#94a3b8");
+            ctx.fillStyle = moonGrad;
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Krater Havzaları (Maria)
+            ctx.fillStyle = "rgba(100, 116, 139, 0.5)";
+            ctx.beginPath();
+            ctx.arc(x - 4, y - 3, 3.5, 0, Math.PI * 2);
+            ctx.arc(x + 4, y + 2, 3, 0, Math.PI * 2);
+            ctx.arc(x - 2, y + 5, 2.2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    ctx.restore();
+}
+
+function drawEclipseSkyViewfinder(ctx, ec, isSolar, isAligned) {
+    const vx = 710, vy = 75, vr = 44;
+
+    ctx.save();
+
+    // 1. Dış HUD Çerçevesi (High-Tech Gözlemevi Monitörü)
+    ctx.fillStyle = "rgba(10, 15, 30, 0.9)";
+    ctx.strokeStyle = isAligned ? "#10b981" : "rgba(56, 189, 248, 0.4)";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(vx, vy, vr, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // HUD Köşe Çentikleri
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+    ctx.lineWidth = 1;
+    for (let a = 0; a < Math.PI * 2; a += Math.PI / 2) {
+        ctx.beginPath();
+        ctx.moveTo(vx + Math.cos(a) * (vr - 4), vy + Math.sin(a) * (vr - 4));
+        ctx.lineTo(vx + Math.cos(a) * vr, vy + Math.sin(a) * vr);
+        ctx.stroke();
+    }
+
+    // 2. Kırpma Alanı (Monitörün İçi)
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(vx, vy, vr - 2, 0, Math.PI * 2);
+    ctx.clip();
+
+    if (isSolar) {
+        // Güneş Tutulmasında Gündüz Gökyüzü Görünümü
+        // Tutulma derecesine göre gökyüzü rengi kararır
+        const darkFactor = isAligned ? 0.9 : Math.max(0, 1 - Math.abs(ec.orbitAngle) / 20);
+        const skyR = Math.round(14 * (1 - darkFactor) + 2 * darkFactor);
+        const skyG = Math.round(116 * (1 - darkFactor) + 6 * darkFactor);
+        const skyB = Math.round(144 * (1 - darkFactor) + 18 * darkFactor);
+        ctx.fillStyle = `rgb(${skyR}, ${skyG}, ${skyB})`;
+        ctx.fillRect(vx - vr, vy - vr, vr * 2, vr * 2);
+
+        // Güneş Diski
+        const sunDiskR = 19;
+        const sunGrad = ctx.createRadialGradient(vx, vy, 2, vx, vy, sunDiskR);
+        sunGrad.addColorStop(0, "#ffffff");
+        sunGrad.addColorStop(0.5, "#fef08a");
+        sunGrad.addColorStop(1, "#f59e0b");
+        ctx.fillStyle = sunGrad;
+        ctx.beginPath();
+        ctx.arc(vx, vy, sunDiskR, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Ay Diskinin Güneş Önünden Geçişi (Y ekseninde kayma)
+        const moonOffsetY = (ec.orbitAngle / 28) * (sunDiskR * 2.2);
+        const moonDiskX = vx;
+        const moonDiskY = vy + moonOffsetY;
+        const moonDiskR = 19.5;
+
+        // Ay Silüeti
+        ctx.fillStyle = "#020617";
+        ctx.beginPath();
+        ctx.arc(moonDiskX, moonDiskY, moonDiskR, 0, Math.PI * 2);
+        ctx.fill();
+
+        // TAM TUTULMA ÖZEL EFEKTİ: Parlak Korona Tacı ve Elmas Yüzük Pırıltısı
+        if (isAligned) {
+            ctx.save();
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
+            ctx.shadowColor = "#38bdf8";
+            ctx.shadowBlur = 14;
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.arc(vx, vy, sunDiskR + 1.5, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Elmas Yüzük (Diamond Ring Effect)
+            const ringAngle = -Math.PI / 4;
+            const rx = vx + Math.cos(ringAngle) * (sunDiskR + 1);
+            const ry = vy + Math.sin(ringAngle) * (sunDiskR + 1);
+            ctx.fillStyle = "#ffffff";
+            ctx.shadowColor = "#ffffff";
+            ctx.shadowBlur = 16;
+            ctx.beginPath();
+            ctx.arc(rx, ry, 3.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+    } else {
+        // Ay Tutulmasında Gece Gökyüzü Görünümü
+        ctx.fillStyle = "#02040a";
+        ctx.fillRect(vx - vr, vy - vr, vr * 2, vr * 2);
+
+        // Minik Yıldızlar
+        ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+        ctx.fillRect(vx - 25, vy - 20, 1.5, 1.5);
+        ctx.fillRect(vx + 20, vy - 25, 1.5, 1.5);
+        ctx.fillRect(vx - 18, vy + 24, 1.5, 1.5);
+        ctx.fillRect(vx + 24, vy + 18, 1.5, 1.5);
+
+        const moonR = 19;
+        if (isAligned) {
+            // Kanlı Ay (Blood Moon) Eerie Kızıl Halesi
+            const bloodGrad = ctx.createRadialGradient(vx - 4, vy - 4, 3, vx, vy, moonR);
+            bloodGrad.addColorStop(0, "#f87171");
+            bloodGrad.addColorStop(0.6, "#b91c1c");
+            bloodGrad.addColorStop(1, "#450a0a");
+            ctx.fillStyle = bloodGrad;
+            ctx.shadowColor = "#ef4444";
+            ctx.shadowBlur = 10;
+            ctx.beginPath();
+            ctx.arc(vx, vy, moonR, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        } else {
+            // Normal Parlak Dolunay
+            const fullGrad = ctx.createRadialGradient(vx - 4, vy - 4, 3, vx, vy, moonR);
+            fullGrad.addColorStop(0, "#ffffff");
+            fullGrad.addColorStop(0.7, "#cbd5e1");
+            fullGrad.addColorStop(1, "#64748b");
+            ctx.fillStyle = fullGrad;
+            ctx.beginPath();
+            ctx.arc(vx, vy, moonR, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Kısmi Gölge (Dünya Umbrası kenardan kesiyorsa)
+            if (Math.abs(ec.orbitAngle) < 16) {
+                const shadowShiftY = (ec.orbitAngle / 16) * 35;
+                ctx.fillStyle = "rgba(2, 6, 23, 0.85)";
+                ctx.beginPath();
+                ctx.arc(vx, vy + shadowShiftY, moonR * 1.3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+    }
+
+    ctx.restore(); // Kırpma sonu
+
+    // 3. Cam Yansıması Sheen Çizgisi
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(vx, vy, vr - 5, Math.PI * 1.15, Math.PI * 1.6);
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+// ============================================================================
+// --- 6.3. DENEY 6.3: SABİT SÜRATLİ HAREKET SİMÜLATÖRÜ (FB.6.2.3) ---
 // ============================================================================
 
 function initMotionState() {
@@ -1420,10 +2238,12 @@ function updateMotionDOMControls() {
     if (slider) slider.value = m.speed;
     if (labelVal) labelVal.textContent = `${m.speed} m/s`;
 
-    // Sürat Hızlı Butonları
+    // Sürat Hızlı Butonları (Hızlı Bar & Sağ Panel)
     [5, 10, 20].forEach(spd => {
-        const btn = document.getElementById(`btn-motion-speed-${spd}`);
-        if (btn) btn.classList.toggle('active', m.speed === spd);
+        const btn1 = document.getElementById(`btn-motion-speed-${spd}`);
+        const btn2 = document.getElementById(`btn-speed-${spd}`);
+        if (btn1) btn1.classList.toggle('active', m.speed === spd);
+        if (btn2) btn2.classList.toggle('active', m.speed === spd);
     });
 
     // Pist Uzunluğu Butonları
@@ -1432,11 +2252,15 @@ function updateMotionDOMControls() {
         if (pill) pill.classList.toggle('active', m.trackLength === len);
     });
 
-    // Grafik Butonları
+    // Grafik Butonları (Hızlı Bar & Sağ Panel)
     const pillXt = document.getElementById('pill-graph-xt');
     const pillVt = document.getElementById('pill-graph-vt');
+    const btnXt = document.getElementById('btn-graph-xt');
+    const btnVt = document.getElementById('btn-graph-vt');
     if (pillXt) pillXt.classList.toggle('active', m.graphMode === "xt");
     if (pillVt) pillVt.classList.toggle('active', m.graphMode === "vt");
+    if (btnXt) btnXt.classList.toggle('active', m.graphMode === "xt");
+    if (btnVt) btnVt.classList.toggle('active', m.graphMode === "vt");
 }
 
 function setupMotionControlsDOM() {
@@ -1465,15 +2289,16 @@ function setupMotionControlsDOM() {
 
     // 3. Hızlı Sürat Butonları (5, 10, 20 m/s)
     [5, 10, 20].forEach(spd => {
-        const btn = document.getElementById(`btn-motion-speed-${spd}`);
-        if (btn) {
-            btn.addEventListener('click', () => {
-                labState.motion.speed = spd;
-                updateMotionDOMControls();
-                updateMotionMetricsDOM();
-                showLabToast(`Sabit Sürat: ${spd} m/s olarak ayarlandı`);
-            });
-        }
+        const handler = () => {
+            labState.motion.speed = spd;
+            updateMotionDOMControls();
+            updateMotionMetricsDOM();
+            showLabToast(`Sabit Sürat: ${spd} m/s olarak ayarlandı`);
+        };
+        const btn1 = document.getElementById(`btn-motion-speed-${spd}`);
+        const btn2 = document.getElementById(`btn-speed-${spd}`);
+        if (btn1) btn1.addEventListener('click', handler);
+        if (btn2) btn2.addEventListener('click', handler);
     });
 
     // 4. Sürat Kaydırıcısı
@@ -1485,8 +2310,10 @@ function setupMotionControlsDOM() {
             labState.motion.speed = val;
             if (speedLabel) speedLabel.textContent = `${val} m/s`;
             [5, 10, 20].forEach(spd => {
-                const btn = document.getElementById(`btn-motion-speed-${spd}`);
-                if (btn) btn.classList.toggle('active', val === spd);
+                const b1 = document.getElementById(`btn-motion-speed-${spd}`);
+                const b2 = document.getElementById(`btn-speed-${spd}`);
+                if (b1) b1.classList.toggle('active', val === spd);
+                if (b2) b2.classList.toggle('active', val === spd);
             });
             updateMotionMetricsDOM();
         });
@@ -1506,25 +2333,22 @@ function setupMotionControlsDOM() {
     });
 
     // 6. Grafik Modu Seçicileri (x-t vs v-t)
+    const setGraphMode = (mode) => {
+        labState.motion.graphMode = mode;
+        updateMotionDOMControls();
+        showLabToast(mode === "xt" ? "Canlı Grafik: Yol - Zaman (x - t) eğrisi" : "Canlı Grafik: Sürat - Zaman (v - t) eğrisi");
+    };
     const pillXt = document.getElementById('pill-graph-xt');
     const pillVt = document.getElementById('pill-graph-vt');
-    if (pillXt) {
-        pillXt.addEventListener('click', () => {
-            labState.motion.graphMode = "xt";
-            updateMotionDOMControls();
-            showLabToast("Canlı Grafik: Yol - Zaman (x - t) eğrisi");
-        });
-    }
-    if (pillVt) {
-        pillVt.addEventListener('click', () => {
-            labState.motion.graphMode = "vt";
-            updateMotionDOMControls();
-            showLabToast("Canlı Grafik: Sürat - Zaman (v - t) eğrisi");
-        });
-    }
+    const btnXt = document.getElementById('btn-graph-xt');
+    const btnVt = document.getElementById('btn-graph-vt');
+    if (pillXt) pillXt.addEventListener('click', () => setGraphMode("xt"));
+    if (btnXt) btnXt.addEventListener('click', () => setGraphMode("xt"));
+    if (pillVt) pillVt.addEventListener('click', () => setGraphMode("vt"));
+    if (btnVt) btnVt.addEventListener('click', () => setGraphMode("vt"));
 
     // 7. Gözlem Kayıt Butonu
-    const btnRecord = document.getElementById('btn-record-data-6-1');
+    const btnRecord = document.getElementById('btn-record-data-6-3');
     if (btnRecord) btnRecord.addEventListener('click', recordMeasurement);
 }
 
@@ -1590,11 +2414,11 @@ function updateMotionMetricsDOM() {
     const m = labState.motion;
     const fmt = (n, d = 1) => Number(n).toFixed(d);
 
-    // Canvas Altı Responsive Metrik Şeridi (#metrics-bar-6-1)
-    const mbDist = document.getElementById('mbar-61-dist');
-    const mbTime = document.getElementById('mbar-61-time');
-    const mbSpeed = document.getElementById('mbar-61-speed');
-    const mbStatus = document.getElementById('mbar-61-status');
+    // Canvas Altı Responsive Metrik Şeridi (#metrics-bar-6-3)
+    const mbDist = document.getElementById('mbar-63-dist');
+    const mbTime = document.getElementById('mbar-63-time');
+    const mbSpeed = document.getElementById('mbar-63-speed');
+    const mbStatus = document.getElementById('mbar-63-status');
 
     if (mbDist) mbDist.textContent = `${fmt(m.distanceTraveled, 1)} m`;
     if (mbTime) mbTime.textContent = `${fmt(m.elapsedTime, 1)} s`;
@@ -1613,10 +2437,10 @@ function updateMotionMetricsDOM() {
     }
 
     // Sağ Panel Metrikleri
-    const pTime = document.getElementById('metric-61-time');
-    const pDist = document.getElementById('metric-61-dist');
-    const pSpeed = document.getElementById('metric-61-speed');
-    const pStatus = document.getElementById('metric-61-status');
+    const pTime = document.getElementById('metric-63-time');
+    const pDist = document.getElementById('metric-63-dist');
+    const pSpeed = document.getElementById('metric-63-speed');
+    const pStatus = document.getElementById('metric-63-status');
     if (pTime) pTime.textContent = `${fmt(m.elapsedTime, 1)} s`;
     if (pDist) pDist.textContent = `${fmt(m.distanceTraveled, 1)} m`;
     if (pSpeed) pSpeed.textContent = `${fmt(m.speed, 1)} m/s`;
@@ -2544,7 +3368,769 @@ function drawNeonArrow(ctx, x1, y1, x2, y2, color, width) {
 }
 
 // ============================================================================
-// --- 6.3. DENEY 6.3: SIVILARIN YOĞUNLUĞU VE YOĞUNLUK KULESİ (FB.6.3.2) ---
+// --- 6.4. DENEY 6.4: YANSIMA KANUNLARI VE AYNALAR SİMÜLATÖRÜ (FB.6.4.1 - FB.6.4.3) ---
+// ============================================================================
+
+function initReflectionState() {
+    const r = labState.reflection;
+    r.mirrorType = "plane";
+    r.subMode = "smooth";
+    r.incidentAngle = 40;
+    r.objectDistance = 160;
+    r.focalLength = 100;
+    r.candleHeight = 52;
+    r.isDragging = false;
+
+    updateReflectionDOMControls();
+    updateReflectionMetricsDOM();
+}
+
+function resetReflectionExperiment() {
+    const r = labState.reflection;
+    r.mirrorType = "plane";
+    r.subMode = "smooth";
+    r.incidentAngle = 40;
+    r.objectDistance = 160;
+    r.isDragging = false;
+
+    updateReflectionDOMControls();
+    updateReflectionMetricsDOM();
+    showLabToast("Optik düzenek düzlem ayna ve 40° gelme açısına sıfırlandı!");
+}
+
+function updateReflectionDOMControls() {
+    const r = labState.reflection;
+    const isPlane = (r.mirrorType === "plane");
+    const isConcave = (r.mirrorType === "concave");
+    const isConvex = (r.mirrorType === "convex");
+
+    // Ayna Seçim Butonları (Hızlı Bar & Sağ Panel)
+    const btnPlane = document.getElementById('btn-mirror-plane');
+    const btnConcave = document.getElementById('btn-mirror-concave');
+    const btnConvex = document.getElementById('btn-mirror-convex');
+    const pillPlane = document.getElementById('pill-mirror-plane');
+    const pillConcave = document.getElementById('pill-mirror-concave');
+    const pillConvex = document.getElementById('pill-mirror-convex');
+
+    if (btnPlane) btnPlane.classList.toggle('active', isPlane);
+    if (btnConcave) btnConcave.classList.toggle('active', isConcave);
+    if (btnConvex) btnConvex.classList.toggle('active', isConvex);
+    if (pillPlane) pillPlane.classList.toggle('active', isPlane);
+    if (pillConcave) pillConcave.classList.toggle('active', isConcave);
+    if (pillConvex) pillConvex.classList.toggle('active', isConvex);
+
+    // Düzlem Ayna Alt Modu (Düzgün vs Dağınık)
+    const isSmooth = (r.subMode === "smooth");
+    const btnSmooth = document.getElementById('btn-refl-smooth');
+    const btnDiffuse = document.getElementById('btn-refl-diffuse');
+    const pillSmooth = document.getElementById('pill-refl-smooth');
+    const pillDiffuse = document.getElementById('pill-refl-diffuse');
+    if (btnSmooth) btnSmooth.classList.toggle('active', isSmooth);
+    if (btnDiffuse) btnDiffuse.classList.toggle('active', !isSmooth);
+    if (pillSmooth) pillSmooth.classList.toggle('active', isSmooth);
+    if (pillDiffuse) pillDiffuse.classList.toggle('active', !isSmooth);
+
+    // Kontrol Grupları Görünürlüğü (Açı vs Mesafe)
+    const wrapAngle = document.getElementById('wrap-refl-angle');
+    const wrapDist = document.getElementById('wrap-refl-dist');
+    const wrapSurface = document.getElementById('wrap-refl-surface');
+    const groupSubmodes = document.getElementById('group-refl-submodes');
+    const btnMinus5 = document.getElementById('btn-refl-minus-5');
+    const btnPlus5 = document.getElementById('btn-refl-plus-5');
+
+    if (wrapAngle) wrapAngle.style.display = isPlane ? '' : 'none';
+    if (wrapDist) wrapDist.style.display = isPlane ? 'none' : '';
+    if (wrapSurface) wrapSurface.style.display = isPlane ? '' : 'none';
+    if (groupSubmodes) groupSubmodes.style.display = isPlane ? '' : 'none';
+    if (btnMinus5) btnMinus5.style.display = isPlane ? '' : 'none';
+    if (btnPlus5) btnPlus5.style.display = isPlane ? '' : 'none';
+
+    // Açı Kaydırıcısı & Etiketi
+    const sliderAngle = document.getElementById('slider-refl-angle');
+    const labelAngle = document.getElementById('label-refl-angle-val');
+    if (sliderAngle) sliderAngle.value = r.incidentAngle;
+    if (labelAngle) labelAngle.textContent = `${r.incidentAngle}°`;
+
+    // Mesafe Kaydırıcısı & Etiketi
+    const sliderDist = document.getElementById('slider-refl-dist');
+    const labelDist = document.getElementById('label-refl-dist-val');
+    if (sliderDist) sliderDist.value = r.objectDistance;
+    if (labelDist) labelDist.textContent = `${r.objectDistance} mm`;
+}
+
+function setupReflectionControlsDOM() {
+    // 1. Ayna Türü Seçimi
+    const setMirrorType = (type) => {
+        labState.reflection.mirrorType = type;
+        updateReflectionDOMControls();
+        updateReflectionMetricsDOM();
+        if (type === "plane") {
+            showLabToast("🪞 Düzlem Ayna Seçildi (Gelme Açısı = Yansıma Açısı, Düzgün Görüntü)");
+        } else if (type === "concave") {
+            showLabToast("🔍 Çukur (İçbükey) Ayna Seçildi (Işığı Odakta Toplar, Yakınsak)");
+        } else {
+            showLabToast("🚗 Tümsek (Dışbükey) Ayna Seçildi (Işığı Dağıtır, Geniş Görüş Alanı)");
+        }
+    };
+
+    ['btn-mirror-plane', 'pill-mirror-plane'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => setMirrorType("plane"));
+    });
+
+    ['btn-mirror-concave', 'pill-mirror-concave'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => setMirrorType("concave"));
+    });
+
+    ['btn-mirror-convex', 'pill-mirror-convex'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => setMirrorType("convex"));
+    });
+
+    // 2. Yansıma Yüzeyi Türü (Düzgün vs Dağınık)
+    const setSubMode = (mode) => {
+        labState.reflection.subMode = mode;
+        updateReflectionDOMControls();
+        updateReflectionMetricsDOM();
+        showLabToast(mode === "smooth" ? "✨ Düzgün Yansıma: Paralel ışınlar birbirine paralel yansır" : "〰️ Dağınık Yansıma: Pürüzlü yüzeyde ışınlar farklı yönlere saçılır");
+    };
+
+    ['btn-refl-smooth', 'pill-refl-smooth'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => setSubMode("smooth"));
+    });
+
+    ['btn-refl-diffuse', 'pill-refl-diffuse'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => setSubMode("diffuse"));
+    });
+
+    // 3. Açı Butonları (-5° / +5°)
+    const btnMinus5 = document.getElementById('btn-refl-minus-5');
+    const btnPlus5 = document.getElementById('btn-refl-plus-5');
+    if (btnMinus5) {
+        btnMinus5.addEventListener('click', () => {
+            const r = labState.reflection;
+            r.incidentAngle = Math.max(0, r.incidentAngle - 5);
+            updateReflectionDOMControls();
+            updateReflectionMetricsDOM();
+        });
+    }
+    if (btnPlus5) {
+        btnPlus5.addEventListener('click', () => {
+            const r = labState.reflection;
+            r.incidentAngle = Math.min(75, r.incidentAngle + 5);
+            updateReflectionDOMControls();
+            updateReflectionMetricsDOM();
+        });
+    }
+
+    // 4. Açı Kaydırıcısı
+    const sliderAngle = document.getElementById('slider-refl-angle');
+    if (sliderAngle) {
+        sliderAngle.addEventListener('input', (e) => {
+            labState.reflection.incidentAngle = parseInt(e.target.value, 10);
+            updateReflectionDOMControls();
+            updateReflectionMetricsDOM();
+        });
+    }
+
+    // 5. Mesafe Kaydırıcısı
+    const sliderDist = document.getElementById('slider-refl-dist');
+    if (sliderDist) {
+        sliderDist.addEventListener('input', (e) => {
+            labState.reflection.objectDistance = parseInt(e.target.value, 10);
+            updateReflectionDOMControls();
+            updateReflectionMetricsDOM();
+        });
+    }
+
+    // 6. Sıfırla
+    const btnReset = document.getElementById('btn-refl-reset');
+    if (btnReset) btnReset.addEventListener('click', resetReflectionExperiment);
+
+    // 7. Gözlem Kayıt Butonu
+    const btnRecord = document.getElementById('btn-record-data-6-4');
+    if (btnRecord) btnRecord.addEventListener('click', recordMeasurement);
+}
+
+function updateReflectionPhysics() {
+    updateReflectionMetricsDOM();
+}
+
+function updateReflectionMetricsDOM() {
+    const r = labState.reflection;
+    const isPlane = (r.mirrorType === "plane");
+    const isConcave = (r.mirrorType === "concave");
+    const isConvex = (r.mirrorType === "convex");
+
+    // Canvas Altı Responsive Metrik Şeridi (#metrics-bar-6-4)
+    const mbMirror = document.getElementById('mbar-64-mirror');
+    const mbInci = document.getElementById('mbar-64-inci');
+    const mbRefl = document.getElementById('mbar-64-refl');
+    const mbType = document.getElementById('mbar-64-type');
+    const mbStatus = document.getElementById('mbar-64-status');
+
+    let mirrorName = "Düzlem Ayna";
+    let imageStatus = "Düz ve Eşit Boyut";
+    let reflType = "Düzgün Yansıma";
+
+    if (isPlane) {
+        mirrorName = "Düzlem Ayna";
+        reflType = (r.subMode === "smooth") ? "Düzgün Yansıma" : "Dağınık Yansıma";
+        imageStatus = (r.subMode === "smooth") ? "Düz, Eşit Boyut, Simetrik" : "Görüntü Net Değil (Saçılma)";
+        if (mbInci) mbInci.textContent = `${r.incidentAngle}°`;
+        if (mbRefl) mbRefl.textContent = `${r.incidentAngle}°`;
+    } else if (isConcave) {
+        mirrorName = "Çukur (İçbükey) Ayna";
+        reflType = "Işığı Toplar (Yakınsak)";
+        const d = r.objectDistance;
+        const f = r.focalLength;
+        if (d < f) imageStatus = "Düz ve Dev Büyüklükte (Dişçi)";
+        else if (d === f) imageStatus = "Odak Noktası (Işınlar Paralel)";
+        else if (d < 2 * f) imageStatus = "Ters ve Büyük Görüntü";
+        else if (d === 2 * f) imageStatus = "Ters ve Eşit Boyut (Merkez)";
+        else imageStatus = "Ters ve Küçük Görüntü (Kaşık İçi)";
+        if (mbInci) mbInci.textContent = `d: ${d}mm`;
+        if (mbRefl) mbRefl.textContent = `f: ${f}mm`;
+    } else {
+        mirrorName = "Tümsek (Dışbükey) Ayna";
+        reflType = "Işığı Dağıtır (Iraksak)";
+        imageStatus = "Daima Düz, Küçük ve Geniş Görüş";
+        if (mbInci) mbInci.textContent = `d: ${r.objectDistance}mm`;
+        if (mbRefl) mbRefl.textContent = `f: -${r.focalLength}mm`;
+    }
+
+    if (mbMirror) mbMirror.textContent = mirrorName;
+    if (mbType) mbType.textContent = reflType;
+    if (mbStatus) {
+        mbStatus.textContent = imageStatus;
+        mbStatus.style.borderLeftColor = isPlane ? "#38bdf8" : (isConcave ? "#f59e0b" : "#10b981");
+    }
+
+    // Sağ Panel Veri Çipleri
+    const pInci = document.getElementById('metric-64-inci');
+    const pRefl = document.getElementById('metric-64-refl');
+    const pMirror = document.getElementById('metric-64-mirror');
+    const pImage = document.getElementById('metric-64-image');
+
+    if (pInci) pInci.textContent = isPlane ? `${r.incidentAngle}°` : `${r.objectDistance} mm`;
+    if (pRefl) pRefl.textContent = isPlane ? `${r.incidentAngle}°` : `${r.focalLength} mm`;
+    if (pMirror) pMirror.textContent = mirrorName;
+    if (pImage) pImage.textContent = imageStatus;
+
+    // Dinamik Pedagojik Çıkarım Kartı
+    const pTitle = document.getElementById('refl-pedagogical-title');
+    const pText = document.getElementById('refl-pedagogical-text');
+    const pIcon = document.getElementById('refl-pedagogical-icon');
+
+    if (pTitle && pText && pIcon) {
+        if (isPlane) {
+            pIcon.innerHTML = `<i class="fas fa-clone" style="color:#38bdf8;"></i>`;
+            pTitle.textContent = "📐 1. Yansıma Kanunu (i = r)";
+            if (r.subMode === "smooth") {
+                pText.textContent = `Gelme açısı (${r.incidentAngle}°), yansıma açısına (${r.incidentAngle}°) daima eşittir. Pürüzsüz düzlem aynada paralel gelen ışınlar birbirine paralel olarak yansır. Görüntü cisimle aynı büyüklükte, düz ve simetriktir.`;
+            } else {
+                pText.textContent = `Pürüzlü yüzeylerde her bir ışın için yansıma kanunu (i = r) geçerli olsa da yüzey normalleri farklı yönlere baktığı için ışınlar farklı açılarla saçılır (Dağınık yansıma). Bu nedenle net bir görüntü oluşmaz.`;
+            }
+        } else if (isConcave) {
+            pIcon.innerHTML = `<i class="fas fa-circle-notch" style="color:#f59e0b;"></i>`;
+            pTitle.textContent = "🔍 Çukur Ayna (Işığı Toplar)";
+            if (r.objectDistance < r.focalLength) {
+                pText.textContent = `Cisim odak noktası ile ayna arasındayken (d = ${r.objectDistance} mm < f), aynada DÜZ ve DEV BÜYÜKLÜKTE görüntü oluşur. Bu ilke diş hekimi aynalarında, makyaj aynalarında ve mikroskoplarda kullanılır.`;
+            } else {
+                pText.textContent = `Cisim odaktan uzaktayken gerçek ve TERS görüntü oluşur. Çukur aynalar ışığı tek bir noktada (odak) topladığı için Güneş fırınlarında, el fenerlerinde ve araba farlarında yansıtıcı çanak olarak kullanılır.`;
+            }
+        } else {
+            pIcon.innerHTML = `<i class="fas fa-circle" style="color:#10b981;"></i>`;
+            pTitle.textContent = "🚗 Tümsek Ayna (Işığı Dağıtır)";
+            pText.textContent = `Tümsek aynalar üzerine düşen paralel ışınları dışarıya doğru dağıtır. Cismin konumu neresi olursa olsun görüntü DAİMA DÜZ ve KÜÇÜKTÜR. Görüş alanı çok geniştir; araç yan dikiz aynaları, kavşak aynaları ve mağaza güvenlik aynalarında tercih edilir.`;
+        }
+    }
+}
+
+function drawReflectionSimulation() {
+    const w = canvas.width;
+    const h = canvas.height;
+    const scale = w / 800;
+
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    const r = labState.reflection;
+
+    // 1. Optik Laboratuvarı Arka Planı (Karanlık Masa & Hassas Izgara)
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 500);
+    bgGrad.addColorStop(0, "#080c16");
+    bgGrad.addColorStop(1, "#0d1527");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 800, 500);
+
+    // İnce Optik Izgarası (Grid)
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.05)";
+    ctx.lineWidth = 1;
+    for (let x = 40; x < 800; x += 40) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, 500);
+        ctx.stroke();
+    }
+    for (let y = 40; y < 500; y += 40) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(800, y);
+        ctx.stroke();
+    }
+
+    if (r.mirrorType === "plane") {
+        drawPlaneMirrorSimulation(ctx, r);
+    } else if (r.mirrorType === "concave") {
+        drawConcaveMirrorSimulation(ctx, r);
+    } else {
+        drawConvexMirrorSimulation(ctx, r);
+    }
+
+    ctx.restore();
+}
+
+function drawPlaneMirrorSimulation(ctx, r) {
+    const mirrorY = 380;
+    const mirrorStartX = 160;
+    const mirrorEndX = 640;
+    const normalX = 400;
+
+    ctx.save();
+
+    // 1. Yüzey Normali (N) - Kesikli Neon Cyan Çizgi
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.65)";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 6]);
+    ctx.beginPath();
+    ctx.moveTo(normalX, 90);
+    ctx.lineTo(normalX, mirrorY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Normal Tepe Gösterge Noktası
+    ctx.fillStyle = "#38bdf8";
+    ctx.beginPath();
+    ctx.arc(normalX, 90, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2. İletki Açı Yayları (Protractor Arc)
+    const rad = r.incidentAngle * (Math.PI / 180);
+    const arcR = 85;
+
+    // Gelme Açısı Yayı (Sol / Normalden Işına)
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.5)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(normalX, mirrorY, arcR, -Math.PI / 2 - rad, -Math.PI / 2);
+    ctx.stroke();
+
+    // Yansıma Açısı Yayı (Sağ / Normalden Işına)
+    ctx.strokeStyle = "rgba(74, 222, 128, 0.5)";
+    ctx.beginPath();
+    ctx.arc(normalX, mirrorY, arcR, -Math.PI / 2, -Math.PI / 2 + rad);
+    ctx.stroke();
+
+    // 3. Işınlar: Düzgün vs Dağınık Yansıma
+    const isSmooth = (r.subMode === "smooth");
+    const rayColorIn = "#38bdf8";
+    const rayColorOut = "#4ade80";
+
+    if (isSmooth) {
+        // A. Düzgün Yansıma: Merkez Işın ve 2 Yan Paralel Işın
+        const beamOffsets = [0, -32, 32];
+        beamOffsets.forEach((off, idx) => {
+            const hitX = normalX + off;
+            const hitY = mirrorY;
+            const len = 340;
+            const srcX = hitX - len * Math.sin(rad);
+            const srcY = hitY - len * Math.cos(rad);
+            const outX = hitX + len * Math.sin(rad);
+            const outY = hitY - len * Math.cos(rad);
+
+            const isMain = (idx === 0);
+            const alpha = isMain ? 1.0 : 0.45;
+            const w = isMain ? 3.5 : 2.0;
+
+            // Gelen Işın (Mavi Neon)
+            drawLaserBeam(ctx, srcX, srcY, hitX, hitY, rayColorIn, w, alpha);
+            // Yansıyan Işın (Yeşil Neon)
+            drawLaserBeam(ctx, hitX, hitY, outX, outY, rayColorOut, w, alpha);
+        });
+
+        // Merkez Lazer Cihazı
+        const mainSrcX = normalX - 310 * Math.sin(rad);
+        const mainSrcY = mirrorY - 310 * Math.cos(rad);
+        drawLaserDevice(ctx, mainSrcX, mainSrcY, normalX, mirrorY, 1.0);
+    } else {
+        // B. Dağınık Yansıma: Paralel Gelen Işınlar Farklı Açılarla Saçılır
+        const diffuseRays = [
+            { off: -36, outDeg: 65 },
+            { off: 0, outDeg: 25 },
+            { off: 36, outDeg: 55 }
+        ];
+
+        diffuseRays.forEach(dr => {
+            const hitX = normalX + dr.off;
+            const hitY = mirrorY;
+            const len = 320;
+            const srcX = hitX - len * Math.sin(rad);
+            const srcY = hitY - len * Math.cos(rad);
+
+            // Gelen Paralel Işın
+            drawLaserBeam(ctx, srcX, srcY, hitX, hitY, rayColorIn, 2.5, 0.85);
+
+            // Farklı Yöne Saçılan Yansıyan Işın
+            const outRad = dr.outDeg * (Math.PI / 180);
+            const outX = hitX + len * Math.sin(outRad);
+            const outY = hitY - len * Math.cos(outRad);
+            drawLaserBeam(ctx, hitX, hitY, outX, outY, "#f59e0b", 2.2, 0.85);
+        });
+
+        // Lazer Cihazı
+        const mainSrcX = normalX - 310 * Math.sin(rad);
+        const mainSrcY = mirrorY - 310 * Math.cos(rad);
+        drawLaserDevice(ctx, mainSrcX, mainSrcY, normalX, mirrorY, 1.0);
+    }
+
+    // 4. Ayna Gövdesi Çizimi (Yatay Çubuk)
+    drawPlaneMirrorGlass(ctx, mirrorStartX, mirrorEndX, mirrorY, isSmooth);
+
+    ctx.restore();
+}
+
+function drawPlaneMirrorGlass(ctx, startX, endX, y, isSmooth) {
+    ctx.save();
+
+    // Arka Sırlı Tabaka (Gümüş & Bakır Kaplama)
+    ctx.fillStyle = "#475569";
+    ctx.fillRect(startX, y, endX - startX, 16);
+
+    // Sır Taraması (Arka yüzey çapraz çizgileri)
+    ctx.strokeStyle = "rgba(15, 23, 42, 0.8)";
+    ctx.lineWidth = 1.5;
+    for (let x = startX + 6; x < endX; x += 14) {
+        ctx.beginPath();
+        ctx.moveTo(x, y + 16);
+        ctx.lineTo(x + 10, y + 3);
+        ctx.stroke();
+    }
+
+    if (isSmooth) {
+        // Düzgün Cam ve Gümüş Yansıtıcı Şerit
+        const mirrorGrad = ctx.createLinearGradient(startX, y - 4, startX, y + 2);
+        mirrorGrad.addColorStop(0, "#ffffff");
+        mirrorGrad.addColorStop(0.5, "#93c5fd");
+        mirrorGrad.addColorStop(1, "#38bdf8");
+        ctx.fillStyle = mirrorGrad;
+        ctx.fillRect(startX, y - 4, endX - startX, 5);
+
+        // Ayna Yüzey Parlaması
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.9)";
+        ctx.lineWidth = 2;
+        ctx.shadowColor = "#38bdf8";
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        ctx.moveTo(startX, y - 4);
+        ctx.lineTo(endX, y - 4);
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+    } else {
+        // Dağınık Yansıma İçin Pürüzlü / Tırtıklı Yüzey Çizimi
+        ctx.fillStyle = "#cbd5e1";
+        ctx.beginPath();
+        ctx.moveTo(startX, y);
+        for (let x = startX; x <= endX; x += 10) {
+            const bump = ((x / 10) % 2 === 0) ? -5 : -1;
+            ctx.lineTo(x, y + bump);
+        }
+        ctx.lineTo(endX, y + 6);
+        ctx.lineTo(startX, y + 6);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = "#94a3b8";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+    }
+
+    ctx.restore();
+}
+
+function drawConcaveMirrorSimulation(ctx, r) {
+    const axisY = 250;
+    const mirrorX = 620;
+    const f = r.focalLength; // 100 mm
+    const focusX = mirrorX - f; // 520
+    const centerX = mirrorX - 2 * f; // 420
+    const candleX = mirrorX - r.objectDistance;
+
+    ctx.save();
+
+    // 1. Asal Eksen (Horizontal Principal Axis)
+    ctx.strokeStyle = "rgba(148, 163, 184, 0.35)";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([8, 8]);
+    ctx.beginPath();
+    ctx.moveTo(80, axisY);
+    ctx.lineTo(720, axisY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // 2. Odak Noktası (F) ve Merkez Noktası (M)
+    ctx.fillStyle = "#38bdf8";
+    ctx.beginPath();
+    ctx.arc(focusX, axisY, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = "#f59e0b";
+    ctx.beginPath();
+    ctx.arc(centerX, axisY, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 3. Çukur Ayna Yayı (Concave Arc - İçbükey)
+    ctx.save();
+    ctx.strokeStyle = "#00d2ff";
+    ctx.lineWidth = 6;
+    ctx.shadowColor = "#00d2ff";
+    ctx.shadowBlur = 12;
+    ctx.beginPath();
+    // Yay çukur tarafı sola bakar
+    ctx.arc(mirrorX + 200, axisY, 230, Math.PI * 0.82, Math.PI * 1.18);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Aynanın Arka Sırlı Taraması
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 2;
+    for (let a = Math.PI * 0.83; a <= Math.PI * 1.17; a += 0.04) {
+        const ax = mirrorX + 200 + Math.cos(a) * 230;
+        const ay = axisY + Math.sin(a) * 230;
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(ax + 10, ay + 6);
+        ctx.stroke();
+    }
+    ctx.restore();
+
+    // 4. Cisim: Yanan Mum (Candle Object)
+    const candleH = r.candleHeight;
+    drawReflectionCandle(ctx, candleX, axisY, candleH, false, 1.0);
+
+    // 5. Işın Çizimleri (Principal Rays)
+    const flameTipY = axisY - candleH;
+    const hitY1 = flameTipY;
+    const hitX1 = mirrorX - 10;
+
+    // Işın 1: Asal Eksene Paralel Gelen -> Odaktan Geçerek Yansır
+    drawLaserBeam(ctx, candleX, flameTipY, hitX1, hitY1, "#38bdf8", 2.2, 0.85);
+    // Odaktan geçerek uzar
+    const slope1 = (axisY - hitY1) / (focusX - hitX1);
+    const endX1 = 80;
+    const endY1 = hitY1 + slope1 * (endX1 - hitX1);
+    drawLaserBeam(ctx, hitX1, hitY1, endX1, endY1, "#4ade80", 2.2, 0.85);
+
+    // Işın 2: Tepe Noktasına Vuran Işın (Aynı Açıyla Yansır)
+    const hitX2 = mirrorX - 6;
+    const hitY2 = axisY;
+    drawLaserBeam(ctx, candleX, flameTipY, hitX2, hitY2, "#38bdf8", 2.0, 0.8);
+    const outSlope2 = (axisY - flameTipY) / (hitX2 - candleX);
+    const endX2 = 80;
+    const endY2 = hitY2 + outSlope2 * (hitX2 - endX2);
+    drawLaserBeam(ctx, hitX2, hitY2, endX2, endY2, "#4ade80", 2.0, 0.8);
+
+    // 6. Görüntü Çizimi (Image Formation)
+    const d = r.objectDistance;
+    if (d < f) {
+        // DÜZ ve DEV BÜYÜKLÜKTE (Sanal - Ayna Arkasında)
+        const di = Math.abs((d * f) / (d - f));
+        const mag = Math.min(2.5, di / d);
+        const imageX = mirrorX + Math.min(100, di * 0.4);
+        const imageH = candleH * mag;
+
+        // Sanal ışın uzantıları (Dashed)
+        ctx.strokeStyle = "rgba(74, 222, 128, 0.4)";
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(hitX1, hitY1);
+        ctx.lineTo(imageX, axisY - imageH);
+        ctx.moveTo(hitX2, hitY2);
+        ctx.lineTo(imageX, axisY - imageH);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Büyütülmüş Düz Mum Görüntüsü
+        drawReflectionCandle(ctx, imageX, axisY, imageH, false, 0.7);
+    } else if (d > f) {
+        // TERS GÖRÜNTÜ (Gerçek - Ayna Önünde)
+        const di = (d * f) / (d - f);
+        const mag = Math.min(2.2, Math.max(0.4, di / d));
+        const imageX = mirrorX - Math.min(480, di);
+        const imageH = candleH * mag;
+
+        if (imageX > 80) {
+            drawReflectionCandle(ctx, imageX, axisY, imageH, true, 0.75);
+        }
+    }
+
+    ctx.restore();
+}
+
+function drawConvexMirrorSimulation(ctx, r) {
+    const axisY = 250;
+    const mirrorX = 560;
+    const f = r.focalLength; // 100 mm (Sanal Odak ayna arkasında)
+    const virtualFocusX = mirrorX + f; // 660
+    const candleX = mirrorX - r.objectDistance;
+
+    ctx.save();
+
+    // 1. Asal Eksen
+    ctx.strokeStyle = "rgba(148, 163, 184, 0.35)";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([8, 8]);
+    ctx.beginPath();
+    ctx.moveTo(80, axisY);
+    ctx.lineTo(740, axisY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // 2. Sanal Odak (Ayna Arkasında)
+    ctx.fillStyle = "#38bdf8";
+    ctx.beginPath();
+    ctx.arc(virtualFocusX, axisY, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 3. Tümsek Ayna Yayı (Convex Arc - Dışbükey Sola Bakan Şişkinlik)
+    ctx.save();
+    ctx.strokeStyle = "#10b981";
+    ctx.lineWidth = 6;
+    ctx.shadowColor = "#10b981";
+    ctx.shadowBlur = 12;
+    ctx.beginPath();
+    // Yay bombeli tarafı sola bakar
+    ctx.arc(mirrorX - 200, axisY, 230, -Math.PI * 0.18, Math.PI * 0.18);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Aynanın Arka Taraması (Sağ Taraf)
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 2;
+    for (let a = -Math.PI * 0.17; a <= Math.PI * 0.17; a += 0.04) {
+        const ax = mirrorX - 200 + Math.cos(a) * 230;
+        const ay = axisY + Math.sin(a) * 230;
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(ax + 10, ay + 6);
+        ctx.stroke();
+    }
+    ctx.restore();
+
+    // 4. Cisim: Yanan Mum
+    const candleH = r.candleHeight;
+    drawReflectionCandle(ctx, candleX, axisY, candleH, false, 1.0);
+
+    // 5. Işın Çizimleri
+    const flameTipY = axisY - candleH;
+    const hitX1 = mirrorX + 8;
+    const hitY1 = flameTipY;
+
+    // Asal Eksene Paralel Gelen Işın
+    drawLaserBeam(ctx, candleX, flameTipY, hitX1, hitY1, "#38bdf8", 2.2, 0.85);
+
+    // Odaktan çıkıyormuş gibi dağılan yansıyan ışın
+    const slope1 = (hitY1 - axisY) / (hitX1 - virtualFocusX);
+    const endX1 = 80;
+    const endY1 = hitY1 - slope1 * (hitX1 - endX1);
+    drawLaserBeam(ctx, hitX1, hitY1, endX1, endY1, "#4ade80", 2.2, 0.85);
+
+    // Ayna Arkasına Sanal Uzantı Çizgisi (Dashed)
+    ctx.strokeStyle = "rgba(74, 222, 128, 0.45)";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(hitX1, hitY1);
+    ctx.lineTo(virtualFocusX, axisY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // 6. Görüntü Çizimi (Daima DÜZ ve KÜÇÜK, Sanal)
+    const d = r.objectDistance;
+    const di = (d * f) / (d + f);
+    const mag = di / d;
+    const imageX = mirrorX + di * 0.75;
+    const imageH = candleH * mag;
+
+    drawReflectionCandle(ctx, imageX, axisY, imageH, false, 0.7);
+
+    ctx.restore();
+}
+
+function drawReflectionCandle(ctx, x, baseY, height, isFlipped, alpha) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+
+    const dir = isFlipped ? -1 : 1;
+    const waxW = Math.max(10, height * 0.28);
+    const waxH = height * 0.7;
+
+    // Mum Gövdesi (Beyaz / Sarı Parafin)
+    const waxGrad = ctx.createLinearGradient(x - waxW / 2, baseY, x + waxW / 2, baseY);
+    waxGrad.addColorStop(0, "#fef08a");
+    waxGrad.addColorStop(0.5, "#ffffff");
+    waxGrad.addColorStop(1, "#cbd5e1");
+    ctx.fillStyle = waxGrad;
+    ctx.beginPath();
+    ctx.roundRect(x - waxW / 2, isFlipped ? baseY : baseY - waxH, waxW, waxH, 3);
+    ctx.fill();
+
+    // Mum Fitili
+    const wickStartY = isFlipped ? baseY + waxH : baseY - waxH;
+    const wickEndY = wickStartY + dir * 6;
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x, wickStartY);
+    ctx.lineTo(x, wickEndY);
+    ctx.stroke();
+
+    // Alev (Flickering Flame)
+    const flameH = height * 0.35;
+    const flameW = waxW * 0.85;
+    const flameTipY = wickEndY + dir * flameH;
+    const flicker = Math.sin(animTime * 8 + x) * 1.5;
+
+    // Alev Halesi
+    ctx.fillStyle = "rgba(245, 158, 11, 0.35)";
+    ctx.beginPath();
+    ctx.arc(x + flicker * 0.5, wickEndY + dir * (flameH * 0.5), flameW * 1.1, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Alev Damlası (Teardrop shape)
+    const flameGrad = ctx.createRadialGradient(x, wickEndY + dir * 4, 1, x, wickEndY + dir * (flameH * 0.5), flameW);
+    flameGrad.addColorStop(0, "#ffffff");
+    flameGrad.addColorStop(0.3, "#fef08a");
+    flameGrad.addColorStop(0.7, "#f59e0b");
+    flameGrad.addColorStop(1, "rgba(239, 68, 68, 0.2)");
+
+    ctx.fillStyle = flameGrad;
+    ctx.beginPath();
+    ctx.moveTo(x - flameW / 2, wickEndY);
+    ctx.quadraticCurveTo(x - flameW * 0.6, wickEndY + dir * (flameH * 0.6), x + flicker, flameTipY);
+    ctx.quadraticCurveTo(x + flameW * 0.6, wickEndY + dir * (flameH * 0.6), x + flameW / 2, wickEndY);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+}
+
+// ============================================================================
+// --- 6.5. DENEY 6.5: SIVILARIN YOĞUNLUĞU VE YOĞUNLUK KULESİ (FB.6.5.3 - FB.6.5.4) ---
 // ============================================================================
 
 const DENSITY_LIQUIDS_DEF = {
@@ -2632,7 +4218,7 @@ function setupDensityTowerControlsDOM() {
     if (btnEmpty2) btnEmpty2.addEventListener('click', resetDensityTowerExperiment);
 
     // Gözlem Kayıt Butonu
-    const btnRecord = document.getElementById('btn-record-data-6-3');
+    const btnRecord = document.getElementById('btn-record-data-6-5');
     if (btnRecord) btnRecord.addEventListener('click', recordMeasurement);
 }
 
@@ -2760,11 +4346,11 @@ function updateDensityMetricsDOM() {
     const dt = labState.densityTower;
     const count = dt.activeLiquids.length;
 
-    // Canvas Altı Responsive Metrik Şeridi (#metrics-bar-6-3)
-    const mbCount = document.getElementById('mbar-63-liquid-count');
-    const mbBottom = document.getElementById('mbar-63-bottom-layer');
-    const mbTop = document.getElementById('mbar-63-top-layer');
-    const mbStatus = document.getElementById('mbar-63-status');
+    // Canvas Altı Responsive Metrik Şeridi (#metrics-bar-6-5)
+    const mbCount = document.getElementById('mbar-65-liquid-count');
+    const mbBottom = document.getElementById('mbar-65-bottom-layer');
+    const mbTop = document.getElementById('mbar-65-top-layer');
+    const mbStatus = document.getElementById('mbar-65-status');
 
     if (mbCount) mbCount.textContent = `${count} / 4`;
     if (mbBottom) {
@@ -2787,10 +4373,10 @@ function updateDensityMetricsDOM() {
     }
 
     // Sağ Panel Metrikleri
-    const pCount = document.getElementById('metric-63-count');
-    const pBottom = document.getElementById('metric-63-bottom');
-    const pTop = document.getElementById('metric-63-top');
-    const pObj = document.getElementById('metric-63-object');
+    const pCount = document.getElementById('metric-65-count');
+    const pBottom = document.getElementById('metric-65-bottom');
+    const pTop = document.getElementById('metric-65-top');
+    const pObj = document.getElementById('metric-65-object');
     if (pCount) pCount.textContent = `${count} / 4`;
     if (pBottom) pBottom.textContent = count > 0 ? dt.activeLiquids[0].name : "—";
     if (pTop) pTop.textContent = count > 0 ? dt.activeLiquids[count - 1].name : "—";
@@ -11240,8 +12826,28 @@ function setupCanvasPointerEvents() {
         const canvasX = x * scaleX;
         const canvasY = y * scaleY;
 
-        // Deney 6.1: Araç Konumu Manuel Sürükleme
-        if (labState.activeExperimentId === "6.1" && labState.motion.car.isDragging) {
+        // Deney 6.1: Ay Yörünge Açısı Manuel Sürükleme
+        if (labState.activeExperimentId === "6.1" && labState.eclipse && labState.eclipse.isDragging) {
+            const ec = labState.eclipse;
+            const orbitScale = (ec.mode === "solar") ? 110 : 115;
+            const angle = ((canvasY - 250) / orbitScale) * 30;
+            ec.orbitAngle = Math.max(-30, Math.min(30, angle));
+            ec.isPlaying = false;
+            updateEclipseDOMControls();
+            updateEclipseMetricsDOM();
+            return;
+        }
+
+        // Deney 6.2: Halat / Kutu Manuel Sürükleme
+        if (labState.activeExperimentId === "6.2" && labState.tugOfWar && labState.tugOfWar.isDragging) {
+            const tow = labState.tugOfWar;
+            tow.boxX = Math.max(200, Math.min(600, canvasX));
+            updateTugMetricsDOM();
+            return;
+        }
+
+        // Deney 6.3: Araç Konumu Manuel Sürükleme
+        if (labState.activeExperimentId === "6.3" && labState.motion && labState.motion.car.isDragging) {
             const m = labState.motion;
             const clampedX = Math.max(90, Math.min(690, canvasX));
             m.distanceTraveled = ((clampedX - 90) / 600) * m.trackLength;
@@ -11251,11 +12857,27 @@ function setupCanvasPointerEvents() {
             return;
         }
 
-        // Deney 6.2: Halat / Kutu Manuel Sürükleme
-        if (labState.activeExperimentId === "6.2" && labState.tugOfWar.isDragging) {
-            const tow = labState.tugOfWar;
-            tow.boxX = Math.max(200, Math.min(600, canvasX));
-            updateTugMetricsDOM();
+        // Deney 6.4: Yansıma Açısı veya Mum Mesafesi Manuel Sürükleme
+        if (labState.activeExperimentId === "6.4" && labState.reflection && labState.reflection.isDragging) {
+            const r = labState.reflection;
+            if (r.mirrorType === "plane") {
+                const dx = 400 - canvasX;
+                const dy = 380 - canvasY;
+                if (dy > 10) {
+                    let deg = Math.round(Math.atan2(dx, dy) * (180 / Math.PI));
+                    r.incidentAngle = Math.max(0, Math.min(75, deg));
+                    updateReflectionDOMControls();
+                    updateReflectionMetricsDOM();
+                }
+            } else {
+                const mirrorX = (r.mirrorType === "concave") ? 620 : 560;
+                if (canvasX < mirrorX) {
+                    const dist = Math.round(mirrorX - canvasX);
+                    r.objectDistance = Math.max(50, Math.min(320, dist));
+                    updateReflectionDOMControls();
+                    updateReflectionMetricsDOM();
+                }
+            }
             return;
         }
 
@@ -11432,8 +13054,12 @@ function setupCanvasPointerEvents() {
             const scaleY = 500 / rect.height;
             const canvasX = (clientX - rect.left) * scaleX;
             const canvasY = (clientY - rect.top) * scaleY;
-            if (Math.hypot(canvasX - labState.motion.car.x, canvasY - labState.motion.car.y) <= 65) {
-                labState.motion.car.isDragging = true;
+            const ec = labState.eclipse;
+            const moonX = (ec.mode === "solar") ? 360 : 640;
+            const moonY = 250 + (ec.orbitAngle / 30) * (ec.mode === "solar" ? 110 : 115);
+            if (Math.hypot(canvasX - moonX, canvasY - moonY) <= 35) {
+                ec.isDragging = true;
+                ec.isPlaying = false;
             }
         } else if (labState.activeExperimentId === "6.2") {
             const rect = cvs.getBoundingClientRect();
@@ -11446,6 +13072,17 @@ function setupCanvasPointerEvents() {
             if (Math.abs(canvasX - labState.tugOfWar.boxX) <= 50 && Math.abs(canvasY - 330) <= 55) {
                 labState.tugOfWar.isDragging = true;
             }
+        } else if (labState.activeExperimentId === "6.3") {
+            const rect = cvs.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            const scaleX = 800 / rect.width;
+            const scaleY = 500 / rect.height;
+            const canvasX = (clientX - rect.left) * scaleX;
+            const canvasY = (clientY - rect.top) * scaleY;
+            if (Math.hypot(canvasX - labState.motion.car.x, canvasY - labState.motion.car.y) <= 65) {
+                labState.motion.car.isDragging = true;
+            }
         } else if (labState.activeExperimentId === "6.4") {
             const rect = cvs.getBoundingClientRect();
             const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
@@ -11454,11 +13091,20 @@ function setupCanvasPointerEvents() {
             const scaleY = 500 / rect.height;
             const canvasX = (clientX - rect.left) * scaleX;
             const canvasY = (clientY - rect.top) * scaleY;
-            if (Math.hypot(canvasX - 180, canvasY - 340) <= 45) {
-                labState.heatTransfer.isHeating = !labState.heatTransfer.isHeating;
-                updateHeatTransferDOMControls();
-                updateHeatMetricsDOM();
-                showLabToast(labState.heatTransfer.isHeating ? "🔥 İspirto ocağı yakıldı!" : "Ocak söndürüldü.");
+            const r = labState.reflection;
+            if (r.mirrorType === "plane") {
+                const rad = r.incidentAngle * (Math.PI / 180);
+                const srcX = 400 - 300 * Math.sin(rad);
+                const srcY = 380 - 300 * Math.cos(rad);
+                if (Math.hypot(canvasX - srcX, canvasY - srcY) <= 55 || Math.hypot(canvasX - 400, canvasY - 380) <= 55) {
+                    r.isDragging = true;
+                }
+            } else {
+                const mirrorX = (r.mirrorType === "concave") ? 620 : 560;
+                const candleX = mirrorX - r.objectDistance;
+                if (Math.hypot(canvasX - candleX, canvasY - 250) <= 50) {
+                    r.isDragging = true;
+                }
             }
         } else if (labState.activeExperimentId === "7.1") {
             labState.work.isDragging = true;
@@ -11566,8 +13212,10 @@ function setupCanvasPointerEvents() {
     });
 
     cvs.addEventListener('pointermove', (e) => {
-        const isDragging61 = (labState.activeExperimentId === "6.1" && labState.motion && labState.motion.car.isDragging);
+        const isDragging61 = (labState.activeExperimentId === "6.1" && labState.eclipse && labState.eclipse.isDragging);
         const isDragging62 = (labState.activeExperimentId === "6.2" && labState.tugOfWar && labState.tugOfWar.isDragging);
+        const isDragging63 = (labState.activeExperimentId === "6.3" && labState.motion && labState.motion.car.isDragging);
+        const isDragging64 = (labState.activeExperimentId === "6.4" && labState.reflection && labState.reflection.isDragging);
         const isDragging71 = (labState.activeExperimentId === "7.1" && labState.work.isDragging);
         const isDragging72 = (labState.activeExperimentId === "7.2" && (labState.energy.pendulum.isDragging || labState.energy.ramp.isDragging));
         const isDragging77 = (labState.activeExperimentId === "7.7" && (
@@ -11575,12 +13223,18 @@ function setupCanvasPointerEvents() {
             (labState.electro.mode === "conduction" && (labState.electro.conduction.sphere1.isDragging || labState.electro.conduction.sphere2.isDragging))
         ));
         const isDragging78 = (labState.activeExperimentId === "7.8" && labState.electroscope && labState.electroscope.rod.isDragging);
-        if (isDragging61 || isDragging62 || isDragging71 || isDragging72 || isDragging77 || isDragging78 || labState.optics.isDraggingLaser || labState.lens.isDraggingObject) {
+        if (isDragging61 || isDragging62 || isDragging63 || isDragging64 || isDragging71 || isDragging72 || isDragging77 || isDragging78 || labState.optics.isDraggingLaser || labState.lens.isDraggingObject) {
             handlePointerAction(e);
         }
     });
 
     const stopDragging = (e) => {
+        if (labState.eclipse) {
+            labState.eclipse.isDragging = false;
+        }
+        if (labState.reflection) {
+            labState.reflection.isDragging = false;
+        }
         if (labState.motion) {
             labState.motion.car.isDragging = false;
         }
@@ -11621,11 +13275,11 @@ function updateTableHeader(expId) {
         thead.innerHTML = `
             <tr>
                 <th>#</th>
-                <th>Pist Uzunluğu</th>
-                <th>Geçen Süre (t)</th>
-                <th>Alınan Yol (x)</th>
-                <th>Sabit Sürat (v)</th>
-                <th>Hareket Durumu</th>
+                <th>Tutulma Türü</th>
+                <th>Gezegen Sıralaması</th>
+                <th>Ay Evresi</th>
+                <th>Gözlem Zamanı / Bölgesi</th>
+                <th>Gölge Tipi & Görsel Efekt</th>
             </tr>
         `;
     } else if (expId === "6.2") {
@@ -11643,22 +13297,33 @@ function updateTableHeader(expId) {
         thead.innerHTML = `
             <tr>
                 <th>#</th>
-                <th>Eklenen Sıvılar</th>
-                <th>Kule Katmanları</th>
-                <th>En Yoğun (Dip)</th>
-                <th>En Az Yoğun (Üst)</th>
-                <th>Bırakılan Cisimler</th>
+                <th>Pist Uzunluğu</th>
+                <th>Geçen Süre (t)</th>
+                <th>Alınan Yol (x)</th>
+                <th>Sabit Sürat (v)</th>
+                <th>Hareket Durumu</th>
             </tr>
         `;
     } else if (expId === "6.4") {
         thead.innerHTML = `
             <tr>
                 <th>#</th>
-                <th>Deney Modu</th>
-                <th>Isı Kaynağı</th>
-                <th>Bakır (k=385)</th>
-                <th>Alüminyum (k=205)</th>
-                <th>Demir (k=80)</th>
+                <th>Ayna Türü</th>
+                <th>Gelme Açısı (i)</th>
+                <th>Yansıma Açısı (r)</th>
+                <th>Yansıma Türü</th>
+                <th>Görüntü Özellikleri</th>
+            </tr>
+        `;
+    } else if (expId === "6.5") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Eklenen Sıvılar</th>
+                <th>Kule Katmanları</th>
+                <th>En Yoğun (Dip)</th>
+                <th>En Az Yoğun (Üst)</th>
+                <th>Bırakılan Cisimler</th>
             </tr>
         `;
     } else if (expId === "7.1") {
@@ -11768,17 +13433,20 @@ function recordMeasurement() {
     const fmt = (n, dec = 1) => (typeof n === 'number' && !isNaN(n)) ? n.toFixed(dec) : '—';
 
     if (expId === "6.1") {
-        const m = labState.motion;
+        const ec = labState.eclipse;
+        const isSolar = ec.mode === "solar";
         const row = {
-            id: m.measurements.length + 1,
-            col1: `${m.trackLength} m Pist`,
-            col2: `${fmt(m.elapsedTime, 1)} s`,
-            col3: `${fmt(m.distanceTraveled, 1)} m`,
-            col4: `${fmt(m.speed, 1)} m/s`,
-            col5: m.distanceTraveled >= m.trackLength ? "🏁 Pisti Tamamladı" : (m.isPlaying ? "⚡ Sabit Süratli Hareket" : "Bekliyor")
+            id: ec.measurements.length + 1,
+            col1: isSolar ? "☀️ Güneş Tutulması" : "🌕 Ay Tutulması",
+            col2: isSolar ? "Güneş — Ay — Dünya" : "Güneş — Dünya — Ay",
+            col3: isSolar ? "Yeniay Evresi" : "Dolunay Evresi",
+            col4: isSolar ? "Gündüz (Dar Bölge)" : "Gece (Karanlık Yarı Küre)",
+            col5: isSolar 
+                ? (Math.abs(ec.orbitAngle) <= 1.2 ? "Tam Tutulma (Korona Halkası)" : "Parçalı Tutulma")
+                : (Math.abs(ec.orbitAngle) <= 1.5 ? "Tam Tutulma (Kızıl / Kanlı Ay)" : "Parçalı Tutulma")
         };
-        m.measurements.push(row);
-        showLabToast(`Sabit Sürat Gözlemi #${row.id} deftere kaydedildi!`);
+        ec.measurements.push(row);
+        showLabToast(`Tutulma Gözlemi #${row.id} deftere kaydedildi!`);
     } else if (expId === "6.2") {
         const tow = labState.tugOfWar;
         const netDir = tow.netForce > 0 ? "Doğu" : (tow.netForce < 0 ? "Batı" : "Sıfır");
@@ -11793,6 +13461,40 @@ function recordMeasurement() {
         tow.measurements.push(row);
         showLabToast(`Kuvvet Gözlemi #${row.id} deftere kaydedildi!`);
     } else if (expId === "6.3") {
+        const m = labState.motion;
+        const row = {
+            id: m.measurements.length + 1,
+            col1: `${m.trackLength} m Pist`,
+            col2: `${fmt(m.elapsedTime, 1)} s`,
+            col3: `${fmt(m.distanceTraveled, 1)} m`,
+            col4: `${fmt(m.speed, 1)} m/s`,
+            col5: m.distanceTraveled >= m.trackLength ? "🏁 Pisti Tamamladı" : (m.isPlaying ? "⚡ Sabit Süratli Hareket" : "Bekliyor")
+        };
+        m.measurements.push(row);
+        showLabToast(`Sabit Sürat Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "6.4") {
+        const r = labState.reflection;
+        let mirrorName = "Düzlem Ayna";
+        let imageProp = "Düz, Eşit Boyut";
+        if (r.mirrorType === "concave") {
+            mirrorName = "Çukur (İçbükey) Ayna";
+            if (r.objectDistance < r.focalLength) imageProp = "Düz, Dev Büyüklükte (Dişçi)";
+            else imageProp = "Ters, Gerçek Görüntü";
+        } else if (r.mirrorType === "convex") {
+            mirrorName = "Tümsek (Dışbükey) Ayna";
+            imageProp = "Düz, Küçük, Geniş Görüş";
+        }
+        const row = {
+            id: r.measurements.length + 1,
+            col1: mirrorName,
+            col2: `${r.incidentAngle}°`,
+            col3: `${r.incidentAngle}°`,
+            col4: r.subMode === "smooth" ? "Düzgün Yansıma" : "Dağınık Yansıma",
+            col5: imageProp
+        };
+        r.measurements.push(row);
+        showLabToast(`Yansıma Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "6.5") {
         const dt = labState.densityTower;
         const names = dt.activeLiquids.map(l => l.name);
         const objNames = dt.objects.map(o => o.name);
@@ -11806,21 +13508,6 @@ function recordMeasurement() {
         };
         dt.measurements.push(row);
         showLabToast(`Yoğunluk Kulesi Gözlemi #${row.id} deftere kaydedildi!`);
-    } else if (expId === "6.4") {
-        const ht = labState.heatTransfer;
-        const c = ht.rods[0];
-        const al = ht.rods[1];
-        const fe = ht.rods[2];
-        const row = {
-            id: ht.measurements.length + 1,
-            col1: ht.mode === "metals" ? "🥇 Metallerde İletim" : "🏠 Binalarda Yalıtım",
-            col2: ht.isHeating ? "🔥 Ocak Yanıyor" : "Sönük",
-            col3: c.ballDropped ? `Düştü (${fmt(c.dropTime, 1)} s)` : `${fmt(c.temp, 0)}°C (Isınıyor)`,
-            col4: al.ballDropped ? `Düştü (${fmt(al.dropTime, 1)} s)` : `${fmt(al.temp, 0)}°C (Isınıyor)`,
-            col5: fe.ballDropped ? `Düştü (${fmt(fe.dropTime, 1)} s)` : `${fmt(fe.temp, 0)}°C (Isınıyor)`
-        };
-        ht.measurements.push(row);
-        showLabToast(`Isı İletimi Gözlemi #${row.id} deftere kaydedildi!`);
     } else if (expId === "7.1") {
         const work = labState.work;
         let scenarioName = "";
@@ -12090,13 +13777,15 @@ function renderMeasurementTable() {
     const expId = labState.activeExperimentId;
     let measurements = [];
     if (expId === "6.1") {
-        measurements = labState.motion.measurements;
+        measurements = labState.eclipse.measurements;
     } else if (expId === "6.2") {
         measurements = labState.tugOfWar.measurements;
     } else if (expId === "6.3") {
-        measurements = labState.densityTower.measurements;
+        measurements = labState.motion.measurements;
     } else if (expId === "6.4") {
-        measurements = labState.heatTransfer.measurements;
+        measurements = labState.reflection.measurements;
+    } else if (expId === "6.5") {
+        measurements = labState.densityTower.measurements;
     } else if (expId === "7.1") {
         measurements = labState.work.measurements;
     } else if (expId === "7.2") {
@@ -12142,7 +13831,17 @@ function renderMeasurementTable() {
 
 function clearMeasurementTable() {
     const expId = labState.activeExperimentId;
-    if (expId === "7.1") {
+    if (expId === "6.1") {
+        labState.eclipse.measurements = [];
+    } else if (expId === "6.2") {
+        labState.tugOfWar.measurements = [];
+    } else if (expId === "6.3") {
+        labState.motion.measurements = [];
+    } else if (expId === "6.4") {
+        labState.reflection.measurements = [];
+    } else if (expId === "6.5") {
+        labState.densityTower.measurements = [];
+    } else if (expId === "7.1") {
         labState.work.measurements = [];
     } else if (expId === "7.2") {
         labState.energy.measurements = [];
