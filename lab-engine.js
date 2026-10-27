@@ -182,24 +182,24 @@ export const EXPERIMENTS_DATABASE = [
     },
     {
         id: "7.5", grade: 7, unit: 5, unitName: "Maddenin Doğasına Yolculuk",
-        title: "Çözünme Hızını Etkileyen Faktörler Simülatörü",
-        code: "FB.7.5.9", bookRef: "2. Kitap, s. 78–89",
-        active: true, // 🏆 AKTİF!
-        desc: "Sıcaklık, temas yüzeyi (pudra/toz/küp şeker) ve karıştırmanın çözünme süresine etkisini 3 beherli kontrollü deney düzeneğinde eşzamanlı test edin."
-    },
-    {
-        id: "7.6", grade: 7, unit: 5, unitName: "Maddenin Doğasına Yolculuk",
         title: "Karışımların Ayrılması Simülatörü (Ayırma Hunisi ve Basit Damıtma)",
         code: "FB.7.5.10", bookRef: "2. Kitap, s. 90–101",
         active: true, // 🏆 AKTİF!
         desc: "Zeytinyağı-su heterojen karışımını ayırma hunisinde yoğunluk farkıyla, homojen alkol-su çözeltisini basit damıtmada kaynama noktası farkıyla saflaştırın."
     },
     {
+        id: "7.6", grade: 7, unit: 5, unitName: "Maddenin Doğasına Yolculuk",
+        title: "Çözünme Hızını Etkileyen Faktörler Simülatörü",
+        code: "FB.7.5.9", bookRef: "2. Kitap, s. 78–89",
+        active: true, // 🏆 AKTİF!
+        desc: "Sıcaklık, temas yüzeyi (pudra/toz/küp şeker) ve karıştırmanın çözünme süresine etkisini 3 beherli kontrollü deney düzeneğinde eşzamanlı test edin."
+    },
+    {
         id: "7.7", grade: 7, unit: 6, unitName: "Elektriklenme",
-        title: "Sürtünme ve Dokunma ile Elektriklenme Simülatörü",
+        title: "Sürtünme, Dokunma ve Etki ile Elektriklenme Simülatörü",
         code: "FB.7.6.1 - FB.7.6.2", bookRef: "2. Kitap, s. 106–119",
         active: true, // 🏆 AKTİF!
-        desc: "Ebonit çubuğu yün kumaşa, cam çubuğu ipek kumaşa sürterek elektron transferini, kağıt çekimini ve dokunma ile yük paylaşımını deneyimleyin."
+        desc: "Ebonit çubuğu yün kumaşa, cam çubuğu ipek kumaşa sürterek elektron transferini, iletken kürelerde dokunma ve yaklaştırma (etki/kutuplanma) fiziğini deneyimleyin."
     },
     {
         id: "7.8", grade: 7, unit: 6, unitName: "Elektriklenme",
@@ -214,6 +214,13 @@ export const EXPERIMENTS_DATABASE = [
         code: "FB.7.7.1", bookRef: "2. Kitap, s. 136–149",
         active: true, // 🏆 AKTİF!
         desc: "Üreticiden tepe avcıya aktarılan enerjinin azalışını (%10 kuralı) ve tarım ilacı zehirlerinin katlanarak birikimini nitel olarak gözlemleyin."
+    },
+    {
+        id: "7.10", grade: 7, unit: 7, unitName: "Sürdürülebilir Yaşam ve Enerji",
+        title: "Su Ayak İzi ve Sürdürülebilir Tasarruf Simülatörü",
+        code: "FB.7.7.2", bookRef: "2. Kitap, s. 152–155",
+        active: true, // 🏆 AKTİF!
+        desc: "Mimar Sinan Mağlova Su Kemeri hidroliği (%0.2 eğim ve sel menfezleri), perlatörlü musluk, basınçlı damla sulama ve Arjen Hoekstra Su Ayak İzi Terazisi simülatörü."
     }
 ];
 
@@ -485,6 +492,30 @@ export const labState = {
             touchSparks: []
         },
 
+        // Mod C: Etki ile Elektriklenme (Kutuplanma - Kural: Pozitif Yükler Sabittir!)
+        induction: {
+            pair: "ebonite", // "ebonite" (-) | "glass" (+)
+            rod: {
+                x: 180,
+                baseX: 180,
+                y: 220,
+                w: 160,
+                h: 36,
+                protons: 8,
+                electrons: 14, // (-) Ebonit: net -6e
+                isApproached: false
+            },
+            sphere: {
+                x: 500,
+                baseX: 500,
+                y: 220,
+                r: 65,
+                protons: 14,
+                electrons: 14, // Nötr
+                polarizedRatio: 0 // 0.0 (nötr homojen) -> 1.0 (kutuplanmış)
+            }
+        },
+
         measurements: []
     },
 
@@ -531,6 +562,40 @@ export const labState = {
         flowParticles: [],    // basamaklar arası enerji fotonları
         heatArrows: [],       // her basamaktan çıkan %90 ısı okları
         poisonParticles: [],  // dokularda biriken zehir tanecikleri
+        measurements: []
+    },
+
+    // DENEY 7.10: SU AYAK İZİ VE SÜRDÜRÜLEBİLİR TASARRUF SİMÜLATÖRÜ (FB.7.7.2)
+    waterFootprint: {
+        mode: "aqueduct", // "aqueduct" (Su Kemeri) | "tech" (Tasarruf Teknolojileri) | "footprint" (Hoekstra Terazisi)
+        animTime: 0,
+        // Mod 1: Su Kemeri (Mimar Sinan Hidroliği)
+        aqueduct: {
+            slope: 0.2,          // %0.2 ideal Sinan eğimi
+            flow: 200,           // 50 - 500 L/s
+            flood: false,        // Sel / şiddetli yağış
+            waterDelivered: 198, // L/s
+            particles: []
+        },
+        // Mod 2: Tasarruf Teknolojileri
+        tech: {
+            aerator: false,   // %50 tasarruf sağlayan çift kademeli perlatör
+            drip: false,      // %65 tasarruf sağlayan basınçlı damla sulama
+            greywater: false, // %30 geri kazanım sağlayan evsel gri su
+            particles: []
+        },
+        // Mod 3: Arjen Hoekstra Su Ayak İzi Terazisi
+        footprint: {
+            selectedProduct: "shirt",
+            products: {
+                shirt: { name: "1 Pamuklu Tişört", liters: 2700, green: 54, blue: 33, grey: 13, note: "Pamuk tarımı & boyama" },
+                beef: { name: "1 kg Dana Eti", liters: 15400, green: 93, blue: 4, grey: 3, note: "Yem bitkisi & canlı tüketimi" },
+                coffee: { name: "1 Fincan Kahve", liters: 140, green: 96, blue: 1, grey: 3, note: "Kahve çekirdeği işleme" },
+                apple: { name: "1 Adet Elma", liters: 125, green: 82, blue: 11, grey: 7, note: "Meyve bahçesi sulaması" },
+                paper: { name: "1 Adet A4 Kağıt", liters: 10, green: 57, blue: 32, grey: 11, note: "Ağaç hamuru & lif yıkama" }
+            },
+            scaleAngle: 0
+        },
         measurements: []
     },
 
@@ -1075,6 +1140,9 @@ function setupWorkspaceShellDOM() {
     // 12. DENEY 7.9 KONTROLLERİ (BESİN PİRAMİDİ VE BİYOBİRİKİM)
     setupFoodPyramidControlsDOM();
 
+    // 12.1. DENEY 7.10 KONTROLLERİ (SU AYAK İZİ VE SÜRDÜRÜLEBİLİR TASARRUF)
+    setupWaterFootprintControlsDOM();
+
     // 12.5. 5. SINIF KONTROLLERİ (DENEY 5.1 - 5.10)
     setupMoonPhasesControlsDOM();
     setupDynamometerControlsDOM();
@@ -1286,6 +1354,7 @@ export function openExperimentWorkspace(expId) {
     const is77 = (expId === "7.7");
     const is78 = (expId === "7.8");
     const is79 = (expId === "7.9");
+    const is710 = (expId === "7.10");
 
     // Metrik Şeritleri (Canvas Altı Responsive Barlar)
     const mbar51 = document.getElementById('metrics-bar-5-1');
@@ -1327,6 +1396,7 @@ export function openExperimentWorkspace(expId) {
     const mbar77 = document.getElementById('metrics-bar-7-7');
     const mbar78 = document.getElementById('metrics-bar-7-8');
     const mbar79 = document.getElementById('metrics-bar-7-9');
+    const mbar710 = document.getElementById('metrics-bar-7-10');
     if (mbar61) mbar61.classList.toggle('is-hidden', !is61);
     if (mbar62) mbar62.classList.toggle('is-hidden', !is62);
     if (mbar63) mbar63.classList.toggle('is-hidden', !is63);
@@ -1346,6 +1416,7 @@ export function openExperimentWorkspace(expId) {
     if (mbar77) mbar77.classList.toggle('is-hidden', !is77);
     if (mbar78) mbar78.classList.toggle('is-hidden', !is78);
     if (mbar79) mbar79.classList.toggle('is-hidden', !is79);
+    if (mbar710) mbar710.classList.toggle('is-hidden', !is710);
 
     // Hızlı Kontroller (Canvas Altı)
     const qc51 = document.getElementById('quick-controls-5-1');
@@ -1387,6 +1458,7 @@ export function openExperimentWorkspace(expId) {
     const qc77 = document.getElementById('quick-controls-7-7');
     const qc78 = document.getElementById('quick-controls-7-8');
     const qc79 = document.getElementById('quick-controls-7-9');
+    const qc710 = document.getElementById('quick-controls-7-10');
     if (qc61) qc61.classList.toggle('is-hidden', !is61);
     if (qc62) qc62.classList.toggle('is-hidden', !is62);
     if (qc63) qc63.classList.toggle('is-hidden', !is63);
@@ -1406,6 +1478,7 @@ export function openExperimentWorkspace(expId) {
     if (qc77) qc77.classList.toggle('is-hidden', !is77);
     if (qc78) qc78.classList.toggle('is-hidden', !is78);
     if (qc79) qc79.classList.toggle('is-hidden', !is79);
+    if (qc710) qc710.classList.toggle('is-hidden', !is710);
 
     // Değişkenler Panelleri
     const vars51 = document.getElementById('vars-container-5-1');
@@ -1447,6 +1520,7 @@ export function openExperimentWorkspace(expId) {
     const vars77 = document.getElementById('vars-container-7-7');
     const vars78 = document.getElementById('vars-container-7-8');
     const vars79 = document.getElementById('vars-container-7-9');
+    const vars710 = document.getElementById('vars-container-7-10');
     if (vars61) vars61.classList.toggle('is-hidden', !is61);
     if (vars62) vars62.classList.toggle('is-hidden', !is62);
     if (vars63) vars63.classList.toggle('is-hidden', !is63);
@@ -1466,6 +1540,7 @@ export function openExperimentWorkspace(expId) {
     if (vars77) vars77.classList.toggle('is-hidden', !is77);
     if (vars78) vars78.classList.toggle('is-hidden', !is78);
     if (vars79) vars79.classList.toggle('is-hidden', !is79);
+    if (vars710) vars710.classList.toggle('is-hidden', !is710);
 
     // Rehber Panelleri
     const guide51 = document.getElementById('guide-container-5-1');
@@ -1507,6 +1582,7 @@ export function openExperimentWorkspace(expId) {
     const guide77 = document.getElementById('guide-container-7-7');
     const guide78 = document.getElementById('guide-container-7-8');
     const guide79 = document.getElementById('guide-container-7-9');
+    const guide710 = document.getElementById('guide-container-7-10');
     if (guide61) guide61.classList.toggle('is-hidden', !is61);
     if (guide62) guide62.classList.toggle('is-hidden', !is62);
     if (guide63) guide63.classList.toggle('is-hidden', !is63);
@@ -1526,6 +1602,7 @@ export function openExperimentWorkspace(expId) {
     if (guide77) guide77.classList.toggle('is-hidden', !is77);
     if (guide78) guide78.classList.toggle('is-hidden', !is78);
     if (guide79) guide79.classList.toggle('is-hidden', !is79);
+    if (guide710) guide710.classList.toggle('is-hidden', !is710);
 
     if (is51) {
         initMoonPhasesState();
@@ -1572,15 +1649,17 @@ export function openExperimentWorkspace(expId) {
     } else if (is72) {
         initEnergyState();
     } else if (is75) {
-        initDissolveState();
-    } else if (is76) {
         initSeparationState();
+    } else if (is76) {
+        initDissolveState();
     } else if (is77) {
         initElectroState();
     } else if (is78) {
         initElectroscopeState();
     } else if (is79) {
         initFoodPyramidState();
+    } else if (is710) {
+        initWaterFootprintState();
     }
 
     // Veri Tablosu Başlıklarını Güncelle
@@ -1654,15 +1733,17 @@ function resetCurrentExperiment() {
     } else if (labState.activeExperimentId === "7.2") {
         resetEnergyExperiment();
     } else if (labState.activeExperimentId === "7.5") {
-        resetDissolveExperiment();
-    } else if (labState.activeExperimentId === "7.6") {
         resetSeparationExperiment();
+    } else if (labState.activeExperimentId === "7.6") {
+        resetDissolveExperiment();
     } else if (labState.activeExperimentId === "7.7") {
         resetElectroExperiment();
     } else if (labState.activeExperimentId === "7.8") {
         resetElectroscopeExperiment();
     } else if (labState.activeExperimentId === "7.9") {
         resetFoodPyramidExperiment();
+    } else if (labState.activeExperimentId === "7.10") {
+        resetWaterFootprintExperiment();
     } else if (labState.activeExperimentId === "7.3") {
         labState.optics.medium1 = "air";
         labState.optics.medium2 = "water";
@@ -1788,15 +1869,17 @@ function initExperimentCanvas() {
     } else if (labState.activeExperimentId === "7.4") {
         calculateLensPhysics();
     } else if (labState.activeExperimentId === "7.5") {
-        initDissolveState();
-    } else if (labState.activeExperimentId === "7.6") {
         initSeparationState();
+    } else if (labState.activeExperimentId === "7.6") {
+        initDissolveState();
     } else if (labState.activeExperimentId === "7.7") {
         initElectroState();
     } else if (labState.activeExperimentId === "7.8") {
         initElectroscopeState();
     } else if (labState.activeExperimentId === "7.9") {
         initFoodPyramidState();
+    } else if (labState.activeExperimentId === "7.10") {
+        initWaterFootprintState();
     }
 
     startRenderLoop();
@@ -1889,11 +1972,11 @@ function startRenderLoop() {
             } else if (labState.activeExperimentId === "7.4") {
                 drawLensSimulation();
             } else if (labState.activeExperimentId === "7.5") {
-                updateDissolvePhysics();
-                drawDissolveSimulation();
-            } else if (labState.activeExperimentId === "7.6") {
                 updateSeparationPhysics();
                 drawSeparationSimulation();
+            } else if (labState.activeExperimentId === "7.6") {
+                updateDissolvePhysics();
+                drawDissolveSimulation();
             } else if (labState.activeExperimentId === "7.7") {
                 updateElectroPhysics();
                 drawElectroSimulation();
@@ -1903,6 +1986,9 @@ function startRenderLoop() {
             } else if (labState.activeExperimentId === "7.9") {
                 updateFoodPyramidEcology();
                 drawFoodPyramidSimulation();
+            } else if (labState.activeExperimentId === "7.10") {
+                updateWaterFootprintPhysics();
+                drawWaterFootprintSimulation();
             }
         }
         if (labState.activeExperimentId) {
@@ -11165,9 +11251,9 @@ function setupDissolveControlsDOM() {
     });
 
     // 5. Gözlemi Kaydet Butonu
-    const btnRecord = document.getElementById('btn-record-data-7-5');
-    if (btnRecord) {
-        btnRecord.addEventListener('click', recordMeasurement);
+    const btnRecord76 = document.getElementById('btn-record-data-7-6');
+    if (btnRecord76) {
+        btnRecord76.addEventListener('click', recordMeasurement);
     }
 }
 
@@ -11367,11 +11453,11 @@ function updateDissolveStopwatchDOM() {
         }
     });
 
-    // Metrik Şeridi (#metrics-bar-7-5) Güncellemesi
-    const mb1 = document.getElementById('mbar-75-b1');
-    const mb2 = document.getElementById('mbar-75-b2');
-    const mb3 = document.getElementById('mbar-75-b3');
-    const mbStatus = document.getElementById('mbar-75-status');
+    // Metrik Şeridi (#metrics-bar-7-6) Güncellemesi
+    const mb1 = document.getElementById('mbar-76-b1');
+    const mb2 = document.getElementById('mbar-76-b2');
+    const mb3 = document.getElementById('mbar-76-b3');
+    const mbStatus = document.getElementById('mbar-76-status');
 
     const sugarNames = { powder: "Pudra", granulated: "Toz", cube: "Küp" };
     if (mb1 && b[0]) {
@@ -11859,8 +11945,8 @@ function setupSeparationControlsDOM() {
     if (btnResetDistill) btnResetDistill.addEventListener('click', resetDistillApparatus);
 
     // 4. Veri Defterine Kaydet
-    const btnRecord76 = document.getElementById('btn-record-data-7-6');
-    if (btnRecord76) btnRecord76.addEventListener('click', recordMeasurement);
+    const btnRecord75 = document.getElementById('btn-record-data-7-5');
+    if (btnRecord75) btnRecord75.addEventListener('click', recordMeasurement);
 }
 
 function setSeparationMode(mode) {
@@ -12132,11 +12218,11 @@ function updateSeparationMetricsDOM() {
         if (mFlaskLiquid) mFlaskLiquid.textContent = `${(d.alcoholVolume + d.waterVolume).toFixed(1)} mL`;
     }
 
-    // Metrik Şeridi (#metrics-bar-7-6) Güncellemesi
-    const mbMethod = document.getElementById('mbar-76-method');
-    const mbSubstances = document.getElementById('mbar-76-substances');
-    const mbPhase = document.getElementById('mbar-76-phase');
-    const mbStatus = document.getElementById('mbar-76-status');
+    // Metrik Şeridi (#metrics-bar-7-5) Güncellemesi
+    const mbMethod = document.getElementById('mbar-75-method');
+    const mbSubstances = document.getElementById('mbar-75-substances');
+    const mbPhase = document.getElementById('mbar-75-phase');
+    const mbStatus = document.getElementById('mbar-75-status');
 
     if (sep.mode === "funnel") {
         const f = sep.funnel;
@@ -13103,12 +13189,14 @@ function drawDistillationIndicators(ctx, distill) {
 // --- 8.7. DENEY 7.7: SÜRTÜNME VE DOKUNMA İLE ELEKTRİKLENME MOTORU ---
 
 function setupElectroControlsDOM() {
-    // 1. Mod Geçiş Butonları (Sürtünme vs Dokunma)
+    // 1. Mod Geçiş Butonları (Sürtünme vs Dokunma vs Etki)
     const btnFriction = document.getElementById('btn-mode-friction');
     const btnConduction = document.getElementById('btn-mode-conduction');
+    const btnInduction = document.getElementById('btn-mode-induction');
 
     if (btnFriction) btnFriction.addEventListener('click', () => setElectroMode("friction"));
     if (btnConduction) btnConduction.addEventListener('click', () => setElectroMode("conduction"));
+    if (btnInduction) btnInduction.addEventListener('click', () => setElectroMode("induction"));
 
     // 2. Sürtünme Çifti Butonları
     const btnEbonite = document.getElementById('btn-pair-ebonite');
@@ -13130,6 +13218,19 @@ function setupElectroControlsDOM() {
     if (btnP3) btnP3.addEventListener('click', () => setConductionPreset("pos6_neg2"));
     if (btnCondNeut) btnCondNeut.addEventListener('click', neutralizeConduction);
 
+    // 3.1. Etki ile Elektriklenme (Kutuplanma) Butonları
+    const btnIndEb = document.getElementById('btn-ind-ebonite');
+    const btnIndGl = document.getElementById('btn-ind-glass');
+    const btnIndApp = document.getElementById('btn-ind-approach');
+    const btnIndRem = document.getElementById('btn-ind-remove');
+    const btnIndNeut = document.getElementById('btn-ind-neutralize');
+
+    if (btnIndEb) btnIndEb.addEventListener('click', () => setInductionPair("ebonite"));
+    if (btnIndGl) btnIndGl.addEventListener('click', () => setInductionPair("glass"));
+    if (btnIndApp) btnIndApp.addEventListener('click', approachInductionRod);
+    if (btnIndRem) btnIndRem.addEventListener('click', removeInductionRod);
+    if (btnIndNeut) btnIndNeut.addEventListener('click', neutralizeInduction);
+
     // 4. Veri Defterine Kaydet
     const btnRecord77 = document.getElementById('btn-record-data-7-7');
     if (btnRecord77) btnRecord77.addEventListener('click', recordMeasurement);
@@ -13138,25 +13239,33 @@ function setupElectroControlsDOM() {
 function setElectroMode(mode) {
     labState.electro.mode = mode;
     const isFriction = (mode === "friction");
+    const isConduction = (mode === "conduction");
+    const isInduction = (mode === "induction");
 
     const btnFriction = document.getElementById('btn-mode-friction');
     const btnConduction = document.getElementById('btn-mode-conduction');
+    const btnInduction = document.getElementById('btn-mode-induction');
     if (btnFriction) btnFriction.classList.toggle('active', isFriction);
-    if (btnConduction) btnConduction.classList.toggle('active', !isFriction);
+    if (btnConduction) btnConduction.classList.toggle('active', isConduction);
+    if (btnInduction) btnInduction.classList.toggle('active', isInduction);
 
     const grpFriction = document.getElementById('group-controls-friction');
     const grpConduction = document.getElementById('group-controls-conduction');
+    const grpInduction = document.getElementById('group-controls-induction');
     if (grpFriction) grpFriction.classList.toggle('is-hidden', !isFriction);
-    if (grpConduction) grpConduction.classList.toggle('is-hidden', isFriction);
+    if (grpConduction) grpConduction.classList.toggle('is-hidden', !isConduction);
+    if (grpInduction) grpInduction.classList.toggle('is-hidden', !isInduction);
 
     const countersFriction = document.getElementById('counters-grid-friction');
     const countersConduction = document.getElementById('counters-grid-conduction');
+    const countersInduction = document.getElementById('counters-grid-induction');
     if (countersFriction) countersFriction.classList.toggle('is-hidden', !isFriction);
-    if (countersConduction) countersConduction.classList.toggle('is-hidden', isFriction);
+    if (countersConduction) countersConduction.classList.toggle('is-hidden', !isConduction);
+    if (countersInduction) countersInduction.classList.toggle('is-hidden', !isInduction);
 
     updateElectroMetricsDOM();
     updateElectroPedagogicalBox();
-    showLabToast(isFriction ? "⚡ Sürtünme ile Elektriklenme Modu Aktif" : "🤝 Dokunma ile Elektriklenme Modu Aktif");
+    showLabToast(isFriction ? "⚡ Sürtünme ile Elektriklenme Modu Aktif" : (isConduction ? "🤝 Dokunma ile Elektriklenme Modu Aktif" : "🧲 Etki ile Elektriklenme (Kutuplanma) Modu Aktif"));
 }
 
 function setFrictionPair(pair) {
@@ -13276,11 +13385,68 @@ function neutralizeConduction() {
     showLabToast("🔄 Her iki iletken küre nötrlendi");
 }
 
+function setInductionPair(pair) {
+    const ind = labState.electro.induction;
+    ind.pair = pair;
+    const isEb = (pair === "ebonite");
+    const btnEb = document.getElementById('btn-ind-ebonite');
+    const btnGl = document.getElementById('btn-ind-glass');
+    if (btnEb) btnEb.classList.toggle('active', isEb);
+    if (btnGl) btnGl.classList.toggle('active', !isEb);
+
+    const lblRod = document.getElementById('label-electro-ind-rod');
+    const badgeRod = document.getElementById('badge-ind-rod');
+    if (lblRod) lblRod.textContent = isEb ? "(-) Ebonit Çubuk" : "(+) Cam Çubuk";
+    if (badgeRod) {
+        badgeRod.textContent = isEb ? "-6e" : "+6e";
+        badgeRod.className = `electro-charge-badge ${isEb ? 'negative' : 'positive'}`;
+    }
+
+    if (isEb) {
+        ind.rod.protons = 8;
+        ind.rod.electrons = 14; // -6
+    } else {
+        ind.rod.protons = 14;
+        ind.rod.electrons = 8;  // +6
+    }
+    updateElectroMetricsDOM();
+    updateElectroPedagogicalBox();
+    showLabToast(isEb ? "🧤 (-) Yüklü Ebonit Çubuk Seçildi" : "✨ (+) Yüklü Cam Çubuk Seçildi");
+}
+
+function approachInductionRod() {
+    const ind = labState.electro.induction;
+    ind.rod.isApproached = true;
+    updateElectroMetricsDOM();
+    updateElectroPedagogicalBox();
+    showLabToast("🧲 Yüklü çubuk nötr iletken küreye yaklaştırıldı!");
+}
+
+function removeInductionRod() {
+    const ind = labState.electro.induction;
+    ind.rod.isApproached = false;
+    updateElectroMetricsDOM();
+    updateElectroPedagogicalBox();
+    showLabToast("↔️ Çubuk uzaklaştırıldı. Elektronlar tekrar homojen dağıldı (Nötr).");
+}
+
+function neutralizeInduction() {
+    const ind = labState.electro.induction;
+    ind.rod.isApproached = false;
+    ind.rod.x = ind.rod.baseX;
+    ind.polarization = 0;
+    updateElectroMetricsDOM();
+    updateElectroPedagogicalBox();
+    showLabToast("🔄 Sistem sıfırlandı.");
+}
+
 function resetElectroExperiment() {
     if (labState.electro.mode === "friction") {
         neutralizeElectro();
-    } else {
+    } else if (labState.electro.mode === "conduction") {
         setConductionPreset("pos6_zero");
+    } else {
+        neutralizeInduction();
     }
 }
 
@@ -13349,7 +13515,7 @@ function updateElectroPedagogicalBox() {
             pTitle.textContent = "⚡ Kritik Kural: Yalnızca Elektronlar Hareket Eder!";
             pText.textContent = "Maddeler başlangıçta nötrdür (proton ve elektron sayıları eşittir). Kumaşı parmağınızla/fareyle çubuğun üzerine sürterek elektriklenmeyi başlatın!";
         }
-    } else {
+    } else if (el.mode === "conduction") {
         const c = el.conduction;
         box.className = "lab-pedagogical-card is-work";
 
@@ -13365,6 +13531,22 @@ function updateElectroPedagogicalBox() {
             pIcon.innerHTML = '<i class="fas fa-arrows-alt-h"></i>';
             pTitle.textContent = "🤝 Dokunma ile Elektriklenme: Küreleri Dokundurun";
             pText.textContent = "İletken kürelerden birini diğerine doğru sürükleyip temas ettirin. Dokunma anında elektronların nasıl aktarıldığını ve toplam yükün nasıl paylaşıldığını gözlemleyin.";
+        }
+    } else {
+        // induction
+        const ind = el.induction;
+        const isEb = (ind.pair === "ebonite");
+        box.className = "lab-pedagogical-card is-work";
+        if (ind.rod.isApproached) {
+            pIcon.innerHTML = '<i class="fas fa-arrows-split-up-and-left"></i>';
+            pTitle.textContent = isEb ? "🧲 Etki ile Kutuplanma: Elektronlar Zıt Tarafa İtildi!" : "🧲 Etki ile Kutuplanma: Elektronlar Yakın Tarafa Çekildi!";
+            pText.textContent = isEb ?
+                "(-) Yüklü ebonit çubuk yaklaştığında küredeki serbest elektronları uzak tarafa iter. Kürenin çubuğa yakın tarafında pozitif proton fazlalığı kalır, uzak tarafı negatif yüklenir. Toplam yük DEĞİŞMEZ, küre nötr kalır!" :
+                "(+) Yüklü cam çubuk yaklaştığında küredeki serbest elektronları kendine doğru çeker. Çubuğa yakın tarafta elektron fazlalığı oluşur. Pozitif protonlar çekirdekte sabit kalır!";
+        } else {
+            pIcon.innerHTML = '<i class="fas fa-arrows-alt-h"></i>';
+            pTitle.textContent = "🧲 Etki ile Elektriklenme: Yüklü Çubuğu Yaklaştırın";
+            pText.textContent = "Çubuğu küreye yaklaştırarak (temas ettirmeden) iletken küre içindeki elektronların nasıl kutuplandığını gözlemleyin. Çubuk uzaklaştırıldığında küre anında eski nötr homojen haline döner!";
         }
     }
 }
@@ -13408,7 +13590,7 @@ function updateElectroMetricsDOM() {
             bCloth.className = "electro-charge-badge " + (clothNet > 0 ? "positive" : clothNet < 0 ? "negative" : "neutral");
             bCloth.textContent = clothNet > 0 ? `+${clothNet}e (Pozitif)` : clothNet < 0 ? `-${Math.abs(clothNet)}e (Negatif)` : "Nötr";
         }
-    } else {
+    } else if (el.mode === "conduction") {
         const c = el.conduction;
         const s1Net = c.sphere1.protons - c.sphere1.electrons;
         const s2Net = c.sphere2.protons - c.sphere2.electrons;
@@ -13444,6 +13626,36 @@ function updateElectroMetricsDOM() {
             bS2.className = "electro-charge-badge " + (s2Net > 0 ? "positive" : s2Net < 0 ? "negative" : "neutral");
             bS2.textContent = s2Net > 0 ? `+${s2Net}e` : s2Net < 0 ? `-${Math.abs(s2Net)}e` : "Nötr";
         }
+    } else {
+        // induction
+        const ind = el.induction;
+        const isEb = (ind.pair === "ebonite");
+        const cIndRodPos = document.getElementById('cnt-ind-rod-pos');
+        const cIndRodNeg = document.getElementById('cnt-ind-rod-neg');
+        const cIndRodNet = document.getElementById('cnt-ind-rod-net');
+        const bIndRod = document.getElementById('badge-ind-rod');
+        const bIndSphere = document.getElementById('badge-ind-sphere');
+        const cNear = document.getElementById('cnt-ind-near-side');
+        const cFar = document.getElementById('cnt-ind-far-side');
+        const cSphereNet = document.getElementById('cnt-ind-sphere-net');
+
+        if (cIndRodPos) cIndRodPos.textContent = ind.rod.protons;
+        if (cIndRodNeg) cIndRodNeg.textContent = ind.rod.electrons;
+        if (cIndRodNet) {
+            cIndRodNet.textContent = isEb ? "-6e" : "+6e";
+            cIndRodNet.style.color = isEb ? '#38bdf8' : '#f87171';
+        }
+        if (bIndRod) {
+            bIndRod.className = "electro-charge-badge " + (isEb ? "negative" : "positive");
+            bIndRod.textContent = isEb ? "-6e" : "+6e";
+        }
+        if (bIndSphere) {
+            bIndSphere.textContent = ind.rod.isApproached ? "Kutuplanmış" : "Homojen Nötr";
+            bIndSphere.className = "electro-charge-badge neutral";
+        }
+        if (cNear) cNear.textContent = ind.rod.isApproached ? (isEb ? "+ Çekilen" : "- Çekilen") : "Nötr";
+        if (cFar) cFar.textContent = ind.rod.isApproached ? (isEb ? "- İtilen" : "+ Kalan") : "Nötr";
+        if (cSphereNet) cSphereNet.textContent = "0 (Nötr)";
     }
 
     // Metrik Şeridi (#metrics-bar-7-7) Güncellemesi
@@ -13451,6 +13663,32 @@ function updateElectroMetricsDOM() {
     const mbCloth = document.getElementById('mbar-77-cloth');
     const mbTransfer = document.getElementById('mbar-77-transfer');
     const mbStatus = document.getElementById('mbar-77-status');
+
+    if (mbRod) {
+        if (el.mode === "friction") mbRod.textContent = el.friction.pair === "ebonite" ? "Ebonit (-)" : "Cam (+)";
+        else if (el.mode === "conduction") mbRod.textContent = "1. Küre";
+        else mbRod.textContent = el.induction.pair === "ebonite" ? "Ebonit (-)" : "Cam (+)";
+    }
+    if (mbCloth) {
+        if (el.mode === "friction") mbCloth.textContent = el.friction.pair === "ebonite" ? "Yün (+)" : "İpek (-)";
+        else if (el.mode === "conduction") mbCloth.textContent = "2. Küre";
+        else mbCloth.textContent = "İletken Küre (Nötr)";
+    }
+    if (mbTransfer) {
+        if (el.mode === "friction") mbTransfer.textContent = "Sürtünme e⁻";
+        else if (el.mode === "conduction") mbTransfer.textContent = el.conduction.hasTouched ? "e⁻ Paylaşıldı" : "Dokunma Yok";
+        else mbTransfer.textContent = el.induction.rod.isApproached ? "Kutuplanma (e⁻ İtildi/Çekildi)" : "Kutuplanma Yok";
+    }
+    if (mbStatus) {
+        if (el.mode === "friction") {
+            const stuckCount = el.friction.papers.filter(p => p.isStuck).length;
+            mbStatus.textContent = stuckCount > 0 ? `Çekim: ${stuckCount} Kağıt` : (el.friction.rod.protons !== el.friction.rod.electrons ? "Yüklü Çubuk" : "Nötr");
+        } else if (el.mode === "conduction") {
+            mbStatus.textContent = el.conduction.hasTouched ? "Yükler Paylaşıldı" : "Temas Bekleniyor";
+        } else {
+            mbStatus.textContent = el.induction.rod.isApproached ? "Kutuplanmış Küre (Net: 0)" : "Nötr Dağılım";
+        }
+    }
 
     if (el.mode === "friction") {
         const f = el.friction;
@@ -13627,7 +13865,7 @@ function updateElectroPhysics() {
         });
     }
     // --- MOD B: DOKUNMA FİZİĞİ ---
-    else {
+    else if (el.mode === "conduction") {
         const c = el.conduction;
         const touchDist = c.sphere1.r + c.sphere2.r; // 110 px
         const curDist = c.sphere2.x - c.sphere1.x;
@@ -13676,6 +13914,13 @@ function updateElectroPhysics() {
             sp.alpha -= 0.04;
             if (sp.alpha <= 0) c.touchSparks.splice(i, 1);
         }
+    } else if (el.mode === "induction") {
+        const ind = el.induction;
+        const targetX = ind.rod.isApproached ? 270 : ind.rod.baseX;
+        ind.rod.x += (targetX - ind.rod.x) * 0.12;
+
+        const targetPol = ind.rod.isApproached ? 1.0 : 0.0;
+        ind.polarization += (targetPol - ind.polarization) * 0.1;
     }
 }
 
@@ -13715,10 +13960,140 @@ function drawElectroSimulation() {
     const el = labState.electro;
     if (el.mode === "friction") {
         drawElectroFrictionSetup(ctx, el.friction);
-    } else {
+    } else if (el.mode === "conduction") {
         drawElectroConductionSetup(ctx, el.conduction);
+    } else {
+        drawElectroInductionSetup(ctx, el.induction);
     }
 
+    ctx.restore();
+}
+
+function drawElectroInductionSetup(ctx, ind) {
+    ctx.save();
+
+    // 1. İletken Kürenin Yalıtkan Plastik Standı
+    const standGrad = ctx.createLinearGradient(480, 0, 520, 0);
+    standGrad.addColorStop(0, '#1e293b');
+    standGrad.addColorStop(0.5, '#475569');
+    standGrad.addColorStop(1, '#0f172a');
+    ctx.fillStyle = standGrad;
+    ctx.fillRect(495, 280, 10, 160);
+
+    ctx.beginPath();
+    ctx.roundRect(460, 435, 80, 12, 4);
+    ctx.fill();
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // 2. Nötr İletken Küre
+    const sphereGrad = ctx.createRadialGradient(ind.sphere.x - 20, ind.sphere.y - 20, 10, ind.sphere.x, ind.sphere.y, ind.sphere.r);
+    sphereGrad.addColorStop(0, '#f8fafc');
+    sphereGrad.addColorStop(0.35, '#cbd5e1');
+    sphereGrad.addColorStop(0.75, '#64748b');
+    sphereGrad.addColorStop(1, '#334155');
+    ctx.fillStyle = sphereGrad;
+    ctx.beginPath();
+    ctx.arc(ind.sphere.x, ind.sphere.y, ind.sphere.r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // 3. Küre İçi Yük Dağılımı ve Kutuplanma (Polarization)
+    const isEbonite = (ind.pair === "ebonite");
+    const shiftX = (isEbonite ? 22 : -22) * ind.polarization;
+
+    // Protonları çiz (sabit + simgeleri)
+    ctx.fillStyle = '#ef4444';
+    for (let i = 0; i < 7; i++) {
+        const ang = (i / 7) * Math.PI * 2;
+        const px = ind.sphere.x + Math.cos(ang) * 36;
+        const py = ind.sphere.y + Math.sin(ang) * 36;
+        drawChargeBadgeSymbol(ctx, px, py, '+');
+    }
+
+    // Elektronları çiz (kayan - simgeleri)
+    ctx.fillStyle = '#3b82f6';
+    for (let i = 0; i < 7; i++) {
+        const ang = (i / 7) * Math.PI * 2 + 0.45;
+        const ex = ind.sphere.x + Math.cos(ang) * 36 + shiftX;
+        const ey = ind.sphere.y + Math.sin(ang) * 36;
+        drawChargeBadgeSymbol(ctx, ex, ey, '-');
+    }
+
+    // 4. Yaklaştırılan Çubuk
+    const isEb = (ind.pair === "ebonite");
+    const rodX = ind.rod.x;
+    const rodY = ind.rod.y;
+    const rodW = ind.rod.w;
+    const rodH = ind.rod.h;
+
+    const rodGrad = ctx.createLinearGradient(0, rodY - rodH / 2, 0, rodY + rodH / 2);
+    if (isEb) {
+        rodGrad.addColorStop(0, '#27272a');
+        rodGrad.addColorStop(0.5, '#4b5563');
+        rodGrad.addColorStop(1, '#18181b');
+    } else {
+        rodGrad.addColorStop(0, 'rgba(56, 189, 248, 0.4)');
+        rodGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.75)');
+        rodGrad.addColorStop(1, 'rgba(56, 189, 248, 0.35)');
+    }
+    ctx.fillStyle = rodGrad;
+    ctx.beginPath();
+    ctx.roundRect(rodX - rodW / 2, rodY - rodH / 2, rodW, rodH, 8);
+    ctx.fill();
+    ctx.strokeStyle = isEb ? '#52525b' : '#38bdf8';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Çubuk üzerindeki yükler
+    const rodSign = isEb ? '-' : '+';
+    ctx.fillStyle = isEb ? '#3b82f6' : '#ef4444';
+    for (let c = 0; c < 5; c++) {
+        const cx = (rodX - rodW / 2 + 20) + c * 28;
+        drawChargeBadgeSymbol(ctx, cx, rodY, rodSign);
+    }
+
+    // 5. Etki Kuvvet Çizgileri (Kutuplanma alanı)
+    if (ind.polarization > 0.2) {
+        ctx.strokeStyle = isEb ? 'rgba(59, 130, 246, 0.45)' : 'rgba(239, 68, 68, 0.45)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.beginPath();
+        ctx.moveTo(rodX + rodW / 2 + 5, rodY - 15);
+        ctx.lineTo(ind.sphere.x - ind.sphere.r - 5, ind.sphere.y - 15);
+        ctx.moveTo(rodX + rodW / 2 + 10, rodY);
+        ctx.lineTo(ind.sphere.x - ind.sphere.r - 2, ind.sphere.y);
+        ctx.moveTo(rodX + rodW / 2 + 5, rodY + 15);
+        ctx.lineTo(ind.sphere.x - ind.sphere.r - 5, ind.sphere.y + 15);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    ctx.restore();
+}
+
+function drawChargeBadgeSymbol(ctx, cx, cy, sign) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    if (sign === '+') {
+        ctx.moveTo(cx - 3.5, cy);
+        ctx.lineTo(cx + 3.5, cy);
+        ctx.moveTo(cx, cy - 3.5);
+        ctx.lineTo(cx, cy + 3.5);
+    } else {
+        ctx.moveTo(cx - 3.5, cy);
+        ctx.lineTo(cx + 3.5, cy);
+    }
+    ctx.stroke();
     ctx.restore();
 }
 
@@ -16188,7 +16563,7 @@ function setupCanvasPointerEvents() {
         labState.optics.isDraggingLaser = true;
         labState.lens.isDraggingObject = true;
 
-        if (labState.activeExperimentId === "7.6" && labState.separation.mode === "funnel") {
+        if (labState.activeExperimentId === "7.5" && labState.separation.mode === "funnel") {
             const rect = cvs.getBoundingClientRect();
             const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
             const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
@@ -19684,22 +20059,22 @@ function updateTableHeader(expId) {
         thead.innerHTML = `
             <tr>
                 <th>#</th>
-                <th>Beher No</th>
-                <th>Sıcaklık (°C)</th>
-                <th>Şeker Türü</th>
-                <th>Karıştırma</th>
-                <th>Çözünme Süresi (t)</th>
+                <th>Yöntem</th>
+                <th>Karışım Türü</th>
+                <th>Fiziksel Özellik Farkı</th>
+                <th>Ayrılan Bileşenler</th>
+                <th>Sonuç / Verim</th>
             </tr>
         `;
     } else if (expId === "7.6") {
         thead.innerHTML = `
             <tr>
                 <th>#</th>
-                <th>Yöntem</th>
-                <th>Karışım Türü</th>
-                <th>Fiziksel Özellik Farkı</th>
-                <th>Ayrılan Bileşenler</th>
-                <th>Sonuç / Verim</th>
+                <th>Beher No</th>
+                <th>Sıcaklık (°C)</th>
+                <th>Şeker Türü</th>
+                <th>Karıştırma</th>
+                <th>Çözünme Süresi (t)</th>
             </tr>
         `;
     } else if (expId === "7.7") {
@@ -19733,6 +20108,17 @@ function updateTableHeader(expId) {
                 <th>Mevcut Enerji (J)</th>
                 <th>Isı Kaybı (%90)</th>
                 <th>Biyolojik Birikim (Zehir)</th>
+            </tr>
+        `;
+    } else if (expId === "7.10") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>İncelenen Mod / Sistem</th>
+                <th>Seçilen Değişken / Ürün</th>
+                <th>Tüketim / İletim (L)</th>
+                <th>Tasarruf / Verim Oranı</th>
+                <th>Su Ayak İzi / Çıkarım</th>
             </tr>
         `;
     }
@@ -20171,22 +20557,6 @@ function recordMeasurement() {
         labState.lens.measurements.push(row);
         showLabToast(`Mercek Gözlemi #${row.id} deftere kaydedildi!`);
     } else if (expId === "7.5") {
-        const dissolve = labState.dissolve;
-        const sugarNames = { cube: "Küp Şeker", granulated: "Toz Şeker", powder: "Pudra Şekeri" };
-        dissolve.beakers.forEach(b => {
-            const timeText = b.isDissolved ? `${fmt(b.elapsedTime, 1)} sn (Çözündü)` : `${fmt(b.elapsedTime, 1)} sn (Devam Ediyor)`;
-            const row = {
-                id: dissolve.measurements.length + 1,
-                col1: `${b.name}`,
-                col2: `${b.temp}°C`,
-                col3: `${sugarNames[b.sugar] || b.sugar} (10g)`,
-                col4: b.stirring ? "Açık (Karıştırılıyor)" : "Kapalı (Durgun)",
-                col5: timeText
-            };
-            dissolve.measurements.push(row);
-        });
-        showLabToast("3 Beherin ölçüm sonuçları deftere kaydedildi!");
-    } else if (expId === "7.6") {
         const sep = labState.separation;
         if (sep.mode === "funnel") {
             const f = sep.funnel;
@@ -20231,6 +20601,22 @@ function recordMeasurement() {
             sep.measurements.push(row);
             showLabToast(`Damıtma Gözlemi #${row.id} deftere kaydedildi!`);
         }
+    } else if (expId === "7.6") {
+        const dissolve = labState.dissolve;
+        const sugarNames = { cube: "Küp Şeker", granulated: "Toz Şeker", powder: "Pudra Şekeri" };
+        dissolve.beakers.forEach(b => {
+            const timeText = b.isDissolved ? `${fmt(b.elapsedTime, 1)} sn (Çözündü)` : `${fmt(b.elapsedTime, 1)} sn (Devam Ediyor)`;
+            const row = {
+                id: dissolve.measurements.length + 1,
+                col1: `${b.name}`,
+                col2: `${b.temp}°C`,
+                col3: `${sugarNames[b.sugar] || b.sugar} (10g)`,
+                col4: b.stirring ? "Açık (Karıştırılıyor)" : "Kapalı (Durgun)",
+                col5: timeText
+            };
+            dissolve.measurements.push(row);
+        });
+        showLabToast("3 Beherin ölçüm sonuçları deftere kaydedildi!");
     } else if (expId === "7.7") {
         const el = labState.electro;
         if (el.mode === "friction") {
@@ -20255,7 +20641,7 @@ function recordMeasurement() {
             };
             el.measurements.push(row);
             showLabToast(`Sürtünme Gözlemi #${row.id} deftere kaydedildi!`);
-        } else {
+        } else if (el.mode === "conduction") {
             const c = el.conduction;
             const s1Net = c.sphere1.protons - c.sphere1.electrons;
             const s2Net = c.sphere2.protons - c.sphere2.electrons;
@@ -20272,6 +20658,21 @@ function recordMeasurement() {
             };
             el.measurements.push(row);
             showLabToast(`Dokunma Gözlemi #${row.id} deftere kaydedildi!`);
+        } else {
+            // induction (etki ile kutuplanma)
+            const ind = el.induction;
+            const isEbonite = (ind.pair === "ebonite");
+            const rodLabel = isEbonite ? "(-) Ebonit Çubuk" : "(+) Cam Çubuk";
+            const row = {
+                id: el.measurements.length + 1,
+                col1: "🧲 Etki (Kutuplanma)",
+                col2: `${rodLabel} + Nötr İletken Küre`,
+                col3: ind.rod.isApproached ? "Çubuk Yaklaştırıldı" : "Çubuk Uzakta",
+                col4: isEbonite ? "e⁻ İtildi (Sağa Toplandı)" : "e⁻ Çekildi (Sola Toplandı)",
+                col5: ind.rod.isApproached ? "Küre Kutuplandı (Net Yük: 0 Nötr)" : "Homojen Nötr Dağılım"
+            };
+            el.measurements.push(row);
+            showLabToast(`Etki ile Elektriklenme Gözlemi #${row.id} deftere kaydedildi!`);
         }
     } else if (expId === "7.8") {
         const es = labState.electroscope;
@@ -20313,6 +20714,42 @@ function recordMeasurement() {
         };
         fp.measurements.push(row);
         showLabToast(`Ekoloji Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "7.10") {
+        const wf = labState.waterFootprint;
+        let col1 = "", col2 = "", col3 = "", col4 = "", col5 = "";
+        if (wf.mode === "aqueduct") {
+            const aq = wf.aqueduct;
+            col1 = "🏛️ Mağlova Su Kemeri";
+            col2 = `Eğim: %${fmt(aq.slope, 1)} · Debi: ${aq.flow} L/s`;
+            col3 = `${aq.waterDelivered} L/s İletim`;
+            col4 = aq.flood ? "Sel Tahliyesi (%99 Başarılı)" : "Sıfır Enerji / Yerçekimi";
+            col5 = aq.slope === 0.2 ? "Mimar Sinan İdeal Akışı" : "Hassas Eğim Ayarı";
+        } else if (wf.mode === "tech") {
+            const tc = wf.tech;
+            let saving = 0;
+            if (tc.aerator) saving += 50;
+            if (tc.drip) saving += 65;
+            if (tc.greywater) saving += 30;
+            col1 = "💧 Tasarruf Teknolojileri";
+            col2 = `P:${tc.aerator ? 'Açık' : 'Kapalı'} · D:${tc.drip ? 'Açık' : 'Kapalı'} · G:${tc.greywater ? 'Açık' : 'Kapalı'}`;
+            col3 = `${Math.round(150 * (1 - Math.min(0.8, saving / 100)))} L/gün Birey`;
+            col4 = `%${Math.min(80, saving)} Tasarruf / Kazanım`;
+            col5 = saving >= 50 ? "Yüksek Sürdürülebilirlik" : "Geliştirilebilir";
+        } else {
+            const fp = wf.footprint;
+            const p = fp.products[fp.selectedProduct] || fp.products.shirt;
+            col1 = "⚖️ Arjen Hoekstra Terazisi";
+            col2 = p.name;
+            col3 = `${p.liters.toLocaleString('tr-TR')} Litre Sanal Su`;
+            col4 = `Yeşil: %${p.green} · Mavi: %${p.blue} · Gri: %${p.grey}`;
+            col5 = p.note;
+        }
+        const row = {
+            id: wf.measurements.length + 1,
+            col1, col2, col3, col4, col5
+        };
+        wf.measurements.push(row);
+        showLabToast(`Su Ayak İzi Gözlemi #${row.id} deftere kaydedildi!`);
     }
 
     renderMeasurementTable();
@@ -20325,7 +20762,27 @@ function renderMeasurementTable() {
 
     const expId = labState.activeExperimentId;
     let measurements = [];
-    if (expId === "6.1") {
+    if (expId === "5.1") {
+        measurements = labState.moonPhases.measurements;
+    } else if (expId === "5.2") {
+        measurements = labState.dynamometer.measurements;
+    } else if (expId === "5.3") {
+        measurements = labState.friction.measurements;
+    } else if (expId === "5.4") {
+        measurements = labState.lightRect.measurements;
+    } else if (expId === "5.5") {
+        measurements = labState.shadow.measurements;
+    } else if (expId === "5.6") {
+        measurements = labState.compressibility.measurements;
+    } else if (expId === "5.7") {
+        measurements = labState.heatExchange.measurements;
+    } else if (expId === "5.8") {
+        measurements = labState.waterState.measurements;
+    } else if (expId === "5.9") {
+        measurements = labState.heatTransfer.measurements;
+    } else if (expId === "5.10") {
+        measurements = labState.circuit.measurements;
+    } else if (expId === "6.1") {
         measurements = labState.eclipse.measurements;
     } else if (expId === "6.2") {
         measurements = labState.tugOfWar.measurements;
@@ -20349,18 +20806,22 @@ function renderMeasurementTable() {
         measurements = labState.work.measurements;
     } else if (expId === "7.2") {
         measurements = labState.energy.measurements;
+    } else if (expId === "7.3") {
+        measurements = labState.optics.measurements;
     } else if (expId === "7.4") {
         measurements = labState.lens.measurements;
     } else if (expId === "7.5") {
-        measurements = labState.dissolve.measurements;
-    } else if (expId === "7.6") {
         measurements = labState.separation.measurements;
+    } else if (expId === "7.6") {
+        measurements = labState.dissolve.measurements;
     } else if (expId === "7.7") {
         measurements = labState.electro.measurements;
     } else if (expId === "7.8") {
         measurements = labState.electroscope.measurements;
     } else if (expId === "7.9") {
         measurements = labState.foodPyramid.measurements;
+    } else if (expId === "7.10") {
+        measurements = labState.waterFootprint.measurements;
     } else {
         measurements = labState.optics.measurements;
     }
@@ -20390,7 +20851,27 @@ function renderMeasurementTable() {
 
 function clearMeasurementTable() {
     const expId = labState.activeExperimentId;
-    if (expId === "6.1") {
+    if (expId === "5.1") {
+        labState.moonPhases.measurements = [];
+    } else if (expId === "5.2") {
+        labState.dynamometer.measurements = [];
+    } else if (expId === "5.3") {
+        labState.friction.measurements = [];
+    } else if (expId === "5.4") {
+        labState.lightRect.measurements = [];
+    } else if (expId === "5.5") {
+        labState.shadow.measurements = [];
+    } else if (expId === "5.6") {
+        labState.compressibility.measurements = [];
+    } else if (expId === "5.7") {
+        labState.heatExchange.measurements = [];
+    } else if (expId === "5.8") {
+        labState.waterState.measurements = [];
+    } else if (expId === "5.9") {
+        labState.heatTransfer.measurements = [];
+    } else if (expId === "5.10") {
+        labState.circuit.measurements = [];
+    } else if (expId === "6.1") {
         labState.eclipse.measurements = [];
     } else if (expId === "6.2") {
         labState.tugOfWar.measurements = [];
@@ -20414,18 +20895,22 @@ function clearMeasurementTable() {
         labState.work.measurements = [];
     } else if (expId === "7.2") {
         labState.energy.measurements = [];
+    } else if (expId === "7.3") {
+        labState.optics.measurements = [];
     } else if (expId === "7.4") {
         labState.lens.measurements = [];
     } else if (expId === "7.5") {
-        labState.dissolve.measurements = [];
-    } else if (expId === "7.6") {
         labState.separation.measurements = [];
+    } else if (expId === "7.6") {
+        labState.dissolve.measurements = [];
     } else if (expId === "7.7") {
         labState.electro.measurements = [];
     } else if (expId === "7.8") {
         labState.electroscope.measurements = [];
     } else if (expId === "7.9") {
         labState.foodPyramid.measurements = [];
+    } else if (expId === "7.10") {
+        labState.waterFootprint.measurements = [];
     } else {
         labState.optics.measurements = [];
     }
@@ -20559,6 +21044,1027 @@ function drawLaserDevice(ctx, x, y, targetX, targetY, scale) {
 
     ctx.restore();
 }
+
+// ============================================================================
+// --- 8.10. DENEY 7.10: SU AYAK İZİ VE SÜRDÜRÜLEBİLİR TASARRUF SİMÜLATÖRÜ ---
+// ============================================================================
+
+function initWaterFootprintState() {
+    const wf = labState.waterFootprint;
+    if (!wf.aqueduct.particles || wf.aqueduct.particles.length === 0) {
+        wf.aqueduct.particles = [];
+        for (let i = 0; i < 40; i++) {
+            wf.aqueduct.particles.push({
+                x: Math.random() * 800,
+                y: 110 + Math.random() * 20,
+                vx: 2 + Math.random() * 3,
+                size: 1.5 + Math.random() * 2.5,
+                alpha: 0.4 + Math.random() * 0.6
+            });
+        }
+    }
+    if (!wf.tech.particles || wf.tech.particles.length === 0) {
+        wf.tech.particles = [];
+        for (let i = 0; i < 25; i++) {
+            wf.tech.particles.push({
+                x: 180 + (Math.random() - 0.5) * 16,
+                y: 220 + Math.random() * 120,
+                vy: 3 + Math.random() * 4,
+                size: 1.5 + Math.random() * 2,
+                isBubble: Math.random() > 0.4
+            });
+        }
+    }
+    setWaterFootprintMode(wf.mode || "aqueduct");
+    updateWaterFootprintDOM();
+}
+
+function resetWaterFootprintExperiment() {
+    const wf = labState.waterFootprint;
+    wf.aqueduct.slope = 0.2;
+    wf.aqueduct.flow = 200;
+    wf.aqueduct.flood = false;
+    wf.tech.aerator = false;
+    wf.tech.drip = false;
+    wf.tech.greywater = false;
+    wf.footprint.selectedProduct = "shirt";
+
+    const sSlope = document.getElementById('slider-aqueduct-slope');
+    const sFlow = document.getElementById('slider-aqueduct-flow');
+    if (sSlope) sSlope.value = 2;
+    if (sFlow) sFlow.value = 200;
+
+    const btnFlood = document.getElementById('btn-aqueduct-flood');
+    if (btnFlood) {
+        btnFlood.classList.remove('active');
+        const sp = btnFlood.querySelector('span');
+        if (sp) sp.textContent = "Kapalı";
+    }
+
+    ['btn-toggle-aerator', 'btn-toggle-drip', 'btn-toggle-greywater'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.classList.remove('active');
+    });
+
+    updateWaterFootprintDOM();
+    showLabToast("💧 Su ve Sürdürülebilirlik simülatörü sıfırlandı.");
+}
+
+function setupWaterFootprintControlsDOM() {
+    // 1. Mod Seçici Butonları
+    const btnAqua = document.getElementById('btn-mode-aqueduct');
+    const btnTech = document.getElementById('btn-mode-saving-tech');
+    const btnFoot = document.getElementById('btn-mode-footprint');
+
+    if (btnAqua) btnAqua.addEventListener('click', () => setWaterFootprintMode("aqueduct"));
+    if (btnTech) btnTech.addEventListener('click', () => setWaterFootprintMode("tech"));
+    if (btnFoot) btnFoot.addEventListener('click', () => setWaterFootprintMode("footprint"));
+
+    // 2. Mod 1 Kontrolleri: Su Kemeri (Sinan Hidroliği)
+    const slSlope = document.getElementById('slider-aqueduct-slope');
+    const slFlow = document.getElementById('slider-aqueduct-flow');
+    const btnFlood = document.getElementById('btn-aqueduct-flood');
+
+    if (slSlope) {
+        slSlope.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value, 10) / 10.0;
+            setAqueductSlope(val);
+        });
+    }
+    if (slFlow) {
+        slFlow.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value, 10);
+            setAqueductFlow(val);
+        });
+    }
+    if (btnFlood) {
+        btnFlood.addEventListener('click', toggleAqueductFlood);
+    }
+
+    // 3. Mod 2 Kontrolleri: Tasarruf Teknolojileri
+    const btnAerator = document.getElementById('btn-toggle-aerator');
+    const btnDrip = document.getElementById('btn-toggle-drip');
+    const btnGrey = document.getElementById('btn-toggle-greywater');
+
+    if (btnAerator) btnAerator.addEventListener('click', toggleAerator);
+    if (btnDrip) btnDrip.addEventListener('click', toggleDrip);
+    if (btnGrey) btnGrey.addEventListener('click', toggleGreywater);
+
+    // 4. Mod 3 Kontrolleri: Arjen Hoekstra Terazisi Ürün Butonları
+    const prods = ['shirt', 'beef', 'coffee', 'apple', 'paper'];
+    prods.forEach(p => {
+        const pill = document.getElementById(`pill-prod-${p}`);
+        if (pill) pill.addEventListener('click', () => selectFootprintProduct(p));
+    });
+
+    // 5. Gözlemi Kaydet Butonu
+    const btnRecord710 = document.getElementById('btn-record-data-7-10');
+    if (btnRecord710) btnRecord710.addEventListener('click', recordMeasurement);
+}
+
+function setWaterFootprintMode(mode) {
+    const wf = labState.waterFootprint;
+    wf.mode = mode;
+
+    const isAqua = (mode === "aqueduct");
+    const isTech = (mode === "tech");
+    const isFoot = (mode === "footprint");
+
+    const btnAqua = document.getElementById('btn-mode-aqueduct');
+    const btnTech = document.getElementById('btn-mode-saving-tech');
+    const btnFoot = document.getElementById('btn-mode-footprint');
+    if (btnAqua) btnAqua.classList.toggle('active', isAqua);
+    if (btnTech) btnTech.classList.toggle('active', isTech);
+    if (btnFoot) btnFoot.classList.toggle('active', isFoot);
+
+    const boxAqua = document.getElementById('box-aqueduct-params');
+    const boxTech = document.getElementById('box-tech-params');
+    const boxFoot = document.getElementById('box-footprint-params');
+    if (boxAqua) boxAqua.classList.toggle('is-hidden', !isAqua);
+    if (boxTech) boxTech.classList.toggle('is-hidden', !isTech);
+    if (boxFoot) boxFoot.classList.toggle('is-hidden', !isFoot);
+
+    updateWaterFootprintDOM();
+    showLabToast(isAqua ? "🏛️ Mimar Sinan Mağlova Su Kemeri Modu" : (isTech ? "💧 Tasarruf Teknolojileri Modu" : "⚖️ Arjen Hoekstra Su Ayak İzi Terazisi"));
+}
+
+function setAqueductSlope(val) {
+    const aq = labState.waterFootprint.aqueduct;
+    aq.slope = val;
+    aq.waterDelivered = Math.round(aq.flow * (val >= 0.1 && val <= 0.4 ? 0.99 : Math.max(0.7, 1.0 - (val - 0.2) * 0.15)));
+    const disp = document.getElementById('val-aqueduct-slope');
+    if (disp) {
+        disp.textContent = `%${val.toFixed(1)} ${val === 0.2 ? '(İdeal Sinan Eğimi)' : (val > 0.4 ? '(Aşırı Eğim / Erozyon)' : '(Durgun Akış)')}`;
+    }
+    updateWaterFootprintDOM();
+}
+
+function setAqueductFlow(val) {
+    const aq = labState.waterFootprint.aqueduct;
+    aq.flow = val;
+    aq.waterDelivered = Math.round(val * (aq.slope >= 0.1 && aq.slope <= 0.4 ? 0.99 : 0.85));
+    const disp = document.getElementById('val-aqueduct-flow');
+    if (disp) disp.textContent = `${val} L/s`;
+    updateWaterFootprintDOM();
+}
+
+function toggleAqueductFlood() {
+    const aq = labState.waterFootprint.aqueduct;
+    aq.flood = !aq.flood;
+    const btn = document.getElementById('btn-aqueduct-flood');
+    if (btn) {
+        btn.classList.toggle('active', aq.flood);
+        const sp = btn.querySelector('span');
+        if (sp) sp.textContent = aq.flood ? "Açık (Sel Dehlizleri Devrede)" : "Kapalı";
+    }
+    updateWaterFootprintDOM();
+    showLabToast(aq.flood ? "⛈️ Aşırı sel debisi! Kemer ayaklarındaki tahliye pencereleri suyu boşaltıyor." : "☀️ Normal su akışına dönüldü.");
+}
+
+function toggleAerator() {
+    const tc = labState.waterFootprint.tech;
+    tc.aerator = !tc.aerator;
+    const btn = document.getElementById('btn-toggle-aerator');
+    if (btn) {
+        btn.classList.toggle('active', tc.aerator);
+        const sp = btn.querySelector('span');
+        if (sp) {
+            sp.textContent = tc.aerator ? "Açık (%50 Tasarruf)" : "Kapalı (%0)";
+            sp.style.color = tc.aerator ? '#34d399' : '#38bdf8';
+        }
+    }
+    updateWaterFootprintDOM();
+    showLabToast(tc.aerator ? "🚰 Çift kademeli perlatör devreye alındı! Suya hava katılarak akış debisi yarıya indi." : "Standart musluk moduna dönüldü.");
+}
+
+function toggleDrip() {
+    const tc = labState.waterFootprint.tech;
+    tc.drip = !tc.drip;
+    const btn = document.getElementById('btn-toggle-drip');
+    if (btn) {
+        btn.classList.toggle('active', tc.drip);
+        const sp = btn.querySelector('span');
+        if (sp) {
+            sp.textContent = tc.drip ? "Açık (Damla Sulama - %65)" : "Kapalı (Salma Sulama)";
+            sp.style.color = tc.drip ? '#34d399' : '#10b981';
+        }
+    }
+    updateWaterFootprintDOM();
+    showLabToast(tc.drip ? "🌱 Basınçlı damla sulama devrede! Su doğrudan köklere damlatılıyor, buharlaşma önlendi." : "Vahşi (salma) sulama moduna dönüldü.");
+}
+
+function toggleGreywater() {
+    const tc = labState.waterFootprint.tech;
+    tc.greywater = !tc.greywater;
+    const btn = document.getElementById('btn-toggle-greywater');
+    if (btn) {
+        btn.classList.toggle('active', tc.greywater);
+        const sp = btn.querySelector('span');
+        if (sp) {
+            sp.textContent = tc.greywater ? "Açık (%30 Geri Kazanım)" : "Kapalı";
+            sp.style.color = tc.greywater ? '#34d399' : '#a78bfa';
+        }
+    }
+    updateWaterFootprintDOM();
+    showLabToast(tc.greywater ? "♻️ Evsel gri su arıtımı devrede! Lavabo ve duş suları bahçede değerlendiriliyor." : "Gri su arıtımı kapatıldı.");
+}
+
+function selectFootprintProduct(prodKey) {
+    const fp = labState.waterFootprint.footprint;
+    fp.selectedProduct = prodKey;
+
+    const prods = ['shirt', 'beef', 'coffee', 'apple', 'paper'];
+    prods.forEach(p => {
+        const pill = document.getElementById(`pill-prod-${p}`);
+        if (pill) pill.classList.toggle('active', p === prodKey);
+    });
+
+    updateWaterFootprintDOM();
+    const pData = fp.products[prodKey];
+    showLabToast(`⚖️ ${pData.name} seçildi (Su Ayak İzi: ${pData.liters.toLocaleString('tr-TR')} Litre)`);
+}
+
+function updateWaterFootprintDOM() {
+    const wf = labState.waterFootprint;
+    const pBox = document.getElementById('water-pedagogical-box');
+    const pIcon = document.getElementById('water-pedagogical-icon');
+    const pTitle = document.getElementById('water-pedagogical-title');
+    const pText = document.getElementById('water-pedagogical-text');
+
+    const lbl1 = document.getElementById('label-stat-water-1');
+    const val1 = document.getElementById('metric-water-val-1');
+    const lbl2 = document.getElementById('label-stat-water-2');
+    const val2 = document.getElementById('metric-water-val-2');
+    const lbl3 = document.getElementById('label-stat-water-3');
+    const val3 = document.getElementById('metric-water-val-3');
+    const lbl4 = document.getElementById('label-stat-water-4');
+    const val4 = document.getElementById('metric-water-val-4');
+
+    const mbMode = document.getElementById('mbar-710-mode');
+    const mbFlow = document.getElementById('mbar-710-flow');
+    const mbSaving = document.getElementById('mbar-710-saving');
+    const mbType = document.getElementById('mbar-710-type');
+
+    if (wf.mode === "aqueduct") {
+        const aq = wf.aqueduct;
+        if (mbMode) mbMode.textContent = "Su Kemeri (Sinan)";
+        if (mbFlow) mbFlow.textContent = `${aq.waterDelivered} L/s İletim`;
+        if (mbSaving) mbSaving.textContent = aq.slope === 0.2 ? "%0.2 Kusursuz Eğim" : `%${aq.slope.toFixed(1)} Eğim`;
+        if (mbType) mbType.textContent = aq.flood ? "Sel Tahliyesi Açık" : "Mavi Su (Kaynak)";
+
+        if (lbl1) lbl1.textContent = "Kaynak Debi Girişi";
+        if (val1) val1.textContent = `${aq.flow} L/s`;
+        if (lbl2) lbl2.textContent = "İstanbul'a Ulaşan Su";
+        if (val2) val2.textContent = `${aq.waterDelivered} L/s`;
+        if (lbl3) lbl3.textContent = "Kanal Eğim Açısı";
+        if (val3) val3.textContent = `%${aq.slope.toFixed(1)}`;
+        if (lbl4) lbl4.textContent = "Yapı Güvenliği & Sel";
+        if (val4) val4.textContent = aq.flood ? "Tahliye Menfezleri Açık" : "Optimum Dayanım";
+
+        if (pBox && pIcon && pTitle && pText) {
+            pIcon.innerHTML = '<i class="fas fa-archway"></i>';
+            if (aq.slope === 0.2) {
+                pTitle.textContent = "🏛️ Mimar Sinan ve Mağlova Kemeri Dehası (%0.2 Eğim)";
+                pText.textContent = "Mimar Sinan, motor ve elektrik gücü olmadan suyu Belgrad Ormanları'ndan İstanbul'a taşırken kanala tam %0.2 (binde iki) eğim vermiştir. Aşırı eğim kanal duvarlarını yıpratır, düşük eğim suyu durdurur!";
+            } else if (aq.slope > 0.4) {
+                pTitle.textContent = "⚠️ Aşırı Kanal Eğimi: Aşınma ve Taşma Riski!";
+                pText.textContent = "Eğim %0.4'ü aştığında su kanalda aşırı hızlanır, sürtünme ve erozyonla kemer taşlarına zarar verir. Mimar Sinan'ın binde 2'lik altın oranına dönün.";
+            } else {
+                pTitle.textContent = "🏛️ Kırkçeşme Su Yolu Yerçekimi İletimi";
+                pText.textContent = "Kemer ayaklarındaki piramidal mahmuzlar ve tahliye pencereleri asırlık sellere meydan okumuştur.";
+            }
+        }
+    } else if (wf.mode === "tech") {
+        const tc = wf.tech;
+        let totalSaving = 0;
+        if (tc.aerator) totalSaving += 50;
+        if (tc.drip) totalSaving += 65;
+        if (tc.greywater) totalSaving += 30;
+
+        const effectiveSaving = Math.min(85, totalSaving);
+        const baseUsage = 150; // L/gün
+        const currentUsage = Math.round(baseUsage * (1 - effectiveSaving / 100));
+
+        if (mbMode) mbMode.textContent = "Tasarruf Teknolojileri";
+        if (mbFlow) mbFlow.textContent = `${currentUsage} L/gün Tüketim`;
+        if (mbSaving) mbSaving.textContent = `Toplam %${effectiveSaving} Tasarruf`;
+        if (mbType) mbType.textContent = tc.greywater ? "Gri Su Geri Kazanıldı" : "Şebeke Suyu";
+
+        if (lbl1) lbl1.textContent = "Kişi Başı Günlük Su";
+        if (val1) val1.textContent = `${currentUsage} Litre`;
+        if (lbl2) lbl2.textContent = "Net Tasarruf Oranı";
+        if (val2) val2.textContent = `%${effectiveSaving}`;
+        if (lbl3) lbl3.textContent = "Tasarruf Yöntemi";
+        if (val3) val3.textContent = tc.aerator && tc.drip ? "Perlatör + Damla Sulama" : (tc.aerator ? "Perlatörlü Musluk" : (tc.drip ? "Damla Sulama" : "Geleneksel Tüketim"));
+        if (lbl4) lbl4.textContent = "Sürdürülebilirlik Puanı";
+        if (val4) val4.textContent = effectiveSaving >= 50 ? "A+ (Mükemmel Tasarruf)" : (effectiveSaving > 0 ? "B (İyi Seviye)" : "D (Aşırı İsraf)");
+
+        if (pBox && pIcon && pTitle && pText) {
+            pIcon.innerHTML = '<i class="fas fa-faucet-drip"></i>';
+            if (effectiveSaving >= 50) {
+                pTitle.textContent = "🌱 Harika Tasarruf! Su Kaynakları Güvence Altında";
+                pText.textContent = "Perlatör musluk debisini %50 azaltırken basınç hissini korur. Damla sulama ise suyu buharlaşmadan doğrudan köke vererek %65 su tasarrufu sağlar.";
+            } else {
+                pTitle.textContent = "🚰 Geleneksel Kullanım: Su Ayak İzinizi Küçültün!";
+                pText.textContent = "Perlatör takarak ve vahşi salma sulama yerine damla sulama sistemine geçerek su tüketiminizi %60'ın üzerinde düşürebilirsiniz.";
+            }
+        }
+    } else {
+        const fp = wf.footprint;
+        const p = fp.products[fp.selectedProduct] || fp.products.shirt;
+
+        if (mbMode) mbMode.textContent = "Hoekstra Terazisi";
+        if (mbFlow) mbFlow.textContent = `${p.liters.toLocaleString('tr-TR')} L Su`;
+        if (mbSaving) mbSaving.textContent = p.name;
+        if (mbType) mbType.textContent = `Yeşil:%${p.green} · Mavi:%${p.blue} · Gri:%${p.grey}`;
+
+        if (lbl1) lbl1.textContent = "Seçilen Sanayi/Tarım Ürünü";
+        if (val1) val1.textContent = p.name;
+        if (lbl2) lbl2.textContent = "Sanal (Gizli) Su Ayak İzi";
+        if (val2) val2.textContent = `${p.liters.toLocaleString('tr-TR')} Litre`;
+        if (lbl3) lbl3.textContent = "En Büyük Bileşen";
+        if (val3) val3.textContent = p.green >= p.blue ? `Yeşil Su (%${p.green})` : `Mavi Su (%${p.blue})`;
+        if (lbl4) lbl4.textContent = "Üretim Açıklaması";
+        if (val4) val4.textContent = p.note;
+
+        if (pBox && pIcon && pTitle && pText) {
+            pIcon.innerHTML = '<i class="fas fa-balance-scale"></i>';
+            pTitle.textContent = `📦 ${p.name}: ${p.liters.toLocaleString('tr-TR')} Litre Gizli Su!`;
+            pText.textContent = `Prof. Arjen Hoekstra modeline göre 1 adet ${p.name} soframıza/gardırobumuza gelene kadar doğrudan ve dolaylı olarak ${p.liters.toLocaleString('tr-TR')} litre tatlı su tüketilir. İsrafı önlemek devasa su tasarrufu sağlar!`;
+        }
+    }
+}
+
+function updateWaterFootprintPhysics() {
+    const wf = labState.waterFootprint;
+    wf.animTime += 0.05;
+
+    if (wf.mode === "aqueduct") {
+        const aq = wf.aqueduct;
+        const speed = (aq.flow / 100.0) * (aq.slope * 4.0);
+        aq.particles.forEach(pt => {
+            pt.x += speed * (pt.vx / 3.0);
+            pt.y += (aq.slope * 0.4);
+            if (pt.x > 800) {
+                pt.x = 0;
+                pt.y = 110 + Math.random() * 18;
+            }
+        });
+    } else if (wf.mode === "tech") {
+        const tc = wf.tech;
+        tc.particles.forEach(pt => {
+            pt.y += pt.vy;
+            if (pt.y > 340) {
+                pt.y = 220;
+                pt.x = 180 + (Math.random() - 0.5) * 16;
+            }
+        });
+    }
+}
+
+// Zero-Canvas-Text Zırhı: Tuval üzerinde TEK BİR ctx.fillText YOKTUR!
+function drawWaterFootprintSimulation() {
+    if (!ctx || !canvas) return;
+
+    const w = 800;
+    const h = 500;
+    ctx.save();
+    ctx.clearRect(0, 0, w, h);
+
+    const wf = labState.waterFootprint;
+    if (wf.mode === "aqueduct") {
+        drawAqueductSimulation(ctx, wf.aqueduct, wf.animTime);
+    } else if (wf.mode === "tech") {
+        drawSavingTechSimulation(ctx, wf.tech, wf.animTime);
+    } else {
+        drawFootprintScaleSimulation(ctx, wf.footprint, wf.animTime);
+    }
+
+    ctx.restore();
+}
+
+function drawAqueductSimulation(ctx, aq, t) {
+    const w = 800;
+    const h = 500;
+
+    // Gökyüzü / Vadi Arka Planı
+    const skyGrad = ctx.createLinearGradient(0, 0, 0, 360);
+    skyGrad.addColorStop(0, '#0c1a30');
+    skyGrad.addColorStop(0.6, '#1e293b');
+    skyGrad.addColorStop(1, '#0f172a');
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Vadi Tabanı / Nehir Yatağı (y = 400 - 500)
+    const valleyGrad = ctx.createLinearGradient(0, 400, 0, h);
+    valleyGrad.addColorStop(0, '#1c1917');
+    valleyGrad.addColorStop(0.4, '#0f172a');
+    valleyGrad.addColorStop(1, '#020617');
+    ctx.fillStyle = valleyGrad;
+    ctx.fillRect(0, 400, w, 100);
+
+    // Kırkçeşme / Vadi Dibi Durgun / Coşkun Akarsuyu
+    const riverColor = aq.flood ? 'rgba(56, 189, 248, 0.7)' : 'rgba(14, 116, 144, 0.5)';
+    ctx.fillStyle = riverColor;
+    ctx.beginPath();
+    ctx.moveTo(0, 430);
+    for (let x = 0; x <= w; x += 40) {
+        const wave = Math.sin(x * 0.02 + t * (aq.flood ? 4 : 1.5)) * (aq.flood ? 8 : 4);
+        ctx.lineTo(x, 430 + wave);
+    }
+    ctx.lineTo(w, h);
+    ctx.lineTo(0, h);
+    ctx.closePath();
+    ctx.fill();
+
+    // 🏛️ MAĞLOVA KEMERİ TAŞ MİMARİSİ (2 Katlı Kemer + Mahmuzlar + Sel Dehlizleri)
+    const stoneGrad = ctx.createLinearGradient(0, 100, 0, 400);
+    stoneGrad.addColorStop(0, '#d6d3d1');
+    stoneGrad.addColorStop(0.3, '#a8a29e');
+    stoneGrad.addColorStop(0.7, '#78716c');
+    stoneGrad.addColorStop(1, '#57534e');
+    ctx.fillStyle = stoneGrad;
+
+    // 1. Kat (Alt Kat) 4 Taşıyıcı Ayak (Piers)
+    const pierWidth = 55;
+    const pierPositions = [120, 300, 480, 660];
+
+    pierPositions.forEach(px => {
+        // Alt ayak gövdesi
+        ctx.fillStyle = stoneGrad;
+        ctx.fillRect(px, 240, pierWidth, 170);
+
+        // Sinan'ın Piramidal Sel Mahmuzları (Vadi akıntısını yaran üçgen mahmuzlar)
+        ctx.fillStyle = '#44403c';
+        ctx.beginPath();
+        ctx.moveTo(px + pierWidth / 2, 430);
+        ctx.lineTo(px - 14, 380);
+        ctx.lineTo(px + pierWidth + 14, 380);
+        ctx.closePath();
+        ctx.fill();
+
+        // 🌊 SEL DEHLİZİ (Tahliye Penceresi): Ayak ortasındaki delik
+        ctx.fillStyle = aq.flood ? 'rgba(56, 189, 248, 0.85)' : '#0c0a09';
+        ctx.beginPath();
+        ctx.arc(px + pierWidth / 2, 320, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#292524';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // Sel taşması durumunda sel dehlizinden fışkıran su jeti
+        if (aq.flood) {
+            ctx.fillStyle = 'rgba(125, 211, 252, 0.75)';
+            ctx.beginPath();
+            ctx.ellipse(px + pierWidth / 2, 345, 12, 25, 0, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    });
+
+    // Alt Kat Kemer Boşlukları (Kemerli Açıklıklar)
+    ctx.fillStyle = '#0f172a';
+    for (let i = 0; i < pierPositions.length - 1; i++) {
+        const x1 = pierPositions[i] + pierWidth;
+        const x2 = pierPositions[i + 1];
+        const archCenter = (x1 + x2) / 2;
+        const archR = (x2 - x1) / 2;
+
+        ctx.beginPath();
+        ctx.arc(archCenter, 290, archR, Math.PI, 0, false);
+        ctx.lineTo(x2, 410);
+        ctx.lineTo(x1, 410);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.strokeStyle = '#a8a29e';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+    }
+
+    // 2. Kat (Üst Kat) Kemerleri ve Taşıyıcı Döşemesi
+    ctx.fillStyle = stoneGrad;
+    ctx.fillRect(80, 220, 640, 22);
+
+    for (let bx = 100; bx < 680; bx += 70) {
+        // Üst kat minyatür kemer ayakları
+        ctx.fillRect(bx, 130, 22, 90);
+
+        // Üst kat kemer pencereleri
+        ctx.fillStyle = '#0c1a30';
+        ctx.beginPath();
+        ctx.arc(bx + 35, 160, 18, Math.PI, 0, false);
+        ctx.lineTo(bx + 53, 220);
+        ctx.lineTo(bx + 17, 220);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = stoneGrad;
+    }
+
+    // En Üst Su Kanalı Tabliyesi (y = 110 - 130)
+    ctx.fillStyle = '#57534e';
+    ctx.fillRect(40, 126, 720, 10);
+
+    // KANAL İÇİNDEKİ SU AKIŞI (Mimar Sinan %0.2 Hassas Yerçekimi Akışı)
+    const slopeOffset = aq.slope * 15;
+    const waterLevelY = 116;
+
+    const waterGrad = ctx.createLinearGradient(0, 100, 0, 130);
+    waterGrad.addColorStop(0, '#38bdf8');
+    waterGrad.addColorStop(0.6, '#0284c7');
+    waterGrad.addColorStop(1, '#0369a1');
+    ctx.fillStyle = waterGrad;
+
+    ctx.beginPath();
+    ctx.moveTo(40, waterLevelY);
+    for (let x = 40; x <= 760; x += 30) {
+        const fall = ((x - 40) / 720) * slopeOffset;
+        const wave = Math.sin(x * 0.04 + t * (2 + aq.slope * 5)) * (1.5 + aq.slope * 1.5);
+        ctx.lineTo(x, waterLevelY + fall + wave);
+    }
+    ctx.lineTo(760, 128);
+    ctx.lineTo(40, 128);
+    ctx.closePath();
+    ctx.fill();
+
+    // Su parçacıkları / köpükleri
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+    aq.particles.forEach(pt => {
+        if (pt.x >= 45 && pt.x <= 755) {
+            ctx.beginPath();
+            ctx.arc(pt.x, pt.y + ((pt.x - 40) / 720) * slopeOffset, pt.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    });
+
+    // Taş Korkuluk Duvarı
+    ctx.strokeStyle = '#78716c';
+    ctx.lineWidth = 3;
+    ctx.strokeRect(40, 112, 720, 16);
+}
+
+function drawSavingTechSimulation(ctx, tc, t) {
+    const w = 800;
+    const h = 500;
+
+    // Arka Plan (Laboratuvar / Konut & Tarla Ayrımı)
+    ctx.fillStyle = '#0a0f1d';
+    ctx.fillRect(0, 0, w, h);
+
+    // Dikey Ayırıcı İnce Neon Çizgi (Sol: Evsel Musluk, Sağ: Tarımsal Sulama)
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 6]);
+    ctx.beginPath();
+    ctx.moveTo(400, 30);
+    ctx.lineTo(400, 460);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // --- SOL BÖLÜM: EVSEL PERLATÖRLÜ MUSLUK VE LAVABO ---
+    const faucetX = 180;
+    const faucetY = 160;
+
+    // Tezgah (y = 340)
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(30, 340, 340, 120);
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(30, 340, 340, 120);
+
+    // Lavabo Çanağı
+    ctx.fillStyle = '#0f172a';
+    ctx.beginPath();
+    ctx.ellipse(faucetX, 345, 90, 22, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.stroke();
+
+    // Musluk Gövdesi (Krom Batarya)
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.lineWidth = 14;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(faucetX - 50, 320);
+    ctx.lineTo(faucetX - 50, faucetY);
+    ctx.arc(faucetX - 20, faucetY, 30, Math.PI, 0, false);
+    ctx.lineTo(faucetX + 10, faucetY + 25);
+    ctx.stroke();
+
+    // Musluk Ucu (Perlatör Aparatı)
+    ctx.fillStyle = tc.aerator ? '#34d399' : '#94a3b8';
+    ctx.beginPath();
+    ctx.roundRect(faucetX + 2, faucetY + 25, 16, 12, 3);
+    ctx.fill();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Musluktan Dökülen Su Sütunu
+    const streamW = tc.aerator ? 12 : 6;
+    const streamGrad = ctx.createLinearGradient(faucetX + 10 - streamW / 2, 0, faucetX + 10 + streamW / 2, 0);
+    if (tc.aerator) {
+        streamGrad.addColorStop(0, 'rgba(52, 211, 153, 0.6)');
+        streamGrad.addColorStop(0.5, 'rgba(255, 255, 255, 0.9)');
+        streamGrad.addColorStop(1, 'rgba(56, 189, 248, 0.6)');
+    } else {
+        streamGrad.addColorStop(0, 'rgba(56, 189, 248, 0.7)');
+        streamGrad.addColorStop(0.5, 'rgba(186, 230, 253, 0.9)');
+        streamGrad.addColorStop(1, 'rgba(56, 189, 248, 0.7)');
+    }
+    ctx.fillStyle = streamGrad;
+    ctx.beginPath();
+    ctx.roundRect(faucetX + 10 - streamW / 2, faucetY + 37, streamW, 160, 4);
+    ctx.fill();
+
+    // Perlatör Mikro Hava Kabarcıkları (Suyu dolgunlaştıran hava karışımı)
+    if (tc.aerator) {
+        ctx.fillStyle = '#ffffff';
+        for (let i = 0; i < 16; i++) {
+            const bx = faucetX + 10 + (Math.sin(i * 1.5 + t * 4) * (streamW / 2 - 2));
+            const by = faucetY + 45 + ((i * 10 + t * 40) % 150);
+            ctx.beginPath();
+            ctx.arc(bx, by, 1.8, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+
+    // --- SAĞ BÖLÜM: TARIMSAL DAMLA SULAMA VE BİTKİLER ---
+    const fieldLeft = 430;
+    const fieldTop = 320;
+
+    // Toprak Zemini
+    const soilGrad = ctx.createLinearGradient(0, fieldTop, 0, h);
+    soilGrad.addColorStop(0, '#78350f');
+    soilGrad.addColorStop(0.3, '#451a03');
+    soilGrad.addColorStop(1, '#1c1917');
+    ctx.fillStyle = soilGrad;
+    ctx.fillRect(fieldLeft, fieldTop, 340, 140);
+
+    // Damla Sulama Borusu (Siyah Polietilen Boru)
+    ctx.strokeStyle = '#18181b';
+    ctx.lineWidth = 9;
+    ctx.beginPath();
+    ctx.moveTo(fieldLeft, fieldTop + 15);
+    ctx.lineTo(fieldLeft + 340, fieldTop + 15);
+    ctx.stroke();
+
+    // 3 Bitki ve Damlatıcılar
+    const plantPositions = [fieldLeft + 60, fieldLeft + 160, fieldLeft + 260];
+    plantPositions.forEach(plX => {
+        // Damlatıcı Nozul (Emitter)
+        ctx.fillStyle = tc.drip ? '#10b981' : '#64748b';
+        ctx.beginPath();
+        ctx.arc(plX, fieldTop + 15, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Damlayan Su
+        if (tc.drip) {
+            const dropY = fieldTop + 24 + ((t * 35 + plX) % 35);
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.9)';
+            ctx.beginPath();
+            ctx.arc(plX, dropY, 3.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // Bitki Sapı ve Yaprakları (Canlı Yeşil)
+        ctx.strokeStyle = tc.drip ? '#22c55e' : '#84cc16';
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(plX, fieldTop);
+        ctx.quadraticCurveTo(plX - 8, fieldTop - 40, plX, fieldTop - 85);
+        ctx.stroke();
+
+        // Yapraklar
+        ctx.fillStyle = tc.drip ? '#16a34a' : '#65a30d';
+        ctx.beginPath();
+        ctx.ellipse(plX - 16, fieldTop - 50, 16, 7, -0.4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(plX + 16, fieldTop - 65, 16, 7, 0.4, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Kök Bölgesi (Toprak altında nem yayılımı)
+        ctx.fillStyle = tc.drip ? 'rgba(56, 189, 248, 0.25)' : 'rgba(120, 53, 15, 0.4)';
+        ctx.beginPath();
+        ctx.arc(plX, fieldTop + 55, tc.drip ? 24 : 14, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    // --- ALT BÖLÜM: GRİ SU ARITIM ÜNİTESİ (Küçük Geri Kazanım Tankı) ---
+    if (tc.greywater) {
+        ctx.save();
+        ctx.fillStyle = 'rgba(167, 139, 250, 0.2)';
+        ctx.beginPath();
+        ctx.roundRect(140, 390, 120, 60, 8);
+        ctx.fill();
+        ctx.strokeStyle = '#a78bfa';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Filtre Katmanları
+        ctx.fillStyle = '#64748b';
+        ctx.fillRect(145, 410, 110, 6);
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillRect(145, 425, 110, 18);
+        ctx.restore();
+    }
+}
+
+function drawFootprintScaleSimulation(ctx, fp, t) {
+    const w = 800;
+    const h = 500;
+
+    // Arka Plan
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+    bgGrad.addColorStop(0, '#0a0f1d');
+    bgGrad.addColorStop(0.8, '#0f172a');
+    bgGrad.addColorStop(1, '#020617');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    const prod = fp.products[fp.selectedProduct] || fp.products.shirt;
+
+    // Terazi Parametreleri
+    const pivotX = 400;
+    const pivotY = 160;
+    const armLen = 175;
+
+    // Terazi Eğim Açısı: Su ağırlığına göre hafif salınım
+    const targetAngle = -0.05 + Math.sin(t * 1.5) * 0.02;
+    fp.scaleAngle += (targetAngle - fp.scaleAngle) * 0.08;
+
+    // 1. TERAZİ ANA GÖVDESİ & TABANI (Pirinç/Krom Görünüm)
+    const baseGrad = ctx.createLinearGradient(350, 0, 450, 0);
+    baseGrad.addColorStop(0, '#475569');
+    baseGrad.addColorStop(0.5, '#cbd5e1');
+    baseGrad.addColorStop(1, '#334155');
+    ctx.fillStyle = baseGrad;
+
+    // Dikey Direk
+    ctx.fillRect(pivotX - 8, pivotY, 16, 240);
+
+    // Taban Tablası
+    ctx.beginPath();
+    ctx.roundRect(pivotX - 90, 395, 180, 18, 6);
+    ctx.fill();
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Pivot Başlığı
+    ctx.fillStyle = '#e2e8f0';
+    ctx.beginPath();
+    ctx.arc(pivotX, pivotY, 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    // 2. TERAZİ DENGE KOLU (Rotasyonlu)
+    ctx.save();
+    ctx.translate(pivotX, pivotY);
+    ctx.rotate(fp.scaleAngle);
+
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.lineWidth = 8;
+    ctx.beginPath();
+    ctx.moveTo(-armLen, 0);
+    ctx.lineTo(armLen, 0);
+    ctx.stroke();
+
+    // Kefe Bağlantı Noktaları
+    ctx.fillStyle = '#f8fafc';
+    ctx.beginPath();
+    ctx.arc(-armLen, 0, 6, 0, Math.PI * 2);
+    ctx.arc(armLen, 0, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    // 3. SOL KEFE (Tüketilen Ürün)
+    const leftX = pivotX - Math.cos(fp.scaleAngle) * armLen;
+    const leftY = pivotY - Math.sin(fp.scaleAngle) * armLen;
+    const panHangerLen = 95;
+
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(leftX, leftY);
+    ctx.lineTo(leftX - 45, leftY + panHangerLen);
+    ctx.moveTo(leftX, leftY);
+    ctx.lineTo(leftX + 45, leftY + panHangerLen);
+    ctx.stroke();
+
+    // Sol Kefe Tabağı
+    ctx.fillStyle = '#334155';
+    ctx.beginPath();
+    ctx.ellipse(leftX, leftY + panHangerLen, 55, 12, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Ürün Çizimi (Minimalist Şık İkonografi)
+    drawProductIcon(ctx, leftX, leftY + panHangerLen - 28, fp.selectedProduct);
+
+    // 4. SAĞ KEFE (Hoekstra Sanal Su Ayak İzi Kütlesi)
+    const rightX = pivotX + Math.cos(fp.scaleAngle) * armLen;
+    const rightY = pivotY + Math.sin(fp.scaleAngle) * armLen;
+
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(rightX, rightY);
+    ctx.lineTo(rightX - 45, rightY + panHangerLen);
+    ctx.moveTo(rightX, rightY);
+    ctx.lineTo(rightX + 45, rightY + panHangerLen);
+    ctx.stroke();
+
+    // Sağ Kefe Tabağı
+    ctx.fillStyle = '#334155';
+    ctx.beginPath();
+    ctx.ellipse(rightX, rightY + panHangerLen, 55, 12, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Devasa Sanal Su Damlası (Su Hacmine Göre Ölçekli)
+    const scaleFactor = Math.min(1.4, Math.max(0.6, Math.log10(prod.liters) / 3.0));
+    drawHugeWaterDrop(ctx, rightX, rightY + panHangerLen - 40, scaleFactor, t);
+
+    // 5. EN ALT: YEŞİL / MAVİ / GRİ SU BİLEŞENİ ORAN ÇUBUĞU (Zero-Canvas-Text)
+    const barW = 320;
+    const barH = 14;
+    const barX = pivotX - barW / 2;
+    const barY = 445;
+
+    const gW = (prod.green / 100.0) * barW;
+    const bW = (prod.blue / 100.0) * barW;
+    const grW = barW - gW - bW;
+
+    // Yeşil Su (Yağmur)
+    ctx.fillStyle = '#22c55e';
+    ctx.fillRect(barX, barY, gW, barH);
+    // Mavi Su (Yeraltı / Nehir)
+    ctx.fillStyle = '#0284c7';
+    ctx.fillRect(barX + gW, barY, bW, barH);
+    // Gri Su (Kirlilik Arıtma)
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(barX + gW + bW, barY, grW, barH);
+
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(barX, barY, barW, barH);
+}
+
+function drawHugeWaterDrop(ctx, x, y, scale, t) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+
+    const dropGrad = ctx.createRadialGradient(-6, -6, 4, 0, 8, 38);
+    dropGrad.addColorStop(0, '#e0f2fe');
+    dropGrad.addColorStop(0.3, '#38bdf8');
+    dropGrad.addColorStop(0.8, '#0284c7');
+    dropGrad.addColorStop(1, '#0369a1');
+    ctx.fillStyle = dropGrad;
+
+    ctx.beginPath();
+    ctx.moveTo(0, -32);
+    ctx.bezierCurveTo(22, -10, 32, 12, 32, 24);
+    ctx.bezierCurveTo(32, 42, 18, 52, 0, 52);
+    ctx.bezierCurveTo(-18, 52, -32, 42, -32, 24);
+    ctx.bezierCurveTo(-32, 12, -22, -10, 0, -32);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.strokeStyle = '#bae6fd';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Işık Yansıması
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+    ctx.beginPath();
+    ctx.ellipse(-10, 10, 5, 12, -0.4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+}
+
+function drawProductIcon(ctx, x, y, prodKey) {
+    ctx.save();
+    ctx.translate(x, y);
+
+    if (prodKey === 'shirt') {
+        // Pamuklu Tişört
+        ctx.fillStyle = '#f87171';
+        ctx.beginPath();
+        ctx.moveTo(-18, -25);
+        ctx.lineTo(-32, -10);
+        ctx.lineTo(-24, 0);
+        ctx.lineTo(-14, -6);
+        ctx.lineTo(-14, 25);
+        ctx.lineTo(14, 25);
+        ctx.lineTo(14, -6);
+        ctx.lineTo(24, 0);
+        ctx.lineTo(32, -10);
+        ctx.lineTo(18, -25);
+        ctx.quadraticCurveTo(0, -18, -18, -25);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+    } else if (prodKey === 'beef') {
+        // 1 kg Dana Eti (Biftek / But silüeti)
+        ctx.fillStyle = '#dc2626';
+        ctx.beginPath();
+        ctx.ellipse(0, 0, 26, 18, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#fee2e2';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(-8, -2, 6, 0, Math.PI * 2);
+        ctx.fill();
+    } else if (prodKey === 'coffee') {
+        // Fincan Kahve
+        ctx.fillStyle = '#f1f5f9';
+        ctx.beginPath();
+        ctx.arc(0, 5, 18, 0, Math.PI, false);
+        ctx.lineTo(18, -8);
+        ctx.lineTo(-18, -8);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Kulp
+        ctx.strokeStyle = '#f1f5f9';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(19, 4, 7, -Math.PI / 2, Math.PI / 2);
+        ctx.stroke();
+
+        // Sıcak Buhar
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(-6, -12);
+        ctx.quadraticCurveTo(-10, -22, -6, -28);
+        ctx.moveTo(4, -12);
+        ctx.quadraticCurveTo(0, -22, 4, -28);
+        ctx.stroke();
+    } else if (prodKey === 'apple') {
+        // Elma
+        ctx.fillStyle = '#ef4444';
+        ctx.beginPath();
+        ctx.arc(-8, 2, 14, 0, Math.PI * 2);
+        ctx.arc(8, 2, 14, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Sap ve Yaprak
+        ctx.strokeStyle = '#78350f';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(0, -8);
+        ctx.lineTo(3, -20);
+        ctx.stroke();
+
+        ctx.fillStyle = '#22c55e';
+        ctx.beginPath();
+        ctx.ellipse(9, -16, 7, 3, -0.6, 0, Math.PI * 2);
+        ctx.fill();
+    } else {
+        // A4 Kağıt
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.roundRect(-16, -24, 32, 46, 3);
+        ctx.fill();
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Çizgiler
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 1.5;
+        for (let yl = -12; yl <= 12; yl += 6) {
+            ctx.beginPath();
+            ctx.moveTo(-10, yl);
+            ctx.lineTo(10, yl);
+            ctx.stroke();
+        }
+    }
+
+    ctx.restore();
+}
+
 
 // Global Tarayıcı Erişimi
 if (typeof window !== "undefined") {
