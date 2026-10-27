@@ -420,11 +420,18 @@ function switchScene(from, to) {
     }
     if (mainFooter) mainFooter.classList.toggle('hidden-footer', !isHome);
 
-    if (to.id === "scene-quiz" || to.id === "scene-tournament-quiz") {
-        if (topControls) topControls.style.display = "flex";
-    } else {
-        if (topControls) topControls.style.display = "none";
-        stopSound(sfx.bgm); 
+    const isQuiz = (to.id === "scene-quiz" || to.id === "scene-tournament-quiz");
+    if (topControls) {
+        if (isQuiz) {
+            topControls.classList.remove('is-hidden');
+            topControls.classList.add('is-visible');
+            topControls.style.display = "flex";
+        } else {
+            topControls.classList.remove('is-visible');
+            topControls.classList.add('is-hidden');
+            topControls.style.display = "none";
+            stopSound(sfx.bgm); 
+        }
     }
 
     if (to.id === "scene-unit") {
@@ -438,9 +445,26 @@ function switchScene(from, to) {
         }
     }
 }
+
+function showScene(sceneId) {
+    const targetScene = (typeof sceneId === "string") ? (document.getElementById(sceneId) || scenes[sceneId]) : sceneId;
+    if (!targetScene) return;
+    const currentScene = document.querySelector('.scene:not(.is-hidden)');
+    if (currentScene && currentScene !== targetScene) {
+        switchScene(currentScene, targetScene);
+    } else {
+        targetScene.classList.remove('is-hidden');
+        switchScene(targetScene, targetScene);
+    }
+}
 window.switchScene = switchScene;
+window.showScene = showScene;
 window.scenes = scenes;
-if (topControls) topControls.style.display = "none"; 
+if (topControls) {
+    topControls.classList.remove('is-visible');
+    topControls.classList.add('is-hidden');
+    topControls.style.display = "none";
+} 
 
 // --- 4. MASTER PAUSE ---
 let isGlobalPaused = false;

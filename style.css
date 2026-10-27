@@ -28,7 +28,8 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
 .social-icon:hover { color: var(--neon-blue); transform: scale(1.2); }
 .hidden-footer { display: none !important; opacity: 0; pointer-events: none !important; }
 
-.top-controls { display: flex; gap: 10px; }
+.top-controls { display: none !important; gap: 10px; }
+.top-controls.is-visible { display: flex !important; }
 .volume-control { background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 20px; display:flex; align-items: center; gap: 10px; }
 .icon-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition:0.3s; }
 .icon-btn:hover { color: var(--neon-blue); }
@@ -926,7 +927,7 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     .header-right { width: 100%; justify-content: center !important; flex-wrap: wrap !important; gap: 10px !important; }
     .text-btn { font-size: 1rem !important; }
     .outline-btn { padding: 6px 12px !important; font-size: 0.9rem !important; }
-    .top-controls { justify-content: center !important; flex-wrap: wrap !important; }
+    .top-controls.is-visible { justify-content: center !important; flex-wrap: wrap !important; }
     .volume-control { padding: 5px 10px !important; }
     #volume-slider { width: 70px !important; }
 
@@ -2755,7 +2756,7 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     .lab-canvas-quick-controls,
     .metrics-bar,
     .lab-metric-badge-group,
-    .top-controls,
+    .top-controls.is-visible,
     .header-right {
         flex-wrap: wrap !important;
         gap: 6px !important;

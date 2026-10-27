@@ -4134,7 +4134,7 @@ function setupReflectionControlsDOM() {
     if (btnReset) btnReset.addEventListener('click', resetReflectionExperiment);
 
     // 7. Gözlem Kayıt Butonu
-    const btnRecord = document.getElementById('btn-record-data-5-9');
+    const btnRecord = document.getElementById('btn-record-data-6-4');
     if (btnRecord) btnRecord.addEventListener('click', recordMeasurement);
 }
 
@@ -5267,7 +5267,7 @@ function drawPouringStream(ctx) {
 
 function initHeatTransferState() {
     const ht = labState.heatTransfer;
-    ht.mode = "metals";
+    if (!ht.mode) ht.mode = "metals"; // Seçili mod korunur
     ht.isHeating = false;
     ht.burnerIntensity = 1.0;
     ht.flameParticles = [];
@@ -17633,42 +17633,50 @@ function drawDynamometerSimulation() {
 
 function initFrictionState() {
     const fr = labState.friction;
-    fr.surface = "ice";
-    fr.rampHeight = 2;
+    if (!fr.surface) fr.surface = "ice";
+    if (!fr.rampHeight) fr.rampHeight = 2;
     fr.carState = "ready";
-    fr.carX = 130;
-    fr.carY = 260;
     fr.carVx = 0;
     fr.distanceTraveled = 0.0;
     fr.wheelAngle = 0.0;
     fr.skidParticles = [];
+
+    // Başlangıç araba konumu: Seçili kitap yüksekliğine göre rampanın üstü
+    const rampTopX = 85;
+    const rampTopY = 380 - fr.rampHeight * 42;
+    fr.carX = rampTopX + 22;
+    fr.carY = rampTopY + 12;
+
     updateFrictionDOMControls();
     updateFrictionPhysics();
 }
 
 function resetFrictionExperiment() {
     initFrictionState();
-    showLabToast("Araç rampanın tepesine geri yerleştirildi!");
+    showLabToast("🚗 Oyuncak araba kitap rampasının tepesine yerleştirildi!");
 }
 
 function updateFrictionDOMControls() {
     const fr = labState.friction;
-    ['btn-53-surf-ice', 'pill-53-ice'].forEach(id => {
+    ['btn-53-surf-ice', 'pill-53-ice', 'btn-surface-glass', 'btn-surface-ice'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('active', fr.surface === 'ice');
     });
-    ['btn-53-surf-wood', 'pill-53-wood'].forEach(id => {
+    ['btn-53-surf-wood', 'pill-53-wood', 'btn-surface-wood'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('active', fr.surface === 'wood');
     });
-    ['btn-53-surf-sand', 'pill-53-sand'].forEach(id => {
+    ['btn-53-surf-sand', 'pill-53-sand', 'btn-surface-sandpaper', 'btn-surface-sand'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('active', fr.surface === 'sand');
     });
-    ['btn-53-surf-carpet', 'pill-53-carpet'].forEach(id => {
+    ['btn-53-surf-carpet', 'pill-53-carpet', 'btn-surface-carpet'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('active', fr.surface === 'carpet');
     });
+    const valEl = document.getElementById('val-53-height');
+    const labels = { 1: "1 Kitap (Düşük Eğim)", 2: "2 Kitap (Orta Eğim)", 3: "3 Kitap (Yüksek Eğim)", 4: "4 Kitap (Dik Eğim)" };
+    if (valEl && labels[fr.rampHeight]) valEl.textContent = labels[fr.rampHeight];
 }
 
 function setupFrictionControlsDOM() {
@@ -17678,15 +17686,15 @@ function setupFrictionControlsDOM() {
         fr.surface = s;
         initFrictionState();
         updateFrictionDOMControls();
-        const names = { ice: "Buz Pisti", wood: "Cilalı Tahta", sand: "Zımpara Kağıdı", carpet: "Halı Zemin" };
-        showLabToast(`Yüzey türü seçildi: ${names[s]}`);
+        const names = { ice: "Cam / Buz Levhası (Pürüzsüz)", wood: "Cilalı Ahşap Masa (Orta)", sand: "Zımpara Kağıdı (Pürüzlü)", carpet: "Kumaş / Halı Şilte (Çok Pürüzlü)" };
+        showLabToast(`Yüzey türü seçildi: ${names[s] || s}`);
     };
 
     const map = {
-        'btn-53-surf-ice': 'ice', 'pill-53-ice': 'ice',
-        'btn-53-surf-wood': 'wood', 'pill-53-wood': 'wood',
-        'btn-53-surf-sand': 'sand', 'pill-53-sand': 'sand',
-        'btn-53-surf-carpet': 'carpet', 'pill-53-carpet': 'carpet'
+        'btn-53-surf-ice': 'ice', 'pill-53-ice': 'ice', 'btn-surface-glass': 'ice', 'btn-surface-ice': 'ice',
+        'btn-53-surf-wood': 'wood', 'pill-53-wood': 'wood', 'btn-surface-wood': 'wood',
+        'btn-53-surf-sand': 'sand', 'pill-53-sand': 'sand', 'btn-surface-sandpaper': 'sand', 'btn-surface-sand': 'sand',
+        'btn-53-surf-carpet': 'carpet', 'pill-53-carpet': 'carpet', 'btn-surface-carpet': 'carpet'
     };
     Object.entries(map).forEach(([id, s]) => {
         const el = document.getElementById(id);
@@ -17698,11 +17706,9 @@ function setupFrictionControlsDOM() {
         btnLaunch.addEventListener('click', () => {
             if (fr.carState === 'ready' || fr.carState === 'stopped') {
                 fr.carState = 'rolling';
-                fr.carX = 130;
-                fr.carY = 260;
                 fr.carVx = 0;
                 fr.distanceTraveled = 0;
-                showLabToast("🚀 Araç serbest bırakıldı!");
+                showLabToast("🚀 Oyuncak araba serbest bırakıldı!");
             }
         });
     }
@@ -17715,9 +17721,6 @@ function setupFrictionControlsDOM() {
         sliderHeight.addEventListener('input', (e) => {
             fr.rampHeight = parseInt(e.target.value, 10);
             initFrictionState();
-            const labels = { 1: "1 Takoz (Düşük)", 2: "2 Takoz (Orta)", 3: "3 Takoz (Yüksek)" };
-            const valEl = document.getElementById('val-53-height');
-            if (valEl) valEl.textContent = labels[fr.rampHeight];
         });
     }
 
@@ -17728,49 +17731,62 @@ function setupFrictionControlsDOM() {
 function updateFrictionPhysics() {
     const fr = labState.friction;
 
-    // Sürtünme katsayıları
+    // Sürtünme katsayıları: Cam/Buz çok az, ahşap orta, zımpara yüksek, halı çok yüksek
     const muMap = { ice: 0.025, wood: 0.09, sand: 0.28, carpet: 0.45 };
     const mu = muMap[fr.surface] || 0.09;
 
-    if (fr.carState === 'rolling') {
-        // Rampadan aşağı iniyor (x: 130 -> 240, y: 260 -> 360)
-        const rampAngle = 0.55;
-        const accel = 0.45 * fr.rampHeight;
-        fr.carVx += accel;
-        fr.carX += fr.carVx * Math.cos(rampAngle);
-        fr.carY += fr.carVx * Math.sin(rampAngle);
-        fr.wheelAngle += 0.25;
+    const rampTopX = 85;
+    const rampTopY = 380 - fr.rampHeight * 42;
+    const rampBottomX = 240;
+    const rampBottomY = 380;
+    const dx = rampBottomX - rampTopX;
+    const dy = rampBottomY - rampTopY;
+    const rampAngle = Math.atan2(dy, dx);
 
-        if (fr.carX >= 240) {
+    if (fr.carState === 'rolling') {
+        // Rampadan hızlanarak iniyor
+        const accel = 0.38 * fr.rampHeight;
+        fr.carVx += accel;
+        const speed = fr.carVx;
+        fr.carX += speed * Math.cos(rampAngle);
+        fr.carY += speed * Math.sin(rampAngle);
+        fr.wheelAngle += speed * 0.15;
+
+        if (fr.carX >= rampBottomX) {
             fr.carState = 'sliding';
-            fr.carX = 240;
-            fr.carY = 360;
+            fr.carX = rampBottomX;
+            fr.carY = 380 - 15; // Yatay piste oturur
         }
     } else if (fr.carState === 'sliding') {
         // Yatay düzlemde ilerliyor ve sürtünmeyle yavaşlıyor
-        const decel = mu * 1.8;
+        const decel = mu * 1.75;
         fr.carVx = Math.max(0, fr.carVx - decel);
         fr.carX += fr.carVx;
-        fr.wheelAngle += fr.carVx * 0.1;
+        fr.carY = 380 - 15;
+        fr.wheelAngle += fr.carVx * 0.12;
 
-        // Sürtünme parçacıkları üret
-        if (fr.carVx > 1 && (fr.surface === 'sand' || fr.surface === 'carpet')) {
+        // Sürtünme parçacıkları üret (Zımpara veya Halıda toz/kıvılcım)
+        if (fr.carVx > 0.8 && (fr.surface === 'sand' || fr.surface === 'carpet')) {
             fr.skidParticles.push({
-                x: fr.carX + 10,
-                y: 375,
-                vx: -fr.carVx * 0.3 + (Math.random() - 0.5),
+                x: fr.carX + 5,
+                y: 380,
+                vx: -fr.carVx * 0.25 + (Math.random() - 0.5),
                 vy: -Math.random() * 2,
                 life: 1.0,
-                color: fr.surface === 'sand' ? '#d97706' : '#10b981'
+                color: fr.surface === 'sand' ? '#f59e0b' : '#34d399'
             });
         }
 
-        fr.distanceTraveled = Math.min(10.0, (fr.carX - 240) / 48);
+        // 10 metre ölçeği (240px -> 720px = 480px / 48px = 10m)
+        fr.distanceTraveled = Math.min(10.0, Math.max(0, (fr.carX - rampBottomX) / 48));
 
         if (fr.carVx <= 0 || fr.carX >= 720) {
             fr.carState = 'stopped';
             fr.carVx = 0;
         }
+    } else if (fr.carState === 'ready') {
+        fr.carX = rampTopX + 22;
+        fr.carY = rampTopY + 12;
     }
 
     // Parçacıkları güncelle
@@ -17782,8 +17798,8 @@ function updateFrictionPhysics() {
         if (p.life <= 0) fr.skidParticles.splice(i, 1);
     }
 
-    const surfNames = { ice: "Buz Pisti", wood: "Cilalı Tahta", sand: "Zımpara Kağıdı", carpet: "Halı Zemin" };
-    const fLevels = { ice: "Çok Düşük (Kaygan)", wood: "Düşük Sürtünme", sand: "Yüksek Sürtünme", carpet: "Çok Yüksek Sürtünme" };
+    const surfNames = { ice: "Cam / Buz Levhası", wood: "Cilalı Ahşap", sand: "Zımpara Kağıdı", carpet: "Kumaş / Halı Şilte" };
+    const fLevels = { ice: "Çok Düşük (Pürüzsüz)", wood: "Düşük (Az Pürüzlü)", sand: "Yüksek (Pürüzlü)", carpet: "Çok Yüksek (Aşırı Pürüzlü)" };
 
     const mbSurf = document.getElementById('mbar-53-surface');
     const mbFric = document.getElementById('mbar-53-friction');
@@ -17794,10 +17810,10 @@ function updateFrictionPhysics() {
     if (mbFric) mbFric.textContent = fLevels[fr.surface];
     if (mbDist) mbDist.textContent = `${fr.distanceTraveled.toFixed(1)} m`;
     if (mbStatus) {
-        if (fr.carState === 'ready') mbStatus.textContent = "🚗 Araç rampada hazır bekliyor";
-        else if (fr.carState === 'rolling') mbStatus.textContent = "⚡ Araç rampadan hızlanarak iniyor";
-        else if (fr.carState === 'sliding') mbStatus.textContent = "🚗 Zemin sürtünmesi aracı yavaşlatıyor...";
-        else mbStatus.textContent = `🏁 Araç durdu! Alınan yol: ${fr.distanceTraveled.toFixed(1)} m`;
+        if (fr.carState === 'ready') mbStatus.textContent = "🚗 Araba kitap rampasının tepesinde serbest bırakılmayı bekliyor";
+        else if (fr.carState === 'rolling') mbStatus.textContent = "⚡ Araba mukavva rampadan hızlanarak iniyor...";
+        else if (fr.carState === 'sliding') mbStatus.textContent = "🚗 Yüzey pürüzlülüğü aracı yavaşlatıyor...";
+        else mbStatus.textContent = `🏁 Araç durdu! Durma mesafesi: ${fr.distanceTraveled.toFixed(1)} m`;
     }
 
     const mFric = document.getElementById('metric-53-friction');
@@ -17808,6 +17824,7 @@ function updateFrictionPhysics() {
     if (mState) mState.textContent = fr.carState === 'stopped' ? "Tamamlandı" : "Hazır";
 }
 
+// MEB 1. Kitap s. 80 Birebir Düzenek: Üst üste ders kitapları, mukavva rampa, gerçekçi kaplamalar ve model araba
 function drawFrictionSimulation() {
     const w = canvas.width;
     const h = canvas.height;
@@ -17816,113 +17833,202 @@ function drawFrictionSimulation() {
     ctx.save();
     ctx.scale(scale, scale);
 
-    // Arka Plan
+    // 1. Arka Plan (Laboratuvar / Fen Sınıfı Işığı)
     const bgGrad = ctx.createLinearGradient(0, 0, 0, 500);
-    bgGrad.addColorStop(0, "#090d16");
+    bgGrad.addColorStop(0, "#080d1a");
+    bgGrad.addColorStop(0.6, "#0f172a");
     bgGrad.addColorStop(1, "#1e293b");
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, 800, 500);
 
     const fr = labState.friction;
 
-    // 1. Sol: Eğik Düzlem Rampası ve Destek Takozları
-    const rampTopX = 80;
-    const rampTopY = 380 - fr.rampHeight * 50;
-    const rampBottomX = 240;
-    const rampBottomY = 380;
+    // 2. Deney Masası Tablası (Y: 380 -> 500)
+    const tableGrad = ctx.createLinearGradient(0, 380, 0, 500);
+    tableGrad.addColorStop(0, "#1e293b");
+    tableGrad.addColorStop(1, "#0f172a");
+    ctx.fillStyle = tableGrad;
+    ctx.fillRect(0, 380, 800, 120);
 
-    // Takoz Blokları (Ahşap)
-    for (let b = 0; b < fr.rampHeight; b++) {
-        const by = 380 - (b + 1) * 50;
-        ctx.fillStyle = "#b45309";
-        ctx.strokeStyle = "#78350f";
-        ctx.lineWidth = 2;
+    ctx.fillStyle = "#334155";
+    ctx.fillRect(0, 378, 800, 3);
+    ctx.fillStyle = "rgba(56, 189, 248, 0.25)";
+    ctx.fillRect(0, 377, 800, 1);
+
+    // 3. MEB Ders Kitapları Desteği (x: 35, y: 380)
+    const bookX = 35;
+    const bookW = 95;
+    const bookH = 40;
+    const count = fr.rampHeight;
+
+    const bookColors = [
+        { cover: "#1e3a8a", trim: "#facc15", spine: "#172554" }, // 1. Kitap (Lacivert / Altın)
+        { cover: "#991b1b", trim: "#fbbf24", spine: "#7f1d1d" }, // 2. Kitap (Bordo / Sarı)
+        { cover: "#065f46", trim: "#a7f3d0", spine: "#064e3b" }, // 3. Kitap (Zümrüt Yeşil)
+        { cover: "#78350f", trim: "#fde68a", spine: "#451a03" }  // 4. Kitap (Kehribar Kahve)
+    ];
+
+    for (let b = 0; b < count; b++) {
+        const by = 380 - (b + 1) * bookH + 2;
+        const col = bookColors[b % bookColors.length];
+
+        // Kitap Alt Gölgesi
+        ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+        ctx.fillRect(bookX, by + bookH - 2, bookW, 4);
+
+        // Kitap Sayfaları (Beyaz / Krem Kağıt Katmanı)
+        ctx.fillStyle = "#f8fafc";
+        ctx.fillRect(bookX + 12, by + 4, bookW - 14, bookH - 8);
+        ctx.fillStyle = "#e2e8f0";
+        for (let l = by + 7; l < by + bookH - 6; l += 5) {
+            ctx.fillRect(bookX + 12, l, bookW - 14, 1);
+        }
+
+        // Kitap Sırtı ve Kapak (Kalın Cilt)
+        ctx.fillStyle = col.cover;
         ctx.beginPath();
-        ctx.roundRect(rampTopX - 35, by, 65, 48, 4);
+        ctx.roundRect(bookX, by, 16, bookH - 2, [4, 0, 0, 4]);
         ctx.fill();
-        ctx.stroke();
+
+        // Üst ve Alt Kapak Çıkıntıları
+        ctx.fillStyle = col.spine;
+        ctx.fillRect(bookX - 1, by, bookW + 2, 3);
+        ctx.fillRect(bookX - 1, by + bookH - 4, bookW + 2, 3);
+
+        // Altın Varak Sırt Çizgileri
+        ctx.fillStyle = col.trim;
+        ctx.fillRect(bookX + 3, by + 6, 8, 2);
+        ctx.fillRect(bookX + 3, by + bookH - 9, 8, 2);
     }
 
-    // Eğimli Rampa Levhası
-    ctx.fillStyle = "#475569";
-    ctx.strokeStyle = "#64748b";
-    ctx.lineWidth = 2.5;
+    // 4. Eğimli Mukavva Rampa Levhası (Oluklu Karton)
+    const rampTopX = 85;
+    const rampTopY = 380 - fr.rampHeight * 42;
+    const rampBottomX = 240;
+    const rampBottomY = 380;
+    const rampAngle = Math.atan2(rampBottomY - rampTopY, rampBottomX - rampTopX);
+
+    ctx.save();
+    // Mukavva Alt Kalınlık Gölgesi
+    ctx.fillStyle = "#78350f";
     ctx.beginPath();
-    ctx.moveTo(rampTopX - 40, rampTopY);
+    ctx.moveTo(rampTopX, rampTopY);
     ctx.lineTo(rampBottomX, rampBottomY);
     ctx.lineTo(rampBottomX, rampBottomY + 14);
-    ctx.lineTo(rampTopX - 40, rampTopY + 14);
+    ctx.lineTo(rampTopX, rampTopY + 14);
     ctx.closePath();
     ctx.fill();
-    ctx.stroke();
 
-    // 2. Sağ: Yatay Test Pisti (x: 240 -> 760, y: 380 -> 440)
-    const trackX = 240;
-    const trackW = 520;
-    const trackH = 40;
+    // Mukavva Ana Yüzeyi (Karton Sarı/Kahve)
+    const cardGrad = ctx.createLinearGradient(rampTopX, rampTopY, rampBottomX, rampBottomY);
+    cardGrad.addColorStop(0, "#d97706");
+    cardGrad.addColorStop(0.5, "#b45309");
+    cardGrad.addColorStop(1, "#92400e");
+    ctx.fillStyle = cardGrad;
+    ctx.beginPath();
+    ctx.moveTo(rampTopX, rampTopY);
+    ctx.lineTo(rampBottomX, rampBottomY);
+    ctx.lineTo(rampBottomX, rampBottomY + 6);
+    ctx.lineTo(rampTopX, rampTopY + 6);
+    ctx.closePath();
+    ctx.fill();
+
+    // Rampa Üstü Mukavva Oluklu Çizgileri
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+    ctx.lineWidth = 1.2;
+    const rLen = Math.sqrt(Math.pow(rampBottomX - rampTopX, 2) + Math.pow(rampBottomY - rampTopY, 2));
+    for (let d = 20; d < rLen - 15; d += 18) {
+        const ox = rampTopX + Math.cos(rampAngle) * d;
+        const oy = rampTopY + Math.sin(rampAngle) * d;
+        ctx.beginPath();
+        ctx.moveTo(ox, oy - 2);
+        ctx.lineTo(ox, oy + 8);
+        ctx.stroke();
+    }
+    ctx.restore();
+
+    // 5. Zemin Kaplama Şiltesi (Masa Üzerine Serilen Yüzey)
+    const trackX = 236;
+    const trackW = 530;
+    const trackH = 26;
 
     if (fr.surface === 'ice') {
-        // Buz Pisti: Parlak Cyan/Beyaz Ayna Yansıması
-        const iceGrad = ctx.createLinearGradient(trackX, 380, trackX, 420);
-        iceGrad.addColorStop(0, "#e0f2fe");
-        iceGrad.addColorStop(0.3, "#38bdf8");
-        iceGrad.addColorStop(1, "#0284c7");
-        ctx.fillStyle = iceGrad;
+        // Cam / Buz Levhası: Ayna Yansımalı Açık Mavi & Pürüzsüz
+        const glassGrad = ctx.createLinearGradient(trackX, 380, trackX, 380 + trackH);
+        glassGrad.addColorStop(0, "#e0f2fe");
+        glassGrad.addColorStop(0.3, "#38bdf8");
+        glassGrad.addColorStop(1, "#0284c7");
+        ctx.fillStyle = glassGrad;
         ctx.fillRect(trackX, 380, trackW, trackH);
 
-        // Buz Parıltı Çizgileri
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
-        ctx.lineWidth = 1.5;
-        for (let ix = trackX + 20; ix < trackX + trackW; ix += 60) {
+        // Cam Yansıma Işıkları
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.75)";
+        ctx.lineWidth = 2;
+        for (let gx = trackX + 30; gx < trackX + trackW - 40; gx += 70) {
             ctx.beginPath();
-            ctx.moveTo(ix, 385);
-            ctx.lineTo(ix + 25, 385);
+            ctx.moveTo(gx, 384);
+            ctx.lineTo(gx + 35, 384);
             ctx.stroke();
         }
+        // Cam Pah Kenarı
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.9)";
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(trackX, 380, trackW, trackH);
+
     } else if (fr.surface === 'wood') {
-        // Cilalı Ahşap Zemin
-        ctx.fillStyle = "#d97706";
+        // Cilalı Ahşap Masa: Parke Damarları ve Ahşap Dokusu
+        const woodGrad = ctx.createLinearGradient(trackX, 380, trackX, 380 + trackH);
+        woodGrad.addColorStop(0, "#d97706");
+        woodGrad.addColorStop(1, "#78350f");
+        ctx.fillStyle = woodGrad;
         ctx.fillRect(trackX, 380, trackW, trackH);
 
-        ctx.strokeStyle = "#92400e";
+        ctx.strokeStyle = "rgba(120, 53, 15, 0.6)";
         ctx.lineWidth = 1.5;
-        for (let wy = 388; wy < 420; wy += 9) {
+        for (let wy = 385; wy < 380 + trackH; wy += 7) {
             ctx.beginPath();
             ctx.moveTo(trackX, wy);
             ctx.lineTo(trackX + trackW, wy);
             ctx.stroke();
         }
+
     } else if (fr.surface === 'sand') {
-        // Zımpara Kağıdı Zemin
+        // Zımpara Kağıdı: Pütürlü Koyu Kehribar Zemin ve Kum Tanecikleri
         ctx.fillStyle = "#78350f";
         ctx.fillRect(trackX, 380, trackW, trackH);
 
-        // Kum tanecikleri (noktalar)
         ctx.fillStyle = "#fde68a";
-        for (let i = 0; i < 90; i++) {
-            const px = trackX + ((i * 37) % trackW);
-            const py = 384 + ((i * 19) % 30);
+        for (let i = 0; i < 110; i++) {
+            const px = trackX + ((i * 47) % trackW);
+            const py = 383 + ((i * 23) % (trackH - 6));
             ctx.fillRect(px, py, 2, 2);
         }
+        ctx.strokeStyle = "#b45309";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(trackX, 380, trackW, trackH);
+
     } else if (fr.surface === 'carpet') {
-        // Kumaş / Halı Zemin
-        ctx.fillStyle = "#065f46";
+        // Kumaş / Halı / Havlu Şiltesi: Tekstil Dokusu ve Hav Lifleri
+        ctx.fillStyle = "#064e3b";
         ctx.fillRect(trackX, 380, trackW, trackH);
 
-        // Halı lifleri
+        // Kumaş dikey hav lifleri
         ctx.strokeStyle = "#10b981";
-        ctx.lineWidth = 1;
-        for (let cx = trackX; cx < trackX + trackW; cx += 8) {
+        ctx.lineWidth = 1.2;
+        for (let cx = trackX + 4; cx < trackX + trackW; cx += 6) {
             ctx.beginPath();
             ctx.moveTo(cx, 380);
-            ctx.lineTo(cx + 4, 388);
+            ctx.lineTo(cx + 2, 386);
             ctx.stroke();
         }
+        ctx.strokeStyle = "#047857";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(trackX, 380, trackW, trackH);
     }
 
-    // Pist Üst Çizgisi ve Metre Çentikleri (0 m - 10 m)
+    // 6. Metre Cetveli (Pist Üzeri Çentikler 0m - 10m)
     ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(trackX, 380);
     ctx.lineTo(trackX + trackW, 380);
@@ -17931,6 +18037,7 @@ function drawFrictionSimulation() {
     for (let m = 0; m <= 10; m++) {
         const mx = trackX + m * 48;
         const tickH = (m % 2 === 0) ? 14 : 7;
+        ctx.strokeStyle = (m % 2 === 0) ? "#facc15" : "rgba(255, 255, 255, 0.45)";
         ctx.lineWidth = (m % 2 === 0) ? 2 : 1;
         ctx.beginPath();
         ctx.moveTo(mx, 380);
@@ -17938,7 +18045,7 @@ function drawFrictionSimulation() {
         ctx.stroke();
     }
 
-    // 3. Skid Parçacıkları (Toz / Kıvılcım)
+    // 7. Sürtünme Parçacıkları (Skid / Toz)
     fr.skidParticles.forEach(p => {
         ctx.fillStyle = p.color;
         ctx.globalAlpha = p.life;
@@ -17948,62 +18055,119 @@ function drawFrictionSimulation() {
         ctx.globalAlpha = 1.0;
     });
 
-    // 4. Deney Arabası
+    // 8. MEB Ders Kitabı Uyumlu Stylized Oyuncak Model Araba
     ctx.save();
     ctx.translate(fr.carX, fr.carY);
 
     if (fr.carState === 'rolling') {
-        ctx.rotate(0.55); // Rampa eğimi
+        ctx.rotate(rampAngle);
     }
 
-    // Araba Gövdesi (Kırmızı Aerodinamik Kasa)
-    ctx.fillStyle = "#ef4444";
-    ctx.strokeStyle = "#b91c1c";
-    ctx.lineWidth = 2;
+    // Araba Alt Zemin Gölgesi
+    ctx.fillStyle = "rgba(0, 0, 0, 0.45)";
     ctx.beginPath();
-    ctx.roundRect(-25, -20, 50, 18, 4);
+    ctx.ellipse(0, 10, 26, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Ön Far Işık Huzmesi (Aydınlatma Konisi)
+    const beamGrad = ctx.createLinearGradient(15, -4, 55, -4);
+    beamGrad.addColorStop(0, "rgba(254, 240, 138, 0.7)");
+    beamGrad.addColorStop(1, "rgba(254, 240, 138, 0)");
+    ctx.fillStyle = beamGrad;
+    ctx.beginPath();
+    ctx.moveTo(25, -4);
+    ctx.lineTo(60, -12);
+    ctx.lineTo(60, 4);
+    ctx.closePath();
+    ctx.fill();
+
+    // Aerodinamik Gövde (Metalik Kırmızı Spor Kasa)
+    const carBodyGrad = ctx.createLinearGradient(-26, -18, 26, -2);
+    carBodyGrad.addColorStop(0, "#ef4444");
+    carBodyGrad.addColorStop(0.5, "#dc2626");
+    carBodyGrad.addColorStop(1, "#991b1b");
+    ctx.fillStyle = carBodyGrad;
+    ctx.strokeStyle = "#7f1d1d";
+    ctx.lineWidth = 1.8;
+
+    // Gövde Profili (Ön kaput, çamurluklar, tavan)
+    ctx.beginPath();
+    ctx.moveTo(-24, -4);
+    ctx.lineTo(-24, -14); // Arka tampon
+    ctx.lineTo(-14, -15);
+    ctx.lineTo(-6, -24);  // Arka cam eğimi
+    ctx.lineTo(8, -24);   // Tavan
+    ctx.lineTo(17, -13);  // Ön cam eğimi
+    ctx.lineTo(26, -11);  // Ön burun
+    ctx.lineTo(26, -4);   // Ön tampon
+    ctx.closePath();
     ctx.fill();
     ctx.stroke();
 
-    // Ön Cam / Kabin
+    // Arka Spoyler (Yarış Arabası Kanadı)
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(-26, -20, 6, 6);
+    ctx.fillRect(-28, -22, 10, 3);
+
+    // Ön ve Yan Camlar (Kavisli Gökyüzü Mavisi)
     ctx.fillStyle = "#38bdf8";
+    ctx.strokeStyle = "#0284c7";
+    ctx.lineWidth = 1.2;
     ctx.beginPath();
-    ctx.roundRect(-10, -28, 24, 10, 2);
+    ctx.moveTo(-5, -22);
+    ctx.lineTo(7, -22);
+    ctx.lineTo(15, -14);
+    ctx.lineTo(-5, -14);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Ön Far (Akkor LED Sarı)
+    ctx.fillStyle = "#facc15";
+    ctx.beginPath();
+    ctx.arc(24, -7, 3, 0, Math.PI * 2);
     ctx.fill();
 
-    // Tekerlekler (Dönen İki Tekerlek)
+    // Tekerlekler (Alaşım Jantlı Çift Lastik)
     const drawWheel = (wx, wy) => {
         ctx.save();
         ctx.translate(wx, wy);
         ctx.rotate(fr.wheelAngle);
 
-        ctx.fillStyle = "#1e293b";
-        ctx.strokeStyle = "#cbd5e1";
+        // Kauçuk Lastik
+        ctx.fillStyle = "#0f172a";
+        ctx.strokeStyle = "#334155";
         ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.arc(0, 0, 7, 0, Math.PI * 2);
+        ctx.arc(0, 0, 8, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
 
-        ctx.strokeStyle = "#94a3b8";
+        // Krom / Alaşım Jant Göbeği
+        ctx.fillStyle = "#e2e8f0";
+        ctx.beginPath();
+        ctx.arc(0, 0, 4.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Jant Kolları
+        ctx.strokeStyle = "#475569";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(-5, 0); ctx.lineTo(5, 0);
-        ctx.moveTo(0, -5); ctx.lineTo(0, 5);
+        ctx.moveTo(-4, 0); ctx.lineTo(4, 0);
+        ctx.moveTo(0, -4); ctx.lineTo(0, 4);
         ctx.stroke();
 
         ctx.restore();
     };
 
-    drawWheel(-16, 0);
-    drawWheel(16, 0);
+    drawWheel(-15, 0);
+    drawWheel(15, 0);
 
-    ctx.restore();
+    ctx.restore(); // Araba restore
 
-    ctx.restore();
+    ctx.restore(); // Genel canvas restore
 }
 
-// ============================================================================
 // --- 5.4. DENEY 5.4: IŞIĞIN DOĞRUSAL YAYILMASI (FB.5.4.1) ---
 // ============================================================================
 
@@ -21157,6 +21321,27 @@ function setupWaterFootprintControlsDOM() {
         if (pill) pill.addEventListener('click', () => selectFootprintProduct(p));
     });
 
+    // 4.1. Quick Controls (Tuval Altı Hızlı Kontroller) 7 Buton Dinleyicisi
+    const btnGatesToggle = document.getElementById('btn-water-gates-toggle');
+    if (btnGatesToggle) btnGatesToggle.addEventListener('click', toggleAqueductFlood);
+
+    const btnAeratorToggle = document.getElementById('btn-water-aerator-toggle');
+    if (btnAeratorToggle) btnAeratorToggle.addEventListener('click', toggleAerator);
+
+    const btnIrrigationToggle = document.getElementById('btn-water-irrigation-toggle');
+    if (btnIrrigationToggle) btnIrrigationToggle.addEventListener('click', toggleDrip);
+
+    const quickProdMap = {
+        'btn-footprint-tshirt': 'shirt',
+        'btn-footprint-beef': 'beef',
+        'btn-footprint-coffee': 'coffee',
+        'btn-footprint-apple': 'apple'
+    };
+    Object.entries(quickProdMap).forEach(([btnId, prodKey]) => {
+        const b = document.getElementById(btnId);
+        if (b) b.addEventListener('click', () => selectFootprintProduct(prodKey));
+    });
+
     // 5. Gözlemi Kaydet Butonu
     const btnRecord710 = document.getElementById('btn-record-data-7-10');
     if (btnRecord710) btnRecord710.addEventListener('click', recordMeasurement);
@@ -21393,6 +21578,40 @@ function updateWaterFootprintDOM() {
             pText.textContent = `Prof. Arjen Hoekstra modeline göre 1 adet ${p.name} soframıza/gardırobumuza gelene kadar doğrudan ve dolaylı olarak ${p.liters.toLocaleString('tr-TR')} litre tatlı su tüketilir. İsrafı önlemek devasa su tasarrufu sağlar!`;
         }
     }
+
+    // Quick Controls Bar Senkronizasyonu
+    const bGates = document.getElementById('btn-water-gates-toggle');
+    const lblGates = document.getElementById('label-water-gates');
+    if (bGates && wf.aqueduct) {
+        bGates.classList.toggle('active', !!wf.aqueduct.flood);
+        if (lblGates) lblGates.textContent = wf.aqueduct.flood ? "Sel Gözleri: Açık" : "Sel Gözleri: Kapalı";
+    }
+
+    const bAer = document.getElementById('btn-water-aerator-toggle');
+    const lblAer = document.getElementById('label-water-aerator');
+    if (bAer && wf.tech) {
+        bAer.classList.toggle('active', !!wf.tech.aerator);
+        if (lblAer) lblAer.textContent = wf.tech.aerator ? "Perlatör: Açık (%50)" : "Perlatör: Kapalı";
+    }
+
+    const bIrr = document.getElementById('btn-water-irrigation-toggle');
+    const lblIrr = document.getElementById('label-water-irrigation');
+    if (bIrr && wf.tech) {
+        bIrr.classList.toggle('active', !!wf.tech.drip);
+        if (lblIrr) lblIrr.textContent = wf.tech.drip ? "Damla Sulama (%65)" : "Salma Sulama (Vahşi)";
+    }
+
+    const fpProd = wf.footprint ? wf.footprint.selectedProduct : 'shirt';
+    const qProds = {
+        'btn-footprint-tshirt': 'shirt',
+        'btn-footprint-beef': 'beef',
+        'btn-footprint-coffee': 'coffee',
+        'btn-footprint-apple': 'apple'
+    };
+    Object.entries(qProds).forEach(([bid, pKey]) => {
+        const el = document.getElementById(bid);
+        if (el) el.classList.toggle('active', fpProd === pKey);
+    });
 }
 
 function updateWaterFootprintPhysics() {
