@@ -455,6 +455,50 @@
                         <div class="metrics-pill status" id="mbar-65-status">Silindir Boş</div>
                     </div>
 
+                    <!-- Canvas Altı Responsive Metrik Şeridi (Deney 6.6 - Tohumun Çimlenmesi) -->
+                    <div id="metrics-bar-6-6" class="lab-canvas-metrics-bar is-hidden">
+                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-tint"></i> Su/Nem: <strong id="mbar-66-water">Islak Pamuk</strong></div>
+                        <div class="metrics-pill" style="color: #facc15;"><i class="fas fa-thermometer-half"></i> Sıcaklık: <strong id="mbar-66-temp">25°C (Uygun)</strong></div>
+                        <div class="metrics-pill" style="color: #cbd5e1;"><i class="fas fa-sun"></i> Işık: <strong id="mbar-66-light">Aydınlık</strong></div>
+                        <div class="metrics-pill" style="color: #10b981;"><i class="fas fa-wind"></i> Oksijen: <strong id="mbar-66-oxygen">Var</strong></div>
+                        <div class="metrics-pill status" id="mbar-66-status">🌱 Çimlenme Şartları Sağlandı</div>
+                    </div>
+
+                    <!-- Canvas Altı Responsive Metrik Şeridi (Deney 6.7 - Işığın Soğurulması ve Radyometre) -->
+                    <div id="metrics-bar-6-7" class="lab-canvas-metrics-bar is-hidden">
+                        <div class="metrics-pill" style="color: #facc15;"><i class="fas fa-sun"></i> Işık: <strong id="mbar-67-lamp">Açık (%100)</strong></div>
+                        <div class="metrics-pill" style="color: #f87171;"><i class="fas fa-temperature-high"></i> Siyah Kap: <strong id="mbar-67-black-temp">20.0°C</strong></div>
+                        <div class="metrics-pill" style="color: #60a5fa;"><i class="fas fa-temperature-half"></i> Mavi Kap: <strong id="mbar-67-blue-temp">20.0°C</strong></div>
+                        <div class="metrics-pill" style="color: #cbd5e1;"><i class="fas fa-temperature-low"></i> Beyaz Kap: <strong id="mbar-67-white-temp">20.0°C</strong></div>
+                        <div class="metrics-pill" style="color: #34d399;"><i class="fas fa-sync-alt"></i> Radyometre: <strong id="mbar-67-rpm">Durgun</strong></div>
+                        <div class="metrics-pill status" id="mbar-67-status">Işık Soğurulması Başlatıldı</div>
+                    </div>
+
+                    <!-- Canvas Altı Responsive Metrik Şeridi (Deney 6.8 - Katılarda Genleşme ve Büzülme) -->
+                    <div id="metrics-bar-6-8" class="lab-canvas-metrics-bar is-hidden">
+                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-circle"></i> Küre: <strong id="mbar-68-state">Oda Sıcaklığı</strong></div>
+                        <div class="metrics-pill" style="color: #facc15;"><i class="fas fa-thermometer-half"></i> Sıcaklık: <strong id="mbar-68-temp">20°C</strong></div>
+                        <div class="metrics-pill" style="color: #cbd5e1;"><i class="fas fa-expand-arrows-alt"></i> Hacim: <strong id="mbar-68-volume">Normal</strong></div>
+                        <div class="metrics-pill status" id="mbar-68-status">✅ Halkadan Kolayca Geçer</div>
+                    </div>
+
+                    <!-- Canvas Altı Responsive Metrik Şeridi (Deney 6.9 - Maddelerin Elektriksel İletkenliği) -->
+                    <div id="metrics-bar-6-9" class="lab-canvas-metrics-bar is-hidden">
+                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-vial"></i> Test Maddesi: <strong id="mbar-69-material">Bakır Tel</strong></div>
+                        <div class="metrics-pill" style="color: #cbd5e1;"><i class="fas fa-shapes"></i> Tür: <strong id="mbar-69-type">Katı İletken</strong></div>
+                        <div class="metrics-pill" style="color: #10b981;"><i class="fas fa-bolt"></i> İletkenlik: <strong id="mbar-69-conduct">İletken</strong></div>
+                        <div class="metrics-pill status" id="mbar-69-status">💡 Ampul Işık Verir (Devre Kapalı)</div>
+                    </div>
+
+                    <!-- Canvas Altı Responsive Metrik Şeridi (Deney 6.10 - Elektriksel Direnç ve Reosta) -->
+                    <div id="metrics-bar-6-10" class="lab-canvas-metrics-bar is-hidden">
+                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-ruler-horizontal"></i> Boy (L): <strong id="mbar-610-length">10 cm</strong></div>
+                        <div class="metrics-pill" style="color: #cbd5e1;"><i class="fas fa-circle"></i> Kesit (S): <strong id="mbar-610-area">Kalın (2S)</strong></div>
+                        <div class="metrics-pill" style="color: #f59e0b;"><i class="fas fa-cubes"></i> Cins: <strong id="mbar-610-material">Bakır</strong></div>
+                        <div class="metrics-pill" style="color: #facc15;"><i class="fas fa-tachometer-alt"></i> Direnç: <strong id="mbar-610-resistance">Düşük</strong></div>
+                        <div class="metrics-pill status" id="mbar-610-status">💡 Ampul Çok Parlak</div>
+                    </div>
+
                     <!-- Canvas Altı Hızlı Dokunmatik Açı Kontrol Barı (Deney 7.3) -->
                     <div id="quick-controls-7-3" class="lab-canvas-quick-controls">
                         <button class="lab-btn-step" id="btn-angle-minus-5" title="-5 Derece">-5°</button>
@@ -727,6 +771,90 @@
                                 <button class="lab-toggle-btn" id="btn-drop-plastic" title="Plastik Kapak Bırak (Askıda)"><i class="fas fa-circle" style="color: #ef4444;"></i> Plastik Bırak</button>
                                 <button class="lab-toggle-btn" id="btn-drop-iron" title="Demir Vida Bırak (Batar)"><i class="fas fa-wrench" style="color: #94a3b8;"></i> Vida Bırak</button>
                                 <button class="lab-toggle-btn" id="btn-density-reset" title="Silindiri Boşalt"><i class="fas fa-trash-alt"></i> Boşalt</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Altı Hızlı Tohum Çimlenme Kontrol Barı (Deney 6.6) -->
+                    <div id="quick-controls-6-6" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-germ-dish-1" title="1. Kap: İdeal Şartlar (Su+25°C+Karanlık)">🌱 1. Kap (İdeal)</button>
+                                <button class="lab-toggle-btn" id="btn-germ-dish-2" title="2. Kap: Kuru Pamuk (Su Yok)">🏜️ 2. Kap (Susuz)</button>
+                                <button class="lab-toggle-btn" id="btn-germ-dish-3" title="3. Kap: Soğuk Ortam (0°C)">❄️ 3. Kap (0°C Soğuk)</button>
+                                <button class="lab-toggle-btn" id="btn-germ-dish-4" title="4. Kap: Aydınlık Ortam (Işıklı)">☀️ 4. Kap (Işıklı)</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-germ-play-pause" title="Çimlenmeyi Başlat / Durdur"><i class="fas fa-play"></i> <span id="label-germ-play">Günleri İlerlet</span></button>
+                                <button class="lab-btn-step" id="btn-germ-day-next" title="+1 Gün İlerle">+1 Gün</button>
+                                <button class="lab-toggle-btn" id="btn-germ-reset" title="Tohumları Sıfırla"><i class="fas fa-redo"></i> Sıfırla</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Altı Hızlı Işığın Soğurulması ve Radyometre Kontrol Barı (Deney 6.7) -->
+                    <div id="quick-controls-6-7" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-absorb-lamp-toggle" title="Işık Kaynağını Aç / Kapat"><i class="fas fa-lightbulb"></i> <span id="label-absorb-lamp">Işık: Açık</span></button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn" id="btn-absorb-pwr-25" title="Düşük Işık (%25)">%25 Güç</button>
+                                <button class="lab-toggle-btn" id="btn-absorb-pwr-50" title="Orta Işık (%50)">%50 Güç</button>
+                                <button class="lab-toggle-btn active" id="btn-absorb-pwr-100" title="Tam Işık (%100)">%100 Güç</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn" id="btn-absorb-reset" title="Sıcaklıkları Sıfırla"><i class="fas fa-redo"></i> Sıfırla</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Altı Hızlı Gravzant Halkası Kontrol Barı (Deney 6.8) -->
+                    <div id="quick-controls-6-8" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-grav-pass-cold" title="Soğuk Küreyi Halkadan Geçir"><i class="fas fa-arrow-down"></i> 1. Geçir (Soğuk)</button>
+                                <button class="lab-toggle-btn" id="btn-grav-heat" title="İspirto Ocağında Küreyi Isıt"><i class="fas fa-fire" style="color: #f97316;"></i> 2. Küreyi Isıt</button>
+                                <button class="lab-toggle-btn" id="btn-grav-pass-hot" title="Sıcak Küreyi Halkadan Geçirmeyi Dene"><i class="fas fa-times-circle" style="color: #ef4444;"></i> 3. Geçirmeyi Dene (Sıcak)</button>
+                                <button class="lab-toggle-btn" id="btn-grav-quench" title="Soğuk Suya Daldırarak Büz"><i class="fas fa-snowflake" style="color: #38bdf8;"></i> 4. Suya Daldır (Soğut)</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn" id="btn-grav-reset" title="Düzeneği Sıfırla"><i class="fas fa-redo"></i> Sıfırla</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Altı Hızlı Elektriksel İletkenlik Kontrol Barı (Deney 6.9) -->
+                    <div id="quick-controls-6-9" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-cond-mat-copper" title="Bakır Tel Bağla (İletken)"><i class="fas fa-bolt" style="color: #f59e0b;"></i> Bakır Tel</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-iron" title="Demir Çivi Bağla (İletken)"><i class="fas fa-cube" style="color: #94a3b8;"></i> Demir Çivi</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-graphite" title="Kurşun Kalem Ucu / Grafit (İletken)"><i class="fas fa-pencil-alt" style="color: #cbd5e1;"></i> Grafit Uç</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-wood" title="Tahta Çubuk Bağla (Yalıtkan)"><i class="fas fa-tree" style="color: #b45309;"></i> Tahta</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-plastic" title="Plastik Silgi Bağla (Yalıtkan)"><i class="fas fa-eraser" style="color: #ef4444;"></i> Silgi</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn" id="btn-cond-mat-saltwater" title="Tuzlu Su Beheri (İletken)"><i class="fas fa-tint" style="color: #38bdf8;"></i> Tuzlu Su</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-purewater" title="Saf Su Beheri (Yalıtkan)"><i class="fas fa-tint" style="color: #93c5fd;"></i> Saf Su</button>
+                                <button class="lab-toggle-btn" id="btn-cond-reset" title="Uçları Boşa Çıkar"><i class="fas fa-redo"></i> Boşa Çıkar</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Altı Hızlı Elektriksel Direnç ve Reosta Kontrol Barı (Deney 6.10) -->
+                    <div id="quick-controls-6-10" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-res-mode-wire" title="Telin Faktörleri (L, S, Cins)"><i class="fas fa-ruler-combined"></i> 1. Tel Faktörleri</button>
+                                <button class="lab-toggle-btn" id="btn-res-mode-rheostat" title="Reosta ile Ayarlı Direnç"><i class="fas fa-sliders-h"></i> 2. Reosta Modu</button>
+                            </div>
+                            <div class="lab-toggle-btn-group" id="group-res-wire-presets">
+                                <button class="lab-toggle-btn active" id="btn-res-wire-short-thick" title="Kısa ve Kalın Tel (En Düşük Direnç, Parlak)">⚡ Kısa & Kalın</button>
+                                <button class="lab-toggle-btn" id="btn-res-wire-long-thin" title="Uzun ve İnce Tel (En Yüksek Direnç, Sönük)">🕯️ Uzun & İnce</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn" id="btn-res-reset" title="Devreyi Sıfırla"><i class="fas fa-redo"></i> Sıfırla</button>
                             </div>
                         </div>
                     </div>
@@ -1764,7 +1892,7 @@
                             <div class="lab-panel-box">
                                 <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
                                 <div class="lab-vars-list">
-                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Sıvıların ve Cisimlerin Yoğunlukları (d = m / V)</div>
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Sıvıların ve Cisimlerin Yoğunlukları (Yoğunluk Farkı)</div>
                                     <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Sıvıların Kuledeki Düşey Konumu ve Cisimlerin Yüzme/Batma Durumu</div>
                                     <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Sıcaklık (Oda Sıcaklığı 20°C), Yer Çekimi</div>
                                 </div>
@@ -1826,6 +1954,356 @@
                                     </div>
                                 </div>
                                 <button id="btn-record-data-6-5" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 6.6 DEĞİŞKENLERİ: TOHUMUN ÇİMLENMESİNE ETKİ EDEN FAKTÖRLER -->
+                        <div id="vars-container-6-6" class="is-hidden">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Çevresel Faktörler (Su/Nem, Sıcaklık, Işık Durumu)</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Tohumun Çimlenme Durumu (Filizlenme)</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Tohum Türü (Fasulye), Tohum Sayısı, Oksijen</div>
+                                </div>
+                            </div>
+
+                            <!-- Dinamik Pedagojik Çıkarım Kartı -->
+                            <div class="lab-pedagogical-card is-work" id="germ-pedagogical-box">
+                                <div class="pedagogical-icon" id="germ-pedagogical-icon"><i class="fas fa-seedling"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="germ-pedagogical-title">🌱 Çimlenme Şartları (S.O.S İlkesi)</strong>
+                                    <p id="germ-pedagogical-text">Tohumun çimlenmesi için Su (Nem), Oksijen ve uygun Sıcaklık gereklidir. IŞIK çimlenme için gerekli DEĞİLDİR; tohumlar karanlıkta da çimlenir!</p>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Deney Kapları ve Şartlar</h4>
+                                <div class="lab-lens-controls-box">
+                                    <div class="lab-field-group">
+                                        <label class="lab-field-label">İncelenen Deney Kabı:</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                            <button class="lab-select-pill active" id="pill-germ-dish-1">🌱 1. Kap (İdeal)</button>
+                                            <button class="lab-select-pill" id="pill-germ-dish-2">🏜️ 2. Kap (Susuz)</button>
+                                            <button class="lab-select-pill" id="pill-germ-dish-3">❄️ 3. Kap (0°C Soğuk)</button>
+                                            <button class="lab-select-pill" id="pill-germ-dish-4">☀️ 4. Kap (Işıklı)</button>
+                                        </div>
+                                    </div>
+                                    <div class="lab-field-group" style="margin-top: 8px;">
+                                        <label class="lab-field-label">Nem / Su Durumu:</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                            <button class="lab-select-pill active" id="pill-germ-water-yes">💧 Islak Pamuk</button>
+                                            <button class="lab-select-pill" id="pill-germ-water-no">🏜️ Kuru Pamuk</button>
+                                        </div>
+                                    </div>
+                                    <div class="lab-field-group" style="margin-top: 8px;">
+                                        <label class="lab-field-label">Sıcaklık:</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+                                            <button class="lab-select-pill" id="pill-germ-temp-0">0°C (Buzluk)</button>
+                                            <button class="lab-select-pill active" id="pill-germ-temp-25">25°C (Oda)</button>
+                                            <button class="lab-select-pill" id="pill-germ-temp-50">50°C (Fırın)</button>
+                                        </div>
+                                    </div>
+                                    <div class="lab-field-group" style="margin-top: 8px;">
+                                        <label class="lab-field-label">Işık Durumu:</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                            <button class="lab-select-pill" id="pill-germ-light-dark">🌑 Karanlık Dolap</button>
+                                            <button class="lab-select-pill active" id="pill-germ-light-bright">☀️ Aydınlık</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-clipboard-list"></i> Çimlenme Gözlem Verileri</h4>
+                                <div class="lab-stats-grid">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Seçili Kap</span>
+                                        <strong class="chip-val" id="metric-66-dish" style="color: #38bdf8;">1. Kap</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Su / Nem</span>
+                                        <strong class="chip-val" id="metric-66-water" style="color: #10b981;">Islak Pamuk</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Sıcaklık</span>
+                                        <strong class="chip-val" id="metric-66-temp" style="color: #facc15;">25°C</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Çimlenme Durumu</span>
+                                        <strong class="chip-val" id="metric-66-sprout" style="color: #4ade80;">Filizlendi</strong>
+                                    </div>
+                                </div>
+                                <button id="btn-record-data-6-6" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 6.7 DEĞİŞKENLERİ: IŞIĞIN SOĞURULMASI VE RADYOMETRE -->
+                        <div id="vars-container-6-7" class="is-hidden">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Yüzey Rengi (Siyah, Beyaz, Mavi) ve Işık Şiddeti</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Sıcaklık Artışı (°C) ve Radyometre Dönüş Hızı (RPM)</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> İlk Sıcaklık (20°C), Kap Hacimleri, Işık Mesafesi</div>
+                                </div>
+                            </div>
+
+                            <!-- Dinamik Pedagojik Çıkarım Kartı -->
+                            <div class="lab-pedagogical-card is-work" id="absorb-pedagogical-box">
+                                <div class="pedagogical-icon" id="absorb-pedagogical-icon"><i class="fas fa-sun"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="absorb-pedagogical-title">☀️ Işığın Soğurulması ve Renkler</strong>
+                                    <p id="absorb-pedagogical-text">Koyu renkler ışığı soğurarak ısıya dönüştürür ve daha çok ısınır. Açık renkler ışığı yansıtır. Radyometrede siyah kanatçık daha çok ısınarak pervaneyi döndürür.</p>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Işık ve Deney Parametreleri</h4>
+                                <div class="lab-lens-controls-box">
+                                    <div class="lab-field-group">
+                                        <label class="lab-field-label">Işık Kaynağı Gücü: <span id="label-absorb-power-val" style="color:var(--neon-blue); font-weight:800;">%100</span></label>
+                                        <input type="range" id="slider-absorb-power" min="0" max="100" step="10" value="100" style="width:100%;">
+                                    </div>
+                                    <div class="lab-field-group" style="margin-top: 8px;">
+                                        <label class="lab-field-label">Hızlı Işık Ayarı:</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+                                            <button class="lab-select-pill" id="pill-absorb-low">%25 Güç</button>
+                                            <button class="lab-select-pill" id="pill-absorb-med">%50 Güç</button>
+                                            <button class="lab-select-pill active" id="pill-absorb-high">%100 Güç</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-thermometer-half"></i> Sıcaklık ve Dönüş Analizi</h4>
+                                <div class="lab-stats-grid">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Siyah Kap</span>
+                                        <strong class="chip-val" id="metric-67-black" style="color: #f87171;">20.0°C</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Mavi Kap</span>
+                                        <strong class="chip-val" id="metric-67-blue" style="color: #60a5fa;">20.0°C</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Beyaz Kap</span>
+                                        <strong class="chip-val" id="metric-67-white" style="color: #cbd5e1;">20.0°C</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Radyometre Hızı</span>
+                                        <strong class="chip-val" id="metric-67-rpm" style="color: #34d399;">Durgun</strong>
+                                    </div>
+                                </div>
+                                <button id="btn-record-data-6-7" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 6.8 DEĞİŞKENLERİ: KATILARDA GENLEŞME VE BÜZÜLME (GRAVZANT HALKASI) -->
+                        <div id="vars-container-6-8" class="is-hidden">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Metal Kürenin Sıcaklığı (Isıtılma / Soğutulma Durumu)</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Kürenin Hacmi ve Halkadan Geçebilme Durumu</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Halkanın Çapı, Küre Maddesi (Pirinç/Metal)</div>
+                                </div>
+                            </div>
+
+                            <!-- Dinamik Pedagojik Çıkarım Kartı -->
+                            <div class="lab-pedagogical-card is-work" id="grav-pedagogical-box">
+                                <div class="pedagogical-icon" id="grav-pedagogical-icon"><i class="fas fa-fire"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="grav-pedagogical-title">🔥 Katılarda Genleşme ve Büzülme</strong>
+                                    <p id="grav-pedagogical-text">Katı maddeler ısı aldığında taneciklerinin hareketi ve aralarındaki boşluk artar; madde genleşir ve hacmi büyür (halkadan geçemez). Isı verdiğinde tanecikler birbirine yaklaşır; madde büzülür ve hacmi küçülür (halkadan geçer).</p>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Deney Aşamaları</h4>
+                                <div class="lab-lens-controls-box">
+                                    <div class="lab-field-group">
+                                        <label class="lab-field-label">Aşama Seçimi:</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                            <button class="lab-select-pill active" id="pill-grav-pass-cold">1. Soğukken Geçir</button>
+                                            <button class="lab-select-pill" id="pill-grav-heat">2. Alevde Isıt</button>
+                                            <button class="lab-select-pill" id="pill-grav-pass-hot">3. Sıcakken Dene</button>
+                                            <button class="lab-select-pill" id="pill-grav-quench">4. Soğuk Suda Soğut</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-ruler-combined"></i> Gravzant Halkası Ölçüm Verileri</h4>
+                                <div class="lab-stats-grid">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Küre Sıcaklığı</span>
+                                        <strong class="chip-val" id="metric-68-temp" style="color: #38bdf8;">20°C</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Hacim Durumu</span>
+                                        <strong class="chip-val" id="metric-68-volume" style="color: #10b981;">Normal</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Halka Durumu</span>
+                                        <strong class="chip-val" id="metric-68-ring" style="color: #fbbf24;">Sabit Çap</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Halkadan Geçiş</span>
+                                        <strong class="chip-val" id="metric-68-pass" style="color: #4ade80;">Geçer</strong>
+                                    </div>
+                                </div>
+                                <button id="btn-record-data-6-8" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 6.9 DEĞİŞKENLERİ: MADDELERİN ELEKTRİKSEL İLETKENLİĞİ TEST CİHAZI -->
+                        <div id="vars-container-6-9" class="is-hidden">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Test Uçlarına Bağlanan Madde (Katı veya Sıvı)</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Devreden Akım Geçmesi ve Ampulün Işık Vermesi</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Pil Gerilimi (3V), Ampul Özellikleri, İletken Teller</div>
+                                </div>
+                            </div>
+
+                            <!-- Dinamik Pedagojik Çıkarım Kartı -->
+                            <div class="lab-pedagogical-card is-work" id="cond-pedagogical-box">
+                                <div class="pedagogical-icon" id="cond-pedagogical-icon"><i class="fas fa-bolt"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="cond-pedagogical-title">⚡ İletken ve Yalıtkan Maddeler</strong>
+                                    <p id="cond-pedagogical-text">Elektrik enerjisini ileten maddelere iletken, iletmeyen maddelere yalıtkan denir. Katı iletkenlerde serbest elektronlar, sıvı iletkenlerde (tuzlu su, limonlu su) serbest iyonlar elektrik akımını iletir. Saf su ve şekerli su yalıtkandır.</p>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Test Edilecek Maddeyi Seç</h4>
+                                <div class="lab-lens-controls-box">
+                                    <div class="lab-field-group">
+                                        <label class="lab-field-label">Katı Maddeler:</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+                                            <button class="lab-select-pill active" id="pill-cond-copper">⚡ Bakır Tel</button>
+                                            <button class="lab-select-pill" id="pill-cond-iron">🔩 Demir Çivi</button>
+                                            <button class="lab-select-pill" id="pill-cond-graphite">✏️ Grafit Uç</button>
+                                            <button class="lab-select-pill" id="pill-cond-wood">🪵 Tahta</button>
+                                            <button class="lab-select-pill" id="pill-cond-plastic">🧴 Plastik</button>
+                                            <button class="lab-select-pill" id="pill-cond-eraser">🧽 Silgi</button>
+                                        </div>
+                                    </div>
+                                    <div class="lab-field-group" style="margin-top: 8px;">
+                                        <label class="lab-field-label">Sıvı Çözeltiler:</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                            <button class="lab-select-pill" id="pill-cond-saltwater">🧂 Tuzlu Su (İletken)</button>
+                                            <button class="lab-select-pill" id="pill-cond-sugarwater">🍬 Şekerli Su (Yalıtkan)</button>
+                                            <button class="lab-select-pill" id="pill-cond-lemonwater">🍋 Limonlu Su (İletken)</button>
+                                            <button class="lab-select-pill" id="pill-cond-purewater">💧 Saf Su (Yalıtkan)</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-plug"></i> Devre İletkenlik Durumu</h4>
+                                <div class="lab-stats-grid">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Test Maddesi</span>
+                                        <strong class="chip-val" id="metric-69-material" style="color: #38bdf8;">Bakır Tel</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Madde Türü</span>
+                                        <strong class="chip-val" id="metric-69-type" style="color: #cbd5e1;">Katı İletken</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">İletkenlik</span>
+                                        <strong class="chip-val" id="metric-69-conduct" style="color: #10b981;">İletken</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Ampul Durumu</span>
+                                        <strong class="chip-val" id="metric-69-bulb" style="color: #facc15;">Yanıyor 💡</strong>
+                                    </div>
+                                </div>
+                                <button id="btn-record-data-6-9" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 6.10 DEĞİŞKENLERİ: ELEKTRİKSEL DİRENÇ VE REOSTA -->
+                        <div id="vars-container-6-10" class="is-hidden">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Telin Boyu (L), Kesit Alanı (S), Tel Cinsi veya Reosta Konumu</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Devrenin Toplam Direnci ve Ampulün Parlaklığı</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Pil Gerilimi (3V), Sıcaklık, Devre Anahtarı</div>
+                                </div>
+                            </div>
+
+                            <!-- Dinamik Pedagojik Çıkarım Kartı -->
+                            <div class="lab-pedagogical-card is-work" id="res-pedagogical-box">
+                                <div class="pedagogical-icon" id="res-pedagogical-icon"><i class="fas fa-lightbulb"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="res-pedagogical-title">💡 Elektriksel Direnç ve Reosta</strong>
+                                    <p id="res-pedagogical-text">Maddelerin elektrik akımına karşı gösterdiği zorluğa direnç denir. Telin boyu uzadıkça ve kesiti inceldikçe direnç artar, ampul daha sönük yanar. Reosta, devredeki tel uzunluğunu değiştirerek direnci ve ampul parlaklığını ayarlayan ayarlı dirençtir.</p>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Direnç Parametreleri</h4>
+                                <div class="lab-lens-controls-box">
+                                    <div class="lab-field-group">
+                                        <label class="lab-field-label">Deney Modu:</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                            <button class="lab-select-pill active" id="pill-res-mode-wire">1. Tel Özellikleri</button>
+                                            <button class="lab-select-pill" id="pill-res-mode-rheostat">2. Reosta Modu</button>
+                                        </div>
+                                    </div>
+                                    <div class="lab-field-group" id="wrap-res-wire-controls" style="margin-top: 8px;">
+                                        <label class="lab-field-label">Telin Boyu (L): <span id="label-res-length-val" style="color:var(--neon-blue); font-weight:800;">10 cm</span></label>
+                                        <input type="range" id="slider-res-length" min="10" max="40" step="10" value="10" style="width:100%;">
+                                        
+                                        <label class="lab-field-label" style="margin-top: 8px;">Telin Kesit Alanı (Kalınlığı):</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                            <button class="lab-select-pill" id="pill-res-thick-thin">İnce Tel (S)</button>
+                                            <button class="lab-select-pill active" id="pill-res-thick-thick">Kalın Tel (2S)</button>
+                                        </div>
+
+                                        <label class="lab-field-label" style="margin-top: 8px;">Telin Cinsi:</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
+                                            <button class="lab-select-pill active" id="pill-res-mat-copper">Bakır (Az Direnç)</button>
+                                            <button class="lab-select-pill" id="pill-res-mat-iron">Demir (Orta)</button>
+                                            <button class="lab-select-pill" id="pill-res-mat-nichrome">Nikrom (Çok)</button>
+                                        </div>
+                                    </div>
+                                    <div class="lab-field-group" id="wrap-res-rheostat-controls" style="margin-top: 8px; display: none;">
+                                        <label class="lab-field-label">Reosta Sürgüsü Konumu: <span id="label-res-rheostat-val" style="color:#fbbf24; font-weight:800;">%20 (Düşük Direnç)</span></label>
+                                        <input type="range" id="slider-res-rheostat" min="0" max="100" step="5" value="20" style="width:100%;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Direnç ve Parlaklık Analizi</h4>
+                                <div class="lab-stats-grid">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Telin Boyu (L)</span>
+                                        <strong class="chip-val" id="metric-610-length" style="color: #38bdf8;">10 cm</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Kesit Alanı (S)</span>
+                                        <strong class="chip-val" id="metric-610-area" style="color: #cbd5e1;">Kalın (2S)</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Devre Direnci</span>
+                                        <strong class="chip-val" id="metric-610-resistance" style="color: #10b981;">Düşük</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Ampul Parlaklığı</span>
+                                        <strong class="chip-val" id="metric-610-brightness" style="color: #facc15;">Çok Parlak 💡</strong>
+                                    </div>
+                                </div>
+                                <button id="btn-record-data-6-10" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
                             </div>
                         </div>
 
@@ -2232,6 +2710,128 @@
                                 <div class="guide-item">
                                     <strong>5. Suyun Hayat Veren Yoğunluk Anomalisi:</strong>
                                     <p>Maddelerin çoğu katı hale geçerken büzüşür ve yoğunluğu artar. Ancak su $+4^\circ\text{C}$'den $0^\circ\text{C}$'ye doğru soğuyup donarken hacmi genişler ve yoğunluğu azalır ($d_{\text{su}} = 1\text{ g/cm}^3$, $d_{\text{buz}} = 0.92\text{ g/cm}^3$). Bu sayede buzullar ve göller <strong>üstten donar</strong>; buz tabakası yalıtım sağlayarak su altındaki balıkların ve su canlılarının yaşamını korur.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 6.6 REHBERİ: TOHUMUN ÇİMLENMESİNE ETKİ EDEN FAKTÖRLER -->
+                        <div id="guide-container-6-6" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Tohumun Çimlenmesi Bilimsel Rehberi (FB.6.3.3)</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Çimlenme Nedir?</strong>
+                                    <p>Tohumun içindeki embriyonun uygun çevre koşullarında uyku (dormansi) halinden çıkarak ana bitkiye benzeyen genç bir bitkiyi (fideyi) oluşturmak üzere gelişmesine <strong>çimlenme</strong> denir.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Çimlenme İçin Gerekli Şartlar (S.O.S Kuralı):</strong>
+                                    <p>Bir tohumun çimlenebilmesi için 3 temel faktörün aynı anda bulunması şarttır:<br>
+                                    • <strong>S (Su / Nem):</strong> Tohum kabuğunun yumuşamasını ve enzimlerin aktifleşmesini sağlar.<br>
+                                    • <strong>O (Oksijen / Hava):</strong> Embriyonun hücresel solunum yaparak büyüme enerjisi üretmesi için gereklidir.<br>
+                                    • <strong>S (Uygun Sıcaklık):</strong> Enzimlerin çalışabilmesi için genellikle 15°C–25°C arası idealdir. Donma noktasında (0°C) veya aşırı sıcakta çimlenme durur.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>3. Hayati Pedagojik Yanılgı: Işık Gerekli midir?</strong>
+                                    <p><strong>HAYIR! Çimlenme için ışık gerekli DEĞİLDİR!</strong> Tohumlar toprak altında tamamen karanlıkta çimlenir. Embriyo ilk yapraklarını çıkarıp fotosenteze başlayana kadar tohumun çeneklerindeki (endosperm) hazır besin deposunu tüketir. Işık, çimlenme bittikten sonra bitkinin <strong>büyüme ve fotosentez</strong> evresinde gereklidir.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>4. Çimlenme Sürecinin Aşamaları:</strong>
+                                    <p>1. Tohum su emerek şişer.<br>
+                                    2. Tohum kabuğu (testa) çatlar.<br>
+                                    3. İlk olarak aşağıya doğru ilk kökçük (radikula) uzanır.<br>
+                                    4. Ardından yukarıya doğru ilk gövde ve sürgün (hipokotil) yükselerek yeşil filizi oluşturur.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 6.7 REHBERİ: IŞIĞIN SOĞURULMASI VE RADYOMETRE -->
+                        <div id="guide-container-6-7" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Işığın Soğurulması ve Radyometre Rehberi (FB.6.4.4 - FB.6.4.6)</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Işığın Soğurulması (Absorpsiyon) Nedir?</strong>
+                                    <p>Işığın maddeler tarafından tutulması ve emilmesine <strong>ışığın soğurulması</strong> denir. Soğurulan ışık enerjisi, maddenin taneciklerinin kinetik enerjisini artırarak <strong>ısı enerjisine dönüşür</strong>; bu da maddenin sıcaklığının yükselmesine yol açar.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Renklerin Işığı Soğurma İlişkisi:</strong>
+                                    <p>• <strong>Koyu / Siyah Yüzeyler:</strong> Üzerine düşen görünür ışığın neredeyse tamamını soğurur, çok azını yansıtır. Bu nedenle siyah yüzeylerin sıcaklığı hızla ve en yüksek seviyeye çıkar.<br>
+                                    • <strong>Açık / Beyaz Yüzeyler:</strong> Üzerine düşen ışığın büyük kısmını yansıtır, çok azını soğurur. Bu nedenle beyaz yüzeyler serin kalır.<br>
+                                    • <strong>Ara Renkler (Mavi vb.):</strong> Kendi rengini yansıtırken diğer dalga boylarını soğurur; sıcaklık artışı orta düzeydedir.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>3. Crookes Radyometresi (Işık Değirmeni):</strong>
+                                    <p>Havası kısmen boşaltılmış cam bir fanus içinde dönebilen 4 kanatçıktan oluşur. Kanatçıkların bir yüzü <strong>siyah</strong>, diğer yüzü <strong>beyaz / parlaktır</strong>. Işık düştüğünde siyah yüzey daha fazla ısınır ve fanus içindeki seyrek gaz moleküllerini hızla fırlatarak pervanenin dönmesini sağlar. <strong>Işık şiddeti arttıkça radyometrenin dönüş hızı artar.</strong> Bu deney, ışık enerjisinin hareket enerjisine dönüştüğünün en somut kanıtıdır.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>4. Günlük Yaşamdaki Uygulamaları:</strong>
+                                    <p>Yaz aylarında açık renkli, kış aylarında koyu renkli kıyafetlerin tercih edilmesi; güneş enerjili su ısıtma panellerinin ve güneş fırınlarının tabanının siyah yapılması; yakıt tanklarının aşırı ısınmayı önlemek için beyaza boyanması ışığın soğurulması ilkesiyle doğrudan ilişkilidir.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 6.8 REHBERİ: KATILARDA GENLEŞME VE BÜZÜLME -->
+                        <div id="guide-container-6-8" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Katılarda Genleşme ve Büzülme Rehberi (FB.6.5.1)</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Genleşme ve Büzülme Tanımı:</strong>
+                                    <p>• <strong>Genleşme:</strong> Isı alan maddelerin taneciklerinin kinetik enerjisi ve hareketliliği artar. Tanecikler birbirinden uzaklaşır ve maddenin hacmi büyür.<br>
+                                    • <strong>Büzülme:</strong> Isı veren (soğuyan) maddelerin taneciklerinin hareketi yavaşlar, tanecikler birbirine yaklaşır ve maddenin hacmi küçülür.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Gravzant (Gravesande) Halkası Deneyi:</strong>
+                                    <p>Oda sıcaklığında metal küre, iç çapı küreden milimetrik olarak büyük olan metal halkadan kolaylıkla geçer. Küre ispirto ocağında ısıtıldığında hacmi genleşir; çapı halkanın çapını aştığı için <strong>halkadan geçemez ve takılı kalır</strong>. Küre soğuk suya daldırıldığında aniden ısı vererek büzülür; çapı küçülür ve <strong>halkadan tekrar kolayca geçer</strong>.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>3. Günlük Hayattan Somut Örnekler:</strong>
+                                    <p>• <strong>Tren Rayları:</strong> Yazın genleşip eğilmemesi için ray birleşim noktalarına genleşme boşlukları bırakılır.<br>
+                                    • <strong>Elektrik Telleri:</strong> Yaz aylarında ısınıp genleştiği için sarkar; kışın soğuyup büzüldüğü için gerginleşir.<br>
+                                    • <strong>Sıkışan Kavanoz Kapakları:</strong> Metal kapak sıcak suya tutulduğunda camdan daha çok genleşerek kolayca açılır.<br>
+                                    • <strong>Termostatlar:</strong> Farklı genleşme oranlarına sahip metal çiftleri (bimetal) kullanılarak elektrikli aletlerin sıcaklığı kontrol edilir.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 6.9 REHBERİ: MADDELERİN ELEKTRİKSEL İLETKENLİĞİ -->
+                        <div id="guide-container-6-9" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Maddelerin Elektriksel İletkenliği Rehberi (FB.6.6.1)</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Elektriksel İletkenlik ve İletken Maddeler:</strong>
+                                    <p>Elektrik enerjisinin iletimine izin veren, elektrik akımını geçiren maddelere <strong>iletken maddeler</strong> denir. Katı iletkenlerde serbest elektronlar bulunur. Örnekler: <strong>Bakır, demir, alüminyum, altın, gümüş ve kurşun kalem ucu (grafit/karbon)</strong>.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Yalıtkan Maddeler:</strong>
+                                    <p>Elektrik enerjisinin iletimine izin vermeyen, serbest elektron taşımayan maddelere <strong>yalıtkan maddeler</strong> denir. Bu maddeler devreye bağlandığında akım geçmez ve ampul yanmaz. Örnekler: <strong>Plastik, tahta, cam, porselen, kauçuk, silgi ve kuru hava</strong>.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>3. Sıvı Çözeltilerin İletkenliği:</strong>
+                                    <p>• <strong>İletken Sıvılar:</strong> İçinde serbest artı ve eksi iyonlar bulunan sıvılar elektriği iletir. Örnekler: <strong>Tuzlu su, limonlu su, sirkeli su ve maden suyu</strong>.<br>
+                                    • <strong>Yalıtkan Sıvılar:</strong> İyonlaşmayan, moleküler yapıda çözünen sıvılar elektriği iletmez. Örnekler: <strong>Saf su ve şekerli su</strong>.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>4. Güvenlik ve İzolasyon:</strong>
+                                    <p>Elektrik çarpmalarını önlemek için elektrikli aletlerin kulpları, tornavidaların sapları ve kabloların dışı yalıtkan plastiklerle kaplanır.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 6.10 REHBERİ: ELEKTRİKSEL DİRENÇ VE REOSTA -->
+                        <div id="guide-container-6-10" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Elektriksel Direnç ve Reosta Bilimsel Rehberi (FB.6.6.2 - FB.6.6.3)</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Elektriksel Direnç Nedir?</strong>
+                                    <p>Maddelerin elektrik enerjisinin iletimine karşı gösterdiği zorluğa <strong>elektriksel direnç (R)</strong> denir. Birimi Ohm'dur (Ω). Bir devrede direnç ne kadar büyükse üzerinden geçen akım o kadar azalır ve ampul o kadar sönük yanar.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Direnci Etkileyen 3 Temel Faktör:</strong>
+                                    <p>• <strong>1. Telin Boyu (L):</strong> Telin boyu uzadıkça elektronların atomlarla çarpışma sayısı artar; direnç artar ve ampul parlaklığı azalır ($R \propto L$). Uzun tel = Yüksek Direnç = Sönük Ampul.<br>
+                                    • <strong>2. Telin Dik Kesit Alanı / Kalınlığı (S):</strong> Tel kalınlaştıkça elektronlar daha geniş bir alandan rahatça geçer; direnç azalır ve ampul parlaklığı artar ($R \propto 1/S$). Kalın tel = Düşük Direnç = Parlak Ampul.<br>
+                                    • <strong>3. Telin Cinsi (Öz Direnç):</strong> Farklı metallerin atomik yapıları farklıdır. Bakır çok düşük direnç gösterirken, demir orta, nikel-krom tel çok yüksek direnç gösterir.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>3. Reosta (Ayarlanabilir Direnç):</strong>
+                                    <p>Bir elektrik devresinde direnci istenen düzeyde değiştirerek akımı ve ampul parlaklığını ayarlamaya yarayan alete <strong>reosta</strong> denir. Reosta sürgüsü kaydırıldığında devrede kullanılan telin uzunluğu değişir; böylece direnç artırılıp azaltılabilir. Evlerimizdeki ayarlı ışık anahtarları (dimmer), ses açma-kapatma düğmeleri ve elektrikli ocak sıcaklık ayarları birer reostadır.</p>
                                 </div>
                             </div>
                         </div>

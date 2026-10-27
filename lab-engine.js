@@ -102,32 +102,39 @@ export const EXPERIMENTS_DATABASE = [
         desc: "Bal, gliserin, su ve zeytinyağını aynı silindire dökerek tabakalaşmayı ve içine bırakılan cisimlerin yüzme-batma hallerini gözlemleyin."
     },
     {
-        id: "6.6", grade: 6, unit: 4, unitName: "Işığın Yansıması ve Renkler",
-        title: "Işığın Soğurulması ve Renklerin Isınma Etkisi",
-        code: "FB.6.4.4 - FB.6.4.6", bookRef: "2. Kitap, s. 14–29",
-        active: false,
-        desc: "Siyah, beyaz ve renkli kumaşların ışığı soğurma miktarlarını sıcaklık artışı sensörleriyle eşzamanlı izleyin."
+        id: "6.6", grade: 6, unit: 3, unitName: "Canlılarda Sistemler ve Yaşam",
+        title: "Tohumun Çimlenmesine Etki Eden Faktörler",
+        code: "FB.6.3.3", bookRef: "1. Kitap, s. 94–96",
+        active: true, // 🏆 AKTİF!
+        desc: "Fasulye tohumlarının çimlenmesi için gerekli çevre şartlarını (su/nem, oksijen, uygun sıcaklık) test edin; karanlık ve aydınlık ortamlarda çimlenmeyi karşılaştırarak ışığın çimlenmeye etki etmediğini gözlemleyin."
     },
     {
-        id: "6.7", grade: 6, unit: 5, unitName: "Maddenin Doğası ve Yoğunluk",
-        title: "Katı Maddelerin Yoğunluk Ölçüm İstasyonu (d = m / V)",
-        code: "FB.6.5.1 - FB.6.5.2", bookRef: "2. Kitap, s. 30–37",
-        active: false,
-        desc: "Eşit kollu terazi ve dereceli silindir kullanarak düzgün ve düzgün olmayan katıların kütle ve hacmini ölçüp yoğunluğunu hesaplayın."
+        id: "6.7", grade: 6, unit: 4, unitName: "Işığın Yansıması ve Renkler",
+        title: "Işığın Soğurulması ve Radyometre",
+        code: "FB.6.4.4 - FB.6.4.6", bookRef: "1. Kitap, s. 164–168",
+        active: true, // 🏆 AKTİF!
+        desc: "Siyah, beyaz ve mavi yüzeylerin güneş ışığını soğurma miktarlarını termometrelerle ölçün; ışık enerjisini hareket enerjisine dönüştüren Crookes radyometresinin kanatçık dönüşünü canlı simüle edin."
     },
     {
-        id: "6.8", grade: 6, unit: 6, unitName: "Madde ve Elektrik",
-        title: "İletken ve Yalıtkan Maddeleri Test Devresi",
-        code: "FB.6.6.1", bookRef: "2. Kitap, s. 92–105",
-        active: false,
-        desc: "Timsah ağızlı test uçlarına katı ve sıvı maddeler bağlayarak elektrik iletkenliklerini ampul parlaklığıyla test edin."
+        id: "6.8", grade: 6, unit: 5, unitName: "Maddenin Doğası ve Isı",
+        title: "Katılarda Genleşme ve Büzülme - Gravzant Halkası",
+        code: "FB.6.5.1", bookRef: "2. Kitap, s. 22–24",
+        active: true, // 🏆 AKTİF!
+        desc: "Gravzant halkası ve metal küre düzeneğinde küreyi ısıtıp genleşmesini (halkadan geçememe) ve soğuk suya daldırarak büzülmesini (halkadan tekrar geçme) gözlemleyin."
     },
     {
-        id: "6.9", grade: 6, unit: 6, unitName: "Madde ve Elektrik",
-        title: "İletkenin Direncini Etkileyen Faktörler (L, S) ve Reosta",
-        code: "FB.6.6.2", bookRef: "2. Kitap, s. 106–121",
-        active: false,
-        desc: "İletken telin boyu, kesit alanı ve cinsini değiştirerek devre direncindeki ve ampul parlaklığındaki değişimi gözlemleyin."
+        id: "6.9", grade: 6, unit: 6, unitName: "Elektriğin İletimi ve Direnç",
+        title: "Maddelerin Elektriksel İletkenliği Test Cihazı",
+        code: "FB.6.6.1", bookRef: "2. Kitap, s. 69–72",
+        active: true, // 🏆 AKTİF!
+        desc: "Test uçları arasına katı (bakır, demir, grafit, tahta, plastik, silgi) ve sıvı (tuzlu su, şekerli su, limonlu su, saf su) maddeleri bağlayarak devrenin iletkenlik durumunu ampul parlaklığıyla test edin."
+    },
+    {
+        id: "6.10", grade: 6, unit: 6, unitName: "Elektriğin İletimi ve Direnç",
+        title: "Elektriksel Direnç ve Reosta Simülatörü",
+        code: "FB.6.6.2 - FB.6.6.3", bookRef: "2. Kitap, s. 78–89",
+        active: true, // 🏆 AKTİF!
+        desc: "İletken telin boyu (L), dik kesit alanı (S) ve cinsi (bakır, demir, nikel-krom) değiştikçe devredeki direnci ve ampul parlaklığını inceleyin; reosta sürgüsünü kaydırarak direnci canlı ayarlayın."
     },
 
     // 7. SINIF (9 DENEY)
@@ -589,6 +596,75 @@ export const labState = {
         measurements: []
     },
 
+    // DENEY 6.6: TOHUMUN ÇİMLENMESİNE ETKİ EDEN FAKTÖRLER (FB.6.3.3)
+    germination: {
+        currentDay: 1,           // 1 - 7 gün
+        isPlaying: false,
+        animProgress: 0.0,
+        selectedDish: 1,         // 1, 2, 3, 4
+        dishes: [
+            { id: 1, name: "1. Kap (İdeal)", water: true, temp: 25, light: false, oxygen: true, sproutProgress: 0.0 },
+            { id: 2, name: "2. Kap (Susuz)", water: false, temp: 25, light: false, oxygen: true, sproutProgress: 0.0 },
+            { id: 3, name: "3. Kap (0°C Soğuk)", water: true, temp: 0, light: false, oxygen: true, sproutProgress: 0.0 },
+            { id: 4, name: "4. Kap (Işıklı)", water: true, temp: 25, light: true, oxygen: true, sproutProgress: 0.0 }
+        ],
+        measurements: []
+    },
+
+    // DENEY 6.7: IŞIĞIN SOĞURULMASI VE RADYOMETRE (FB.6.4.4 - FB.6.4.6)
+    absorption: {
+        lampOn: true,
+        lampPower: 100,          // 0, 25, 50, 100 (%)
+        tempBlack: 20.0,
+        tempBlue: 20.0,
+        tempWhite: 20.0,
+        radiometerAngle: 0.0,
+        radiometerSpeed: 0.08,
+        lightRaysAnim: 0.0,
+        measurements: []
+    },
+
+    // DENEY 6.8: KATILARDA GENLEŞME VE BÜZÜLME - GRAVZANT HALKASI (FB.6.5.1)
+    expansion: {
+        step: "cold_pass",       // "cold_pass", "heating", "hot_try", "quenching"
+        sphereTemp: 20.0,        // °C (20 - 250)
+        sphereRadius: 26.0,      // px (26.0 soğuk -> 32.5 sıcak)
+        ringRadius: 29.0,        // px (sabit)
+        sphereX: 400,
+        sphereY: 150,
+        targetY: 150,
+        isHeating: false,
+        isQuenching: false,
+        isPassingThrough: true,  // Soğukken geçer, sıcakken geçemez
+        flameParticles: [],
+        steamParticles: [],
+        measurements: []
+    },
+
+    // DENEY 6.9: MADDELERİN ELEKTRİKSEL İLETKENLİĞİ TEST CİHAZI (FB.6.6.1)
+    conductivity: {
+        selectedMaterial: "copper", // "copper", "iron", "graphite", "wood", "plastic", "eraser", "saltwater", "sugarwater", "lemonwater", "purewater"
+        isConductive: true,
+        bulbBrightness: 1.0,     // 0.0 to 1.0
+        electronParticles: [],
+        ionParticles: [],
+        measurements: []
+    },
+
+    // DENEY 6.10: ELEKTRİKSEL DİRENÇ VE REOSTA SİMÜLATÖRÜ (FB.6.6.2 - FB.6.6.3)
+    resistance: {
+        mode: "wire",            // "wire" (Tel Faktörleri) | "rheostat" (Reosta)
+        wireLength: 10,          // cm (10, 20, 30, 40)
+        wireThickness: "thick",  // "thin" (S) | "thick" (2S)
+        wireMaterial: "copper",  // "copper" | "iron" | "nichrome"
+        rheostatSlider: 20,      // % (0 - 100)
+        totalResistanceLevel: "low", // "very_low", "low", "medium", "high", "very_high"
+        bulbBrightness: 0.9,     // 0.1 to 1.0
+        electronParticles: [],
+        isDraggingSlider: false,
+        measurements: []
+    },
+
     // REZERVE (5. SINIF 5. ÜNİTE İÇİN SAKLANDI): ISI İLETKENLİĞİ VE YALITIM SİMÜLATÖRÜ
     heatTransfer: {
         mode: "metals",          // "metals" | "insulation"
@@ -878,13 +954,18 @@ function setupWorkspaceShellDOM() {
     // 12. DENEY 7.9 KONTROLLERİ (BESİN PİRAMİDİ VE BİYOBİRİKİM)
     setupFoodPyramidControlsDOM();
 
-    // 13. 6. SINIF KONTROLLERİ (DENEY 6.1 - 6.5)
+    // 13. 6. SINIF KONTROLLERİ (DENEY 6.1 - 6.10)
     setupEclipseControlsDOM();
     setupTugOfWarControlsDOM();
     setupMotionControlsDOM();
     setupReflectionControlsDOM();
     setupDensityTowerControlsDOM();
     setupHeatTransferControlsDOM();
+    setupGerminationControlsDOM();
+    setupAbsorptionControlsDOM();
+    setupExpansionControlsDOM();
+    setupConductivityControlsDOM();
+    setupResistanceControlsDOM();
 
     // 7. Tablo Temizle
     const btnClearTable = document.getElementById('btn-clear-table');
@@ -1049,6 +1130,11 @@ export function openExperimentWorkspace(expId) {
     const is63 = (expId === "6.3");
     const is64 = (expId === "6.4");
     const is65 = (expId === "6.5");
+    const is66 = (expId === "6.6");
+    const is67 = (expId === "6.7");
+    const is68 = (expId === "6.8");
+    const is69 = (expId === "6.9");
+    const is610 = (expId === "6.10");
     const is71 = (expId === "7.1");
     const is72 = (expId === "7.2");
     const is73 = (expId === "7.3");
@@ -1065,6 +1151,11 @@ export function openExperimentWorkspace(expId) {
     const mbar63 = document.getElementById('metrics-bar-6-3');
     const mbar64 = document.getElementById('metrics-bar-6-4');
     const mbar65 = document.getElementById('metrics-bar-6-5');
+    const mbar66 = document.getElementById('metrics-bar-6-6');
+    const mbar67 = document.getElementById('metrics-bar-6-7');
+    const mbar68 = document.getElementById('metrics-bar-6-8');
+    const mbar69 = document.getElementById('metrics-bar-6-9');
+    const mbar610 = document.getElementById('metrics-bar-6-10');
     const mbar73 = document.getElementById('metrics-bar-7-3');
     const mbar71 = document.getElementById('metrics-bar-7-1');
     if (mbar61) mbar61.classList.toggle('is-hidden', !is61);
@@ -1072,6 +1163,11 @@ export function openExperimentWorkspace(expId) {
     if (mbar63) mbar63.classList.toggle('is-hidden', !is63);
     if (mbar64) mbar64.classList.toggle('is-hidden', !is64);
     if (mbar65) mbar65.classList.toggle('is-hidden', !is65);
+    if (mbar66) mbar66.classList.toggle('is-hidden', !is66);
+    if (mbar67) mbar67.classList.toggle('is-hidden', !is67);
+    if (mbar68) mbar68.classList.toggle('is-hidden', !is68);
+    if (mbar69) mbar69.classList.toggle('is-hidden', !is69);
+    if (mbar610) mbar610.classList.toggle('is-hidden', !is610);
     if (mbar73) mbar73.classList.toggle('is-hidden', !is73);
     if (mbar71) mbar71.classList.toggle('is-hidden', !is71);
 
@@ -1081,6 +1177,11 @@ export function openExperimentWorkspace(expId) {
     const qc63 = document.getElementById('quick-controls-6-3');
     const qc64 = document.getElementById('quick-controls-6-4');
     const qc65 = document.getElementById('quick-controls-6-5');
+    const qc66 = document.getElementById('quick-controls-6-6');
+    const qc67 = document.getElementById('quick-controls-6-7');
+    const qc68 = document.getElementById('quick-controls-6-8');
+    const qc69 = document.getElementById('quick-controls-6-9');
+    const qc610 = document.getElementById('quick-controls-6-10');
     const qc71 = document.getElementById('quick-controls-7-1');
     const qc72 = document.getElementById('quick-controls-7-2');
     const qc73 = document.getElementById('quick-controls-7-3');
@@ -1095,6 +1196,11 @@ export function openExperimentWorkspace(expId) {
     if (qc63) qc63.classList.toggle('is-hidden', !is63);
     if (qc64) qc64.classList.toggle('is-hidden', !is64);
     if (qc65) qc65.classList.toggle('is-hidden', !is65);
+    if (qc66) qc66.classList.toggle('is-hidden', !is66);
+    if (qc67) qc67.classList.toggle('is-hidden', !is67);
+    if (qc68) qc68.classList.toggle('is-hidden', !is68);
+    if (qc69) qc69.classList.toggle('is-hidden', !is69);
+    if (qc610) qc610.classList.toggle('is-hidden', !is610);
     if (qc71) qc71.classList.toggle('is-hidden', !is71);
     if (qc72) qc72.classList.toggle('is-hidden', !is72);
     if (qc73) qc73.classList.toggle('is-hidden', !is73);
@@ -1111,6 +1217,11 @@ export function openExperimentWorkspace(expId) {
     const vars63 = document.getElementById('vars-container-6-3');
     const vars64 = document.getElementById('vars-container-6-4');
     const vars65 = document.getElementById('vars-container-6-5');
+    const vars66 = document.getElementById('vars-container-6-6');
+    const vars67 = document.getElementById('vars-container-6-7');
+    const vars68 = document.getElementById('vars-container-6-8');
+    const vars69 = document.getElementById('vars-container-6-9');
+    const vars610 = document.getElementById('vars-container-6-10');
     const vars71 = document.getElementById('vars-container-7-1');
     const vars72 = document.getElementById('vars-container-7-2');
     const vars73 = document.getElementById('vars-container-7-3');
@@ -1125,6 +1236,11 @@ export function openExperimentWorkspace(expId) {
     if (vars63) vars63.classList.toggle('is-hidden', !is63);
     if (vars64) vars64.classList.toggle('is-hidden', !is64);
     if (vars65) vars65.classList.toggle('is-hidden', !is65);
+    if (vars66) vars66.classList.toggle('is-hidden', !is66);
+    if (vars67) vars67.classList.toggle('is-hidden', !is67);
+    if (vars68) vars68.classList.toggle('is-hidden', !is68);
+    if (vars69) vars69.classList.toggle('is-hidden', !is69);
+    if (vars610) vars610.classList.toggle('is-hidden', !is610);
     if (vars71) vars71.classList.toggle('is-hidden', !is71);
     if (vars72) vars72.classList.toggle('is-hidden', !is72);
     if (vars73) vars73.classList.toggle('is-hidden', !is73);
@@ -1141,6 +1257,11 @@ export function openExperimentWorkspace(expId) {
     const guide63 = document.getElementById('guide-container-6-3');
     const guide64 = document.getElementById('guide-container-6-4');
     const guide65 = document.getElementById('guide-container-6-5');
+    const guide66 = document.getElementById('guide-container-6-6');
+    const guide67 = document.getElementById('guide-container-6-7');
+    const guide68 = document.getElementById('guide-container-6-8');
+    const guide69 = document.getElementById('guide-container-6-9');
+    const guide610 = document.getElementById('guide-container-6-10');
     const guide71 = document.getElementById('guide-container-7-1');
     const guide72 = document.getElementById('guide-container-7-2');
     const guide73 = document.getElementById('guide-container-7-3');
@@ -1155,6 +1276,11 @@ export function openExperimentWorkspace(expId) {
     if (guide63) guide63.classList.toggle('is-hidden', !is63);
     if (guide64) guide64.classList.toggle('is-hidden', !is64);
     if (guide65) guide65.classList.toggle('is-hidden', !is65);
+    if (guide66) guide66.classList.toggle('is-hidden', !is66);
+    if (guide67) guide67.classList.toggle('is-hidden', !is67);
+    if (guide68) guide68.classList.toggle('is-hidden', !is68);
+    if (guide69) guide69.classList.toggle('is-hidden', !is69);
+    if (guide610) guide610.classList.toggle('is-hidden', !is610);
     if (guide71) guide71.classList.toggle('is-hidden', !is71);
     if (guide72) guide72.classList.toggle('is-hidden', !is72);
     if (guide73) guide73.classList.toggle('is-hidden', !is73);
@@ -1175,6 +1301,16 @@ export function openExperimentWorkspace(expId) {
         initReflectionState();
     } else if (is65) {
         initDensityTowerState();
+    } else if (is66) {
+        initGerminationState();
+    } else if (is67) {
+        initAbsorptionState();
+    } else if (is68) {
+        initExpansionState();
+    } else if (is69) {
+        initConductivityState();
+    } else if (is610) {
+        initResistanceState();
     } else if (is71) {
         initWorkState();
     } else if (is72) {
@@ -1227,6 +1363,16 @@ function resetCurrentExperiment() {
         resetReflectionExperiment();
     } else if (labState.activeExperimentId === "6.5") {
         resetDensityTowerExperiment();
+    } else if (labState.activeExperimentId === "6.6") {
+        resetGerminationExperiment();
+    } else if (labState.activeExperimentId === "6.7") {
+        resetAbsorptionExperiment();
+    } else if (labState.activeExperimentId === "6.8") {
+        resetExpansionExperiment();
+    } else if (labState.activeExperimentId === "6.9") {
+        resetConductivityExperiment();
+    } else if (labState.activeExperimentId === "6.10") {
+        resetResistanceExperiment();
     } else if (labState.activeExperimentId === "7.1") {
         resetWorkExperiment();
     } else if (labState.activeExperimentId === "7.2") {
@@ -1327,6 +1473,16 @@ function initExperimentCanvas() {
         initReflectionState();
     } else if (labState.activeExperimentId === "6.5") {
         initDensityTowerState();
+    } else if (labState.activeExperimentId === "6.6") {
+        initGerminationState();
+    } else if (labState.activeExperimentId === "6.7") {
+        initAbsorptionState();
+    } else if (labState.activeExperimentId === "6.8") {
+        initExpansionState();
+    } else if (labState.activeExperimentId === "6.9") {
+        initConductivityState();
+    } else if (labState.activeExperimentId === "6.10") {
+        initResistanceState();
     } else if (labState.activeExperimentId === "7.1") {
         initWorkState();
     } else if (labState.activeExperimentId === "7.2") {
@@ -1381,6 +1537,21 @@ function startRenderLoop() {
             } else if (labState.activeExperimentId === "6.5") {
                 updateDensityTowerPhysics();
                 drawDensityTowerSimulation();
+            } else if (labState.activeExperimentId === "6.6") {
+                updateGerminationPhysics();
+                drawGerminationSimulation();
+            } else if (labState.activeExperimentId === "6.7") {
+                updateAbsorptionPhysics();
+                drawAbsorptionSimulation();
+            } else if (labState.activeExperimentId === "6.8") {
+                updateExpansionPhysics();
+                drawExpansionSimulation();
+            } else if (labState.activeExperimentId === "6.9") {
+                updateConductivityPhysics();
+                drawConductivitySimulation();
+            } else if (labState.activeExperimentId === "6.10") {
+                updateResistancePhysics();
+                drawResistanceSimulation();
             } else if (labState.activeExperimentId === "7.1") {
                 updateWorkPhysics();
                 drawWorkSimulation();
@@ -5156,6 +5327,2411 @@ function drawBuildingInsulationTest(ctx) {
             drawNeonArrow(ctx, bx + houseW * 0.5, baseY - houseH * 0.5, bx + houseW * 0.5 + arrowLen, baseY - houseH * 0.5, arrowColor, 2);
         }
     });
+
+    ctx.restore();
+}
+
+
+// ============================================================================
+// --- 6.6. DENEY 6.6: TOHUMUN ÇİMLENMESİNE ETKİ EDEN FAKTÖRLER (FB.6.3.3) ---
+// ============================================================================
+
+function initGerminationState() {
+    const g = labState.germination;
+    g.currentDay = 1;
+    g.isPlaying = false;
+    g.animProgress = 0.0;
+    g.selectedDish = 1;
+    g.dishes = [
+        { id: 1, name: "1. Kap (İdeal)", water: true, temp: 25, light: false, oxygen: true, sproutProgress: 0.0 },
+        { id: 2, name: "2. Kap (Susuz)", water: false, temp: 25, light: false, oxygen: true, sproutProgress: 0.0 },
+        { id: 3, name: "3. Kap (0°C Soğuk)", water: true, temp: 0, light: false, oxygen: true, sproutProgress: 0.0 },
+        { id: 4, name: "4. Kap (Işıklı)", water: true, temp: 25, light: true, oxygen: true, sproutProgress: 0.0 }
+    ];
+
+    updateGerminationDOMControls();
+    updateGerminationMetricsDOM();
+}
+
+function resetGerminationExperiment() {
+    initGerminationState();
+    showLabToast("Tohumlar ve kaplar 1. gün başlangıç durumuna sıfırlandı!");
+}
+
+function selectGerminationDish(dishId) {
+    labState.germination.selectedDish = dishId;
+    updateGerminationDOMControls();
+    updateGerminationMetricsDOM();
+}
+
+function setGerminationWater(dishId, hasWater) {
+    const dish = labState.germination.dishes.find(d => d.id === dishId);
+    if (!dish) return;
+    dish.water = hasWater;
+    recalculateGerminationDish(dish);
+    updateGerminationDOMControls();
+    updateGerminationMetricsDOM();
+}
+
+function setGerminationTemp(dishId, temp) {
+    const dish = labState.germination.dishes.find(d => d.id === dishId);
+    if (!dish) return;
+    dish.temp = temp;
+    recalculateGerminationDish(dish);
+    updateGerminationDOMControls();
+    updateGerminationMetricsDOM();
+}
+
+function setGerminationLight(dishId, isLight) {
+    const dish = labState.germination.dishes.find(d => d.id === dishId);
+    if (!dish) return;
+    dish.light = isLight;
+    recalculateGerminationDish(dish);
+    updateGerminationDOMControls();
+    updateGerminationMetricsDOM();
+}
+
+function stepGerminationDay(delta) {
+    const g = labState.germination;
+    g.currentDay = Math.max(1, Math.min(7, g.currentDay + delta));
+    g.dishes.forEach(recalculateGerminationDish);
+    updateGerminationDOMControls();
+    updateGerminationMetricsDOM();
+    showLabToast(`📅 ${g.currentDay}. Gün Gözlemleniyor`);
+}
+
+function recalculateGerminationDish(dish) {
+    const g = labState.germination;
+    // S.O.S Kuralı: Su (Nem) + Oksijen + Uygun Sıcaklık (20-30°C arası)
+    // Işık çimlenmeyi engellemez veya zorunlu kılmaz (Tohum karanlıkta da çimlenir)
+    const canSprout = (dish.water === true) && (dish.temp === 25) && (dish.oxygen === true);
+    if (canSprout) {
+        dish.sproutProgress = Math.min(1.0, (g.currentDay - 1) / 5.0);
+    } else {
+        dish.sproutProgress = 0.0;
+    }
+}
+
+function updateGerminationPhysics() {
+    const g = labState.germination;
+    if (g.isPlaying) {
+        g.animProgress += 0.008;
+        if (g.animProgress >= 1.0) {
+            g.animProgress = 0.0;
+            if (g.currentDay < 7) {
+                g.currentDay++;
+                g.dishes.forEach(recalculateGerminationDish);
+                updateGerminationDOMControls();
+                updateGerminationMetricsDOM();
+            } else {
+                g.isPlaying = false;
+                const btnPlay = document.getElementById('btn-germ-play-pause');
+                const lblPlay = document.getElementById('label-germ-play');
+                if (btnPlay) btnPlay.classList.remove('active');
+                if (lblPlay) lblPlay.textContent = "Günleri İlerlet";
+                showLabToast("7 günlük çimlenme takibi tamamlandı!");
+            }
+        }
+    }
+}
+
+function updateGerminationDOMControls() {
+    const g = labState.germination;
+    const curDish = g.dishes.find(d => d.id === g.selectedDish) || g.dishes[0];
+
+    // Kap Seçim Butonları (Hızlı Bar & Sağ Panel)
+    [1, 2, 3, 4].forEach(id => {
+        const isSel = (g.selectedDish === id);
+        const b = document.getElementById(`btn-germ-dish-${id}`);
+        const p = document.getElementById(`pill-germ-dish-${id}`);
+        if (b) b.classList.toggle('active', isSel);
+        if (p) p.classList.toggle('active', isSel);
+    });
+
+    // Su Butonları
+    const pWaterYes = document.getElementById('pill-germ-water-yes');
+    const pWaterNo = document.getElementById('pill-germ-water-no');
+    if (pWaterYes) pWaterYes.classList.toggle('active', curDish.water);
+    if (pWaterNo) pWaterNo.classList.toggle('active', !curDish.water);
+
+    // Sıcaklık Butonları
+    const pT0 = document.getElementById('pill-germ-temp-0');
+    const pT25 = document.getElementById('pill-germ-temp-25');
+    const pT50 = document.getElementById('pill-germ-temp-50');
+    if (pT0) pT0.classList.toggle('active', curDish.temp === 0);
+    if (pT25) pT25.classList.toggle('active', curDish.temp === 25);
+    if (pT50) pT50.classList.toggle('active', curDish.temp === 50);
+
+    // Işık Butonları
+    const pLDark = document.getElementById('pill-germ-light-dark');
+    const pLBright = document.getElementById('pill-germ-light-bright');
+    if (pLDark) pLDark.classList.toggle('active', !curDish.light);
+    if (pLBright) pLBright.classList.toggle('active', curDish.light);
+
+    // Oynat / Durdur
+    const btnPlay = document.getElementById('btn-germ-play-pause');
+    const lblPlay = document.getElementById('label-germ-play');
+    if (btnPlay) btnPlay.classList.toggle('active', g.isPlaying);
+    if (lblPlay) lblPlay.textContent = g.isPlaying ? "Durdur" : "Günleri İlerlet";
+}
+
+function updateGerminationMetricsDOM() {
+    const g = labState.germination;
+    const curDish = g.dishes.find(d => d.id === g.selectedDish) || g.dishes[0];
+    const isSprouted = (curDish.sproutProgress >= 0.8);
+    const isGrowing = (curDish.sproutProgress > 0 && curDish.sproutProgress < 0.8);
+
+    // Canvas Altı Metrik Şeridi
+    const elWater = document.getElementById('mbar-66-water');
+    const elTemp = document.getElementById('mbar-66-temp');
+    const elLight = document.getElementById('mbar-66-light');
+    const elOxygen = document.getElementById('mbar-66-oxygen');
+    const elStatus = document.getElementById('mbar-66-status');
+
+    if (elWater) elWater.textContent = curDish.water ? "Islak Pamuk" : "Kuru Pamuk";
+    if (elTemp) elTemp.textContent = `${curDish.temp}°C ${curDish.temp === 25 ? '(Uygun)' : '(Uygun Değil)'}`;
+    if (elLight) elLight.textContent = curDish.light ? "Aydınlık Ortam" : "Karanlık Dolap";
+    if (elOxygen) elOxygen.textContent = "Var (Havadar)";
+
+    if (elStatus) {
+        if (isSprouted) {
+            elStatus.textContent = `🌱 ${g.currentDay}. Gün: Çimlendi & Filizlendi!`;
+            elStatus.style.borderColor = "#10b981";
+            elStatus.style.color = "#10b981";
+        } else if (isGrowing) {
+            elStatus.textContent = `🌱 ${g.currentDay}. Gün: Tohum Çatladı, Kök Çıkıyor`;
+            elStatus.style.borderColor = "#38bdf8";
+            elStatus.style.color = "#38bdf8";
+        } else {
+            let reason = !curDish.water ? "Su Yok (Kuru)" : (curDish.temp === 0 ? "Çok Soğuk (0°C)" : "Çok Sıcak (50°C)");
+            elStatus.textContent = `❌ Çimlenme Yok (${reason})`;
+            elStatus.style.borderColor = "#ef4444";
+            elStatus.style.color = "#ef4444";
+        }
+    }
+
+    // Sağ Panel Veri Çipleri
+    const mDish = document.getElementById('metric-66-dish');
+    const mWater = document.getElementById('metric-66-water');
+    const mTemp = document.getElementById('metric-66-temp');
+    const mSprout = document.getElementById('metric-66-sprout');
+
+    if (mDish) mDish.textContent = `${curDish.id}. Kap (${g.currentDay}. Gün)`;
+    if (mWater) mWater.textContent = curDish.water ? "Islak Pamuk" : "Kuru Pamuk";
+    if (mTemp) mTemp.textContent = `${curDish.temp}°C`;
+    if (mSprout) {
+        mSprout.textContent = isSprouted ? "Filizlendi 🌱" : (isGrowing ? "Kök Çıkıyor" : "Çimlenmedi ❌");
+        mSprout.style.color = isSprouted ? "#4ade80" : (isGrowing ? "#38bdf8" : "#f87171");
+    }
+
+    // Dinamik Pedagojik Kutu
+    const pBox = document.getElementById('germ-pedagogical-box');
+    const pTitle = document.getElementById('germ-pedagogical-title');
+    const pText = document.getElementById('germ-pedagogical-text');
+    if (pBox && pTitle && pText) {
+        if (curDish.id === 1 || curDish.id === 4) {
+            pTitle.textContent = curDish.light ? "☀️ 4. Kap: Işıklı Ortamda Çimlenme" : "🌑 1. Kap: Karanlık Ortamda Çimlenme";
+            pText.textContent = "Fasulye tohumları hem karanlıkta (1. Kap) hem de ışıkta (4. Kap) eşit şekilde çimlenir. Bu durum, tohumun çimlenmesi için IŞIĞIN GEREKLİ OLMADIĞINI (çimlenme için S.O.S: Su, Oksijen, Sıcaklık yeterlidir) ispatlar!";
+        } else if (curDish.id === 2) {
+            pTitle.textContent = "🏜️ 2. Kap: Susuz Ortam Deneyi";
+            pText.textContent = "Pamuk kuru bırakıldığında tohum su alıp şişemez ve metabolik faaliyetler başlayamaz. Su (nem) çimlenmenin vazgeçilmez şartıdır!";
+        } else if (curDish.id === 3) {
+            pTitle.textContent = "❄️ 3. Kap: Soğuk Ortam (0°C) Deneyi";
+            pText.textContent = "Su ve oksijen bulunsa bile 0°C'de enzimler çalışamaz ve tohum uyku (dormansi) evresinde kalır. Çimlenme için uygun sıcaklık (20-30°C) zorunludur!";
+        }
+    }
+}
+
+function setupGerminationControlsDOM() {
+    [1, 2, 3, 4].forEach(id => {
+        const b = document.getElementById(`btn-germ-dish-${id}`);
+        const p = document.getElementById(`pill-germ-dish-${id}`);
+        if (b) b.addEventListener('click', () => selectGerminationDish(id));
+        if (p) p.addEventListener('click', () => selectGerminationDish(id));
+    });
+
+    const pWaterYes = document.getElementById('pill-germ-water-yes');
+    const pWaterNo = document.getElementById('pill-germ-water-no');
+    if (pWaterYes) pWaterYes.addEventListener('click', () => setGerminationWater(labState.germination.selectedDish, true));
+    if (pWaterNo) pWaterNo.addEventListener('click', () => setGerminationWater(labState.germination.selectedDish, false));
+
+    const pT0 = document.getElementById('pill-germ-temp-0');
+    const pT25 = document.getElementById('pill-germ-temp-25');
+    const pT50 = document.getElementById('pill-germ-temp-50');
+    if (pT0) pT0.addEventListener('click', () => setGerminationTemp(labState.germination.selectedDish, 0));
+    if (pT25) pT25.addEventListener('click', () => setGerminationTemp(labState.germination.selectedDish, 25));
+    if (pT50) pT50.addEventListener('click', () => setGerminationTemp(labState.germination.selectedDish, 50));
+
+    const pLDark = document.getElementById('pill-germ-light-dark');
+    const pLBright = document.getElementById('pill-germ-light-bright');
+    if (pLDark) pLDark.addEventListener('click', () => setGerminationLight(labState.germination.selectedDish, false));
+    if (pLBright) pLBright.addEventListener('click', () => setGerminationLight(labState.germination.selectedDish, true));
+
+    const btnPlay = document.getElementById('btn-germ-play-pause');
+    if (btnPlay) {
+        btnPlay.addEventListener('click', () => {
+            const g = labState.germination;
+            g.isPlaying = !g.isPlaying;
+            if (g.isPlaying && g.currentDay >= 7) g.currentDay = 1;
+            updateGerminationDOMControls();
+        });
+    }
+
+    const btnNext = document.getElementById('btn-germ-day-next');
+    if (btnNext) btnNext.addEventListener('click', () => stepGerminationDay(1));
+
+    const btnReset = document.getElementById('btn-germ-reset');
+    if (btnReset) btnReset.addEventListener('click', resetGerminationExperiment);
+
+    const btnRec = document.getElementById('btn-record-data-6-6');
+    if (btnRec) btnRec.addEventListener('click', recordMeasurement);
+}
+
+// Deney 6.6 Canvas Çizim Motoru (ZERO-CANVAS-TEXT)
+function drawGerminationSimulation() {
+    if (!ctx || !canvas) return;
+    const w = 800;
+    const h = 500;
+    const g = labState.germination;
+
+    ctx.save();
+    ctx.clearRect(0, 0, w, h);
+
+    // 1. Laboratuvar Tezgahı ve Arka Plan
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+    bgGrad.addColorStop(0, "#0b1329");
+    bgGrad.addColorStop(0.65, "#131d38");
+    bgGrad.addColorStop(1, "#1e293b");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Tezgah Ahşap Yüzeyi
+    const benchY = 320;
+    const tableGrad = ctx.createLinearGradient(0, benchY, 0, h);
+    tableGrad.addColorStop(0, "#334155");
+    tableGrad.addColorStop(0.08, "#1e293b");
+    tableGrad.addColorStop(1, "#0f172a");
+    ctx.fillStyle = tableGrad;
+    ctx.fillRect(0, benchY, w, h - benchY);
+
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.2)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, benchY);
+    ctx.lineTo(w, benchY);
+    ctx.stroke();
+
+    // 2. 4 Petri Kabının Çizimi (x: 120, 300, 480, 660)
+    const dishPositions = [120, 300, 480, 660];
+
+    g.dishes.forEach((dish, idx) => {
+        const cx = dishPositions[idx];
+        const cy = 300;
+        const rx = 68;
+        const ry = 22;
+        const dishH = 34;
+        const isSelected = (dish.id === g.selectedDish);
+
+        ctx.save();
+
+        // Seçim Halesi / Glow
+        if (isSelected) {
+            ctx.beginPath();
+            ctx.ellipse(cx, cy + dishH + 4, rx + 12, ry + 8, 0, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(0, 210, 255, 0.18)";
+            ctx.fill();
+            ctx.strokeStyle = "#00d2ff";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+
+        // Kabın Alt Gölgesi
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + dishH, rx + 4, ry + 4, 0, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
+        ctx.fill();
+
+        // Ortam Efekti (Işık veya Soğukluk veya Karanlık)
+        if (dish.light) {
+            // 4. Kap: Güneş Işığı Hüzmesi
+            const cone = ctx.createLinearGradient(cx, 40, cx, cy);
+            cone.addColorStop(0, "rgba(253, 224, 71, 0.45)");
+            cone.addColorStop(1, "rgba(253, 224, 71, 0.02)");
+            ctx.fillStyle = cone;
+            ctx.beginPath();
+            ctx.moveTo(cx - 20, 40);
+            ctx.lineTo(cx + 20, 40);
+            ctx.lineTo(cx + rx + 15, cy + 10);
+            ctx.lineTo(cx - rx - 15, cy + 10);
+            ctx.closePath();
+            ctx.fill();
+        } else if (dish.temp === 0) {
+            // 3. Kap: Buz / Soğuk Kristal Efekti
+            ctx.fillStyle = "rgba(56, 189, 248, 0.12)";
+            ctx.beginPath();
+            ctx.arc(cx, cy - 20, 55, 0, Math.PI * 2);
+            ctx.fill();
+        } else if (!dish.light && dish.id === 1) {
+            // 1. Kap: Karanlık Dolap Atmosferi
+            ctx.fillStyle = "rgba(0, 0, 0, 0.28)";
+            ctx.beginPath();
+            ctx.roundRect(cx - rx - 10, cy - 80, (rx + 10) * 2, 140, 8);
+            ctx.fill();
+        }
+
+        // Cam Petri Kabı - Gövde Silindiri
+        ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + dishH, rx, ry, 0, 0, Math.PI);
+        ctx.lineTo(cx - rx, cy);
+        ctx.ellipse(cx, cy, rx, ry, 0, Math.PI, 0, true);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Pamuk Katmanı
+        const cottonY = cy + 10;
+        ctx.beginPath();
+        ctx.ellipse(cx, cottonY, rx - 6, ry - 3, 0, 0, Math.PI * 2);
+        if (dish.water) {
+            // Islak Pamuk (Mavimsi nemli doku)
+            ctx.fillStyle = "#94a3b8";
+            ctx.fill();
+            ctx.strokeStyle = "#38bdf8";
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+            // Su Parıltıları
+            ctx.fillStyle = "rgba(56, 189, 248, 0.6)";
+            ctx.beginPath();
+            ctx.arc(cx - 25, cottonY - 2, 3, 0, Math.PI * 2);
+            ctx.arc(cx + 28, cottonY + 2, 2.5, 0, Math.PI * 2);
+            ctx.arc(cx, cottonY + 4, 2, 0, Math.PI * 2);
+            ctx.fill();
+        } else {
+            // Kuru Pamuk (Beyaz kuru lifler)
+            ctx.fillStyle = "#f8fafc";
+            ctx.fill();
+            ctx.strokeStyle = "#cbd5e1";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+
+        // 3 Adet Fasulye Tohumu ve Filizleri
+        const seeds = [
+            { ox: -26, oy: -1, rot: -0.25 },
+            { ox: 0, oy: 4, rot: 0.1 },
+            { ox: 26, oy: -2, rot: 0.3 }
+        ];
+
+        seeds.forEach(s => {
+            const sx = cx + s.ox;
+            const sy = cottonY + s.oy;
+            const p = dish.sproutProgress;
+
+            ctx.save();
+            ctx.translate(sx, sy);
+            ctx.rotate(s.rot);
+
+            // Kök (Radikula - p > 0.1 ise aşağı uzanır)
+            if (p > 0.15) {
+                const rootLen = p * 22;
+                ctx.beginPath();
+                ctx.moveTo(4, 0);
+                ctx.quadraticCurveTo(8, rootLen * 0.5, 2, rootLen);
+                ctx.strokeStyle = "#a3e635";
+                ctx.lineWidth = 2.4;
+                ctx.stroke();
+            }
+
+            // Tohum Gövdesi (Fasulye Böbrek Formu)
+            ctx.beginPath();
+            ctx.ellipse(0, 0, 11, 7, 0, 0, Math.PI * 2);
+            ctx.fillStyle = (dish.temp === 0) ? "#a16207" : "#b45309"; // Kahverengi fasulye tohumu
+            ctx.fill();
+            ctx.strokeStyle = "#78350f";
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+
+            // Gövde ve Yaprak (Plumula - p > 0.4 ise yukarı uzanır)
+            if (p > 0.35) {
+                const stemH = (p - 0.35) * 65;
+                ctx.beginPath();
+                ctx.moveTo(-3, -2);
+                ctx.quadraticCurveTo(-6, -stemH * 0.6, -1, -stemH);
+                ctx.strokeStyle = "#22c55e";
+                ctx.lineWidth = 3.2;
+                ctx.stroke();
+
+                // Taze Yapraklar
+                if (p > 0.65) {
+                    const leafSize = (p - 0.65) * 22;
+                    // Sol Yaprak
+                    ctx.beginPath();
+                    ctx.ellipse(-1 - leafSize * 0.8, -stemH - 4, leafSize, leafSize * 0.55, -0.4, 0, Math.PI * 2);
+                    ctx.fillStyle = "#4ade80";
+                    ctx.fill();
+                    ctx.strokeStyle = "#15803d";
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+
+                    // Sağ Yaprak
+                    ctx.beginPath();
+                    ctx.ellipse(-1 + leafSize * 0.8, -stemH - 4, leafSize, leafSize * 0.55, 0.4, 0, Math.PI * 2);
+                    ctx.fillStyle = "#4ade80";
+                    ctx.fill();
+                    ctx.strokeStyle = "#15803d";
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                }
+            }
+
+            ctx.restore();
+        });
+
+        // Cam Petri Kabı - Üst Kenar Parlaması
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+
+        ctx.restore();
+    });
+
+    ctx.restore();
+}
+
+// ============================================================================
+// --- 6.7. DENEY 6.7: IŞIĞIN SOĞURULMASI VE RADYOMETRE (FB.6.4.4 - FB.6.4.6) ---
+// ============================================================================
+
+function initAbsorptionState() {
+    const ab = labState.absorption;
+    ab.lampOn = true;
+    ab.lampPower = 100;
+    ab.tempBlack = 20.0;
+    ab.tempBlue = 20.0;
+    ab.tempWhite = 20.0;
+    ab.radiometerAngle = 0.0;
+    ab.radiometerSpeed = 0.08;
+    ab.lightRaysAnim = 0.0;
+
+    updateAbsorptionDOMControls();
+    updateAbsorptionMetricsDOM();
+}
+
+function resetAbsorptionExperiment() {
+    initAbsorptionState();
+    showLabToast("Tüm kaplar ve radyometre oda sıcaklığına (20°C) sıfırlandı!");
+}
+
+function toggleAbsorptionLamp() {
+    const ab = labState.absorption;
+    ab.lampOn = !ab.lampOn;
+    updateAbsorptionDOMControls();
+    updateAbsorptionMetricsDOM();
+    showLabToast(ab.lampOn ? "💡 Işık Kaynağı Açıldı" : "🌑 Işık Kaynağı Kapatıldı");
+}
+
+function setAbsorptionPower(pwr) {
+    const ab = labState.absorption;
+    ab.lampPower = pwr;
+    ab.lampOn = (pwr > 0);
+    updateAbsorptionDOMControls();
+    updateAbsorptionMetricsDOM();
+}
+
+function updateAbsorptionPhysics() {
+    const ab = labState.absorption;
+    ab.lightRaysAnim += 0.04;
+
+    if (ab.lampOn) {
+        const factor = ab.lampPower / 100;
+        // Siyah kap: En çok ışık soğuran -> 45°C'ye kadar hızla ısınır
+        const targetBlack = 20.0 + 25.0 * factor;
+        // Mavi kap: Orta soğuran -> 32°C'ye kadar ısınır
+        const targetBlue = 20.0 + 12.0 * factor;
+        // Beyaz kap: En çok yansıtan -> 24°C'ye kadar çok az ısınır
+        const targetWhite = 20.0 + 4.0 * factor;
+
+        ab.tempBlack += (targetBlack - ab.tempBlack) * 0.015;
+        ab.tempBlue += (targetBlue - ab.tempBlue) * 0.015;
+        ab.tempWhite += (targetWhite - ab.tempWhite) * 0.015;
+
+        // Radyometre dönüş hızı
+        ab.radiometerSpeed = 0.03 + 0.18 * factor;
+    } else {
+        // Soğuma (Oda sıcaklığına dönüş)
+        ab.tempBlack += (20.0 - ab.tempBlack) * 0.01;
+        ab.tempBlue += (20.0 - ab.tempBlue) * 0.01;
+        ab.tempWhite += (20.0 - ab.tempWhite) * 0.01;
+        ab.radiometerSpeed *= 0.96;
+    }
+
+    ab.radiometerAngle += ab.radiometerSpeed;
+    updateAbsorptionMetricsDOM();
+}
+
+function updateAbsorptionDOMControls() {
+    const ab = labState.absorption;
+
+    // Lamba Aç/Kapat Butonu
+    const btnLamp = document.getElementById('btn-absorb-lamp-toggle');
+    const lblLamp = document.getElementById('label-absorb-lamp');
+    if (btnLamp) btnLamp.classList.toggle('active', ab.lampOn);
+    if (lblLamp) lblLamp.textContent = ab.lampOn ? `Işık: Açık (%${ab.lampPower})` : "Işık: Kapalı";
+
+    // Güç Butonları (Hızlı Bar)
+    const p25 = document.getElementById('btn-absorb-pwr-25');
+    const p50 = document.getElementById('btn-absorb-pwr-50');
+    const p100 = document.getElementById('btn-absorb-pwr-100');
+    if (p25) p25.classList.toggle('active', ab.lampOn && ab.lampPower === 25);
+    if (p50) p50.classList.toggle('active', ab.lampOn && ab.lampPower === 50);
+    if (p100) p100.classList.toggle('active', ab.lampOn && ab.lampPower === 100);
+
+    // Sağ Panel Butonları
+    const pillLow = document.getElementById('pill-absorb-low');
+    const pillMed = document.getElementById('pill-absorb-med');
+    const pillHigh = document.getElementById('pill-absorb-high');
+    if (pillLow) pillLow.classList.toggle('active', ab.lampOn && ab.lampPower === 25);
+    if (pillMed) pillMed.classList.toggle('active', ab.lampOn && ab.lampPower === 50);
+    if (pillHigh) pillHigh.classList.toggle('active', ab.lampOn && ab.lampPower === 100);
+
+    // Kaydırıcı
+    const slider = document.getElementById('slider-absorb-power');
+    const lblVal = document.getElementById('label-absorb-power-val');
+    if (slider) slider.value = ab.lampOn ? ab.lampPower : 0;
+    if (lblVal) lblVal.textContent = ab.lampOn ? `%${ab.lampPower}` : "%0 (Kapalı)";
+}
+
+function updateAbsorptionMetricsDOM() {
+    const ab = labState.absorption;
+
+    // Metrik Şeridi (Canvas Altı)
+    const elLamp = document.getElementById('mbar-67-lamp');
+    const elBlack = document.getElementById('mbar-67-black-temp');
+    const elBlue = document.getElementById('mbar-67-blue-temp');
+    const elWhite = document.getElementById('mbar-67-white-temp');
+    const elRpm = document.getElementById('mbar-67-rpm');
+    const elStatus = document.getElementById('mbar-67-status');
+
+    if (elLamp) elLamp.textContent = ab.lampOn ? `Açık (%${ab.lampPower})` : "Kapalı";
+    if (elBlack) elBlack.textContent = `${ab.tempBlack.toFixed(1)}°C`;
+    if (elBlue) elBlue.textContent = `${ab.tempBlue.toFixed(1)}°C`;
+    if (elWhite) elWhite.textContent = `${ab.tempWhite.toFixed(1)}°C`;
+
+    let rpmStr = "Durgun";
+    if (ab.radiometerSpeed > 0.15) rpmStr = "Çok Hızlı ⚡";
+    else if (ab.radiometerSpeed > 0.07) rpmStr = "Orta Hız";
+    else if (ab.radiometerSpeed > 0.01) rpmStr = "Yavaş";
+    if (elRpm) elRpm.textContent = rpmStr;
+
+    if (elStatus) {
+        if (!ab.lampOn) {
+            elStatus.textContent = "Işık Kapalı · Soğuma Devam Ediyor";
+            elStatus.style.borderColor = "#94a3b8";
+        } else if (ab.tempBlack > ab.tempWhite + 8) {
+            elStatus.textContent = "☀️ Siyah Kap Belirgin Şekilde Daha Çok Isındı!";
+            elStatus.style.borderColor = "#f87171";
+            elStatus.style.color = "#f87171";
+        } else {
+            elStatus.textContent = "Işık Soğurulması Devam Ediyor...";
+            elStatus.style.borderColor = "#facc15";
+            elStatus.style.color = "#facc15";
+        }
+    }
+
+    // Sağ Panel Çipleri
+    const mBlack = document.getElementById('metric-67-black');
+    const mBlue = document.getElementById('metric-67-blue');
+    const mWhite = document.getElementById('metric-67-white');
+    const mRpm = document.getElementById('metric-67-rpm');
+    if (mBlack) mBlack.textContent = `${ab.tempBlack.toFixed(1)}°C`;
+    if (mBlue) mBlue.textContent = `${ab.tempBlue.toFixed(1)}°C`;
+    if (mWhite) mWhite.textContent = `${ab.tempWhite.toFixed(1)}°C`;
+    if (mRpm) mRpm.textContent = rpmStr;
+}
+
+function setupAbsorptionControlsDOM() {
+    const btnToggle = document.getElementById('btn-absorb-lamp-toggle');
+    if (btnToggle) btnToggle.addEventListener('click', toggleAbsorptionLamp);
+
+    const b25 = document.getElementById('btn-absorb-pwr-25');
+    const b50 = document.getElementById('btn-absorb-pwr-50');
+    const b100 = document.getElementById('btn-absorb-pwr-100');
+    if (b25) b25.addEventListener('click', () => setAbsorptionPower(25));
+    if (b50) b50.addEventListener('click', () => setAbsorptionPower(50));
+    if (b100) b100.addEventListener('click', () => setAbsorptionPower(100));
+
+    const pLow = document.getElementById('pill-absorb-low');
+    const pMed = document.getElementById('pill-absorb-med');
+    const pHigh = document.getElementById('pill-absorb-high');
+    if (pLow) pLow.addEventListener('click', () => setAbsorptionPower(25));
+    if (pMed) pMed.addEventListener('click', () => setAbsorptionPower(50));
+    if (pHigh) pHigh.addEventListener('click', () => setAbsorptionPower(100));
+
+    const slider = document.getElementById('slider-absorb-power');
+    if (slider) {
+        slider.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value, 10);
+            setAbsorptionPower(val);
+        });
+    }
+
+    const btnReset = document.getElementById('btn-absorb-reset');
+    if (btnReset) btnReset.addEventListener('click', resetAbsorptionExperiment);
+
+    const btnRec = document.getElementById('btn-record-data-6-7');
+    if (btnRec) btnRec.addEventListener('click', recordMeasurement);
+}
+
+// Deney 6.7 Canvas Çizim Motoru (ZERO-CANVAS-TEXT)
+function drawAbsorptionSimulation() {
+    if (!ctx || !canvas) return;
+    const w = 800;
+    const h = 500;
+    const ab = labState.absorption;
+
+    ctx.save();
+    ctx.clearRect(0, 0, w, h);
+
+    // Arka Plan
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+    bgGrad.addColorStop(0, "#090d16");
+    bgGrad.addColorStop(0.7, "#111827");
+    bgGrad.addColorStop(1, "#1f2937");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Zemin Tezgahı
+    const benchY = 360;
+    ctx.fillStyle = "#374151";
+    ctx.fillRect(0, benchY, w, h - benchY);
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.25)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, benchY);
+    ctx.lineTo(w, benchY);
+    ctx.stroke();
+
+    // 1. Akkor Lamba / Projektör (x: 270, y: 70)
+    const lx = 270;
+    const ly = 70;
+
+    // Lamba Işık Demeti (Açıksa)
+    if (ab.lampOn) {
+        const glowR = 120 * (ab.lampPower / 100);
+        const lGlow = ctx.createRadialGradient(lx, ly, 10, lx, ly, glowR);
+        lGlow.addColorStop(0, "rgba(254, 240, 138, 0.9)");
+        lGlow.addColorStop(0.4, "rgba(250, 204, 21, 0.35)");
+        lGlow.addColorStop(1, "rgba(250, 204, 21, 0)");
+        ctx.fillStyle = lGlow;
+        ctx.beginPath();
+        ctx.arc(lx, ly, glowR, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Kaplara İnen Işık Işınları
+        const beamGrad = ctx.createLinearGradient(lx, ly, lx, benchY);
+        beamGrad.addColorStop(0, "rgba(254, 240, 138, 0.35)");
+        beamGrad.addColorStop(1, "rgba(254, 240, 138, 0.03)");
+        ctx.fillStyle = beamGrad;
+        ctx.beginPath();
+        ctx.moveTo(lx - 25, ly);
+        ctx.lineTo(lx + 25, ly);
+        ctx.lineTo(470, benchY);
+        ctx.lineTo(70, benchY);
+        ctx.closePath();
+        ctx.fill();
+
+        // Radyometreye Vuran Işık
+        const radBeam = ctx.createLinearGradient(lx, ly, 620, 260);
+        radBeam.addColorStop(0, "rgba(254, 240, 138, 0.3)");
+        radBeam.addColorStop(1, "rgba(254, 240, 138, 0.04)");
+        ctx.fillStyle = radBeam;
+        ctx.beginPath();
+        ctx.moveTo(lx, ly);
+        ctx.lineTo(620 - 45, 260 - 30);
+        ctx.lineTo(620 + 45, 260 + 30);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    // Lamba Gövdesi & Reflektör
+    ctx.fillStyle = "#4b5563";
+    ctx.beginPath();
+    ctx.moveTo(lx - 35, ly);
+    ctx.lineTo(lx + 35, ly);
+    ctx.lineTo(lx + 15, ly - 35);
+    ctx.lineTo(lx - 15, ly - 35);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = "#9ca3af";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Ampul Camı
+    ctx.beginPath();
+    ctx.arc(lx, ly, 16, 0, Math.PI * 2);
+    ctx.fillStyle = ab.lampOn ? "#fef08a" : "#6b7280";
+    ctx.fill();
+
+    // 2. 3 Adet Renkli Kap ve Termometreler (x: 130, 270, 410)
+    const cups = [
+        { cx: 130, color: "#0f172a", border: "#334155", temp: ab.tempBlack }, // Siyah Kap
+        { cx: 270, color: "#2563eb", border: "#60a5fa", temp: ab.tempBlue },  // Mavi Kap
+        { cx: 410, color: "#f8fafc", border: "#cbd5e1", temp: ab.tempWhite }  // Beyaz Kap
+    ];
+
+    cups.forEach(cup => {
+        const cx = cup.cx;
+        const cy = 250;
+        const cw = 75;
+        const ch = 110;
+
+        // Kap Silindiri
+        ctx.fillStyle = cup.color;
+        ctx.beginPath();
+        ctx.roundRect(cx - cw / 2, cy, cw, ch, [0, 0, 10, 10]);
+        ctx.fill();
+        ctx.strokeStyle = cup.border;
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Termometre (Cam Tüp ve Kırmızı Sıvı)
+        const tx = cx;
+        const ty = cy - 45;
+        const th = 135;
+
+        // Cam Tüp
+        ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+        ctx.beginPath();
+        ctx.roundRect(tx - 4, ty, 8, th, 4);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        // Termometre Haznesi
+        ctx.beginPath();
+        ctx.arc(tx, ty + th - 2, 7, 0, Math.PI * 2);
+        ctx.fillStyle = "#ef4444";
+        ctx.fill();
+
+        // Sıvı Sütunu (Sıcaklığa göre 20°C - 50°C arası)
+        const liquidH = Math.max(10, Math.min(th - 14, ((cup.temp - 15) / 35) * (th - 14)));
+        ctx.beginPath();
+        ctx.roundRect(tx - 2.5, ty + th - 4 - liquidH, 5, liquidH, 2.5);
+        ctx.fillStyle = "#ef4444";
+        ctx.fill();
+    });
+
+    // 3. Crookes Radyometresi (x: 620, y: 260)
+    const rx = 620;
+    const ry = 250;
+
+    // Radyometre Metal Standı
+    ctx.fillStyle = "#334155";
+    ctx.beginPath();
+    ctx.roundRect(rx - 30, benchY - 15, 60, 15, 4);
+    ctx.fill();
+    ctx.fillStyle = "#64748b";
+    ctx.fillRect(rx - 3, ry + 60, 6, benchY - (ry + 60) - 15);
+
+    // Cam Fanus Küresi
+    const sphereR = 55;
+    ctx.beginPath();
+    ctx.arc(rx, ry, sphereR, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.06)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Fanus Cam Yansıma Parıltısı
+    ctx.beginPath();
+    ctx.arc(rx - 18, ry - 18, 22, Math.PI * 1.1, Math.PI * 1.6);
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Dikey İğne Mili
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(rx, ry + 40);
+    ctx.lineTo(rx, ry - 15);
+    ctx.stroke();
+
+    // Dönen 4 Kanatçık
+    ctx.save();
+    ctx.translate(rx, ry);
+
+    const a = ab.radiometerAngle;
+    for (let i = 0; i < 4; i++) {
+        const angle = a + i * (Math.PI / 2);
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        const vaneLen = 30;
+        const vx = cos * vaneLen;
+        const vy = sin * (vaneLen * 0.35); // 3D perspektif eğimi
+
+        // İğneden kanada tel kol
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(vx, vy);
+        ctx.strokeStyle = "#94a3b8";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        // Kanatçık Levhası: Bir yüzü siyah, diğer yüzü gümüş
+        ctx.save();
+        ctx.translate(vx, vy);
+        ctx.beginPath();
+        ctx.roundRect(-6, -11, 12, 22, 2);
+        // Bakış açısına göre siyah mı beyaz mı görünüyor
+        ctx.fillStyle = (sin >= 0) ? "#0f172a" : "#f8fafc";
+        ctx.fill();
+        ctx.strokeStyle = (sin >= 0) ? "#334155" : "#cbd5e1";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+    }
+    ctx.restore();
+
+    ctx.restore();
+}
+
+// ============================================================================
+// --- 6.8. DENEY 6.8: KATILARDA GENLEŞME VE BÜZÜLME - GRAVZANT (FB.6.5.1) ---
+// ============================================================================
+
+function initExpansionState() {
+    const ex = labState.expansion;
+    ex.step = "cold_pass";
+    ex.sphereTemp = 20.0;
+    ex.sphereRadius = 25.5; // Soğukken halkanın (29.0) içinden rahat geçer
+    ex.ringRadius = 29.0;
+    ex.sphereX = 400;
+    ex.sphereY = 140;
+    ex.targetY = 140;
+    ex.isHeating = false;
+    ex.isQuenching = false;
+    ex.isPassingThrough = true;
+    ex.flameParticles = [];
+    ex.steamParticles = [];
+
+    updateExpansionDOMControls();
+    updateExpansionMetricsDOM();
+}
+
+function resetExpansionExperiment() {
+    initExpansionState();
+    showLabToast("Gravzant düzeneği başlangıç durumuna sıfırlandı!");
+}
+
+function setExpansionStep(stepName) {
+    const ex = labState.expansion;
+    ex.step = stepName;
+
+    if (stepName === "cold_pass") {
+        ex.sphereTemp = 20.0;
+        ex.sphereRadius = 25.5;
+        ex.sphereX = 400;
+        ex.sphereY = 140;
+        ex.targetY = 320; // Halkanın altından geçer
+        ex.isHeating = false;
+        ex.isQuenching = false;
+        ex.isPassingThrough = true;
+        showLabToast("1. Aşama: Soğuk küre halkadan kolayca geçer.");
+    } else if (stepName === "heating") {
+        ex.sphereX = 180; // İspirto ocağının üstü
+        ex.sphereY = 240;
+        ex.targetY = 240;
+        ex.isHeating = true;
+        ex.isQuenching = false;
+        showLabToast("2. Aşama: Küre ispirto ocağında ısıtılıyor (Genleşiyor!).");
+    } else if (stepName === "hot_try") {
+        ex.sphereX = 400;
+        ex.sphereY = 140;
+        ex.targetY = 208; // Halkanın üstüne küt diye takılır (halka Y: 230)
+        ex.isHeating = false;
+        ex.isQuenching = false;
+        ex.isPassingThrough = false;
+        showLabToast("3. Aşama: Sıcak küre genleştiği için halkadan GEÇEMEZ (Takıldı!).");
+    } else if (stepName === "quenching") {
+        ex.sphereX = 620; // Soğuk su beherinin içi
+        ex.sphereY = 260;
+        ex.targetY = 260;
+        ex.isHeating = false;
+        ex.isQuenching = true;
+        showLabToast("4. Aşama: Küre soğuk suya daldırıldı (Büzülüyor!).");
+    }
+
+    updateExpansionDOMControls();
+    updateExpansionMetricsDOM();
+}
+
+function updateExpansionPhysics() {
+    const ex = labState.expansion;
+
+    // Küre Pozisyon İnterpolasyonu
+    ex.sphereY += (ex.targetY - ex.sphereY) * 0.08;
+
+    // Isıtma Fiziği
+    if (ex.isHeating) {
+        if (ex.sphereTemp < 250.0) {
+            ex.sphereTemp += 1.8;
+            ex.sphereRadius = 25.5 + ((ex.sphereTemp - 20) / 230) * 7.0; // 25.5 -> 32.5 px
+        }
+        // Alev Parçacıkları Üret
+        if (Math.random() < 0.6) {
+            ex.flameParticles.push({
+                x: 180 + (Math.random() - 0.5) * 18,
+                y: 310,
+                vx: (Math.random() - 0.5) * 0.8,
+                vy: -2.5 - Math.random() * 2,
+                life: 1.0,
+                color: Math.random() < 0.5 ? "#f97316" : "#facc15"
+            });
+        }
+    }
+
+    // Suya Daldırıp Soğutma Fiziği
+    if (ex.isQuenching) {
+        if (ex.sphereTemp > 20.0) {
+            ex.sphereTemp -= 4.0;
+            if (ex.sphereTemp < 20.0) ex.sphereTemp = 20.0;
+            ex.sphereRadius = 25.5 + ((ex.sphereTemp - 20) / 230) * 7.0;
+        }
+        // Buhar Parçacıkları Üret
+        if (ex.sphereTemp > 40 && Math.random() < 0.7) {
+            ex.steamParticles.push({
+                x: 620 + (Math.random() - 0.5) * 25,
+                y: 250,
+                vx: (Math.random() - 0.5) * 1.2,
+                vy: -2.0 - Math.random() * 1.5,
+                size: 4 + Math.random() * 6,
+                life: 1.0
+            });
+        }
+    }
+
+    // Alev Parçacıklarını Güncelle
+    for (let i = ex.flameParticles.length - 1; i >= 0; i--) {
+        const p = ex.flameParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 0.05;
+        if (p.life <= 0) ex.flameParticles.splice(i, 1);
+    }
+
+    // Buhar Parçacıklarını Güncelle
+    for (let i = ex.steamParticles.length - 1; i >= 0; i--) {
+        const p = ex.steamParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.size += 0.2;
+        p.life -= 0.035;
+        if (p.life <= 0) ex.steamParticles.splice(i, 1);
+    }
+
+    updateExpansionMetricsDOM();
+}
+
+function updateExpansionDOMControls() {
+    const ex = labState.expansion;
+
+    const steps = ["cold_pass", "heating", "hot_try", "quenching"];
+    const quickIds = {
+        cold_pass: "btn-grav-pass-cold",
+        heating: "btn-grav-heat",
+        hot_try: "btn-grav-pass-hot",
+        quenching: "btn-grav-quench"
+    };
+    const pillIds = {
+        cold_pass: "pill-grav-pass-cold",
+        heating: "pill-grav-heat",
+        hot_try: "pill-grav-pass-hot",
+        quenching: "pill-grav-quench"
+    };
+
+    steps.forEach(s => {
+        const isCur = (ex.step === s);
+        const b = document.getElementById(quickIds[s]);
+        const p = document.getElementById(pillIds[s]);
+        if (b) b.classList.toggle('active', isCur);
+        if (p) p.classList.toggle('active', isCur);
+    });
+}
+
+function updateExpansionMetricsDOM() {
+    const ex = labState.expansion;
+    const isHot = (ex.sphereTemp > 80);
+    const passes = (ex.sphereRadius <= ex.ringRadius);
+
+    // Canvas Altı Metrik Şeridi
+    const elState = document.getElementById('mbar-68-state');
+    const elTemp = document.getElementById('mbar-68-temp');
+    const elVol = document.getElementById('mbar-68-volume');
+    const elStatus = document.getElementById('mbar-68-status');
+
+    if (elState) elState.textContent = isHot ? "Akkor Sıcak" : "Oda Sıcaklığı";
+    if (elTemp) elTemp.textContent = `${ex.sphereTemp.toFixed(0)}°C`;
+    if (elVol) elVol.textContent = isHot ? "Büyük (Genleşti)" : "Normal (Büzüldü)";
+
+    if (elStatus) {
+        if (ex.step === "heating") {
+            elStatus.textContent = "🔥 İspirto Ocağında Isıtılıyor (Genleşme Gerçekleşiyor)";
+            elStatus.style.borderColor = "#f97316";
+            elStatus.style.color = "#f97316";
+        } else if (ex.step === "hot_try") {
+            elStatus.textContent = "⛔ Sıcak Küre Genleştiği İçin Halkaya Takıldı (Geçemez!)";
+            elStatus.style.borderColor = "#ef4444";
+            elStatus.style.color = "#ef4444";
+        } else if (ex.step === "quenching") {
+            elStatus.textContent = "❄️ Soğuk Suya Daldırıldı (Büzülüyor)";
+            elStatus.style.borderColor = "#38bdf8";
+            elStatus.style.color = "#38bdf8";
+        } else {
+            elStatus.textContent = "✅ Soğuk Küre Halkadan Kolayca Geçti";
+            elStatus.style.borderColor = "#10b981";
+            elStatus.style.color = "#10b981";
+        }
+    }
+
+    // Sağ Panel Çipleri
+    const mTemp = document.getElementById('metric-68-temp');
+    const mVol = document.getElementById('metric-68-volume');
+    const mRing = document.getElementById('metric-68-ring');
+    const mPass = document.getElementById('metric-68-pass');
+
+    if (mTemp) mTemp.textContent = `${ex.sphereTemp.toFixed(0)}°C`;
+    if (mVol) mVol.textContent = isHot ? "Büyük (Genleşti)" : "Normal";
+    if (mRing) mRing.textContent = "Sabit Çap";
+    if (mPass) {
+        mPass.textContent = passes ? "Geçer ✅" : "Takılır ⛔";
+        mPass.style.color = passes ? "#4ade80" : "#f87171";
+    }
+}
+
+function setupExpansionControlsDOM() {
+    const bCold = document.getElementById('btn-grav-pass-cold');
+    const bHeat = document.getElementById('btn-grav-heat');
+    const bHot = document.getElementById('btn-grav-pass-hot');
+    const bQuench = document.getElementById('btn-grav-quench');
+    if (bCold) bCold.addEventListener('click', () => setExpansionStep("cold_pass"));
+    if (bHeat) bHeat.addEventListener('click', () => setExpansionStep("heating"));
+    if (bHot) bHot.addEventListener('click', () => setExpansionStep("hot_try"));
+    if (bQuench) bQuench.addEventListener('click', () => setExpansionStep("quenching"));
+
+    const pCold = document.getElementById('pill-grav-pass-cold');
+    const pHeat = document.getElementById('pill-grav-heat');
+    const pHot = document.getElementById('pill-grav-pass-hot');
+    const pQuench = document.getElementById('pill-grav-quench');
+    if (pCold) pCold.addEventListener('click', () => setExpansionStep("cold_pass"));
+    if (pHeat) pHeat.addEventListener('click', () => setExpansionStep("heating"));
+    if (pHot) pHot.addEventListener('click', () => setExpansionStep("hot_try"));
+    if (pQuench) pQuench.addEventListener('click', () => setExpansionStep("quenching"));
+
+    const btnReset = document.getElementById('btn-grav-reset');
+    if (btnReset) btnReset.addEventListener('click', resetExpansionExperiment);
+
+    const btnRec = document.getElementById('btn-record-data-6-8');
+    if (btnRec) btnRec.addEventListener('click', recordMeasurement);
+}
+
+// Deney 6.8 Canvas Çizim Motoru (ZERO-CANVAS-TEXT)
+function drawExpansionSimulation() {
+    if (!ctx || !canvas) return;
+    const w = 800;
+    const h = 500;
+    const ex = labState.expansion;
+
+    ctx.save();
+    ctx.clearRect(0, 0, w, h);
+
+    // Arka Plan
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+    bgGrad.addColorStop(0, "#0b1120");
+    bgGrad.addColorStop(0.7, "#172554");
+    bgGrad.addColorStop(1, "#1e293b");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Zemin
+    const benchY = 370;
+    ctx.fillStyle = "#334155";
+    ctx.fillRect(0, benchY, w, h - benchY);
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.25)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, benchY);
+    ctx.lineTo(w, benchY);
+    ctx.stroke();
+
+    // 1. SOL ALAN: İspirto Ocağı (x: 180)
+    const bx = 180;
+    const by = benchY - 10;
+
+    // Cam Gövde
+    ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+    ctx.beginPath();
+    ctx.roundRect(bx - 32, by - 45, 64, 45, 8);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // İspirto Sıvısı (Mavi/Mor alev sıvısı)
+    ctx.fillStyle = "rgba(147, 51, 234, 0.35)";
+    ctx.beginPath();
+    ctx.roundRect(bx - 30, by - 32, 60, 30, [0, 0, 6, 6]);
+    ctx.fill();
+
+    // Metal Fitil Başlığı
+    ctx.fillStyle = "#cbd5e1";
+    ctx.fillRect(bx - 8, by - 55, 16, 10);
+
+    // Alev (Isıtma adımı aktifse)
+    if (ex.isHeating) {
+        ctx.fillStyle = "#fbbf24";
+        ctx.beginPath();
+        ctx.moveTo(bx - 9, by - 55);
+        ctx.quadraticCurveTo(bx - 14, by - 95, bx, by - 110);
+        ctx.quadraticCurveTo(bx + 14, by - 95, bx + 9, by - 55);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.fillStyle = "#f97316";
+        ctx.beginPath();
+        ctx.moveTo(bx - 5, by - 55);
+        ctx.quadraticCurveTo(bx - 8, by - 85, bx, by - 98);
+        ctx.quadraticCurveTo(bx + 8, by - 85, bx + 5, by - 55);
+        ctx.closePath();
+        ctx.fill();
+
+        // Parçacıklar
+        ex.flameParticles.forEach(p => {
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 3 * p.life, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    // 2. ORTA ALAN: Gravzant Düzeneği (Halka x: 400, y: 230)
+    const rx = 400;
+    const ry = 230;
+
+    // Statif Ayak ve Dikey Çubuk
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(rx - 70, benchY - 14, 40, 14); // Taban
+    ctx.fillStyle = "#94a3b8";
+    ctx.fillRect(rx - 55, 100, 8, benchY - 100); // Dikey sütun
+
+    // Yatay Halka Tutucu Kolu
+    ctx.fillRect(rx - 55, ry - 5, 45, 10);
+
+    // Gravzant Halkası (Ortası delik dairesel halka)
+    ctx.save();
+    ctx.translate(rx, ry);
+    // Halkanın dışı
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 42, 16, 0, 0, Math.PI * 2);
+    ctx.fillStyle = "#e2e8f0";
+    ctx.fill();
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Halkanın iç deliği (r = 29.0 px)
+    ctx.beginPath();
+    ctx.ellipse(0, 0, ex.ringRadius, ex.ringRadius * 0.38, 0, 0, Math.PI * 2);
+    ctx.fillStyle = "#172554"; // Boşluk
+    ctx.fill();
+    ctx.strokeStyle = "#334155";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.restore();
+
+    // 3. SAĞ ALAN: Soğuk Su Beheri (x: 620)
+    const sx = 620;
+    const sy = benchY - 10;
+
+    // Cam Beher
+    ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
+    ctx.beginPath();
+    ctx.roundRect(sx - 42, sy - 90, 84, 90, [0, 0, 8, 8]);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Soğuk Su
+    ctx.fillStyle = "rgba(56, 189, 248, 0.45)";
+    ctx.beginPath();
+    ctx.roundRect(sx - 40, sy - 75, 80, 75, [0, 0, 6, 6]);
+    ctx.fill();
+
+    // Su İçinde Buz Küpleri
+    ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
+    ctx.fillRect(sx - 25, sy - 65, 14, 14);
+    ctx.fillRect(sx + 10, sy - 50, 16, 16);
+
+    // Buhar Parçacıkları (Suya daldırıldığında)
+    ex.steamParticles.forEach(p => {
+        ctx.fillStyle = `rgba(255, 255, 255, ${p.life * 0.5})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    // 4. METAL KÜRE VE TUTMA ZİNCİRİ (ex.sphereX, ex.sphereY)
+    const kx = ex.sphereX;
+    const ky = ex.sphereY;
+    const kr = ex.sphereRadius;
+
+    // Tutma Zinciri (Tepeden küreye iner)
+    ctx.strokeStyle = "#94a3b8";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(kx, 40);
+    ctx.lineTo(kx, ky - kr);
+    ctx.stroke();
+
+    // Küre Çizimi
+    ctx.save();
+    // Sıcaklık kızıllığı / parlama
+    if (ex.sphereTemp > 80) {
+        const glow = ctx.createRadialGradient(kx, ky, kr * 0.5, kx, ky, kr * 2.2);
+        glow.addColorStop(0, "rgba(239, 68, 68, 0.8)");
+        glow.addColorStop(0.5, "rgba(249, 115, 22, 0.4)");
+        glow.addColorStop(1, "rgba(249, 115, 22, 0)");
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(kx, ky, kr * 2.2, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.arc(kx, ky, kr, 0, Math.PI * 2);
+    // Renk (Soğuksa pirinç sarısı, sıcaksa akkor kızıl)
+    const sphereGrad = ctx.createRadialGradient(kx - kr * 0.35, ky - kr * 0.35, kr * 0.1, kx, ky, kr);
+    if (ex.sphereTemp > 180) {
+        sphereGrad.addColorStop(0, "#fef08a"); // Akkor merkez
+        sphereGrad.addColorStop(0.4, "#ef4444");
+        sphereGrad.addColorStop(1, "#7f1d1d");
+    } else if (ex.sphereTemp > 60) {
+        sphereGrad.addColorStop(0, "#fed7aa");
+        sphereGrad.addColorStop(0.5, "#f97316");
+        sphereGrad.addColorStop(1, "#9a3412");
+    } else {
+        sphereGrad.addColorStop(0, "#fef08a"); // Pirinç bronz küre
+        sphereGrad.addColorStop(0.5, "#eab308");
+        sphereGrad.addColorStop(1, "#713f12");
+    }
+    ctx.fillStyle = sphereGrad;
+    ctx.fill();
+    ctx.strokeStyle = "#451a03";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.restore();
+}
+
+// ============================================================================
+// --- 6.9. DENEY 6.9: ELEKTRİKSEL İLETKENLİK TEST CİHAZI (FB.6.6.1) ---
+// ============================================================================
+
+const CONDUCTIVITY_MATERIALS = {
+    copper:     { name: "Bakır Tel",        type: "Katı İletken",        isConductive: true,  brightness: 1.0,  color: "#f97316", isLiquid: false },
+    iron:       { name: "Demir Çivi",       type: "Katı İletken",        isConductive: true,  brightness: 0.9,  color: "#94a3b8", isLiquid: false },
+    graphite:   { name: "Grafit Uç",        type: "Katı Ametal İletken", isConductive: true,  brightness: 0.75, color: "#334155", isLiquid: false },
+    wood:       { name: "Kuru Tahta",       type: "Katı Yalıtkan",       isConductive: false, brightness: 0.0,  color: "#b45309", isLiquid: false },
+    plastic:    { name: "Plastik Cetvel",   type: "Katı Yalıtkan",       isConductive: false, brightness: 0.0,  color: "#3b82f6", isLiquid: false },
+    eraser:     { name: "Silgi",            type: "Katı Yalıtkan",       isConductive: false, brightness: 0.0,  color: "#f43f5e", isLiquid: false },
+    saltwater:  { name: "Tuzlu Su",         type: "Sıvı İletken Çözelti",isConductive: true,  brightness: 0.85, color: "#38bdf8", isLiquid: true  },
+    lemonwater: { name: "Limonlu Su",       type: "Sıvı Asidik Çözelti", isConductive: true,  brightness: 0.8,  color: "#facc15", isLiquid: true  },
+    sugarwater: { name: "Şekerli Su",       type: "Sıvı Yalıtkan Çözelti",isConductive: false, brightness: 0.0, color: "#bae6fd", isLiquid: true  },
+    purewater:  { name: "Saf Su",           type: "Saf Sıvı (Yalıtkan)", isConductive: false, brightness: 0.0,  color: "#93c5fd", isLiquid: true  }
+};
+
+function initConductivityState() {
+    const cd = labState.conductivity;
+    cd.selectedMaterial = "copper";
+    cd.isConductive = true;
+    cd.bulbBrightness = 1.0;
+    cd.electronParticles = [];
+    cd.ionParticles = [];
+
+    // Devre Kablosu Yolunda Başlangıç Elektronları
+    for (let i = 0; i < 24; i++) {
+        cd.electronParticles.push({
+            progress: i / 24,
+            speed: 0.006
+        });
+    }
+
+    updateConductivityDOMControls();
+    updateConductivityMetricsDOM();
+}
+
+function resetConductivityExperiment() {
+    initConductivityState();
+    showLabToast("İletkenlik test cihazı başlangıç konumuna alındı!");
+}
+
+function selectConductivityMaterial(matKey) {
+    const cd = labState.conductivity;
+    const info = CONDUCTIVITY_MATERIALS[matKey];
+    if (!info) return;
+
+    cd.selectedMaterial = matKey;
+    cd.isConductive = info.isConductive;
+    cd.bulbBrightness = info.brightness;
+
+    updateConductivityDOMControls();
+    updateConductivityMetricsDOM();
+    showLabToast(info.isConductive ? `💡 ${info.name} bağlandı: İletken! Ampul yanıyor.` : `❌ ${info.name} bağlandı: Yalıtkan! Ampul yanmıyor.`);
+}
+
+function updateConductivityPhysics() {
+    const cd = labState.conductivity;
+    if (cd.isConductive) {
+        cd.electronParticles.forEach(p => {
+            p.progress += p.speed;
+            if (p.progress > 1.0) p.progress -= 1.0;
+        });
+    }
+}
+
+function updateConductivityDOMControls() {
+    const cd = labState.conductivity;
+    const sel = cd.selectedMaterial;
+
+    // Hızlı Butonlar
+    const btnIds = ["copper", "iron", "graphite", "wood", "plastic", "saltwater", "purewater"];
+    btnIds.forEach(id => {
+        const b = document.getElementById(`btn-cond-mat-${id}`);
+        if (b) b.classList.toggle('active', sel === id);
+    });
+
+    // Sağ Panel Butonları
+    const pillIds = ["copper", "iron", "graphite", "wood", "plastic", "eraser", "saltwater", "sugarwater", "lemonwater", "purewater"];
+    pillIds.forEach(id => {
+        const p = document.getElementById(`pill-cond-${id}`);
+        if (p) p.classList.toggle('active', sel === id);
+    });
+}
+
+function updateConductivityMetricsDOM() {
+    const cd = labState.conductivity;
+    const info = CONDUCTIVITY_MATERIALS[cd.selectedMaterial] || CONDUCTIVITY_MATERIALS.copper;
+
+    // Canvas Altı Metrik Şeridi
+    const mMat = document.getElementById('mbar-69-material');
+    const mType = document.getElementById('mbar-69-type');
+    const mCond = document.getElementById('mbar-69-conduct');
+    const mStatus = document.getElementById('mbar-69-status');
+
+    if (mMat) mMat.textContent = info.name;
+    if (mType) mType.textContent = info.type;
+    if (mCond) {
+        mCond.textContent = info.isConductive ? "İletken Madde" : "Yalıtkan Madde";
+        mCond.style.color = info.isConductive ? "#10b981" : "#ef4444";
+    }
+
+    if (mStatus) {
+        if (info.isConductive) {
+            mStatus.textContent = `💡 Devre Tamamlandı: ${info.name} Akımı İletir (Ampul Yanıyor)`;
+            mStatus.style.borderColor = "#10b981";
+            mStatus.style.color = "#10b981";
+        } else {
+            mStatus.textContent = `❌ Devre Açık Kaldı: ${info.name} Akımı İletmez (Yalıtkan)`;
+            mStatus.style.borderColor = "#ef4444";
+            mStatus.style.color = "#ef4444";
+        }
+    }
+
+    // Sağ Panel Çipleri
+    const pMat = document.getElementById('metric-69-material');
+    const pType = document.getElementById('metric-69-type');
+    const pCond = document.getElementById('metric-69-conduct');
+    const pBulb = document.getElementById('metric-69-bulb');
+
+    if (pMat) pMat.textContent = info.name;
+    if (pType) pType.textContent = info.type;
+    if (pCond) {
+        pCond.textContent = info.isConductive ? "İletken" : "Yalıtkan";
+        pCond.style.color = info.isConductive ? "#10b981" : "#ef4444";
+    }
+    if (pBulb) {
+        pBulb.textContent = info.isConductive ? "Işık Veriyor 💡" : "Sönük (0) ❌";
+        pBulb.style.color = info.isConductive ? "#facc15" : "#94a3b8";
+    }
+
+    // Dinamik Pedagojik Kutu
+    const pTitle = document.getElementById('cond-pedagogical-title');
+    const pText = document.getElementById('cond-pedagogical-text');
+    if (pTitle && pText) {
+        if (info.isLiquid) {
+            pTitle.textContent = info.isConductive ? `🧂 ${info.name}: Sıvı İletken Çözelti` : `💧 ${info.name}: Sıvı Yalıtkan Çözelti`;
+            pText.textContent = info.isConductive
+                ? `${info.name} suda iyonlarına ayrışır (serbest + ve - yüklü iyonlar). Bu serbest iyonlar sayesinde elektrik akımı iletilir ve ampul ışık verir!`
+                : `${info.name} suda iyonlarına ayrışmaz, moleküler olarak çözünür. Ortamda serbest yük taşıyıcı iyon bulunmadığı için elektrik akımını iletmez (Yalıtkandır).`;
+        } else {
+            pTitle.textContent = info.isConductive ? `⚡ ${info.name}: Katı İletken Madde` : `🪵 ${info.name}: Katı Yalıtkan Madde`;
+            pText.textContent = info.isConductive
+                ? `${info.name} yapısındaki serbest elektronlar sayesinde elektrik akımını iletir. Katı iletkenlerde elektrik enerjisi elektron hareketiyle taşınır!`
+                : `${info.name} atomlarında elektronlar sıkı bağlıdır ve serbestçe hareket edemez. Devre uçları arasında akım geçişi sağlanamaz ve ampul yanmaz.`;
+        }
+    }
+}
+
+function setupConductivityControlsDOM() {
+    const list = ["copper", "iron", "graphite", "wood", "plastic", "eraser", "saltwater", "sugarwater", "lemonwater", "purewater"];
+    list.forEach(id => {
+        const b = document.getElementById(`btn-cond-mat-${id}`);
+        const p = document.getElementById(`pill-cond-${id}`);
+        if (b) b.addEventListener('click', () => selectConductivityMaterial(id));
+        if (p) p.addEventListener('click', () => selectConductivityMaterial(id));
+    });
+
+    const bReset = document.getElementById('btn-cond-reset');
+    if (bReset) bReset.addEventListener('click', resetConductivityExperiment);
+
+    const btnRec = document.getElementById('btn-record-data-6-9');
+    if (btnRec) btnRec.addEventListener('click', recordMeasurement);
+}
+
+// Deney 6.9 Canvas Çizim Motoru (ZERO-CANVAS-TEXT)
+function drawConductivitySimulation() {
+    if (!ctx || !canvas) return;
+    const w = 800;
+    const h = 500;
+    const cd = labState.conductivity;
+    const info = CONDUCTIVITY_MATERIALS[cd.selectedMaterial] || CONDUCTIVITY_MATERIALS.copper;
+
+    ctx.save();
+    ctx.clearRect(0, 0, w, h);
+
+    // Arka Plan
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+    bgGrad.addColorStop(0, "#0a0f1d");
+    bgGrad.addColorStop(0.7, "#111c35");
+    bgGrad.addColorStop(1, "#1e293b");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Ahşap Deney Masası
+    const benchY = 360;
+    ctx.fillStyle = "#334155";
+    ctx.fillRect(0, benchY, w, h - benchY);
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.25)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, benchY);
+    ctx.lineTo(w, benchY);
+    ctx.stroke();
+
+    // 1. Pil Yatağı ve Piller (Sol Üst: x: 180, y: 100)
+    const px = 180;
+    const py = 100;
+
+    // Pil Yatağı Tabanı
+    ctx.fillStyle = "#1e293b";
+    ctx.beginPath();
+    ctx.roundRect(px - 60, py - 20, 120, 40, 6);
+    ctx.fill();
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // 2 Adet AA Pil (Mavi/Kırmızı gövde)
+    [-1, 1].forEach((dir, i) => {
+        const bx = px + dir * 28;
+        ctx.fillStyle = "#2563eb";
+        ctx.fillRect(bx - 20, py - 14, 40, 28);
+        ctx.fillStyle = "#ef4444"; // Artı kutup bandı
+        ctx.fillRect(bx + 12, py - 14, 8, 28);
+        ctx.fillStyle = "#cbd5e1"; // Artı kutup ucu
+        ctx.fillRect(bx + 20, py - 6, 4, 12);
+    });
+
+    // 2. Akkor Ampul ve Duy (Sağ Üst: x: 620, y: 100)
+    const bx = 620;
+    const by = 100;
+
+    // Duy Tabanı
+    ctx.fillStyle = "#475569";
+    ctx.fillRect(bx - 25, by + 10, 50, 18);
+    ctx.fillStyle = "#64748b";
+    ctx.fillRect(bx - 18, by + 2, 36, 8); // Vidalı soket
+
+    // Ampul Yanma Halesi (İletken ise)
+    if (cd.isConductive) {
+        const glowR = 100 * cd.bulbBrightness;
+        const bGlow = ctx.createRadialGradient(bx, by - 20, 8, bx, by - 20, glowR);
+        bGlow.addColorStop(0, "rgba(254, 240, 138, 0.95)");
+        bGlow.addColorStop(0.35, "rgba(250, 204, 21, 0.5)");
+        bGlow.addColorStop(1, "rgba(250, 204, 21, 0)");
+        ctx.fillStyle = bGlow;
+        ctx.beginPath();
+        ctx.arc(bx, by - 20, glowR, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Cam Ampul Küresi
+    ctx.beginPath();
+    ctx.arc(bx, by - 20, 26, 0, Math.PI * 2);
+    ctx.fillStyle = cd.isConductive ? "rgba(254, 240, 138, 0.85)" : "rgba(255, 255, 255, 0.12)";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Akkor Filament
+    ctx.strokeStyle = cd.isConductive ? "#f97316" : "#64748b";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(bx - 6, by - 10);
+    ctx.lineTo(bx - 3, by - 25);
+    ctx.lineTo(bx + 3, by - 25);
+    ctx.lineTo(bx + 6, by - 10);
+    ctx.stroke();
+
+    // 3. Devre Kabloları (Pil -> Kıskaç 1, Ampul -> Kıskaç 2, Pil -> Ampul)
+    // Üst Hat (Pil Artı Kutuuptan Ampule)
+    ctx.strokeStyle = "#ef4444"; // Kırmızı kablo
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(px + 60, py);
+    ctx.lineTo(bx - 25, py + 18);
+    ctx.stroke();
+
+    // Sol Hat (Pil Eksi Kutuptan Sol Kıskaca: x: 300, y: 310)
+    const clip1X = 310;
+    const clip1Y = 310;
+    ctx.strokeStyle = "#3b82f6"; // Mavi kablo
+    ctx.beginPath();
+    ctx.moveTo(px - 60, py);
+    ctx.quadraticCurveTo(px - 80, 260, clip1X - 35, clip1Y);
+    ctx.stroke();
+
+    // Sağ Hat (Ampulden Sağ Kıskaca: x: 490, y: 310)
+    const clip2X = 490;
+    const clip2Y = 310;
+    ctx.strokeStyle = "#10b981"; // Yeşil kablo
+    ctx.beginPath();
+    ctx.moveTo(bx + 25, py + 18);
+    ctx.quadraticCurveTo(bx + 60, 260, clip2X + 35, clip2Y);
+    ctx.stroke();
+
+    // Elektron Akışı Parçacıkları (İletkense)
+    if (cd.isConductive) {
+        cd.electronParticles.forEach(p => {
+            // Basit döngüsel devre koordinatı
+            let ex = 0;
+            let ey = 0;
+            const prog = p.progress;
+            if (prog < 0.35) {
+                // Üst hat
+                ex = (px + 60) + (prog / 0.35) * (bx - 25 - (px + 60));
+                ey = py;
+            } else if (prog < 0.65) {
+                // Sağ iniş
+                const sub = (prog - 0.35) / 0.3;
+                ex = (bx + 25) + sub * (clip2X - (bx + 25));
+                ey = (py + 18) + sub * (clip2Y - (py + 18));
+            } else {
+                // Sol dönüş
+                const sub = (prog - 0.65) / 0.35;
+                ex = clip1X - sub * (clip1X - (px - 60));
+                ey = clip1Y - sub * (clip1Y - py);
+            }
+
+            ctx.fillStyle = "#38bdf8";
+            ctx.beginPath();
+            ctx.arc(ex, ey, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    // 4. Krokodil Kıskaçlar (Timsah Ağızları: clip1X, clip2X)
+    [clip1X, clip2X].forEach((cx, idx) => {
+        const isLeft = (idx === 0);
+        ctx.save();
+        ctx.translate(cx, clip1Y);
+        if (!isLeft) ctx.scale(-1, 1);
+
+        ctx.fillStyle = "#94a3b8";
+        ctx.beginPath();
+        ctx.moveTo(-35, -7);
+        ctx.lineTo(-5, -7);
+        ctx.lineTo(0, -3);
+        ctx.lineTo(0, 3);
+        ctx.lineTo(-5, 7);
+        ctx.lineTo(-35, 7);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = "#cbd5e1";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.restore();
+    });
+
+    // 5. TEST EDİLEN MADDE (Katı veya Sıvı Beher)
+    if (info.isLiquid) {
+        // Sıvı Beheri (Ortada: x: 400, y: 310)
+        const bx = 400;
+        const by = 350;
+
+        // Cam Beher
+        ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
+        ctx.beginPath();
+        ctx.roundRect(bx - 45, by - 70, 90, 70, [0, 0, 8, 8]);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Sıvı Çözelti
+        ctx.fillStyle = info.color;
+        ctx.beginPath();
+        ctx.roundRect(bx - 43, by - 55, 86, 55, [0, 0, 6, 6]);
+        ctx.fill();
+
+        // Kıskaçlardan Sıvıya Daldırılan İki Elektrot
+        ctx.strokeStyle = "#cbd5e1";
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(clip1X, clip1Y);
+        ctx.lineTo(bx - 20, clip1Y);
+        ctx.lineTo(bx - 20, by - 15);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(clip2X, clip1Y);
+        ctx.lineTo(bx + 20, clip1Y);
+        ctx.lineTo(bx + 20, by - 15);
+        ctx.stroke();
+
+        // İyon Parıltıları (İletkense)
+        if (info.isConductive) {
+            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            ctx.beginPath();
+            ctx.arc(bx - 12, by - 35, 3, 0, Math.PI * 2);
+            ctx.arc(bx + 10, by - 25, 2.5, 0, Math.PI * 2);
+            ctx.arc(bx, by - 40, 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else {
+        // Katı Madde (İki krokodil kıskaç arasına kenetlenmiş)
+        const sx = clip1X;
+        const ex = clip2X;
+        const my = clip1Y;
+
+        ctx.save();
+        if (cd.selectedMaterial === "copper") {
+            // Bakır Tel
+            ctx.strokeStyle = "#f97316";
+            ctx.lineWidth = 5;
+            ctx.beginPath();
+            ctx.moveTo(sx, my);
+            ctx.lineTo(ex, my);
+            ctx.stroke();
+        } else if (cd.selectedMaterial === "iron") {
+            // Demir Çivi (Başlıklı sivri çivi)
+            ctx.fillStyle = "#94a3b8";
+            ctx.beginPath();
+            ctx.moveTo(sx + 5, my - 7);
+            ctx.lineTo(sx + 5, my + 7);
+            ctx.lineTo(sx + 15, my + 3);
+            ctx.lineTo(ex - 8, my + 3);
+            ctx.lineTo(ex, my);
+            ctx.lineTo(ex - 8, my - 3);
+            ctx.lineTo(sx + 15, my - 3);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = "#cbd5e1";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        } else if (cd.selectedMaterial === "graphite") {
+            // Grafit Kurşun Kalem Ucu
+            ctx.fillStyle = "#334155";
+            ctx.beginPath();
+            ctx.roundRect(sx, my - 4, ex - sx, 8, 3);
+            ctx.fill();
+            ctx.strokeStyle = "#64748b";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        } else if (cd.selectedMaterial === "wood") {
+            // Ahşap Çubuk
+            ctx.fillStyle = "#b45309";
+            ctx.beginPath();
+            ctx.roundRect(sx, my - 6, ex - sx, 12, 3);
+            ctx.fill();
+            ctx.strokeStyle = "#78350f";
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+        } else if (cd.selectedMaterial === "plastic") {
+            // Plastik Cetvel
+            ctx.fillStyle = "rgba(59, 130, 246, 0.75)";
+            ctx.beginPath();
+            ctx.roundRect(sx, my - 7, ex - sx, 14, 2);
+            ctx.fill();
+            ctx.strokeStyle = "#2563eb";
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+        } else if (cd.selectedMaterial === "eraser") {
+            // Silgi
+            ctx.fillStyle = "#f43f5e";
+            ctx.beginPath();
+            ctx.roundRect(sx, my - 9, ex - sx, 18, 4);
+            ctx.fill();
+            ctx.strokeStyle = "#be123c";
+            ctx.lineWidth = 1.2;
+            ctx.stroke();
+        }
+        ctx.restore();
+    }
+
+    ctx.restore();
+}
+
+// ============================================================================
+// --- 6.10. DENEY 6.10: DİRENÇ VE REOSTA SİMÜLATÖRÜ (FB.6.6.2 - FB.6.6.3) ---
+// ============================================================================
+
+function initResistanceState() {
+    const res = labState.resistance;
+    res.mode = "wire";
+    res.wireLength = 10;
+    res.wireThickness = "thick";
+    res.wireMaterial = "copper";
+    res.rheostatSlider = 20;
+    res.totalResistanceLevel = "low";
+    res.bulbBrightness = 0.9;
+    res.electronParticles = [];
+    res.isDraggingSlider = false;
+
+    for (let i = 0; i < 24; i++) {
+        res.electronParticles.push({
+            progress: i / 24,
+            speed: 0.007
+        });
+    }
+
+    recalculateResistancePhysics();
+    updateResistanceDOMControls();
+    updateResistanceMetricsDOM();
+}
+
+function resetResistanceExperiment() {
+    initResistanceState();
+    showLabToast("Direnç ve reosta düzeneği sıfırlandı!");
+}
+
+function setResistanceMode(mode) {
+    const res = labState.resistance;
+    res.mode = mode;
+    recalculateResistancePhysics();
+    updateResistanceDOMControls();
+    updateResistanceMetricsDOM();
+    showLabToast(mode === "wire" ? "1. Mod: İletken Telin Faktörleri (Boy, Kesit, Cins)" : "2. Mod: Reosta ile Ayarlı Direnç");
+}
+
+function setWireLength(len) {
+    const res = labState.resistance;
+    res.wireLength = len;
+    recalculateResistancePhysics();
+    updateResistanceDOMControls();
+    updateResistanceMetricsDOM();
+}
+
+function setWireThickness(thick) {
+    const res = labState.resistance;
+    res.wireThickness = thick;
+    recalculateResistancePhysics();
+    updateResistanceDOMControls();
+    updateResistanceMetricsDOM();
+}
+
+function setWireMaterial(mat) {
+    const res = labState.resistance;
+    res.wireMaterial = mat;
+    recalculateResistancePhysics();
+    updateResistanceDOMControls();
+    updateResistanceMetricsDOM();
+}
+
+function setRheostatSlider(pct) {
+    const res = labState.resistance;
+    res.rheostatSlider = Math.max(0, Math.min(100, pct));
+    recalculateResistancePhysics();
+    updateResistanceDOMControls();
+    updateResistanceMetricsDOM();
+}
+
+function recalculateResistancePhysics() {
+    const res = labState.resistance;
+
+    if (res.mode === "wire") {
+        // Nitel Formülsüz Direnç Puanı (1 ile 10 arası)
+        // Boy: 10cm (1), 20cm (2), 30cm (3), 40cm (4)
+        const lenScore = res.wireLength / 10;
+        // Kesit: thin S (2.2), thick 2S (1.0)
+        const thickMult = res.wireThickness === "thin" ? 2.2 : 1.0;
+        // Cins: Bakır (1.0), Demir (2.0), Nikrom (3.2)
+        const matMult = res.wireMaterial === "copper" ? 1.0 : (res.wireMaterial === "iron" ? 2.0 : 3.2);
+
+        const score = lenScore * thickMult * matMult;
+
+        if (score <= 1.5) {
+            res.totalResistanceLevel = "very_low";
+            res.bulbBrightness = 1.0;
+        } else if (score <= 3.5) {
+            res.totalResistanceLevel = "low";
+            res.bulbBrightness = 0.82;
+        } else if (score <= 7.0) {
+            res.totalResistanceLevel = "medium";
+            res.bulbBrightness = 0.6;
+        } else if (score <= 14.0) {
+            res.totalResistanceLevel = "high";
+            res.bulbBrightness = 0.35;
+        } else {
+            res.totalResistanceLevel = "very_high";
+            res.bulbBrightness = 0.15;
+        }
+    } else {
+        // Reosta Modu (%0 ile %100 arası)
+        // Sürgü sola (%0): direnç sıfıra yakın, ampul çok parlak
+        // Sürgü sağa (%100): tam bobin direnci devrede, ampul çok sönük
+        const pct = res.rheostatSlider;
+        if (pct <= 15) {
+            res.totalResistanceLevel = "very_low";
+            res.bulbBrightness = 1.0;
+        } else if (pct <= 35) {
+            res.totalResistanceLevel = "low";
+            res.bulbBrightness = 0.82;
+        } else if (pct <= 65) {
+            res.totalResistanceLevel = "medium";
+            res.bulbBrightness = 0.58;
+        } else if (pct <= 85) {
+            res.totalResistanceLevel = "high";
+            res.bulbBrightness = 0.35;
+        } else {
+            res.totalResistanceLevel = "very_high";
+            res.bulbBrightness = 0.15;
+        }
+    }
+
+    // Elektron akış hızını dirençle ters orantılı ayarla
+    res.electronParticles.forEach(p => {
+        p.speed = 0.002 + 0.009 * res.bulbBrightness;
+    });
+}
+
+function updateResistancePhysics() {
+    const res = labState.resistance;
+    res.electronParticles.forEach(p => {
+        p.progress += p.speed;
+        if (p.progress > 1.0) p.progress -= 1.0;
+    });
+}
+
+function updateResistanceDOMControls() {
+    const res = labState.resistance;
+    const isWire = (res.mode === "wire");
+
+    // Mod Butonları (Hızlı Bar & Sağ Panel)
+    const btnWire = document.getElementById('btn-res-mode-wire');
+    const btnRheo = document.getElementById('btn-res-mode-rheostat');
+    const pillWire = document.getElementById('pill-res-mode-wire');
+    const pillRheo = document.getElementById('pill-res-mode-rheostat');
+    if (btnWire) btnWire.classList.toggle('active', isWire);
+    if (btnRheo) btnRheo.classList.toggle('active', !isWire);
+    if (pillWire) pillWire.classList.toggle('active', isWire);
+    if (pillRheo) pillRheo.classList.toggle('active', !isWire);
+
+    // Sağ Panel Kontrol Kapsayıcıları
+    const wrapWire = document.getElementById('wrap-res-wire-controls');
+    const wrapRheo = document.getElementById('wrap-res-rheostat-controls');
+    const groupPresets = document.getElementById('group-res-wire-presets');
+    if (wrapWire) wrapWire.style.display = isWire ? "block" : "none";
+    if (wrapRheo) wrapRheo.style.display = isWire ? "none" : "block";
+    if (groupPresets) groupPresets.style.display = isWire ? "flex" : "none";
+
+    // Tel Kontrolleri
+    const sliderLen = document.getElementById('slider-res-length');
+    const lblLen = document.getElementById('label-res-length-val');
+    if (sliderLen) sliderLen.value = res.wireLength;
+    if (lblLen) lblLen.textContent = `${res.wireLength} cm`;
+
+    const pThin = document.getElementById('pill-res-thick-thin');
+    const pThick = document.getElementById('pill-res-thick-thick');
+    if (pThin) pThin.classList.toggle('active', res.wireThickness === "thin");
+    if (pThick) pThick.classList.toggle('active', res.wireThickness === "thick");
+
+    const pCopper = document.getElementById('pill-res-mat-copper');
+    const pIron = document.getElementById('pill-res-mat-iron');
+    const pNichrome = document.getElementById('pill-res-mat-nichrome');
+    if (pCopper) pCopper.classList.toggle('active', res.wireMaterial === "copper");
+    if (pIron) pIron.classList.toggle('active', res.wireMaterial === "iron");
+    if (pNichrome) pNichrome.classList.toggle('active', res.wireMaterial === "nichrome");
+
+    // Reosta Kontrolleri
+    const sliderRheo = document.getElementById('slider-res-rheostat');
+    const lblRheo = document.getElementById('label-res-rheostat-val');
+    if (sliderRheo) sliderRheo.value = res.rheostatSlider;
+    if (lblRheo) {
+        let rheoText = res.rheostatSlider <= 25 ? "(Düşük Direnç)" : (res.rheostatSlider <= 65 ? "(Orta Direnç)" : "(Yüksek Direnç)");
+        lblRheo.textContent = `%${res.rheostatSlider} ${rheoText}`;
+    }
+}
+
+function updateResistanceMetricsDOM() {
+    const res = labState.resistance;
+    const isWire = (res.mode === "wire");
+
+    // Metrik Şeridi (Canvas Altı)
+    const mLen = document.getElementById('mbar-610-length');
+    const mArea = document.getElementById('mbar-610-area');
+    const mMat = document.getElementById('mbar-610-material');
+    const mRes = document.getElementById('mbar-610-resistance');
+    const mStatus = document.getElementById('mbar-610-status');
+
+    if (mLen) mLen.textContent = isWire ? `${res.wireLength} cm` : `Etkin Boy: %${res.rheostatSlider}`;
+    if (mArea) mArea.textContent = isWire ? (res.wireThickness === "thin" ? "İnce (S)" : "Kalın (2S)") : "Bobin Sargı";
+    if (mMat) mMat.textContent = isWire ? (res.wireMaterial === "copper" ? "Bakır" : (res.wireMaterial === "iron" ? "Demir" : "Nikel-Krom")) : "Nikel-Krom";
+
+    let resText = "";
+    let brightText = "";
+    if (res.totalResistanceLevel === "very_low") {
+        resText = "Çok Düşük Direnç";
+        brightText = "💡 Çok Parlak";
+    } else if (res.totalResistanceLevel === "low") {
+        resText = "Düşük Direnç";
+        brightText = "💡 Parlak";
+    } else if (res.totalResistanceLevel === "medium") {
+        resText = "Orta Direnç";
+        brightText = "💡 Normal Işık";
+    } else if (res.totalResistanceLevel === "high") {
+        resText = "Yüksek Direnç";
+        brightText = "🕯️ Sönük";
+    } else {
+        resText = "Çok Yüksek Direnç";
+        brightText = "🕯️ Çok Sönük";
+    }
+
+    if (mRes) mRes.textContent = resText;
+    if (mStatus) {
+        mStatus.textContent = `${brightText} (${resText})`;
+        mStatus.style.borderColor = res.bulbBrightness > 0.7 ? "#10b981" : (res.bulbBrightness > 0.4 ? "#facc15" : "#f87171");
+    }
+
+    // Sağ Panel Çipleri
+    const pLen = document.getElementById('metric-610-length');
+    const pArea = document.getElementById('metric-610-area');
+    const pRes = document.getElementById('metric-610-resistance');
+    const pBright = document.getElementById('metric-610-brightness');
+
+    if (pLen) pLen.textContent = isWire ? `${res.wireLength} cm` : `%${res.rheostatSlider}`;
+    if (pArea) pArea.textContent = isWire ? (res.wireThickness === "thin" ? "İnce (S)" : "Kalın (2S)") : "Reosta";
+    if (pRes) {
+        pRes.textContent = resText;
+        pRes.style.color = res.bulbBrightness > 0.7 ? "#10b981" : (res.bulbBrightness > 0.4 ? "#facc15" : "#f87171");
+    }
+    if (pBright) pBright.textContent = brightText;
+
+    // Dinamik Pedagojik Kutu
+    const pTitle = document.getElementById('res-pedagogical-title');
+    const pText = document.getElementById('res-pedagogical-text');
+    if (pTitle && pText) {
+        if (isWire) {
+            pTitle.textContent = "💡 İletkenin Direncini Etkileyen Faktörler";
+            pText.textContent = "Telin boyu uzadıkça elektronların çarpışma sayısı artar ve DİRENÇ ARTAR (ampul sönükleşir). Tel kalınlaştıkça (kesit alanı büyüdükçe) geçiş kolaylaşır ve DİRENÇ AZALIR (ampul parlar). Bakır en az direnç gösteren maddedir.";
+        } else {
+            pTitle.textContent = "🎛️ Reosta: Ayarlanabilir Direnç";
+            pText.textContent = "Reosta, devredeki telin uzunluğunu sürgü yardımıyla değiştirerek devre direncini ayarlayan araçtır. Sürgüyü sola kaydırdığınızda tel kısalır (direnç azalır, lamba parlar); sağa kaydırdığınızda tel uzar (direnç artar, lamba söner).";
+        }
+    }
+}
+
+function setupResistanceControlsDOM() {
+    const btnWire = document.getElementById('btn-res-mode-wire');
+    const btnRheo = document.getElementById('btn-res-mode-rheostat');
+    const pillWire = document.getElementById('pill-res-mode-wire');
+    const pillRheo = document.getElementById('pill-res-mode-rheostat');
+    if (btnWire) btnWire.addEventListener('click', () => setResistanceMode("wire"));
+    if (btnRheo) btnRheo.addEventListener('click', () => setResistanceMode("rheostat"));
+    if (pillWire) pillWire.addEventListener('click', () => setResistanceMode("wire"));
+    if (pillRheo) pillRheo.addEventListener('click', () => setResistanceMode("rheostat"));
+
+    // Hızlı Preset Butonları
+    const bShortThick = document.getElementById('btn-res-wire-short-thick');
+    const bLongThin = document.getElementById('btn-res-wire-long-thin');
+    if (bShortThick) {
+        bShortThick.addEventListener('click', () => {
+            setResistanceMode("wire");
+            labState.resistance.wireLength = 10;
+            labState.resistance.wireThickness = "thick";
+            labState.resistance.wireMaterial = "copper";
+            recalculateResistancePhysics();
+            updateResistanceDOMControls();
+            updateResistanceMetricsDOM();
+            showLabToast("⚡ En Düşük Direnç Preset: Kısa, Kalın, Bakır Tel (Aşırı Parlak!)");
+        });
+    }
+    if (bLongThin) {
+        bLongThin.addEventListener('click', () => {
+            setResistanceMode("wire");
+            labState.resistance.wireLength = 40;
+            labState.resistance.wireThickness = "thin";
+            labState.resistance.wireMaterial = "nichrome";
+            recalculateResistancePhysics();
+            updateResistanceDOMControls();
+            updateResistanceMetricsDOM();
+            showLabToast("🕯️ En Yüksek Direnç Preset: Uzun, İnce, Nikel-Krom Tel (Çok Sönük!)");
+        });
+    }
+
+    const sliderLen = document.getElementById('slider-res-length');
+    if (sliderLen) {
+        sliderLen.addEventListener('input', (e) => {
+            setWireLength(parseInt(e.target.value, 10));
+        });
+    }
+
+    const pThin = document.getElementById('pill-res-thick-thin');
+    const pThick = document.getElementById('pill-res-thick-thick');
+    if (pThin) pThin.addEventListener('click', () => setWireThickness("thin"));
+    if (pThick) pThick.addEventListener('click', () => setWireThickness("thick"));
+
+    const pCopper = document.getElementById('pill-res-mat-copper');
+    const pIron = document.getElementById('pill-res-mat-iron');
+    const pNichrome = document.getElementById('pill-res-mat-nichrome');
+    if (pCopper) pCopper.addEventListener('click', () => setWireMaterial("copper"));
+    if (pIron) pIron.addEventListener('click', () => setWireMaterial("iron"));
+    if (pNichrome) pNichrome.addEventListener('click', () => setWireMaterial("nichrome"));
+
+    const sliderRheo = document.getElementById('slider-res-rheostat');
+    if (sliderRheo) {
+        sliderRheo.addEventListener('input', (e) => {
+            setRheostatSlider(parseInt(e.target.value, 10));
+        });
+    }
+
+    const btnReset = document.getElementById('btn-res-reset');
+    if (btnReset) btnReset.addEventListener('click', resetResistanceExperiment);
+
+    const btnRec = document.getElementById('btn-record-data-6-10');
+    if (btnRec) btnRec.addEventListener('click', recordMeasurement);
+}
+
+// Deney 6.10 Canvas Çizim Motoru (ZERO-CANVAS-TEXT)
+function drawResistanceSimulation() {
+    if (!ctx || !canvas) return;
+    const w = 800;
+    const h = 500;
+    const res = labState.resistance;
+    const isWire = (res.mode === "wire");
+
+    ctx.save();
+    ctx.clearRect(0, 0, w, h);
+
+    // Arka Plan
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+    bgGrad.addColorStop(0, "#080d1a");
+    bgGrad.addColorStop(0.7, "#0f172a");
+    bgGrad.addColorStop(1, "#1e293b");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
+
+    // Zemin
+    const benchY = 370;
+    ctx.fillStyle = "#334155";
+    ctx.fillRect(0, benchY, w, h - benchY);
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.25)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, benchY);
+    ctx.lineTo(w, benchY);
+    ctx.stroke();
+
+    // 1. Pil Grubu (Sol Üst: x: 180, y: 100)
+    const px = 180;
+    const py = 100;
+
+    ctx.fillStyle = "#1e293b";
+    ctx.beginPath();
+    ctx.roundRect(px - 55, py - 20, 110, 40, 6);
+    ctx.fill();
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Piller
+    [-1, 1].forEach((dir) => {
+        const bx = px + dir * 26;
+        ctx.fillStyle = "#2563eb";
+        ctx.fillRect(bx - 18, py - 14, 36, 28);
+        ctx.fillStyle = "#ef4444";
+        ctx.fillRect(bx + 10, py - 14, 8, 28);
+        ctx.fillStyle = "#cbd5e1";
+        ctx.fillRect(bx + 18, py - 6, 4, 12);
+    });
+
+    // 2. Akkor Ampul (Sağ Üst: x: 620, y: 100)
+    const bx = 620;
+    const by = 100;
+
+    // Duy Tabanı
+    ctx.fillStyle = "#475569";
+    ctx.fillRect(bx - 25, by + 10, 50, 18);
+    ctx.fillStyle = "#64748b";
+    ctx.fillRect(bx - 18, by + 2, 36, 8);
+
+    // Parlama Halesi (Dirençle ters orantılı)
+    const glowR = 110 * res.bulbBrightness;
+    const bGlow = ctx.createRadialGradient(bx, by - 20, 8, bx, by - 20, glowR);
+    bGlow.addColorStop(0, `rgba(254, 240, 138, ${res.bulbBrightness})`);
+    bGlow.addColorStop(0.4, `rgba(250, 204, 21, ${res.bulbBrightness * 0.5})`);
+    bGlow.addColorStop(1, "rgba(250, 204, 21, 0)");
+    ctx.fillStyle = bGlow;
+    ctx.beginPath();
+    ctx.arc(bx, by - 20, glowR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Cam Ampul Küresi
+    ctx.beginPath();
+    ctx.arc(bx, by - 20, 26, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(254, 240, 138, ${0.25 + res.bulbBrightness * 0.7})`;
+    ctx.fill();
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Akkor Filament
+    ctx.strokeStyle = res.bulbBrightness > 0.4 ? "#f97316" : "#64748b";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(bx - 6, by - 10);
+    ctx.lineTo(bx - 3, by - 25);
+    ctx.lineTo(bx + 3, by - 25);
+    ctx.lineTo(bx + 6, by - 10);
+    ctx.stroke();
+
+    // 3. Devre Telleri (Pil -> Cihaz, Ampul -> Cihaz, Pil -> Ampul)
+    ctx.strokeStyle = "#ef4444"; // Üst bağlantı teli
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(px + 55, py);
+    ctx.lineTo(bx - 25, py + 18);
+    ctx.stroke();
+
+    // Elektron Parçacıkları Çizimi
+    res.electronParticles.forEach(p => {
+        let ex = 0;
+        let ey = 0;
+        const prog = p.progress;
+        if (prog < 0.35) {
+            ex = (px + 55) + (prog / 0.35) * (bx - 25 - (px + 55));
+            ey = py;
+        } else if (prog < 0.65) {
+            const sub = (prog - 0.35) / 0.3;
+            ex = (bx + 25) + sub * (550 - (bx + 25));
+            ey = (py + 18) + sub * (260 - (py + 18));
+        } else {
+            const sub = (prog - 0.65) / 0.35;
+            ex = 250 - sub * (250 - (px - 55));
+            ey = 260 - sub * (260 - py);
+        }
+
+        ctx.fillStyle = "#38bdf8";
+        ctx.beginPath();
+        ctx.arc(ex, ey, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    // 4. DÜZENEK ÇİZİMİ (Tel Faktörleri vs Reosta)
+    if (isWire) {
+        // --- MOD 1: TEL FAKTÖRLERİ TEST TABLASI ---
+        const tx = 400;
+        const ty = 280;
+        const tableW = 420;
+        const tableH = 80;
+
+        // Ahşap Takoz / Tabla
+        ctx.fillStyle = "#78350f";
+        ctx.beginPath();
+        ctx.roundRect(tx - tableW / 2, ty - 20, tableW, tableH, 8);
+        ctx.fill();
+        ctx.strokeStyle = "#451a03";
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+
+        // Cetvel Çizgileri (Ahşap üzerinde ölçek)
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+        ctx.lineWidth = 1;
+        for (let cm = 0; cm <= 40; cm += 5) {
+            const cx = (tx - tableW / 2 + 30) + (cm / 40) * (tableW - 60);
+            const lineH = (cm % 10 === 0) ? 12 : 6;
+            ctx.beginPath();
+            ctx.moveTo(cx, ty + 38);
+            ctx.lineTo(cx, ty + 38 - lineH);
+            ctx.stroke();
+        }
+
+        // Sol Sabit Klemens (Pirinç klemens: x = tx - tableW/2 + 30 = 220)
+        const k1X = tx - tableW / 2 + 30;
+        const k1Y = ty;
+        ctx.fillStyle = "#fbbf24";
+        ctx.beginPath();
+        ctx.arc(k1X, k1Y, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#92400e";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Sağ Hareketli Klemens (Boy ayarına göre: 10, 20, 30, 40 cm)
+        const k2X = k1X + (res.wireLength / 40) * (tableW - 60);
+        const k2Y = ty;
+        ctx.fillStyle = "#fbbf24";
+        ctx.beginPath();
+        ctx.arc(k2X, k2Y, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#92400e";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Devre Kablo Bağlantıları
+        ctx.strokeStyle = "#3b82f6";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(px - 55, py);
+        ctx.lineTo(k1X - 5, k1Y);
+        ctx.stroke();
+
+        ctx.strokeStyle = "#10b981";
+        ctx.beginPath();
+        ctx.moveTo(bx + 25, py + 18);
+        ctx.lineTo(k2X + 5, k2Y);
+        ctx.stroke();
+
+        // GERİLMİŞ İLETKEN TEL
+        let wireColor = "#f97316"; // Bakır
+        if (res.wireMaterial === "iron") wireColor = "#94a3b8"; // Demir
+        else if (res.wireMaterial === "nichrome") wireColor = "#64748b"; // Nikel-Krom
+
+        const wireThick = (res.wireThickness === "thin") ? 2.8 : 7.5;
+
+        ctx.strokeStyle = wireColor;
+        ctx.lineWidth = wireThick;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(k1X, k1Y);
+        ctx.lineTo(k2X, k2Y);
+        ctx.stroke();
+
+    } else {
+        // --- MOD 2: REOSTA (AYARLI DİRENÇ) SİMÜLASYONU ---
+        const rx = 400;
+        const ry = 280;
+        const rheoW = 320;
+        const rheoH = 65;
+
+        // Seramik Silindir Gövde
+        ctx.fillStyle = "#cbd5e1";
+        ctx.beginPath();
+        ctx.roundRect(rx - rheoW / 2, ry - rheoH / 2, rheoW, rheoH, 6);
+        ctx.fill();
+        ctx.strokeStyle = "#475569";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Nikel-Krom Tel Bobin Sarımları (Dikey çizgiler)
+        ctx.strokeStyle = "#64748b";
+        ctx.lineWidth = 2;
+        const coilStart = rx - rheoW / 2 + 10;
+        const coilEnd = rx + rheoW / 2 - 10;
+        for (let x = coilStart; x <= coilEnd; x += 6) {
+            ctx.beginPath();
+            ctx.moveTo(x, ry - rheoH / 2 + 4);
+            ctx.lineTo(x, ry + rheoH / 2 - 4);
+            ctx.stroke();
+        }
+
+        // Üst Metal Kılavuz Mili (Reosta Sürgüsünün Kaydığı Çubuk)
+        const guideY = ry - rheoH / 2 - 16;
+        ctx.fillStyle = "#94a3b8";
+        ctx.fillRect(rx - rheoW / 2 - 10, guideY - 4, rheoW + 20, 8);
+        ctx.strokeStyle = "#cbd5e1";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(rx - rheoW / 2 - 10, guideY - 4, rheoW + 20, 8);
+
+        // Reosta Sol Sabit Klemensi
+        const leftTermX = rx - rheoW / 2 - 10;
+        ctx.fillStyle = "#fbbf24";
+        ctx.beginPath();
+        ctx.arc(leftTermX, ry + 15, 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Reosta Sağ Üst Klemensi (Sürgü miline bağlı)
+        const rightTermX = rx + rheoW / 2 + 10;
+        ctx.fillStyle = "#fbbf24";
+        ctx.beginPath();
+        ctx.arc(rightTermX, guideY, 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Devre Kabloları
+        ctx.strokeStyle = "#3b82f6";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(px - 55, py);
+        ctx.lineTo(leftTermX, ry + 15);
+        ctx.stroke();
+
+        ctx.strokeStyle = "#10b981";
+        ctx.beginPath();
+        ctx.moveTo(bx + 25, py + 18);
+        ctx.lineTo(rightTermX, guideY);
+        ctx.stroke();
+
+        // REOSTA SÜRGÜSÜ (KAYAR KONTAK)
+        const sliderX = coilStart + (res.rheostatSlider / 100) * (coilEnd - coilStart);
+
+        // Akım Geçen Kısım (Vurgu sarısı: coilStart ile sliderX arası)
+        ctx.strokeStyle = "rgba(250, 204, 21, 0.75)";
+        ctx.lineWidth = 3;
+        for (let x = coilStart; x <= sliderX; x += 6) {
+            ctx.beginPath();
+            ctx.moveTo(x, ry - rheoH / 2 + 6);
+            ctx.lineTo(x, ry + rheoH / 2 - 6);
+            ctx.stroke();
+        }
+
+        // Sürgü Metalik Gövdesi & İletken Kontak Fırçası
+        ctx.fillStyle = "#f59e0b";
+        ctx.beginPath();
+        ctx.roundRect(sliderX - 12, guideY - 14, 24, 46, 5);
+        ctx.fill();
+        ctx.strokeStyle = "#78350f";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Sürgü Tutma Kolu
+        ctx.fillStyle = "#ef4444";
+        ctx.beginPath();
+        ctx.arc(sliderX, guideY - 18, 9, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#991b1b";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+    }
 
     ctx.restore();
 }
@@ -12881,6 +15457,21 @@ function setupCanvasPointerEvents() {
             return;
         }
 
+        // Deney 6.10: Reosta Sürgüsü Manuel Sürükleme
+        if (labState.activeExperimentId === "6.10" && labState.resistance && labState.resistance.isDraggingSlider) {
+            const res = labState.resistance;
+            if (res.mode === "rheostat") {
+                const minX = 280;
+                const maxX = 560;
+                const ratio = Math.max(0, Math.min(1, (canvasX - minX) / (maxX - minX)));
+                const pct = Math.round(ratio * 20) * 5;
+                res.rheostatSlider = pct;
+                updateResistanceDOMControls();
+                updateResistanceMetricsDOM();
+            }
+            return;
+        }
+
         // Deney 7.1: Sandık veya Yük Taşıma Sürükleme
         if (labState.activeExperimentId === "7.1") {
             const work = labState.work;
@@ -13183,6 +15774,52 @@ function setupCanvasPointerEvents() {
             }
         }
 
+        if (labState.activeExperimentId === "6.6") {
+            const rect = cvs.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            const scaleX = 800 / rect.width;
+            const scaleY = 500 / rect.height;
+            const canvasX = (clientX - rect.left) * scaleX;
+            const canvasY = (clientY - rect.top) * scaleY;
+            if (canvasY >= 200 && canvasY <= 380) {
+                if (Math.abs(canvasX - 120) <= 75) selectGerminationDish(1);
+                else if (Math.abs(canvasX - 300) <= 75) selectGerminationDish(2);
+                else if (Math.abs(canvasX - 480) <= 75) selectGerminationDish(3);
+                else if (Math.abs(canvasX - 660) <= 75) selectGerminationDish(4);
+            }
+        }
+
+        if (labState.activeExperimentId === "6.7") {
+            const rect = cvs.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            const scaleX = 800 / rect.width;
+            const scaleY = 500 / rect.height;
+            const canvasX = (clientX - rect.left) * scaleX;
+            const canvasY = (clientY - rect.top) * scaleY;
+            if (Math.hypot(canvasX - 270, canvasY - 70) <= 45) {
+                toggleAbsorptionLamp();
+            }
+        }
+
+        if (labState.activeExperimentId === "6.10" && labState.resistance) {
+            const rect = cvs.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+            const scaleX = 800 / rect.width;
+            const scaleY = 500 / rect.height;
+            const canvasX = (clientX - rect.left) * scaleX;
+            const canvasY = (clientY - rect.top) * scaleY;
+            const res = labState.resistance;
+            if (res.mode === "rheostat") {
+                const sliderX = 280 + (res.rheostatSlider / 100) * 280;
+                if (Math.abs(canvasX - sliderX) <= 35 && Math.abs(canvasY - 250) <= 45) {
+                    res.isDraggingSlider = true;
+                }
+            }
+        }
+
         if (labState.activeExperimentId === "7.9") {
             const rect = cvs.getBoundingClientRect();
             const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
@@ -13223,12 +15860,16 @@ function setupCanvasPointerEvents() {
             (labState.electro.mode === "conduction" && (labState.electro.conduction.sphere1.isDragging || labState.electro.conduction.sphere2.isDragging))
         ));
         const isDragging78 = (labState.activeExperimentId === "7.8" && labState.electroscope && labState.electroscope.rod.isDragging);
-        if (isDragging61 || isDragging62 || isDragging63 || isDragging64 || isDragging71 || isDragging72 || isDragging77 || isDragging78 || labState.optics.isDraggingLaser || labState.lens.isDraggingObject) {
+        const isDragging610 = (labState.activeExperimentId === "6.10" && labState.resistance && labState.resistance.isDraggingSlider);
+        if (isDragging61 || isDragging62 || isDragging63 || isDragging64 || isDragging71 || isDragging72 || isDragging77 || isDragging78 || isDragging610 || labState.optics.isDraggingLaser || labState.lens.isDraggingObject) {
             handlePointerAction(e);
         }
     });
 
     const stopDragging = (e) => {
+        if (labState.resistance) {
+            labState.resistance.isDraggingSlider = false;
+        }
         if (labState.eclipse) {
             labState.eclipse.isDragging = false;
         }
@@ -13324,6 +15965,61 @@ function updateTableHeader(expId) {
                 <th>En Yoğun (Dip)</th>
                 <th>En Az Yoğun (Üst)</th>
                 <th>Bırakılan Cisimler</th>
+            </tr>
+        `;
+    } else if (expId === "6.6") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Deney Kabı</th>
+                <th>Nem / Su Durumu</th>
+                <th>Sıcaklık (°C)</th>
+                <th>Işık Durumu</th>
+                <th>Çimlenme Sonucu</th>
+            </tr>
+        `;
+    } else if (expId === "6.7") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Işık Gücü</th>
+                <th>Siyah Kap (°C)</th>
+                <th>Mavi Kap (°C)</th>
+                <th>Beyaz Kap (°C)</th>
+                <th>Radyometre Hızı & Çıkarım</th>
+            </tr>
+        `;
+    } else if (expId === "6.8") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Deney Aşaması</th>
+                <th>Küre Sıcaklığı</th>
+                <th>Küre Hacmi</th>
+                <th>Halkadan Geçiş Durumu</th>
+                <th>Fiziksel Nitel Çıkarım</th>
+            </tr>
+        `;
+    } else if (expId === "6.9") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Test Maddesi</th>
+                <th>Fiziksel Hali / Türü</th>
+                <th>İletkenlik Durumu</th>
+                <th>Ampul Parlaklığı</th>
+                <th>Yük Taşıyıcı / Nitel Açıklama</th>
+            </tr>
+        `;
+    } else if (expId === "6.10") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Deney Modu</th>
+                <th>Tel Uzunluğu (L)</th>
+                <th>Kesit Alanı (S) & Cinsi</th>
+                <th>Devre Direnci Seviyesi</th>
+                <th>Ampul Parlaklığı & Çıkarım</th>
             </tr>
         `;
     } else if (expId === "7.1") {
@@ -13508,6 +16204,119 @@ function recordMeasurement() {
         };
         dt.measurements.push(row);
         showLabToast(`Yoğunluk Kulesi Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "6.6") {
+        const g = labState.germination;
+        const d = g.dishes.find(x => x.id === g.selectedDish) || g.dishes[0];
+        const sproutText = d.sproutProgress >= 0.8 ? "🌱 Çimlendi (Filiz Çıktı)" : "❌ Çimlenmedi (Tohum Sabit)";
+        const row = {
+            id: g.measurements.length + 1,
+            col1: d.name,
+            col2: d.water ? "💧 Islak Pamuk (Nem Var)" : "🏜️ Kuru Pamuk (Su Yok)",
+            col3: `${d.temp}°C ${d.temp === 25 ? '(Uygun)' : '(Uygun Değil)'}`,
+            col4: d.light ? "☀️ Aydınlık" : "🌑 Karanlık Dolap",
+            col5: sproutText
+        };
+        g.measurements.push(row);
+        showLabToast(`Tohum Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "6.7") {
+        const ab = labState.absorption;
+        let rpmText = "Durgun (0 RPM)";
+        if (ab.lampOn) {
+            if (ab.lampPower === 100) rpmText = "Çok Hızlı (240 RPM)";
+            else if (ab.lampPower >= 50) rpmText = "Orta Hız (120 RPM)";
+            else rpmText = "Yavaş (60 RPM)";
+        }
+        const row = {
+            id: ab.measurements.length + 1,
+            col1: ab.lampOn ? `%${ab.lampPower} Güç` : "Kapalı",
+            col2: `${ab.tempBlack.toFixed(1)}°C (En Çok Isınan)`,
+            col3: `${ab.tempBlue.toFixed(1)}°C (Orta)`,
+            col4: `${ab.tempWhite.toFixed(1)}°C (En Az Isınan)`,
+            col5: rpmText
+        };
+        ab.measurements.push(row);
+        showLabToast(`Soğrulma Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "6.8") {
+        const ex = labState.expansion;
+        const stepLabels = {
+            cold_pass: "1. Soğukken Geçirme",
+            heating: "2. Alevde Isıtma",
+            hot_try: "3. Sıcakken Deneme",
+            quenching: "4. Soğuk Suda Soğutma"
+        };
+        const passText = ex.isPassingThrough ? "✅ Halkadan Geçti" : "⛔ Takıldı, Geçemedi!";
+        const inference = ex.isPassingThrough 
+            ? "Büzüldü / Hacim Küçüldü (r_küre < r_halka)" 
+            : "Genleşti / Hacim Büyüdü (r_küre > r_halka)";
+        const row = {
+            id: ex.measurements.length + 1,
+            col1: stepLabels[ex.step] || "Gözlem",
+            col2: `${ex.sphereTemp.toFixed(0)}°C`,
+            col3: ex.sphereRadius > 28 ? "Büyük (Genleşmiş)" : "Normal (Büzülmüş)",
+            col4: passText,
+            col5: inference
+        };
+        ex.measurements.push(row);
+        showLabToast(`Gravzant Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "6.9") {
+        const cd = labState.conductivity;
+        const matNames = {
+            copper: { name: "Bakır Tel", type: "Katı İletken", cond: "İletken", carrier: "Serbest Elektronlar" },
+            iron: { name: "Demir Çivi", type: "Katı İletken", cond: "İletken", carrier: "Serbest Elektronlar" },
+            graphite: { name: "Grafit (Kurşun Kalem)", type: "Katı Ametal İletken", cond: "İletken", carrier: "Serbest Elektronlar" },
+            wood: { name: "Kuru Tahta", type: "Katı Yalıtkan", cond: "Yalıtkan", carrier: "Serbest Taşıyıcı Yok" },
+            plastic: { name: "Plastik Cetvel", type: "Katı Yalıtkan", cond: "Yalıtkan", carrier: "Serbest Taşıyıcı Yok" },
+            eraser: { name: "Silgi", type: "Katı Yalıtkan", cond: "Yalıtkan", carrier: "Serbest Taşıyıcı Yok" },
+            saltwater: { name: "Tuzlu Su", type: "Sıvı Çözelti", cond: "İletken", carrier: "Serbest İyonlar (Na+, Cl-)" },
+            lemonwater: { name: "Limonlu Su", type: "Sıvı Asit Çözeltisi", cond: "İletken", carrier: "Serbest İyonlar (H+)" },
+            sugarwater: { name: "Şekerli Su", type: "Sıvı Çözelti", cond: "Yalıtkan", carrier: "Moleküler Dağılır (İyonsuz)" },
+            purewater: { name: "Saf Su", type: "Saf Sıvı", cond: "Yalıtkan", carrier: "İyonsuz Nötr Moleküller" }
+        };
+        const info = matNames[cd.selectedMaterial] || matNames.copper;
+        const row = {
+            id: cd.measurements.length + 1,
+            col1: info.name,
+            col2: info.type,
+            col3: info.cond,
+            col4: cd.isConductive ? "💡 Yanıyor (Parlak)" : "❌ Yanmıyor (Sönük)",
+            col5: info.carrier
+        };
+        cd.measurements.push(row);
+        showLabToast(`İletkenlik Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "6.10") {
+        const res = labState.resistance;
+        const matNames = { copper: "Bakır", iron: "Demir", nichrome: "Nikel-Krom" };
+        const thickNames = { thin: "İnce (S)", thick: "Kalın (2S)" };
+        let modeLabel = res.mode === "wire" ? "Tel Faktörleri" : `Reosta (%${res.rheostatSlider})`;
+        let lenStr = res.mode === "wire" ? `${res.wireLength} cm` : `Etkin Boy: %${res.rheostatSlider}`;
+        let resLevelStr = "";
+        let brightStr = "";
+        if (res.totalResistanceLevel === "very_low") {
+            resLevelStr = "Çok Düşük Direnç";
+            brightStr = "💡 Çok Parlak";
+        } else if (res.totalResistanceLevel === "low") {
+            resLevelStr = "Düşük Direnç";
+            brightStr = "💡 Parlak";
+        } else if (res.totalResistanceLevel === "medium") {
+            resLevelStr = "Orta Direnç";
+            brightStr = "💡 Normal Işık";
+        } else if (res.totalResistanceLevel === "high") {
+            resLevelStr = "Yüksek Direnç";
+            brightStr = "🕯️ Sönük";
+        } else {
+            resLevelStr = "Çok Yüksek Direnç";
+            brightStr = "🕯️ Çok Sönük";
+        }
+        const row = {
+            id: res.measurements.length + 1,
+            col1: modeLabel,
+            col2: lenStr,
+            col3: res.mode === "wire" ? `${thickNames[res.wireThickness]} · ${matNames[res.wireMaterial]}` : "Nikel-Krom Sargı",
+            col4: resLevelStr,
+            col5: brightStr
+        };
+        res.measurements.push(row);
+        showLabToast(`Direnç Gözlemi #${row.id} deftere kaydedildi!`);
     } else if (expId === "7.1") {
         const work = labState.work;
         let scenarioName = "";
@@ -13786,6 +16595,16 @@ function renderMeasurementTable() {
         measurements = labState.reflection.measurements;
     } else if (expId === "6.5") {
         measurements = labState.densityTower.measurements;
+    } else if (expId === "6.6") {
+        measurements = labState.germination.measurements;
+    } else if (expId === "6.7") {
+        measurements = labState.absorption.measurements;
+    } else if (expId === "6.8") {
+        measurements = labState.expansion.measurements;
+    } else if (expId === "6.9") {
+        measurements = labState.conductivity.measurements;
+    } else if (expId === "6.10") {
+        measurements = labState.resistance.measurements;
     } else if (expId === "7.1") {
         measurements = labState.work.measurements;
     } else if (expId === "7.2") {
@@ -13841,6 +16660,16 @@ function clearMeasurementTable() {
         labState.reflection.measurements = [];
     } else if (expId === "6.5") {
         labState.densityTower.measurements = [];
+    } else if (expId === "6.6") {
+        labState.germination.measurements = [];
+    } else if (expId === "6.7") {
+        labState.absorption.measurements = [];
+    } else if (expId === "6.8") {
+        labState.expansion.measurements = [];
+    } else if (expId === "6.9") {
+        labState.conductivity.measurements = [];
+    } else if (expId === "6.10") {
+        labState.resistance.measurements = [];
     } else if (expId === "7.1") {
         labState.work.measurements = [];
     } else if (expId === "7.2") {
