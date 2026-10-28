@@ -14,3 +14,4 @@ playwright-report/
 blob-report/
 .playwright/
 downloads/
+tests/artifacts/

@@ -73,6 +73,7 @@ if (typeof localStorage !== 'undefined') {
                     state.attempt = {
                         version: parsed.attempt.version || 2,
                         scoringVersion: parsed.attempt.scoringVersion || 2,
+                        evaluationVersion: parsed.attempt.evaluationVersion || 1,
                         ids: parsed.attempt.ids,
                         questionPoints: parsed.attempt.questionPoints || {},
                         totalPoints: parsed.attempt.totalPoints || 100,
@@ -84,6 +85,10 @@ if (typeof localStorage !== 'undefined') {
                         answers: parsed.attempt.answers || {},
                         evaluations: parsed.attempt.evaluations || {},
                         revealed: parsed.attempt.revealed || {},
+                        criteriaMap: parsed.attempt.criteriaMap || null,
+                        selectedCriteria: parsed.attempt.selectedCriteria || {},
+                        evaluatedQuestions: parsed.attempt.evaluatedQuestions || {},
+                        score: typeof parsed.attempt.score === 'number' ? parsed.attempt.score : undefined,
                         finished: !!parsed.attempt.finished,
                         status: parsed.attempt.status || (parsed.attempt.finished ? 'completed' : 'in_progress'),
                         visitedCards: Array.isArray(parsed.attempt.visitedCards) ? parsed.attempt.visitedCards : []
@@ -154,9 +159,10 @@ function sourcesHtml(refs) {
     }).filter(Boolean).join(' ');
 }
 
-// --- 5'İN KATLARIYLA 100 PUAN DAĞITIMI VE ÖZ DEĞERLENDİRME YAPILANDIRMASI ---
+// --- 5'İN KATLARIYLA 100 PUAN DAĞITIMI VE ÖLÇÜT TEMELLİ DEĞERLENDİRME YAPILANDIRMASI ---
 export const SCORING_POLICY = {
     version: 3,
+    evaluationVersion: 2,
     targetTotal: 100,
     allowedPoints: [10, 15, 20],
     partialScoreMap: {
@@ -165,6 +171,95 @@ export const SCORING_POLICY = {
         20: 10
     }
 };
+
+/**
+ * Bir sorunun rubrik ölçütlerine soru hedef puanını (10, 15, 20 vb.) deterministik olarak dağıtır.
+ * Kural 1: Mümkün olduğunda (targetPoint >= n * 5 ve targetPoint % 5 === 0) 5'in katları pozitif tamsayılar kullanılır.
+ * Kural 2: Diğer durumlarda Hamilton (Largest Remainder) yöntemiyle pozitif tam sayılar (min 1) üretilir.
+ * Kural 3: Bütün ölçüt puanları pozitif tamsayıdır ve toplamları TAM targetPoint'e eşittir.
+ */
+export function distributeCriteriaPoints(rubrics, targetPoint) {
+    if (!Array.isArray(rubrics) || rubrics.length === 0) return [];
+    const n = rubrics.length;
+    const pt = Number(targetPoint);
+
+    // 1. Mümkün olduğunda 5'in katlarıyla dağıtım:
+    if (pt % 5 === 0 && pt >= n * 5) {
+        const units = pt / 5;
+        const weights = rubrics.map((r, i) => ({ id: r.id, weight: r.points || 1, origIdx: i }));
+        const totalW = weights.reduce((s, w) => s + w.weight, 0);
+        let unitAlloc = weights.map(() => 1);
+        let remainingUnits = units - n;
+        const remainders = weights.map((w, i) => {
+            const exact = (w.weight / totalW) * units;
+            return { idx: i, frac: exact - Math.floor(exact), id: w.id };
+        });
+        remainders.sort((a, b) => b.frac - a.frac || a.idx - b.idx);
+        for (let i = 0; i < remainingUnits; i++) {
+            unitAlloc[remainders[i % n].idx]++;
+        }
+        return rubrics.map((r, i) => ({
+            id: r.id,
+            text: r.text,
+            return_card_ids: Array.isArray(r.return_card_ids) ? [...r.return_card_ids] : [],
+            points: unitAlloc[i] * 5
+        }));
+    }
+
+    // 2. 5'in katlarıyla dağıtılamıyorsa: Deterministik Hamilton (Largest Remainder) Pozitif Tamsayı Dağıtımı
+    const weights = rubrics.map((r, i) => ({ id: r.id, weight: r.points || 1, origIdx: i }));
+    const totalW = weights.reduce((s, w) => s + w.weight, 0);
+    const shares = weights.map((w, i) => {
+        const exact = (w.weight / totalW) * pt;
+        const base = Math.floor(exact);
+        return { idx: i, base: base >= 1 ? base : 1, frac: exact - base, id: w.id };
+    });
+    const sumBase = shares.reduce((s, x) => s + x.base, 0);
+    let diff = pt - sumBase;
+    let alloc = shares.map(x => x.base);
+    shares.sort((a, b) => b.frac - a.frac || a.idx - b.idx);
+    if (diff > 0) {
+        for (let i = 0; i < diff; i++) {
+            alloc[shares[i % n].idx]++;
+        }
+    } else if (diff < 0) {
+        for (let i = shares.length - 1; i >= 0 && diff < 0; i--) {
+            const idx = shares[i].idx;
+            if (alloc[idx] > 1) {
+                alloc[idx]--;
+                diff++;
+            }
+        }
+    }
+    return rubrics.map((r, i) => ({
+        id: r.id,
+        text: r.text,
+        return_card_ids: Array.isArray(r.return_card_ids) ? [...r.return_card_ids] : [],
+        points: alloc[i]
+    }));
+}
+
+export function ensureAttemptCriteriaMap(attempt) {
+    if (!attempt || !Array.isArray(attempt.ids)) return;
+    attempt.criteriaMap = attempt.criteriaMap || {};
+    attempt.selectedCriteria = attempt.selectedCriteria || {};
+    attempt.evaluatedQuestions = attempt.evaluatedQuestions || {};
+
+    const questions = attempt.ids.map(id => (QUESTIONS || []).find(q => q.id === id)).filter(Boolean);
+    questions.forEach(q => {
+        if (!attempt.criteriaMap[q.id] || !Array.isArray(attempt.criteriaMap[q.id]) || attempt.criteriaMap[q.id].length === 0) {
+            const qPt = attempt.questionPoints?.[q.id] || 15;
+            attempt.criteriaMap[q.id] = distributeCriteriaPoints(q.rubric || [], qPt);
+        }
+    });
+}
+
+export function getQuestionScore(qId, attempt) {
+    if (!attempt || !attempt.criteriaMap || !attempt.criteriaMap[qId]) return 0;
+    const criteria = attempt.criteriaMap[qId] || [];
+    const selected = attempt.selectedCriteria?.[qId] || [];
+    return criteria.filter(c => selected.includes(c.id)).reduce((sum, c) => sum + (c.points || 0), 0);
+}
 
 export function getPartialScore(questionPoint) {
     const pt = Number(questionPoint);
@@ -297,6 +392,15 @@ async function loadData() {
                             console.warn('Soru puanı migrasyon uyarısı:', e);
                         }
                     }
+                }
+
+                // Ölçüt temelli değerlendirme migrasyonu (Henüz tamamlanmamış aktif çalışmalar için)
+                if (!state.attempt.finished && (!state.attempt.evaluationVersion || state.attempt.evaluationVersion < SCORING_POLICY.evaluationVersion)) {
+                    ensureAttemptCriteriaMap(state.attempt);
+                    state.attempt.evaluationVersion = SCORING_POLICY.evaluationVersion;
+                    state.attempt.selectedCriteria = state.attempt.selectedCriteria || {};
+                    state.attempt.evaluatedQuestions = state.attempt.evaluatedQuestions || {};
+                    saveState();
                 }
             }
             return true;
@@ -1365,11 +1469,22 @@ function startNewPractice() {
         // 5'in katı (10, 15, 20) standart puan dağıtımı
         const pointsMap = calculateQuestionPoints(chosen.questions, SCORING_POLICY.targetTotal);
 
+        // Her soru için ölçüt snapshot haritasını hesapla
+        const criteriaMap = {};
+        chosen.questions.forEach(q => {
+            const qPt = pointsMap[q.id] || 15;
+            criteriaMap[q.id] = distributeCriteriaPoints(q.rubric || [], qPt);
+        });
+
         state.attempt = {
             version: 2,
             scoringVersion: SCORING_POLICY.version,
+            evaluationVersion: SCORING_POLICY.evaluationVersion,
             ids: chosen.questions.map(q => q.id),
             questionPoints: pointsMap,
+            criteriaMap: criteriaMap,
+            selectedCriteria: {},
+            evaluatedQuestions: {},
             totalPoints: SCORING_POLICY.targetTotal,
             profile: currentProfile,
             repeats: chosen.repeats,
@@ -1395,7 +1510,21 @@ function startNewPractice() {
     }
 }
 
-// 4. AŞAMA: ÖZ DEĞERLENDİRME EKRANI (Tek Soru & 3 Seçenek: Tam / Kısmen / Yapamadım)
+export function reEvaluateWithCriteria() {
+    if (!state.attempt || !Array.isArray(state.attempt.ids)) return;
+    ensureAttemptCriteriaMap(state.attempt);
+    state.attempt.evaluationVersion = SCORING_POLICY.evaluationVersion;
+    state.attempt.selectedCriteria = {};
+    state.attempt.evaluatedQuestions = {};
+    state.attempt.finished = false;
+    state.attempt.status = 'evaluating';
+    state.attempt.evalQuestionIndex = 0;
+    state.reviewingEval = false;
+    saveState();
+    goToStep('eval');
+}
+
+// 4. AŞAMA: ÖLÇÜT TEMELLİ ÖZ DEĞERLENDİRME EKRANI (Tek Soru & Bilimsel Rubrik Kontrol Listesi)
 function renderEval() {
     if (!state.attempt) {
         goToStep('practice');
@@ -1409,12 +1538,13 @@ function renderEval() {
         return;
     }
 
-    // Soru puanları haritası yoksa tamamla
+    // Soru puanları ve ölçüt snapshot haritası yoksa tamamla
     if (!a.questionPoints || Object.keys(a.questionPoints).length === 0) {
         a.questionPoints = calculateQuestionPoints(questions, 100);
         a.totalPoints = 100;
         saveState();
     }
+    ensureAttemptCriteriaMap(a);
 
     let evalIdx = typeof a.evalQuestionIndex === 'number' ? a.evalQuestionIndex : 0;
     if (evalIdx < 0) evalIdx = 0;
@@ -1445,14 +1575,14 @@ function renderEval() {
         }
     }
 
-    // 1-7 Soru Gezinme Butonları (Eval Strip)
+    // 1-7 Soru Gezinme Düğmeleri (Eval Strip)
     const navStrip = $('eval-question-nav-strip');
     if (navStrip) {
         navStrip.innerHTML = questions.map((q, i) => {
-            const ev = a.evaluations[q.id];
+            const isEvaluated = !!(a.evaluatedQuestions && a.evaluatedQuestions[q.id]);
             const isCurrent = (i === evalIdx);
             return `
-                <button type="button" class="q-nav-btn ${isCurrent ? 'active' : ''} ${ev ? 'eval-' + ev : ''}" data-eval-q="${i}" title="Soru ${i + 1}">
+                <button type="button" class="q-nav-btn ${isCurrent ? 'active' : ''} ${isEvaluated ? 'eval-completed' : ''}" data-eval-q="${i}" title="Soru ${i + 1} (${isEvaluated ? 'Değerlendirildi' : 'Bekliyor'})">
                     ${i + 1}
                 </button>
             `;
@@ -1470,7 +1600,10 @@ function renderEval() {
     // Tek Soru Değerlendirme Konteyneri
     const q = questions[evalIdx];
     const qPoints = a.questionPoints?.[q.id] || 15;
-    const partialPoints = getPartialScore(qPoints);
+    const criteria = a.criteriaMap?.[q.id] || [];
+    const selectedIds = a.selectedCriteria?.[q.id] || [];
+    const isEvaluated = !!(a.evaluatedQuestions && a.evaluatedQuestions[q.id]);
+    const currentQScore = criteria.filter(c => selectedIds.includes(c.id)).reduce((s, c) => s + c.points, 0);
     const qContainer = $('eval-single-question-container');
 
     if (qContainer && q) {
@@ -1492,12 +1625,6 @@ function renderEval() {
         ` : '';
 
         const studentAns = (a.answers[q.id] || '').trim();
-        const currentEval = a.evaluations[q.id] || '';
-
-        // Rubrik ölçütleri: Öğrenci için puansız bilimsel kontrol listesi
-        const rubricsList = (q.rubric || []).map(r => `
-            <li><i class="fas fa-check" style="color: #2dd4bf; margin-right: 6px;"></i> <span>${esc(r.text)}</span></li>
-        `).join('');
 
         qContainer.innerHTML = `
             <article class="exam-question-item eval-card">
@@ -1516,80 +1643,98 @@ function renderEval() {
                     ${visual}
                 </div>
 
-                <!-- Öğrencinin Kendi Cevabı -->
+                <!-- 1. Öğrencinin Kendi Cevabı -->
                 <div class="eval-student-answer-box">
-                    <h4><i class="fas fa-pencil-alt"></i> Senin Verdiğin Cevap:</h4>
+                    <h4><i class="fas fa-pencil-alt"></i> 1. Senin Verdiğin Cevap:</h4>
                     <div class="student-answer-content">
                         ${studentAns
                             ? esc(studentAns)
                             : (a.solveMode === 'kagitta'
-                                ? '<div class="eval-paper-hint"><i class="fas fa-pencil-alt"></i> Bu provayı kâğıt üzerinde çözdün. Kâğıttaki çözümünü aşağıdaki bilimsel ölçütlerle karşılaştırarak kendini değerlendir.</div>'
-                                : '<em>(Bu soru için ekrana yazılı cevap girilmedi.)</em>')}
+                                ? '<div class="eval-paper-hint"><i class="fas fa-file-alt"></i> Bu provayı kâğıt üzerinde çözdün. Kâğıttaki çözümünü aşağıdaki bilimsel ölçütlerle karşılaştırarak kendini değerlendir.</div>'
+                                : '<em>(Bu soru için ekrana yazılı cevap girilmedi. Kendi çözümünü aşağıdaki bilimsel ölçütlerle karşılaştırabilirsin.)</em>')}
                     </div>
                 </div>
 
-                <!-- Örnek Bilimsel Açıklama ve Rubrik Ölçütleri -->
+                <!-- 2. Örnek Bilimsel Açıklama ve Eşdeğerlik Notu -->
                 <div class="eval-sample-answer-box">
-                    <h4><i class="fas fa-check-circle" style="color: #2dd4bf;"></i> Örnek Bilimsel Açıklama:</h4>
+                    <h4><i class="fas fa-check-circle" style="color: #2dd4bf;"></i> 2. Örnek Bilimsel Açıklama:</h4>
                     <p class="sample-answer-text">${esc(q.sample_answer)}</p>
                     <div class="eval-alt-note">
-                        <strong>Bilimsel Eşdeğerlik:</strong> ${esc(q.accepted_alternatives)}
-                    </div>
-                    <div class="eval-rubric-summary">
-                        <strong>Başarı Ölçütleri:</strong>
-                        <ul class="eval-criteria-checklist">${rubricsList}</ul>
+                        <i class="fas fa-info-circle"></i> Aynı bilimsel anlamı veren farklı ifadeler kabul edilir.
                     </div>
                 </div>
 
-                <!-- 3 Net Öz Değerlendirme Seçeneği (5'in Katları: 10, 15, 20 Puan) -->
-                <div class="eval-choice-section">
-                    <label class="eval-choice-title">Kendi cevabını değerlendir ve sana en uygun olanı seç:</label>
-                    <div class="eval-choices-grid">
-                        <button type="button" class="eval-choice-btn tam ${currentEval === 'tam' ? 'selected' : ''}" data-eval-opt="tam" ${state.reviewingEval ? 'disabled' : ''}>
-                            <div class="eval-opt-icon"><i class="fas fa-check-circle"></i></div>
-                            <div class="eval-opt-body">
-                                <strong>Tam Yaptım (${qPoints} Puan)</strong>
-                                <small>Tüm bilimsel ölçütleri ve fen gerekçesini eksiksiz sağladım.</small>
-                            </div>
-                        </button>
-                        <button type="button" class="eval-choice-btn kismen ${currentEval === 'kismen' ? 'selected' : ''}" data-eval-opt="kismen" ${state.reviewingEval ? 'disabled' : ''}>
-                            <div class="eval-opt-icon"><i class="fas fa-adjust"></i></div>
-                            <div class="eval-opt-body">
-                                <strong>Kısmen Yaptım (${partialPoints} Puan)</strong>
-                                <small>Temel kavramı belirttim fakat bazı gerekçeler veya ölçütler eksik kaldı.</small>
-                            </div>
-                        </button>
-                        <button type="button" class="eval-choice-btn yapamadim ${currentEval === 'yapamadim' ? 'selected' : ''}" data-eval-opt="yapamadim" ${state.reviewingEval ? 'disabled' : ''}>
-                            <div class="eval-opt-icon"><i class="fas fa-times-circle"></i></div>
-                            <div class="eval-opt-body">
-                                <strong>Yapamadım (0 Puan)</strong>
-                                <small>Gerekçeyi açıklayamadım, yanlış yaptım veya soruyu boş bıraktım.</small>
-                            </div>
-                        </button>
+                <!-- 3. “Cevabında hangileri var?” Ölçüt Listesi -->
+                <div class="eval-criteria-section">
+                    <div class="eval-criteria-header">
+                        <h4><i class="fas fa-tasks" style="color: #38bdf8;"></i> 3. Cevabında hangileri var?</h4>
+                        <span class="eval-criteria-sub">Kendi cevabında yer alan bilimsel unsurları işaretle:</span>
+                    </div>
+                    <div class="eval-criteria-list" role="group" aria-label="Bilimsel başarı ölçütleri">
+                        ${criteria.map(c => {
+                            const isChecked = selectedIds.includes(c.id);
+                            return `
+                                <label class="exam-criterion-item ${isChecked ? 'checked' : ''}" for="crit-${esc(c.id)}">
+                                    <input type="checkbox" id="crit-${esc(c.id)}" class="exam-criterion-checkbox" data-criterion-id="${esc(c.id)}" ${isChecked ? 'checked' : ''} ${state.reviewingEval ? 'disabled' : ''}>
+                                    <div class="criterion-custom-box" aria-hidden="true">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="criterion-body">
+                                        <span class="criterion-text">${esc(c.text)}</span>
+                                    </div>
+                                    <span class="criterion-point-badge">+${c.points} Puan</span>
+                                </label>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+
+                <!-- 4. Hesaplanan Soru Puanı ve Durum Göstergesi -->
+                <div class="eval-score-live-box">
+                    <div class="live-score-info">
+                        <span class="live-score-label">Bu Sorudan Alınan Puan:</span>
+                        <span class="live-score-val" id="eval-current-q-score">${currentQScore} <small>/ ${qPoints} Puan</small></span>
+                    </div>
+                    <div class="live-eval-status">
+                        ${isEvaluated
+                            ? '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Değerlendirme Kaydedildi</span>'
+                            : '<span class="status-badge pending"><i class="fas fa-pencil-alt"></i> Kayıt Bekliyor</span>'}
                     </div>
                 </div>
             </article>
         `;
 
-        // Seçenek tıklama olayları (İnceleme modunda salt okunur)
+        // Checkbox tıklama olayları (İnceleme modunda salt okunur)
         if (!state.reviewingEval) {
-            qContainer.querySelectorAll('[data-eval-opt]').forEach(btn => {
-                btn.onclick = () => {
-                    const optVal = btn.dataset.evalOpt;
-                    a.evaluations[q.id] = optVal;
+            qContainer.querySelectorAll('.exam-criterion-checkbox').forEach(cb => {
+                cb.onchange = () => {
+                    const cId = cb.dataset.criterionId;
+                    const currentSel = a.selectedCriteria[q.id] || [];
+                    if (cb.checked) {
+                        if (!currentSel.includes(cId)) currentSel.push(cId);
+                    } else {
+                        const idx = currentSel.indexOf(cId);
+                        if (idx !== -1) currentSel.splice(idx, 1);
+                    }
+                    a.selectedCriteria[q.id] = currentSel;
+                    const parentLabel = cb.closest('.exam-criterion-item');
+                    if (parentLabel) parentLabel.classList.toggle('checked', cb.checked);
+
+                    const newScore = criteria.filter(c => currentSel.includes(c.id)).reduce((s, c) => s + c.points, 0);
+                    const scoreValEl = $('eval-current-q-score');
+                    if (scoreValEl) scoreValEl.innerHTML = `${newScore} <small>/ ${qPoints} Puan</small>`;
                     saveState();
-                    renderEval();
                 };
             });
         }
     }
 
     // İlerleme Metni
-    const evaluatedCount = questions.filter(qu => !!a.evaluations[qu.id]).length;
+    const evaluatedCount = questions.filter(qu => !!(a.evaluatedQuestions && a.evaluatedQuestions[qu.id])).length;
     const progressEl = $('eval-progress-text');
     if (progressEl) progressEl.textContent = `${evaluatedCount} / 7 Değerlendirildi`;
 
-    // Alt Gezinme Butonları (Önceki / Sonraki / Çalışma Özetim)
+    // Alt Gezinme Butonları (Önceki / Değerlendirmeyi Kaydet ve İlerle / Çalışma Özetim)
     const btnPrev = $('btn-eval-prev-q');
     if (btnPrev) {
         btnPrev.disabled = (evalIdx === 0);
@@ -1608,8 +1753,14 @@ function renderEval() {
     if (btnNext && btnToSummary) {
         if (evalIdx < 6) {
             btnNext.style.display = 'inline-flex';
+            btnNext.innerHTML = '<span>Değerlendirmeyi Kaydet ve İlerle</span> <i class="fas fa-arrow-right"></i>';
             btnToSummary.style.display = 'none';
+
             btnNext.onclick = () => {
+                a.evaluatedQuestions = a.evaluatedQuestions || {};
+                a.selectedCriteria = a.selectedCriteria || {};
+                a.evaluatedQuestions[q.id] = true;
+                a.selectedCriteria[q.id] = a.selectedCriteria[q.id] || [];
                 a.evalQuestionIndex = evalIdx + 1;
                 saveState();
                 renderEval();
@@ -1617,6 +1768,7 @@ function renderEval() {
         } else {
             btnNext.style.display = 'none';
             btnToSummary.style.display = 'inline-flex';
+            btnToSummary.innerHTML = '<i class="fas fa-chart-pie"></i> <span>Değerlendirmeyi Kaydet ve Özete Geç</span>';
 
             btnToSummary.onclick = () => {
                 if (state.reviewingEval) {
@@ -1626,15 +1778,23 @@ function renderEval() {
                     return;
                 }
 
+                a.evaluatedQuestions = a.evaluatedQuestions || {};
+                a.selectedCriteria = a.selectedCriteria || {};
+                a.evaluatedQuestions[q.id] = true;
+                a.selectedCriteria[q.id] = a.selectedCriteria[q.id] || [];
+
                 const missing = [];
                 questions.forEach((qu, i) => {
-                    if (!a.evaluations[qu.id]) {
+                    if (!a.evaluatedQuestions[qu.id]) {
                         missing.push(i + 1);
                     }
                 });
 
                 if (missing.length > 0) {
-                    alert(`Lütfen tüm sorular için öz değerlendirmeni tamamla.\nHenüz değerlendirilmeyen: Soru ${missing.join(', ')}`);
+                    alert(`Lütfen tüm sorular için öz değerlendirmeni kaydet.\nHenüz değerlendirilmeyen: Soru ${missing.join(', ')}`);
+                    a.evalQuestionIndex = missing[0] - 1;
+                    saveState();
+                    renderEval();
                     return;
                 }
 
@@ -1648,7 +1808,7 @@ function renderEval() {
     }
 }
 
-// 5. AŞAMA: ÇALIŞMA ÖZETİ EKRANI (100 Puan, Konu Analizi & Eksiklerimi Çalış)
+// 5. AŞAMA: ÇALIŞMA ÖZETİ EKRANI (100 Puan, Konu Analizi & Hedefli Eksikleri Çalış)
 function renderSummary() {
     if (!state.attempt) {
         goToStep('scope');
@@ -1662,25 +1822,45 @@ function renderSummary() {
         return;
     }
 
-    // 100 Puanlık Soru Dağılımına Göre Toplam Puanı Hesapla (Kesirsiz 5'in Katları Standardı)
-    let totalScore = 0;
-    let tamCount = 0;
-    let kismenCount = 0;
-    let yapamadimCount = 0;
+    // Değerlendirme Modu Ayrımı: Yeni Ölçüt Temelli vs Eski 3 Seçenekli Kayıt
+    const isLegacyEvaluation = (a.evaluationVersion !== 2 && a.evaluations && Object.keys(a.evaluations).length > 0 && (!a.criteriaMap || Object.keys(a.selectedCriteria || {}).length === 0));
 
-    questions.forEach(q => {
-        const ev = a.evaluations[q.id];
-        const p = a.questionPoints?.[q.id] || 15;
-        if (ev === 'tam') {
-            totalScore += p;
-            tamCount++;
-        } else if (ev === 'kismen') {
-            totalScore += getPartialScore(p);
-            kismenCount++;
-        } else {
-            yapamadimCount++;
-        }
-    });
+    let totalScore = 0;
+    let fullyCorrectCount = 0;
+    let partialCount = 0;
+    let zeroCount = 0;
+
+    if (isLegacyEvaluation) {
+        // Eski kayıt uyumluluğu: Eski puanlama motorunu koru
+        questions.forEach(q => {
+            const ev = a.evaluations[q.id];
+            const p = a.questionPoints?.[q.id] || 15;
+            if (ev === 'tam') {
+                totalScore += p;
+                fullyCorrectCount++;
+            } else if (ev === 'kismen') {
+                totalScore += getPartialScore(p);
+                partialCount++;
+            } else {
+                zeroCount++;
+            }
+        });
+    } else {
+        // Yeni Ölçüt Temelli Değerlendirme
+        ensureAttemptCriteriaMap(a);
+        questions.forEach(q => {
+            const qScore = getQuestionScore(q.id, a);
+            const qTarget = a.questionPoints?.[q.id] || 15;
+            totalScore += qScore;
+            if (qScore === qTarget) {
+                fullyCorrectCount++;
+            } else if (qScore > 0) {
+                partialCount++;
+            } else {
+                zeroCount++;
+            }
+        });
+    }
 
     a.score = totalScore;
     saveState();
@@ -1702,16 +1882,15 @@ function renderSummary() {
     }
 
     const tamEl = $('summary-tam-count');
-    if (tamEl) tamEl.textContent = tamCount;
+    if (tamEl) tamEl.textContent = fullyCorrectCount;
     const kismenEl = $('summary-kismen-count');
-    if (kismenEl) kismenEl.textContent = kismenCount;
+    if (kismenEl) kismenEl.textContent = partialCount;
     const yapamadimEl = $('summary-yapamadim-count');
-    if (yapamadimEl) yapamadimEl.textContent = yapamadimCount;
+    if (yapamadimEl) yapamadimEl.textContent = zeroCount;
 
-    // Konu Bazlı Başarı Analizi (Senaryo 2: FB.7.1.1, FB.7.1.3, FB.7.1.5, FB.7.2.1)
+    // Konu Bazlı Başarı Analizi (Senaryo 2 Kazanımları)
     const goodListEl = $('summary-good-topics-list');
     const needsReviewListEl = $('summary-needs-review-list');
-    const returnCardIds = [];
 
     if (goodListEl && needsReviewListEl && DATA.outcomes) {
         goodListEl.innerHTML = '';
@@ -1721,9 +1900,29 @@ function renderSummary() {
             const outcomeQs = questions.filter(q => q.outcome_id === outcome.id);
             if (outcomeQs.length === 0) return;
 
-            const isAllTam = outcomeQs.every(q => a.evaluations[q.id] === 'tam');
+            let isOutcomeAllTam = false;
+            let oPartialCount = 0;
+            let oZeroCount = 0;
 
-            if (isAllTam) {
+            if (isLegacyEvaluation) {
+                isOutcomeAllTam = outcomeQs.every(q => a.evaluations[q.id] === 'tam');
+                oPartialCount = outcomeQs.filter(q => a.evaluations[q.id] === 'kismen').length;
+                oZeroCount = outcomeQs.filter(q => a.evaluations[q.id] === 'yapamadim').length;
+            } else {
+                isOutcomeAllTam = outcomeQs.every(q => {
+                    const qScore = getQuestionScore(q.id, a);
+                    const qTarget = a.questionPoints?.[q.id] || 15;
+                    return qScore === qTarget;
+                });
+                outcomeQs.forEach(q => {
+                    const qScore = getQuestionScore(q.id, a);
+                    const qTarget = a.questionPoints?.[q.id] || 15;
+                    if (qScore === 0) oZeroCount++;
+                    else if (qScore < qTarget) oPartialCount++;
+                });
+            }
+
+            if (isOutcomeAllTam) {
                 const item = document.createElement('div');
                 item.className = 'analysis-item success';
                 item.innerHTML = `
@@ -1735,9 +1934,6 @@ function renderSummary() {
                 `;
                 goodListEl.appendChild(item);
             } else {
-                const partialCount = outcomeQs.filter(q => a.evaluations[q.id] === 'kismen').length;
-                const zeroCount = outcomeQs.filter(q => a.evaluations[q.id] === 'yapamadim').length;
-
                 const item = document.createElement('div');
                 item.className = 'analysis-item warning';
                 item.innerHTML = `
@@ -1746,8 +1942,8 @@ function renderSummary() {
                         <strong>${esc(outcome.short_title)}</strong>
                     </div>
                     <p>
-                        ${zeroCount > 0 ? `<strong>${zeroCount} soru yapılamadı.</strong> ` : ''}
-                        ${partialCount > 0 ? `<span>${partialCount} soru kısmen açıklandı.</span>` : ''}
+                        ${oZeroCount > 0 ? `<strong>${oZeroCount} soru tam puan alamadı.</strong> ` : ''}
+                        ${oPartialCount > 0 ? `<span>${oPartialCount} soruda bazı ölçütler geliştirilmeli.</span>` : ''}
                     </p>
                 `;
                 needsReviewListEl.appendChild(item);
@@ -1762,38 +1958,84 @@ function renderSummary() {
         }
     }
 
-    // "Eksiklerimi Çalış": Yapamadım (Öncelikli) ve Kısmen olan soruların return_card_ids listesi tekilleştirilir
-    const missedQuestions = questions.filter(q => a.evaluations[q.id] === 'yapamadim');
-    const partialQuestions = questions.filter(q => a.evaluations[q.id] === 'kismen');
-
-    [...missedQuestions, ...partialQuestions].forEach(q => {
-        (q.rubric || []).forEach(r => {
-            if (Array.isArray(r.return_card_ids)) {
-                r.return_card_ids.forEach(cid => {
-                    if (!returnCardIds.includes(cid)) {
-                        returnCardIds.push(cid);
-                    }
-                });
-            }
+    // Eksik Ölçütler ve Kart Eşleştirmesi (Hedefli Tekrar)
+    const missedCardMap = {};
+    if (!isLegacyEvaluation) {
+        questions.forEach(q => {
+            const criteria = a.criteriaMap?.[q.id] || [];
+            const selIds = a.selectedCriteria?.[q.id] || [];
+            criteria.forEach(c => {
+                if (!selIds.includes(c.id)) {
+                    (c.return_card_ids || []).forEach(cid => {
+                        const card = CARDS.find(cardItem => cardItem.id === cid);
+                        if (!card) return;
+                        if (!missedCardMap[cid]) {
+                            missedCardMap[cid] = {
+                                card,
+                                missedPoints: 0,
+                                criteriaTexts: []
+                            };
+                        }
+                        missedCardMap[cid].missedPoints += c.points;
+                        missedCardMap[cid].criteriaTexts.push(c.text);
+                    });
+                }
+            });
         });
-    });
+    } else {
+        // Eski kayıt uyumluluğu
+        questions.filter(q => a.evaluations[q.id] !== 'tam').forEach(q => {
+            (q.return_card_ids || []).forEach(cid => {
+                const card = CARDS.find(cardItem => cardItem.id === cid);
+                if (card && !missedCardMap[cid]) {
+                    missedCardMap[cid] = {
+                        card,
+                        missedPoints: 0,
+                        criteriaTexts: []
+                    };
+                }
+            });
+        });
+    }
+
+    // Müfredat sırasına göre tekilleştirilmiş kart dizisi
+    const sortedMissedCards = CARDS.filter(c => !!missedCardMap[c.id]).map(c => missedCardMap[c.id]);
+    const returnCardIds = sortedMissedCards.map(item => item.card.id);
 
     const returnCardsContainer = $('summary-return-cards-container');
     const needsStudyBox = $('summary-needs-study-box');
+    const btnStudyMissed = $('btn-summary-study-missed');
+
     if (returnCardsContainer && needsStudyBox) {
-        if (returnCardIds.length === 0) {
-            needsStudyBox.style.display = 'none';
+        if (sortedMissedCards.length === 0) {
+            needsStudyBox.style.display = 'block';
+            returnCardsContainer.innerHTML = `
+                <div class="eval-all-perfect-box">
+                    <i class="fas fa-trophy"></i>
+                    <div>
+                        <strong>Tebrikler! Eksiksiz Başarı!</strong>
+                        <p>Öz değerlendirmende tüm bilimsel ölçütleri başarıyla karşıladın. Tekrar etmen önerilen bir eksik konu kartı bulunmuyor.</p>
+                    </div>
+                </div>
+            `;
+            if (btnStudyMissed) btnStudyMissed.style.display = 'none';
         } else {
             needsStudyBox.style.display = 'block';
-            returnCardsContainer.innerHTML = returnCardIds.map(cid => {
-                const card = CARDS.find(c => c.id === cid);
-                if (!card) return '';
+            if (btnStudyMissed) {
+                btnStudyMissed.style.display = 'inline-flex';
+                btnStudyMissed.innerHTML = `<i class="fas fa-book-reader"></i> <span>Eksiklerimi Çalış (${sortedMissedCards.length} Kart)</span>`;
+            }
+
+            returnCardsContainer.innerHTML = sortedMissedCards.map(item => {
+                const card = item.card;
+                const missedPtBadge = item.missedPoints > 0 ? `<span class="return-card-missed-pts">-${item.missedPoints} Puan</span>` : '';
                 return `
-                    <button type="button" class="return-card-btn" data-return-card="${cid}">
+                    <button type="button" class="return-card-btn" data-return-card="${esc(card.id)}">
                         <div class="return-card-info">
                             <span class="return-card-code">${esc(card.outcome_id)}</span>
                             <strong>${esc(card.title)}</strong>
                             <small>${esc(card.takeaway)}</small>
+                            ${missedPtBadge}
                         </div>
                         <span class="return-card-action">Karta Git <i class="fas fa-arrow-right"></i></span>
                     </button>
@@ -1833,10 +2075,9 @@ function renderSummary() {
         };
     }
 
-    const btnStudyMissed = $('btn-summary-study-missed');
     if (btnStudyMissed) {
         btnStudyMissed.onclick = () => {
-            if (returnCardIds.length === 0) {
+            if (sortedMissedCards.length === 0) {
                 alert('Tebrikler! Bu provada tekrar etmen önerilen bir eksik konu bulunmuyor. Senaryodaki tüm konuları Hazırlık Ekranından serbestçe çalışabilirsin.');
                 return;
             }
@@ -1848,6 +2089,32 @@ function renderSummary() {
             saveState();
             goToStep('study');
         };
+    }
+
+    // Eski Kayıtlar İçin "Ölçütlerle Yeniden Değerlendir" Butonu
+    let btnReEval = $('btn-summary-re-evaluate');
+    if (isLegacyEvaluation) {
+        if (!btnReEval) {
+            const actionsToolbar = document.querySelector('.summary-actions-toolbar');
+            if (actionsToolbar) {
+                btnReEval = document.createElement('button');
+                btnReEval.type = 'button';
+                btnReEval.id = 'btn-summary-re-evaluate';
+                btnReEval.className = 'exam-btn-secondary';
+                btnReEval.innerHTML = '<i class="fas fa-tasks"></i> <span>Ölçütlerle Yeniden Değerlendir</span>';
+                actionsToolbar.insertBefore(btnReEval, actionsToolbar.firstChild);
+            }
+        }
+        if (btnReEval) {
+            btnReEval.style.display = 'inline-flex';
+            btnReEval.onclick = () => {
+                if (confirm('Sorular ve cevapların korunarak yeni ölçüt temelli değerlendirme ekranına geçilecek. Devam etmek istiyor musun?')) {
+                    reEvaluateWithCriteria();
+                }
+            };
+        }
+    } else {
+        if (btnReEval) btnReEval.style.display = 'none';
     }
 
     const btnNewPractice = $('btn-summary-new-practice');
@@ -2832,6 +3099,10 @@ if (typeof window !== 'undefined') {
         closePrintPreview,
         downloadExamPdf,
         calculateQuestionPoints,
+        distributeCriteriaPoints,
+        ensureAttemptCriteriaMap,
+        getQuestionScore,
+        reEvaluateWithCriteria,
         getPartialScore,
         SCORING_POLICY,
         toggleStudyPlan,

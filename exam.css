@@ -2361,6 +2361,245 @@ input[type=range].exam-slider {
     margin: 16px 0;
 }
 
+/* --- YENİ: ÖLÇÜT TEMELLİ DEĞERLENDİRME BİLEŞENLERİ --- */
+.eval-criteria-section {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.eval-criteria-header {
+    margin-bottom: 14px;
+}
+
+.eval-criteria-header h4 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.eval-criteria-sub {
+    font-size: 0.88rem;
+    color: #94a3b8;
+}
+
+.eval-criteria-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.exam-criterion-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    padding: 12px 18px !important;
+    background: rgba(15, 23, 42, 0.7) !important;
+    border: 2px solid rgba(148, 163, 184, 0.2) !important;
+    border-radius: 14px !important;
+    cursor: pointer;
+    min-height: 48px;
+    touch-action: manipulation;
+    transition: all 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+    position: relative;
+}
+
+.exam-criterion-item:hover {
+    border-color: rgba(56, 189, 248, 0.5) !important;
+    background: rgba(15, 23, 42, 0.9) !important;
+}
+
+.exam-criterion-item.checked {
+    border-color: #38bdf8 !important;
+    background: rgba(56, 189, 248, 0.12) !important;
+    box-shadow: 0 0 16px rgba(56, 189, 248, 0.18) !important;
+}
+
+.exam-criterion-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+}
+
+.criterion-custom-box {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    border-radius: 7px;
+    border: 2px solid rgba(148, 163, 184, 0.4);
+    background: rgba(15, 23, 42, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+    font-size: 0.82rem;
+    transition: all 0.18s ease;
+    flex-shrink: 0;
+}
+
+.exam-criterion-item.checked .criterion-custom-box {
+    background: #38bdf8;
+    border-color: #38bdf8;
+    color: #0f172a;
+}
+
+.criterion-body {
+    flex: 1 1 0%;
+    min-width: 0;
+}
+
+.criterion-text {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #f1f5f9;
+    line-height: 1.45;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.criterion-point-badge {
+    flex-shrink: 0;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    padding: 4px 10px;
+    border-radius: 8px;
+    letter-spacing: -0.01em;
+    transition: all 0.2s ease;
+}
+
+.exam-criterion-item.checked .criterion-point-badge {
+    background: #38bdf8;
+    color: #0f172a;
+    font-weight: 900;
+    border-color: #38bdf8;
+}
+
+/* Canlı Soru Puanı ve Durum Çubuğu */
+.eval-score-live-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+    padding: 14px 20px;
+    background: rgba(15, 23, 42, 0.9);
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    box-sizing: border-box;
+}
+
+.live-score-info {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+}
+
+.live-score-label {
+    font-size: 0.95rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.live-score-val {
+    font-size: 1.45rem;
+    font-weight: 900;
+    color: #f59e0b;
+}
+
+.live-score-val small {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.status-badge.saved {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.status-badge.pending {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.q-nav-btn.eval-completed {
+    background: rgba(16, 185, 129, 0.25) !important;
+    border-color: #10b981 !important;
+    color: #34d399 !important;
+    font-weight: 800 !important;
+}
+
+.eval-all-perfect-box {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: 16px;
+    color: #34d399;
+}
+
+.eval-all-perfect-box i {
+    font-size: 2.2rem;
+    color: #10b981;
+    flex-shrink: 0;
+}
+
+.eval-all-perfect-box strong {
+    display: block;
+    font-size: 1.15rem;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.eval-all-perfect-box p {
+    margin: 0;
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+
+.return-card-missed-pts {
+    display: inline-block;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #f87171;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-top: 6px;
+}
+
 .eval-criteria-checklist .criteria-list-title {
     font-weight: 800;
     color: #38bdf8;
@@ -3273,6 +3512,19 @@ input[type=range].exam-slider {
         font-size: 0.85rem !important;
         touch-action: manipulation !important;
         width: auto !important;
+    }
+    .exam-criterion-item {
+        padding: 10px 12px !important;
+        gap: 10px !important;
+    }
+    .criterion-text {
+        font-size: 0.92rem !important;
+    }
+    .eval-score-live-box {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+        padding: 12px 14px !important;
     }
     .summary-score-badge {
         padding: 20px 16px;

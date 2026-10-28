@@ -37,8 +37,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2026102815">
-    <link rel="stylesheet" href="exam.css?v=2026102815">
+    <link rel="stylesheet" href="style.css?v=2026102816">
+    <link rel="stylesheet" href="exam.css?v=2026102816">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -4343,7 +4343,7 @@
             </div>
         </section>
 
-        <!-- 6. Aşama 4: Öz Değerlendirme Ekranı (Soru Soru İlerleme & 3 Seçenek) -->
+        <!-- 6. Aşama 4: Öz Değerlendirme Ekranı (Ölçüt Temelli Soru Değerlendirme) -->
         <section id="exam-view-eval" class="exam-step-view" style="display: none;">
             <div class="exam-eval-header-bar">
                 <div class="eval-top-row">
@@ -4356,7 +4356,7 @@
                 </div>
                 <div class="eval-title-wrap">
                     <span class="exam-card-eyebrow"><i class="fas fa-balance-scale"></i> Öz Değerlendirme</span>
-                    <h3 class="exam-section-heading">Cevabını Bilimsel Ölçütlerle Karşılaştır</h3>
+                    <h3 class="exam-section-heading">Cevabını Bilimsel Ölçütlerle Değerlendir</h3>
                 </div>
 
                 <!-- 1-7 Soru Düğmeleri -->
@@ -4369,13 +4369,13 @@
             <!-- Alt Eylem Çubuğu -->
             <div class="eval-bottom-bar">
                 <div class="eval-bottom-left">
-                    <button type="button" id="btn-eval-prev-q" class="exam-btn-secondary"><i class="fas fa-chevron-left"></i> <span>Önceki</span></button>
+                    <button type="button" id="btn-eval-prev-q" class="exam-btn-secondary"><i class="fas fa-chevron-left"></i> <span>Önceki Soru</span></button>
                 </div>
                 <div class="eval-progress-text" id="eval-progress-text">1 / 7 Değerlendirildi</div>
                 <div class="eval-bottom-right">
-                    <button type="button" id="btn-eval-next-q" class="exam-btn-secondary"><span>Sonraki</span> <i class="fas fa-chevron-right"></i></button>
-                    <button type="button" id="btn-eval-to-summary" class="exam-btn-primary">
-                        <i class="fas fa-chart-pie"></i> <span>Çalışma Özetim</span>
+                    <button type="button" id="btn-eval-next-q" class="exam-btn-secondary"><span>Değerlendirmeyi Kaydet ve İlerle</span> <i class="fas fa-arrow-right"></i></button>
+                    <button type="button" id="btn-eval-to-summary" class="exam-btn-primary" style="display: none;">
+                        <i class="fas fa-chart-pie"></i> <span>Değerlendirmeyi Kaydet ve Özete Geç</span>
                     </button>
                 </div>
             </div>
@@ -4389,11 +4389,11 @@
                     <div class="score-big" id="summary-total-score">0 <span style="font-size: 0.5em; color: #94a3b8; font-weight: 500;">/ 100</span></div>
                     <p class="summary-hero-sub" id="summary-score-sub">7. Sınıf · 1. Dönem 1. Yazılı (MEB Senaryo 2)</p>
                     <div class="summary-stats-pills">
-                        <span class="stat-pill success"><i class="fas fa-check-circle"></i> <span id="summary-tam-count">0</span> Tam</span>
-                        <span class="stat-pill warning"><i class="fas fa-adjust"></i> <span id="summary-kismen-count">0</span> Kısmen</span>
-                        <span class="stat-pill danger"><i class="fas fa-times-circle"></i> <span id="summary-yapamadim-count">0</span> Yapılamadı</span>
+                        <span class="stat-pill success"><i class="fas fa-check-circle"></i> <span id="summary-tam-count">0</span> Tam Soru</span>
+                        <span class="stat-pill warning"><i class="fas fa-adjust"></i> <span id="summary-kismen-count">0</span> Kısmi Puanlı</span>
+                        <span class="stat-pill danger"><i class="fas fa-times-circle"></i> <span id="summary-yapamadim-count">0</span> 0 Puanlı</span>
                     </div>
-                    <p class="summary-disclaimer-note"><i class="fas fa-info-circle"></i> Bu puan, rubrik ölçütlerine göre işaretlediğin öz değerlendirme sonucudur; otomatik sınav okuma değildir.</p>
+                    <p class="summary-disclaimer-note"><i class="fas fa-info-circle"></i> Bu puan, bilimsel başarı ölçütlerine göre işaretlediğin öz değerlendirme sonucudur; otomatik yapay zekâ veya resmî sınav okuması değildir.</p>
                 </div>
             </div>
 
@@ -4630,8 +4630,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
-    <script type="module" src="exam-engine.js?v=2026102815"></script>
-    <script type="module" src="lab-engine.js?v=2026102815"></script>
-    <script type="module" src="script.js?v=2026102815"></script>
+    <script type="module" src="exam-engine.js?v=2026102816"></script>
+    <script type="module" src="lab-engine.js?v=2026102816"></script>
+    <script type="module" src="script.js?v=2026102816"></script>
 </body>
 </html>
