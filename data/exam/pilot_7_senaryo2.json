@@ -953,7 +953,9 @@
         "alt": "A aracı bir araştırma aracını Dünya’dan uzaya taşıyor. B aracı ise insansız olarak bir gök cisminin yakınında bilimsel ölçümler yapıyor. A ve B için uygun uzay teknolojilerini belirt; görevlerini karşılaştır.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 12,
+      "score_weight_rationale": "Temel fen kavramını (taşımak mı, incelemek mi?) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB711-E02",
@@ -1029,7 +1031,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (mekik ve istasyon) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB711-E03",
@@ -1105,7 +1109,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (i̇ki uydu, iki ihtiyaç) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB711-E04",
@@ -1186,7 +1192,9 @@
         "alt": "Bir uzay teleskobu uzak gök cisimlerinden gelen ışığı topluyor. Bir uzay istasyonunda astronotlar deney yapıyor. Araçların araştırmaya katkılarında bir benzerlik ve bir fark açıkla.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 12,
+      "score_weight_rationale": "Temel fen kavramını (i̇ki farklı araştırmacı) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB711-E05",
@@ -1262,7 +1270,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (göreve uygun ortam) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB711-E06",
@@ -1339,7 +1349,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (ortak özellik aynı görev mi?) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB711-M01",
@@ -1437,7 +1449,9 @@
           ]
         ]
       },
-      "visual": null
+      "visual": null,
+      "score_weight": 15,
+      "score_weight_rationale": "Durum/veri analizi (görev dosyasını oku) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB711-M02",
@@ -1520,7 +1534,9 @@
         "alt": "Bir sonda başka bir gök cismini inceleyecek. Önce Dünya’dan uzaya çıkarılması, sonra ölçüm yapması gerekiyor. Bu iki aşamada roket ve sondanın rollerini açıkla. Birini diğerinin yerine koymak neden uygun olmaz?",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 15,
+      "score_weight_rationale": "Durum/veri analizi (bir görev zinciri kur) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB711-M03",
@@ -1596,7 +1612,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 14,
+      "score_weight_rationale": "Durum/veri analizi (yeniden kullanım ölçütü) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB711-M04",
@@ -1672,7 +1690,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 14,
+      "score_weight_rationale": "Durum/veri analizi (veri neye yeter?) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB711-H01",
@@ -1766,7 +1786,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 19,
+      "score_weight_rationale": "Deney tasarımı, modelleme ve kural sınaması (araç ekibini tasarla) içeren derinlemesine 4 alt ölçütlü üst düzey soru."
     },
     {
       "id": "FB711-H02",
@@ -1843,7 +1865,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 18,
+      "score_weight_rationale": "Deney tasarımı, modelleme ve kural sınaması (sınıflandırma kuralını sınayalım) içeren derinlemesine 3 alt ölçütlü üst düzey soru."
     },
     {
       "id": "FB713-E01",
@@ -1925,7 +1949,9 @@
         "alt": "A çalışan bir gözlem uydusu, B işlevsiz bir roket parçasıdır. İkisinin uzay kirliliği açısından durumunu ayır. B’nin oluşturabileceği bir risk ve bu riski azaltmak için bir yaklaşım öner.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 12,
+      "score_weight_rationale": "Temel fen kavramını (hangi nesne, hangi önlem?) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB713-E02",
@@ -2003,7 +2029,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (yeni parçalar neden oluşur?) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB713-E03",
@@ -2079,7 +2107,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (risk mi, kesinlik mi?) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB713-E04",
@@ -2158,7 +2188,9 @@
         "alt": "A planı görev sonunda yeni işlevsiz araç bırakmayı azaltıyor. B planı çalışan uyduya yaklaşan parçadan kaçınma manevrası yaptırıyor. Hangi plan birikimin artmasını, hangisi yakın çarpışma riskini hedefler? B’nin tek başına yapamadığı şeyi açıkla.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 12,
+      "score_weight_rationale": "Temel fen kavramını (i̇ki önlemi ayır) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB713-E05",
@@ -2234,7 +2266,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (günlük yaşama bağlantı) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB713-E06",
@@ -2311,7 +2345,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (bütün tehlikeler aynı mı?) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB713-M01",
@@ -2415,7 +2451,9 @@
         "alt": "Aynı bölge aynı izleme yöntemiyle üç kez sayılmıştır. Tabloya göre parça sayısının değişimini özetle. “Problem tamamen çözüldü.” iddiasını değerlendir ve izlenmesi gereken bir ek veri öner.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 16,
+      "score_weight_rationale": "Durum/veri analizi (azalma neyi kanıtlar?) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB713-M02",
@@ -2491,7 +2529,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 14,
+      "score_weight_rationale": "Durum/veri analizi (nesneye uygun çözüm) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB713-M03",
@@ -2569,7 +2609,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 14,
+      "score_weight_rationale": "Durum/veri analizi (bir yörüngeden çıkarmak) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB713-M04",
@@ -2661,7 +2703,9 @@
           ]
         ]
       },
-      "visual": null
+      "visual": null,
+      "score_weight": 15,
+      "score_weight_rationale": "Durum/veri analizi (hedefe göre plan seç) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB713-H01",
@@ -2759,7 +2803,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 19,
+      "score_weight_rationale": "Deney tasarımı, modelleme ve kural sınaması (bir yörünge güvenliği planı) içeren derinlemesine 4 alt ölçütlü üst düzey soru."
     },
     {
       "id": "FB713-H02",
@@ -2836,7 +2882,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 17,
+      "score_weight_rationale": "Deney tasarımı, modelleme ve kural sınaması (başarı iddiasını sorgula) içeren derinlemesine 3 alt ölçütlü üst düzey soru."
     },
     {
       "id": "FB715-E01",
@@ -2912,7 +2960,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (güneş ve samanyolu) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB715-E02",
@@ -2991,7 +3041,9 @@
         "alt": "Güneş, Samanyolu ve evreni en geniş kapsamdan en dar kapsama sırala. Bu sıralamanın oluşum sırası olmadığını belirterek ilişkiyi açıkla.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 12,
+      "score_weight_rationale": "Temel fen kavramını (kapsam sırası) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB715-E03",
@@ -3071,7 +3123,9 @@
         "alt": "A kendi enerjisini üreten bir gök cismi; B çok sayıda yıldız, gezegen sistemleri, gaz ve toz içeren kütle çekimiyle bağlı bir yapı. A ve B kavramlarını adlandır ve farklarını açıkla.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 12,
+      "score_weight_rationale": "Temel fen kavramını (tek yıldız mı, büyük yapı mı?) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB715-E04",
@@ -3145,7 +3199,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (evrenin içinde neler var?) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB715-E05",
@@ -3220,7 +3276,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (dünya’nın adresi) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB715-E06",
@@ -3297,7 +3355,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (güneş sistemi galaksi midir?) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB715-M01",
@@ -3381,7 +3441,9 @@
         "alt": "Bir kavram haritasında “Güneş, Samanyolu’nu içerir” ve “Samanyolu, evreni içerir” yazıyor. İki ilişkiyi düzelt. Güneş, Samanyolu ve evren için kavram türlerini de belirterek uyumlu bir açıklama yaz.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 15,
+      "score_weight_rationale": "Durum/veri analizi (haritadaki okları düzelt) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB715-M02",
@@ -3457,7 +3519,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 14,
+      "score_weight_rationale": "Durum/veri analizi (benzetmenin sınırı) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB715-M03",
@@ -3540,7 +3604,9 @@
         "alt": "Bir afişte yıldız simgesi bir galaksi simgesinden daha büyük çizilmiş. Afişin ölçekli olmadığı yazıyor. “Bu yıldız gerçekte galaksiden büyüktür.” sonucunu değerlendir ve doğru kapsama ilişkisini Güneş–Samanyolu örneğiyle açıkla.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 15,
+      "score_weight_rationale": "Durum/veri analizi (şemaya bakarak karar) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB715-M04",
@@ -3619,7 +3685,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 14,
+      "score_weight_rationale": "Durum/veri analizi (adres kartlarını birleştir) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB715-H01",
@@ -3712,7 +3780,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 18,
+      "score_weight_rationale": "Deney tasarımı, modelleme ve kural sınaması (etiketli kavram haritası) içeren derinlemesine 4 alt ölçütlü üst düzey soru."
     },
     {
       "id": "FB715-H02",
@@ -3793,7 +3863,9 @@
       "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
       "review_status": "teacher_review_required",
       "table": null,
-      "visual": null
+      "visual": null,
+      "score_weight": 17,
+      "score_weight_rationale": "Deney tasarımı, modelleme ve kural sınaması (i̇ki hatayı tek modelde düzelt) içeren derinlemesine 3 alt ölçütlü üst düzey soru."
     },
     {
       "id": "FB721-E01",
@@ -3871,7 +3943,9 @@
         "alt": "Kitap masadan daha yüksek rafa kaldırılıyor. Elin kuvveti ve kitabın yer değiştirmesi yukarı yönlü.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 12,
+      "score_weight_rationale": "Temel fen kavramını (kitabı rafa kaldır) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB721-E02",
@@ -3942,7 +4016,9 @@
         "P1"
       ],
       "originality": "FenUp X için özgün hazırlanmıştır; kaynak sorular aynen alınmamıştır.",
-      "review_status": "teacher_review_required"
+      "review_status": "teacher_review_required",
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (hareket etmeyen dolap) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB721-E04",
@@ -4020,7 +4096,9 @@
         "alt": "Tepsi aynı yükseklikte yatay taşınıyor; destek kuvveti yukarı, yer değiştirme sağa.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 12,
+      "score_weight_rationale": "Temel fen kavramını (tepsiyi yatay taşıma) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB721-E05",
@@ -4091,7 +4169,9 @@
         "P1"
       ],
       "originality": "FenUp X için özgün hazırlanmıştır; kaynak sorular aynen alınmamıştır.",
-      "review_status": "teacher_review_required"
+      "review_status": "teacher_review_required",
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (eşit mesafe, farklı kuvvet) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB721-E06",
@@ -4162,7 +4242,9 @@
         "P1"
       ],
       "originality": "FenUp X için özgün hazırlanmıştır; kaynak sorular aynen alınmamıştır.",
-      "review_status": "teacher_review_required"
+      "review_status": "teacher_review_required",
+      "score_weight": 11,
+      "score_weight_rationale": "Temel fen kavramını (eşit kuvvet, farklı mesafe) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB721-E08",
@@ -4241,7 +4323,9 @@
         "alt": "Sağa itilen sandık ilkinde sağa ilerliyor; ikinci gözlemde yer değiştirmiyor.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 12,
+      "score_weight_rationale": "Temel fen kavramını (gözlemi kaydet) tanıma ve doğrudan eşleştirme içeren 3 alt ölçütlü açık uçlu soru."
     },
     {
       "id": "FB721-M01",
@@ -4339,7 +4423,9 @@
         "P1"
       ],
       "originality": "FenUp X için özgün hazırlanmıştır; kaynak sorular aynen alınmamıştır.",
-      "review_status": "teacher_review_required"
+      "review_status": "teacher_review_required",
+      "score_weight": 15,
+      "score_weight_rationale": "Durum/veri analizi (üç denemeyi karşılaştır) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB721-M02",
@@ -4412,7 +4498,9 @@
         "P1"
       ],
       "originality": "FenUp X için özgün hazırlanmıştır; kaynak sorular aynen alınmamıştır.",
-      "review_status": "teacher_review_required"
+      "review_status": "teacher_review_required",
+      "score_weight": 14,
+      "score_weight_rationale": "Durum/veri analizi (araştırma adil mi?) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB721-M03",
@@ -4491,7 +4579,9 @@
         "alt": "A: kutuyu kaldırma; B: yatay taşıma; C: daha üst rafa kaldırma. Elin kuvveti her aşamada yukarı.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 15,
+      "score_weight_rationale": "Durum/veri analizi (taşımanın üç bölümü) ve bilimsel gerekçelendirme gerektiren 3 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB721-M06",
@@ -4609,7 +4699,9 @@
         "alt": "A: 10 N ve 2 m; B: 20 N ve 2 m; C: 10 N ve 3 m. Kuvvetler sağa, yer değiştirmeler sağa.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 17,
+      "score_weight_rationale": "Durum/veri analizi (doğru deneme çiftini bul) ve bilimsel gerekçelendirme gerektiren 4 alt ölçütlü çok adımlı soru."
     },
     {
       "id": "FB721-H01",
@@ -4697,7 +4789,9 @@
         "P1"
       ],
       "originality": "FenUp X için özgün hazırlanmıştır; kaynak sorular aynen alınmamıştır.",
-      "review_status": "teacher_review_required"
+      "review_status": "teacher_review_required",
+      "score_weight": 19,
+      "score_weight_rationale": "Deney tasarımı, modelleme ve kural sınaması (i̇ki araştırma tasarla) içeren derinlemesine 4 alt ölçütlü üst düzey soru."
     },
     {
       "id": "FB721-H03",
@@ -4818,7 +4912,9 @@
         "alt": "A, B, C için göreli iş göstergeleri 1, 2, 2; yer değiştirmeler sırasıyla 1, 2, 3 m. Kuvvet sabit 10 N.",
         "kind": "svg",
         "essential_information_in_text": true
-      }
+      },
+      "score_weight": 21,
+      "score_weight_rationale": "Deney tasarımı, modelleme ve kural sınaması (şaşırtıcı kaydı araştır) içeren derinlemesine 4 alt ölçütlü üst düzey soru."
     }
   ],
   "sources": [

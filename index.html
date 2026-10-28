@@ -37,8 +37,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2026102806">
-    <link rel="stylesheet" href="exam.css?v=2026102806">
+    <link rel="stylesheet" href="style.css?v=2026102807">
+    <link rel="stylesheet" href="exam.css?v=2026102807">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -4122,7 +4122,7 @@
 
                 <div class="exam-actions-row">
                     <button id="btn-scope-continue" class="exam-btn-primary full-width" type="button">
-                        <span>Hazırlanmaya Başla</span> <i class="fas fa-arrow-right"></i>
+                        <span>Devam Et</span> <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
@@ -4183,10 +4183,7 @@
                 </div>
                 <div class="saved-attempt-actions">
                     <button type="button" id="btn-resume-saved-attempt" class="exam-btn-primary">
-                        <i class="fas fa-play"></i> <span id="btn-resume-saved-label">Kayıtlı Provana Devam Et</span>
-                    </button>
-                    <button type="button" id="btn-discard-start-new" class="exam-btn-secondary">
-                        <i class="fas fa-redo"></i> <span>Yeni Prova Başlat</span>
+                        <i class="fas fa-play"></i> <span id="btn-resume-saved-label">Devam Et</span>
                     </button>
                 </div>
             </div>
@@ -4281,17 +4278,15 @@
                     </div>
                 </div>
 
-                <div class="exam-controls" style="margin-top: 24px;">
-                    <button id="exam-start-practice" class="exam-btn-primary" type="button" style="padding: 14px 28px; font-size: 1.1rem;">
-                        <i class="fas fa-play"></i> Provaya Başla
+                <div class="exam-controls" style="margin-top: 24px; flex-direction: column; align-items: stretch; gap: 10px;">
+                    <button id="exam-start-practice" class="exam-btn-primary" type="button" style="padding: 14px 28px; font-size: 1.1rem; width: 100%;">
+                        <i class="fas fa-play"></i> <span id="exam-start-practice-label">Başla</span>
                     </button>
-                    <button id="btn-practice-back-choice" class="exam-btn-secondary" type="button">
+                    <p id="exam-setup-subtext" class="setup-subtext" style="display: none; font-size: 0.88rem; color: #94a3b8; text-align: center; margin: 0;">Sonraki adımda PDF'ni alabilir veya yazdırabilirsin.</p>
+                    <button id="btn-practice-back-choice" class="exam-btn-secondary" type="button" style="width: 100%;">
                         <i class="fas fa-arrow-left"></i> Hazırlık Ekranı
                     </button>
                 </div>
-
-                <p id="exam-history-note" class="exam-history-note" aria-live="polite">Havuz: Her çıktı için 6 kolay, 4 orta, 2 zor; toplam 48 ana soru. Her provada 7 soru seçilir.</p>
-                <p id="exam-storage-note" class="exam-storage-note">Cevaplar ve soru geçmişi yalnızca bu cihazda saklanır. Silinebilir; başka hesaba aktarılmaz.</p>
             </div>
 
             <!-- Aktif Soru Alanı (Tek Soru Görünümü) -->
@@ -4299,8 +4294,8 @@
                 <!-- Üst Gezinme & Durum Çubuğu -->
                 <div class="practice-top-bar">
                     <div class="practice-top-left-actions">
-                        <button type="button" id="btn-practice-pause" class="exam-btn-secondary btn-pause" title="Çalışmayı kaydet ve hazırlık ekranına dön">
-                            <i class="fas fa-pause"></i> <span>Ara Ver ve Çık</span>
+                        <button type="button" id="btn-practice-back-choice" class="exam-btn-secondary" title="Cevapları kaydet ve hazırlık ekranına dön">
+                            <i class="fas fa-arrow-left"></i> <span>Hazırlık Ekranı</span>
                         </button>
                         <div class="practice-status-info">
                             <span id="practice-current-indicator">Soru 1 / 7</span>
@@ -4313,7 +4308,7 @@
 
                     <div class="practice-top-actions">
                         <button type="button" id="btn-practice-preview-print" class="exam-btn-secondary btn-print-trigger" title="Soru kâğıdını A4 düzeninde önizle veya PDF olarak kaydet">
-                            <i class="fas fa-print"></i> <span>Soru Kâğıdını Önizle / Yazdır</span>
+                            <i class="fas fa-print"></i> <span>Soru Kâğıdı</span>
                         </button>
                     </div>
                 </div>
@@ -4324,18 +4319,15 @@
                 <!-- Alt Eylem Çubuğu -->
                 <div class="practice-bottom-bar">
                     <div class="practice-bottom-left">
-                        <button type="button" id="btn-practice-pause-bottom" class="exam-btn-secondary btn-pause" title="Çalışmayı kaydet ve hazırlık ekranına dön">
-                            <i class="fas fa-pause"></i> <span>Ara Ver ve Çık</span>
-                        </button>
-                        <button type="button" id="btn-practice-prev-q" class="exam-btn-secondary"><i class="fas fa-chevron-left"></i> Önceki Soru</button>
+                        <button type="button" id="btn-practice-prev-q" class="exam-btn-secondary"><i class="fas fa-chevron-left"></i> <span>Önceki Soru</span></button>
                     </div>
                     <div class="practice-nav-middle">
                         <span id="practice-answered-count-text">0 / 7 Yanıtlandı</span>
                     </div>
                     <div class="practice-bottom-right">
-                        <button type="button" id="btn-practice-next-q" class="exam-btn-secondary">Sonraki Soru <i class="fas fa-chevron-right"></i></button>
+                        <button type="button" id="btn-practice-next-q" class="exam-btn-secondary"><span>Sonraki Soru</span> <i class="fas fa-chevron-right"></i></button>
                         <button type="button" id="btn-practice-finish" class="exam-btn-primary">
-                            <i class="fas fa-clipboard-check"></i> Provayı Bitir ve Değerlendir
+                            <i class="fas fa-check-circle"></i> <span>Provayı Bitir</span>
                         </button>
                     </div>
                 </div>
@@ -4346,17 +4338,16 @@
         <section id="exam-view-eval" class="exam-step-view" style="display: none;">
             <div class="exam-eval-header-bar">
                 <div class="eval-top-row">
-                    <button type="button" id="btn-eval-pause" class="exam-btn-secondary btn-pause" title="Değerlendirmeyi kaydet ve hazırlık ekranına dön">
-                        <i class="fas fa-pause"></i> <span>Ara Ver ve Çık</span>
+                    <button type="button" id="btn-eval-back-choice" class="exam-btn-secondary" title="Değerlendirmeyi kaydet ve hazırlık ekranına dön">
+                        <i class="fas fa-arrow-left"></i> <span>Hazırlık Ekranı</span>
                     </button>
                     <button type="button" id="btn-eval-return-summary" class="exam-btn-warning" style="display: none;" title="Çalışma özetine geri dön">
                         <i class="fas fa-undo"></i> <span>Çalışma Özetime Dön</span>
                     </button>
                 </div>
                 <div class="eval-title-wrap">
-                    <span class="exam-card-eyebrow"><i class="fas fa-balance-scale"></i> Adım Adım Öz Değerlendirme</span>
+                    <span class="exam-card-eyebrow"><i class="fas fa-balance-scale"></i> Öz Değerlendirme</span>
                     <h3 class="exam-section-heading">Cevabını Bilimsel Ölçütlerle Karşılaştır</h3>
-                    <p class="exam-body-p">Kendi cevabını örnek bilimsel açıklama ile karşılaştır. Her soru için sana en uygun seçeneği belirle.</p>
                 </div>
 
                 <!-- 1-7 Soru Düğmeleri -->
@@ -4369,16 +4360,13 @@
             <!-- Alt Eylem Çubuğu -->
             <div class="eval-bottom-bar">
                 <div class="eval-bottom-left">
-                    <button type="button" id="btn-eval-pause-bottom" class="exam-btn-secondary btn-pause" title="Değerlendirmeyi kaydet ve hazırlık ekranına dön">
-                        <i class="fas fa-pause"></i> <span>Ara Ver ve Çık</span>
-                    </button>
-                    <button type="button" id="btn-eval-prev-q" class="exam-btn-secondary"><i class="fas fa-chevron-left"></i> Önceki Soru</button>
+                    <button type="button" id="btn-eval-prev-q" class="exam-btn-secondary"><i class="fas fa-chevron-left"></i> <span>Önceki</span></button>
                 </div>
                 <div class="eval-progress-text" id="eval-progress-text">1 / 7 Değerlendirildi</div>
                 <div class="eval-bottom-right">
-                    <button type="button" id="btn-eval-next-q" class="exam-btn-secondary">Sonraki Soru <i class="fas fa-chevron-right"></i></button>
+                    <button type="button" id="btn-eval-next-q" class="exam-btn-secondary"><span>Sonraki</span> <i class="fas fa-chevron-right"></i></button>
                     <button type="button" id="btn-eval-to-summary" class="exam-btn-primary">
-                        <i class="fas fa-chart-pie"></i> <span>Çalışma Özetimi Gör</span>
+                        <i class="fas fa-chart-pie"></i> <span>Çalışma Özetim</span>
                     </button>
                 </div>
             </div>
@@ -4388,8 +4376,9 @@
         <section id="exam-view-summary" class="exam-step-view" style="display: none;">
             <div class="exam-summary-hero">
                 <div class="summary-score-badge">
-                    <h3 class="summary-hero-title"><i class="fas fa-clipboard-check" style="color: #2dd4bf; margin-right: 8px;"></i> Çalışma Özeti</h3>
-                    <p class="summary-hero-sub">7. Sınıf · 1. Dönem 1. Yazılı (MEB Senaryo 2)</p>
+                    <span class="score-label">Öz Değerlendirme Puanın</span>
+                    <div class="score-big" id="summary-total-score">0 <span style="font-size: 0.5em; color: #94a3b8; font-weight: 500;">/ 100</span></div>
+                    <p class="summary-hero-sub" id="summary-score-sub">7. Sınıf · 1. Dönem 1. Yazılı (MEB Senaryo 2)</p>
                     <div class="summary-stats-pills">
                         <span class="stat-pill success"><i class="fas fa-check-circle"></i> <span id="summary-tam-count">0</span> Tam</span>
                         <span class="stat-pill warning"><i class="fas fa-adjust"></i> <span id="summary-kismen-count">0</span> Kısmen</span>
@@ -4433,20 +4422,17 @@
 
             <!-- Alt Eylemler Çubuğu -->
             <div class="summary-actions-toolbar">
-                <button type="button" id="btn-summary-to-choice" class="exam-btn-secondary">
-                    <i class="fas fa-th-large"></i> <span>Hazırlık Ekranı</span>
+                <button type="button" id="btn-summary-study-missed" class="exam-btn-warning">
+                    <i class="fas fa-book-reader"></i> <span>Eksiklerimi Çalış</span>
                 </button>
                 <button type="button" id="btn-summary-review-eval" class="exam-btn-secondary">
                     <i class="fas fa-search"></i> <span>Cevaplarımı İncele</span>
                 </button>
-                <button type="button" id="btn-summary-study-missed" class="exam-btn-warning">
-                    <i class="fas fa-book-reader"></i> <span>Eksiklerimi Çalış</span>
-                </button>
                 <button type="button" id="btn-summary-new-practice" class="exam-btn-primary">
                     <i class="fas fa-redo"></i> <span>Yeni Prova</span>
                 </button>
-                <button type="button" id="btn-summary-reset-data" class="exam-btn-danger">
-                    <i class="fas fa-trash-alt"></i> <span>Verileri Sıfırla</span>
+                <button type="button" id="btn-summary-to-choice" class="exam-btn-secondary">
+                    <i class="fas fa-th-large"></i> <span>Hazırlık Ekranı</span>
                 </button>
             </div>
         </section>
@@ -4457,12 +4443,15 @@
         <div class="print-preview-modal-dialog">
             <div class="print-preview-modal-header">
                 <div class="print-preview-title-group">
-                    <h3 id="print-modal-title"><i class="fas fa-print"></i> Soru Kâğıdı Baskı Önizlemesi</h3>
-                    <p>MEB Senaryo 2 standartlarında 7 açık uçlu soru. Cevap anahtarı veya ipuçları içermez.</p>
+                    <h3 id="print-modal-title"><i class="fas fa-file-pdf"></i> Soru Kâğıdı Baskı ve PDF Önizlemesi</h3>
+                    <p>MEB Senaryo 2 standartlarında 7 açık uçlu soru. Toplam 100 puandır.</p>
                 </div>
                 <div class="print-preview-actions">
-                    <button type="button" id="btn-print-preview-submit" class="exam-btn-primary">
-                        <i class="fas fa-print"></i> <span>Yazdır / PDF Olarak Kaydet</span>
+                    <button type="button" id="btn-print-preview-download-pdf" class="exam-btn-primary">
+                        <i class="fas fa-file-pdf"></i> <span>PDF İndir</span>
+                    </button>
+                    <button type="button" id="btn-print-preview-submit" class="exam-btn-secondary">
+                        <i class="fas fa-print"></i> <span>Yazdır</span>
                     </button>
                     <button type="button" id="btn-print-preview-close" class="exam-btn-secondary">
                         <i class="fas fa-times"></i> <span>Provaya Dön</span>
@@ -4471,7 +4460,7 @@
             </div>
             <div class="print-preview-hint-banner">
                 <i class="fas fa-info-circle"></i>
-                <span>Yazdır butonuna bastığınızda açılan sistem penceresinden yazıcınızı veya <strong>"PDF Olarak Kaydet"</strong> seçeneğini belirleyebilirsiniz. Tarayıcınız yazdırmayı engellerse menüden "Paylaş > Yazdır"ı kullanabilirsiniz.</span>
+                <span><strong>PDF İndir</strong> butonu ile soru kâğıdını cihazınıza indirebilir veya <strong>Yazdır</strong> butonuyla kâğıt çıktısı alabilirsiniz.</span>
             </div>
             <div class="print-preview-scroll-viewport">
                 <!-- Yazdırılabilir Sınav Kâğıdı Şablonu -->
@@ -4629,8 +4618,8 @@
         </div>
     </footer>
 
-    <script type="module" src="exam-engine.js?v=2026102806"></script>
-    <script type="module" src="lab-engine.js?v=2026102806"></script>
-    <script type="module" src="script.js?v=2026102806"></script>
+    <script type="module" src="exam-engine.js?v=2026102807"></script>
+    <script type="module" src="lab-engine.js?v=2026102807"></script>
+    <script type="module" src="script.js?v=2026102807"></script>
 </body>
 </html>

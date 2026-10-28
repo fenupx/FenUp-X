@@ -35,6 +35,7 @@ let state = {
 
 let currentProfile = 'dengeli';
 let currentSolveMode = 'ekranda'; // 'ekranda' | 'kagitta'
+let setupPracticeNewMode = false;
 let activeFrame = null;
 let activeAnimationCleanup = null;
 let isInitialized = false;
@@ -68,7 +69,10 @@ if (typeof localStorage !== 'undefined') {
 
                 if (parsed.attempt && Array.isArray(parsed.attempt.ids)) {
                     state.attempt = {
+                        version: parsed.attempt.version || 2,
                         ids: parsed.attempt.ids,
+                        questionPoints: parsed.attempt.questionPoints || {},
+                        totalPoints: parsed.attempt.totalPoints || 100,
                         profile: parsed.attempt.profile || 'dengeli',
                         repeats: parsed.attempt.repeats || 0,
                         solveMode: parsed.attempt.solveMode || 'ekranda',
@@ -78,6 +82,7 @@ if (typeof localStorage !== 'undefined') {
                         evaluations: parsed.attempt.evaluations || {},
                         revealed: parsed.attempt.revealed || {},
                         finished: !!parsed.attempt.finished,
+                        status: parsed.attempt.status || (parsed.attempt.finished ? 'completed' : 'in_progress'),
                         visitedCards: Array.isArray(parsed.attempt.visitedCards) ? parsed.attempt.visitedCards : []
                     };
 
@@ -146,6 +151,66 @@ function sourcesHtml(refs) {
     }).filter(Boolean).join(' ');
 }
 
+// --- 100 PUANLIK SORU PUANLARI DAĞITIMI (Largest Remainder / Hamilton Yöntemi) ---
+export function calculateQuestionPoints(questions, targetTotal = 100) {
+    if (!Array.isArray(questions) || questions.length === 0) {
+        throw new Error('Soru puanı hesabı için en az bir soru bulunmalıdır.');
+    }
+
+    const weights = questions.map(q => {
+        const w = Number(q.score_weight);
+        if (!Number.isFinite(w) || w <= 0) {
+            return q.difficulty === 'hard' ? 18 : (q.difficulty === 'medium' ? 14 : 11);
+        }
+        return w;
+    });
+
+    const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+    if (totalWeight <= 0) {
+        throw new Error('Toplam soru ağırlığı pozitif bir sayı olmalıdır.');
+    }
+
+    const n = questions.length;
+    const quotas = weights.map(w => (w * targetTotal) / totalWeight);
+    const integers = quotas.map(q => Math.floor(q));
+    const remainders = quotas.map((q, i) => ({
+        remainder: q - integers[i],
+        index: i,
+        weight: weights[i]
+    }));
+
+    // Kalanları büyükten küçüğe sırala (eşitlik halinde ağırlık ve soru sırasını kararlı tie-breaker olarak kullan)
+    remainders.sort((a, b) => {
+        if (Math.abs(b.remainder - a.remainder) > 1e-9) {
+            return b.remainder - a.remainder;
+        }
+        if (b.weight !== a.weight) {
+            return b.weight - a.weight;
+        }
+        return a.index - b.index;
+    });
+
+    const integerSum = integers.reduce((sum, val) => sum + val, 0);
+    const leftover = targetTotal - integerSum;
+
+    for (let i = 0; i < leftover; i++) {
+        const targetIdx = remainders[i].index;
+        integers[targetIdx] += 1;
+    }
+
+    const pointsMap = {};
+    questions.forEach((q, i) => {
+        pointsMap[q.id] = integers[i];
+    });
+
+    return pointsMap;
+}
+
+function formatScore(score) {
+    if (typeof score !== 'number' || isNaN(score)) return '0';
+    return Number.isInteger(score) ? String(score) : score.toFixed(1);
+}
+
 // --- VERİ YÜKLEME ---
 let dataPromise = null;
 async function loadData() {
@@ -159,6 +224,22 @@ async function loadData() {
             CARDS = DATA.cards || [];
             QUESTIONS = DATA.questions || [];
             profiles = DATA.selection_policy?.scenario_profiles || {};
+
+            // Eski kayıtları sürümlü uyarlama: 100 puanlık soru puanlarını bir kez ata
+            if (state.attempt && Array.isArray(state.attempt.ids)) {
+                if (!state.attempt.questionPoints || Object.keys(state.attempt.questionPoints).length === 0) {
+                    const qs = state.attempt.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
+                    if (qs.length === state.attempt.ids.length) {
+                        try {
+                            state.attempt.questionPoints = calculateQuestionPoints(qs, 100);
+                            state.attempt.totalPoints = 100;
+                            saveState();
+                        } catch (e) {
+                            console.warn('Eski prova puan adaptasyon uyarısı:', e);
+                        }
+                    }
+                }
+            }
             return true;
         } catch (err) {
             console.error('Yazılı verisi yüklenemedi:', err);
@@ -297,7 +378,10 @@ function renderChoice() {
 
     const btnPractice = $('btn-choice-go-practice');
     if (btnPractice) {
-        btnPractice.onclick = () => goToStep('practice');
+        btnPractice.onclick = () => {
+            setupPracticeNewMode = true;
+            goToStep('practice');
+        };
     }
 
     // Dinamik konu ve soru sayaçları
@@ -325,7 +409,6 @@ function renderChoice() {
             const modeEl = $('saved-attempt-mode');
             const btnResume = $('btn-resume-saved-attempt');
             const resumeLabel = $('btn-resume-saved-label');
-            const btnDiscard = $('btn-discard-start-new');
 
             const answeredCount = a.ids.filter(qid => (a.answers[qid] || '').trim().length > 0).length;
             const evalCount = a.ids.filter(qid => !!a.evaluations[qid]).length;
@@ -336,41 +419,31 @@ function renderChoice() {
                 modeEl.innerHTML = `<i class="fas fa-sliders-h"></i> ${esc(profileText)} · ${esc(modeText)}`;
             }
 
-            if (a.finished) {
-                if (titleEl) titleEl.textContent = 'Tamamlanmış Çalışman Var';
-                if (descEl) descEl.textContent = '7 soruluk provan ve öz değerlendirmen tamamlandı. Sonuçlarını ve konu eksiklerini inceleyebilirsin.';
+            if (a.status === 'completed' || a.finished) {
+                if (titleEl) titleEl.textContent = 'Tamamlanmış Prova';
+                if (descEl) descEl.textContent = '7 soruluk provan ve öz değerlendirmen hazır. Sonuçlarını ve konu eksiklerini inceleyebilirsin.';
                 if (badgeEl) badgeEl.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Değerlendirme Tamamlandı`;
-                if (resumeLabel) resumeLabel.textContent = 'Çalışma Özetini Gör';
+                if (resumeLabel) resumeLabel.textContent = 'Devam Et';
                 if (btnResume) btnResume.onclick = () => goToStep('summary');
-            } else if (evalCount > 0 || a.evalQuestionIndex > 0) {
-                if (titleEl) titleEl.textContent = 'Öz Değerlendirmesi Süren Provan Var';
+            } else if (a.status === 'evaluating' || evalCount > 0 || a.evalQuestionIndex > 0) {
+                if (titleEl) titleEl.textContent = 'Devam Eden Öz Değerlendirme';
                 if (descEl) descEl.textContent = 'Soruları çözdün; öz değerlendirme aşamasındasın.';
                 if (badgeEl) badgeEl.innerHTML = `<i class="fas fa-balance-scale"></i> ${evalCount} / 7 Soru Değerlendirildi`;
-                if (resumeLabel) resumeLabel.textContent = 'Değerlendirmeye Devam Et';
+                if (resumeLabel) resumeLabel.textContent = 'Devam Et';
                 if (btnResume) btnResume.onclick = () => goToStep('eval');
             } else {
-                if (titleEl) titleEl.textContent = 'Devam Eden Yazılı Provan Var';
+                if (titleEl) titleEl.textContent = 'Devam Eden Yazılı Prova';
                 if (descEl) descEl.textContent = 'Yazılı provan yarıda kaldı. Cevapların ve soru sıran güvenle saklanıyor.';
                 if (badgeEl) badgeEl.innerHTML = `<i class="fas fa-tasks"></i> ${answeredCount} / 7 Soru Yanıtlandı`;
-                if (resumeLabel) resumeLabel.textContent = 'Kayıtlı Provana Devam Et';
-                if (btnResume) btnResume.onclick = () => goToStep('practice');
-            }
-
-            if (btnDiscard) {
-                btnDiscard.onclick = () => discardAndStartNewPractice();
+                if (resumeLabel) resumeLabel.textContent = 'Devam Et';
+                if (btnResume) btnResume.onclick = () => {
+                    setupPracticeNewMode = false;
+                    goToStep('practice');
+                };
             }
         } else {
             savedCard.style.display = 'none';
         }
-    }
-}
-
-function discardAndStartNewPractice() {
-    const proceed = confirm('Mevcut prova ilerlemeniz sıfırlanacak ve yeni bir soru setiyle prova başlatılacaktır. Emin misiniz?');
-    if (proceed) {
-        state.attempt = null;
-        saveState();
-        goToStep('practice');
     }
 }
 
@@ -673,29 +746,42 @@ function renderPractice() {
     const setupBox = $('practice-setup-box');
     const activeBox = $('practice-active-box');
 
-    // Eğer aktif bir sınav oturumu yoksa veya bitmiş bir oturum varsa ve yeni soru seti seçilmemişse kurulumu göster
-    if (!state.attempt) {
+    // Eğer aktif bir sınav oturumu yoksa veya kullanıcı "Yeni Prova" başlatmak istiyorsa kurulumu göster
+    if (!state.attempt || setupPracticeNewMode) {
         if (setupBox) setupBox.style.display = 'block';
         if (activeBox) activeBox.style.display = 'none';
 
-        const btnBackChoice = $('btn-practice-back-choice');
-        if (btnBackChoice) btnBackChoice.onclick = () => goToStep('choice');
+        const btnBackChoice = setupBox ? setupBox.querySelector('#btn-practice-back-choice') : $('btn-practice-back-choice');
+        if (btnBackChoice) {
+            btnBackChoice.onclick = () => {
+                setupPracticeNewMode = false;
+                goToStep('choice');
+            };
+        }
 
         // Çözüm Modu Butonları (Ekranda / Kâğıtta)
         const btnModeScreen = $('btn-mode-screen');
         const btnModePaper = $('btn-mode-paper');
+        const btnStartLabel = $('exam-start-practice-label');
+        const setupSubtext = $('exam-setup-subtext');
+
+        const updateSolveModeUI = (mode) => {
+            currentSolveMode = mode;
+            if (btnModeScreen) btnModeScreen.classList.toggle('active', mode === 'ekranda');
+            if (btnModePaper) btnModePaper.classList.toggle('active', mode === 'kagitta');
+            if (btnStartLabel) {
+                btnStartLabel.textContent = (mode === 'kagitta') ? 'Soru Kâğıdını Hazırla' : 'Başla';
+            }
+            if (setupSubtext) {
+                setupSubtext.style.display = (mode === 'kagitta') ? 'block' : 'none';
+            }
+        };
+
         if (btnModeScreen && btnModePaper) {
-            btnModeScreen.onclick = () => {
-                currentSolveMode = 'ekranda';
-                btnModeScreen.classList.add('active');
-                btnModePaper.classList.remove('active');
-            };
-            btnModePaper.onclick = () => {
-                currentSolveMode = 'kagitta';
-                btnModePaper.classList.add('active');
-                btnModeScreen.classList.remove('active');
-            };
+            btnModeScreen.onclick = () => updateSolveModeUI('ekranda');
+            btnModePaper.onclick = () => updateSolveModeUI('kagitta');
         }
+        updateSolveModeUI(currentSolveMode);
 
         // Seviye Profili Butonları (Radio Benzeri Tekil Seçim & Net Gösterge)
         const profileBadge = $('exam-selected-profile-badge');
@@ -750,27 +836,36 @@ function renderPractice() {
         return;
     }
 
+    // Soru puanları haritası yoksa oluştur
+    if (!a.questionPoints || Object.keys(a.questionPoints).length === 0) {
+        a.questionPoints = calculateQuestionPoints(questions, 100);
+        a.totalPoints = 100;
+        saveState();
+    }
+
     let activeIdx = typeof a.activeQuestionIndex === 'number' ? a.activeQuestionIndex : 0;
     if (activeIdx < 0) activeIdx = 0;
     if (activeIdx > 6) activeIdx = 6;
     a.activeQuestionIndex = activeIdx;
 
-    // "Ara Ver ve Çık" Butonları: İlerlemeyi güvenle saklar, provayı bitirmez, hazırlık tercihine döner
-    const handlePracticePause = () => {
-        a.activeQuestionIndex = activeIdx;
-        saveState();
-        goToStep('choice');
-    };
-
-    const btnPauseTop = $('btn-practice-pause');
-    if (btnPauseTop) btnPauseTop.onclick = handlePracticePause;
-
-    const btnPauseBottom = $('btn-practice-pause-bottom');
-    if (btnPauseBottom) btnPauseBottom.onclick = handlePracticePause;
+    // Üst Bar Geri Dön Butonu: Mevcut soru metnini güvenle saklar ve hazırlık tercihine döner
+    const btnBackChoicePractice = activeBox.querySelector('#btn-practice-back-choice') || $('btn-practice-back-choice');
+    if (btnBackChoicePractice) {
+        btnBackChoicePractice.onclick = () => {
+            const textarea = $('practice-text-ans');
+            if (textarea && questions[activeIdx]) {
+                a.answers[questions[activeIdx].id] = textarea.value;
+            }
+            saveState();
+            goToStep('choice');
+        };
+    }
 
     // Üst Bar Durum Bilgileri
     const currInd = $('practice-current-indicator');
-    if (currInd) currInd.textContent = `Soru ${activeIdx + 1} / 7`;
+    if (currInd) {
+        currInd.textContent = (a.solveMode === 'kagitta') ? 'Kâğıtta Çözüm' : `Soru ${activeIdx + 1} / 7`;
+    }
 
     const modeInd = $('practice-mode-indicator');
     if (modeInd) {
@@ -779,9 +874,63 @@ function renderPractice() {
             : '<i class="fas fa-laptop"></i> Ekranda Çözüm';
     }
 
+    // Soru Kâğıdını Önizle / Yazdır Butonu
+    const btnPreviewPrint = $('btn-practice-preview-print');
+    if (btnPreviewPrint) {
+        btnPreviewPrint.onclick = (e) => {
+            e.preventDefault();
+            openPrintPreview(btnPreviewPrint);
+        };
+    }
+
     // 1-7 Soru Gezinme Butonları (Nav Strip)
     const navStrip = $('practice-question-nav-strip');
+    const bottomBar = activeBox.querySelector('.practice-bottom-bar');
+    const qContainer = $('practice-single-question-container');
+
+    if (a.solveMode === 'kagitta') {
+        // Kâğıtta Çözüm Modu: Odaklanmış sade bilgilendirme kartı
+        if (navStrip) navStrip.style.display = 'none';
+        if (bottomBar) bottomBar.style.display = 'none';
+
+        if (qContainer) {
+            qContainer.innerHTML = `
+                <div class="paper-mode-active-card">
+                    <div class="paper-mode-icon"><i class="fas fa-file-alt"></i></div>
+                    <h3>Soru Kâğıdın Hazır!</h3>
+                    <p>7 açık uçlu sorudan oluşan provan kâğıt üzerinde çözülmek üzere hazırlandı. Soruları kâğıt üzerinde çözdükten sonra cevaplarını kontrol etmek için aşağıdaki butona tıkla.</p>
+                    <div class="paper-mode-actions">
+                        <button type="button" class="exam-btn-primary" id="btn-paper-to-eval">
+                            <i class="fas fa-check-circle"></i> <span>Çözdüm, Cevaplarımı Kontrol Et</span>
+                        </button>
+                        <button type="button" class="exam-btn-secondary" id="btn-paper-reopen-print">
+                            <i class="fas fa-print"></i> <span>Soru Kâğıdını Tekrar Aç</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            const btnPaperEval = $('btn-paper-to-eval');
+            if (btnPaperEval) {
+                btnPaperEval.onclick = () => {
+                    a.status = 'evaluating';
+                    a.evalQuestionIndex = 0;
+                    saveState();
+                    goToStep('eval');
+                };
+            }
+
+            const btnPaperReopen = $('btn-paper-reopen-print');
+            if (btnPaperReopen) {
+                btnPaperReopen.onclick = () => openPrintPreview(btnPaperReopen);
+            }
+        }
+        return;
+    }
+
+    // Ekranda Çözüm Modu: 1-7 Nav strip ve alt bar aktif
     if (navStrip) {
+        navStrip.style.display = 'flex';
         navStrip.innerHTML = questions.map((q, i) => {
             const isAnswered = !!(a.answers[q.id] && a.answers[q.id].trim().length > 0);
             const isCurrent = (i === activeIdx);
@@ -794,6 +943,10 @@ function renderPractice() {
 
         navStrip.querySelectorAll('[data-nav-q]').forEach(btn => {
             btn.onclick = () => {
+                const textarea = $('practice-text-ans');
+                if (textarea && questions[activeIdx]) {
+                    a.answers[questions[activeIdx].id] = textarea.value;
+                }
                 a.activeQuestionIndex = Number(btn.dataset.navQ);
                 saveState();
                 renderPractice();
@@ -801,18 +954,12 @@ function renderPractice() {
         });
     }
 
-    // Soru Kâğıdını Önizle / Yazdır Butonu
-    const btnPreviewPrint = $('btn-practice-preview-print');
-    if (btnPreviewPrint) {
-        btnPreviewPrint.onclick = (e) => {
-            e.preventDefault();
-            openPrintPreview(btnPreviewPrint);
-        };
-    }
+    if (bottomBar) bottomBar.style.display = 'flex';
 
     // Tek Soru Konteyneri: PROVADA RUBRİK, İPUCU VEYA CEVAP KESİNLİKLE GÖSTERİLMEZ!
     const q = questions[activeIdx];
-    const qContainer = $('practice-single-question-container');
+    const qPoints = a.questionPoints?.[q.id] || (q.score_weight || 14);
+
     if (qContainer && q) {
         const visual = q.visual?.asset ? `
             <div class="exam-qimage-box">
@@ -839,6 +986,7 @@ function renderPractice() {
                     <span>SORU ${activeIdx + 1} / 7</span> · 
                     <span>${esc(q.outcome_id)}</span> · 
                     <span>${names[q.difficulty] || ''}</span>
+                    <span class="q-points-badge">${qPoints} Puan</span>
                 </div>
                 <h3 class="exam-qtitle">${esc(q.title)}</h3>
                 <div class="exam-qgrid ${visual ? '' : 'noimage'}">
@@ -849,16 +997,8 @@ function renderPractice() {
                     ${visual}
                 </div>
 
-                ${a.solveMode === 'kagitta' ? `
-                    <div class="exam-paper-note">
-                        <i class="fas fa-pencil-alt"></i> Bu provayı kâğıt üzerinde çözmeyi seçtin. İstersen aşağıya kısa notlar veya ara işlemler alabilirsin:
-                    </div>
-                ` : ''}
-
-                <label class="exam-answer-label" for="practice-text-ans">
-                    ${a.solveMode === 'kagitta' ? 'Kişisel Notların (İsteğe bağlı):' : 'Cevabın ve Fen Bilimsel Gerekçen:'}
-                </label>
-                <textarea id="practice-text-ans" class="exam-textarea" placeholder="${a.solveMode === 'kagitta' ? 'İsteğe bağlı ara işlem veya notların...' : 'Gerekçeli bilimsel cevabını buraya yaz...'}">${esc(existingAnswer)}</textarea>
+                <label class="exam-answer-label" for="practice-text-ans">Cevabın ve Fen Bilimsel Gerekçen:</label>
+                <textarea id="practice-text-ans" class="exam-textarea" placeholder="Gerekçeli bilimsel cevabını buraya yaz...">${esc(existingAnswer)}</textarea>
             </article>
         `;
 
@@ -877,12 +1017,16 @@ function renderPractice() {
         }
     }
 
-    // Alt Gezinme Butonları
+    // Alt Gezinme Butonları (Önceki Soru / Sonraki Soru / Provayı Bitir)
     const btnPrev = $('btn-practice-prev-q');
     if (btnPrev) {
         btnPrev.disabled = (activeIdx === 0);
         btnPrev.onclick = () => {
             if (activeIdx > 0) {
+                const textarea = $('practice-text-ans');
+                if (textarea && questions[activeIdx]) {
+                    a.answers[questions[activeIdx].id] = textarea.value;
+                }
                 a.activeQuestionIndex = activeIdx - 1;
                 saveState();
                 renderPractice();
@@ -891,40 +1035,51 @@ function renderPractice() {
     }
 
     const btnNext = $('btn-practice-next-q');
-    if (btnNext) {
-        btnNext.disabled = (activeIdx === 6);
-        btnNext.onclick = () => {
-            if (activeIdx < 6) {
+    const btnFinish = $('btn-practice-finish');
+
+    if (btnNext && btnFinish) {
+        if (activeIdx < 6) {
+            btnNext.style.display = 'inline-flex';
+            btnFinish.style.display = 'none';
+            btnNext.onclick = () => {
+                const textarea = $('practice-text-ans');
+                if (textarea && questions[activeIdx]) {
+                    a.answers[questions[activeIdx].id] = textarea.value;
+                }
                 a.activeQuestionIndex = activeIdx + 1;
                 saveState();
                 renderPractice();
-            }
-        };
+            };
+        } else {
+            btnNext.style.display = 'none';
+            btnFinish.style.display = 'inline-flex';
+            btnFinish.onclick = () => {
+                const textarea = $('practice-text-ans');
+                if (textarea && questions[activeIdx]) {
+                    a.answers[questions[activeIdx].id] = textarea.value;
+                }
+
+                const emptyIndices = [];
+                questions.forEach((qu, i) => {
+                    if (!(a.answers[qu.id] || '').trim()) {
+                        emptyIndices.push(i + 1);
+                    }
+                });
+
+                if (emptyIndices.length > 0) {
+                    const proceed = confirm(`Henüz yanıtlamadığın soru(lar) bulunuyor: Soru ${emptyIndices.join(', ')}.\n\nYine de provayı bitirip öz değerlendirmeye geçmek istiyor musun?`);
+                    if (!proceed) return;
+                }
+
+                a.status = 'evaluating';
+                a.evalQuestionIndex = 0;
+                saveState();
+                goToStep('eval');
+            };
+        }
     }
 
     updateAnsweredCountText(questions);
-
-    // Provayı Bitir ve Öz Değerlendirmeye Geç
-    const btnFinish = $('btn-practice-finish');
-    if (btnFinish) {
-        btnFinish.onclick = () => {
-            const emptyIndices = [];
-            questions.forEach((qu, i) => {
-                if (!(a.answers[qu.id] || '').trim()) {
-                    emptyIndices.push(i + 1);
-                }
-            });
-
-            if (emptyIndices.length > 0 && a.solveMode === 'ekranda') {
-                const proceed = confirm(`Henüz yanıtlamadığın soru(lar) bulunuyor: Soru ${emptyIndices.join(', ')}.\n\nYine de provayı bitirip öz değerlendirmeye geçmek istiyor musun?`);
-                if (!proceed) return;
-            }
-
-            a.evalQuestionIndex = 0;
-            saveState();
-            goToStep('eval');
-        };
-    }
 }
 
 function updateAnsweredCountText(questions) {
@@ -937,12 +1092,21 @@ function updateAnsweredCountText(questions) {
 
 function startNewPractice() {
     try {
+        setupPracticeNewMode = false;
         state.profileRuns = state.profileRuns || {};
         const run = state.profileRuns[currentProfile] || 0;
+        state.history = state.history || {};
         const chosen = selectQuestions(currentProfile, state.history, run);
         state.profileRuns[currentProfile] = run + 1;
+
+        // 100 puanlık soru puanlarını Hamilton / Largest Remainder yöntemiyle dağıt
+        const pointsMap = calculateQuestionPoints(chosen.questions, 100);
+
         state.attempt = {
+            version: 2,
             ids: chosen.questions.map(q => q.id),
+            questionPoints: pointsMap,
+            totalPoints: 100,
             profile: currentProfile,
             repeats: chosen.repeats,
             solveMode: currentSolveMode,
@@ -951,11 +1115,17 @@ function startNewPractice() {
             answers: {},
             evaluations: {},
             revealed: {},
+            status: 'in_progress',
             finished: false,
             visitedCards: []
         };
         saveState();
         renderPractice();
+
+        // Kâğıtta çözüm seçildiyse doğrudan baskı ve PDF modalını aç
+        if (currentSolveMode === 'kagitta') {
+            openPrintPreview();
+        }
     } catch (err) {
         alert(err.message);
     }
@@ -975,21 +1145,26 @@ function renderEval() {
         return;
     }
 
+    // Soru puanları haritası yoksa tamamla
+    if (!a.questionPoints || Object.keys(a.questionPoints).length === 0) {
+        a.questionPoints = calculateQuestionPoints(questions, 100);
+        a.totalPoints = 100;
+        saveState();
+    }
+
     let evalIdx = typeof a.evalQuestionIndex === 'number' ? a.evalQuestionIndex : 0;
     if (evalIdx < 0) evalIdx = 0;
     if (evalIdx > 6) evalIdx = 6;
     a.evalQuestionIndex = evalIdx;
 
-    // "Ara Ver ve Çık" Butonları
-    const handleEvalPause = () => {
-        a.evalQuestionIndex = evalIdx;
-        saveState();
-        goToStep('choice');
-    };
-    const btnEvalPauseTop = $('btn-eval-pause');
-    if (btnEvalPauseTop) btnEvalPauseTop.onclick = handleEvalPause;
-    const btnEvalPauseBottom = $('btn-eval-pause-bottom');
-    if (btnEvalPauseBottom) btnEvalPauseBottom.onclick = handleEvalPause;
+    // Hazırlık Ekranına Dön Butonu: İlerlemeyi saklar ve hazırlık tercihine döner
+    const btnEvalBackChoice = $('btn-eval-back-choice');
+    if (btnEvalBackChoice) {
+        btnEvalBackChoice.onclick = () => {
+            saveState();
+            goToStep('choice');
+        };
+    }
 
     // Çalışma Özetime Dön Butonu (İnceleme modunda gösterilir)
     const btnReturnSummary = $('btn-eval-return-summary');
@@ -1030,7 +1205,9 @@ function renderEval() {
 
     // Tek Soru Değerlendirme Konteyneri
     const q = questions[evalIdx];
+    const qPoints = a.questionPoints?.[q.id] || (q.score_weight || 14);
     const qContainer = $('eval-single-question-container');
+
     if (qContainer && q) {
         const visual = q.visual?.asset ? `
             <div class="exam-qimage-box">
@@ -1052,8 +1229,9 @@ function renderEval() {
         const studentAns = (a.answers[q.id] || '').trim();
         const currentEval = a.evaluations[q.id] || '';
 
-        const rubricsList = (q.rubric || []).map((r, i) => `
-            <li><strong>Ölçüt ${i + 1}:</strong> ${esc(r.text)}</li>
+        // Rubrik ölçütleri: Öğrenci için puansız bilimsel kontrol listesi
+        const rubricsList = (q.rubric || []).map(r => `
+            <li><i class="fas fa-check" style="color: #2dd4bf; margin-right: 6px;"></i> <span>${esc(r.text)}</span></li>
         `).join('');
 
         qContainer.innerHTML = `
@@ -1062,6 +1240,7 @@ function renderEval() {
                     <span>SORU ${evalIdx + 1} / 7</span> · 
                     <span>${esc(q.outcome_id)}</span> · 
                     <span>${names[q.difficulty] || ''}</span>
+                    <span class="q-points-badge">${qPoints} Puan</span>
                 </div>
                 <h3 class="exam-qtitle">${esc(q.title)}</h3>
                 <div class="exam-qgrid ${visual ? '' : 'noimage'}">
@@ -1076,11 +1255,15 @@ function renderEval() {
                 <div class="eval-student-answer-box">
                     <h4><i class="fas fa-pencil-alt"></i> Senin Verdiğin Cevap:</h4>
                     <div class="student-answer-content">
-                        ${studentAns ? esc(studentAns) : '<em>(Bu soru için ekrana yazılı cevap girilmedi veya kâğıt üzerinde çözüldü.)</em>'}
+                        ${studentAns
+                            ? esc(studentAns)
+                            : (a.solveMode === 'kagitta'
+                                ? '<div class="eval-paper-hint"><i class="fas fa-pencil-alt"></i> Bu provayı kâğıt üzerinde çözdün. Kâğıttaki çözümünü aşağıdaki bilimsel ölçütlerle karşılaştırarak kendini değerlendir.</div>'
+                                : '<em>(Bu soru için ekrana yazılı cevap girilmedi.)</em>')}
                     </div>
                 </div>
 
-                <!-- Örnek Bilimsel Açıklama ve Rubrik -->
+                <!-- Örnek Bilimsel Açıklama ve Rubrik Ölçütleri -->
                 <div class="eval-sample-answer-box">
                     <h4><i class="fas fa-check-circle" style="color: #2dd4bf;"></i> Örnek Bilimsel Açıklama:</h4>
                     <p class="sample-answer-text">${esc(q.sample_answer)}</p>
@@ -1089,32 +1272,32 @@ function renderEval() {
                     </div>
                     <div class="eval-rubric-summary">
                         <strong>Başarı Ölçütleri:</strong>
-                        <ul>${rubricsList}</ul>
+                        <ul class="eval-criteria-checklist">${rubricsList}</ul>
                     </div>
                 </div>
 
-                <!-- 3 Net Öz Değerlendirme Seçeneği -->
+                <!-- 3 Net Öz Değerlendirme Seçeneği (100 Puanlık Soru Payı) -->
                 <div class="eval-choice-section">
                     <label class="eval-choice-title">Kendi cevabını değerlendir ve sana en uygun olanı seç:</label>
                     <div class="eval-choices-grid">
-                        <button type="button" class="eval-choice-btn tam ${currentEval === 'tam' ? 'selected' : ''}" data-eval-opt="tam">
+                        <button type="button" class="eval-choice-btn tam ${currentEval === 'tam' ? 'selected' : ''}" data-eval-opt="tam" ${state.reviewingEval ? 'disabled' : ''}>
                             <div class="eval-opt-icon"><i class="fas fa-check-circle"></i></div>
                             <div class="eval-opt-body">
-                                <strong>Tam Yaptım</strong>
-                                <small>Tüm bilimsel ölçütleri ve fen gerekçesini eksiksiz açıkladım.</small>
+                                <strong>Tam Yaptım (${qPoints} Puan)</strong>
+                                <small>Tüm bilimsel ölçütleri ve fen gerekçesini eksiksiz sağladım.</small>
                             </div>
                         </button>
-                        <button type="button" class="eval-choice-btn kismen ${currentEval === 'kismen' ? 'selected' : ''}" data-eval-opt="kismen">
+                        <button type="button" class="eval-choice-btn kismen ${currentEval === 'kismen' ? 'selected' : ''}" data-eval-opt="kismen" ${state.reviewingEval ? 'disabled' : ''}>
                             <div class="eval-opt-icon"><i class="fas fa-adjust"></i></div>
                             <div class="eval-opt-body">
-                                <strong>Kısmen Yaptım</strong>
+                                <strong>Kısmen Yaptım (${formatScore(qPoints / 2)} Puan)</strong>
                                 <small>Temel kavramı belirttim fakat bazı gerekçeler veya ölçütler eksik kaldı.</small>
                             </div>
                         </button>
-                        <button type="button" class="eval-choice-btn yapamadim ${currentEval === 'yapamadim' ? 'selected' : ''}" data-eval-opt="yapamadim">
+                        <button type="button" class="eval-choice-btn yapamadim ${currentEval === 'yapamadim' ? 'selected' : ''}" data-eval-opt="yapamadim" ${state.reviewingEval ? 'disabled' : ''}>
                             <div class="eval-opt-icon"><i class="fas fa-times-circle"></i></div>
                             <div class="eval-opt-body">
-                                <strong>Yapamadım</strong>
+                                <strong>Yapamadım (0 Puan)</strong>
                                 <small>Gerekçeyi açıklayamadım, yanlış yaptım veya soruyu boş bıraktım.</small>
                             </div>
                         </button>
@@ -1123,15 +1306,17 @@ function renderEval() {
             </article>
         `;
 
-        // Seçenek tıklama olayları
-        qContainer.querySelectorAll('[data-eval-opt]').forEach(btn => {
-            btn.onclick = () => {
-                const optVal = btn.dataset.evalOpt;
-                a.evaluations[q.id] = optVal;
-                saveState();
-                renderEval();
-            };
-        });
+        // Seçenek tıklama olayları (İnceleme modunda salt okunur)
+        if (!state.reviewingEval) {
+            qContainer.querySelectorAll('[data-eval-opt]').forEach(btn => {
+                btn.onclick = () => {
+                    const optVal = btn.dataset.evalOpt;
+                    a.evaluations[q.id] = optVal;
+                    saveState();
+                    renderEval();
+                };
+            });
+        }
     }
 
     // İlerleme Metni
@@ -1139,7 +1324,7 @@ function renderEval() {
     const progressEl = $('eval-progress-text');
     if (progressEl) progressEl.textContent = `${evaluatedCount} / 7 Değerlendirildi`;
 
-    // Alt Gezinme Butonları
+    // Alt Gezinme Butonları (Önceki / Sonraki / Çalışma Özetim)
     const btnPrev = $('btn-eval-prev-q');
     if (btnPrev) {
         btnPrev.disabled = (evalIdx === 0);
@@ -1153,49 +1338,52 @@ function renderEval() {
     }
 
     const btnNext = $('btn-eval-next-q');
-    if (btnNext) {
-        btnNext.disabled = (evalIdx === 6);
-        btnNext.onclick = () => {
-            if (evalIdx < 6) {
+    const btnToSummary = $('btn-eval-to-summary');
+
+    if (btnNext && btnToSummary) {
+        if (evalIdx < 6) {
+            btnNext.style.display = 'inline-flex';
+            btnToSummary.style.display = 'none';
+            btnNext.onclick = () => {
                 a.evalQuestionIndex = evalIdx + 1;
                 saveState();
                 renderEval();
-            }
-        };
-    }
-
-    // Çalışma Özetimi Gör Butonu: Tüm sorular değerlendirilmeden açılamaz
-    const btnToSummary = $('btn-eval-to-summary');
-    if (btnToSummary) {
-        const missingCount = questions.filter(qu => !a.evaluations[qu.id]).length;
-        if (missingCount > 0) {
-            btnToSummary.classList.add('eval-pending');
+            };
         } else {
-            btnToSummary.classList.remove('eval-pending');
-        }
+            btnNext.style.display = 'none';
+            btnToSummary.style.display = 'inline-flex';
 
-        btnToSummary.onclick = () => {
-            const missing = [];
-            questions.forEach((qu, i) => {
-                if (!a.evaluations[qu.id]) {
-                    missing.push(i + 1);
+            btnToSummary.onclick = () => {
+                if (state.reviewingEval) {
+                    state.reviewingEval = false;
+                    saveState();
+                    goToStep('summary');
+                    return;
                 }
-            });
 
-            if (missing.length > 0) {
-                alert(`Lütfen tüm sorular için öz değerlendirmeni tamamla.\nHenüz değerlendirilmeyen: Soru ${missing.join(', ')}`);
-                return;
-            }
+                const missing = [];
+                questions.forEach((qu, i) => {
+                    if (!a.evaluations[qu.id]) {
+                        missing.push(i + 1);
+                    }
+                });
 
-            a.finished = true;
-            state.reviewingEval = false;
-            saveState();
-            goToStep('summary');
-        };
+                if (missing.length > 0) {
+                    alert(`Lütfen tüm sorular için öz değerlendirmeni tamamla.\nHenüz değerlendirilmeyen: Soru ${missing.join(', ')}`);
+                    return;
+                }
+
+                a.status = 'completed';
+                a.finished = true;
+                state.reviewingEval = false;
+                saveState();
+                goToStep('summary');
+            };
+        }
     }
 }
 
-// 5. AŞAMA: ÇALIŞMA ÖZETİ EKRANI (Skor, Konu Analizi & Eksiklerimi Çalış)
+// 5. AŞAMA: ÇALIŞMA ÖZETİ EKRANI (100 Puan, Konu Analizi & Eksiklerimi Çalış)
 function renderSummary() {
     if (!state.attempt) {
         goToStep('scope');
@@ -1209,7 +1397,7 @@ function renderSummary() {
         return;
     }
 
-    // Puan ve Başarı Dağılımı Hesaplama (Veri uyumluluğu için a.score hesaplanır)
+    // 100 Puanlık Soru Dağılımına Göre Toplam Puanı Hesapla
     let totalScore = 0;
     let tamCount = 0;
     let kismenCount = 0;
@@ -1217,11 +1405,12 @@ function renderSummary() {
 
     questions.forEach(q => {
         const ev = a.evaluations[q.id];
+        const p = a.questionPoints?.[q.id] || (q.score_weight || 14);
         if (ev === 'tam') {
-            totalScore += 10;
+            totalScore += p;
             tamCount++;
         } else if (ev === 'kismen') {
-            totalScore += 5;
+            totalScore += (p / 2);
             kismenCount++;
         } else {
             yapamadimCount++;
@@ -1230,6 +1419,22 @@ function renderSummary() {
 
     a.score = totalScore;
     saveState();
+
+    // Hero Skor Alanı
+    const scoreValEl = $('summary-total-score');
+    if (scoreValEl) {
+        scoreValEl.innerHTML = `${formatScore(totalScore)} <span style="font-size: 0.5em; color: #94a3b8; font-weight: 500;">/ 100</span>`;
+    }
+
+    const scoreSubEl = $('summary-score-sub');
+    if (scoreSubEl) {
+        let msg = '7. Sınıf · 1. Dönem 1. Yazılı (MEB Senaryo 2)';
+        if (totalScore >= 85) msg = 'Harika bir hazırlık! Tüm kavramlara ve fen gerekçelerine son derece hakimsin.';
+        else if (totalScore >= 70) msg = 'Çok iyi bir performans! Birkaç küçük eksiği tamamlayarak yazılıya tam hazır olabilirsin.';
+        else if (totalScore >= 50) msg = 'Güzel bir prova! Aşağıdaki önerilen kartları çalışarak puanını daha da artırabilirsin.';
+        else msg = 'Provayı tamamladın! Şimdi eksik konulara odaklanarak yazılıya eksiksiz hazırlanabilirsin.';
+        scoreSubEl.textContent = msg;
+    }
 
     const tamEl = $('summary-tam-count');
     if (tamEl) tamEl.textContent = tamCount;
@@ -1382,35 +1587,66 @@ function renderSummary() {
 
     const btnNewPractice = $('btn-summary-new-practice');
     if (btnNewPractice) {
-        btnNewPractice.onclick = () => discardAndStartNewPractice();
-    }
-
-    const btnResetData = $('btn-summary-reset-data');
-    if (btnResetData) {
-        btnResetData.onclick = () => {
-            const proceed = confirm('Bu cihazdaki tüm prova geçmişi ve çalışma verileri sıfırlanacaktır. Emin misin?');
-            if (proceed) {
-                state = {
-                    history: {},
-                    attempt: null,
-                    profileRuns: {},
-                    currentStep: 'scope',
-                    studyCardIdx: 0,
-                    studyMode: 'free',
-                    reviewCardIds: [],
-                    returnToSummary: false,
-                    reviewingEval: false,
-                    hasSelectedScope: false
-                };
-                saveState();
-                goToStep('scope');
-            }
+        btnNewPractice.onclick = () => {
+            setupPracticeNewMode = true;
+            goToStep('practice');
         };
     }
 }
 
-// --- YAZDIRMA VE KÂĞITTA ÇÖZÜM FORMATI (Print / PDF Sheet Preview) ---
+// --- YAZDIRMA VE KÂĞITTA ÇÖZÜM FORMATI (Print / PDF Sheet Preview & Direct PDF Download) ---
 let lastPrintTriggerElement = null;
+let html2pdfPromise = null;
+
+function loadHtml2Pdf() {
+    if (window.html2pdf) return Promise.resolve(window.html2pdf);
+    if (html2pdfPromise) return html2pdfPromise;
+    html2pdfPromise = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+        script.crossOrigin = 'anonymous';
+        script.onload = () => resolve(window.html2pdf);
+        script.onerror = () => {
+            html2pdfPromise = null;
+            reject(new Error('PDF kütüphanesi yüklenemedi.'));
+        };
+        document.head.appendChild(script);
+    });
+    return html2pdfPromise;
+}
+
+async function downloadExamPdf(btnDownload = null) {
+    const printEl = $('exam-print-sheet');
+    if (!printEl) return;
+
+    const origHtml = btnDownload ? btnDownload.innerHTML : '';
+    if (btnDownload) {
+        btnDownload.disabled = true;
+        btnDownload.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>PDF Hazırlanıyor...</span>';
+    }
+
+    try {
+        const html2pdf = await loadHtml2Pdf();
+        const opt = {
+            margin: [10, 12, 10, 12],
+            filename: 'FenUpX_7Sinif_1Donem_1Yazili_Senaryo2.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        };
+        await html2pdf().set(opt).from(printEl).save();
+    } catch (err) {
+        console.warn('Doğrudan PDF oluşturma hatası, yazdırma penceresine yönlendiriliyor:', err);
+        alert("Doğrudan PDF indirme bu tarayıcıda tamamlanamadı. Açılacak yazdırma penceresinden 'PDF Olarak Kaydet' seçeneğini kullanabilirsiniz.");
+        window.print();
+    } finally {
+        if (btnDownload) {
+            btnDownload.disabled = false;
+            btnDownload.innerHTML = origHtml;
+        }
+    }
+}
 
 function openPrintPreview(triggerEl = null) {
     if (!state.attempt) return;
@@ -1418,6 +1654,13 @@ function openPrintPreview(triggerEl = null) {
     const printEl = $('exam-print-sheet');
     const modalEl = $('exam-print-preview-modal');
     if (!printEl || !modalEl) return;
+
+    // Soru puanları haritası yoksa tamamla
+    if (!state.attempt.questionPoints || Object.keys(state.attempt.questionPoints).length === 0) {
+        state.attempt.questionPoints = calculateQuestionPoints(qs, 100);
+        state.attempt.totalPoints = 100;
+        saveState();
+    }
 
     // Tetikleyen düğmeyi sakla (kapatınca odağı geri vermek için)
     lastPrintTriggerElement = triggerEl || (document.activeElement && document.activeElement !== document.body ? document.activeElement : $('btn-practice-preview-print'));
@@ -1427,7 +1670,7 @@ function openPrintPreview(triggerEl = null) {
             <div class="print-brand-row">
                 <img src="fenupx-logo.png" alt="FenUp X Logo" class="print-logo" width="48" height="48">
                 <div class="print-title-group">
-                    <h1 class="print-school-title">FenUp X — Fen Bilimleri Ortak Yazılı Sınavı</h1>
+                    <h1 class="print-school-title">FenUp X — Fen Bilimleri Yazılı Provası</h1>
                     <h2 class="print-sub-title">7. Sınıf 1. Dönem 1. Yazılı Provası (MEB Senaryo 2)</h2>
                 </div>
             </div>
@@ -1436,13 +1679,15 @@ function openPrintPreview(triggerEl = null) {
                 <div class="print-info-item"><strong>Sınıfı / Şubesi:</strong> ....................</div>
                 <div class="print-info-item"><strong>Okul No:</strong> ....................</div>
                 <div class="print-info-item"><strong>Tarih:</strong> ....................</div>
+                <div class="print-info-item"><strong>Aldığı Puan:</strong> ...... / 100</div>
             </div>
         </div>
         <div class="print-instructions">
-            <strong>Yönerge:</strong> Bu sınav MEB Senaryo 2 kazanım dağılımına uygun 7 açık uçlu sorudan oluşmaktadır. Her soru 10 puandır. Toplam süre 40 dakikadır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.
+            <strong>Yönerge:</strong> Bu sınav MEB Senaryo 2 kazanım dağılımına uygun 7 açık uçlu sorudan oluşmaktadır. Soru puanları yanlarında belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.
         </div>
         <div class="print-questions-flow">
             ${qs.map((q, i) => {
+                const qPoints = state.attempt.questionPoints?.[q.id] || (q.score_weight || 14);
                 const visual = q.visual?.asset ? `
                     <div class="print-qimage">
                         <img src="${esc(ASSET_BASE + q.visual.asset)}" alt="${esc(q.visual?.alt || '')}">
@@ -1457,11 +1702,15 @@ function openPrintPreview(triggerEl = null) {
                     </table>
                 ` : '';
 
+                // Puana ve rubrik sayısına göre orantılı çizgili alan satır sayısı
+                const lineCount = (qPoints >= 18 || (q.rubric && q.rubric.length >= 4)) ? 7 : (qPoints >= 14 ? 6 : 4);
+                const ruledLines = Array(lineCount).fill('<div class="print-line"></div>').join('');
+
                 return `
                     <div class="print-question-block">
                         <div class="print-q-header">
                             <span class="print-q-num">SORU ${i + 1}</span>
-                            <span class="print-q-meta">[${esc(q.outcome_id)} · 10 Puan]</span>
+                            <span class="print-q-meta">[${esc(q.outcome_id)} · ${qPoints} Puan]</span>
                         </div>
                         <div class="print-q-body">
                             <p class="print-q-stem">${esc(q.stem)}</p>
@@ -1471,11 +1720,7 @@ function openPrintPreview(triggerEl = null) {
                         <div class="print-answer-lines-container">
                             <span class="print-lines-label">Cevabınız ve Fen Bilimsel Gerekçeniz:</span>
                             <div class="print-ruled-lines">
-                                <div class="print-line"></div>
-                                <div class="print-line"></div>
-                                <div class="print-line"></div>
-                                <div class="print-line"></div>
-                                <div class="print-line"></div>
+                                ${ruledLines}
                             </div>
                         </div>
                     </div>
@@ -1492,6 +1737,16 @@ function openPrintPreview(triggerEl = null) {
 
     // Arka plan kaydırma kilidi
     document.body.classList.add('exam-modal-open');
+
+    // PDF İndir butonu
+    const btnDownloadPdf = $('btn-print-preview-download-pdf');
+    if (btnDownloadPdf) {
+        btnDownloadPdf.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            downloadExamPdf(btnDownloadPdf);
+        };
+    }
 
     // Yazdır butonu: gerçek window.print() başlatır, veriyi bozmaz
     const btnSubmit = $('btn-print-preview-submit');
@@ -1521,9 +1776,11 @@ function openPrintPreview(triggerEl = null) {
         }
     };
 
-    // Açılışta odağı birincil düğmeye veya modal penceresine taşı
+    // Açılışta odağı birincil düğmeye (PDF İndir veya Yazdır) taşı
     setTimeout(() => {
-        if (btnSubmit) {
+        if (btnDownloadPdf) {
+            btnDownloadPdf.focus();
+        } else if (btnSubmit) {
             btnSubmit.focus();
         } else if (modalEl) {
             modalEl.focus();
@@ -2007,7 +2264,9 @@ if (typeof window !== 'undefined') {
         renderStudy,
         renderAdminQuestionReview,
         openPrintPreview,
-        closePrintPreview
+        closePrintPreview,
+        downloadExamPdf,
+        calculateQuestionPoints
     };
 }
 
