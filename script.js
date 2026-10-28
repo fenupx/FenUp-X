@@ -442,6 +442,87 @@ if (mobileMenuButton && headerNavigation) {
     syncMobileHeader();
 }
 
+// Ortak sahne katmanının History API bağlantısı; cevaplar yalnız sınav kaydındadır.
+const navigation = (() => {
+    let replaying = false;
+    const safeIndex = value => Number.isSafeInteger(value) && value >= 0 ? value : 0;
+    let index = safeIndex(history.state?.fenupx?.index);
+    const entries = new Map();
+    const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+    const snapshot = () => {
+        const scene = document.querySelector('.scene:not(.is-hidden)')?.id || 'scene-home';
+        return scene === 'scene-yazili' ? { scene, ...(window.FenUpExam?.getRoute() || { step: 'scope' }) } : { scene };
+    };
+    const url = route => '#' + [route.scene, route.step, route.mode].filter(Boolean).join('/');
+    const readURL = () => {
+        const [scene, step, mode] = location.hash.slice(1).split('/');
+        return scene ? { scene, ...(step ? { step } : {}), ...(mode ? { mode } : {}) } : { scene: 'scene-home' };
+    };
+    function record(replace = false) {
+        if (replaying) return;
+        const route = snapshot();
+        if (same(history.state?.fenupx?.route, route)) return;
+        if (!replace) index++;
+        entries.set(index, route);
+        history[replace ? 'replaceState' : 'pushState']({ fenupx: { v: 1, index, route } }, '', url(route));
+    }
+    function cleanLayers() {
+        closeMobileMenu();
+        document.querySelectorAll('.modal-overlay.is-open, .modal-overlay.active').forEach(el => {
+            el.classList.add('is-hidden'); el.classList.remove('is-open', 'active');
+            el.style.display = 'none'; el.setAttribute('aria-hidden', 'true');
+        });
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.top = '';
+    }
+    async function apply(route) {
+        replaying = true;
+        window.FenUpExam?.saveProgress();
+        cleanLayers();
+        try {
+            const target = document.getElementById(route?.scene);
+            if (!target?.classList.contains('scene')) route = { scene: 'scene-home' };
+            if (route.scene === 'scene-home') returnToHome();
+            else {
+                showScene(route.scene);
+                if (route.scene === 'scene-yazili') await window.FenUpExam?.openExamView({ route });
+                if (route.scene === 'lab-view') window.FenUpLab?.openLabView();
+            }
+        } finally {
+            replaying = false;
+            record(true);
+            entries.set(index, snapshot());
+            window.scrollTo(0, 0);
+        }
+    }
+    function backTo(route) {
+        if (replaying) return false;
+        window.FenUpExam?.saveProgress();
+        const candidates = [...entries].filter(([i, r]) => i < index && r.scene === route.scene && (!route.step || r.step === route.step));
+        if (candidates.length) history.go(candidates.at(-1)[0] - index);
+        else apply(route);
+        return true;
+    }
+    window.addEventListener('popstate', e => {
+        const saved = e.state?.fenupx;
+        index = saved?.v === 1 ? safeIndex(saved.index) : 0;
+        apply(saved?.v === 1 ? saved.route : readURL());
+    });
+    window.addEventListener('hashchange', () => {
+        if (location.hash !== url(history.state?.fenupx?.route || {})) apply(readURL());
+    });
+    window.addEventListener('load', () => {
+        history.scrollRestoration = 'manual';
+        const saved = history.state?.fenupx;
+        const route = saved?.v === 1 ? saved.route : readURL();
+        entries.set(index, route);
+        apply(route);
+    }, { once: true });
+    return { record, backTo, get replaying() { return replaying; } };
+})();
+window.FenUpNavigation = navigation;
+
 function switchScene(from, to) {
     closeMobileMenu();
     if(!from || !to) return;
@@ -474,7 +555,7 @@ function switchScene(from, to) {
     if(userProfileArea) {
         userProfileArea.style.display = isHome ? "inline-block" : "none";
     }
-    if (mainFooter) mainFooter.classList.toggle('hidden-footer', !isHome);
+    if (mainFooter) mainFooter.classList.toggle('hidden-footer', !isHome && to.id !== 'scene-yazili');
 
     const isQuiz = (to.id === "scene-quiz" || to.id === "scene-tournament-quiz");
     if (topControls) {
@@ -496,6 +577,7 @@ function switchScene(from, to) {
         }
     }
 
+    if (!navigation.replaying) navigation.record();
     if (to.id === "scene-unit") {
         if (selectedGrade && typeof updateUnitCards === "function") updateUnitCards(selectedGrade);
         const lbSide = document.getElementById('unit-leaderboard-side');
@@ -579,6 +661,7 @@ let activeMode = "", selectedGrade = null, selectedUnit = null;
 let usedQuestions = []; 
 
 function returnToHome() {
+    if (navigation.backTo({ scene: 'scene-home' })) return;
     closeMobileMenu();
     document.querySelector('.top-header')?.classList.remove('module-active');
     if (window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
@@ -674,24 +757,18 @@ const btnModeTurnuva = document.getElementById('btn-mode-turnuva');
 if(btnModeTurnuva) btnModeTurnuva.onclick = () => { activeMode = "turnuva"; initTournamentLobby(); switchScene(scenes.crossroads, scenes.tournamentLobby); };
 
 document.querySelectorAll('.btn-back-home').forEach(btn => {
-    btn.onclick = () => {
-        if (btn.id === 'btn-lab-back-home' && window.FenUpLab && typeof window.FenUpLab.closeLabView === "function") {
-            window.FenUpLab.closeLabView();
-        } else if (btn.id === 'btn-exam-back-home' && window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
-            window.FenUpExam.closeExamView();
-            switchScene(btn.closest('.scene'), scenes.home);
-        } else {
-            switchScene(btn.closest('.scene'), scenes.home);
-        }
-    };
+    btn.addEventListener('click', e => {
+        e.stopImmediatePropagation();
+        returnToHome();
+    }, true);
 });
-document.querySelectorAll('.btn-back-cross').forEach(btn => btn.onclick = () => switchScene(btn.closest('.scene'), scenes.crossroads));
+document.querySelectorAll('.btn-back-cross').forEach(btn => btn.onclick = () => navigation.backTo({ scene: scenes.crossroads.id }));
 
 const btnBackClass = document.getElementById('btn-back-class');
-if(btnBackClass) btnBackClass.onclick = () => switchScene(scenes.unit, scenes.class);
+if(btnBackClass) btnBackClass.onclick = () => navigation.backTo({ scene: scenes.class.id });
 
 const btnBackRules = document.getElementById('btn-back-rules');
-if(btnBackRules) btnBackRules.onclick = () => switchScene(scenes.rules, scenes.unit);
+if(btnBackRules) btnBackRules.onclick = () => navigation.backTo({ scene: scenes.unit.id });
 
 let drawBag = []; let currentDrawSize = 0; let currentActivePlayerName = "Misafir"; let individualLeaderboard = [];
 

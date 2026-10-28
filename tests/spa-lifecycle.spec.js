@@ -14,7 +14,7 @@ test.describe('SPA Sahne Yaşam Döngüsü (Scene Lifecycle) ve İzolasyon Testl
     await expect(page.locator('#scene-yazili')).toBeVisible();
 
     // 2. "Ana Sayfaya Dön" butonuna tıkla (#btn-exam-back-home)
-    const btnClose = page.locator('#btn-exam-back-home');
+    const btnClose = page.locator('#btn-exam-step-back');
     await expect(btnClose).toBeVisible();
     await btnClose.click();
 

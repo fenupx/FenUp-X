@@ -47,7 +47,7 @@ test.describe('Üst Başlık ve Ana Sayfa Butonu Örtüşme & Tıklanabilirlik Z
     }
 
     // Üstteki "Hazırlık Ekranı" butonuna gerçekten tıklanabilmeli (hit testing)
-    const btnBack = page.locator('#practice-active-box #btn-practice-back-choice');
+    const btnBack = page.locator('#btn-exam-step-back');
     await expect(btnBack).toBeVisible();
     await btnBack.click();
     await expect(page.locator('#exam-view-choice')).toBeVisible();

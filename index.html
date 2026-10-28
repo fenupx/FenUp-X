@@ -37,8 +37,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2026102818">
-    <link rel="stylesheet" href="exam.css?v=2026102817">
+    <link rel="stylesheet" href="style.css?v=2026102819">
+    <link rel="stylesheet" href="exam.css?v=2026102819">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -4054,6 +4054,10 @@
     <!-- FENUP X — YAZILIYA HAZIRLIK / 7. SINIF SENARYO 2 PİLOTU          -->
     <!-- ================================================================= -->
     <div id="scene-yazili" class="scene is-hidden glass-panel full-width exam-scene">
+        <div class="exam-back-navigation">
+            <button id="btn-exam-step-back" class="exam-btn-secondary" type="button">← Geri</button>
+        </div>
+
         <!-- 1. Üst Navigasyon ve Başlık Şeridi -->
         <div class="exam-header-bar">
             <button id="btn-exam-back-home" class="back-link btn-back-home"><i class="fas fa-arrow-left"></i> Ana Sayfaya Dön</button>
@@ -4195,7 +4199,7 @@
             <!-- Üst Çubuk -->
             <div class="exam-study-toolbar">
                 <div class="study-toolbar-left">
-                    <button id="btn-study-back-choice" class="exam-btn-secondary" type="button"><i class="fas fa-arrow-left"></i> <span>Hazırlık Ekranı</span></button>
+                    <button id="btn-study-back-choice" class="exam-btn-secondary" type="button"><i class="fas fa-arrow-left"></i> <span>Çalışma Seçimi</span></button>
                     <button id="btn-study-toggle-plan" class="exam-btn-secondary" type="button" aria-expanded="true" aria-controls="exam-cardnav" title="Çalışma Planını Aç / Kapat">
                         <i class="fas fa-columns"></i> <span>Çalışma Planı</span>
                     </button>
@@ -4287,7 +4291,7 @@
                         <i class="fas fa-play"></i> <span id="exam-start-practice-label">Başla</span>
                     </button>
                     <p id="exam-setup-subtext" class="setup-subtext" style="display: none; font-size: 0.88rem; color: #94a3b8; text-align: center; margin: 0;">Sonraki adımda PDF'ni alabilir veya yazdırabilirsin.</p>
-                    <button id="btn-practice-back-choice" class="exam-btn-secondary" type="button" style="width: 100%;">
+                    <button id="btn-practice-setup-back" class="exam-btn-secondary" type="button" style="width: 100%;">
                         <i class="fas fa-arrow-left"></i> Hazırlık Ekranı
                     </button>
                 </div>
@@ -4299,7 +4303,7 @@
                 <div class="practice-top-bar">
                     <div class="practice-top-left-actions">
                         <button type="button" id="btn-practice-back-choice" class="exam-btn-secondary" title="Cevapları kaydet ve hazırlık ekranına dön">
-                            <i class="fas fa-arrow-left"></i> <span>Hazırlık Ekranı</span>
+                            <i class="fas fa-arrow-left"></i> <span>Çalışma Seçimi</span>
                         </button>
                         <div class="practice-status-info">
                             <button type="button" id="btn-practice-q-picker" class="practice-q-picker-btn" aria-expanded="false" aria-controls="practice-q-picker-dropdown" title="Soruları Listele">
@@ -4349,7 +4353,7 @@
             <div class="exam-eval-header-bar">
                 <div class="eval-top-row">
                     <button type="button" id="btn-eval-back-choice" class="exam-btn-secondary" title="Değerlendirmeyi kaydet ve hazırlık ekranına dön">
-                        <i class="fas fa-arrow-left"></i> <span>Hazırlık Ekranı</span>
+                        <i class="fas fa-arrow-left"></i> <span>Çalışma Seçimi</span>
                     </button>
                     <button type="button" id="btn-eval-return-summary" class="exam-btn-warning" style="display: none;" title="Çalışma özetine geri dön">
                         <i class="fas fa-undo"></i> <span>Çalışma Özetime Dön</span>
@@ -4443,7 +4447,7 @@
                     <i class="fas fa-redo"></i> <span>Yeni Prova</span>
                 </button>
                 <button type="button" id="btn-summary-to-choice" class="exam-btn-secondary">
-                    <i class="fas fa-th-large"></i> <span>Hazırlık Ekranı</span>
+                    <i class="fas fa-th-large"></i> <span>Çalışma Seçimi</span>
                 </button>
             </div>
         </section>
@@ -4631,8 +4635,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
-    <script type="module" src="exam-engine.js?v=2026102817"></script>
+    <script type="module" src="exam-engine.js?v=2026102819"></script>
     <script type="module" src="lab-engine.js?v=2026102817"></script>
-    <script type="module" src="script.js?v=2026102818"></script>
+    <script type="module" src="script.js?v=2026102819"></script>
 </body>
 </html>

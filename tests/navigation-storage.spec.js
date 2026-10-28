@@ -26,8 +26,8 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     const textarea = page.locator('#practice-text-ans');
     await textarea.fill(testAns1);
 
-    // "Hazırlık Ekranı" butonuna tıkla (#practice-active-box #btn-practice-back-choice)
-    const btnBack = page.locator('#practice-active-box #btn-practice-back-choice');
+    // "Hazırlık Ekranı" butonuna tıkla (#btn-exam-step-back)
+    const btnBack = page.locator('#btn-exam-step-back');
     await btnBack.click();
 
     // Tercih ekranındayız (#exam-view-choice)
@@ -104,7 +104,7 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     await page.locator('#practice-text-ans').fill('Eski Deneme Yanıtı');
 
     // Hazırlık ekranına dön
-    await page.locator('#practice-active-box #btn-practice-back-choice').click();
+    await page.locator('#btn-exam-step-back').click();
     await expect(page.locator('#exam-view-choice')).toBeVisible();
 
     // "Provaya Başla" butonuna tıkla (Yeni Prova başlatır)

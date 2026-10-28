@@ -157,10 +157,11 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
     // Öz değerlendirme başlığı
     await expect(page.locator('.summary-score-badge .score-label')).toHaveText('Öz Değerlendirme Puanın');
 
-    // Sayfa Yenileme (F5) ve Veri Kalıcılığı Testi
+    // Yenileme mevcut özet rotasını ve tamamlanmış sonucu korur.
     await page.reload();
-    await page.locator('#btn-yazili-modulu').click();
-    // Kapsam önceden seçilmiş olduğu için tercih ekranına gelir
+    await expect(page.locator('#exam-view-summary')).toBeVisible();
+    await page.locator('#btn-exam-step-back').click();
+    // Çalışma seçimine dönerek kayıtlı provaya tekrar devam et
     await expect(page.locator('#exam-view-choice')).toBeVisible();
     // Kayıtlı tamamlanmış provanın "Devam Et" butonuna tıkla
     await page.locator('#btn-resume-saved-attempt').click();

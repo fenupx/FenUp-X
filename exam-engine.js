@@ -71,6 +71,7 @@ if (typeof localStorage !== 'undefined') {
 
                 if (parsed.attempt && Array.isArray(parsed.attempt.ids)) {
                     state.attempt = {
+                        routeKey: parsed.attempt.routeKey || crypto.randomUUID(),
                         version: parsed.attempt.version || 2,
                         scoringVersion: parsed.attempt.scoringVersion || 2,
                         evaluationVersion: parsed.attempt.evaluationVersion || 1,
@@ -432,9 +433,14 @@ async function loadData() {
 }
 
 // --- AKIŞ MOTORU (State Machine): Senaryo Seçimi → Tercih → Konu/Prova → Değerlendirme → Özet ---
-export function goToStep(step) {
+export function goToStep(step, options = {}) {
+    const previousStep = state.currentStep;
     stopAnimation();
     closePrintPreview();
+    const picker = $('practice-q-picker-dropdown');
+    if (picker) picker.classList.add('is-hidden');
+    const pickerButton = $('btn-practice-q-picker');
+    if (pickerButton) { pickerButton.setAttribute('aria-expanded', 'false'); pickerButton.classList.remove('active'); }
     if (step !== 'study') {
         exitStudyFullscreen();
     }
@@ -492,6 +498,9 @@ export function goToStep(step) {
         window.scrollTo(0, 0);
     }
 
+    updateBackControls();
+    if (!options.restore) window.FenUpNavigation?.record(options.replace || (step === 'eval' && previousStep === 'practice'));
+
     // Her ekran değişiminde odak noktasını ilgili ekranın başlığına taşı
     const activeViewEl = views[step];
     if (activeViewEl) {
@@ -501,6 +510,57 @@ export function goToStep(step) {
             heading.focus({ preventScroll: true });
         }
     }
+}
+
+function saveProgress() {
+    const a = state.attempt;
+    const answer = $('practice-text-ans');
+    if (a && state.currentStep === 'practice' && !setupPracticeNewMode && !a.finished && a.status === 'in_progress' && answer) {
+        const id = a.ids[a.activeQuestionIndex || 0];
+        if (id) a.answers[id] = answer.value;
+    }
+    saveState();
+}
+function getRoute() {
+    return {
+        step: state.currentStep === 'practice' && (!state.attempt || setupPracticeNewMode) ? 'setup' : state.currentStep,
+        mode: state.currentStep === 'study' && state.returnToSummary ? 'review' : 'free',
+        ...(state.attempt ? { attempt: state.attempt.routeKey } : {})
+    };
+}
+function backStep(step) {
+    saveProgress();
+    if (!window.FenUpNavigation?.backTo({ scene: 'scene-yazili', step })) goToStep(step);
+}
+function updateBackControls() {
+    const step = state.currentStep;
+    const review = step === 'study' && state.returnToSummary;
+    const button = $('btn-exam-step-back');
+    if (button) {
+        button.textContent = review ? '← Çalışma Özeti' : (['study', 'practice', 'eval'].includes(step) ? '← Çalışma Seçimi' : '← Geri');
+        button.onclick = () => {
+            if (step === 'scope') window.returnToHome?.();
+            else backStep(review ? 'summary' : step === 'choice' ? 'scope' : 'choice');
+        };
+    }
+}
+function restoreExamRoute(route) {
+    let step = route?.step || 'scope';
+    if (!['scope', 'choice', 'study', 'setup', 'practice', 'eval', 'summary'].includes(step)) step = 'scope';
+    const a = state.attempt;
+    if (route?.attempt && route.attempt !== a?.routeKey) step = 'choice';
+    const usableAttempt = a && a.ids.length === 7 && a.ids.every(id => QUESTIONS.some(q => q.id === id));
+    if (['practice', 'eval', 'summary'].includes(step) && !usableAttempt) step = 'choice';
+    if (!state.hasSelectedScope && step !== 'scope') step = 'scope';
+    if (a && step === 'practice' && (a.finished || a.status !== 'in_progress')) step = a.finished ? 'summary' : 'eval';
+    if (step === 'eval') state.reviewingEval = !!a?.finished;
+    if (step === 'summary' && !a?.finished) step = 'choice';
+    setupPracticeNewMode = step === 'setup';
+    if (step === 'study') {
+        state.returnToSummary = route?.mode === 'review' && !!a?.finished;
+        state.studyMode = state.returnToSummary ? 'review' : 'free';
+    }
+    goToStep(step === 'setup' ? 'practice' : step, { restore: true });
 }
 
 function bindScopeContinue() {
@@ -545,7 +605,7 @@ function renderChoice() {
         btnBack.onclick = () => {
             state.hasSelectedScope = false;
             saveState();
-            goToStep('scope');
+            backStep('scope');
         };
     }
 
@@ -657,7 +717,7 @@ function renderStudy(cardIndex) {
             state.studyMode = 'free';
             state.returnToSummary = false;
             saveState();
-            goToStep('choice');
+            backStep('choice');
         };
     }
 
@@ -690,7 +750,7 @@ function renderStudy(cardIndex) {
                 state.studyMode = 'free';
                 state.returnToSummary = false;
                 saveState();
-                goToStep('summary');
+                backStep('summary');
             };
         } else {
             returnSummaryBox.style.display = 'none';
@@ -1027,11 +1087,11 @@ function renderPractice() {
         if (setupBox) setupBox.style.display = 'block';
         if (activeBox) activeBox.style.display = 'none';
 
-        const btnBackChoice = setupBox ? setupBox.querySelector('#btn-practice-back-choice') : $('btn-practice-back-choice');
+        const btnBackChoice = setupBox ? setupBox.querySelector('#btn-practice-setup-back') : $('btn-practice-back-choice');
         if (btnBackChoice) {
             btnBackChoice.onclick = () => {
                 setupPracticeNewMode = false;
-                goToStep('choice');
+                backStep('choice');
             };
         }
 
@@ -1133,7 +1193,7 @@ function renderPractice() {
                 a.answers[questions[activeIdx].id] = textarea.value;
             }
             saveState();
-            goToStep('choice');
+            backStep('choice');
         };
     }
 
@@ -1453,6 +1513,10 @@ function updateAnsweredCountText(questions) {
 function startNewPractice() {
     try {
         setupPracticeNewMode = false;
+        state.reviewingEval = false;
+        state.studyMode = 'free';
+        state.returnToSummary = false;
+        state.reviewCardIds = [];
         if (typeof window !== 'undefined') {
             window.scrollTo(0, 0);
         }
@@ -1477,6 +1541,7 @@ function startNewPractice() {
         });
 
         state.attempt = {
+            routeKey: crypto.randomUUID(),
             version: 2,
             scoringVersion: SCORING_POLICY.version,
             evaluationVersion: SCORING_POLICY.evaluationVersion,
@@ -1500,6 +1565,8 @@ function startNewPractice() {
         };
         saveState();
         renderPractice();
+        updateBackControls();
+        window.FenUpNavigation?.record(true);
 
         // Kâğıtta çözüm seçildiyse doğrudan baskı ve PDF modalını aç
         if (currentSolveMode === 'kagitta') {
@@ -1556,7 +1623,7 @@ function renderEval() {
     if (btnEvalBackChoice) {
         btnEvalBackChoice.onclick = () => {
             saveState();
-            goToStep('choice');
+            backStep('choice');
         };
     }
 
@@ -1568,7 +1635,7 @@ function renderEval() {
             btnReturnSummary.onclick = () => {
                 state.reviewingEval = false;
                 saveState();
-                goToStep('summary');
+                backStep('summary');
             };
         } else {
             btnReturnSummary.style.display = 'none';
@@ -2070,7 +2137,7 @@ function renderSummary() {
     // Alt Eylem Butonları
     const btnToChoice = $('btn-summary-to-choice');
     if (btnToChoice) {
-        btnToChoice.onclick = () => goToStep('choice');
+        btnToChoice.onclick = () => backStep('choice');
     }
 
     const btnReviewEval = $('btn-summary-review-eval');
@@ -3004,7 +3071,7 @@ function selectQuestions(profileName, history, run = 0) {
 }
 
 // --- YAŞAM DÖNGÜSÜ (Lifecycle API) ---
-export async function openExamView() {
+export async function openExamView(options = {}) {
     const ok = await loadData();
     if (!ok) return;
 
@@ -3085,10 +3152,12 @@ export async function openExamView() {
     // İlk kez gelen veya seçimini sıfırlayan kullanıcı önce kapsamı ('scope') görür.
     // Kapsam seçimini yapmış kullanıcı doğrudan 2 seçenekli Hazırlık Ekranına ('choice') gelir.
     const initialStep = state.hasSelectedScope ? 'choice' : 'scope';
-    goToStep(initialStep);
+    if (options.route) restoreExamRoute(options.route);
+    else goToStep(initialStep, { replace: true });
 }
 
 export function closeExamView() {
+    saveProgress();
     stopAnimation();
     closePrintPreview();
     exitStudyFullscreen();
@@ -3098,6 +3167,8 @@ export function closeExamView() {
 if (typeof window !== 'undefined') {
     window.FenUpExam = {
         openExamView,
+        getRoute,
+        saveProgress,
         closeExamView,
         goToStep,
         renderStudy,
