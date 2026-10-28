@@ -139,38 +139,44 @@ function sourcesHtml(refs) {
 }
 
 // --- VERİ YÜKLEME ---
+let dataPromise = null;
 async function loadData() {
     if (DATA) return true;
-    try {
-        const res = await fetch(DATA_URL);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        DATA = await res.json();
-        CARDS = DATA.cards || [];
-        QUESTIONS = DATA.questions || [];
-        profiles = DATA.selection_policy?.scenario_profiles || {};
-        return true;
-    } catch (err) {
-        console.error('Yazılı verisi yüklenemedi:', err);
-        const container = $('scene-yazili');
-        if (container) {
-            container.innerHTML = `
-                <div class="exam-header-bar">
-                    <button class="back-link btn-back-home" id="btn-exam-err-home"><i class="fas fa-arrow-left"></i> Ana Sayfaya Dön</button>
-                    <span class="exam-badge">Yükleme Hatası</span>
-                </div>
-                <div class="exam-panel">
-                    <h3 style="color:#f87171;"><i class="fas fa-exclamation-triangle"></i> İçerik Yüklenemedi</h3>
-                    <p style="color:#cbd5e1;">Yazılıya Hazırlık verileri alınırken bir ağ veya dosya okuma sorunu oluştu.</p>
-                    <button class="exam-btn-primary" onclick="window.FenUpExam.openExamView()"><i class="fas fa-redo"></i> Tekrar Dene</button>
-                </div>
-            `;
-            const btnHome = $('btn-exam-err-home');
-            if (btnHome && window.scenes?.home) {
-                btnHome.onclick = () => window.switchScene(container, window.scenes.home);
+    if (dataPromise) return dataPromise;
+    dataPromise = (async () => {
+        try {
+            const res = await fetch(DATA_URL);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            DATA = await res.json();
+            CARDS = DATA.cards || [];
+            QUESTIONS = DATA.questions || [];
+            profiles = DATA.selection_policy?.scenario_profiles || {};
+            return true;
+        } catch (err) {
+            console.error('Yazılı verisi yüklenemedi:', err);
+            dataPromise = null;
+            const container = $('scene-yazili');
+            if (container) {
+                container.innerHTML = `
+                    <div class="exam-header-bar">
+                        <button class="back-link btn-back-home" id="btn-exam-err-home"><i class="fas fa-arrow-left"></i> Ana Sayfaya Dön</button>
+                        <span class="exam-badge">Yükleme Hatası</span>
+                    </div>
+                    <div class="exam-panel">
+                        <h3 style="color:#f87171;"><i class="fas fa-exclamation-triangle"></i> İçerik Yüklenemedi</h3>
+                        <p style="color:#cbd5e1;">Yazılıya Hazırlık verileri alınırken bir ağ veya dosya okuma sorunu oluştu.</p>
+                        <button class="exam-btn-primary" onclick="window.FenUpExam.openExamView()"><i class="fas fa-redo"></i> Tekrar Dene</button>
+                    </div>
+                `;
+                const btnHome = $('btn-exam-err-home');
+                if (btnHome && window.scenes?.home) {
+                    btnHome.onclick = () => window.switchScene(container, window.scenes.home);
+                }
             }
+            return false;
         }
-        return false;
-    }
+    })();
+    return dataPromise;
 }
 
 // --- AKIŞ MOTORU (State Machine): Senaryo Seçimi → Tercih → Konu/Prova → Değerlendirme → Özet ---
@@ -194,6 +200,11 @@ export function goToStep(step) {
         }
     });
 
+    const scopeBadge = $('exam-scope-badge');
+    if (scopeBadge) {
+        scopeBadge.style.display = (step === 'scope') ? 'none' : 'inline-block';
+    }
+
     if (step === 'scope') renderScope();
     else if (step === 'choice') renderChoice();
     else if (step === 'study') renderStudy(state.studyCardIdx || 0);
@@ -210,12 +221,26 @@ export function goToStep(step) {
     }
 }
 
+function bindScopeContinue() {
+    const btnContinue = $('btn-scope-continue');
+    if (!btnContinue) return;
+    btnContinue.onclick = async () => {
+        if (!DATA) {
+            const origHtml = btnContinue.innerHTML;
+            btnContinue.disabled = true;
+            btnContinue.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hazırlanıyor...';
+            const ok = await loadData();
+            btnContinue.disabled = false;
+            btnContinue.innerHTML = origHtml;
+            if (!ok) return;
+        }
+        goToStep('choice');
+    };
+}
+
 // 1. AŞAMA: SENARYO VE KAPSAM SEÇİMİ
 function renderScope() {
-    const btnContinue = $('btn-scope-continue');
-    if (btnContinue) {
-        btnContinue.onclick = () => goToStep('choice');
-    }
+    bindScopeContinue();
 }
 
 // 2. AŞAMA: HAZIRLIK TERCİHİ
@@ -236,6 +261,26 @@ function renderChoice() {
     const btnPractice = $('btn-choice-go-practice');
     if (btnPractice) {
         btnPractice.onclick = () => goToStep('practice');
+    }
+
+    // Dinamik konu ve soru sayaçları
+    const studyCountEl = $('choice-study-count');
+    if (studyCountEl && DATA) {
+        const topicCount = DATA.outcomes ? DATA.outcomes.length : 4;
+        const cardCount = CARDS.length || 24;
+        studyCountEl.innerHTML = `<i class="fas fa-clone"></i> ${topicCount} konu · ${cardCount} bilgi kartı`;
+    }
+
+    const practiceCountEl = $('choice-practice-count');
+    if (practiceCountEl && DATA) {
+        let qCount = 7;
+        const sp = DATA.selection_policy?.scenario_profiles?.temel?.allocation;
+        if (sp) {
+            qCount = Object.values(sp).reduce((total, diffMap) => {
+                return total + (diffMap.easy || 0) + (diffMap.medium || 0) + (diffMap.hard || 0);
+            }, 0);
+        }
+        practiceCountEl.innerHTML = `<i class="fas fa-pen-alt"></i> ${qCount} soruluk prova`;
     }
 }
 
@@ -507,8 +552,7 @@ function renderPractice() {
                 <div class="exam-qmeta">
                     <span>SORU ${activeIdx + 1} / 7</span> · 
                     <span>${esc(q.outcome_id)}</span> · 
-                    <span>${names[q.difficulty] || ''}</span> · 
-                    <span class="qmeta-points">10 PUAN</span>
+                    <span>${names[q.difficulty] || ''}</span>
                 </div>
                 <h3 class="exam-qtitle">${esc(q.title)}</h3>
                 <div class="exam-qgrid ${visual ? '' : 'noimage'}">
@@ -697,7 +741,7 @@ function renderEval() {
         const currentEval = a.evaluations[q.id] || '';
 
         const rubricsList = (q.rubric || []).map((r, i) => `
-            <li><strong>Ölçüt ${i + 1} (${r.points} Puan):</strong> ${esc(r.text)}</li>
+            <li><strong>Ölçüt ${i + 1}:</strong> ${esc(r.text)}</li>
         `).join('');
 
         qContainer.innerHTML = `
@@ -705,8 +749,7 @@ function renderEval() {
                 <div class="exam-qmeta">
                     <span>SORU ${evalIdx + 1} / 7</span> · 
                     <span>${esc(q.outcome_id)}</span> · 
-                    <span>${names[q.difficulty] || ''}</span> · 
-                    <span class="qmeta-points">10 PUAN</span>
+                    <span>${names[q.difficulty] || ''}</span>
                 </div>
                 <h3 class="exam-qtitle">${esc(q.title)}</h3>
                 <div class="exam-qgrid ${visual ? '' : 'noimage'}">
@@ -745,21 +788,21 @@ function renderEval() {
                         <button type="button" class="eval-choice-btn tam ${currentEval === 'tam' ? 'selected' : ''}" data-eval-opt="tam">
                             <div class="eval-opt-icon"><i class="fas fa-check-circle"></i></div>
                             <div class="eval-opt-body">
-                                <strong>Tam Yaptım (10 Puan)</strong>
+                                <strong>Tam Yaptım</strong>
                                 <small>Tüm bilimsel ölçütleri ve fen gerekçesini eksiksiz açıkladım.</small>
                             </div>
                         </button>
                         <button type="button" class="eval-choice-btn kismen ${currentEval === 'kismen' ? 'selected' : ''}" data-eval-opt="kismen">
                             <div class="eval-opt-icon"><i class="fas fa-adjust"></i></div>
                             <div class="eval-opt-body">
-                                <strong>Kısmen Yaptım (5 Puan)</strong>
+                                <strong>Kısmen Yaptım</strong>
                                 <small>Temel kavramı belirttim fakat bazı gerekçeler veya ölçütler eksik kaldı.</small>
                             </div>
                         </button>
                         <button type="button" class="eval-choice-btn yapamadim ${currentEval === 'yapamadim' ? 'selected' : ''}" data-eval-opt="yapamadim">
                             <div class="eval-opt-icon"><i class="fas fa-times-circle"></i></div>
                             <div class="eval-opt-body">
-                                <strong>Yapamadım / Boş (0 Puan)</strong>
+                                <strong>Yapamadım</strong>
                                 <small>Gerekçeyi açıklayamadım, yanlış yaptım veya soruyu boş bıraktım.</small>
                             </div>
                         </button>
@@ -846,13 +889,34 @@ function renderSummary() {
         return;
     }
 
-    // Puan Hesaplama (Tam: 10, Kısmen: 5, Yapamadım: 0)
+    // Puan ve Başarı Dağılımı Hesaplama (Veri uyumluluğu için a.score hesaplanır)
     let totalScore = 0;
+    let tamCount = 0;
+    let kismenCount = 0;
+    let yapamadimCount = 0;
+
     questions.forEach(q => {
         const ev = a.evaluations[q.id];
-        if (ev === 'tam') totalScore += 10;
-        else if (ev === 'kismen') totalScore += 5;
+        if (ev === 'tam') {
+            totalScore += 10;
+            tamCount++;
+        } else if (ev === 'kismen') {
+            totalScore += 5;
+            kismenCount++;
+        } else {
+            yapamadimCount++;
+        }
     });
+
+    a.score = totalScore;
+    saveState();
+
+    const tamEl = $('summary-tam-count');
+    if (tamEl) tamEl.textContent = tamCount;
+    const kismenEl = $('summary-kismen-count');
+    if (kismenEl) kismenEl.textContent = kismenCount;
+    const yapamadimEl = $('summary-yapamadim-count');
+    if (yapamadimEl) yapamadimEl.textContent = yapamadimCount;
 
     const scoreDisplay = $('summary-score-display');
     if (scoreDisplay) scoreDisplay.textContent = `${totalScore} / 70`;
@@ -1505,4 +1569,17 @@ if (typeof window !== 'undefined') {
         renderStudy,
         renderAdminQuestionReview
     };
+}
+
+// Sayfa ilk yüklendiğinde kapsam butonunu bağla ve veriyi arka planda önceden getir
+if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            bindScopeContinue();
+            loadData();
+        });
+    } else {
+        bindScopeContinue();
+        loadData();
+    }
 }

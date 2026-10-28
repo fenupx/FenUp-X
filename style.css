@@ -18,19 +18,22 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
 }
 .logo { font-size: 2.5rem; font-weight: 900; color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-blue); cursor: pointer;}
 .site-brand-link {
-  display: inline-flex; align-items: center; gap: 12px;
+  display: inline-flex; align-items: center; gap: 10px;
   text-decoration: none; cursor: pointer; touch-action: manipulation;
-  transition: transform 0.25s ease;
+  min-height: 48px; padding: 4px 8px; border-radius: 8px;
+  user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.site-brand-link * {
+  pointer-events: none;
 }
 .site-logo-img {
   width: 48px; height: 48px; object-fit: contain; aspect-ratio: 1 / 1;
-  display: block; border-radius: 50%;
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  display: block;
 }
-.site-brand-link:hover .site-logo-img { transform: scale(1.08) rotate(3deg); }
 .site-brand-text {
   font-size: 2.2rem; font-weight: 900; color: var(--neon-blue);
   text-shadow: 0 0 15px var(--neon-blue); letter-spacing: -0.02em;
+  line-height: 1;
 }
 .header-right { display: flex; align-items: center; gap: 20px; }
 .text-btn { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; transition:0.3s; font-weight: bold;}
@@ -938,9 +941,9 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
         flex-direction: column !important; 
         padding: 15px !important; gap: 10px !important;
     }
-    .logo { font-size: 2rem !important; margin-bottom: 0 !important; text-align: center; }
-    .site-logo-img { width: 40px !important; height: 40px !important; }
-    .site-brand-text { font-size: 1.7rem !important; }
+    .site-brand-link { min-height: 48px !important; padding: 4px 10px !important; margin: 0 auto !important; }
+    .site-logo-img { width: 40px !important; height: 40px !important; border-radius: 0 !important; }
+    .site-brand-text { font-size: 1.65rem !important; }
     .header-right { width: 100%; justify-content: center !important; flex-wrap: wrap !important; gap: 10px !important; }
     .text-btn { font-size: 1rem !important; }
     .outline-btn { padding: 6px 12px !important; font-size: 0.9rem !important; }

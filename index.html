@@ -4062,73 +4062,66 @@
                 </h2>
                 <p class="exam-sub-title">Senaryona göre çalış, yazılı provası yap.</p>
             </div>
-            <span class="exam-badge" id="exam-scope-badge">7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2</span>
+            <span class="exam-badge" id="exam-scope-badge" style="display: none;">7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2</span>
         </div>
 
         <!-- 2. Aşama 1: Senaryo ve Kapsam Seçimi Görünümü -->
         <section id="exam-view-scope" class="exam-step-view">
-            <div class="exam-scope-card glass-card">
-                <div class="exam-card-eyebrow"><i class="fas fa-bullseye"></i> Yazılı Kapsamı ve Senaryo Belirleme</div>
-                <h3 class="exam-section-heading">Sınav Senaryonu Seç</h3>
-                <p class="exam-body-p">MEB Ortak Yazılı Sınav Sistemi (OYSS) çerçevesinde okulunda uygulanacak senaryoyu seçerek ilgili öğrenme çıktılarına göre çalışabilir veya doğrudan provaya geçebilirsin.</p>
-
+            <div class="exam-scope-card">
                 <div class="exam-scope-grid">
                     <div class="exam-scope-field">
-                        <label class="exam-scope-label" for="exam-select-grade">Sınıf Düzeyi</label>
+                        <label class="exam-scope-label" for="exam-select-grade">Sınıf</label>
                         <select id="exam-select-grade" class="exam-select">
-                            <option value="7" selected>7. Sınıf (Aktif Pilot)</option>
-                            <option value="5" disabled>5. Sınıf (Yakında)</option>
-                            <option value="6" disabled>6. Sınıf (Yakında)</option>
-                            <option value="8" disabled>8. Sınıf (Yakında)</option>
+                            <option value="7" selected>7. Sınıf</option>
                         </select>
                     </div>
 
                     <div class="exam-scope-field">
-                        <label class="exam-scope-label" for="exam-select-period">Sınav Dönemi</label>
+                        <label class="exam-scope-label" for="exam-select-period">Yazılı</label>
                         <select id="exam-select-period" class="exam-select">
                             <option value="1-1" selected>1. Dönem 1. Yazılı</option>
-                            <option value="1-2" disabled>1. Dönem 2. Yazılı (Yakında)</option>
-                            <option value="2-1" disabled>2. Dönem 1. Yazılı (Yakında)</option>
-                            <option value="2-2" disabled>2. Dönem 2. Yazılı (Yakında)</option>
                         </select>
                     </div>
 
                     <div class="exam-scope-field">
-                        <label class="exam-scope-label" for="exam-select-scenario">MEB Senaryosu</label>
+                        <label class="exam-scope-label" for="exam-select-scenario">Senaryo</label>
                         <select id="exam-select-scenario" class="exam-select">
-                            <option value="senaryo2" selected>MEB Senaryo 2 (7 Soru · Aktif)</option>
-                            <option value="senaryo1" disabled>MEB Senaryo 1 (Yakında)</option>
-                            <option value="senaryo3" disabled>MEB Senaryo 3 (Yakında)</option>
+                            <option value="senaryo2" selected>MEB Senaryo 2 (7 Soru)</option>
                         </select>
                     </div>
                 </div>
 
-                <!-- Akordiyon 1: Senaryomu Bilmiyorum -->
+                <!-- Yardım Bağlantısı 1: Senaryomu Bilmiyorum -->
                 <details class="exam-scope-accordion">
-                    <summary><i class="fas fa-question-circle"></i> Senaryomu bilmiyorum, ne yapmalıyım?</summary>
+                    <summary><i class="fas fa-question-circle"></i> Senaryomu bilmiyorum</summary>
                     <div class="exam-accordion-body">
-                        <p>MEB okullarında fen bilimleri zümre öğretmenleri, yazılı sınavdan önce hangi senaryonun uygulanacağını öğrencilere duyurur.</p>
-                        <p>Öğretmenin henüz senaryo belirtmediyse veya genel bir hazırlık yapmak istiyorsan, <strong>MEB Senaryo 2</strong> hem 1. ünite (Uzay Araştırmaları) hem de 2. ünite (Kuvvet ve Enerji / Fiziksel İş) kazanımlarını dengeli kapsadığı için en ideal çalışma paketidir. Güvenle Senaryo 2 ile devam edebilirsin.</p>
+                        <p>MEB ortak sınavlarında fen bilimleri öğretmeniniz, okulunuzda uygulanacak senaryoyu yazılı öncesinde duyurur. Sınava hazırlanırken öğretmeninizin belirttiği senaryoyu seçmelisiniz.</p>
                     </div>
                 </details>
 
-                <!-- Akordiyon 2: Senaryonun İçeriğini Gör -->
-                <details class="exam-scope-accordion" open>
-                    <summary><i class="fas fa-list-check"></i> Senaryo 2'nin Soru ve Kazanım Dağılımını Gör</summary>
+                <!-- Yardım Bağlantısı 2: Senaryonun İçeriğini Gör (İLK AÇILIŞTA KAPALI) -->
+                <details class="exam-scope-accordion">
+                    <summary><i class="fas fa-list-check"></i> Senaryonun içeriğini gör</summary>
                     <div class="exam-accordion-body">
                         <ul class="exam-outcome-distribution-list">
-                            <li><span class="outcome-tag">FB.7.1.1</span> <strong>Uzay Araştırmaları:</strong> 2 Soru (20 Puan)</li>
-                            <li><span class="outcome-tag">FB.7.1.3</span> <strong>Uzay Kirliliği:</strong> 1 Soru (10 Puan)</li>
-                            <li><span class="outcome-tag">FB.7.1.5</span> <strong>Yıldızlar, Galaksiler ve Evren:</strong> 1 Soru (10 Puan)</li>
-                            <li><span class="outcome-tag">FB.7.2.1</span> <strong>Fiziksel Anlamda İş:</strong> 3 Soru (30 Puan)</li>
+                            <li><strong>Uzay Araştırmaları:</strong> 2 soru</li>
+                            <li><strong>Uzay Kirliliği:</strong> 1 soru</li>
+                            <li><strong>Yıldızlar, Galaksiler ve Evren:</strong> 1 soru</li>
+                            <li><strong>Fiziksel Anlamda İş:</strong> 3 soru</li>
                         </ul>
-                        <p class="exam-body-note"><i class="fas fa-info-circle"></i> Toplam 7 açık uçlu soru, 70 puanlık öz değerlendirme havuzudur. Gerçek yazılı sınav puan dağılımı okul zümresine göre farklılık gösterebilir.</p>
+                        <p class="exam-body-note">Toplam 7 açık uçlu soru içerir.</p>
+                        <details class="exam-sub-details" style="margin-top: 8px;">
+                            <summary style="font-size: 0.82rem; color: #94a3b8; cursor: pointer;">Kazanım kodlarını gör</summary>
+                            <div style="font-size: 0.8rem; color: #94a3b8; padding: 6px 0;">
+                                FB.7.1.1 (2 soru), FB.7.1.3 (1 soru), FB.7.1.5 (1 soru), FB.7.2.1 (3 soru)
+                            </div>
+                        </details>
                     </div>
                 </details>
 
                 <div class="exam-actions-row">
-                    <button id="btn-scope-continue" class="exam-btn-primary">
-                        <span>Hazırlığa Başla</span> <i class="fas fa-arrow-right"></i>
+                    <button id="btn-scope-continue" class="exam-btn-primary full-width" type="button">
+                        <span>Hazırlanmaya Başla</span> <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
@@ -4137,13 +4130,12 @@
         <!-- 3. Aşama 2: Hazırlık Tercihi Ekranı -->
         <section id="exam-view-choice" class="exam-step-view" style="display: none;">
             <div class="exam-choice-nav">
-                <button id="btn-choice-change-scope" class="exam-btn-secondary"><i class="fas fa-arrow-left"></i> Senaryo Seçimini Değiştir</button>
-                <div class="exam-choice-scope-pill"><i class="fas fa-check-circle"></i> Seçili: 7. Sınıf 1. Dönem 1. Yazılı (Senaryo 2)</div>
+                <button id="btn-choice-change-scope" class="exam-btn-secondary" type="button"><i class="fas fa-arrow-left"></i> Seçimi Değiştir</button>
+                <div class="exam-choice-scope-pill"><i class="fas fa-check-circle"></i> 7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2</div>
             </div>
 
             <div class="exam-choice-header">
-                <h3 class="exam-section-heading">Nasıl Hazırlanmak İstiyorsun?</h3>
-                <p class="exam-body-p">İster sınav kapsamındaki konuları görsel ve interaktif kartlarla gözden geçir, ister doğrudan 7 soruluk yazılı provasına başla.</p>
+                <h3 class="exam-section-heading">Nasıl hazırlanmak istersin?</h3>
             </div>
 
             <div class="exam-choice-cards-grid">
@@ -4151,13 +4143,12 @@
                 <div class="exam-choice-card" id="card-choice-study">
                     <div class="choice-icon-wrap"><i class="fas fa-book-open"></i></div>
                     <h4>Konuları Çalış</h4>
-                    <p>Senaryo 2 kapsamındaki 4 öğrenme çıktısına ait 24 konu kartını incele. Şematik modeller, interaktif deneyler ve kritik kavram yanılgılarıyla eksiklerini tamamla.</p>
+                    <p>Senaryondaki konuları adım adım tekrar et.</p>
                     <div class="choice-badge-row">
-                        <span class="choice-mini-badge"><i class="fas fa-layer-group"></i> 24 Konu Kartı</span>
-                        <span class="choice-mini-badge"><i class="fas fa-flask"></i> İnteraktif Modeller</span>
+                        <span class="choice-mini-badge" id="choice-study-count">4 konu · 24 bilgi kartı</span>
                     </div>
-                    <button id="btn-choice-go-study" class="exam-btn-primary full-width">
-                        <span>Konu Kartlarını Aç</span> <i class="fas fa-arrow-right"></i>
+                    <button id="btn-choice-go-study" class="exam-btn-primary full-width" type="button">
+                        <span>Konu Çalışmaya Başla</span> <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
 
@@ -4165,13 +4156,12 @@
                 <div class="exam-choice-card featured" id="card-choice-practice">
                     <div class="choice-icon-wrap"><i class="fas fa-file-signature"></i></div>
                     <h4>Yazılı Provası Yap</h4>
-                    <p>Senaryo 2 dağılımına birebir uygun 7 açık uçlu soru çöz. Cevaplarını ekranda yazabilir veya kâğıda çıktı alarak gerçek sınav provası deneyimi yaşayabilirsin.</p>
+                    <p>Senaryona uygun sorularla kendini dene.</p>
                     <div class="choice-badge-row">
-                        <span class="choice-mini-badge"><i class="fas fa-stopwatch"></i> 7 Açık Uçlu Soru</span>
-                        <span class="choice-mini-badge"><i class="fas fa-print"></i> Kâğıt / PDF Desteği</span>
+                        <span class="choice-mini-badge" id="choice-practice-count">7 soruluk prova</span>
                     </div>
-                    <button id="btn-choice-go-practice" class="exam-btn-primary full-width">
-                        <span>Yazılı Provasına Başla</span> <i class="fas fa-arrow-right"></i>
+                    <button id="btn-choice-go-practice" class="exam-btn-primary full-width" type="button">
+                        <span>Provaya Başla</span> <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
@@ -4327,9 +4317,13 @@
         <section id="exam-view-summary" class="exam-step-view" style="display: none;">
             <div class="exam-summary-hero">
                 <div class="summary-score-badge">
-                    <span class="score-label">Öz Değerlendirme Skorun</span>
-                    <div class="score-big" id="summary-score-display">0 / 70</div>
-                    <span class="score-note">Bu sonuç senin kendi beyanına dayanır; resmî sınav notu değildir.</span>
+                    <h3 class="summary-hero-title"><i class="fas fa-clipboard-check" style="color: #2dd4bf; margin-right: 8px;"></i> Çalışma Özeti</h3>
+                    <p class="summary-hero-sub">7. Sınıf · 1. Dönem 1. Yazılı (MEB Senaryo 2)</p>
+                    <div class="summary-stats-pills">
+                        <span class="stat-pill success"><i class="fas fa-check-circle"></i> <span id="summary-tam-count">0</span> Tam</span>
+                        <span class="stat-pill warning"><i class="fas fa-adjust"></i> <span id="summary-kismen-count">0</span> Kısmen</span>
+                        <span class="stat-pill danger"><i class="fas fa-times-circle"></i> <span id="summary-yapamadim-count">0</span> Yapılamadı</span>
+                    </div>
                 </div>
             </div>
 
