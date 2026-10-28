@@ -671,41 +671,43 @@ function renderStudy(cardIndex) {
         const isLastCard = (cardIndex === CARDS.length - 1);
 
         cardPanel.innerHTML = `
-            <div class="study-card-top-meta">
-                <div class="study-meta-left">
-                    <span class="outcome-pill-code">${esc(c.outcome_id)}</span>
-                    <span class="study-counter-topic"><i class="fas fa-clone"></i> Kart ${cardNumInOutcome} / ${outcomeCards.length}</span>
+            <div class="study-card-content-area">
+                <div class="study-card-top-meta">
+                    <div class="study-meta-left">
+                        <span class="outcome-pill-code">${esc(c.outcome_id)}</span>
+                        <span class="study-counter-topic"><i class="fas fa-clone"></i> Kart ${cardNumInOutcome} / ${outcomeCards.length}</span>
+                    </div>
+                    ${outcome ? `
+                        <details class="study-outcome-expandable">
+                            <summary><i class="fas fa-info-circle"></i> MEB Kazanımı: <span>${esc(outcome.short_title || outcome.id)}</span> <span class="study-outcome-expand-hint">(Detay)</span></summary>
+                            <p class="study-outcome-full-desc">${esc(outcome.title)}</p>
+                        </details>
+                    ` : ''}
                 </div>
-                ${outcome ? `
-                    <details class="study-outcome-expandable">
-                        <summary><i class="fas fa-info-circle"></i> MEB Kazanımı: <span>${esc(outcome.short_title || outcome.id)}</span> <span class="study-outcome-expand-hint">(Detay)</span></summary>
-                        <p class="study-outcome-full-desc">${esc(outcome.title)}</p>
+
+                <h2 class="exam-card-title">${esc(c.title)}</h2>
+
+                <div class="exam-contentgrid">
+                    <div class="study-text-column">
+                        <p class="exam-lead">${esc(c.lead)}</p>
+                        ${(c.body || []).map(p => `<p class="exam-body-p">${esc(p)}</p>`).join('')}
+                        <div class="exam-takeaway"><strong>📌 Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>
+                        <p class="exam-warning"><strong>⚠️ Karıştırma:</strong> ${esc(c.misconception)}</p>
+                    </div>
+                    <div class="exam-visualbox" id="exam-visual">
+                        ${visualAssetPath ? `<img src="${esc(visualAssetPath)}" alt="${esc(c.visual?.alt || '')}">` : ''}
+                        <p class="exam-caption">Şematik öğretim modeli; ölçekli değildir.</p>
+                    </div>
+                </div>
+
+                <div class="exam-check">
+                    <strong>Kendini kontrol et</strong>
+                    <p class="exam-body-p">${esc(c.check?.prompt || '')}</p>
+                    <details>
+                        <summary><i class="fas fa-eye" style="margin-right:8px;"></i> Örnek açıklamayı gör</summary>
+                        <p class="exam-body-p" style="color:#f1f5f9; padding-top:10px;">${esc(c.check?.answer || '')}</p>
                     </details>
-                ` : ''}
-            </div>
-
-            <h2 class="exam-card-title">${esc(c.title)}</h2>
-
-            <div class="exam-contentgrid">
-                <div class="study-text-column">
-                    <p class="exam-lead">${esc(c.lead)}</p>
-                    ${(c.body || []).map(p => `<p class="exam-body-p">${esc(p)}</p>`).join('')}
-                    <div class="exam-takeaway"><strong>📌 Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>
-                    <p class="exam-warning"><strong>⚠️ Karıştırma:</strong> ${esc(c.misconception)}</p>
                 </div>
-                <div class="exam-visualbox" id="exam-visual">
-                    ${visualAssetPath ? `<img src="${esc(visualAssetPath)}" alt="${esc(c.visual?.alt || '')}">` : ''}
-                    <p class="exam-caption">Şematik öğretim modeli; ölçekli değildir.</p>
-                </div>
-            </div>
-
-            <div class="exam-check">
-                <strong>Kendini kontrol et</strong>
-                <p class="exam-body-p">${esc(c.check?.prompt || '')}</p>
-                <details>
-                    <summary><i class="fas fa-eye" style="margin-right:8px;"></i> Örnek açıklamayı gör</summary>
-                    <p class="exam-body-p" style="color:#f1f5f9; padding-top:10px;">${esc(c.check?.answer || '')}</p>
-                </details>
             </div>
 
             <div class="exam-next-bar">
@@ -1777,14 +1779,14 @@ async function generateExamPdfBlob(questions, attempt) {
     // 2. Öğrenci Künyesi (5 Sütunlu Kompakt Tablo)
     docContent.push({
         table: {
-            widths: ['30%', '17.5%', '17.5%', '17.5%', '17.5%'],
+            widths: ['32%', '17%', '17%', '17%', '17%'],
             body: [
                 [
                     { text: 'Adı Soyadı: ...................................', fontSize: 8.5, bold: true, color: '#1e293b' },
                     { text: 'Sınıf / Şube: ..........', fontSize: 8.5, bold: true, color: '#1e293b' },
                     { text: 'Okul No: ..........', fontSize: 8.5, bold: true, color: '#1e293b' },
                     { text: 'Tarih: ...../...../202...', fontSize: 8.5, bold: true, color: '#1e293b' },
-                    { text: 'Aldığı Puan: ..... / 100', fontSize: 8.5, bold: true, color: '#0f172a', alignment: 'right' }
+                    { text: 'Puan: ...... / 100', fontSize: 8.5, bold: true, color: '#0f172a', alignment: 'center' }
                 ]
             ]
         },
@@ -2003,7 +2005,7 @@ function openPrintPreview(triggerEl = null) {
                 <div class="print-info-item"><strong>Sınıfı / Şubesi:</strong> ....................</div>
                 <div class="print-info-item"><strong>Okul No:</strong> ....................</div>
                 <div class="print-info-item"><strong>Tarih:</strong> ....................</div>
-                <div class="print-info-item"><strong>Aldığı Puan:</strong> ...... / 100</div>
+                <div class="print-info-item"><strong>Puan:</strong> ...... / 100</div>
             </div>
         </div>
         <div class="print-instructions">
@@ -2552,6 +2554,27 @@ export async function openExamView() {
                     const studyView = $('exam-view-study');
                     if (studyView && studyView.classList.contains('fullscreen-study-active')) {
                         toggleStudyFullscreen();
+                    }
+                    return;
+                }
+
+                // Ders çalışma ekranında klavye ile önceki/sonraki kart geçişi (input/textarea odağı yokken)
+                const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+                if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
+
+                if (state.step === 'study') {
+                    if (e.key === 'ArrowRight') {
+                        const nextBtn = $('exam-card-next');
+                        if (nextBtn && !nextBtn.disabled) {
+                            e.preventDefault();
+                            nextBtn.click();
+                        }
+                    } else if (e.key === 'ArrowLeft') {
+                        const prevBtn = $('exam-card-prev');
+                        if (prevBtn && !prevBtn.disabled) {
+                            e.preventDefault();
+                            prevBtn.click();
+                        }
                     }
                 }
             });

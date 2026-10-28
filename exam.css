@@ -35,12 +35,94 @@ body:has(#scene-yazili:not(.is-hidden)) #lab-view {
 
 /* Ders çalışma ekranında tanıtım başlığı gizlenir, üst boşluk sıkılaştırılır */
 #scene-yazili.study-active {
-    margin: 70px auto 40px auto;
-    padding-top: 8px;
+    margin: 70px auto 10px auto;
+    padding: 6px 24px 10px 24px;
 }
 
 #scene-yazili.study-active .exam-header-bar {
     display: none !important;
+}
+
+@media (min-width: 821px) {
+    #scene-yazili.study-active {
+        height: calc(100dvh - 84px) !important;
+        max-height: calc(100dvh - 84px) !important;
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+        padding-bottom: 8px !important;
+    }
+
+    #scene-yazili.study-active #exam-view-study {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .exam-study-toolbar {
+        flex-shrink: 0;
+        margin-bottom: 10px;
+    }
+
+    .exam-cards-layout {
+        flex: 1;
+        min-height: 0;
+        min-width: 0;
+        display: grid;
+        grid-template-columns: 290px 1fr;
+        gap: 20px;
+        align-items: stretch;
+        overflow: hidden;
+    }
+
+    .exam-cardnav {
+        height: 100%;
+        min-height: 0;
+        min-width: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #exam-card-article {
+        height: 100%;
+        min-height: 0;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 0 !important;
+    }
+
+    .study-card-content-area {
+        flex: 1;
+        min-height: 0;
+        min-width: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        padding: 22px 28px 16px 28px;
+    }
+
+    .exam-next-bar {
+        flex-shrink: 0;
+        margin-top: 0;
+        padding: 12px 24px;
+        background: rgba(15, 23, 42, 0.98);
+        border-top: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 0 0 20px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 20;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35);
+    }
 }
 
 /* Evrensel Dokunmatik Hedef Zırhı (Kural 7.1) */
@@ -843,18 +925,46 @@ body:has(#scene-yazili:not(.is-hidden)) #lab-view {
     height: 100dvh !important;
     background: #0b1120 !important;
     z-index: 2100 !important;
-    overflow-y: auto !important;
-    padding: 20px 24px 80px 24px !important;
+    overflow: hidden !important;
+    padding: 16px 24px 14px 24px !important;
     box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
 }
 
 #exam-view-study.fullscreen-study-active .exam-study-toolbar {
-    position: sticky;
-    top: 0;
-    z-index: 60;
-    background: rgba(11, 17, 32, 0.95);
-    backdrop-filter: blur(12px);
-    padding: 10px 0;
+    flex-shrink: 0;
+    margin-bottom: 12px;
+}
+
+#exam-view-study.fullscreen-study-active .exam-cards-layout {
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* Konu Kartı ve Sol Liste İçin İnce Şık Kaydırma Çubukları */
+.study-card-content-area::-webkit-scrollbar,
+.exam-cardnav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.study-card-content-area::-webkit-scrollbar-track,
+.exam-cardnav::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.3);
+    border-radius: 8px;
+}
+
+.study-card-content-area::-webkit-scrollbar-thumb,
+.exam-cardnav::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.3);
+    border-radius: 8px;
+}
+
+.study-card-content-area::-webkit-scrollbar-thumb:hover,
+.exam-cardnav::-webkit-scrollbar-thumb:hover {
+    background: rgba(45, 212, 191, 0.5);
 }
 
 .exam-cardnav-label {
@@ -2319,8 +2429,27 @@ input[type=range].exam-slider {
         padding: 18px 16px 120px 16px;
         margin-top: 135px;
     }
+    #scene-yazili.study-active {
+        height: auto !important;
+        max-height: none !important;
+        min-height: 100dvh !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        padding: 14px 16px 100px 16px !important;
+        margin-top: 80px !important;
+        display: block !important;
+    }
+    #exam-view-study {
+        height: auto !important;
+        overflow: visible !important;
+        display: block !important;
+    }
     .exam-cards-layout {
-        grid-template-columns: 1fr;
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important;
+        overflow: visible !important;
+        gap: 16px;
     }
     .study-mobile-outcome-picker {
         display: block;
@@ -2334,9 +2463,33 @@ input[type=range].exam-slider {
     }
     .exam-cardnav {
         padding: 14px 16px;
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
     }
     .exam-panel {
         padding: 20px 16px;
+    }
+    #exam-card-article {
+        height: auto !important;
+        overflow: visible !important;
+        padding: 0 !important;
+    }
+    .study-card-content-area {
+        overflow: visible !important;
+        height: auto !important;
+        padding: 20px 16px 14px 16px;
+    }
+    .exam-next-bar {
+        position: sticky;
+        bottom: 0;
+        z-index: 50;
+        border-radius: 0 0 16px 16px;
+        margin-top: 0;
+        padding: 12px 16px;
+        background: rgba(15, 23, 42, 0.98);
+        border-top: 1px solid rgba(148, 163, 184, 0.2);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
     }
     .exam-profiles-grid {
         grid-template-columns: 1fr;
