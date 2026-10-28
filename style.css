@@ -3080,3 +3080,38 @@ body > .scene { flex-shrink: 0; }
 
 #scene-home { min-height: 0 !important; }
 #main-footer .policy-links { flex-direction: row !important; flex-wrap: wrap; justify-content: center; gap: 4px 15px !important; }
+/* Ana sayfayla sınırlı, ortak uzay yüzeyini koruyan marka vurguları. */
+.site-brand-text .brand-x { color: #ff806b !important; }
+#scene-home .curriculum-label {
+    font-size: 0.85rem; font-weight: 700; color: #cbd5e1;
+    margin: 0 0 12px; letter-spacing: 0.02em;
+    min-width: 0; box-sizing: border-box; overflow-wrap: anywhere;
+}
+#scene-home #btn-oyun-modulu { --module-accent: #e9bd62; --module-rgb: 233, 189, 98; }
+#scene-home #btn-deney-modulu { --module-accent: #38cfc8; --module-rgb: 56, 207, 200; }
+#scene-home #btn-yazili-modulu { --module-accent: #bc9aef; --module-rgb: 188, 154, 239; }
+#scene-home .module-btn {
+    background: linear-gradient(rgba(var(--module-rgb), 0.04), rgba(var(--module-rgb), 0.04)), #111b2d !important;
+    border: 1px solid rgba(var(--module-rgb), 0.32) !important;
+    box-shadow: none !important; opacity: 1;
+    min-width: 0; box-sizing: border-box; padding: 24px 18px !important;
+    min-height: 48px !important; gap: 12px; flex-direction: column;
+}
+#scene-home .module-btn > i {
+    font-size: 2.8rem !important; color: var(--module-accent) !important;
+    text-shadow: none !important; margin: 0;
+}
+#scene-home .module-btn > span:not(.module-cta-badge) {
+    font-size: 1.35rem !important; font-weight: 700; color: #e2e8f0;
+}
+#scene-home .module-summary-tag { background: rgba(0,0,0,0.2); border-color: rgba(var(--module-rgb),0.24); color: #cbd5e1 !important; }
+#scene-home .module-cta-badge {
+    background: rgba(var(--module-rgb),0.1); border: 1px solid rgba(var(--module-rgb),0.32);
+    color: #f1f5f9 !important; box-shadow: none !important; transform: none !important;
+    min-height: 48px; min-width: 48px; font-size: 1.1rem !important;
+}
+#scene-home .module-btn:hover, #scene-home .module-btn:focus-visible {
+    border-color: var(--module-accent) !important; transform: none !important;
+    outline: 2px solid var(--module-accent) !important; outline-offset: 3px;
+}
+#scene-home .module-cta-badge i { font-size: 0.85rem !important; }
