@@ -4219,3 +4219,41 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     #scene-yazili button:hover { transform: none !important; }
 }
 #scene-yazili:not(.is-hidden) { margin-bottom: 0 !important; }
+/* Yalnız soru şemaları: açık çizgileri koyu öğrenci yüzeyinden ayır. */
+#scene-yazili .exam-qimage-box { background: #eef2f6; border-radius: 12px; }
+#scene-yazili .exam-qimage { object-fit: contain; height: auto; }
+/* V2'nin kısa kartları: büyük metin tercihinde doğal iç kaydırma sürer. */
+#scene-yazili.content-v2 .exam-card-title { margin-bottom: 10px; font-size: clamp(1.3rem, 2vw, 1.65rem); }
+#scene-yazili.content-v2 .exam-contentgrid { gap: 16px; margin-bottom: 8px; }
+#scene-yazili.content-v2 .exam-lead { font-size: 1rem; line-height: 1.4; margin-bottom: 8px; }
+#scene-yazili.content-v2 .exam-body-p { line-height: 1.4; margin-bottom: 8px; }
+#scene-yazili.content-v2 .exam-takeaway,
+#scene-yazili.content-v2 .exam-warning { padding: 8px 10px; margin: 8px 0; line-height: 1.4; }
+@media (min-width: 821px) {
+    #scene-yazili.content-v2.study-active .study-card-content-area { padding: 12px 16px !important; }
+    #scene-yazili.content-v2 .study-card-top-meta { margin-bottom: 6px; }
+}
+#scene-yazili.content-v2 .exam-card-notes summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; touch-action: manipulation; }
+@media (orientation: landscape) and (max-height: 520px) and (min-width: 650px) {
+    #scene-yazili.content-v2.study-active { margin-top: 68px !important; height: calc(100dvh - 76px) !important; max-height: calc(100dvh - 76px) !important; padding: 6px 12px !important; }
+    #scene-yazili.content-v2.study-active .exam-back-navigation { position: absolute; top: 6px; left: 12px; width: 160px; z-index: 30; }
+    #scene-yazili.content-v2.study-active .exam-study-toolbar { padding: 0 0 4px 170px !important; margin: 0 0 4px !important; min-height: 48px; }
+    #scene-yazili.content-v2 .exam-contentgrid { display: grid !important; grid-template-columns: minmax(0,1.25fr) minmax(0,0.75fr) !important; gap: 12px !important; }
+    #scene-yazili.content-v2.study-active .study-card-content-area { padding: 8px 12px !important; }
+    #scene-yazili.content-v2 .exam-visualbox { padding: 8px; }
+    #scene-yazili.content-v2 .exam-caption { margin: 4px 0; }
+    #scene-yazili.content-v2 .exam-card-title { margin-bottom: 6px; }
+}
+#scene-yazili.content-v2 #exam-start-practice:hover { transform: none !important; }
+
+@media (min-width: 821px) {
+    #scene-yazili.content-v2 .study-card-top-meta { flex-direction: row; justify-content: space-between; padding-bottom: 6px; gap: 6px; }
+}
+@media (orientation: landscape) and (max-height: 520px) and (min-width: 650px) {
+    #scene-yazili.content-v2 .study-card-top-meta { flex-direction: row !important; justify-content: space-between; margin: 0 0 4px !important; padding: 0 !important; gap: 4px; border: 0; }
+    #scene-yazili.content-v2 .study-outcome-expandable { margin: 0 !important; }
+    #scene-yazili.content-v2.study-active .exam-next-bar { padding: 0 8px !important; }
+}
+@media (orientation: landscape) and (max-height: 520px) and (min-width: 650px) {
+    #scene-yazili.content-v2 .exam-visualbox img { max-height: 140px !important; object-fit: contain; }
+}

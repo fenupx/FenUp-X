@@ -8,8 +8,10 @@
 
 'use strict';
 
-const DATA_URL = 'data/exam/pilot_7_senaryo2.json';
-const ASSET_BASE = 'data/exam/';
+const CONTENT_REVISION = '2.0.0';
+let ASSET_BASE = 'data/exam/';
+let loadedRevision = null;
+const dataVersions = new Map();
 const STORAGE_KEY = 'fenupx_exam_pilot_v1';
 
 const names = { easy: 'Kolay', medium: 'Orta', hard: 'Zor' };
@@ -31,7 +33,7 @@ let state = {
     returnToSummary: false,
     reviewingEval: false,
     hasSelectedScope: false,
-    studyPlanOpen: true
+    studyPlanOpen: typeof window !== 'undefined' && window.innerWidth > 820 && window.innerHeight > 520
 };
 
 let currentProfile = 'dengeli';
@@ -71,6 +73,8 @@ if (typeof localStorage !== 'undefined') {
 
                 if (parsed.attempt && Array.isArray(parsed.attempt.ids)) {
                     state.attempt = {
+                        contentRevision: parsed.attempt.contentRevision || '1',
+                        rubricRevision: parsed.attempt.rubricRevision || '1',
                         routeKey: parsed.attempt.routeKey || crypto.randomUUID(),
                         version: parsed.attempt.version || 2,
                         scoringVersion: parsed.attempt.scoringVersion || 2,
@@ -187,7 +191,7 @@ export function distributeCriteriaPoints(rubrics, targetPoint) {
     // 1. Mümkün olduğunda 5'in katlarıyla dağıtım:
     if (pt % 5 === 0 && pt >= n * 5) {
         const units = pt / 5;
-        const weights = rubrics.map((r, i) => ({ id: r.id, weight: r.points || 1, origIdx: i }));
+        const weights = rubrics.map((r, i) => ({ id: r.id, weight: r.weight || r.points || 1, origIdx: i }));
         const totalW = weights.reduce((s, w) => s + w.weight, 0);
         let unitAlloc = weights.map(() => 1);
         let remainingUnits = units - n;
@@ -208,7 +212,7 @@ export function distributeCriteriaPoints(rubrics, targetPoint) {
     }
 
     // 2. 5'in katlarıyla dağıtılamıyorsa: Deterministik Hamilton (Largest Remainder) Pozitif Tamsayı Dağıtımı
-    const weights = rubrics.map((r, i) => ({ id: r.id, weight: r.points || 1, origIdx: i }));
+    const weights = rubrics.map((r, i) => ({ id: r.id, weight: r.weight || r.points || 1, origIdx: i }));
     const totalW = weights.reduce((s, w) => s + w.weight, 0);
     const shares = weights.map((w, i) => {
         const exact = (w.weight / totalW) * pt;
@@ -250,7 +254,7 @@ export function ensureAttemptCriteriaMap(attempt) {
     questions.forEach(q => {
         if (!attempt.criteriaMap[q.id] || !Array.isArray(attempt.criteriaMap[q.id]) || attempt.criteriaMap[q.id].length === 0) {
             const qPt = attempt.questionPoints?.[q.id] || 15;
-            attempt.criteriaMap[q.id] = distributeCriteriaPoints(q.rubric || [], qPt);
+            attempt.criteriaMap[q.id] = distributeCriteriaPoints(q.rubric || [], qPt).map(c => ({...c, contentRevision: attempt.contentRevision || '1', rubricRevision: attempt.rubricRevision || '1'}));
         }
     });
 }
@@ -360,26 +364,33 @@ function formatScore(score) {
 }
 
 // --- VERİ YÜKLEME ---
-let dataPromise = null;
-async function loadData() {
-    if (DATA) return true;
-    if (dataPromise) return dataPromise;
-    dataPromise = (async () => {
-        try {
-            const res = await fetch(DATA_URL);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            DATA = await res.json();
-            CARDS = DATA.cards || [];
-            QUESTIONS = DATA.questions || [];
-            profiles = DATA.selection_policy?.scenario_profiles || {};
+async function loadData(revision = state.attempt?.contentRevision || CONTENT_REVISION, showError = true) {
+    if (DATA && loadedRevision === revision) return true;
+    try {
+        const base = revision === CONTENT_REVISION ? 'data/exam/content-v2/' : 'data/exam/';
+        if (!dataVersions.has(revision)) {
+            dataVersions.set(revision, fetch(base + 'pilot_7_senaryo2.json').then(async res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            }));
+        }
+        const incoming = await dataVersions.get(revision);
+        DATA = incoming;
+        ASSET_BASE = base;
+        loadedRevision = revision;
+        const contentScene = $('scene-yazili');
+        if (contentScene) contentScene.classList.toggle('content-v2', revision === CONTENT_REVISION);
+        CARDS = DATA.cards || [];
+        QUESTIONS = DATA.questions || [];
+        profiles = DATA.selection_policy?.scenario_profiles || {};
 
             // Eski kayıtları sürümlü uyarlama: 5'in katı (10, 15, 20) standardına bir kez taşı
-            if (state.attempt && Array.isArray(state.attempt.ids)) {
-                const needsMigration = !state.attempt.scoringVersion ||
+            if (state.attempt && (state.attempt.contentRevision || '1') === revision && Array.isArray(state.attempt.ids)) {
+                const needsMigration = !state.attempt.finished && (!state.attempt.scoringVersion ||
                     state.attempt.scoringVersion < SCORING_POLICY.version ||
                     !state.attempt.questionPoints ||
                     Object.keys(state.attempt.questionPoints).length === 0 ||
-                    Object.values(state.attempt.questionPoints).some(p => !SCORING_POLICY.allowedPoints.includes(p));
+                    Object.values(state.attempt.questionPoints).some(p => !SCORING_POLICY.allowedPoints.includes(p)));
 
                 if (needsMigration) {
                     const qs = state.attempt.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
@@ -407,9 +418,9 @@ async function loadData() {
             return true;
         } catch (err) {
             console.error('Yazılı verisi yüklenemedi:', err);
-            dataPromise = null;
+            dataVersions.delete(revision);
             const container = $('scene-yazili');
-            if (container) {
+            if (container && showError) {
                 container.innerHTML = `
                     <div class="exam-header-bar">
                         <button class="back-link btn-back-home" id="btn-exam-err-home"><i class="fas fa-arrow-left"></i> Ana Sayfaya Dön</button>
@@ -428,8 +439,6 @@ async function loadData() {
             }
             return false;
         }
-    })();
-    return dataPromise;
 }
 
 // --- AKIŞ MOTORU (State Machine): Senaryo Seçimi → Tercih → Konu/Prova → Değerlendirme → Özet ---
@@ -630,7 +639,7 @@ function renderChoice() {
     const studyCountEl = $('choice-study-count');
     if (studyCountEl && DATA) {
         const topicCount = DATA.outcomes ? DATA.outcomes.length : 4;
-        const cardCount = CARDS.length || 24;
+        const cardCount = CARDS.length;
         studyCountEl.innerHTML = `<i class="fas fa-clone"></i> ${topicCount} konu · ${cardCount} bilgi kartı`;
     }
 
@@ -689,7 +698,7 @@ function renderChoice() {
     }
 }
 
-// 3a. AŞAMA: KONU ÇALIŞMA EKRANI (24 Kart, Çalışma Planı & İnteraktif Deneyler)
+// 3a. AŞAMA: KONU ÇALIŞMA EKRANI (Veri Kartları, Çalışma Planı & İnteraktif Deneyler)
 function renderStudy(cardIndex) {
     stopAnimation();
     if (!CARDS || CARDS.length === 0) return;
@@ -879,6 +888,8 @@ function renderStudy(cardIndex) {
                             <p class="study-outcome-full-desc">${esc(outcome.title)}</p>
                         </details>
                     ` : ''}
+                    ${loadedRevision === CONTENT_REVISION ? `<details class="exam-card-notes"><summary>Hatırlatmalar</summary><div class="exam-takeaway"><strong>📌 Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>
+                        ${c.misconception ? `<p class="exam-warning"><strong>⚠️ Karıştırma:</strong> ${esc(c.misconception)}</p>` : ''}</details>` : ''}
                 </div>
 
                 <h2 class="exam-card-title">${esc(c.title)}</h2>
@@ -887,8 +898,8 @@ function renderStudy(cardIndex) {
                     <div class="study-text-column">
                         <p class="exam-lead">${esc(c.lead)}</p>
                         ${(c.body || []).map(p => `<p class="exam-body-p">${esc(p)}</p>`).join('')}
-                        <div class="exam-takeaway"><strong>📌 Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>
-                        <p class="exam-warning"><strong>⚠️ Karıştırma:</strong> ${esc(c.misconception)}</p>
+                        ${loadedRevision !== CONTENT_REVISION ? `<div class="exam-takeaway"><strong>📌 Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>
+                        ${c.misconception ? `<p class="exam-warning"><strong>⚠️ Karıştırma:</strong> ${esc(c.misconception)}</p>` : ''}` : ''}
                     </div>
                     <div class="exam-visualbox" id="exam-visual">
                         ${visualAssetPath ? `<img src="${esc(visualAssetPath)}" alt="${esc(c.visual?.alt || '')}">` : ''}
@@ -896,14 +907,7 @@ function renderStudy(cardIndex) {
                     </div>
                 </div>
 
-                <div class="exam-check">
-                    <strong>Kendini kontrol et</strong>
-                    <p class="exam-body-p">${esc(c.check?.prompt || '')}</p>
-                    <details>
-                        <summary><i class="fas fa-eye" style="margin-right:8px;"></i> Örnek açıklamayı gör</summary>
-                        <p class="exam-body-p" style="color:#f1f5f9; padding-top:10px;">${esc(c.check?.answer || '')}</p>
-                    </details>
-                </div>
+
             </div>
 
             <div class="exam-next-bar">
@@ -1510,8 +1514,20 @@ function updateAnsweredCountText(questions) {
     }
 }
 
-function startNewPractice() {
+let startingPractice = false;
+async function startNewPractice() {
+    if (startingPractice) return;
+    startingPractice = true;
+    const previousRevision = loadedRevision;
     try {
+        if (!await loadData(CONTENT_REVISION, false)) throw new Error('Yeni içerik yüklenemedi.');
+        if (state.currentStep !== 'practice' || !setupPracticeNewMode || $('scene-yazili')?.classList.contains('is-hidden')) {
+            if (previousRevision) await loadData(previousRevision);
+            return;
+        }
+        const run = state.profileRuns[currentProfile] || 0;
+        const nextHistory = structuredClone(state.history || {});
+        const chosen = selectQuestions(currentProfile, nextHistory, run);
         setupPracticeNewMode = false;
         state.reviewingEval = false;
         state.studyMode = 'free';
@@ -1524,10 +1540,7 @@ function startNewPractice() {
         if (sceneYazili) {
             sceneYazili.scrollTop = 0;
         }
-        state.profileRuns = state.profileRuns || {};
-        const run = state.profileRuns[currentProfile] || 0;
-        state.history = state.history || {};
-        const chosen = selectQuestions(currentProfile, state.history, run);
+        state.history = nextHistory;
         state.profileRuns[currentProfile] = run + 1;
 
         // 5'in katı (10, 15, 20) standart puan dağıtımı
@@ -1537,10 +1550,12 @@ function startNewPractice() {
         const criteriaMap = {};
         chosen.questions.forEach(q => {
             const qPt = pointsMap[q.id] || 15;
-            criteriaMap[q.id] = distributeCriteriaPoints(q.rubric || [], qPt);
+            criteriaMap[q.id] = distributeCriteriaPoints(q.rubric || [], qPt).map(c => ({...c, contentRevision: CONTENT_REVISION, rubricRevision: CONTENT_REVISION}));
         });
 
         state.attempt = {
+            contentRevision: CONTENT_REVISION,
+            rubricRevision: CONTENT_REVISION,
             routeKey: crypto.randomUUID(),
             version: 2,
             scoringVersion: SCORING_POLICY.version,
@@ -1573,8 +1588,9 @@ function startNewPractice() {
             openPrintPreview();
         }
     } catch (err) {
+        if (previousRevision && loadedRevision !== previousRevision) await loadData(previousRevision);
         alert(err.message);
-    }
+    } finally { startingPractice = false; }
 }
 
 export function reEvaluateWithCriteria() {
@@ -3017,7 +3033,7 @@ function setupLearning(kind) {
 }
 
 // --- SENARYO SORU SEÇİMİ VE GEÇMİŞ YÖNETİMİ ---
-function selectQuestions(profileName, history, run = 0) {
+export function selectQuestions(profileName, history, run = 0) {
     const conf = profiles[profileName];
     if (!conf) throw new Error('Geçersiz profil: ' + profileName);
 
@@ -3027,35 +3043,34 @@ function selectQuestions(profileName, history, run = 0) {
     const now = Date.now();
     let repeats = 0;
 
+    const slots = [];
     for (const allocation of DATA.scenario.allocation) {
-        const oid = allocation.outcome_id;
         for (const diff of ['easy', 'medium', 'hard']) {
-            let n = quota[oid][diff];
-            const candidates = QUESTIONS
-                .filter(q => q.outcome_id === oid && q.difficulty === diff)
-                .map(q => ({
-                    q,
-                    h: history[q.id] || { count: 0, last: 0 },
-                    tie: Math.random()
-                }))
-                .sort((a, b) => a.h.count - b.h.count || a.h.last - b.h.last || a.tie - b.tie);
-
-            for (const c of candidates) {
-                if (!n) break;
-                // Aynı provada family_id çakışmasını engelle
-                if (result.some(q => q.family_id === c.q.family_id)) continue;
-                result.push(c.q);
-                if (c.h.count) repeats++;
-                updates.push([c.q.id, { count: c.h.count + 1, last: now }]);
-                n--;
-            }
-            if (n > 0) {
-                throw new Error('Bu çıktının istenen düzeyinde yeterli uygun soru yok: ' + oid);
-            }
+            const pool = QUESTIONS.filter(q => q.outcome_id === allocation.outcome_id && q.difficulty === diff)
+                .map(q => ({ q, count: history[q.id]?.count || 0, last: history[q.id]?.last || 0, tie: Math.random() }))
+                .sort((a,b) => a.count - b.count || a.last - b.last || a.tie - b.tie).map(x => x.q);
+            for (let i = 0; i < quota[allocation.outcome_id][diff]; i++) slots.push(pool);
         }
     }
-
-    for (const [id, h] of updates) history[id] = h;
+    const compatible = q => result.every(other => other.id !== q.id &&
+        (!q.family_id || q.family_id !== other.family_id) &&
+        !(q.incompatible_with || []).includes(other.id) && !(other.incompatible_with || []).includes(q.id));
+    function choose(index) {
+        if (index === slots.length) return result.length === 7;
+        for (const q of slots[index]) {
+            if (!compatible(q)) continue;
+            result.push(q);
+            if (choose(index + 1)) return true;
+            result.pop();
+        }
+        return false;
+    }
+    if (!choose(0)) throw new Error('Yasak çiftler ve senaryo kotalarıyla uyumlu tam set bulunamadı. Mevcut çalışma korundu.');
+    for (const q of result) {
+        const h = history[q.id] || {count:0,last:0};
+        if (h.count) repeats++;
+        history[q.id] = {count:h.count+1,last:now};
+    }
 
     // Soruları rastgele sırala (Fisher-Yates)
     for (let i = result.length - 1; i > 0; i--) {
