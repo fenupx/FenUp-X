@@ -1,0 +1,476 @@
+{
+  "schema_version": "1.0.0",
+  "status": "reserve_not_in_default_pool",
+  "outcome_id": "FB.7.2.1",
+  "note": "Ana 12 soruya ek olarak hazırlanmış 3 kolay, 2 orta, 1 zor taslak. Öğretmen onayı ve kimlik/ölçüt kontrolünden sonra havuza eklenebilir.",
+  "questions": [
+    {
+      "id": "FB721-E03",
+      "outcome_id": "FB.7.2.1",
+      "difficulty": "easy",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "title": "Süre uzadı, iş arttı mı?",
+      "type": "open_response",
+      "stem": "Bir sporcu topu başının üzerinde önce 10 saniye, sonra 30 saniye hareketsiz tutuyor. Her iki durumda top aynı noktada kalıyor. Sporcunun yukarı yönlü tutma kuvvetinin top üzerindeki işlerini karşılaştır.",
+      "table": null,
+      "hint": "Önce incelenen kuvveti ve yer değiştirmeyi belirle; karşılaştırma varsa sabit kalan etkeni bul.",
+      "sample_answer": "İki durumda da bu kuvvetin yaptığı iş sıfırdır. Top yer değiştirmemiştir. Daha uzun süre tutmak tek başına top üzerindeki fiziksel işi artırmaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler kabul edilir. Örnek cevap kelimesi kelimesine aranmaz.",
+      "rubric": [
+        {
+          "id": "E03-R1",
+          "text": "İki durumda da yer değiştirmenin olmadığını belirtir.",
+          "points": 4,
+          "return_card_ids": [
+            "FB721-K02"
+          ],
+          "scoring": {
+            "full": "İki durumda da yer değiştirmenin olmadığını belirtir.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "E03-R2",
+          "text": "İki işin de sıfır ve eşit olduğunu belirtir.",
+          "points": 4,
+          "return_card_ids": [
+            "FB721-K02"
+          ],
+          "scoring": {
+            "full": "İki işin de sıfır ve eşit olduğunu belirtir.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "E03-R3",
+          "text": "Sürenin uzamasının bu durumda işi artırmadığını açıklar.",
+          "points": 2,
+          "return_card_ids": [
+            "FB721-K04"
+          ],
+          "scoring": {
+            "full": "Sürenin uzamasının bu durumda işi artırmadığını açıklar.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB721-K02",
+        "FB721-K04"
+      ],
+      "family_id": "holding-time",
+      "process_components": [
+        "a",
+        "c"
+      ],
+      "source_refs": [
+        "B1",
+        "P1"
+      ],
+      "originality": "FenUp X için özgün hazırlanmıştır; kaynak sorular aynen alınmamıştır.",
+      "review_status": "teacher_review_required"
+    },
+    {
+      "id": "FB721-E07",
+      "outcome_id": "FB.7.2.1",
+      "difficulty": "easy",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "title": "Kuvvet her zaman yeterli mi?",
+      "type": "open_response",
+      "stem": "Bir öğrenci “Bir cisme kuvvet uygulandıysa o kuvvet mutlaka iş yapmıştır.” diyor. Bu açıklamayı düzelt ve iddiayı çürüten bir günlük yaşam örneği ver.",
+      "table": null,
+      "hint": "Önce incelenen kuvveti ve yer değiştirmeyi belirle; karşılaştırma varsa sabit kalan etkeni bul.",
+      "sample_answer": "Kuvvet uygulamak tek başına yetmez; cismin yer değiştirmesi ve kuvvetle yer değiştirmenin uygun doğrultu ilişkisinde olması gerekir. Örneğin hareket etmeyen bir duvarı iten kuvvet, duvar üzerinde iş yapmaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler kabul edilir. Örnek cevap kelimesi kelimesine aranmaz.",
+      "rubric": [
+        {
+          "id": "E07-R1",
+          "text": "Kuvvetin tek başına yeterli olmadığını açıklar.",
+          "points": 3,
+          "return_card_ids": [
+            "FB721-K01"
+          ],
+          "scoring": {
+            "full": "Kuvvetin tek başına yeterli olmadığını açıklar.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "E07-R2",
+          "text": "Yer değiştirme ve kuvvetle ilişkisini belirtir.",
+          "points": 4,
+          "return_card_ids": [
+            "FB721-K01"
+          ],
+          "scoring": {
+            "full": "Yer değiştirme ve kuvvetle ilişkisini belirtir.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "E07-R3",
+          "text": "İddianın yanlışlığını gösteren uygun örnek verir.",
+          "points": 3,
+          "return_card_ids": [
+            "FB721-K02"
+          ],
+          "scoring": {
+            "full": "İddianın yanlışlığını gösteren uygun örnek verir.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB721-K01",
+        "FB721-K02"
+      ],
+      "family_id": "counterexample-condition",
+      "process_components": [
+        "a"
+      ],
+      "source_refs": [
+        "B1",
+        "P1"
+      ],
+      "originality": "FenUp X için özgün hazırlanmıştır; kaynak sorular aynen alınmamıştır.",
+      "review_status": "teacher_review_required"
+    },
+    {
+      "id": "FB721-E09",
+      "outcome_id": "FB.7.2.1",
+      "difficulty": "easy",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "title": "Yorulmak bir ölçüt mü?",
+      "type": "open_response",
+      "stem": "Ada ağır çantayı aynı noktada tutarken yoruluyor. “Çok yoruldum; çanta üzerinde çok fiziksel iş yaptım.” diyor. Çantaya uyguladığı tutma kuvveti açısından bu yorumu değerlendir.",
+      "table": null,
+      "hint": "Önce incelenen kuvveti ve yer değiştirmeyi belirle; karşılaştırma varsa sabit kalan etkeni bul.",
+      "sample_answer": "Bu yorum doğru değildir. Çanta yer değiştirmediği için tutma kuvvetinin çanta üzerindeki işi sıfırdır. Ada’nın yorulması veya enerji harcaması tek başına çanta üzerinde iş yapıldığını göstermez.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler kabul edilir. Örnek cevap kelimesi kelimesine aranmaz.",
+      "rubric": [
+        {
+          "id": "E09-R1",
+          "text": "Yorulmanın tek başına iş kanıtı olmadığını açıklar.",
+          "points": 3,
+          "return_card_ids": [
+            "FB721-K01"
+          ],
+          "scoring": {
+            "full": "Yorulmanın tek başına iş kanıtı olmadığını açıklar.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "E09-R2",
+          "text": "Çantanın yer değiştirmediğini belirtir.",
+          "points": 3,
+          "return_card_ids": [
+            "FB721-K02"
+          ],
+          "scoring": {
+            "full": "Çantanın yer değiştirmediğini belirtir.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "E09-R3",
+          "text": "Tutma kuvvetinin çanta üzerindeki işinin sıfır olduğunu gerekçelendirir.",
+          "points": 4,
+          "return_card_ids": [
+            "FB721-K02"
+          ],
+          "scoring": {
+            "full": "Tutma kuvvetinin çanta üzerindeki işinin sıfır olduğunu gerekçelendirir.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB721-K01",
+        "FB721-K02"
+      ],
+      "family_id": "holding-time",
+      "process_components": [
+        "a"
+      ],
+      "source_refs": [
+        "B1",
+        "P1"
+      ],
+      "originality": "FenUp X için özgün hazırlanmıştır; kaynak sorular aynen alınmamıştır.",
+      "review_status": "teacher_review_required"
+    },
+    {
+      "id": "FB721-M04",
+      "outcome_id": "FB.7.2.1",
+      "difficulty": "medium",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "title": "Eşit işi farklı yoldan oluştur",
+      "type": "open_response",
+      "stem": "Bir deneyde 10 N sabit kuvvet, hareket yönünde 2 m boyunca uygulanıyor. İkinci deneyde kuvvet 5 N olacak. İkinci kuvvetin aynı miktarda iş yapması için yer değiştirme nasıl olmalıdır? Sayısal önerini ve kuvvet–yer değiştirme ilişkisine dayalı gerekçeni yaz.",
+      "table": null,
+      "hint": "Önce incelenen kuvveti ve yer değiştirmeyi belirle; karşılaştırma varsa sabit kalan etkeni bul.",
+      "sample_answer": "Yer değiştirme 4 m olmalıdır. Kuvvet yarıya indiği için aynı işi elde etmek üzere kuvvet yönündeki yer değiştirme iki katına çıkarılmalıdır. İki değişken birlikte değerlendirilir.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler kabul edilir. Örnek cevap kelimesi kelimesine aranmaz.",
+      "rubric": [
+        {
+          "id": "M04-R1",
+          "text": "Yer değiştirmeyi 4 m önerir.",
+          "points": 4,
+          "return_card_ids": [
+            "FB721-K04"
+          ],
+          "scoring": {
+            "full": "Yer değiştirmeyi 4 m önerir.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "M04-R2",
+          "text": "Kuvvetin yarıya indiğini açıklar.",
+          "points": 3,
+          "return_card_ids": [
+            "FB721-K03"
+          ],
+          "scoring": {
+            "full": "Kuvvetin yarıya indiğini açıklar.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "M04-R3",
+          "text": "Aynı iş için yer değiştirmenin iki kat olması gerektiğini gerekçelendirir.",
+          "points": 3,
+          "return_card_ids": [
+            "FB721-K05"
+          ],
+          "scoring": {
+            "full": "Aynı iş için yer değiştirmenin iki kat olması gerektiğini gerekçelendirir.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB721-K03",
+        "FB721-K04",
+        "FB721-K05"
+      ],
+      "family_id": "equal-work-compensation",
+      "process_components": [
+        "c"
+      ],
+      "source_refs": [
+        "B1",
+        "P1"
+      ],
+      "originality": "FenUp X için özgün hazırlanmıştır; kaynak sorular aynen alınmamıştır.",
+      "review_status": "teacher_review_required"
+    },
+    {
+      "id": "FB721-M05",
+      "outcome_id": "FB.7.2.1",
+      "difficulty": "medium",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "title": "Sonucu birimle birlikte yorumla",
+      "type": "open_response",
+      "stem": "Tablodaki itme kuvvetleri sabit ve hareket yönündedir. Selin, “B’deki sayı daha büyük olduğu için B kuvveti kesin daha çok iş yapar.” diyor. Önce uzunlukları aynı birimle ifade et, sonra iki kuvvetin işlerini karşılaştır.",
+      "table": {
+        "caption": "İtme denemeleri",
+        "headers": [
+          "Deneme",
+          "Kuvvet",
+          "Yer değiştirme"
+        ],
+        "rows": [
+          [
+            "A",
+            "10 N",
+            "2 m"
+          ],
+          [
+            "B",
+            "10 N",
+            "200 cm"
+          ]
+        ]
+      },
+      "hint": "Önce incelenen kuvveti ve yer değiştirmeyi belirle; karşılaştırma varsa sabit kalan etkeni bul.",
+      "sample_answer": "200 cm, 2 m’dir. İki denemede de kuvvet 10 N ve yer değiştirme 2 m olduğu için bu kuvvetlerin yaptığı işler eşittir. Birimler farklıyken yalnız sayılara bakmak yanıltır.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler kabul edilir. Örnek cevap kelimesi kelimesine aranmaz.",
+      "rubric": [
+        {
+          "id": "M05-R1",
+          "text": "200 cm = 2 m dönüşümünü doğru yapar.",
+          "points": 3,
+          "return_card_ids": [
+            "FB721-K06"
+          ],
+          "scoring": {
+            "full": "200 cm = 2 m dönüşümünü doğru yapar.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "M05-R2",
+          "text": "İki kuvvetin ve yer değiştirmenin eşit olduğunu belirler.",
+          "points": 3,
+          "return_card_ids": [
+            "FB721-K05"
+          ],
+          "scoring": {
+            "full": "İki kuvvetin ve yer değiştirmenin eşit olduğunu belirler.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "M05-R3",
+          "text": "İşlerin eşit olduğunu ve yalnız sayıya bakılamayacağını açıklar.",
+          "points": 4,
+          "return_card_ids": [
+            "FB721-K05"
+          ],
+          "scoring": {
+            "full": "İşlerin eşit olduğunu ve yalnız sayıya bakılamayacağını açıklar.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB721-K05",
+        "FB721-K06"
+      ],
+      "family_id": "units-in-evidence",
+      "process_components": [
+        "b",
+        "c"
+      ],
+      "source_refs": [
+        "B1",
+        "P1"
+      ],
+      "originality": "FenUp X için özgün hazırlanmıştır; kaynak sorular aynen alınmamıştır.",
+      "review_status": "teacher_review_required"
+    },
+    {
+      "id": "FB721-H02",
+      "outcome_id": "FB.7.2.1",
+      "difficulty": "hard",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "title": "Kesin karar verebilir miyiz?",
+      "type": "open_response",
+      "stem": "A denemesinde B’ye göre daha büyük bir sabit kuvvet, daha kısa bir mesafe boyunca hareket yönünde uygulanıyor. Kuvvetlerin ve mesafelerin sayısal değerleri verilmemiş. Bir öğrenci “Kuvvet büyük olduğu için A’da kesin daha fazla iş yapılır.” diyor. Bu sonucun verilerden çıkıp çıkmadığını açıkla. Kesin karşılaştırma için gereken ek bilgiyi ve yalnız kuvvetin etkisini araştıracak bir düzenleme öner.",
+      "table": null,
+      "hint": "Önce incelenen kuvveti ve yer değiştirmeyi belirle; karşılaştırma varsa sabit kalan etkeni bul.",
+      "sample_answer": "Kesin sıralama yapılamaz. A’da kuvvet artarken yer değiştirme azalmıştır; sayısal büyüklükler bilinmemektedir. İki kuvvetin ve yer değiştirmenin değerleri gerekir. Yalnız kuvvetin etkisini araştırmak için yer değiştirmeler eşit tutulup kuvvetler farklı seçilir.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler kabul edilir. Örnek cevap kelimesi kelimesine aranmaz.",
+      "rubric": [
+        {
+          "id": "H02-R1",
+          "text": "Verilerden kesin iş sıralaması yapılamayacağını belirtir.",
+          "points": 3,
+          "return_card_ids": [
+            "FB721-K05"
+          ],
+          "scoring": {
+            "full": "Verilerden kesin iş sıralaması yapılamayacağını belirtir.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "H02-R2",
+          "text": "Kuvvet ve yer değiştirmenin ters yönde değiştiğini gerekçede kullanır.",
+          "points": 3,
+          "return_card_ids": [
+            "FB721-K05"
+          ],
+          "scoring": {
+            "full": "Kuvvet ve yer değiştirmenin ters yönde değiştiğini gerekçede kullanır.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "H02-R3",
+          "text": "Sayısal kuvvet ve yer değiştirme bilgilerinin gerektiğini belirtir.",
+          "points": 2,
+          "return_card_ids": [
+            "FB721-K05"
+          ],
+          "scoring": {
+            "full": "Sayısal kuvvet ve yer değiştirme bilgilerinin gerektiğini belirtir.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "H02-R4",
+          "text": "Yalnız kuvvet etkisi için eşit yer değiştirme önerir.",
+          "points": 2,
+          "return_card_ids": [
+            "FB721-K03"
+          ],
+          "scoring": {
+            "full": "Yalnız kuvvet etkisi için eşit yer değiştirme önerir.",
+            "partial": "Ölçütün bir kısmı doğru; gerekçe veya istenen bileşenlerden biri eksik. Puanın yarısı.",
+            "zero": "Ölçüte ilişkin doğru kanıt yok veya yanıt bilimsel olarak çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB721-K03",
+        "FB721-K05"
+      ],
+      "family_id": "insufficient-evidence",
+      "process_components": [
+        "c"
+      ],
+      "source_refs": [
+        "B1",
+        "P1"
+      ],
+      "originality": "FenUp X için özgün hazırlanmıştır; kaynak sorular aynen alınmamıştır.",
+      "review_status": "teacher_review_required"
+    }
+  ]
+}

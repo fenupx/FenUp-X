@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "FX-7-S2-2026-PILOT-v1",
+  "version": "1.0.0",
+  "created_date": "2026-10-28",
+  "status": "teacher_review_required",
+  "module": {
+    "title": "Yazılıya Hazırlık",
+    "subtitle": "Senaryona göre çalış, yazılı provası yap."
+  },
+  "scope": "7. sınıf 1. dönem 1. yazılı Senaryo 2; dört öğrenme çıktısı için taslak pilot. Tüm 7. sınıf müfredatı değildir.",
+  "scenario": {
+    "id": "7-2026-2027-D1-Y1-S2",
+    "grade": 7,
+    "academic_year": "2026-2027",
+    "term": 1,
+    "exam": 1,
+    "scenario": 2,
+    "question_count": 7,
+    "status": "content_draft_complete",
+    "allocation": [
+      {
+        "outcome_id": "FB.7.1.1",
+        "count": 2,
+        "draft_content_ready": true
+      },
+      {
+        "outcome_id": "FB.7.1.3",
+        "count": 1,
+        "draft_content_ready": true
+      },
+      {
+        "outcome_id": "FB.7.1.5",
+        "count": 1,
+        "draft_content_ready": true
+      },
+      {
+        "outcome_id": "FB.7.2.1",
+        "count": 3,
+        "draft_content_ready": true
+      }
+    ],
+    "note": "İçerik taslağı tamamlandı, öğretmen onayı henüz verilmedi. Her soru 10 puan; öz değerlendirme toplamı 70 puandır, resmî sınav puan dağılımı değildir."
+  },
+  "interactives": {
+    "study": {
+      "mission-tools": [
+        [
+          "Taşıma",
+          "Roket, araştırma aracını veya yükü uzaya çıkarır. Araştırma göreviyle aynı işlev değildir."
+        ],
+        [
+          "İnceleme",
+          "Sonda, görevine uygun bilimsel ölçümler yapar. İnsansız araştırma aracıdır."
+        ],
+        [
+          "Birlikte",
+          "Roket ve sonda görev zincirinde birbirini tamamlar: taşıma ve inceleme."
+        ]
+      ],
+      "debris-strategies": [
+        [
+          "Önleme",
+          "Yeni işlevsiz parça bırakmayı azaltmayı hedefler. Mevcut enkazı otomatik temizlemez."
+        ],
+        [
+          "Kaçınma",
+          "Çalışan araç için yakın çarpışma riskini azaltır. Enkaz birikimini ortadan kaldırmaz."
+        ],
+        [
+          "Temizleme",
+          "Uygun mevcut enkazın güvenli şekilde ortamdan çıkarılması değerlendirilir; her nesneye aynı yöntem uygulanmaz."
+        ]
+      ],
+      "cosmic-levels": [
+        [
+          "Güneş",
+          "Güneş bir yıldızdır; Samanyolu içindeki yıldızlardan biridir."
+        ],
+        [
+          "Samanyolu",
+          "Güneş sistemimizi içeren galaksidir. Tek bir yıldız değildir."
+        ],
+        [
+          "Evren",
+          "Galaksiler, diğer madde ve enerjiyle birlikte uzayı kapsayan bütündür."
+        ]
+      ]
+    },
+    "motion": {
+      "start": "Başlangıç konumu",
+      "lift": "Çanta yukarı yer değiştiriyor",
+      "hold": "Çanta aynı noktada",
+      "carry": "Çanta yatay yer değiştiriyor",
+      "start_status": "Başlangıçta henüz yer değiştirme yok. Hareketi ilerlet.",
+      "lift_status": "Yukarı yer değiştirme var: Elin yukarı kuvveti iş yapar.",
+      "hold_status": "Yer değiştirme yok: Tutma kuvvetinin işi sıfırdır.",
+      "carry_status": "Yer değiştirme yatay, kuvvet düşey: Yukarı kuvvetin işi sıfırdır."
+    },
+    "comparison": {
+      "equal": "İki kuvvetin yaptığı işler eşittir.",
+      "a_more": "A kuvveti daha fazla iş yapar.",
+      "b_more": "B kuvveti daha fazla iş yapar.",
+      "force_hint": "Yer değiştirme aynı; kuvveti karşılaştır.",
+      "distance_hint": "Kuvvet aynı; yer değiştirmeyi karşılaştır."
+    }
+  }
+}

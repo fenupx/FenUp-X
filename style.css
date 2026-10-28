@@ -101,7 +101,7 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
   line-height: 1.45; min-width: 0; box-sizing: border-box; overflow-wrap: anywhere;
 }
 .main-menu-grid {
-  display: grid; grid-template-columns: 1.7fr 1fr; gap: 28px; width: 100%;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 24px; width: 100%;
   align-items: stretch; min-width: 0; box-sizing: border-box;
 }
 .module-btn {
@@ -1207,6 +1207,27 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
 @keyframes pulseFlask {
     0%, 100% { transform: scale(1) rotate(0deg); }
     50% { transform: scale(1.1) rotate(6deg); }
+}
+
+/* Ana Menü Yazılıya Hazırlık Butonu */
+.module-btn.exam-active {
+    border-color: rgba(8, 127, 130, 0.45) !important;
+    background: linear-gradient(135deg, rgba(8, 127, 130, 0.16), rgba(0, 210, 255, 0.12)) !important;
+    box-shadow: 0 0 25px rgba(8, 127, 130, 0.25) !important;
+}
+.module-btn.exam-active:hover {
+    border-color: #087f82 !important;
+    box-shadow: 0 0 35px rgba(8, 127, 130, 0.45) !important;
+    transform: translateY(-4px) scale(1.02);
+}
+.module-btn.exam-active i.fa-pen-fancy {
+    color: #2dd4bf;
+    text-shadow: 0 0 15px rgba(45, 212, 191, 0.6);
+    animation: pulsePen 2.5s infinite ease-in-out;
+}
+@keyframes pulsePen {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(-8deg); }
 }
 
 /* Laboratuvar Ana Sahnesi (#lab-view) & İZOLASYON ZIRHI */

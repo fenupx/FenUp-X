@@ -1,0 +1,1200 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "FX-7-FB715-2026-v1",
+  "version": "1.0.0",
+  "created_date": "2026-10-28",
+  "language": "tr-TR",
+  "module": {
+    "title": "Yazılıya Hazırlık",
+    "subtitle": "Senaryona göre çalış, yazılı provası yap."
+  },
+  "status": "teacher_review_required",
+  "scope": "Senaryo 2 kapsamındaki tek öğrenme çıktısının içerik paketi.",
+  "outcome": {
+    "id": "FB.7.1.5",
+    "grade": 7,
+    "unit_id": "7-U01",
+    "unit_title": "Uzay Çağı",
+    "title": "Yıldız, galaksi ve evren kavramlarını açıklayarak yapılandırabilme",
+    "process_components": {
+      "a": "Kavramlar arasındaki hiyerarşik ilişkileri ortaya koyar.",
+      "b": "İlişkilere dayalı uyumlu bir bütün oluşturur."
+    },
+    "short_title": "Yıldız, galaksi ve evren"
+  },
+  "cards": [
+    {
+      "id": "FB715-K01",
+      "outcome_id": "FB.7.1.5",
+      "title": "Güneş bir yıldızdır",
+      "eyebrow": "01 / KONU KARTI",
+      "lead": "Yıldız, kendi enerjisini üreten bir gök cismidir.",
+      "body": [
+        "Güneş de bir yıldızdır; Dünya ise gezegendir. İkisi aynı tür gök cismi değildir.",
+        "Gezegenler ve Ay görünür ışıkta çoğunlukla yıldız ışığını yansıtarak görülür.",
+        "Bir yıldızı, çok sayıda yıldız ve başka yapı barındıran galaksiyle karıştırma."
+      ],
+      "takeaway": "Güneş: yıldız. Dünya: gezegen.",
+      "misconception": "Gökyüzünde parlak görünen her nokta yıldız değildir.",
+      "visual": {
+        "kind": "svg",
+        "asset": "assets/FB715-K01.svg",
+        "alt": "Yıldız, kendi enerjisini üreten bir gök cismidir.",
+        "interactive_id": null
+      },
+      "check": {
+        "prompt": "Güneş ile Samanyolu neden aynı tür yapı değildir?",
+        "answer": "Güneş bir yıldızdır. Samanyolu, Güneş gibi birçok yıldız ve başka bileşenler içeren bir galaksidir."
+      },
+      "source_refs": [
+        "B715",
+        "P1"
+      ]
+    },
+    {
+      "id": "FB715-K02",
+      "outcome_id": "FB.7.1.5",
+      "title": "Galaksi bir yıldız değildir",
+      "eyebrow": "02 / KONU KARTI",
+      "lead": "Galaksi çok sayıda yıldızın ve başka bileşenlerin kütle çekimiyle bağlı olduğu büyük bir yapıdır.",
+      "body": [
+        "Yıldızlar, gezegen sistemleri, gaz ve toz galaksilerde bulunabilir.",
+        "Güneş sistemi Samanyolu galaksisinin içindedir. Samanyolu tek yıldız veya tek gezegen sistemi değildir.",
+        "Galaksiler farklı büyüklük ve biçimlerde olabilir; şemalar gerçek ölçekte olmayabilir."
+      ],
+      "takeaway": "Bir yıldız, galaksinin bileşenlerinden biri olabilir.",
+      "misconception": "Güneş sistemini galaksiyle eş anlamlı kullanma.",
+      "visual": {
+        "kind": "svg",
+        "asset": "assets/FB715-K02.svg",
+        "alt": "Galaksi çok sayıda yıldızın ve başka bileşenlerin kütle çekimiyle bağlı olduğu büyük bir yapıdır.",
+        "interactive_id": null
+      },
+      "check": {
+        "prompt": "Bir galakside yalnız yıldızlar mı bulunur?",
+        "answer": "Hayır. Gezegen sistemleri, gaz ve toz gibi başka bileşenler de bulunur."
+      },
+      "source_refs": [
+        "B715",
+        "P1"
+      ]
+    },
+    {
+      "id": "FB715-K03",
+      "outcome_id": "FB.7.1.5",
+      "title": "Evren yalnız boşluk değildir",
+      "eyebrow": "03 / KONU KARTI",
+      "lead": "Evren, uzayla birlikte içindeki madde ve enerjinin bütününü kapsar.",
+      "body": [
+        "Dünya, Güneş ve Samanyolu evrenin parçalarıdır. Galaksiler arasındaki bölgeler de evrene dahildir.",
+        "Evreni yalnız bir galaksiye veya gök cisimlerinin arasındaki boşluğa indirgemeyiz.",
+        "Bu öğrenme çıktısında temel hedef kavramların kapsam ilişkisini kurmaktır; evrenin tam boyutunu hesaplamak değildir."
+      ],
+      "takeaway": "Evren, galaksileri ve içerdiklerini de kapsayan bütündür.",
+      "misconception": "Evrenin sonsuzluğunu bu kapsam şemasından kanıtladığını söyleme.",
+      "visual": {
+        "kind": "svg",
+        "asset": "assets/FB715-K03.svg",
+        "alt": "Evren, uzayla birlikte içindeki madde ve enerjinin bütününü kapsar.",
+        "interactive_id": null
+      },
+      "check": {
+        "prompt": "“Evren yalnız galaksilerin arasındaki boşluktur.” cümlesini düzelt.",
+        "answer": "Evren galaksileri, diğer madde ve enerjiyi ve uzayı kapsar; yalnız aradaki boşluk değildir."
+      },
+      "source_refs": [
+        "B715",
+        "P1",
+        "NASA"
+      ]
+    },
+    {
+      "id": "FB715-K04",
+      "outcome_id": "FB.7.1.5",
+      "title": "Kapsam ilişkisini kur",
+      "eyebrow": "04 / KONU KARTI",
+      "lead": "Yıldız → galaksi → evren: Ok, “içinde yer alır” anlamındadır.",
+      "body": [
+        "Güneş Samanyolu’nda, Samanyolu evrende yer alır.",
+        "Daha geniş kapsamlı bir yapının içinde bulunmak, onunla aynı türde olmak demek değildir.",
+        "Bu sıra bir doğum veya oluşum sırası değildir. Her yıldızın mutlaka galakside bulunması gibi evrensel bir kural da kurulmaz; burada Güneş örneği incelenir."
+      ],
+      "takeaway": "Okun anlamını mutlaka belirt: içinde yer alır.",
+      "misconception": "Bir yıldız zamanla galaksiye, sonra evrene dönüşür deme.",
+      "visual": {
+        "kind": "svg",
+        "asset": "assets/FB715-K04.svg",
+        "alt": "Yıldız → galaksi → evren: Ok, “içinde yer alır” anlamındadır.",
+        "interactive_id": "cosmic-levels"
+      },
+      "check": {
+        "prompt": "Güneş → Samanyolu → Evren oklarını nasıl okursun?",
+        "answer": "Güneş Samanyolu’nun içinde; Samanyolu evrenin içinde yer alır."
+      },
+      "source_refs": [
+        "B715",
+        "P1",
+        "NASA"
+      ]
+    },
+    {
+      "id": "FB715-K05",
+      "outcome_id": "FB.7.1.5",
+      "title": "Evrendeki adresimiz",
+      "eyebrow": "05 / KONU KARTI",
+      "lead": "Dünya, Güneş sistemi, Samanyolu ve evren birbiriyle ilişkili farklı ölçeklerdir.",
+      "body": [
+        "Dünya Güneş sistemindeki bir gezegendir. Güneş ise bu sistemin yıldızıdır.",
+        "Güneş sistemi Samanyolu’nun Avcı (Orion) kolunda yer alır. Avcı kolu ayrı bir galaksi değildir.",
+        "Adres benzetmesi konumu anlatmaya yardım eder; şehir ile galaksinin fiziksel olarak aynı olduğu anlamına gelmez."
+      ],
+      "takeaway": "Dünya → Güneş sistemi → Avcı kolu → Samanyolu → Evren.",
+      "misconception": "Güneş sistemi yalnız Güneş’ten oluşmaz; gezegenler ve başka cisimler de vardır.",
+      "visual": {
+        "kind": "svg",
+        "asset": "assets/FB715-K05.svg",
+        "alt": "Dünya, Güneş sistemi, Samanyolu ve evren birbiriyle ilişkili farklı ölçeklerdir.",
+        "interactive_id": null
+      },
+      "check": {
+        "prompt": "Avcı kolu ve Samanyolu aynı tür yapı mıdır?",
+        "answer": "Hayır. Avcı kolu Samanyolu içindeki bölgesel bir yapıdır; Samanyolu galaksidir."
+      },
+      "source_refs": [
+        "B715",
+        "P1"
+      ]
+    },
+    {
+      "id": "FB715-K06",
+      "outcome_id": "FB.7.1.5",
+      "title": "Kavram haritasını açıklamayla tamamla",
+      "eyebrow": "06 / KONU KARTI",
+      "lead": "İsimleri doğru yazmak kadar bağlantıları doğru kurmak da önemlidir.",
+      "body": [
+        "Güneş için “bir yıldızdır”, Güneş sistemi için “Samanyolu içinde yer alır” gibi ilişki etiketleri kullan.",
+        "Bir çizimdeki simge boyutundan gerçek boyut veya yakınlık sonucu çıkarma.",
+        "Tanım, örnek ve kapsama ilişkisini birlikte yazarsan cevabın daha açık olur."
+      ],
+      "takeaway": "Kavram + doğru örnek + etiketli ilişki.",
+      "misconception": "İç içe çizilen kutuları evrenin gerçek sınırlarının fotoğrafı gibi yorumlama.",
+      "visual": {
+        "kind": "svg",
+        "asset": "assets/FB715-K06.svg",
+        "alt": "İsimleri doğru yazmak kadar bağlantıları doğru kurmak da önemlidir.",
+        "interactive_id": null
+      },
+      "check": {
+        "prompt": "Galaksi büyük çizilmiş, yıldız küçük çizilmiş diye gerçek çapları hesaplayabilir misin?",
+        "answer": "Hayır. Şemanın ölçekli olup olmadığı ve ölçüm bilgileri gerekir."
+      },
+      "source_refs": [
+        "B715",
+        "P1"
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "FB715-E01",
+      "outcome_id": "FB.7.1.5",
+      "difficulty": "easy",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "type": "open_response",
+      "title": "Güneş ve Samanyolu",
+      "stem": "Güneş ile Samanyolu’nun hangi tür yapılar olduğunu belirt. Aralarındaki kapsama ilişkisini bir cümleyle açıkla.",
+      "sample_answer": "Güneş bir yıldız, Samanyolu bir galaksidir. Güneş, Samanyolu içindeki çok sayıdaki yıldızdan biridir.",
+      "hint": "Kavramı, verilen kanıtı ve istenen karşılaştırmayı birlikte düşün. Sonucunun gerekçesini yaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler ve uygun örnekler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB715-E01-R1",
+          "text": "Güneş’i yıldız olarak belirtir.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K01"
+          ],
+          "scoring": {
+            "full": "Güneş’i yıldız olarak belirtir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-E01-R2",
+          "text": "Samanyolu’nu galaksi olarak belirtir.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K02"
+          ],
+          "scoring": {
+            "full": "Samanyolu’nu galaksi olarak belirtir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-E01-R3",
+          "text": "Güneş’in Samanyolu içinde yer aldığını açıklar.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K04"
+          ],
+          "scoring": {
+            "full": "Güneş’in Samanyolu içinde yer aldığını açıklar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB715-K01",
+        "FB715-K02",
+        "FB715-K04"
+      ],
+      "process_components": [
+        "a",
+        "b"
+      ],
+      "family_id": "FB715-sun-milkyway",
+      "source_refs": [
+        "B715",
+        "P1",
+        "M1"
+      ],
+      "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
+      "review_status": "teacher_review_required",
+      "table": null,
+      "visual": null
+    },
+    {
+      "id": "FB715-E02",
+      "outcome_id": "FB.7.1.5",
+      "difficulty": "easy",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "type": "open_response",
+      "title": "Kapsam sırası",
+      "stem": "Güneş, Samanyolu ve evreni en geniş kapsamdan en dar kapsama sırala. Bu sıralamanın oluşum sırası olmadığını belirterek ilişkiyi açıkla.",
+      "sample_answer": "Evren → Samanyolu → Güneş. Evren Samanyolu’nu, Samanyolu Güneş’i kapsar. Bu, yapıların zaman içinde birbirine dönüştüğü veya bu sırayla oluştuğu anlamına gelmez.",
+      "hint": "Kavramı, verilen kanıtı ve istenen karşılaştırmayı birlikte düşün. Sonucunun gerekçesini yaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler ve uygun örnekler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB715-E02-R1",
+          "text": "Kapsam sırasını doğru yazar.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K04"
+          ],
+          "scoring": {
+            "full": "Kapsam sırasını doğru yazar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-E02-R2",
+          "text": "İçerme ilişkisini doğru açıklar.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K04"
+          ],
+          "scoring": {
+            "full": "İçerme ilişkisini doğru açıklar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-E02-R3",
+          "text": "Oluşum sırası olmadığını belirtir.",
+          "points": 2,
+          "return_card_ids": [
+            "FB715-K04"
+          ],
+          "scoring": {
+            "full": "Oluşum sırası olmadığını belirtir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB715-K04"
+      ],
+      "process_components": [
+        "a",
+        "b"
+      ],
+      "family_id": "FB715-scope-order",
+      "source_refs": [
+        "B715",
+        "P1",
+        "M1"
+      ],
+      "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
+      "review_status": "teacher_review_required",
+      "table": null,
+      "visual": {
+        "asset": "assets/FB715_kapsam.svg",
+        "alt": "Güneş, Samanyolu ve evreni en geniş kapsamdan en dar kapsama sırala. Bu sıralamanın oluşum sırası olmadığını belirterek ilişkiyi açıkla.",
+        "kind": "svg",
+        "essential_information_in_text": true
+      }
+    },
+    {
+      "id": "FB715-E03",
+      "outcome_id": "FB.7.1.5",
+      "difficulty": "easy",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "type": "open_response",
+      "title": "Tek yıldız mı, büyük yapı mı?",
+      "stem": "A kendi enerjisini üreten bir gök cismi; B çok sayıda yıldız, gezegen sistemleri, gaz ve toz içeren kütle çekimiyle bağlı bir yapı. A ve B kavramlarını adlandır ve farklarını açıkla.",
+      "sample_answer": "A yıldız, B galaksidir. Yıldız tek bir gök cismi türüdür; galaksi çok sayıda yıldız ve başka bileşenleri kapsar.",
+      "hint": "Kavramı, verilen kanıtı ve istenen karşılaştırmayı birlikte düşün. Sonucunun gerekçesini yaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler ve uygun örnekler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB715-E03-R1",
+          "text": "A’yı yıldız olarak belirler.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K01"
+          ],
+          "scoring": {
+            "full": "A’yı yıldız olarak belirler.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-E03-R2",
+          "text": "B’yi galaksi olarak belirler.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K02"
+          ],
+          "scoring": {
+            "full": "B’yi galaksi olarak belirler.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-E03-R3",
+          "text": "Tek yıldız ile çok bileşenli galaksi farkını açıklar.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K01",
+            "FB715-K02"
+          ],
+          "scoring": {
+            "full": "Tek yıldız ile çok bileşenli galaksi farkını açıklar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB715-K01",
+        "FB715-K02"
+      ],
+      "process_components": [
+        "a"
+      ],
+      "family_id": "FB715-definitions-contrast",
+      "source_refs": [
+        "B715",
+        "P1",
+        "M1"
+      ],
+      "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
+      "review_status": "teacher_review_required",
+      "table": null,
+      "visual": {
+        "asset": "assets/FB715_yildiz_galaksi.svg",
+        "alt": "A kendi enerjisini üreten bir gök cismi; B çok sayıda yıldız, gezegen sistemleri, gaz ve toz içeren kütle çekimiyle bağlı bir yapı. A ve B kavramlarını adlandır ve farklarını açıkla.",
+        "kind": "svg",
+        "essential_information_in_text": true
+      }
+    },
+    {
+      "id": "FB715-E04",
+      "outcome_id": "FB.7.1.5",
+      "difficulty": "easy",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "type": "open_response",
+      "title": "Evrenin içinde neler var?",
+      "stem": "“Evren sadece galaksilerin arasındaki boşluktur; galaksiler evrene dahil değildir.” cümlesini düzelt ve düzelttiğin tanıma iki örnek ver.",
+      "sample_answer": "Evren uzayla birlikte madde ve enerjiyi de kapsar; galaksiler de evrenin parçasıdır. Örneğin Samanyolu ve Güneş evrene dahildir. Dünya gibi başka doğru örnekler de kabul edilir.",
+      "hint": "Kavramı, verilen kanıtı ve istenen karşılaştırmayı birlikte düşün. Sonucunun gerekçesini yaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler ve uygun örnekler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB715-E04-R1",
+          "text": "Galaksilerin evrene dahil olduğunu belirtir.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K03"
+          ],
+          "scoring": {
+            "full": "Galaksilerin evrene dahil olduğunu belirtir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-E04-R2",
+          "text": "Evreni yalnız boşluğa indirgemeyen doğru tanım verir.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K03"
+          ],
+          "scoring": {
+            "full": "Evreni yalnız boşluğa indirgemeyen doğru tanım verir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-E04-R3",
+          "text": "Tanıma uygun iki örnek verir.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K03"
+          ],
+          "scoring": {
+            "full": "Tanıma uygun iki örnek verir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB715-K03"
+      ],
+      "process_components": [
+        "a",
+        "b"
+      ],
+      "family_id": "FB715-universe-not-empty",
+      "source_refs": [
+        "B715",
+        "P1",
+        "M1"
+      ],
+      "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
+      "review_status": "teacher_review_required",
+      "table": null,
+      "visual": null
+    },
+    {
+      "id": "FB715-E05",
+      "outcome_id": "FB.7.1.5",
+      "difficulty": "easy",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "type": "open_response",
+      "title": "Dünya’nın adresi",
+      "stem": "Dünya → Güneş sistemi → Samanyolu → Evren dizisindeki okları “içinde yer alır” diye oku. Dünya’nın ve Güneş’in türünü belirt; bu ikisinin aynı tür olmadığını açıkla.",
+      "sample_answer": "Dünya Güneş sisteminde, Güneş sistemi Samanyolu’nda, Samanyolu evrende yer alır. Dünya gezegen, Güneş yıldızdır. Konum ilişkisi aynı türde olmayı gerektirmez.",
+      "hint": "Kavramı, verilen kanıtı ve istenen karşılaştırmayı birlikte düşün. Sonucunun gerekçesini yaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler ve uygun örnekler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB715-E05-R1",
+          "text": "Üç içerme ilişkisini doğru açıklar.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K05"
+          ],
+          "scoring": {
+            "full": "Üç içerme ilişkisini doğru açıklar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-E05-R2",
+          "text": "Dünya’yı gezegen, Güneş’i yıldız olarak belirtir.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K01"
+          ],
+          "scoring": {
+            "full": "Dünya’yı gezegen, Güneş’i yıldız olarak belirtir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-E05-R3",
+          "text": "Aynı sistemde bulunmanın aynı tür olmak olmadığını açıklar.",
+          "points": 2,
+          "return_card_ids": [
+            "FB715-K05"
+          ],
+          "scoring": {
+            "full": "Aynı sistemde bulunmanın aynı tür olmak olmadığını açıklar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB715-K01",
+        "FB715-K05"
+      ],
+      "process_components": [
+        "a",
+        "b"
+      ],
+      "family_id": "FB715-earth-address",
+      "source_refs": [
+        "B715",
+        "P1",
+        "M1"
+      ],
+      "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
+      "review_status": "teacher_review_required",
+      "table": null,
+      "visual": null
+    },
+    {
+      "id": "FB715-E06",
+      "outcome_id": "FB.7.1.5",
+      "difficulty": "easy",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "type": "open_response",
+      "title": "Güneş sistemi galaksi midir?",
+      "stem": "Bir öğrenci “Güneş sistemi ile Samanyolu aynı şeydir.” diyor. Bu ifadeyi düzelt; Güneş sisteminin ve Samanyolu’nun ilişkisini açıkla.",
+      "sample_answer": "Aynı şey değildir. Güneş sistemi Güneş, gezegenler ve başka cisimlerden oluşan bir sistemdir; Samanyolu çok sayıda yıldız ve sistem barındıran galaksidir. Güneş sistemi Samanyolu içinde yer alır.",
+      "hint": "Kavramı, verilen kanıtı ve istenen karşılaştırmayı birlikte düşün. Sonucunun gerekçesini yaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler ve uygun örnekler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB715-E06-R1",
+          "text": "İki kavramın aynı olmadığını belirtir.",
+          "points": 2,
+          "return_card_ids": [
+            "FB715-K02",
+            "FB715-K05"
+          ],
+          "scoring": {
+            "full": "İki kavramın aynı olmadığını belirtir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-E06-R2",
+          "text": "Güneş sistemi ile galaksinin kapsam farkını açıklar.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K02",
+            "FB715-K05"
+          ],
+          "scoring": {
+            "full": "Güneş sistemi ile galaksinin kapsam farkını açıklar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-E06-R3",
+          "text": "Güneş sisteminin Samanyolu içinde olduğunu söyler.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K05"
+          ],
+          "scoring": {
+            "full": "Güneş sisteminin Samanyolu içinde olduğunu söyler.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB715-K02",
+        "FB715-K05"
+      ],
+      "process_components": [
+        "a",
+        "b"
+      ],
+      "family_id": "FB715-system-vs-galaxy",
+      "source_refs": [
+        "B715",
+        "P1",
+        "M1"
+      ],
+      "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
+      "review_status": "teacher_review_required",
+      "table": null,
+      "visual": null
+    },
+    {
+      "id": "FB715-M01",
+      "outcome_id": "FB.7.1.5",
+      "difficulty": "medium",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "type": "open_response",
+      "title": "Haritadaki okları düzelt",
+      "stem": "Bir kavram haritasında “Güneş, Samanyolu’nu içerir” ve “Samanyolu, evreni içerir” yazıyor. İki ilişkiyi düzelt. Güneş, Samanyolu ve evren için kavram türlerini de belirterek uyumlu bir açıklama yaz.",
+      "sample_answer": "Samanyolu Güneş’i içerir; evren Samanyolu’nu içerir. Güneş yıldız, Samanyolu galaksi, evren bütün madde/enerji ve uzayı kapsayan bütündür. Oklar içerme ilişkisini ters göstermiştir.",
+      "hint": "Kavramı, verilen kanıtı ve istenen karşılaştırmayı birlikte düşün. Sonucunun gerekçesini yaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler ve uygun örnekler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB715-M01-R1",
+          "text": "İlk ilişkiyi doğru düzeltir.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K04"
+          ],
+          "scoring": {
+            "full": "İlk ilişkiyi doğru düzeltir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-M01-R2",
+          "text": "İkinci ilişkiyi doğru düzeltir.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K04"
+          ],
+          "scoring": {
+            "full": "İkinci ilişkiyi doğru düzeltir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-M01-R3",
+          "text": "Üç kavramın türünü ve birbiriyle ilişkisini uyumlu açıklar.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K01",
+            "FB715-K02",
+            "FB715-K03"
+          ],
+          "scoring": {
+            "full": "Üç kavramın türünü ve birbiriyle ilişkisini uyumlu açıklar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB715-K01",
+        "FB715-K02",
+        "FB715-K03",
+        "FB715-K04"
+      ],
+      "process_components": [
+        "a",
+        "b"
+      ],
+      "family_id": "FB715-reverse-map",
+      "source_refs": [
+        "B715",
+        "P1",
+        "M1"
+      ],
+      "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
+      "review_status": "teacher_review_required",
+      "table": null,
+      "visual": {
+        "asset": "assets/FB715_hatali_oklar.svg",
+        "alt": "Bir kavram haritasında “Güneş, Samanyolu’nu içerir” ve “Samanyolu, evreni içerir” yazıyor. İki ilişkiyi düzelt. Güneş, Samanyolu ve evren için kavram türlerini de belirterek uyumlu bir açıklama yaz.",
+        "kind": "svg",
+        "essential_information_in_text": true
+      }
+    },
+    {
+      "id": "FB715-M02",
+      "outcome_id": "FB.7.1.5",
+      "difficulty": "medium",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "type": "open_response",
+      "title": "Benzetmenin sınırı",
+      "stem": "Bir öğrenci Dünya’nın evrendeki konumunu anlatmak için “Evimin şehirde, şehrin ülkede olması gibi Güneş sistemi Samanyolu’nda, Samanyolu evrendedir.” diyor. Benzetmenin hangi ilişkiyi anlattığını ve neden gerçek boyutları ya da fiziksel yapıları eşitlemediğini açıkla.",
+      "sample_answer": "Benzetme iç içe konum/kapsam ilişkisini anlatır. Şehir ile galaksi veya ülke ile evren fiziksel olarak aynı tür veya aynı büyüklük değildir. Benzetme gerçek uzaklık ve boyutları vermez.",
+      "hint": "Kavramı, verilen kanıtı ve istenen karşılaştırmayı birlikte düşün. Sonucunun gerekçesini yaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler ve uygun örnekler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB715-M02-R1",
+          "text": "İçerme/konum ilişkisini doğru belirler.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K05"
+          ],
+          "scoring": {
+            "full": "İçerme/konum ilişkisini doğru belirler.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-M02-R2",
+          "text": "Benzetmenin yapıları aynı tür yapmadığını açıklar.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K05",
+            "FB715-K06"
+          ],
+          "scoring": {
+            "full": "Benzetmenin yapıları aynı tür yapmadığını açıklar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-M02-R3",
+          "text": "Gerçek boyut/uzaklık bilgisinin çıkarılamayacağını belirtir.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K06"
+          ],
+          "scoring": {
+            "full": "Gerçek boyut/uzaklık bilgisinin çıkarılamayacağını belirtir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB715-K05",
+        "FB715-K06"
+      ],
+      "process_components": [
+        "a",
+        "b"
+      ],
+      "family_id": "FB715-analogy-limits",
+      "source_refs": [
+        "B715",
+        "P1",
+        "M1"
+      ],
+      "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
+      "review_status": "teacher_review_required",
+      "table": null,
+      "visual": null
+    },
+    {
+      "id": "FB715-M03",
+      "outcome_id": "FB.7.1.5",
+      "difficulty": "medium",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "type": "open_response",
+      "title": "Şemaya bakarak karar",
+      "stem": "Bir afişte yıldız simgesi bir galaksi simgesinden daha büyük çizilmiş. Afişin ölçekli olmadığı yazıyor. “Bu yıldız gerçekte galaksiden büyüktür.” sonucunu değerlendir ve doğru kapsama ilişkisini Güneş–Samanyolu örneğiyle açıkla.",
+      "sample_answer": "Ölçeksiz simge boyutundan gerçek boyut sonucu çıkarılamaz. Güneş bir yıldız olarak Samanyolu’nun içindedir; Samanyolu tek yıldız değil çok bileşenli galaksidir. Şema gerçek çap karşılaştırması değildir.",
+      "hint": "Kavramı, verilen kanıtı ve istenen karşılaştırmayı birlikte düşün. Sonucunun gerekçesini yaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler ve uygun örnekler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB715-M03-R1",
+          "text": "Ölçeksiz çizimden gerçek boyut çıkarılamayacağını belirtir.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K06"
+          ],
+          "scoring": {
+            "full": "Ölçeksiz çizimden gerçek boyut çıkarılamayacağını belirtir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-M03-R2",
+          "text": "Güneş’in yıldız, Samanyolu’nun galaksi olduğunu açıklar.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K01",
+            "FB715-K02"
+          ],
+          "scoring": {
+            "full": "Güneş’in yıldız, Samanyolu’nun galaksi olduğunu açıklar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-M03-R3",
+          "text": "Güneş’in Samanyolu içinde yer aldığını belirtir.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K04"
+          ],
+          "scoring": {
+            "full": "Güneş’in Samanyolu içinde yer aldığını belirtir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB715-K01",
+        "FB715-K02",
+        "FB715-K04",
+        "FB715-K06"
+      ],
+      "process_components": [
+        "a",
+        "b"
+      ],
+      "family_id": "FB715-diagram-scale",
+      "source_refs": [
+        "B715",
+        "P1",
+        "M1"
+      ],
+      "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
+      "review_status": "teacher_review_required",
+      "table": null,
+      "visual": {
+        "asset": "assets/FB715_olceksiz.svg",
+        "alt": "Bir afişte yıldız simgesi bir galaksi simgesinden daha büyük çizilmiş. Afişin ölçekli olmadığı yazıyor. “Bu yıldız gerçekte galaksiden büyüktür.” sonucunu değerlendir ve doğru kapsama ilişkisini Güneş–Samanyolu örneğiyle açıkla.",
+        "kind": "svg",
+        "essential_information_in_text": true
+      }
+    },
+    {
+      "id": "FB715-M04",
+      "outcome_id": "FB.7.1.5",
+      "difficulty": "medium",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "type": "open_response",
+      "title": "Adres kartlarını birleştir",
+      "stem": "Kartlarda “Güneş bir yıldızdır”, “Güneş sistemi Avcı kolundadır”, “Avcı kolu Samanyolu içindedir” yazıyor. Bu bilgileri birbiriyle uyumlu bir paragrafta birleştir. Avcı kolunun ayrı galaksi olmadığını ve Samanyolu’nun evrenle ilişkisini belirt.",
+      "sample_answer": "Güneş bir yıldızdır ve Güneş sisteminin yıldızıdır. Güneş sistemi Samanyolu içindeki Avcı kolunda bulunur. Avcı kolu ayrı galaksi değildir; Samanyolu galaksisi evrenin içindedir.",
+      "hint": "Kavramı, verilen kanıtı ve istenen karşılaştırmayı birlikte düşün. Sonucunun gerekçesini yaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler ve uygun örnekler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB715-M04-R1",
+          "text": "Güneş–Güneş sistemi ilişkisini doğru kurar.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K01",
+            "FB715-K05"
+          ],
+          "scoring": {
+            "full": "Güneş–Güneş sistemi ilişkisini doğru kurar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-M04-R2",
+          "text": "Avcı kolu–Samanyolu ilişkisini doğru açıklayıp kolu ayrı galaksi saymaz.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K05"
+          ],
+          "scoring": {
+            "full": "Avcı kolu–Samanyolu ilişkisini doğru açıklayıp kolu ayrı galaksi saymaz.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-M04-R3",
+          "text": "Samanyolu’nun evren içinde olduğunu belirtir.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K03",
+            "FB715-K04"
+          ],
+          "scoring": {
+            "full": "Samanyolu’nun evren içinde olduğunu belirtir.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB715-K01",
+        "FB715-K03",
+        "FB715-K04",
+        "FB715-K05"
+      ],
+      "process_components": [
+        "a",
+        "b"
+      ],
+      "family_id": "FB715-orion-address",
+      "source_refs": [
+        "B715",
+        "P1",
+        "M1"
+      ],
+      "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
+      "review_status": "teacher_review_required",
+      "table": null,
+      "visual": null
+    },
+    {
+      "id": "FB715-H01",
+      "outcome_id": "FB.7.1.5",
+      "difficulty": "hard",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "type": "open_response",
+      "title": "Etiketli kavram haritası",
+      "stem": "Dünya, Güneş, Güneş sistemi, Samanyolu ve evren kavramlarını kullanarak etiketli bir ilişki haritası yaz veya çiz. Güneş ile Güneş sistemini aynı kavram sayma. En az dört doğru bağlantı kur ve bunların oluşum sırası olmadığını açıkla.",
+      "sample_answer": "Dünya Güneş sisteminin içindedir. Güneş bu sistemin yıldızıdır. Güneş sistemi Samanyolu içinde yer alır. Samanyolu evren içinde yer alır. Güneş bir yıldız, Dünya gezegendir. Bağlantılar tür/konum ilişkileridir, oluşum sırası değildir.",
+      "hint": "Kavramı, verilen kanıtı ve istenen karşılaştırmayı birlikte düşün. Sonucunun gerekçesini yaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler ve uygun örnekler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB715-H01-R1",
+          "text": "Dünya–Güneş sistemi bağlantısını doğru etiketler.",
+          "points": 2,
+          "return_card_ids": [
+            "FB715-K05"
+          ],
+          "scoring": {
+            "full": "Dünya–Güneş sistemi bağlantısını doğru etiketler.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-H01-R2",
+          "text": "Güneş’i sistemin yıldızı olarak doğru bağlar; sistemle özdeş saymaz.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K01",
+            "FB715-K05"
+          ],
+          "scoring": {
+            "full": "Güneş’i sistemin yıldızı olarak doğru bağlar; sistemle özdeş saymaz.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-H01-R3",
+          "text": "Güneş sistemi–Samanyolu ve Samanyolu–evren bağlantılarını doğru kurar.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K04",
+            "FB715-K05"
+          ],
+          "scoring": {
+            "full": "Güneş sistemi–Samanyolu ve Samanyolu–evren bağlantılarını doğru kurar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-H01-R4",
+          "text": "Bağlantıların oluşum sırası olmadığını açıklar.",
+          "points": 2,
+          "return_card_ids": [
+            "FB715-K04"
+          ],
+          "scoring": {
+            "full": "Bağlantıların oluşum sırası olmadığını açıklar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB715-K01",
+        "FB715-K04",
+        "FB715-K05",
+        "FB715-K06"
+      ],
+      "process_components": [
+        "a",
+        "b"
+      ],
+      "family_id": "FB715-construct-map",
+      "source_refs": [
+        "B715",
+        "P1",
+        "M1"
+      ],
+      "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
+      "review_status": "teacher_review_required",
+      "table": null,
+      "visual": null
+    },
+    {
+      "id": "FB715-H02",
+      "outcome_id": "FB.7.1.5",
+      "difficulty": "hard",
+      "difficulty_status": "editorial_pending_teacher_review",
+      "type": "open_response",
+      "title": "İki hatayı tek modelde düzelt",
+      "stem": "Bir modelde Güneş “galaksi” diye etiketlenmiş; Samanyolu evrenin dışına çizilmiş. Modeli iki hatayı düzelterek yeniden açıkla. Düzeltmelerinden neden biri tür, diğerinin konum/kapsam hatası olduğunu belirt.",
+      "sample_answer": "Güneş yıldız olarak etiketlenmelidir; galaksi değildir. Samanyolu evren içinde gösterilmelidir. İlk hata gök cisminin türünü, ikinci hata evrenin kapsamını yanlış gösterir. Güneş de Samanyolu içindeki yıldızlardan biridir.",
+      "hint": "Kavramı, verilen kanıtı ve istenen karşılaştırmayı birlikte düşün. Sonucunun gerekçesini yaz.",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler ve uygun örnekler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB715-H02-R1",
+          "text": "Güneş’in yıldız olduğunu düzelterek tür hatasını açıklar.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K01",
+            "FB715-K02"
+          ],
+          "scoring": {
+            "full": "Güneş’in yıldız olduğunu düzelterek tür hatasını açıklar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-H02-R2",
+          "text": "Samanyolu’nu evren içine yerleştirerek kapsam hatasını açıklar.",
+          "points": 3,
+          "return_card_ids": [
+            "FB715-K03",
+            "FB715-K04"
+          ],
+          "scoring": {
+            "full": "Samanyolu’nu evren içine yerleştirerek kapsam hatasını açıklar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        },
+        {
+          "id": "FB715-H02-R3",
+          "text": "Güneş–Samanyolu–evren ilişkisini uyumlu bir bütün olarak kurar.",
+          "points": 4,
+          "return_card_ids": [
+            "FB715-K04",
+            "FB715-K06"
+          ],
+          "scoring": {
+            "full": "Güneş–Samanyolu–evren ilişkisini uyumlu bir bütün olarak kurar.",
+            "partial": "Ölçütün bir kısmı doğru, gerekçe veya istenen unsurlardan biri eksik: puanın yarısı.",
+            "zero": "Doğru bilimsel kanıt yok veya yanıt çelişkili.",
+            "equivalent_wording_accepted": true
+          }
+        }
+      ],
+      "max_points": 10,
+      "return_card_ids": [
+        "FB715-K01",
+        "FB715-K02",
+        "FB715-K03",
+        "FB715-K04",
+        "FB715-K06"
+      ],
+      "process_components": [
+        "a",
+        "b"
+      ],
+      "family_id": "FB715-repair-model",
+      "source_refs": [
+        "B715",
+        "P1",
+        "M1"
+      ],
+      "originality": "FenUp X için özgün yazılmıştır; kaynak sorular kopyalanmamıştır.",
+      "review_status": "teacher_review_required",
+      "table": null,
+      "visual": null
+    }
+  ],
+  "policy_ref": "FX-SORU-12-v1",
+  "sources": [
+    {
+      "id": "B715",
+      "title": "MEB Fen Bilimleri 7. Sınıf 1. Kitap",
+      "url": "https://drive.google.com/file/d/1p5bfeYqk5hnDQYCQ2FaIwV5KhpfU9Ygu/view",
+      "locator": "Basılı s.39, 46–48; PDF s.40, 47–49",
+      "use": "Kapsam ve beceri dayanağı; metin ve sorular özgün hazırlanmıştır."
+    },
+    {
+      "id": "P1",
+      "title": "2026–2027 Atatürk Ortaokulu yıllık planı",
+      "url": "https://docs.google.com/spreadsheets/d/1D1KQdYtBIr2SOSMGHvBlm2PqA6xYh1pF/edit",
+      "locator": "7. sınıf; FB.7.2.1, süreç bileşenleri a–c",
+      "use": "Nitelikleri tanımlama, veri toplama/kaydetme, kuvvet ve yer değiştirmeye bağlılığı yorumlama."
+    },
+    {
+      "id": "M1",
+      "title": "MEBİ 7. Sınıf Fen Bilimleri, Yazılıya Hazırlanıyorum, 1. Dönem 1. Yazılı",
+      "url": "https://drive.google.com/file/d/1rja-SZCHtjyeeHaFE6y5y4GJfpZbVMVn/view",
+      "locator": "s.7–8; çıktı eşleştirmesi s.10, çözümler s.11",
+      "use": "Gerekçeli açık uçlu cevap yaklaşımı. Sorular kopyalanmadı; tüm havuz özgün yazıldı."
+    },
+    {
+      "id": "S1",
+      "title": "Kullanıcının sağladığı resmî konu-soru dağılım tablosu",
+      "url": "https://docs.google.com/spreadsheets/d/1fbuuWFt65Sy74LZt7etGEVOEUYdBEpbA/edit",
+      "locator": "7. sınıf; 1. dönem 1. yazılı; Senaryo 2; FB.7.2.1: 3 soru",
+      "use": "Senaryo dağılımı. Bu paket tek başına tam 7 soruluk senaryo değildir."
+    },
+    {
+      "id": "NASA",
+      "title": "NASA — What is the Universe?",
+      "url": "https://science.nasa.gov/exoplanets/what-is-the-universe/",
+      "locator": "Evren tanımı ve Samanyolu–Güneş sistemi ilişkisi",
+      "use": "Bilimsel doğrulama. Evrenin yalnız boşluk olduğu veya sonsuzluğunun kesin bilindiği iddia edilmedi."
+    }
+  ],
+  "boundaries": [
+    "Evren yalnız boşluk değildir; madde ve enerji de dahildir. Sonsuzluğu kesin kanıtlanmış gibi sunulmaz.",
+    "Güneş–Samanyolu–evren sırası konum/kapsam örneğidir, evrensel bir oluşum sırası değildir.",
+    "Andromeda en yakın galaksi veya galaksileri tek kişi keşfetti gibi yanıltıcı genellemeler kullanılmadı.",
+    "Şemalar topolojik içerme anlatır; gerçek ölçek, evrenin fiziksel sınırı veya bütün yıldızların galaksiye bağlılığı iddiası taşımaz."
+  ]
+}

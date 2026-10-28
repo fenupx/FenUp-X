@@ -434,6 +434,12 @@ function switchScene(from, to) {
         }
     }
 
+    if (from && from.id === "scene-yazili" && to.id !== "scene-yazili") {
+        if (window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
+            window.FenUpExam.closeExamView();
+        }
+    }
+
     if (to.id === "scene-unit") {
         if (selectedGrade && typeof updateUnitCards === "function") updateUnitCards(selectedGrade);
         const lbSide = document.getElementById('unit-leaderboard-side');
@@ -536,6 +542,17 @@ if(btnDeneyModulu) btnDeneyModulu.onclick = () => {
     }
 };
 
+const btnYaziliModulu = document.getElementById('btn-yazili-modulu');
+if(btnYaziliModulu) btnYaziliModulu.onclick = () => {
+    const sceneYazili = document.getElementById('scene-yazili');
+    if (sceneYazili) {
+        switchScene(scenes.home, sceneYazili);
+        if (window.FenUpExam && typeof window.FenUpExam.openExamView === "function") {
+            window.FenUpExam.openExamView();
+        }
+    }
+};
+
 const btnModeBireysel = document.getElementById('btn-mode-bireysel');
 if(btnModeBireysel) btnModeBireysel.onclick = () => {
     activeMode = "bireysel";
@@ -551,6 +568,9 @@ document.querySelectorAll('.btn-back-home').forEach(btn => {
     btn.onclick = () => {
         if (btn.id === 'btn-lab-back-home' && window.FenUpLab && typeof window.FenUpLab.closeLabView === "function") {
             window.FenUpLab.closeLabView();
+        } else if (btn.id === 'btn-exam-back-home' && window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
+            window.FenUpExam.closeExamView();
+            switchScene(btn.closest('.scene'), scenes.home);
         } else {
             switchScene(btn.closest('.scene'), scenes.home);
         }

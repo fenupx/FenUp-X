@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=20261023">
+    <link rel="stylesheet" href="exam.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -67,6 +68,12 @@
                 <span>🧪 Sanal Laboratuvar</span>
                 <small class="module-summary-tag">30 İnteraktif Deney · 2D Simülasyon · Maarif Modeli</small>
                 <span class="module-cta-badge">Laboratuvara Gir <i class="fas fa-arrow-right" style="font-size: 0.85em;"></i></span>
+            </button>
+            <button id="btn-yazili-modulu" class="module-btn secondary exam-active">
+                <i class="fas fa-pen-fancy"></i>
+                <span>Yazılıya Hazırlık</span>
+                <small class="module-summary-tag">Senaryona göre çalış, yazılı provası yap.</small>
+                <span class="module-cta-badge">Provaya Başla <i class="fas fa-arrow-right" style="font-size: 0.85em;"></i></span>
             </button>
         </div>
         <p class="play-guest-hint">✨ Üye olmadan oynayabilirsin. Puanlarını kaydetmek için ücretsiz hesap oluştur.</p>
@@ -4008,6 +4015,92 @@
         </div>
     </div>
 
+    <!-- ================================================================= -->
+    <!-- FENUP X — YAZILIYA HAZIRLIK / 7. SINIF SENARYO 2 PİLOTU          -->
+    <!-- ================================================================= -->
+    <div id="scene-yazili" class="scene is-hidden glass-panel full-width exam-scene">
+        <!-- 1. Üst Navigasyon ve Başlık Şeridi -->
+        <div class="exam-header-bar">
+            <button id="btn-exam-back-home" class="back-link btn-back-home"><i class="fas fa-arrow-left"></i> Ana Sayfaya Dön</button>
+            <div class="exam-nav-title-group">
+                <h2 class="exam-main-title"><i class="fas fa-pen-fancy"></i> Yazılıya Hazırlık</h2>
+                <p class="exam-sub-title">Senaryona göre çalış, yazılı provası yap.</p>
+            </div>
+            <span class="exam-badge">7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2</span>
+        </div>
+
+        <!-- 2. Modül Çalışma Sekmeleri -->
+        <nav class="exam-tabs" aria-label="Yazılıya Hazırlık Bölümleri">
+            <button id="tab-exam-cards" class="exam-tab-btn active" aria-pressed="true"><i class="fas fa-book-open"></i> Konu Kartları</button>
+            <button id="tab-exam-practice" class="exam-tab-btn" aria-pressed="false"><i class="fas fa-edit"></i> 7 Soruluk Prova</button>
+            <button id="tab-exam-review" class="exam-tab-btn" aria-pressed="false"><i class="fas fa-search"></i> Soru İnceleme</button>
+        </nav>
+
+        <!-- Kapsam ve İnceleme Durumu Bildirimi -->
+        <div class="exam-notice">
+            <strong>Senaryo 2 Pilot Kapsamı:</strong> Dört öğrenme çıktısı (FB.7.1.1, FB.7.1.3, FB.7.1.5, FB.7.2.1), 24 konu kartı ve 48 soru.
+            İçerik taslağı tamamlandı, öğretmen incelemesi bekliyor (<em>teacher_review_required</em>). Her soru 10 puan, toplam öz değerlendirme 70 puandır; resmî sınav puan dağılımı değildir.
+        </div>
+
+        <!-- 3. Bölüm 1: Konu Kartları Görünümü -->
+        <section id="exam-cards-view" class="exam-cards-layout">
+            <nav id="exam-cardnav" class="exam-cardnav" aria-label="Konu kartları listesi"></nav>
+            <article id="exam-card-article" class="exam-panel"></article>
+        </section>
+
+        <!-- 4. Bölüm 2: 7 Soruluk Prova Görünümü -->
+        <section id="exam-practice-view" class="exam-panel" style="display: none;">
+            <div class="exam-practice-header">
+                <div class="exam-card-eyebrow">Gerekçeni Yaz, Rubrikle Öz Değerlendir</div>
+                <h3 style="font-size: 1.8rem; color: #fff; margin: 4px 0 10px 0;">Yedi Soruluk Prova Oluştur</h3>
+                <p class="exam-body-p">Senaryo dağılımı: Uzay teknolojileri 2, uzay kirliliği 1, yıldız–galaksi–evren 1, fiziksel iş 3 soru. Zorluk düzeyini seçip provaya başlayabilirsin.</p>
+            </div>
+
+            <!-- Düzey Profilleri -->
+            <div class="exam-profiles-grid">
+                <button class="exam-profile-btn" data-exam-profile="temel">
+                    <span>Temel</span>
+                    <small>6 kolay · 1 orta</small>
+                </button>
+                <button class="exam-profile-btn active" data-exam-profile="dengeli" aria-pressed="true">
+                    <span>Dengeli</span>
+                    <small>4 kolay · 2 orta · 1 zor</small>
+                </button>
+                <button class="exam-profile-btn" data-exam-profile="zorlayici">
+                    <span>Zorlayıcı</span>
+                    <small>1 kolay · 3 orta · 3 zor</small>
+                </button>
+            </div>
+
+            <div class="exam-controls" style="margin: 16px 0;">
+                <button id="exam-start-practice" class="exam-btn-primary" style="padding: 14px 28px; font-size: 1.05rem;">
+                    <i class="fas fa-play"></i> Çalışmayı Oluştur / Provaya Başla
+                </button>
+            </div>
+
+            <p id="exam-history-note" class="exam-history-note" aria-live="polite">Havuz: Her çıktı için 6 kolay, 4 orta, 2 zor; toplam 48 ana soru. Her provada 7 soru seçilir.</p>
+            <p id="exam-storage-note" class="exam-storage-note">Cevaplar ve soru geçmişi yalnızca bu cihazda saklanır. Silinebilir; başka hesaba aktarılmaz.</p>
+            <button id="exam-clear-history" style="font-size: 0.85rem; padding: 6px 14px; background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #fca5a5;">
+                <i class="fas fa-trash-alt"></i> Bu Cihazdaki Çalışma Verilerini Sıfırla
+            </button>
+
+            <!-- Aktif Deneme / Sorular -->
+            <div id="exam-attempt"></div>
+        </section>
+
+        <!-- 5. Bölüm 3: Soru İnceleme (Öğretmen İncelemesi / Havuz) -->
+        <section id="exam-review-view" class="exam-panel" style="display: none;">
+            <div class="exam-card-eyebrow">Öğretmen İncelemesi / Soru Havuzu</div>
+            <h3 style="font-size: 1.8rem; color: #fff; margin: 4px 0 10px 0;">48 Soruluk Ana Havuz</h3>
+            <p class="exam-body-p">Zorluk düzeyleri yazar sınıflandırmasıdır. Canlı öğrenci havuzuna onaylı sunulmadan önce kapsam, doğruluk ve puanlama öğretmen tarafından gözden geçirilmelidir.</p>
+
+            <label for="exam-bank-select" class="exam-answer-label">İncelenecek Soru:</label>
+            <select id="exam-bank-select" class="exam-select"></select>
+
+            <div id="exam-review-container" class="exam-review-panel"></div>
+        </section>
+    </div>
+
     <div id="admin-modal" class="modal-overlay is-hidden">
         <div class="modal-content glass-panel" style="max-height: 90vh; width: 95%; max-width: 900px; padding: 30px; display: flex; flex-direction: column;">
             <button id="btn-close-admin" class="close-btn"><i class="fas fa-times"></i></button>
@@ -4130,6 +4223,7 @@
         </div>
     </footer>
 
+    <script type="module" src="exam-engine.js"></script>
     <script type="module" src="lab-engine.js?v=20261026"></script>
     <script type="module" src="script.js?v=20261026"></script>
 </body>
