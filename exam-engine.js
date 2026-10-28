@@ -331,6 +331,9 @@ async function loadData() {
 export function goToStep(step) {
     stopAnimation();
     closePrintPreview();
+    if (step !== 'study') {
+        exitStudyFullscreen();
+    }
     state.currentStep = step;
     saveState();
 
@@ -554,6 +557,13 @@ function renderStudy(cardIndex) {
     const btnFullscreen = $('btn-study-fullscreen');
     if (btnFullscreen) {
         btnFullscreen.onclick = () => toggleStudyFullscreen();
+        const studyView = $('exam-view-study');
+        const isFs = studyView?.classList.contains('fullscreen-study-active') || (typeof document !== 'undefined' && (!!document.fullscreenElement || !!document.webkitFullscreenElement));
+        btnFullscreen.classList.toggle('active', !!isFs);
+        btnFullscreen.setAttribute('aria-pressed', String(!!isFs));
+        btnFullscreen.innerHTML = isFs
+            ? '<i class="fas fa-compress"></i> <span>Tam Ekrandan Çık</span>'
+            : '<i class="fas fa-expand"></i> <span>Tam Ekran Çalış</span>';
     }
 
     const returnSummaryBox = $('study-return-to-summary-box');
@@ -827,36 +837,68 @@ export function toggleStudyPlan() {
     applyStudyPlanState();
 }
 
-// Tam Ekran Çalışma Modu (Fullscreen API + Genişletilmiş Sayfa İçi Fallback)
-function toggleStudyFullscreen() {
+// Tam Ekran / Odaklanmış Ders Modu Yönetimi (Native Fullscreen API + Mobil Sayfa İçi Zırh)
+export function exitStudyFullscreen() {
+    const studyView = $('exam-view-study');
+    const btn = $('btn-study-fullscreen');
+
+    if (studyView) {
+        studyView.classList.remove('fullscreen-study-active');
+    }
+    if (typeof document !== 'undefined') {
+        document.body.classList.remove('exam-fullscreen-open');
+        try {
+            if (document.fullscreenElement && typeof document.exitFullscreen === 'function') {
+                const p = document.exitFullscreen();
+                if (p && typeof p.catch === 'function') p.catch(() => {});
+            } else if (document.webkitFullscreenElement && typeof document.webkitExitFullscreen === 'function') {
+                document.webkitExitFullscreen();
+            }
+        } catch (_) {}
+    }
+    if (btn) {
+        btn.innerHTML = '<i class="fas fa-expand"></i> <span>Tam Ekran Çalış</span>';
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+    }
+    applyStudyPlanState();
+}
+
+export function enterStudyFullscreen() {
     const studyView = $('exam-view-study');
     if (!studyView) return;
-
     const btn = $('btn-study-fullscreen');
-    const isCurrentlyFs = studyView.classList.contains('fullscreen-study-active') || !!document.fullscreenElement;
+
+    studyView.classList.add('fullscreen-study-active');
+    if (typeof document !== 'undefined') {
+        document.body.classList.add('exam-fullscreen-open');
+        try {
+            if (typeof studyView.requestFullscreen === 'function') {
+                const p = studyView.requestFullscreen();
+                if (p && typeof p.catch === 'function') p.catch(() => {});
+            } else if (typeof studyView.webkitRequestFullscreen === 'function') {
+                studyView.webkitRequestFullscreen();
+            }
+        } catch (_) {}
+    }
+
+    if (btn) {
+        btn.innerHTML = '<i class="fas fa-compress"></i> <span>Tam Ekrandan Çık</span>';
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+    }
+    applyStudyPlanState();
+}
+
+export function toggleStudyFullscreen() {
+    const studyView = $('exam-view-study');
+    if (!studyView) return;
+    const isCurrentlyFs = studyView.classList.contains('fullscreen-study-active') || (typeof document !== 'undefined' && (!!document.fullscreenElement || !!document.webkitFullscreenElement));
 
     if (isCurrentlyFs) {
-        studyView.classList.remove('fullscreen-study-active');
-        if (document.fullscreenElement && document.exitFullscreen) {
-            document.exitFullscreen().catch(() => {});
-        } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        }
-        if (btn) {
-            btn.innerHTML = '<i class="fas fa-expand"></i> <span>Tam Ekran Çalış</span>';
-            btn.classList.remove('active');
-        }
+        exitStudyFullscreen();
     } else {
-        studyView.classList.add('fullscreen-study-active');
-        if (studyView.requestFullscreen) {
-            studyView.requestFullscreen().catch(() => {});
-        } else if (studyView.webkitRequestFullscreen) {
-            studyView.webkitRequestFullscreen();
-        }
-        if (btn) {
-            btn.innerHTML = '<i class="fas fa-compress"></i> <span>Tam Ekrandan Çık</span>';
-            btn.classList.add('active');
-        }
+        enterStudyFullscreen();
     }
 }
 
@@ -2610,7 +2652,7 @@ export async function openExamView() {
                     }
                     const studyView = $('exam-view-study');
                     if (studyView && studyView.classList.contains('fullscreen-study-active')) {
-                        toggleStudyFullscreen();
+                        exitStudyFullscreen();
                     }
                     return;
                 }
@@ -2635,16 +2677,20 @@ export async function openExamView() {
                     }
                 }
             });
-            document.addEventListener('fullscreenchange', () => {
-                const studyView = $('exam-view-study');
-                const btn = $('btn-study-fullscreen');
-                if (!document.fullscreenElement && studyView) {
-                    studyView.classList.remove('fullscreen-study-active');
-                    if (btn) {
-                        btn.innerHTML = '<i class="fas fa-expand"></i> <span>Tam Ekran Çalış</span>';
-                        btn.classList.remove('active');
+            ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
+                document.addEventListener(evt, () => {
+                    const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+                    if (!isFs) {
+                        exitStudyFullscreen();
                     }
-                }
+                });
+            });
+
+            window.addEventListener('orientationchange', () => {
+                applyStudyPlanState();
+            });
+            window.addEventListener('resize', () => {
+                applyStudyPlanState();
             });
         }
     }
@@ -2659,6 +2705,7 @@ export async function openExamView() {
 export function closeExamView() {
     stopAnimation();
     closePrintPreview();
+    exitStudyFullscreen();
 }
 
 // Global Window Erişimi
@@ -2676,7 +2723,10 @@ if (typeof window !== 'undefined') {
         getPartialScore,
         SCORING_POLICY,
         toggleStudyPlan,
-        applyStudyPlanState
+        applyStudyPlanState,
+        toggleStudyFullscreen,
+        enterStudyFullscreen,
+        exitStudyFullscreen
     };
 }
 
