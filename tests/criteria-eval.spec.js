@@ -198,9 +198,26 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
 
     await expect(page.locator('#exam-view-summary')).toBeVisible();
 
-    // Eksikler kutusu ve "Eksiklerimi Çalış" butonu görünür olmalı
+    // Sonuç bildirim metinleri ve buton hiyerarşisi doğrulaması
+    await expect(page.locator('.summary-disclaimer-note')).toContainText('Puanın, kendi cevabında işaretlediğin ölçütlere göre hesaplandı.');
+    await expect(page.locator('.needs-study-header p')).toContainText('İşaretlemediğin bilimsel ölçütlerle ilgili tekrar kartların.');
+
+    // Eksikler kutusu ve "Eksiklerimi Çalış" butonu görünür olmalı (birincil buton)
     const btnStudyMissed = page.locator('#btn-summary-study-missed');
     await expect(btnStudyMissed).toBeVisible();
+    await expect(btnStudyMissed).toHaveClass(/summary-primary-btn/);
+    await expect(page.locator('#btn-summary-new-practice')).toHaveClass(/exam-btn-secondary/);
+
+    // Tekrar kartlarında negatif puan (-X Puan) OLMAMALI
+    const returnCardBtns = page.locator('.return-card-btn');
+    const returnCount = await returnCardBtns.count();
+    expect(returnCount).toBeGreaterThan(0);
+    for (let c = 0; c < returnCount; c++) {
+      const cardBtn = returnCardBtns.nth(c);
+      const text = await cardBtn.innerText();
+      expect(text).not.toMatch(/-\d+\s*Puan/i);
+      await expect(cardBtn.locator('.return-card-missed-pts')).toBeHidden();
+    }
 
     // "Eksiklerimi Çalış" butonuna tıkla
     await btnStudyMissed.click();
@@ -325,6 +342,185 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
 
     await expect(page.locator('#exam-view-summary')).toBeVisible();
     await page.screenshot({ path: 'tests/artifacts/summary-screen.png' });
+  });
+
+  test('6. Tekrar Kartları Mobil Taşma Koruması, Negatif Puanların Kaldırılması ve Kart Tekilleştirmesi', async ({ page }) => {
+    await page.evaluate(() => {
+      const qIds = ['FB711-E01', 'FB711-E02', 'FB711-E03', 'FB711-E04', 'FB711-E05', 'FB711-E06', 'FB711-M01'];
+      const qPoints = {
+        'FB711-E01': 15,
+        'FB711-E02': 15,
+        'FB711-E03': 15,
+        'FB711-E04': 15,
+        'FB711-E05': 15,
+        'FB711-E06': 15,
+        'FB711-M01': 10
+      };
+      // 81 puan için: 19 puan eksik olmalı (Q1'de c1=5 puan eksik, Q2'de c3=14 puan eksik -> toplam 81)
+      const criteriaMap = {
+        'FB711-E01': [
+          { id: 'c1', text: 'Gök cisimlerini doğru listeler', points: 5, return_card_ids: ['FB711-K01', 'FB711-K02'] },
+          { id: 'c2', text: 'Işık kirliliği nedenini açıklar', points: 10, return_card_ids: ['FB711-K03'] }
+        ],
+        'FB711-E02': [
+          { id: 'c3', text: 'Aynaları sınıflandırır', points: 14, return_card_ids: ['FB711-K04'] },
+          { id: 'c4', text: 'Kullanım alanlarını açıklar', points: 1, return_card_ids: ['FB711-K04'] }
+        ],
+        'FB711-E03': [{ id: 'c5', text: 'Hücre kısımlarını açıklar', points: 15, return_card_ids: ['FB711-K05'] }],
+        'FB711-E04': [{ id: 'c6', text: 'Mitoz evrelerini sıralar', points: 15, return_card_ids: ['FB711-K06'] }],
+        'FB711-E05': [{ id: 'c7', text: 'Mayoz özelliklerini belirtir', points: 15, return_card_ids: ['FB711-K07'] }],
+        'FB711-E06': [{ id: 'c8', text: 'Kütle ve ağırlık farkı', points: 15, return_card_ids: ['FB711-K08'] }],
+        'FB711-M01': [{ id: 'c9', text: 'Kuvvet ve iş ilişkisi', points: 10, return_card_ids: ['FB711-K09'] }]
+      };
+      const selectedCriteria = {
+        'FB711-E01': ['c2'], // 10 puan (c1 eksik: 5 puan, return_card_ids: ['FB711-K01', 'FB711-K02'])
+        'FB711-E02': ['c4'], // 1 puan (c3 eksik: 14 puan)
+        'FB711-E03': ['c5'], // 15 puan
+        'FB711-E04': ['c6'], // 15 puan
+        'FB711-E05': ['c7'], // 15 puan
+        'FB711-E06': ['c8'], // 15 puan
+        'FB711-M01': ['c9']  // 10 puan
+        // Toplam = 10 + 1 + 15 + 15 + 15 + 15 + 10 = 81 puan
+      };
+      const mockState = {
+        history: {},
+        profileRuns: {},
+        currentStep: 'summary',
+        hasSelectedScope: true,
+        studyPlanOpen: true,
+        attempt: {
+          version: 2,
+          scoringVersion: 3,
+          evaluationVersion: 2,
+          ids: qIds,
+          questionPoints: qPoints,
+          totalPoints: 100,
+          profile: 'senaryo2_standart',
+          solveMode: 'ekranda',
+          answers: { 'FB711-E01': 'Cevap' },
+          evaluations: {},
+          criteriaMap,
+          selectedCriteria,
+          status: 'completed',
+          finished: true,
+          score: 81
+        }
+      };
+      localStorage.setItem('fenupx_exam_pilot_v1', JSON.stringify(mockState));
+    });
+
+    await page.reload();
+    await page.locator('#btn-yazili-modulu').click();
+    await page.locator('#btn-resume-saved-attempt').click();
+    await expect(page.locator('#exam-view-summary')).toBeVisible();
+
+    // Puan 81 / 100
+    await expect(page.locator('#summary-total-score')).toContainText('81');
+
+    // Tekrar kartları listesi
+    const returnCardBtns = page.locator('.return-card-btn');
+    const returnCount = await returnCardBtns.count();
+    expect(returnCount).toBeGreaterThanOrEqual(2);
+
+    // Kart kimliklerinin tekil olduğunu doğrula (FB711-K01 ve FB711-K02 tekilleştirilmiş)
+    const cardIds = await returnCardBtns.evaluateAll(btns => btns.map(b => b.dataset.returnCard));
+    const uniqueIds = new Set(cardIds);
+    expect(uniqueIds.size).toBe(cardIds.length);
+
+    // Kartlarda kesinlikle "-X Puan" veya benzeri negatif puan etiketi OLMAMALI
+    for (let i = 0; i < returnCount; i++) {
+      const cardBtn = returnCardBtns.nth(i);
+      const btnText = await cardBtn.innerText();
+      expect(btnText).not.toMatch(/-\d+\s*Puan/i);
+      await expect(cardBtn.locator('.return-card-missed-pts')).toBeHidden();
+    }
+
+    // Taşma kontrolü: Karta Git aksiyonu kartın sağ sınırları içinde kalmalı
+    const gridBox = await page.locator('.summary-return-cards-grid').boundingBox();
+    for (let i = 0; i < returnCount; i++) {
+      const cardBtn = returnCardBtns.nth(i);
+      const cardBox = await cardBtn.boundingBox();
+      const actionBox = await cardBtn.locator('.return-card-action').boundingBox();
+      if (cardBox && gridBox && actionBox) {
+        // Aksiyon butonu kart sınırları içinde olmalı
+        expect(actionBox.x + actionBox.width).toBeLessThanOrEqual(cardBox.x + cardBox.width + 3);
+        // Kart ızgarayı aşmamalı
+        expect(cardBox.x + cardBox.width).toBeLessThanOrEqual(gridBox.x + gridBox.width + 5);
+      }
+    }
+  });
+
+  test('7. Pedagojik Geri Bildirim ve Buton Hiyerarşisi (100 Tam Puan vs Geliştirilebilir Puan)', async ({ page }) => {
+    // 100 Tam Puan Denemesi
+    await page.evaluate(() => {
+      const qIds = ['FB711-E01', 'FB711-E02', 'FB711-E03', 'FB711-E04', 'FB711-E05', 'FB711-E06', 'FB711-M01'];
+      const qPoints = {
+        'FB711-E01': 15,
+        'FB711-E02': 15,
+        'FB711-E03': 15,
+        'FB711-E04': 15,
+        'FB711-E05': 15,
+        'FB711-E06': 15,
+        'FB711-M01': 10
+      };
+      const criteriaMap = {
+        'FB711-E01': [{ id: 'c1', text: 'Ölçüt 1', points: 15, return_card_ids: ['FB711-K01'] }],
+        'FB711-E02': [{ id: 'c2', text: 'Ölçüt 2', points: 15, return_card_ids: ['FB711-K02'] }],
+        'FB711-E03': [{ id: 'c3', text: 'Ölçüt 3', points: 15, return_card_ids: ['FB711-K03'] }],
+        'FB711-E04': [{ id: 'c4', text: 'Ölçüt 4', points: 15, return_card_ids: ['FB711-K04'] }],
+        'FB711-E05': [{ id: 'c5', text: 'Ölçüt 5', points: 15, return_card_ids: ['FB711-K05'] }],
+        'FB711-E06': [{ id: 'c6', text: 'Ölçüt 6', points: 15, return_card_ids: ['FB711-K06'] }],
+        'FB711-M01': [{ id: 'c7', text: 'Ölçüt 7', points: 10, return_card_ids: ['FB711-K07'] }]
+      };
+      const selectedCriteria = {
+        'FB711-E01': ['c1'],
+        'FB711-E02': ['c2'],
+        'FB711-E03': ['c3'],
+        'FB711-E04': ['c4'],
+        'FB711-E05': ['c5'],
+        'FB711-E06': ['c6'],
+        'FB711-M01': ['c7']
+      };
+      const mockState = {
+        history: {},
+        profileRuns: {},
+        currentStep: 'summary',
+        hasSelectedScope: true,
+        studyPlanOpen: true,
+        attempt: {
+          version: 2,
+          scoringVersion: 3,
+          evaluationVersion: 2,
+          ids: qIds,
+          questionPoints: qPoints,
+          totalPoints: 100,
+          profile: 'senaryo2_standart',
+          solveMode: 'ekranda',
+          answers: { 'FB711-E01': 'Cevap' },
+          evaluations: {},
+          criteriaMap,
+          selectedCriteria,
+          status: 'completed',
+          finished: true,
+          score: 100
+        }
+      };
+      localStorage.setItem('fenupx_exam_pilot_v1', JSON.stringify(mockState));
+    });
+
+    await page.reload();
+    await page.locator('#btn-yazili-modulu').click();
+    await page.locator('#btn-resume-saved-attempt').click();
+    await expect(page.locator('#exam-view-summary')).toBeVisible();
+
+    // 100 Tam Puanda Pedagojik Mesaj
+    await expect(page.locator('#summary-score-sub')).toContainText('Tebrikler! Bu provada tüm bilimsel ölçütleri karşıladığını belirttin.');
+
+    // 100 Tam Puanda "Yeni Prova" birincil buton olmalı, "Eksiklerimi Çalış" butonu gizli olmalı
+    await expect(page.locator('#btn-summary-new-practice')).toHaveClass(/exam-btn-primary/);
+    await expect(page.locator('#btn-summary-study-missed')).toBeHidden();
+    await expect(page.locator('.eval-all-perfect-box')).toBeVisible();
+    await expect(page.locator('.eval-all-perfect-box')).toContainText('Tebrikler! Eksiksiz Başarı!');
   });
 
 });

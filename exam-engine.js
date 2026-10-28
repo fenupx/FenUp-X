@@ -1865,6 +1865,47 @@ function renderSummary() {
     a.score = totalScore;
     saveState();
 
+    // Eksik Ölçütler ve Kart Eşleştirmesi (Hedefli Tekrar)
+    const missedCardMap = {};
+    if (!isLegacyEvaluation) {
+        questions.forEach(q => {
+            const criteria = a.criteriaMap?.[q.id] || [];
+            const selIds = a.selectedCriteria?.[q.id] || [];
+            criteria.forEach(c => {
+                if (!selIds.includes(c.id)) {
+                    (c.return_card_ids || []).forEach(cid => {
+                        const card = CARDS.find(cardItem => cardItem.id === cid);
+                        if (!card) return;
+                        if (!missedCardMap[cid]) {
+                            missedCardMap[cid] = {
+                                card,
+                                criteriaTexts: []
+                            };
+                        }
+                        missedCardMap[cid].criteriaTexts.push(c.text);
+                    });
+                }
+            });
+        });
+    } else {
+        // Eski kayıt uyumluluğu
+        questions.filter(q => a.evaluations[q.id] !== 'tam').forEach(q => {
+            (q.return_card_ids || []).forEach(cid => {
+                const card = CARDS.find(cardItem => cardItem.id === cid);
+                if (card && !missedCardMap[cid]) {
+                    missedCardMap[cid] = {
+                        card,
+                        criteriaTexts: []
+                    };
+                }
+            });
+        });
+    }
+
+    // Müfredat sırasına göre tekilleştirilmiş kart dizisi
+    const sortedMissedCards = CARDS.filter(c => !!missedCardMap[c.id]).map(c => missedCardMap[c.id]);
+    const returnCardIds = sortedMissedCards.map(item => item.card.id);
+
     // Hero Skor Alanı
     const scoreValEl = $('summary-total-score');
     if (scoreValEl) {
@@ -1874,10 +1915,15 @@ function renderSummary() {
     const scoreSubEl = $('summary-score-sub');
     if (scoreSubEl) {
         let msg = '7. Sınıf · 1. Dönem 1. Yazılı (MEB Senaryo 2)';
-        if (totalScore >= 85) msg = 'Harika bir hazırlık! Tüm kavramlara ve fen gerekçelerine son derece hakimsin.';
-        else if (totalScore >= 70) msg = 'Çok iyi bir performans! Birkaç küçük eksiği tamamlayarak yazılıya tam hazır olabilirsin.';
-        else if (totalScore >= 50) msg = 'Güzel bir prova! Aşağıdaki önerilen kartları çalışarak puanını daha da artırabilirsin.';
-        else msg = 'Provayı tamamladın! Şimdi eksik konulara odaklanarak yazılıya eksiksiz hazırlanabilirsin.';
+        if (sortedMissedCards.length === 0 || totalScore === 100) {
+            msg = 'Tebrikler! Bu provada tüm bilimsel ölçütleri karşıladığını belirttin.';
+        } else if (totalScore >= 80) {
+            msg = 'Çok iyi ilerledin! Tekrar kartlarıyla eksiklerini tamamlayabilirsin.';
+        } else if (totalScore >= 60) {
+            msg = 'İyi bir prova! Tekrar kartlarına odaklanarak hazırlığını güçlendirebilirsin.';
+        } else {
+            msg = 'Provayı tamamladın. Tekrar kartlarıyla eksik olduğun konuları pekiştirebilirsin.';
+        }
         scoreSubEl.textContent = msg;
     }
 
@@ -1930,7 +1976,7 @@ function renderSummary() {
                         <span class="outcome-tag">${esc(outcome.id)}</span>
                         <strong>${esc(outcome.short_title)}</strong>
                     </div>
-                    <p>${outcomeQs.length} sorunun tamamında tüm bilimsel ölçütler eksiksiz sağlandı.</p>
+                    <p>${outcomeQs.length > 1 ? outcomeQs.length + ' sorunun tamamında' : 'Bu konudaki soruda'} tüm ölçütleri karşıladığını belirttin.</p>
                 `;
                 goodListEl.appendChild(item);
             } else {
@@ -1942,8 +1988,8 @@ function renderSummary() {
                         <strong>${esc(outcome.short_title)}</strong>
                     </div>
                     <p>
-                        ${oZeroCount > 0 ? `<strong>${oZeroCount} soru tam puan alamadı.</strong> ` : ''}
-                        ${oPartialCount > 0 ? `<span>${oPartialCount} soruda bazı ölçütler geliştirilmeli.</span>` : ''}
+                        ${oZeroCount > 0 ? `<strong>${oZeroCount} soruda ölçüt işaretlenmedi.</strong> ` : ''}
+                        ${oPartialCount > 0 ? `<span>${oPartialCount} soruda bazı ölçütler eksik kaldı.</span>` : ''}
                     </p>
                 `;
                 needsReviewListEl.appendChild(item);
@@ -1954,57 +2000,14 @@ function renderSummary() {
             goodListEl.innerHTML = '<p class="exam-body-note">Bu provada henüz tam başarı sağlanan konu bulunmuyor. Konu kartlarına dönerek çalışmanı pekiştirebilirsin.</p>';
         }
         if (needsReviewListEl.children.length === 0) {
-            needsReviewListEl.innerHTML = '<p class="exam-body-note" style="color:#2dd4bf;"><i class="fas fa-star"></i> Tebrikler! Tüm konulardaki soruları tam başarıyla çözdün.</p>';
+            needsReviewListEl.innerHTML = '<p class="exam-body-note" style="color:#2dd4bf;"><i class="fas fa-star"></i> Tebrikler! Bu provada tüm konularda ölçütleri karşıladığını belirttin.</p>';
         }
     }
-
-    // Eksik Ölçütler ve Kart Eşleştirmesi (Hedefli Tekrar)
-    const missedCardMap = {};
-    if (!isLegacyEvaluation) {
-        questions.forEach(q => {
-            const criteria = a.criteriaMap?.[q.id] || [];
-            const selIds = a.selectedCriteria?.[q.id] || [];
-            criteria.forEach(c => {
-                if (!selIds.includes(c.id)) {
-                    (c.return_card_ids || []).forEach(cid => {
-                        const card = CARDS.find(cardItem => cardItem.id === cid);
-                        if (!card) return;
-                        if (!missedCardMap[cid]) {
-                            missedCardMap[cid] = {
-                                card,
-                                missedPoints: 0,
-                                criteriaTexts: []
-                            };
-                        }
-                        missedCardMap[cid].missedPoints += c.points;
-                        missedCardMap[cid].criteriaTexts.push(c.text);
-                    });
-                }
-            });
-        });
-    } else {
-        // Eski kayıt uyumluluğu
-        questions.filter(q => a.evaluations[q.id] !== 'tam').forEach(q => {
-            (q.return_card_ids || []).forEach(cid => {
-                const card = CARDS.find(cardItem => cardItem.id === cid);
-                if (card && !missedCardMap[cid]) {
-                    missedCardMap[cid] = {
-                        card,
-                        missedPoints: 0,
-                        criteriaTexts: []
-                    };
-                }
-            });
-        });
-    }
-
-    // Müfredat sırasına göre tekilleştirilmiş kart dizisi
-    const sortedMissedCards = CARDS.filter(c => !!missedCardMap[c.id]).map(c => missedCardMap[c.id]);
-    const returnCardIds = sortedMissedCards.map(item => item.card.id);
 
     const returnCardsContainer = $('summary-return-cards-container');
     const needsStudyBox = $('summary-needs-study-box');
     const btnStudyMissed = $('btn-summary-study-missed');
+    const btnNewPractice = $('btn-summary-new-practice');
 
     if (returnCardsContainer && needsStudyBox) {
         if (sortedMissedCards.length === 0) {
@@ -2014,28 +2017,33 @@ function renderSummary() {
                     <i class="fas fa-trophy"></i>
                     <div>
                         <strong>Tebrikler! Eksiksiz Başarı!</strong>
-                        <p>Öz değerlendirmende tüm bilimsel ölçütleri başarıyla karşıladın. Tekrar etmen önerilen bir eksik konu kartı bulunmuyor.</p>
+                        <p>Öz değerlendirmende bu provadaki tüm ölçütleri karşıladığını belirttin. Tekrar etmen önerilen konu kartı bulunmuyor.</p>
                     </div>
                 </div>
             `;
             if (btnStudyMissed) btnStudyMissed.style.display = 'none';
+            if (btnNewPractice) {
+                btnNewPractice.className = 'exam-btn exam-btn-primary';
+            }
         } else {
             needsStudyBox.style.display = 'block';
             if (btnStudyMissed) {
                 btnStudyMissed.style.display = 'inline-flex';
+                btnStudyMissed.className = 'exam-btn exam-btn-primary summary-primary-btn';
                 btnStudyMissed.innerHTML = `<i class="fas fa-book-reader"></i> <span>Eksiklerimi Çalış (${sortedMissedCards.length} Kart)</span>`;
+            }
+            if (btnNewPractice) {
+                btnNewPractice.className = 'exam-btn exam-btn-secondary';
             }
 
             returnCardsContainer.innerHTML = sortedMissedCards.map(item => {
                 const card = item.card;
-                const missedPtBadge = item.missedPoints > 0 ? `<span class="return-card-missed-pts">-${item.missedPoints} Puan</span>` : '';
                 return `
                     <button type="button" class="return-card-btn" data-return-card="${esc(card.id)}">
                         <div class="return-card-info">
                             <span class="return-card-code">${esc(card.outcome_id)}</span>
                             <strong>${esc(card.title)}</strong>
                             <small>${esc(card.takeaway)}</small>
-                            ${missedPtBadge}
                         </div>
                         <span class="return-card-action">Karta Git <i class="fas fa-arrow-right"></i></span>
                     </button>
@@ -2117,7 +2125,6 @@ function renderSummary() {
         if (btnReEval) btnReEval.style.display = 'none';
     }
 
-    const btnNewPractice = $('btn-summary-new-practice');
     if (btnNewPractice) {
         btnNewPractice.onclick = () => {
             setupPracticeNewMode = true;
