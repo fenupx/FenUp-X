@@ -88,6 +88,7 @@ test.describe('Üst Başlık ve Ana Sayfa Butonu Örtüşme & Tıklanabilirlik Z
 
     // 2. Ana sitedeki tek .top-header Ana Sayfa butonu görünür ve tıklanabilir olmalı
     const topHomeBtn = page.locator('.top-header .header-home-btn');
+    if (page.viewportSize().width <= 820) await page.locator('#btn-mobile-menu').click();
     await expect(topHomeBtn).toBeVisible();
 
     // 3. Başlık opak yüzey kontrolü

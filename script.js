@@ -404,7 +404,46 @@ const btnIletisim = document.getElementById('btn-iletisim');
 const mainFooter = document.getElementById('main-footer');
 const userProfileArea = document.getElementById('user-profile-area');
 
+// Tek DOM: hesap ve navigasyon kontrolleri masaüstüyle paylaşılır.
+const mobileMenuButton = document.getElementById('btn-mobile-menu');
+const headerNavigation = document.getElementById('header-navigation');
+const mobileHeaderQuery = window.matchMedia('(max-width: 820px)');
+function closeMobileMenu(restoreFocus = false) {
+    if (mobileMenuButton) mobileMenuButton.setAttribute('aria-expanded', 'false');
+    if (headerNavigation && mobileHeaderQuery.matches) headerNavigation.classList.add('is-hidden');
+    const dropdown = document.getElementById('profile-dropdown');
+    if (dropdown) dropdown.classList.add('is-hidden');
+    if (restoreFocus && mobileMenuButton) mobileMenuButton.focus();
+}
+function syncMobileHeader() {
+    closeMobileMenu();
+    if (mobileMenuButton) mobileMenuButton.classList.toggle('is-hidden', !mobileHeaderQuery.matches);
+    if (headerNavigation) headerNavigation.classList.toggle('is-hidden', mobileHeaderQuery.matches);
+}
+if (mobileMenuButton && headerNavigation) {
+    mobileMenuButton.addEventListener('click', () => {
+        const open = mobileMenuButton.getAttribute('aria-expanded') !== 'true';
+        if (!open) { closeMobileMenu(); return; }
+        mobileMenuButton.setAttribute('aria-expanded', 'true');
+        headerNavigation.classList.remove('is-hidden');
+    });
+    headerNavigation.addEventListener('click', e => {
+        const action = e.target.closest('button, a');
+        // Oturum açıkken hesap düğmesi mevcut alt panelini açar.
+        if (action && !(action.id === 'btn-uyelik' && action.querySelector('.profile-img-header'))) closeMobileMenu();
+    }, true);
+    document.addEventListener('click', e => {
+        if (!e.target.closest('.top-header')) closeMobileMenu();
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && mobileMenuButton.getAttribute('aria-expanded') === 'true') closeMobileMenu(true);
+    });
+    mobileHeaderQuery.addEventListener('change', syncMobileHeader);
+    syncMobileHeader();
+}
+
 function switchScene(from, to) {
+    closeMobileMenu();
     if(!from || !to) return;
     if (from.id === 'scene-yazili' && window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
         window.FenUpExam.closeExamView();
@@ -414,6 +453,7 @@ function switchScene(from, to) {
     window.scrollTo(0, 0);
     
     const isHome = (to.id === "scene-home");
+    document.querySelector('.top-header')?.classList.toggle('module-active', !isHome);
     const btnHeaderHome = document.getElementById('btn-header-home');
     if (btnHeaderHome) {
         btnHeaderHome.style.display = isHome ? "none" : "inline-flex";
@@ -539,6 +579,8 @@ let activeMode = "", selectedGrade = null, selectedUnit = null;
 let usedQuestions = []; 
 
 function returnToHome() {
+    closeMobileMenu();
+    document.querySelector('.top-header')?.classList.remove('module-active');
     if (window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
         window.FenUpExam.closeExamView();
     }
@@ -576,23 +618,7 @@ function returnToHome() {
 }
 window.returnToHome = returnToHome;
 
-const siteLogoLink = document.getElementById('site-logo-link') || document.querySelector('.logo');
-if(siteLogoLink) {
-    siteLogoLink.onclick = (e) => {
-        e.preventDefault();
-        returnToHome();
-    };
-}
-
-const btnHeaderHome = document.getElementById('btn-header-home');
-if(btnHeaderHome) {
-    btnHeaderHome.onclick = (e) => {
-        e.preventDefault();
-        returnToHome();
-    };
-}
-
-// Delegated click fallback for brand link and header home button
+// Marka ve Ana Sayfa için tek gezinme dinleyicisi.
 document.addEventListener('click', (e) => {
     const brandTarget = e.target.closest('#site-logo-link, .site-brand-link');
     if (brandTarget) {
@@ -608,8 +634,8 @@ document.addEventListener('click', (e) => {
     }
 });
 
-if(btnHakkimizda) btnHakkimizda.onclick = () => switchScene(scenes.home, scenes.hakkimizda);
-if(btnIletisim) btnIletisim.onclick = () => switchScene(scenes.home, scenes.iletisim);
+if(btnHakkimizda) btnHakkimizda.onclick = () => showScene('scene-hakkimizda');
+if(btnIletisim) btnIletisim.onclick = () => showScene('scene-iletisim');
 
 const btnOyunModulu = document.getElementById('btn-oyun-modulu');
 if(btnOyunModulu) btnOyunModulu.onclick = () => switchScene(scenes.home, scenes.crossroads);
