@@ -26,7 +26,11 @@ let state = {
     profileRuns: {},
     currentStep: 'scope', // 'scope' | 'choice' | 'study' | 'practice' | 'eval' | 'summary'
     studyCardIdx: 0,
-    returnToSummary: false
+    studyMode: 'free', // 'free' | 'review'
+    reviewCardIds: [],
+    returnToSummary: false,
+    reviewingEval: false,
+    hasSelectedScope: false
 };
 
 let currentProfile = 'dengeli';
@@ -56,7 +60,11 @@ if (typeof localStorage !== 'undefined') {
                 state.profileRuns = parsed.profileRuns || {};
                 state.currentStep = parsed.currentStep || 'scope';
                 state.studyCardIdx = typeof parsed.studyCardIdx === 'number' ? parsed.studyCardIdx : 0;
+                state.studyMode = parsed.studyMode || 'free';
+                state.reviewCardIds = Array.isArray(parsed.reviewCardIds) ? parsed.reviewCardIds : [];
                 state.returnToSummary = !!parsed.returnToSummary;
+                state.reviewingEval = !!parsed.reviewingEval;
+                state.hasSelectedScope = !!parsed.hasSelectedScope;
 
                 if (parsed.attempt && Array.isArray(parsed.attempt.ids)) {
                     state.attempt = {
@@ -219,6 +227,16 @@ export function goToStep(step) {
     if (typeof window !== 'undefined') {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    // Her ekran değişiminde odak noktasını ilgili ekranın başlığına taşı
+    const activeViewEl = views[step];
+    if (activeViewEl) {
+        const heading = activeViewEl.querySelector('h2, h3, .exam-section-heading, .exam-card-title, .exam-card-eyebrow');
+        if (heading) {
+            heading.setAttribute('tabindex', '-1');
+            heading.focus({ preventScroll: true });
+        }
+    }
 }
 
 function bindScopeContinue() {
@@ -239,9 +257,13 @@ function bindScopeContinue() {
                     return;
                 }
             }
+            state.hasSelectedScope = true;
+            saveState();
             goToStep('choice');
         } catch (err) {
             console.error('Hazırlanmaya başlarken hata:', err);
+            state.hasSelectedScope = true;
+            saveState();
             goToStep('choice');
         }
     };
@@ -256,12 +278,17 @@ function renderScope() {
 function renderChoice() {
     const btnBack = $('btn-choice-change-scope');
     if (btnBack) {
-        btnBack.onclick = () => goToStep('scope');
+        btnBack.onclick = () => {
+            state.hasSelectedScope = false;
+            saveState();
+            goToStep('scope');
+        };
     }
 
     const btnStudy = $('btn-choice-go-study');
     if (btnStudy) {
         btnStudy.onclick = () => {
+            state.studyMode = 'free';
             state.returnToSummary = false;
             goToStep('study');
         };
@@ -282,18 +309,71 @@ function renderChoice() {
 
     const practiceCountEl = $('choice-practice-count');
     if (practiceCountEl && DATA) {
-        let qCount = 7;
-        const sp = DATA.selection_policy?.scenario_profiles?.temel?.allocation;
-        if (sp) {
-            qCount = Object.values(sp).reduce((total, diffMap) => {
-                return total + (diffMap.easy || 0) + (diffMap.medium || 0) + (diffMap.hard || 0);
-            }, 0);
+        practiceCountEl.innerHTML = `<i class="fas fa-pen-alt"></i> 7 soruluk prova`;
+    }
+
+    // Varsa Kayıtlı Çalışma Kartını İkincil Olarak Sun (Kullanıcıyı zorla eski ekrana fırlatma)
+    const savedCard = $('choice-saved-attempt-card');
+    if (savedCard) {
+        if (state.attempt && Array.isArray(state.attempt.ids) && state.attempt.ids.length === 7) {
+            savedCard.style.display = 'flex';
+            const a = state.attempt;
+            const titleEl = $('saved-attempt-title');
+            const descEl = $('saved-attempt-desc');
+            const badgeEl = $('saved-attempt-badge');
+            const modeEl = $('saved-attempt-mode');
+            const btnResume = $('btn-resume-saved-attempt');
+            const resumeLabel = $('btn-resume-saved-label');
+            const btnDiscard = $('btn-discard-start-new');
+
+            const answeredCount = a.ids.filter(qid => (a.answers[qid] || '').trim().length > 0).length;
+            const evalCount = a.ids.filter(qid => !!a.evaluations[qid]).length;
+            const profileText = names[a.profile] || (a.profile === 'zorlayici' ? 'Zorlayıcı' : (a.profile === 'temel' ? 'Temel' : 'Dengeli'));
+            const modeText = a.solveMode === 'kagitta' ? 'Kâğıtta' : 'Ekranda';
+
+            if (modeEl) {
+                modeEl.innerHTML = `<i class="fas fa-sliders-h"></i> ${esc(profileText)} · ${esc(modeText)}`;
+            }
+
+            if (a.finished) {
+                if (titleEl) titleEl.textContent = 'Tamamlanmış Çalışman Var';
+                if (descEl) descEl.textContent = '7 soruluk provan ve öz değerlendirmen tamamlandı. Sonuçlarını ve konu eksiklerini inceleyebilirsin.';
+                if (badgeEl) badgeEl.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Değerlendirme Tamamlandı`;
+                if (resumeLabel) resumeLabel.textContent = 'Çalışma Özetini Gör';
+                if (btnResume) btnResume.onclick = () => goToStep('summary');
+            } else if (evalCount > 0 || a.evalQuestionIndex > 0) {
+                if (titleEl) titleEl.textContent = 'Öz Değerlendirmesi Süren Provan Var';
+                if (descEl) descEl.textContent = 'Soruları çözdün; öz değerlendirme aşamasındasın.';
+                if (badgeEl) badgeEl.innerHTML = `<i class="fas fa-balance-scale"></i> ${evalCount} / 7 Soru Değerlendirildi`;
+                if (resumeLabel) resumeLabel.textContent = 'Değerlendirmeye Devam Et';
+                if (btnResume) btnResume.onclick = () => goToStep('eval');
+            } else {
+                if (titleEl) titleEl.textContent = 'Devam Eden Yazılı Provan Var';
+                if (descEl) descEl.textContent = 'Yazılı provan yarıda kaldı. Cevapların ve soru sıran güvenle saklanıyor.';
+                if (badgeEl) badgeEl.innerHTML = `<i class="fas fa-tasks"></i> ${answeredCount} / 7 Soru Yanıtlandı`;
+                if (resumeLabel) resumeLabel.textContent = 'Kayıtlı Provana Devam Et';
+                if (btnResume) btnResume.onclick = () => goToStep('practice');
+            }
+
+            if (btnDiscard) {
+                btnDiscard.onclick = () => discardAndStartNewPractice();
+            }
+        } else {
+            savedCard.style.display = 'none';
         }
-        practiceCountEl.innerHTML = `<i class="fas fa-pen-alt"></i> ${qCount} soruluk prova`;
     }
 }
 
-// 3a. AŞAMA: KONU ÇALIŞMA EKRANI (24 Kart & İnteraktif Deneyler)
+function discardAndStartNewPractice() {
+    const proceed = confirm('Mevcut prova ilerlemeniz sıfırlanacak ve yeni bir soru setiyle prova başlatılacaktır. Emin misiniz?');
+    if (proceed) {
+        state.attempt = null;
+        saveState();
+        goToStep('practice');
+    }
+}
+
+// 3a. AŞAMA: KONU ÇALIŞMA EKRANI (24 Kart, Çalışma Planı & İnteraktif Deneyler)
 function renderStudy(cardIndex) {
     stopAnimation();
     if (!CARDS || CARDS.length === 0) return;
@@ -312,19 +392,34 @@ function renderStudy(cardIndex) {
     }
     saveState();
 
+    const isReviewMode = (state.studyMode === 'review' && Array.isArray(state.reviewCardIds) && state.reviewCardIds.length > 0);
+
     // Üst Araç Çubuğu
     const btnBackChoice = $('btn-study-back-choice');
-    if (btnBackChoice) btnBackChoice.onclick = () => goToStep('choice');
+    if (btnBackChoice) {
+        btnBackChoice.onclick = () => {
+            state.studyMode = 'free';
+            state.returnToSummary = false;
+            saveState();
+            goToStep('choice');
+        };
+    }
 
     const btnJumpPractice = $('btn-study-jump-practice');
     if (btnJumpPractice) btnJumpPractice.onclick = () => goToStep('practice');
 
+    const btnFullscreen = $('btn-study-fullscreen');
+    if (btnFullscreen) {
+        btnFullscreen.onclick = () => toggleStudyFullscreen();
+    }
+
     const returnSummaryBox = $('study-return-to-summary-box');
     const btnReturnSummary = $('btn-study-return-summary');
     if (returnSummaryBox && btnReturnSummary) {
-        if (state.returnToSummary) {
+        if (state.returnToSummary || isReviewMode) {
             returnSummaryBox.style.display = 'block';
             btnReturnSummary.onclick = () => {
+                state.studyMode = 'free';
                 state.returnToSummary = false;
                 saveState();
                 goToStep('summary');
@@ -334,53 +429,129 @@ function renderStudy(cardIndex) {
         }
     }
 
-    // Sol Liste (Cardnav)
+    // Sol Panel / Konu Çalışma Planı (Desktop Plan & Mobil Kompakt Seçici)
     const cardnav = $('exam-cardnav');
     if (cardnav && DATA.outcomes) {
-        cardnav.innerHTML = `
-            <label class="exam-cardnav-label" for="exam-outcome-select">Çalışılacak Konu:</label>
-            <select id="exam-outcome-select" class="exam-select">
-                ${DATA.outcomes.map(o => `<option value="${esc(o.id)}" ${o.id === c.outcome_id ? 'selected' : ''}>${esc(o.short_title)}</option>`).join('')}
-            </select>
-            <div class="exam-cardnav-list">
-                ${CARDS.map((x, j) => {
-                    if (x.outcome_id !== c.outcome_id) return '';
-                    const num = String(Number(x.id.split('-K')[1] || 1)).padStart(2, '0');
-                    const isCurrent = (j === cardIndex);
-                    const isVisited = state.attempt?.visitedCards?.includes(x.id);
-                    return `
-                        <button class="exam-cardnav-btn ${isCurrent ? 'active' : ''} ${isVisited ? 'visited' : ''}" data-card-idx="${j}" aria-pressed="${isCurrent}">
-                            <b>${num}</b>
-                            <span>${esc(x.title)}</span>
-                            ${isVisited ? '<i class="fas fa-check cardnav-check" title="İncelendi"></i>' : ''}
-                        </button>
-                    `;
-                }).join('')}
-            </div>
-        `;
+        if (isReviewMode) {
+            // Eksikleri Çalışma Modu: Sadece önerilen kartlar sırayla gezilir
+            cardnav.innerHTML = `
+                <div class="study-plan-header review-mode">
+                    <h4><i class="fas fa-graduation-cap"></i> Eksikleri Çalış</h4>
+                    <span class="study-plan-badge">${state.reviewCardIds.length} Önerilen Kart</span>
+                </div>
+                <div class="study-plan-review-list">
+                    ${state.reviewCardIds.map((cid, rIdx) => {
+                        const rCard = CARDS.find(x => x.id === cid);
+                        if (!rCard) return '';
+                        const cardIdxInAll = CARDS.findIndex(x => x.id === cid);
+                        const isCurrent = (cardIdxInAll === cardIndex);
+                        const isVisited = state.attempt?.visitedCards?.includes(cid);
+                        return `
+                            <button type="button" class="exam-cardnav-btn ${isCurrent ? 'active' : ''} ${isVisited ? 'visited' : ''}" data-study-card="${cardIdxInAll}" aria-pressed="${isCurrent}">
+                                <b>${rIdx + 1}</b>
+                                <span>${esc(rCard.title)}</span>
+                                ${isVisited ? '<i class="fas fa-check cardnav-check" title="İncelendi"></i>' : ''}
+                            </button>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        } else {
+            // Genel Konu Çalışma Modu: Senaryonun 4 Öğrenme Çıktısı ("Çalışma Planın")
+            cardnav.innerHTML = `
+                <div class="study-plan-header">
+                    <h4><i class="fas fa-tasks"></i> Çalışma Planın</h4>
+                    <span class="study-plan-badge">4 Konu · 24 Bilgi Kartı</span>
+                </div>
 
-        const outcomeSelect = $('exam-outcome-select');
-        if (outcomeSelect) {
-            outcomeSelect.onchange = e => {
-                const targetIdx = CARDS.findIndex(card => card.outcome_id === e.target.value);
-                if (targetIdx !== -1) renderStudy(targetIdx);
-            };
+                <div class="study-mobile-outcome-picker">
+                    <label class="exam-cardnav-label" for="exam-outcome-select"><i class="fas fa-book-reader"></i> Konu Seç:</label>
+                    <select id="exam-outcome-select" class="exam-select">
+                        ${DATA.outcomes.map(o => `<option value="${esc(o.id)}" ${o.id === c.outcome_id ? 'selected' : ''}>${esc(o.id)}: ${esc(o.title)}</option>`).join('')}
+                    </select>
+                </div>
+
+                <div class="study-plan-outcomes-list">
+                    ${DATA.outcomes.map(o => {
+                        const isOutcomeActive = (o.id === c.outcome_id);
+                        const outcomeCards = CARDS.filter(x => x.outcome_id === o.id);
+                        return `
+                            <div class="study-plan-outcome-item ${isOutcomeActive ? 'active' : ''}">
+                                <button type="button" class="study-plan-outcome-head ${isOutcomeActive ? 'active' : ''}" data-outcome-id="${esc(o.id)}" aria-expanded="${isOutcomeActive}">
+                                    <div class="study-outcome-meta">
+                                        <span class="study-outcome-tag">${esc(o.id)}</span>
+                                        <strong class="study-outcome-title">${esc(o.title)}</strong>
+                                    </div>
+                                    <i class="fas fa-chevron-${isOutcomeActive ? 'down' : 'right'} outcome-arrow"></i>
+                                </button>
+                                ${isOutcomeActive ? `
+                                    <div class="study-plan-cards-sublist">
+                                        ${outcomeCards.map((x, jInOutcome) => {
+                                            const cardIdxInAll = CARDS.findIndex(card => card.id === x.id);
+                                            const isCurrent = (cardIdxInAll === cardIndex);
+                                            const isVisited = state.attempt?.visitedCards?.includes(x.id);
+                                            return `
+                                                <button type="button" class="exam-cardnav-btn ${isCurrent ? 'active' : ''} ${isVisited ? 'visited' : ''}" data-study-card="${cardIdxInAll}" aria-pressed="${isCurrent}">
+                                                    <b>${jInOutcome + 1}</b>
+                                                    <span>${esc(x.title)}</span>
+                                                    ${isVisited ? '<i class="fas fa-check cardnav-check" title="İncelendi"></i>' : ''}
+                                                </button>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+
+            const outcomeSelect = $('exam-outcome-select');
+            if (outcomeSelect) {
+                outcomeSelect.onchange = e => {
+                    const targetIdx = CARDS.findIndex(card => card.outcome_id === e.target.value);
+                    if (targetIdx !== -1) renderStudy(targetIdx);
+                };
+            }
+
+            cardnav.querySelectorAll('[data-outcome-id]').forEach(btn => {
+                btn.onclick = () => {
+                    const oid = btn.dataset.outcomeId;
+                    const targetIdx = CARDS.findIndex(card => card.outcome_id === oid);
+                    if (targetIdx !== -1) renderStudy(targetIdx);
+                };
+            });
         }
 
-        cardnav.querySelectorAll('[data-card-idx]').forEach(btn => {
-            btn.onclick = () => renderStudy(Number(btn.dataset.cardIdx));
+        cardnav.querySelectorAll('[data-study-card]').forEach(btn => {
+            btn.onclick = () => renderStudy(Number(btn.dataset.studyCard));
         });
     }
 
-    // Sağ Panel (Aktif Konu Kartı)
+    // Sağ Panel (Aktif Konu Kartı - Profesyonel Eğitim Portalı Görünümü)
     const cardPanel = $('exam-card-article');
     if (cardPanel) {
         const visualAssetPath = c.visual?.asset ? (ASSET_BASE + c.visual.asset) : '';
+        const outcome = DATA.outcomes ? DATA.outcomes.find(o => o.id === c.outcome_id) : null;
+        const outcomeCards = CARDS.filter(x => x.outcome_id === c.outcome_id);
+        const idxInOutcome = outcomeCards.findIndex(x => x.id === c.id);
+        const cardNumInOutcome = idxInOutcome !== -1 ? (idxInOutcome + 1) : 1;
         const isLastCard = (cardIndex === CARDS.length - 1);
 
         cardPanel.innerHTML = `
-            <div class="exam-card-eyebrow">${esc(c.eyebrow || 'Konu Kartı')} · ${cardIndex + 1} / ${CARDS.length}</div>
+            <div class="study-card-top-meta">
+                <div class="study-card-counters">
+                    <span class="study-counter-topic"><i class="fas fa-clone"></i> Bu konuda ${cardNumInOutcome} / ${outcomeCards.length}</span>
+                    <span class="study-counter-total"><i class="fas fa-layer-group"></i> Toplam 24 bilgi kartı</span>
+                </div>
+                <div class="study-card-outcome-banner">
+                    <span class="outcome-pill-code">${esc(c.outcome_id)}</span>
+                    <span class="outcome-pill-desc">${esc(outcome ? outcome.title : (c.eyebrow || ''))}</span>
+                </div>
+            </div>
+
             <h2 class="exam-card-title">${esc(c.title)}</h2>
+
             <div class="exam-contentgrid">
                 <div>
                     <p class="exam-lead">${esc(c.lead)}</p>
@@ -393,6 +564,7 @@ function renderStudy(cardIndex) {
                     <p class="exam-caption">Şematik öğretim modeli; ölçekli değildir.</p>
                 </div>
             </div>
+
             <div class="exam-check">
                 <strong>Kendini kontrol et</strong>
                 <p class="exam-body-p">${esc(c.check?.prompt || '')}</p>
@@ -401,20 +573,56 @@ function renderStudy(cardIndex) {
                     <p class="exam-body-p" style="color:#f1f5f9; padding-top:10px;">${esc(c.check?.answer || '')}</p>
                 </details>
             </div>
+
             <div class="exam-next-bar">
                 <button id="exam-card-prev" ${cardIndex === 0 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Önceki Kart</button>
-                <button id="exam-card-next" class="exam-btn-primary">${isLastCard ? 'Yazılı Provasına Geç <i class="fas fa-arrow-right"></i>' : 'Sonraki Kart <i class="fas fa-chevron-right"></i>'}</button>
+                <button id="exam-card-next" class="exam-btn-primary">
+                    ${isReviewMode
+                        ? (cardIndex === (state.reviewCardIds?.length ? CARDS.findIndex(x => x.id === state.reviewCardIds[state.reviewCardIds.length - 1]) : CARDS.length - 1)
+                            ? 'Çalışma Özetime Dön <i class="fas fa-undo"></i>'
+                            : 'Sonraki Kart <i class="fas fa-chevron-right"></i>')
+                        : (isLastCard
+                            ? 'Yazılı Provasına Geç <i class="fas fa-arrow-right"></i>'
+                            : 'Sonraki Kart <i class="fas fa-chevron-right"></i>')}
+                </button>
             </div>
-            <div class="exam-sources">Kaynak dayanağı: ${sourcesHtml(c.source_refs)}</div>
         `;
 
         const prevBtn = $('exam-card-prev');
         const nextBtn = $('exam-card-next');
-        if (prevBtn) prevBtn.onclick = () => renderStudy(cardIndex - 1);
+        if (prevBtn) {
+            prevBtn.onclick = () => {
+                if (isReviewMode && Array.isArray(state.reviewCardIds)) {
+                    const currentRevIdx = state.reviewCardIds.indexOf(c.id);
+                    if (currentRevIdx > 0) {
+                        const prevCid = state.reviewCardIds[currentRevIdx - 1];
+                        const targetIdx = CARDS.findIndex(x => x.id === prevCid);
+                        if (targetIdx !== -1) renderStudy(targetIdx);
+                    }
+                } else {
+                    renderStudy(cardIndex - 1);
+                }
+            };
+        }
+
         if (nextBtn) {
             nextBtn.onclick = () => {
-                if (isLastCard) goToStep('practice');
-                else renderStudy(cardIndex + 1);
+                if (isReviewMode && Array.isArray(state.reviewCardIds)) {
+                    const currentRevIdx = state.reviewCardIds.indexOf(c.id);
+                    if (currentRevIdx !== -1 && currentRevIdx < state.reviewCardIds.length - 1) {
+                        const nextCid = state.reviewCardIds[currentRevIdx + 1];
+                        const targetIdx = CARDS.findIndex(x => x.id === nextCid);
+                        if (targetIdx !== -1) renderStudy(targetIdx);
+                    } else {
+                        state.studyMode = 'free';
+                        state.returnToSummary = false;
+                        saveState();
+                        goToStep('summary');
+                    }
+                } else {
+                    if (isLastCard) goToStep('practice');
+                    else renderStudy(cardIndex + 1);
+                }
             };
         }
 
@@ -423,6 +631,39 @@ function renderStudy(cardIndex) {
         if (interId === 'lift-hold-carry') setupMotion();
         if (interId === 'force-compare' || interId === 'distance-compare') setupCompare(interId);
         if (['mission-tools', 'debris-strategies', 'cosmic-levels'].includes(interId)) setupLearning(interId);
+    }
+}
+
+// Tam Ekran Çalışma Modu (Fullscreen API + Genişletilmiş Sayfa İçi Fallback)
+function toggleStudyFullscreen() {
+    const studyView = $('exam-view-study');
+    if (!studyView) return;
+
+    const btn = $('btn-study-fullscreen');
+    const isCurrentlyFs = studyView.classList.contains('fullscreen-study-active') || !!document.fullscreenElement;
+
+    if (isCurrentlyFs) {
+        studyView.classList.remove('fullscreen-study-active');
+        if (document.fullscreenElement && document.exitFullscreen) {
+            document.exitFullscreen().catch(() => {});
+        } else if (document.webkitFullscreenElement && document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-expand"></i> <span>Tam Ekran Çalış</span>';
+            btn.classList.remove('active');
+        }
+    } else {
+        studyView.classList.add('fullscreen-study-active');
+        if (studyView.requestFullscreen) {
+            studyView.requestFullscreen().catch(() => {});
+        } else if (studyView.webkitRequestFullscreen) {
+            studyView.webkitRequestFullscreen();
+        }
+        if (btn) {
+            btn.innerHTML = '<i class="fas fa-compress"></i> <span>Tam Ekrandan Çık</span>';
+            btn.classList.add('active');
+        }
     }
 }
 
@@ -455,15 +696,34 @@ function renderPractice() {
             };
         }
 
-        // Seviye Profili Butonları
+        // Seviye Profili Butonları (Radio Benzeri Tekil Seçim & Net Gösterge)
+        const profileBadge = $('exam-selected-profile-badge');
+        const updateProfileBadge = (p) => {
+            if (!profileBadge) return;
+            const meta = {
+                temel: 'Temel (6 kolay · 1 orta)',
+                dengeli: 'Dengeli (4 kolay · 2 orta · 1 zor)',
+                zorlayici: 'Zorlayıcı (1 kolay · 3 orta · 3 zor)'
+            }[p] || 'Dengeli (4 kolay · 2 orta · 1 zor)';
+            const parts = meta.split(' ');
+            profileBadge.innerHTML = `Seçilen düzey: <strong>${esc(parts[0])}</strong> ${esc(meta.substring(parts[0].length))}`;
+        };
+        updateProfileBadge(currentProfile);
+
         document.querySelectorAll('[data-exam-profile]').forEach(btn => {
+            const p = btn.dataset.examProfile;
+            const isActive = (p === currentProfile);
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-checked', String(isActive));
+
             btn.onclick = () => {
-                currentProfile = btn.dataset.examProfile;
+                currentProfile = p;
                 document.querySelectorAll('[data-exam-profile]').forEach(x => {
-                    const isActive = (x === btn);
-                    x.setAttribute('aria-pressed', String(isActive));
-                    x.classList.toggle('active', isActive);
+                    const isXActive = (x.dataset.examProfile === currentProfile);
+                    x.classList.toggle('active', isXActive);
+                    x.setAttribute('aria-checked', String(isXActive));
                 });
+                updateProfileBadge(currentProfile);
             };
         });
 
@@ -493,6 +753,19 @@ function renderPractice() {
     if (activeIdx < 0) activeIdx = 0;
     if (activeIdx > 6) activeIdx = 6;
     a.activeQuestionIndex = activeIdx;
+
+    // "Ara Ver ve Çık" Butonları: İlerlemeyi güvenle saklar, provayı bitirmez, hazırlık tercihine döner
+    const handlePracticePause = () => {
+        a.activeQuestionIndex = activeIdx;
+        saveState();
+        goToStep('choice');
+    };
+
+    const btnPauseTop = $('btn-practice-pause');
+    if (btnPauseTop) btnPauseTop.onclick = handlePracticePause;
+
+    const btnPauseBottom = $('btn-practice-pause-bottom');
+    if (btnPauseBottom) btnPauseBottom.onclick = handlePracticePause;
 
     // Üst Bar Durum Bilgileri
     const currInd = $('practice-current-indicator');
@@ -527,11 +800,9 @@ function renderPractice() {
         });
     }
 
-    // Yazdır / PDF Butonu
-    const btnPrint = $('btn-practice-print-pdf');
-    if (btnPrint) {
-        btnPrint.onclick = () => printExam();
-    }
+    // Soru Kâğıdını Önizle / Yazdır Butonu
+    const btnPreviewPrint = $('btn-practice-preview-print');
+    if (btnPreviewPrint) btnPreviewPrint.onclick = () => openPrintPreview();
 
     // Tek Soru Konteyneri: PROVADA RUBRİK, İPUCU VEYA CEVAP KESİNLİKLE GÖSTERİLMEZ!
     const q = questions[activeIdx];
@@ -703,6 +974,32 @@ function renderEval() {
     if (evalIdx > 6) evalIdx = 6;
     a.evalQuestionIndex = evalIdx;
 
+    // "Ara Ver ve Çık" Butonları
+    const handleEvalPause = () => {
+        a.evalQuestionIndex = evalIdx;
+        saveState();
+        goToStep('choice');
+    };
+    const btnEvalPauseTop = $('btn-eval-pause');
+    if (btnEvalPauseTop) btnEvalPauseTop.onclick = handleEvalPause;
+    const btnEvalPauseBottom = $('btn-eval-pause-bottom');
+    if (btnEvalPauseBottom) btnEvalPauseBottom.onclick = handleEvalPause;
+
+    // Çalışma Özetime Dön Butonu (İnceleme modunda gösterilir)
+    const btnReturnSummary = $('btn-eval-return-summary');
+    if (btnReturnSummary) {
+        if (state.reviewingEval) {
+            btnReturnSummary.style.display = 'inline-flex';
+            btnReturnSummary.onclick = () => {
+                state.reviewingEval = false;
+                saveState();
+                goToStep('summary');
+            };
+        } else {
+            btnReturnSummary.style.display = 'none';
+        }
+    }
+
     // 1-7 Soru Gezinme Butonları (Eval Strip)
     const navStrip = $('eval-question-nav-strip');
     if (navStrip) {
@@ -861,9 +1158,16 @@ function renderEval() {
         };
     }
 
-    // Çalışma Özetimi Gör Butonu
+    // Çalışma Özetimi Gör Butonu: Tüm sorular değerlendirilmeden açılamaz
     const btnToSummary = $('btn-eval-to-summary');
     if (btnToSummary) {
+        const missingCount = questions.filter(qu => !a.evaluations[qu.id]).length;
+        if (missingCount > 0) {
+            btnToSummary.classList.add('eval-pending');
+        } else {
+            btnToSummary.classList.remove('eval-pending');
+        }
+
         btnToSummary.onclick = () => {
             const missing = [];
             questions.forEach((qu, i) => {
@@ -878,6 +1182,7 @@ function renderEval() {
             }
 
             a.finished = true;
+            state.reviewingEval = false;
             saveState();
             goToStep('summary');
         };
@@ -926,9 +1231,6 @@ function renderSummary() {
     if (kismenEl) kismenEl.textContent = kismenCount;
     const yapamadimEl = $('summary-yapamadim-count');
     if (yapamadimEl) yapamadimEl.textContent = yapamadimCount;
-
-    const scoreDisplay = $('summary-score-display');
-    if (scoreDisplay) scoreDisplay.textContent = `${totalScore} / 70`;
 
     // Konu Bazlı Başarı Analizi (Senaryo 2: FB.7.1.1, FB.7.1.3, FB.7.1.5, FB.7.2.1)
     const goodListEl = $('summary-good-topics-list');
@@ -984,7 +1286,7 @@ function renderSummary() {
         }
     }
 
-    // "Eksiklerimi Çalış": Yapamadım (Öncelikli) ve Kısmen olan soruların return_card_ids listesi
+    // "Eksiklerimi Çalış": Yapamadım (Öncelikli) ve Kısmen olan soruların return_card_ids listesi tekilleştirilir
     const missedQuestions = questions.filter(q => a.evaluations[q.id] === 'yapamadim');
     const partialQuestions = questions.filter(q => a.evaluations[q.id] === 'kismen');
 
@@ -1027,6 +1329,8 @@ function renderSummary() {
                     const cid = btn.dataset.returnCard;
                     const targetIdx = CARDS.findIndex(c => c.id === cid);
                     if (targetIdx !== -1) {
+                        state.studyMode = 'review';
+                        state.reviewCardIds = returnCardIds;
                         state.studyCardIdx = targetIdx;
                         state.returnToSummary = true;
                         saveState();
@@ -1038,25 +1342,41 @@ function renderSummary() {
     }
 
     // Alt Eylem Butonları
+    const btnToChoice = $('btn-summary-to-choice');
+    if (btnToChoice) {
+        btnToChoice.onclick = () => goToStep('choice');
+    }
+
     const btnReviewEval = $('btn-summary-review-eval');
     if (btnReviewEval) {
         btnReviewEval.onclick = () => {
+            state.reviewingEval = true;
             state.attempt.evalQuestionIndex = 0;
             saveState();
             goToStep('eval');
         };
     }
 
+    const btnStudyMissed = $('btn-summary-study-missed');
+    if (btnStudyMissed) {
+        btnStudyMissed.onclick = () => {
+            if (returnCardIds.length === 0) {
+                alert('Tebrikler! Bu provada tekrar etmen önerilen bir eksik konu bulunmuyor. Senaryodaki tüm konuları Hazırlık Ekranından serbestçe çalışabilirsin.');
+                return;
+            }
+            state.studyMode = 'review';
+            state.reviewCardIds = returnCardIds;
+            const firstIdx = CARDS.findIndex(c => c.id === returnCardIds[0]);
+            state.studyCardIdx = firstIdx !== -1 ? firstIdx : 0;
+            state.returnToSummary = true;
+            saveState();
+            goToStep('study');
+        };
+    }
+
     const btnNewPractice = $('btn-summary-new-practice');
     if (btnNewPractice) {
-        btnNewPractice.onclick = () => {
-            const proceed = confirm('Yeni bir yazılı provası başlatmak istiyor musun? Geçmiş sorularınız korunacak ve yeni sorular seçilecektir.');
-            if (proceed) {
-                state.attempt = null;
-                saveState();
-                goToStep('practice');
-            }
-        };
+        btnNewPractice.onclick = () => discardAndStartNewPractice();
     }
 
     const btnResetData = $('btn-summary-reset-data');
@@ -1070,7 +1390,11 @@ function renderSummary() {
                     profileRuns: {},
                     currentStep: 'scope',
                     studyCardIdx: 0,
-                    returnToSummary: false
+                    studyMode: 'free',
+                    reviewCardIds: [],
+                    returnToSummary: false,
+                    reviewingEval: false,
+                    hasSelectedScope: false
                 };
                 saveState();
                 goToStep('scope');
@@ -1079,12 +1403,13 @@ function renderSummary() {
     }
 }
 
-// --- YAZDIRMA VE KÂĞITTA ÇÖZÜM FORMATI (Print Sheet) ---
-function printExam() {
+// --- YAZDIRMA VE KÂĞITTA ÇÖZÜM FORMATI (Print / PDF Sheet Preview) ---
+function openPrintPreview() {
     if (!state.attempt) return;
     const qs = state.attempt.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
     const printEl = $('exam-print-sheet');
-    if (!printEl) return;
+    const modalEl = $('exam-print-preview-modal');
+    if (!printEl || !modalEl) return;
 
     printEl.innerHTML = `
         <div class="print-header">
@@ -1148,7 +1473,26 @@ function printExam() {
         </div>
     `;
 
-    window.print();
+    modalEl.classList.remove('is-hidden');
+    modalEl.style.display = 'flex';
+
+    const btnSubmit = $('btn-print-preview-submit');
+    if (btnSubmit) {
+        btnSubmit.onclick = () => window.print();
+    }
+
+    const btnClose = $('btn-print-preview-close');
+    if (btnClose) {
+        btnClose.onclick = () => closePrintPreview();
+    }
+}
+
+function closePrintPreview() {
+    const modalEl = $('exam-print-preview-modal');
+    if (modalEl) {
+        modalEl.classList.add('is-hidden');
+        modalEl.style.display = 'none';
+    }
 }
 
 // --- YÖNETİCİ PANELİ: 48 SORULUK SORU HAVUZU İNCELEME (Admin Only) ---
@@ -1558,15 +1902,39 @@ export async function openExamView() {
             document.addEventListener('visibilitychange', () => {
                 if (document.hidden) stopAnimation();
             });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closePrintPreview();
+                    const studyView = $('exam-view-study');
+                    if (studyView && studyView.classList.contains('fullscreen-study-active')) {
+                        toggleStudyFullscreen();
+                    }
+                }
+            });
+            document.addEventListener('fullscreenchange', () => {
+                const studyView = $('exam-view-study');
+                const btn = $('btn-study-fullscreen');
+                if (!document.fullscreenElement && studyView) {
+                    studyView.classList.remove('fullscreen-study-active');
+                    if (btn) {
+                        btn.innerHTML = '<i class="fas fa-expand"></i> <span>Tam Ekran Çalış</span>';
+                        btn.classList.remove('active');
+                    }
+                }
+            });
         }
     }
 
     saveState();
-    goToStep(state.currentStep || 'scope');
+    // İlk kez gelen veya seçimini sıfırlayan kullanıcı önce kapsamı ('scope') görür.
+    // Kapsam seçimini yapmış kullanıcı doğrudan 2 seçenekli Hazırlık Ekranına ('choice') gelir.
+    const initialStep = state.hasSelectedScope ? 'choice' : 'scope';
+    goToStep(initialStep);
 }
 
 export function closeExamView() {
     stopAnimation();
+    closePrintPreview();
 }
 
 // Global Window Erişimi
@@ -1576,11 +1944,13 @@ if (typeof window !== 'undefined') {
         closeExamView,
         goToStep,
         renderStudy,
-        renderAdminQuestionReview
+        renderAdminQuestionReview,
+        openPrintPreview,
+        closePrintPreview
     };
 }
 
-// Sayfa ilk yüklendiğinde kapsam butonunu bağla, veriyi arka planda önceden getir ve global tıklama delegasyonunu başlat
+// Sayfa ilk yüklendiğinde kapsam butonunu bağla ve veriyi arka planda önceden getir
 if (typeof document !== 'undefined') {
     const initEngine = () => {
         bindScopeContinue();
@@ -1592,45 +1962,4 @@ if (typeof document !== 'undefined') {
     } else {
         initEngine();
     }
-
-    // Tıklama delegasyon zırhı: Dinleyici gecikmelerini veya DOM yenilemelerini bertaraf et
-    document.addEventListener('click', async (e) => {
-        const btnContinue = e.target.closest('#btn-scope-continue');
-        if (btnContinue) {
-            e.preventDefault();
-            if (!DATA) {
-                const origHtml = btnContinue.innerHTML;
-                btnContinue.disabled = true;
-                btnContinue.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hazırlanıyor...';
-                const ok = await loadData();
-                btnContinue.disabled = false;
-                btnContinue.innerHTML = origHtml;
-                if (!ok) return;
-            }
-            goToStep('choice');
-            return;
-        }
-
-        const btnStudy = e.target.closest('#btn-choice-go-study');
-        if (btnStudy) {
-            e.preventDefault();
-            state.returnToSummary = false;
-            goToStep('study');
-            return;
-        }
-
-        const btnPractice = e.target.closest('#btn-choice-go-practice');
-        if (btnPractice) {
-            e.preventDefault();
-            goToStep('practice');
-            return;
-        }
-
-        const btnChangeScope = e.target.closest('#btn-choice-change-scope');
-        if (btnChangeScope) {
-            e.preventDefault();
-            goToStep('scope');
-            return;
-        }
-    });
 }

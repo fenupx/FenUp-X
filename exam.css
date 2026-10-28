@@ -405,6 +405,125 @@ body:has(#scene-yazili:not(.is-hidden)) #lab-view {
     gap: 6px;
 }
 
+/* Kayıtlı Çalışma Kartı (İkincil / Seçenekler Altında) */
+.choice-saved-attempt-card {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(45, 212, 191, 0.4);
+    border-radius: 20px;
+    padding: 24px 28px;
+    margin: 0 auto 30px auto;
+    max-width: 800px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 8px 32px rgba(8, 127, 130, 0.2);
+    transition: all 0.25s ease;
+}
+
+.choice-saved-attempt-card:hover {
+    border-color: var(--neon-blue, #00d2ff);
+    box-shadow: 0 10px 36px rgba(0, 210, 255, 0.25);
+}
+
+.saved-attempt-content {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex: 1;
+}
+
+.saved-attempt-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 14px;
+    background: rgba(45, 212, 191, 0.15);
+    color: #2dd4bf;
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.saved-attempt-body {
+    flex: 1;
+}
+
+.saved-attempt-eyebrow {
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2dd4bf;
+    margin-bottom: 4px;
+}
+
+.saved-attempt-body h4 {
+    font-size: 1.25rem;
+    color: #fff;
+    margin: 0 0 4px 0;
+    font-weight: 800;
+}
+
+.saved-attempt-body p {
+    font-size: 0.92rem;
+    color: #cbd5e1;
+    margin: 0 0 10px 0;
+    line-height: 1.45;
+}
+
+.saved-attempt-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.saved-attempt-pill {
+    background: rgba(30, 41, 59, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    color: #f1f5f9;
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.saved-attempt-pill.subtle {
+    color: #94a3b8;
+}
+
+.saved-attempt-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.saved-attempt-actions button {
+    min-height: 48px;
+    touch-action: manipulation;
+}
+
+@media (max-width: 768px) {
+    .choice-saved-attempt-card {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 20px 16px;
+        gap: 16px;
+    }
+    .saved-attempt-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    .saved-attempt-actions button {
+        width: 100%;
+    }
+}
+
 /* Konu Kartı Çalışma Üst Çubuk */
 .exam-study-toolbar {
     display: flex;
@@ -432,22 +551,224 @@ body:has(#scene-yazili:not(.is-hidden)) #lab-view {
     border-left: 3px solid #10b981;
 }
 
-/* 5. GÖRÜNÜM 1: KONU KARTLARI */
+/* 5. GÖRÜNÜM 1: KONU KARTLARI (Çalışma Planı & Eğitim Portalı Düzeni) */
 .exam-cards-layout {
     display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 24px;
+    grid-template-columns: 340px 1fr;
+    gap: 28px;
     align-items: start;
 }
 
 .exam-cardnav {
     display: flex;
     flex-direction: column;
+    gap: 12px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.study-plan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.study-plan-header h4 {
+    font-size: 1.1rem;
+    color: #2dd4bf;
+    margin: 0;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.study-plan-header.review-mode h4 {
+    color: #fbbf24;
+}
+
+.study-plan-badge {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #94a3b8;
+    background: rgba(30, 41, 59, 0.8);
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.study-mobile-outcome-picker {
+    display: none;
+}
+
+.study-plan-outcomes-list {
+    display: flex;
+    flex-direction: column;
     gap: 10px;
+}
+
+.study-plan-outcome-item {
+    background: rgba(30, 41, 59, 0.45);
+    border: 1px solid rgba(148, 163, 184, 0.18);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.study-plan-outcome-item.active {
+    border-color: rgba(45, 212, 191, 0.45);
+    background: rgba(30, 41, 59, 0.75);
+}
+
+.study-plan-outcome-head {
+    width: 100%;
+    padding: 12px 14px;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    color: #f1f5f9;
+    touch-action: manipulation;
+}
+
+.study-plan-outcome-head:hover {
+    background: rgba(51, 65, 85, 0.35);
+}
+
+.study-outcome-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+}
+
+.study-outcome-tag {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #38bdf8;
+    letter-spacing: 0.05em;
+}
+
+.study-outcome-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: #f8fafc;
+}
+
+.outcome-arrow {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.study-plan-cards-sublist {
+    padding: 6px 10px 12px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     background: rgba(15, 23, 42, 0.6);
+    border-top: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.study-plan-review-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.study-card-top-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.study-card-counter-pills {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.study-card-pill {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.study-card-pill.highlight {
+    background: rgba(45, 212, 191, 0.15);
+    border: 1px solid rgba(45, 212, 191, 0.35);
+    color: #2dd4bf;
+}
+
+.study-card-pill.subtle {
+    background: rgba(30, 41, 59, 0.6);
     border: 1px solid rgba(148, 163, 184, 0.2);
-    border-radius: 18px;
-    padding: 16px;
+    color: #94a3b8;
+}
+
+.study-card-outcome-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.study-card-outcome-badge {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 2px 8px;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.study-card-outcome-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    line-height: 1.45;
+}
+
+/* Tam Ekran Çalışma Modu (Ders Kitabı Modu) */
+#exam-view-study.fullscreen-study-active {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    background: #0b1120 !important;
+    z-index: 2100 !important;
+    overflow-y: auto !important;
+    padding: 20px 24px 80px 24px !important;
+    box-sizing: border-box !important;
+}
+
+#exam-view-study.fullscreen-study-active .exam-study-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: rgba(11, 17, 32, 0.95);
+    backdrop-filter: blur(12px);
+    padding: 10px 0;
 }
 
 .exam-cardnav-label {
@@ -734,11 +1055,37 @@ input[type=range].exam-slider {
     margin-bottom: 24px;
 }
 
+.profile-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.exam-selected-profile-badge {
+    background: rgba(0, 210, 255, 0.15);
+    border: 1px solid rgba(0, 210, 255, 0.4);
+    color: var(--neon-blue, #00d2ff);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.exam-selected-profile-badge strong {
+    color: #fff;
+}
+
 .exam-profiles-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
-    margin: 20px 0;
+    margin: 16px 0 24px 0;
 }
 
 .exam-profile-btn {
@@ -747,20 +1094,36 @@ input[type=range].exam-slider {
     align-items: flex-start;
     justify-content: center;
     padding: 16px 20px;
-    min-height: 80px;
+    min-height: 84px;
     border-radius: 16px;
     background: rgba(30, 41, 59, 0.6);
     border: 2px solid rgba(148, 163, 184, 0.2);
     color: #f8fafc;
     text-align: left;
     transition: all 0.25s ease;
+    cursor: pointer;
+    touch-action: manipulation;
+    width: 100%;
 }
 
-.exam-profile-btn span {
-    font-size: 1.2rem;
+.profile-radio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.profile-name {
+    font-size: 1.25rem;
     font-weight: 800;
     color: #fff;
-    margin-bottom: 4px;
+}
+
+.profile-check-icon {
+    font-size: 1.15rem;
+    color: rgba(148, 163, 184, 0.25);
+    transition: all 0.2s ease;
 }
 
 .exam-profile-btn small {
@@ -769,15 +1132,27 @@ input[type=range].exam-slider {
     font-weight: 500;
 }
 
-.exam-profile-btn[aria-pressed="true"],
-.exam-profile-btn.active {
-    background: linear-gradient(145deg, rgba(8, 127, 130, 0.35), rgba(0, 210, 255, 0.25));
-    border-color: var(--neon-blue, #00d2ff);
-    box-shadow: 0 0 25px rgba(0, 210, 255, 0.3);
+.exam-profile-btn:hover {
+    border-color: rgba(0, 210, 255, 0.5);
+    background: rgba(30, 41, 59, 0.85);
 }
 
-.exam-profile-btn[aria-pressed="true"] span {
+.exam-profile-btn[aria-checked="true"],
+.exam-profile-btn.active {
+    background: linear-gradient(145deg, rgba(8, 127, 130, 0.4), rgba(0, 210, 255, 0.25)) !important;
+    border-color: var(--neon-blue, #00d2ff) !important;
+    box-shadow: 0 0 25px rgba(0, 210, 255, 0.35) !important;
+}
+
+.exam-profile-btn[aria-checked="true"] .profile-name,
+.exam-profile-btn.active .profile-name {
     color: var(--neon-blue, #00d2ff);
+}
+
+.exam-profile-btn[aria-checked="true"] .profile-check-icon,
+.exam-profile-btn.active .profile-check-icon {
+    color: var(--neon-blue, #00d2ff);
+    transform: scale(1.15);
 }
 
 .exam-history-note {
@@ -1183,6 +1558,71 @@ input[type=range].exam-slider {
     margin: 14px 0 10px 0;
     color: #fef3c7;
     font-size: 0.92rem;
+}
+
+.btn-pause {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    border-radius: 10px;
+    padding: 8px 14px;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    color: #cbd5e1;
+    touch-action: manipulation;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-pause:hover {
+    background: rgba(51, 65, 85, 0.85);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.btn-print-trigger {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    border-radius: 10px;
+    padding: 8px 14px;
+    touch-action: manipulation;
+    cursor: pointer;
+}
+
+.practice-top-left-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.practice-bottom-left,
+.practice-bottom-right,
+.eval-bottom-left,
+.eval-bottom-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.eval-top-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.eval-pending {
+    opacity: 0.75;
 }
 
 .practice-bottom-bar,
@@ -1668,14 +2108,18 @@ input[type=range].exam-slider {
     .exam-cards-layout {
         grid-template-columns: 1fr;
     }
-    .exam-cardnav {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
+    .study-mobile-outcome-picker {
+        display: block;
+        margin-bottom: 8px;
     }
-    .exam-cardnav label,
-    .exam-cardnav select {
-        grid-column: 1 / -1;
+    .study-plan-outcomes-list {
+        display: none;
+    }
+    .study-plan-header {
+        margin-bottom: 8px;
+    }
+    .exam-cardnav {
+        padding: 14px 16px;
     }
     .exam-panel {
         padding: 20px 16px;
@@ -1690,9 +2134,6 @@ input[type=range].exam-slider {
         font-size: 1.4rem;
         flex-wrap: wrap;
         gap: 8px;
-    }
-    .exam-cardnav {
-        grid-template-columns: 1fr;
     }
     .exam-next-bar button {
         width: 100%;
@@ -1727,7 +2168,111 @@ input[type=range].exam-slider {
     }
 }
 
-/* 10. Kural 7 Erişilebilirlik ve Baskı */
+/* 10. Soru Kâğıdı Baskı Önizlemesi Modalı (Ekran A4 Görünümü) */
+#exam-print-preview-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    z-index: 2200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.print-preview-modal-dialog {
+    background: #0f172a;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 960px;
+    max-height: 94vh;
+    max-height: 94dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.7);
+}
+
+.print-preview-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 16px 24px;
+    background: rgba(30, 41, 59, 0.9);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.print-preview-title-group h3 {
+    font-size: 1.25rem;
+    color: #fff;
+    margin: 0 0 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+}
+
+.print-preview-title-group p {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin: 0;
+}
+
+.print-preview-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.print-preview-actions button {
+    min-height: 44px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-weight: 700;
+    touch-action: manipulation;
+}
+
+.print-preview-hint-banner {
+    background: rgba(56, 189, 248, 0.12);
+    border-bottom: 1px solid rgba(56, 189, 248, 0.25);
+    padding: 10px 24px;
+    color: #bae6fd;
+    font-size: 0.84rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.45;
+}
+
+.print-preview-scroll-viewport {
+    flex: 1;
+    overflow-y: auto;
+    background: #1e293b;
+    padding: 28px 16px;
+    display: flex;
+    justify-content: center;
+    -webkit-overflow-scrolling: touch;
+}
+
+#exam-print-sheet {
+    background: #ffffff;
+    color: #111827;
+    width: 100%;
+    max-width: 800px;
+    padding: 36px 44px;
+    border-radius: 4px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    font-family: 'Times New Roman', Times, serif, system-ui;
+    line-height: 1.45;
+    box-sizing: border-box;
+}
+
+/* 11. Kural 7 Erişilebilirlik ve Baskı */
 @media (prefers-reduced-motion: reduce) {
     #scene-yazili *,
     #scene-yazili *::before,
@@ -1738,16 +2283,48 @@ input[type=range].exam-slider {
     }
 }
 
-/* 11. YAZDIRILABİLİR SINAV KÂĞIDI (BASKI / PDF ZIRHI) */
+/* 12. YAZDIRILABİLİR SINAV KÂĞIDI (BASKI / PDF ZIRHI) */
 @media print {
     /* Ekrana ait tüm arayüzü gizle */
     body * {
         visibility: hidden !important;
     }
     
+    #exam-print-preview-modal,
     #exam-print-sheet,
     #exam-print-sheet * {
         visibility: visible !important;
+    }
+
+    #exam-print-preview-modal {
+        position: static !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: block !important;
+        width: 100% !important;
+        backdrop-filter: none !important;
+    }
+
+    .print-preview-modal-dialog {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .print-preview-modal-header,
+    .print-preview-hint-banner {
+        display: none !important;
+    }
+
+    .print-preview-scroll-viewport {
+        padding: 0 !important;
+        background: transparent !important;
+        display: block !important;
+        overflow: visible !important;
     }
 
     #exam-print-sheet {
@@ -1756,6 +2333,8 @@ input[type=range].exam-slider {
         top: 0 !important;
         width: 100% !important;
         display: block !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
         background: #fff !important;
         color: #000 !important;
         padding: 10mm 15mm !important;
