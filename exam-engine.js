@@ -343,7 +343,11 @@ export function goToStep(step) {
 
     Object.keys(views).forEach(key => {
         if (views[key]) {
-            views[key].style.display = (key === step) ? 'block' : 'none';
+            if (key === step) {
+                views[key].style.display = (key === 'study') ? 'flex' : 'block';
+            } else {
+                views[key].style.display = 'none';
+            }
         }
     });
 
