@@ -33,6 +33,16 @@ body:has(#scene-yazili:not(.is-hidden)) #lab-view {
     line-height: 1.6;
 }
 
+/* Ders çalışma ekranında tanıtım başlığı gizlenir, üst boşluk sıkılaştırılır */
+#scene-yazili.study-active {
+    margin: 70px auto 40px auto;
+    padding-top: 8px;
+}
+
+#scene-yazili.study-active .exam-header-bar {
+    display: none !important;
+}
+
 /* Evrensel Dokunmatik Hedef Zırhı (Kural 7.1) */
 #scene-yazili button,
 #scene-yazili input,
@@ -748,6 +758,82 @@ body:has(#scene-yazili:not(.is-hidden)) #lab-view {
     line-height: 1.45;
 }
 
+/* Sadeleştirilmiş Bilgi Kartı Başlık ve Kazanım Akordiyonu */
+.study-card-top-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.study-badge-seq {
+    background: rgba(148, 163, 184, 0.15);
+    color: #cbd5e1;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.study-badge-code {
+    background: rgba(45, 212, 191, 0.15);
+    color: #2dd4bf;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(45, 212, 191, 0.3);
+}
+
+.study-outcome-expandable {
+    margin: 8px 0 16px 0;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+.study-outcome-expandable summary {
+    cursor: pointer;
+    color: #38bdf8;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+    font-size: 0.85rem;
+}
+
+.study-outcome-expandable summary:hover {
+    color: #7dd3fc;
+}
+
+.study-outcome-expandable[open] summary {
+    margin-bottom: 6px;
+    border-bottom: 1px dashed rgba(148, 163, 184, 0.2);
+    padding-bottom: 4px;
+}
+
+.study-outcome-full-text {
+    margin: 0;
+    color: #94a3b8;
+    line-height: 1.5;
+    font-size: 0.82rem;
+    text-align: left !important;
+}
+
+/* Ders Ekranında İki Yana Yaslama Yerine Rahat Okunur Sola Hizalama */
+.exam-lead,
+.exam-body-p,
+.exam-contentgrid div,
+.exam-card p {
+    text-align: left;
+    text-wrap: pretty;
+}
+
 /* Tam Ekran Çalışma Modu (Ders Kitabı Modu) */
 #exam-view-study.fullscreen-study-active {
     position: fixed !important;
@@ -960,8 +1046,18 @@ body:has(#scene-yazili:not(.is-hidden)) #lab-view {
     display: flex;
     justify-content: space-between;
     gap: 12px;
-    margin-top: 28px;
+    margin-top: 24px;
     flex-wrap: wrap;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.35);
 }
 
 .exam-btn-primary {
@@ -2419,6 +2515,173 @@ body.exam-modal-open {
     font-family: 'Times New Roman', Times, serif, system-ui;
     line-height: 1.45;
     box-sizing: border-box;
+}
+
+/* Modal İçi Sınav Kâğıdı Standart Stilleri (Ekran ve Baskı Tutarlılığı) */
+.print-header {
+    border-bottom: 2px solid #0f172a;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+}
+
+.print-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.print-logo {
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+}
+
+.print-school-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0;
+}
+
+.print-sub-title {
+    font-size: 0.95rem;
+    color: #475569;
+    margin: 2px 0 0 0;
+    font-weight: 600;
+}
+
+.print-student-info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+    padding: 10px 14px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    color: #1e293b;
+    margin-top: 10px;
+}
+
+.print-info-item {
+    font-weight: 500;
+}
+
+.print-instructions {
+    background: #f1f5f9;
+    border-left: 3px solid #64748b;
+    padding: 8px 12px;
+    font-size: 0.82rem;
+    color: #475569;
+    margin: 12px 0 16px 0;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.print-questions-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.print-question-block {
+    border-bottom: 1px dashed #cbd5e1;
+    padding-bottom: 16px;
+}
+
+.print-q-header {
+    margin-bottom: 6px;
+}
+
+.print-q-num {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.print-q-stem {
+    font-size: 0.95rem;
+    color: #1e293b;
+    line-height: 1.5;
+    margin: 0 0 8px 0;
+}
+
+.print-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 0.88rem;
+}
+
+.print-table th, .print-table td {
+    border: 1px solid #cbd5e1;
+    padding: 6px 10px;
+    text-align: center;
+}
+
+.print-table th {
+    background: #f1f5f9;
+    font-weight: 700;
+}
+
+.print-qimage {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.print-qimage img {
+    max-width: 280px;
+    max-height: 200px;
+    object-fit: contain;
+}
+
+.print-answer-lines-container {
+    margin-top: 10px;
+}
+
+.print-lines-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-style: italic;
+    color: #475569;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.print-ruled-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 4px;
+}
+
+.print-line {
+    border-bottom: 1.5px solid #94a3b8;
+    height: 26px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.print-sheet-footer {
+    text-align: center;
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #e2e8f0;
+}
+
+/* Öz Değerlendirme Bilgilendirme Notu */
+.summary-disclaimer-note {
+    font-size: 0.82rem;
+    color: #94a3b8;
+    margin: 10px 0 0 0;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
 @media (max-width: 768px) {

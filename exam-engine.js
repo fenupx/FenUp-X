@@ -70,6 +70,7 @@ if (typeof localStorage !== 'undefined') {
                 if (parsed.attempt && Array.isArray(parsed.attempt.ids)) {
                     state.attempt = {
                         version: parsed.attempt.version || 2,
+                        scoringVersion: parsed.attempt.scoringVersion || 2,
                         ids: parsed.attempt.ids,
                         questionPoints: parsed.attempt.questionPoints || {},
                         totalPoints: parsed.attempt.totalPoints || 100,
@@ -151,57 +152,106 @@ function sourcesHtml(refs) {
     }).filter(Boolean).join(' ');
 }
 
-// --- 100 PUANLIK SORU PUANLARI DAĞITIMI (Largest Remainder / Hamilton Yöntemi) ---
+// --- 5'İN KATLARIYLA 100 PUAN DAĞITIMI VE ÖZ DEĞERLENDİRME YAPILANDIRMASI ---
+export const SCORING_POLICY = {
+    version: 3,
+    targetTotal: 100,
+    allowedPoints: [10, 15, 20],
+    partialScoreMap: {
+        10: 5,
+        15: 10,
+        20: 10
+    }
+};
+
+export function getPartialScore(questionPoint) {
+    const pt = Number(questionPoint);
+    if (SCORING_POLICY.partialScoreMap.hasOwnProperty(pt)) {
+        return SCORING_POLICY.partialScoreMap[pt];
+    }
+    return Math.round(pt / 2);
+}
+
 export function calculateQuestionPoints(questions, targetTotal = 100) {
     if (!Array.isArray(questions) || questions.length === 0) {
         throw new Error('Soru puanı hesabı için en az bir soru bulunmalıdır.');
     }
 
-    const weights = questions.map(q => {
-        const w = Number(q.score_weight);
+    const n = questions.length;
+    const allowed = SCORING_POLICY.allowedPoints;
+    const minAllowed = Math.min(...allowed);
+    const maxAllowed = Math.max(...allowed);
+
+    if (minAllowed * n > targetTotal || maxAllowed * n < targetTotal) {
+        throw new Error(`Soru sayısı (${n}) ve izin verilen puanlarla [${allowed.join(', ')}] hedef ${targetTotal} puana ulaşılamaz.`);
+    }
+
+    const weights = questions.map((q, idx) => {
+        let w = Number(q.score_weight);
         if (!Number.isFinite(w) || w <= 0) {
-            return q.difficulty === 'hard' ? 18 : (q.difficulty === 'medium' ? 14 : 11);
+            w = q.difficulty === 'hard' ? 18 : (q.difficulty === 'medium' ? 15 : 12);
         }
-        return w;
+        return { origIdx: idx, id: q.id, weight: w };
     });
 
-    const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+    const totalWeight = weights.reduce((sum, item) => sum + item.weight, 0);
     if (totalWeight <= 0) {
         throw new Error('Toplam soru ağırlığı pozitif bir sayı olmalıdır.');
     }
 
-    const n = questions.length;
-    const quotas = weights.map(w => (w * targetTotal) / totalWeight);
-    const integers = quotas.map(q => Math.floor(q));
-    const remainders = quotas.map((q, i) => ({
-        remainder: q - integers[i],
-        index: i,
-        weight: weights[i]
-    }));
+    // Ağırlıklara göre küçükten büyüğe sırala (kararlı sıra için origIdx tie-breaker)
+    const sorted = [...weights].sort((a, b) => a.weight - b.weight || a.origIdx - b.origIdx);
+    const sortedIdeal = sorted.map(item => (item.weight * targetTotal) / totalWeight);
 
-    // Kalanları büyükten küçüğe sırala (eşitlik halinde ağırlık ve soru sırasını kararlı tie-breaker olarak kullan)
-    remainders.sort((a, b) => {
-        if (Math.abs(b.remainder - a.remainder) > 1e-9) {
-            return b.remainder - a.remainder;
+    let bestScore = Infinity;
+    let bestAssign = null;
+
+    function search(idx, currentSum, prevVal, currentAssign) {
+        if (idx === n) {
+            if (currentSum === targetTotal) {
+                let penalty = 0;
+                for (let i = 0; i < n; i++) {
+                    const diff = currentAssign[i] - sortedIdeal[i];
+                    penalty += diff * diff;
+                }
+                if (penalty < bestScore) {
+                    bestScore = penalty;
+                    bestAssign = [...currentAssign];
+                }
+            }
+            return;
         }
-        if (b.weight !== a.weight) {
-            return b.weight - a.weight;
+
+        const remaining = n - idx;
+        if (currentSum + minAllowed * remaining > targetTotal) return;
+        if (currentSum + maxAllowed * remaining < targetTotal) return;
+
+        for (let i = 0; i < allowed.length; i++) {
+            const val = allowed[i];
+            if (val >= prevVal) { // Monotonluk: ağırlığı büyük olan daha az puan alamaz
+                const remMinusOne = remaining - 1;
+                const minRemSum = currentSum + val + minAllowed * remMinusOne;
+                const maxRemSum = currentSum + val + maxAllowed * remMinusOne;
+                if (minRemSum <= targetTotal && targetTotal <= maxRemSum) {
+                    currentAssign.push(val);
+                    search(idx + 1, currentSum + val, val, currentAssign);
+                    currentAssign.pop();
+                }
+            }
         }
-        return a.index - b.index;
-    });
-
-    const integerSum = integers.reduce((sum, val) => sum + val, 0);
-    const leftover = targetTotal - integerSum;
-
-    for (let i = 0; i < leftover; i++) {
-        const targetIdx = remainders[i].index;
-        integers[targetIdx] += 1;
     }
 
+    search(0, 0, minAllowed, []);
+
+    if (!bestAssign) {
+        throw new Error(`Soru sayısı (${n}) için [${allowed.join(', ')}] kümesinden uygun puan dağılımı bulunamadı.`);
+    }
+
+    // Orijinal soru sırasına geri haritala
     const pointsMap = {};
-    questions.forEach((q, i) => {
-        pointsMap[q.id] = integers[i];
-    });
+    for (let i = 0; i < n; i++) {
+        pointsMap[sorted[i].id] = bestAssign[i];
+    }
 
     return pointsMap;
 }
@@ -225,17 +275,24 @@ async function loadData() {
             QUESTIONS = DATA.questions || [];
             profiles = DATA.selection_policy?.scenario_profiles || {};
 
-            // Eski kayıtları sürümlü uyarlama: 100 puanlık soru puanlarını bir kez ata
+            // Eski kayıtları sürümlü uyarlama: 5'in katı (10, 15, 20) standardına bir kez taşı
             if (state.attempt && Array.isArray(state.attempt.ids)) {
-                if (!state.attempt.questionPoints || Object.keys(state.attempt.questionPoints).length === 0) {
+                const needsMigration = !state.attempt.scoringVersion ||
+                    state.attempt.scoringVersion < SCORING_POLICY.version ||
+                    !state.attempt.questionPoints ||
+                    Object.keys(state.attempt.questionPoints).length === 0 ||
+                    Object.values(state.attempt.questionPoints).some(p => !SCORING_POLICY.allowedPoints.includes(p));
+
+                if (needsMigration) {
                     const qs = state.attempt.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
                     if (qs.length === state.attempt.ids.length) {
                         try {
-                            state.attempt.questionPoints = calculateQuestionPoints(qs, 100);
-                            state.attempt.totalPoints = 100;
+                            state.attempt.questionPoints = calculateQuestionPoints(qs, SCORING_POLICY.targetTotal);
+                            state.attempt.totalPoints = SCORING_POLICY.targetTotal;
+                            state.attempt.scoringVersion = SCORING_POLICY.version;
                             saveState();
                         } catch (e) {
-                            console.warn('Eski prova puan adaptasyon uyarısı:', e);
+                            console.warn('Soru puanı migrasyon uyarısı:', e);
                         }
                     }
                 }
@@ -304,6 +361,7 @@ export function goToStep(step) {
 
     const sceneYazili = $('scene-yazili');
     if (sceneYazili) {
+        sceneYazili.classList.toggle('study-active', step === 'study');
         sceneYazili.scrollTop = 0;
     }
     if (typeof window !== 'undefined') {
@@ -535,13 +593,13 @@ function renderStudy(cardIndex) {
             cardnav.innerHTML = `
                 <div class="study-plan-header">
                     <h4><i class="fas fa-tasks"></i> Çalışma Planın</h4>
-                    <span class="study-plan-badge">4 Konu · 24 Bilgi Kartı</span>
+                    <span class="study-plan-badge">4 Konu</span>
                 </div>
 
                 <div class="study-mobile-outcome-picker">
                     <label class="exam-cardnav-label" for="exam-outcome-select"><i class="fas fa-book-reader"></i> Konu Seç:</label>
                     <select id="exam-outcome-select" class="exam-select">
-                        ${DATA.outcomes.map(o => `<option value="${esc(o.id)}" ${o.id === c.outcome_id ? 'selected' : ''}>${esc(o.id)}: ${esc(o.title)}</option>`).join('')}
+                        ${DATA.outcomes.map(o => `<option value="${esc(o.id)}" ${o.id === c.outcome_id ? 'selected' : ''}>${esc(o.id)}: ${esc(o.short_title || o.title)}</option>`).join('')}
                     </select>
                 </div>
 
@@ -554,7 +612,7 @@ function renderStudy(cardIndex) {
                                 <button type="button" class="study-plan-outcome-head ${isOutcomeActive ? 'active' : ''}" data-outcome-id="${esc(o.id)}" aria-expanded="${isOutcomeActive}">
                                     <div class="study-outcome-meta">
                                         <span class="study-outcome-tag">${esc(o.id)}</span>
-                                        <strong class="study-outcome-title">${esc(o.title)}</strong>
+                                        <strong class="study-outcome-title">${esc(o.short_title || o.title)}</strong>
                                     </div>
                                     <i class="fas fa-chevron-${isOutcomeActive ? 'down' : 'right'} outcome-arrow"></i>
                                 </button>
@@ -614,20 +672,22 @@ function renderStudy(cardIndex) {
 
         cardPanel.innerHTML = `
             <div class="study-card-top-meta">
-                <div class="study-card-counters">
-                    <span class="study-counter-topic"><i class="fas fa-clone"></i> Bu konuda ${cardNumInOutcome} / ${outcomeCards.length}</span>
-                    <span class="study-counter-total"><i class="fas fa-layer-group"></i> Toplam 24 bilgi kartı</span>
-                </div>
-                <div class="study-card-outcome-banner">
+                <div class="study-meta-left">
                     <span class="outcome-pill-code">${esc(c.outcome_id)}</span>
-                    <span class="outcome-pill-desc">${esc(outcome ? outcome.title : (c.eyebrow || ''))}</span>
+                    <span class="study-counter-topic"><i class="fas fa-clone"></i> Kart ${cardNumInOutcome} / ${outcomeCards.length}</span>
                 </div>
+                ${outcome ? `
+                    <details class="study-outcome-expandable">
+                        <summary><i class="fas fa-info-circle"></i> MEB Kazanımı: <span>${esc(outcome.short_title || outcome.id)}</span> <span class="study-outcome-expand-hint">(Detay)</span></summary>
+                        <p class="study-outcome-full-desc">${esc(outcome.title)}</p>
+                    </details>
+                ` : ''}
             </div>
 
             <h2 class="exam-card-title">${esc(c.title)}</h2>
 
             <div class="exam-contentgrid">
-                <div>
+                <div class="study-text-column">
                     <p class="exam-lead">${esc(c.lead)}</p>
                     ${(c.body || []).map(p => `<p class="exam-body-p">${esc(p)}</p>`).join('')}
                     <div class="exam-takeaway"><strong>📌 Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>
@@ -649,7 +709,7 @@ function renderStudy(cardIndex) {
             </div>
 
             <div class="exam-next-bar">
-                <button id="exam-card-prev" ${cardIndex === 0 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Önceki Kart</button>
+                <button id="exam-card-prev" class="exam-btn-secondary" ${cardIndex === 0 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i> Önceki Kart</button>
                 <button id="exam-card-next" class="exam-btn-primary">
                     ${isReviewMode
                         ? (cardIndex === (state.reviewCardIds?.length ? CARDS.findIndex(x => x.id === state.reviewCardIds[state.reviewCardIds.length - 1]) : CARDS.length - 1)
@@ -1085,8 +1145,12 @@ function renderPractice() {
 function updateAnsweredCountText(questions) {
     const answeredCountEl = $('practice-answered-count-text');
     if (answeredCountEl && state.attempt) {
-        const answeredCount = questions.filter(q => (state.attempt.answers[q.id] || '').trim().length > 0).length;
-        answeredCountEl.textContent = `${answeredCount} / 7 Yanıtlandı`;
+        if (state.attempt.solveMode === 'kagitta') {
+            answeredCountEl.textContent = 'Kâğıtta Çözüm İçin Hazır';
+        } else {
+            const answeredCount = questions.filter(q => (state.attempt.answers[q.id] || '').trim().length > 0).length;
+            answeredCountEl.textContent = `${answeredCount} / 7 Yanıtlandı`;
+        }
     }
 }
 
@@ -1099,14 +1163,15 @@ function startNewPractice() {
         const chosen = selectQuestions(currentProfile, state.history, run);
         state.profileRuns[currentProfile] = run + 1;
 
-        // 100 puanlık soru puanlarını Hamilton / Largest Remainder yöntemiyle dağıt
-        const pointsMap = calculateQuestionPoints(chosen.questions, 100);
+        // 5'in katı (10, 15, 20) standart puan dağıtımı
+        const pointsMap = calculateQuestionPoints(chosen.questions, SCORING_POLICY.targetTotal);
 
         state.attempt = {
             version: 2,
+            scoringVersion: SCORING_POLICY.version,
             ids: chosen.questions.map(q => q.id),
             questionPoints: pointsMap,
-            totalPoints: 100,
+            totalPoints: SCORING_POLICY.targetTotal,
             profile: currentProfile,
             repeats: chosen.repeats,
             solveMode: currentSolveMode,
@@ -1205,7 +1270,8 @@ function renderEval() {
 
     // Tek Soru Değerlendirme Konteyneri
     const q = questions[evalIdx];
-    const qPoints = a.questionPoints?.[q.id] || (q.score_weight || 14);
+    const qPoints = a.questionPoints?.[q.id] || 15;
+    const partialPoints = getPartialScore(qPoints);
     const qContainer = $('eval-single-question-container');
 
     if (qContainer && q) {
@@ -1276,7 +1342,7 @@ function renderEval() {
                     </div>
                 </div>
 
-                <!-- 3 Net Öz Değerlendirme Seçeneği (100 Puanlık Soru Payı) -->
+                <!-- 3 Net Öz Değerlendirme Seçeneği (5'in Katları: 10, 15, 20 Puan) -->
                 <div class="eval-choice-section">
                     <label class="eval-choice-title">Kendi cevabını değerlendir ve sana en uygun olanı seç:</label>
                     <div class="eval-choices-grid">
@@ -1290,7 +1356,7 @@ function renderEval() {
                         <button type="button" class="eval-choice-btn kismen ${currentEval === 'kismen' ? 'selected' : ''}" data-eval-opt="kismen" ${state.reviewingEval ? 'disabled' : ''}>
                             <div class="eval-opt-icon"><i class="fas fa-adjust"></i></div>
                             <div class="eval-opt-body">
-                                <strong>Kısmen Yaptım (${formatScore(qPoints / 2)} Puan)</strong>
+                                <strong>Kısmen Yaptım (${partialPoints} Puan)</strong>
                                 <small>Temel kavramı belirttim fakat bazı gerekçeler veya ölçütler eksik kaldı.</small>
                             </div>
                         </button>
@@ -1397,7 +1463,7 @@ function renderSummary() {
         return;
     }
 
-    // 100 Puanlık Soru Dağılımına Göre Toplam Puanı Hesapla
+    // 100 Puanlık Soru Dağılımına Göre Toplam Puanı Hesapla (Kesirsiz 5'in Katları Standardı)
     let totalScore = 0;
     let tamCount = 0;
     let kismenCount = 0;
@@ -1405,12 +1471,12 @@ function renderSummary() {
 
     questions.forEach(q => {
         const ev = a.evaluations[q.id];
-        const p = a.questionPoints?.[q.id] || (q.score_weight || 14);
+        const p = a.questionPoints?.[q.id] || 15;
         if (ev === 'tam') {
             totalScore += p;
             tamCount++;
         } else if (ev === 'kismen') {
-            totalScore += (p / 2);
+            totalScore += getPartialScore(p);
             kismenCount++;
         } else {
             yapamadimCount++;
@@ -1423,7 +1489,7 @@ function renderSummary() {
     // Hero Skor Alanı
     const scoreValEl = $('summary-total-score');
     if (scoreValEl) {
-        scoreValEl.innerHTML = `${formatScore(totalScore)} <span style="font-size: 0.5em; color: #94a3b8; font-weight: 500;">/ 100</span>`;
+        scoreValEl.innerHTML = `${totalScore} <span style="font-size: 0.5em; color: #94a3b8; font-weight: 500;">/ 100</span>`;
     }
 
     const scoreSubEl = $('summary-score-sub');
@@ -1594,30 +1660,288 @@ function renderSummary() {
     }
 }
 
-// --- YAZDIRMA VE KÂĞITTA ÇÖZÜM FORMATI (Print / PDF Sheet Preview & Direct PDF Download) ---
+// --- YAZDIRMA VE KÂĞITTA ÇÖZÜM FORMATI (Print / PDF Sheet Preview & Vector PDF Download) ---
 let lastPrintTriggerElement = null;
-let html2pdfPromise = null;
+let pdfMakePromise = null;
 
-function loadHtml2Pdf() {
-    if (window.html2pdf) return Promise.resolve(window.html2pdf);
-    if (html2pdfPromise) return html2pdfPromise;
-    html2pdfPromise = new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
-        script.crossOrigin = 'anonymous';
-        script.onload = () => resolve(window.html2pdf);
-        script.onerror = () => {
-            html2pdfPromise = null;
-            reject(new Error('PDF kütüphanesi yüklenemedi.'));
+function loadPdfMake() {
+    if (typeof window !== 'undefined' && window.pdfMake && window.pdfMake.vfs) {
+        return Promise.resolve(window.pdfMake);
+    }
+    if (pdfMakePromise) return pdfMakePromise;
+    pdfMakePromise = new Promise((resolve, reject) => {
+        const script1 = document.createElement('script');
+        script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js';
+        script1.crossOrigin = 'anonymous';
+        script1.onload = () => {
+            const script2 = document.createElement('script');
+            script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js';
+            script2.crossOrigin = 'anonymous';
+            script2.onload = () => {
+                if (window.pdfMake && window.pdfMake.vfs) {
+                    resolve(window.pdfMake);
+                } else {
+                    reject(new Error('pdfMake veya vfs_fonts yüklenemedi.'));
+                }
+            };
+            script2.onerror = () => {
+                pdfMakePromise = null;
+                reject(new Error('vfs_fonts yüklenemedi.'));
+            };
+            document.head.appendChild(script2);
         };
-        document.head.appendChild(script);
+        script1.onerror = () => {
+            pdfMakePromise = null;
+            reject(new Error('pdfMake yüklenemedi.'));
+        };
+        document.head.appendChild(script1);
     });
-    return html2pdfPromise;
+    return pdfMakePromise;
+}
+
+function imageToDataUrl(src, maxWidth = 480, maxHeight = 360) {
+    return new Promise((resolve) => {
+        if (!src || typeof document === 'undefined') return resolve(null);
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => {
+            try {
+                let w = img.naturalWidth || 400;
+                let h = img.naturalHeight || 300;
+                const ratio = Math.min(maxWidth / w, maxHeight / h, 1);
+                w = Math.max(1, Math.round(w * ratio));
+                h = Math.max(1, Math.round(h * ratio));
+
+                const canvas = document.createElement('canvas');
+                canvas.width = w * 2;
+                canvas.height = h * 2;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                resolve({ dataUrl: canvas.toDataURL('image/png', 0.95), width: w, height: h });
+            } catch (_) {
+                resolve(null);
+            }
+        };
+        img.onerror = () => resolve(null);
+        img.src = src;
+    });
+}
+
+async function generateExamPdfBlob(questions, attempt) {
+    const pdfMake = await loadPdfMake();
+    const pointsMap = attempt.questionPoints || calculateQuestionPoints(questions, SCORING_POLICY.targetTotal);
+
+    let logoObj = null;
+    try {
+        logoObj = await imageToDataUrl('fenupx-logo.png', 40, 40);
+    } catch (_) {}
+
+    const visualPromises = questions.map(async q => {
+        if (q.visual?.asset) {
+            try {
+                return await imageToDataUrl(ASSET_BASE + q.visual.asset, 260, 180);
+            } catch (_) {
+                return null;
+            }
+        }
+        return null;
+    });
+    const visuals = await Promise.all(visualPromises);
+
+    const docContent = [];
+
+    // 1. Üst Bilgi ve Başlık
+    const headerCols = [];
+    if (logoObj && logoObj.dataUrl) {
+        headerCols.push({
+            image: logoObj.dataUrl,
+            width: 36,
+            height: 36,
+            margin: [0, 0, 10, 0]
+        });
+    }
+    headerCols.push({
+        stack: [
+            { text: 'FenUp X — Fen Bilimleri Yazılı Provası', fontSize: 13, bold: true, color: '#0f172a' },
+            { text: '7. Sınıf 1. Dönem 1. Yazılı Provası (MEB Senaryo 2)', fontSize: 9.5, color: '#475569', margin: [0, 2, 0, 0] }
+        ]
+    });
+
+    docContent.push({
+        columns: headerCols,
+        margin: [0, 0, 0, 8]
+    });
+
+    // 2. Öğrenci Künyesi (5 Sütunlu Kompakt Tablo)
+    docContent.push({
+        table: {
+            widths: ['30%', '17.5%', '17.5%', '17.5%', '17.5%'],
+            body: [
+                [
+                    { text: 'Adı Soyadı: ...................................', fontSize: 8.5, bold: true, color: '#1e293b' },
+                    { text: 'Sınıf / Şube: ..........', fontSize: 8.5, bold: true, color: '#1e293b' },
+                    { text: 'Okul No: ..........', fontSize: 8.5, bold: true, color: '#1e293b' },
+                    { text: 'Tarih: ...../...../202...', fontSize: 8.5, bold: true, color: '#1e293b' },
+                    { text: 'Aldığı Puan: ..... / 100', fontSize: 8.5, bold: true, color: '#0f172a', alignment: 'right' }
+                ]
+            ]
+        },
+        layout: {
+            hLineWidth: () => 0.75,
+            vLineWidth: () => 0.75,
+            hLineColor: () => '#cbd5e1',
+            vLineColor: () => '#cbd5e1',
+            fillColor: () => '#f8fafc',
+            paddingLeft: () => 6,
+            paddingRight: () => 6,
+            paddingTop: () => 4,
+            paddingBottom: () => 4
+        },
+        margin: [0, 0, 0, 6]
+    });
+
+    // 3. Kısa Yönerge (Ayrı kapak sayfası olmadan Soru 1 hemen ardından başlar)
+    docContent.push({
+        text: 'Yönerge: Bu sınav MEB Senaryo 2 kazanım dağılımına uygun 7 açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.',
+        fontSize: 7.6,
+        italics: true,
+        color: '#64748b',
+        margin: [0, 0, 0, 10]
+    });
+
+    // 4. Sorular Akışı (Bölünmeyi engelleyen unbreakable soru blokları)
+    questions.forEach((q, i) => {
+        const qPoints = pointsMap[q.id] || 15;
+        const lineCount = qPoints >= 20 ? 8 : (qPoints >= 15 ? 6 : 4);
+        const qStack = [];
+
+        // Soru Başlığı: Sade "Soru 1", "Soru 2" (öğrenci kâğıdında teknik kazanım kodu YER ALMAZ)
+        qStack.push({
+            text: `Soru ${i + 1}`,
+            fontSize: 10.5,
+            bold: true,
+            color: '#0f172a',
+            margin: [0, 0, 0, 3]
+        });
+
+        // Soru Metni: Kökün sonunda parantez içinde soru puanı
+        qStack.push({
+            text: [
+                { text: q.stem + ' ', fontSize: 9.2, color: '#1e293b', lineHeight: 1.25 },
+                { text: `(${qPoints} puan)`, fontSize: 9.2, bold: true, color: '#0f172a' }
+            ],
+            margin: [0, 0, 0, 5]
+        });
+
+        // Varsa Tablo
+        if (q.table) {
+            qStack.push({
+                table: {
+                    headerRows: 1,
+                    widths: q.table.headers.map(() => '*'),
+                    body: [
+                        q.table.headers.map(h => ({ text: h, fontSize: 8.5, bold: true, alignment: 'center', fillColor: '#f1f5f9' })),
+                        ...q.table.rows.map(r => r.map(c => ({ text: c, fontSize: 8.5, alignment: 'center' })))
+                    ]
+                },
+                layout: {
+                    hLineWidth: () => 0.5,
+                    vLineWidth: () => 0.5,
+                    hLineColor: () => '#cbd5e1',
+                    vLineColor: () => '#cbd5e1',
+                    paddingTop: () => 3,
+                    paddingBottom: () => 3
+                },
+                margin: [0, 2, 0, 5]
+            });
+        }
+
+        // Varsa Görsel
+        if (visuals[i] && visuals[i].dataUrl) {
+            qStack.push({
+                image: visuals[i].dataUrl,
+                width: Math.min(visuals[i].width, 240),
+                alignment: 'center',
+                margin: [0, 3, 0, 5]
+            });
+        }
+
+        // Çizgili Cevap Alanı
+        qStack.push({
+            text: 'Cevabınız ve Fen Bilimsel Gerekçeniz:',
+            fontSize: 7.8,
+            bold: true,
+            italics: true,
+            color: '#475569',
+            margin: [0, 4, 0, 2]
+        });
+
+        const ruledLinesBody = Array(lineCount).fill(0).map(() => [
+            { text: ' ', height: 16, border: [false, false, false, true], borderColor: ['#fff', '#fff', '#fff', '#94a3b8'] }
+        ]);
+
+        qStack.push({
+            table: {
+                widths: ['*'],
+                body: ruledLinesBody
+            },
+            layout: {
+                hLineWidth: () => 0.5,
+                vLineWidth: () => 0,
+                paddingLeft: () => 0,
+                paddingRight: () => 0,
+                paddingTop: () => 0,
+                paddingBottom: () => 0
+            },
+            margin: [0, 0, 0, 8]
+        });
+
+        // unbreakable: true soru bloğunun sayfa sınırında bölünmesini engeller
+        docContent.push({
+            stack: qStack,
+            unbreakable: true,
+            margin: [0, 0, 0, 8]
+        });
+    });
+
+    const docDefinition = {
+        pageSize: 'A4',
+        pageOrientation: 'portrait',
+        pageMargins: [36, 30, 36, 32],
+        content: docContent,
+        footer: function(currentPage, pageCount) {
+            return {
+                text: `Sayfa ${currentPage} / ${pageCount} • fenupx.com`,
+                alignment: 'center',
+                fontSize: 8,
+                color: '#64748b',
+                margin: [0, 10, 0, 0]
+            };
+        },
+        defaultStyle: {
+            font: 'Roboto'
+        }
+    };
+
+    return new Promise((resolve, reject) => {
+        try {
+            const pdfDoc = pdfMake.createPdf(docDefinition);
+            pdfDoc.getBlob((blob) => {
+                if (blob) resolve(blob);
+                else reject(new Error('PDF Blob oluşturulamadı.'));
+            });
+        } catch (err) {
+            reject(err);
+        }
+    });
 }
 
 async function downloadExamPdf(btnDownload = null) {
-    const printEl = $('exam-print-sheet');
-    if (!printEl) return;
+    if (!state.attempt) return;
+    const qs = state.attempt.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
+    if (qs.length === 0) return;
 
     const origHtml = btnDownload ? btnDownload.innerHTML : '';
     if (btnDownload) {
@@ -1626,18 +1950,17 @@ async function downloadExamPdf(btnDownload = null) {
     }
 
     try {
-        const html2pdf = await loadHtml2Pdf();
-        const opt = {
-            margin: [10, 12, 10, 12],
-            filename: 'FenUpX_7Sinif_1Donem_1Yazili_Senaryo2.pdf',
-            image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0 },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-            pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-        };
-        await html2pdf().set(opt).from(printEl).save();
+        const blob = await generateExamPdfBlob(qs, state.attempt);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'FenUpX_7Sinif_1Donem_1Yazili_Senaryo2.pdf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 2000);
     } catch (err) {
-        console.warn('Doğrudan PDF oluşturma hatası, yazdırma penceresine yönlendiriliyor:', err);
+        console.warn('pdfMake PDF oluşturma hatası, yazdırma penceresine yönlendiriliyor:', err);
         alert("Doğrudan PDF indirme bu tarayıcıda tamamlanamadı. Açılacak yazdırma penceresinden 'PDF Olarak Kaydet' seçeneğini kullanabilirsiniz.");
         window.print();
     } finally {
@@ -1655,10 +1978,11 @@ function openPrintPreview(triggerEl = null) {
     const modalEl = $('exam-print-preview-modal');
     if (!printEl || !modalEl) return;
 
-    // Soru puanları haritası yoksa tamamla
+    // Soru puanları haritası yoksa 5'in katları standardıyla tamamla
     if (!state.attempt.questionPoints || Object.keys(state.attempt.questionPoints).length === 0) {
-        state.attempt.questionPoints = calculateQuestionPoints(qs, 100);
-        state.attempt.totalPoints = 100;
+        state.attempt.questionPoints = calculateQuestionPoints(qs, SCORING_POLICY.targetTotal);
+        state.attempt.totalPoints = SCORING_POLICY.targetTotal;
+        state.attempt.scoringVersion = SCORING_POLICY.version;
         saveState();
     }
 
@@ -1668,7 +1992,7 @@ function openPrintPreview(triggerEl = null) {
     printEl.innerHTML = `
         <div class="print-header">
             <div class="print-brand-row">
-                <img src="fenupx-logo.png" alt="FenUp X Logo" class="print-logo" width="48" height="48">
+                <img src="fenupx-logo.png" alt="FenUp X Logo" class="print-logo" width="44" height="44">
                 <div class="print-title-group">
                     <h1 class="print-school-title">FenUp X — Fen Bilimleri Yazılı Provası</h1>
                     <h2 class="print-sub-title">7. Sınıf 1. Dönem 1. Yazılı Provası (MEB Senaryo 2)</h2>
@@ -1683,11 +2007,11 @@ function openPrintPreview(triggerEl = null) {
             </div>
         </div>
         <div class="print-instructions">
-            <strong>Yönerge:</strong> Bu sınav MEB Senaryo 2 kazanım dağılımına uygun 7 açık uçlu sorudan oluşmaktadır. Soru puanları yanlarında belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.
+            <strong>Yönerge:</strong> Bu sınav MEB Senaryo 2 kazanım dağılımına uygun 7 açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.
         </div>
         <div class="print-questions-flow">
             ${qs.map((q, i) => {
-                const qPoints = state.attempt.questionPoints?.[q.id] || (q.score_weight || 14);
+                const qPoints = state.attempt.questionPoints?.[q.id] || 15;
                 const visual = q.visual?.asset ? `
                     <div class="print-qimage">
                         <img src="${esc(ASSET_BASE + q.visual.asset)}" alt="${esc(q.visual?.alt || '')}">
@@ -1702,18 +2026,17 @@ function openPrintPreview(triggerEl = null) {
                     </table>
                 ` : '';
 
-                // Puana ve rubrik sayısına göre orantılı çizgili alan satır sayısı
-                const lineCount = (qPoints >= 18 || (q.rubric && q.rubric.length >= 4)) ? 7 : (qPoints >= 14 ? 6 : 4);
+                // 5'in katı soru puanına uygun fiziksel çizgili alan satır sayısı
+                const lineCount = qPoints >= 20 ? 8 : (qPoints >= 15 ? 6 : 4);
                 const ruledLines = Array(lineCount).fill('<div class="print-line"></div>').join('');
 
                 return `
                     <div class="print-question-block">
                         <div class="print-q-header">
-                            <span class="print-q-num">SORU ${i + 1}</span>
-                            <span class="print-q-meta">[${esc(q.outcome_id)} · ${qPoints} Puan]</span>
+                            <span class="print-q-num">Soru ${i + 1}</span>
                         </div>
                         <div class="print-q-body">
-                            <p class="print-q-stem">${esc(q.stem)}</p>
+                            <p class="print-q-stem">${esc(q.stem)} <strong>(${qPoints} puan)</strong></p>
                             ${table}
                             ${visual}
                         </div>
@@ -1726,6 +2049,9 @@ function openPrintPreview(triggerEl = null) {
                     </div>
                 `;
             }).join('')}
+        </div>
+        <div class="print-sheet-footer">
+            <span>fenupx.com • 7. Sınıf Fen Bilimleri Yazılı Provası</span>
         </div>
     `;
 
@@ -2266,7 +2592,9 @@ if (typeof window !== 'undefined') {
         openPrintPreview,
         closePrintPreview,
         downloadExamPdf,
-        calculateQuestionPoints
+        calculateQuestionPoints,
+        getPartialScore,
+        SCORING_POLICY
     };
 }
 
