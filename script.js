@@ -411,6 +411,10 @@ function switchScene(from, to) {
     window.scrollTo(0, 0);
     
     const isHome = (to.id === "scene-home");
+    const btnHeaderHome = document.getElementById('btn-header-home');
+    if (btnHeaderHome) {
+        btnHeaderHome.style.display = isHome ? "none" : "inline-flex";
+    }
     if (isHome) {
         document.title = "FenUp X | Fen Bilimleri Platformu";
     } else if (to.id === "scene-yazili") {
@@ -531,24 +535,75 @@ if(btnMasterResume) btnMasterResume.onclick = toggleMasterPause;
 let activeMode = "", selectedGrade = null, selectedUnit = null;
 let usedQuestions = []; 
 
+function returnToHome() {
+    if (window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
+        window.FenUpExam.closeExamView();
+    }
+    if (window.FenUpLab && typeof window.FenUpLab.closeLabView === "function") {
+        window.FenUpLab.closeLabView();
+    }
+    document.querySelectorAll('.scene').forEach(s => {
+        if (s !== scenes.home) {
+            s.classList.add('is-hidden');
+        }
+    });
+    if (scenes.home) {
+        scenes.home.classList.remove('is-hidden');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.title = "FenUp X | Fen Bilimleri Platformu";
+    
+    const btnHeaderHome = document.getElementById('btn-header-home');
+    if (btnHeaderHome) btnHeaderHome.style.display = "none";
+    
+    if (btnHakkimizda && btnIletisim) {
+        btnHakkimizda.style.display = "block";
+        btnIletisim.style.display = "block";
+    }
+    if (userProfileArea) {
+        userProfileArea.style.display = "inline-block";
+    }
+    if (mainFooter) mainFooter.classList.remove('hidden-footer');
+    if (topControls) {
+        topControls.classList.remove('is-visible');
+        topControls.classList.add('is-hidden');
+        topControls.style.display = "none";
+        stopSound(sfx.bgm);
+    }
+}
+window.returnToHome = returnToHome;
+
 const siteLogoLink = document.getElementById('site-logo-link') || document.querySelector('.logo');
 if(siteLogoLink) {
     siteLogoLink.onclick = (e) => {
         e.preventDefault();
-        const currentScene = document.querySelector('.scene:not(.is-hidden)');
-        if (currentScene && currentScene !== scenes.home) {
-            if (currentScene.id === 'scene-yazili' && window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
-                window.FenUpExam.closeExamView();
-            }
-            if (currentScene.id === 'lab-view' && window.FenUpLab && typeof window.FenUpLab.closeLabView === "function") {
-                window.FenUpLab.closeLabView();
-            }
-            switchScene(currentScene, scenes.home);
-        } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        returnToHome();
     };
 }
+
+const btnHeaderHome = document.getElementById('btn-header-home');
+if(btnHeaderHome) {
+    btnHeaderHome.onclick = (e) => {
+        e.preventDefault();
+        returnToHome();
+    };
+}
+
+// Delegated click fallback for brand link and header home button
+document.addEventListener('click', (e) => {
+    const brandTarget = e.target.closest('#site-logo-link, .site-brand-link');
+    if (brandTarget) {
+        e.preventDefault();
+        returnToHome();
+        return;
+    }
+    const homeTarget = e.target.closest('#btn-header-home');
+    if (homeTarget) {
+        e.preventDefault();
+        returnToHome();
+        return;
+    }
+});
 
 if(btnHakkimizda) btnHakkimizda.onclick = () => switchScene(scenes.home, scenes.hakkimizda);
 if(btnIletisim) btnIletisim.onclick = () => switchScene(scenes.home, scenes.iletisim);

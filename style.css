@@ -17,9 +17,14 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
   background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
 }
 .logo { font-size: 2.5rem; font-weight: 900; color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-blue); cursor: pointer;}
-.site-brand-link {
+.site-brand-link,
+.site-brand-link:visited,
+.site-brand-link:hover,
+.site-brand-link:active,
+.site-brand-link:focus {
   display: inline-flex; align-items: center; gap: 10px;
-  text-decoration: none; cursor: pointer; touch-action: manipulation;
+  text-decoration: none !important; color: var(--neon-blue) !important;
+  cursor: pointer; touch-action: manipulation;
   min-height: 48px; padding: 4px 8px; border-radius: 8px;
   user-select: none; -webkit-tap-highlight-color: transparent;
 }
@@ -31,9 +36,23 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
   display: block;
 }
 .site-brand-text {
-  font-size: 2.2rem; font-weight: 900; color: var(--neon-blue);
-  text-shadow: 0 0 15px var(--neon-blue); letter-spacing: -0.02em;
+  font-size: 2.2rem; font-weight: 900; color: var(--neon-blue) !important;
+  text-shadow: 0 0 15px rgba(0, 210, 255, 0.6); letter-spacing: -0.02em;
   line-height: 1;
+}
+.header-home-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 1.05rem; padding: 8px 14px; border-radius: 10px;
+  background: rgba(0, 210, 255, 0.12);
+  border: 1px solid rgba(0, 210, 255, 0.4);
+  color: var(--neon-blue) !important;
+  cursor: pointer; touch-action: manipulation;
+  min-height: 48px; transition: all 0.2s ease;
+  font-weight: 700;
+}
+.header-home-btn:hover {
+  background: rgba(0, 210, 255, 0.25);
+  box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
 }
 .header-right { display: flex; align-items: center; gap: 20px; }
 .text-btn { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; transition:0.3s; font-weight: bold;}
@@ -939,11 +958,32 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
 
     .top-header {
         flex-direction: column !important; 
-        padding: 15px !important; gap: 10px !important;
+        padding: 12px 15px !important; gap: 8px !important;
     }
-    .site-brand-link { min-height: 48px !important; padding: 4px 10px !important; margin: 0 auto !important; }
-    .site-logo-img { width: 40px !important; height: 40px !important; border-radius: 0 !important; }
-    .site-brand-text { font-size: 1.65rem !important; }
+    .site-brand-link {
+        min-height: 48px !important;
+        padding: 4px 10px !important;
+        margin: 0 auto !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        text-decoration: none !important;
+        color: var(--neon-blue) !important;
+    }
+    .site-logo-img {
+        width: 42px !important;
+        height: 42px !important;
+        border-radius: 0 !important;
+    }
+    .site-brand-text {
+        font-size: 1.85rem !important;
+        color: var(--neon-blue) !important;
+        text-shadow: 0 0 15px rgba(0, 210, 255, 0.6) !important;
+    }
+    .header-home-btn {
+        min-height: 44px !important;
+        padding: 6px 12px !important;
+        font-size: 0.95rem !important;
+    }
     .header-right { width: 100%; justify-content: center !important; flex-wrap: wrap !important; gap: 10px !important; }
     .text-btn { font-size: 1rem !important; }
     .outline-btn { padding: 6px 12px !important; font-size: 0.9rem !important; }

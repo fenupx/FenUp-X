@@ -224,17 +224,26 @@ export function goToStep(step) {
 function bindScopeContinue() {
     const btnContinue = $('btn-scope-continue');
     if (!btnContinue) return;
-    btnContinue.onclick = async () => {
-        if (!DATA) {
-            const origHtml = btnContinue.innerHTML;
-            btnContinue.disabled = true;
-            btnContinue.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hazırlanıyor...';
-            const ok = await loadData();
-            btnContinue.disabled = false;
-            btnContinue.innerHTML = origHtml;
-            if (!ok) return;
+    btnContinue.onclick = async (e) => {
+        if (e) e.preventDefault();
+        try {
+            if (!DATA) {
+                const origHtml = btnContinue.innerHTML;
+                btnContinue.disabled = true;
+                btnContinue.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hazırlanıyor...';
+                const ok = await loadData();
+                btnContinue.disabled = false;
+                btnContinue.innerHTML = origHtml;
+                if (!ok) {
+                    alert('Yazılı verileri yüklenirken bir sorun oluştu. Lütfen bağlantınızı kontrol edip tekrar deneyin.');
+                    return;
+                }
+            }
+            goToStep('choice');
+        } catch (err) {
+            console.error('Hazırlanmaya başlarken hata:', err);
+            goToStep('choice');
         }
-        goToStep('choice');
     };
 }
 
@@ -1571,15 +1580,57 @@ if (typeof window !== 'undefined') {
     };
 }
 
-// Sayfa ilk yüklendiğinde kapsam butonunu bağla ve veriyi arka planda önceden getir
+// Sayfa ilk yüklendiğinde kapsam butonunu bağla, veriyi arka planda önceden getir ve global tıklama delegasyonunu başlat
 if (typeof document !== 'undefined') {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            bindScopeContinue();
-            loadData();
-        });
-    } else {
+    const initEngine = () => {
         bindScopeContinue();
         loadData();
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initEngine);
+    } else {
+        initEngine();
     }
+
+    // Tıklama delegasyon zırhı: Dinleyici gecikmelerini veya DOM yenilemelerini bertaraf et
+    document.addEventListener('click', async (e) => {
+        const btnContinue = e.target.closest('#btn-scope-continue');
+        if (btnContinue) {
+            e.preventDefault();
+            if (!DATA) {
+                const origHtml = btnContinue.innerHTML;
+                btnContinue.disabled = true;
+                btnContinue.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hazırlanıyor...';
+                const ok = await loadData();
+                btnContinue.disabled = false;
+                btnContinue.innerHTML = origHtml;
+                if (!ok) return;
+            }
+            goToStep('choice');
+            return;
+        }
+
+        const btnStudy = e.target.closest('#btn-choice-go-study');
+        if (btnStudy) {
+            e.preventDefault();
+            state.returnToSummary = false;
+            goToStep('study');
+            return;
+        }
+
+        const btnPractice = e.target.closest('#btn-choice-go-practice');
+        if (btnPractice) {
+            e.preventDefault();
+            goToStep('practice');
+            return;
+        }
+
+        const btnChangeScope = e.target.closest('#btn-choice-change-scope');
+        if (btnChangeScope) {
+            e.preventDefault();
+            goToStep('scope');
+            return;
+        }
+    });
 }
