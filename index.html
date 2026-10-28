@@ -37,8 +37,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2026102812">
-    <link rel="stylesheet" href="exam.css?v=2026102812">
+    <link rel="stylesheet" href="style.css?v=2026102813">
+    <link rel="stylesheet" href="exam.css?v=2026102813">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -4301,7 +4301,10 @@
                             <i class="fas fa-arrow-left"></i> <span>Hazırlık Ekranı</span>
                         </button>
                         <div class="practice-status-info">
-                            <span id="practice-current-indicator">Soru 1 / 7</span>
+                            <button type="button" id="btn-practice-q-picker" class="practice-q-picker-btn" aria-expanded="false" aria-controls="practice-q-picker-dropdown" title="Soruları Listele">
+                                <span id="practice-current-indicator">Soru 1 / 7</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
                             <span id="practice-mode-indicator" class="practice-pill-tag"><i class="fas fa-laptop"></i> Ekranda Çözüm</span>
                         </div>
                     </div>
@@ -4314,6 +4317,9 @@
                             <i class="fas fa-print"></i> <span>Soru Kâğıdı</span>
                         </button>
                     </div>
+
+                    <!-- Kompakt Soru Seçici Açılır Paneli (Mobil & Hızlı Seçim) -->
+                    <div id="practice-q-picker-dropdown" class="practice-q-picker-dropdown is-hidden" aria-label="Soru Listesi"></div>
                 </div>
 
                 <!-- Tek Soru Konteyneri -->
@@ -4624,8 +4630,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
-    <script type="module" src="exam-engine.js?v=2026102812"></script>
-    <script type="module" src="lab-engine.js?v=2026102812"></script>
-    <script type="module" src="script.js?v=2026102812"></script>
+    <script type="module" src="exam-engine.js?v=2026102813"></script>
+    <script type="module" src="lab-engine.js?v=2026102813"></script>
+    <script type="module" src="script.js?v=2026102813"></script>
 </body>
 </html>

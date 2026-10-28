@@ -33,14 +33,40 @@ body:has(#scene-yazili:not(.is-hidden)) #lab-view {
     line-height: 1.6;
 }
 
-/* Ders çalışma ekranında tanıtım başlığı gizlenir, üst boşluk sıkılaştırılır */
+/* Ders çalışma, yazılı provası ve öz değerlendirme ekranlarında tanıtım başlığı gizlenir, üst boşluk sıkılaştırılır */
 #scene-yazili.study-active {
     margin: 70px auto 10px auto;
     padding: 6px 24px 10px 24px;
 }
 
-#scene-yazili.study-active .exam-header-bar {
+#scene-yazili.practice-active,
+#scene-yazili.eval-active {
+    margin: 75px auto 20px auto;
+    padding: 10px 24px 80px 24px;
+}
+
+#scene-yazili.study-active .exam-header-bar,
+#scene-yazili.practice-active .exam-header-bar,
+#scene-yazili.eval-active .exam-header-bar {
     display: none !important;
+}
+
+/* Step Views Visibility Contract: Tek ve Güvenilir Aktif/Gizli Mekanizması */
+.exam-step-view.is-hidden,
+#exam-view-study.is-hidden,
+#exam-view-practice.is-hidden,
+#exam-view-eval.is-hidden,
+#exam-view-choice.is-hidden,
+#exam-view-scope.is-hidden,
+#exam-view-summary.is-hidden,
+#scene-yazili:not(.study-active) #exam-view-study {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
 }
 
 @media (min-width: 821px) {
@@ -1808,6 +1834,184 @@ input[type=range].exam-slider {
     font-weight: 700;
 }
 
+/* Kompakt Soru Seçici Buton ve Açılır Panel */
+.practice-q-picker-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(8, 127, 130, 0.25);
+    border: 1px solid rgba(0, 210, 255, 0.4);
+    color: #fff;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 6px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: all 0.2s ease;
+    min-height: 44px;
+}
+
+.practice-q-picker-btn:hover,
+.practice-q-picker-btn.active {
+    background: rgba(8, 127, 130, 0.45);
+    border-color: var(--neon-blue, #00d2ff);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.3);
+}
+
+.practice-q-picker-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 12px;
+    right: 12px;
+    background: rgba(15, 23, 42, 0.98);
+    border: 1px solid rgba(0, 210, 255, 0.5);
+    border-radius: 16px;
+    padding: 12px;
+    z-index: 100;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 380px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.practice-q-picker-dropdown.is-hidden {
+    display: none !important;
+}
+
+.q-picker-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.q-picker-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(30, 41, 59, 0.75);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    color: #cbd5e1;
+    font-size: 0.88rem;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: all 0.15s ease;
+    min-height: 44px;
+}
+
+.q-picker-item:hover {
+    background: rgba(8, 127, 130, 0.35);
+    border-color: rgba(0, 210, 255, 0.4);
+    color: #fff;
+}
+
+.q-picker-item.active {
+    background: rgba(8, 127, 130, 0.5);
+    border-color: var(--neon-blue, #00d2ff);
+    color: #fff;
+    font-weight: 800;
+}
+
+.q-picker-item-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.q-picker-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: rgba(148, 163, 184, 0.2);
+    font-size: 0.82rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.q-picker-item.active .q-picker-num {
+    background: var(--neon-blue, #00d2ff);
+    color: #000;
+    font-weight: 900;
+}
+
+.q-picker-topic {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.86rem;
+}
+
+.q-picker-item-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.q-picker-pts {
+    font-size: 0.8rem;
+    color: #f59e0b;
+    font-weight: 700;
+}
+
+.q-picker-badge {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.q-picker-badge.current {
+    background: rgba(0, 210, 255, 0.2);
+    color: var(--neon-blue, #00d2ff);
+    border: 1px solid rgba(0, 210, 255, 0.4);
+}
+
+.q-picker-badge.answered {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.q-picker-badge.empty {
+    background: rgba(148, 163, 184, 0.15);
+    color: #94a3b8;
+}
+
+.q-picker-scenario-details {
+    margin-top: 6px;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: rgba(30, 41, 59, 0.4);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    font-size: 0.82rem;
+    color: #94a3b8;
+}
+
+.q-picker-scenario-details summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: #cbd5e1;
+}
+
+.q-picker-scenario-body {
+    padding-top: 6px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #94a3b8;
+}
+
 .practice-question-nav-strip,
 .eval-question-nav-strip {
     display: flex;
@@ -2556,17 +2760,19 @@ input[type=range].exam-slider {
         padding: 18px 16px 120px 16px;
         margin-top: 135px;
     }
-    #scene-yazili.study-active {
+    #scene-yazili.study-active,
+    #scene-yazili.practice-active,
+    #scene-yazili.eval-active {
         height: auto !important;
         max-height: none !important;
         min-height: 100dvh !important;
         overflow-y: auto !important;
         overflow-x: hidden !important;
-        padding: 14px 16px 100px 16px !important;
-        margin-top: 80px !important;
+        padding: 12px 14px 100px 14px !important;
+        margin-top: 75px !important;
         display: block !important;
     }
-    #exam-view-study {
+    #scene-yazili.study-active #exam-view-study:not(.is-hidden) {
         height: auto !important;
         overflow: visible !important;
         display: block !important;
@@ -2867,24 +3073,192 @@ input[type=range].exam-slider {
     .exam-choice-cards-grid {
         grid-template-columns: 1fr;
     }
-    .practice-top-bar,
+    /* Mobil Sade Soru Ekranı: Üstte Tek Kompakt Satır */
+    .practice-top-bar {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-wrap: nowrap !important;
+        padding: 8px 10px !important;
+        gap: 6px !important;
+        margin-bottom: 12px !important;
+        background: rgba(15, 23, 42, 0.85) !important;
+        border: 1px solid rgba(148, 163, 184, 0.25) !important;
+        border-radius: 14px !important;
+        position: relative !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .practice-top-left-actions {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+    }
+
+    #btn-practice-back-choice {
+        min-height: 44px !important;
+        padding: 6px 10px !important;
+        font-size: 0.82rem !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+        touch-action: manipulation !important;
+    }
+
+    .practice-status-info {
+        display: flex !important;
+        align-items: center !important;
+        min-width: 0 !important;
+    }
+
+    .practice-q-picker-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        padding: 6px 10px !important;
+        font-size: 0.88rem !important;
+        min-height: 44px !important;
+        white-space: nowrap !important;
+    }
+
+    .practice-pill-tag {
+        display: none !important;
+    }
+
+    .practice-question-nav-strip {
+        display: none !important;
+    }
+
+    .practice-top-actions {
+        flex-shrink: 0 !important;
+    }
+
+    #btn-practice-preview-print {
+        min-height: 44px !important;
+        padding: 6px 10px !important;
+        font-size: 0.82rem !important;
+        white-space: nowrap !important;
+        touch-action: manipulation !important;
+    }
+
+    /* Mobil Soru Kartı Sadeliği */
+    .practice-card {
+        padding: 16px 14px !important;
+        border-radius: 16px !important;
+        margin-bottom: 14px !important;
+    }
+
+    .practice-card .exam-qtitle {
+        font-size: 1.12rem !important;
+        line-height: 1.35 !important;
+        margin: 8px 0 10px 0 !important;
+    }
+
+    .practice-card .exam-body-p {
+        font-size: 0.95rem !important;
+        line-height: 1.45 !important;
+    }
+
+    .practice-card .exam-textarea {
+        min-height: 120px !important;
+        font-size: 0.92rem !important;
+        padding: 10px 12px !important;
+    }
+
+    /* Mobil Alt Gezinme Çubuğu: Tek Satır ve Erişilebilir */
+    .practice-bottom-bar {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 10px 12px !important;
+        gap: 8px !important;
+        margin-top: 14px !important;
+        position: sticky !important;
+        bottom: 0 !important;
+        background: rgba(15, 23, 42, 0.98) !important;
+        border-top: 1px solid rgba(148, 163, 184, 0.25) !important;
+        border-radius: 14px !important;
+        box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.5) !important;
+        z-index: 50 !important;
+    }
+
+    .practice-bottom-left,
+    .practice-bottom-right {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    .practice-bottom-bar button {
+        min-height: 48px !important;
+        padding: 8px 12px !important;
+        font-size: 0.85rem !important;
+        touch-action: manipulation !important;
+        width: auto !important;
+    }
+
+    .practice-nav-middle {
+        font-size: 0.82rem !important;
+        white-space: nowrap !important;
+    }
+
+    /* Mobil Sade Değerlendirme Ekranı */
     .exam-eval-header-bar {
-        flex-direction: column;
-        align-items: flex-start;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 10px 12px !important;
+        gap: 8px !important;
+        margin-bottom: 14px !important;
     }
-    .practice-question-nav-strip,
+
+    .eval-title-wrap {
+        display: none !important;
+    }
+
     .eval-question-nav-strip {
-        width: 100%;
-        justify-content: center;
+        display: flex !important;
+        gap: 6px !important;
+        overflow-x: auto !important;
+        padding: 2px 0 !important;
+        -webkit-overflow-scrolling: touch;
+        width: auto !important;
+        justify-content: flex-start !important;
     }
-    .practice-bottom-bar,
+
+    .eval-question-nav-strip .q-nav-btn {
+        width: 38px !important;
+        height: 38px !important;
+        min-width: 38px !important;
+        min-height: 38px !important;
+        font-size: 0.88rem !important;
+    }
+
+    .eval-card {
+        padding: 16px 14px !important;
+        border-radius: 16px !important;
+    }
+
     .eval-bottom-bar {
-        flex-direction: column;
-        gap: 14px;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 10px 12px !important;
+        gap: 8px !important;
     }
-    .practice-bottom-bar button,
+
     .eval-bottom-bar button {
-        width: 100%;
+        min-height: 48px !important;
+        padding: 8px 12px !important;
+        font-size: 0.85rem !important;
+        touch-action: manipulation !important;
+        width: auto !important;
     }
     .summary-score-badge {
         padding: 20px 16px;

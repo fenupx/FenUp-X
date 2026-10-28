@@ -347,11 +347,17 @@ export function goToStep(step) {
     };
 
     Object.keys(views).forEach(key => {
-        if (views[key]) {
-            if (key === step) {
-                views[key].style.display = (key === 'study') ? 'flex' : 'block';
+        const v = views[key];
+        if (v) {
+            const isActive = (key === step);
+            v.classList.toggle('is-hidden', !isActive);
+            v.setAttribute('aria-hidden', String(!isActive));
+            if (isActive) {
+                v.style.display = (key === 'study') ? 'flex' : 'block';
+                v.removeAttribute('inert');
             } else {
-                views[key].style.display = 'none';
+                v.style.display = 'none';
+                v.setAttribute('inert', '');
             }
         }
     });
@@ -371,6 +377,11 @@ export function goToStep(step) {
     const sceneYazili = $('scene-yazili');
     if (sceneYazili) {
         sceneYazili.classList.toggle('study-active', step === 'study');
+        sceneYazili.classList.toggle('practice-active', step === 'practice');
+        sceneYazili.classList.toggle('eval-active', step === 'eval');
+        sceneYazili.classList.toggle('summary-active', step === 'summary');
+        sceneYazili.classList.toggle('choice-active', step === 'choice');
+        sceneYazili.classList.toggle('scope-active', step === 'scope');
         sceneYazili.scrollTop = 0;
     }
     if (typeof window !== 'undefined') {
@@ -1033,6 +1044,86 @@ function renderPractice() {
         modeInd.innerHTML = (a.solveMode === 'kagitta')
             ? '<i class="fas fa-print"></i> Kâğıtta Çözüm'
             : '<i class="fas fa-laptop"></i> Ekranda Çözüm';
+    }
+
+    // Kompakt Soru Seçici Açılır Paneli (Mobil Tek Satır & Hızlı Soru Listesi)
+    const btnQPicker = $('btn-practice-q-picker');
+    const dropdownQPicker = $('practice-q-picker-dropdown');
+
+    const closeQPicker = () => {
+        if (dropdownQPicker) dropdownQPicker.classList.add('is-hidden');
+        if (btnQPicker) {
+            btnQPicker.classList.remove('active');
+            btnQPicker.setAttribute('aria-expanded', 'false');
+        }
+    };
+    closeQPicker();
+
+    if (btnQPicker && dropdownQPicker) {
+        if (a.solveMode === 'kagitta') {
+            btnQPicker.onclick = null;
+            btnQPicker.style.cursor = 'default';
+        } else {
+            btnQPicker.style.cursor = 'pointer';
+            btnQPicker.onclick = (e) => {
+                e.stopPropagation();
+                const willOpen = dropdownQPicker.classList.contains('is-hidden');
+                if (willOpen) {
+                    dropdownQPicker.innerHTML = `
+                        <div class="q-picker-list">
+                            ${questions.map((qu, i) => {
+                                const isCurrent = (i === activeIdx);
+                                const ansText = (a.answers[qu.id] || '').trim();
+                                const isAnswered = ansText.length > 0;
+                                const pts = a.questionPoints?.[qu.id] || qu.score_weight || 15;
+                                return `
+                                    <div class="q-picker-item ${isCurrent ? 'active' : ''} ${isAnswered ? 'answered' : ''}" data-picker-q="${i}">
+                                        <div class="q-picker-item-left">
+                                            <b class="q-picker-num">${i + 1}</b>
+                                            <span class="q-picker-topic">${esc(qu.title)}</span>
+                                        </div>
+                                        <div class="q-picker-item-right">
+                                            <span class="q-picker-pts">${pts} Puan</span>
+                                            ${isCurrent
+                                                ? '<span class="q-picker-badge current">Şu Anki</span>'
+                                                : (isAnswered
+                                                    ? '<span class="q-picker-badge answered"><i class="fas fa-check"></i> Yanıtlandı</span>'
+                                                    : '<span class="q-picker-badge empty">Boş</span>')}
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        <details class="q-picker-scenario-details">
+                            <summary><i class="fas fa-info-circle"></i> Senaryo 2 Dağılımı</summary>
+                            <div class="q-picker-scenario-body">
+                                <p>Uzay Araştırmaları (2 Soru), Uzay Kirliliği (1 Soru), Evren (1 Soru), Fiziksel İş (3 Soru) — Toplam 100 Puan</p>
+                            </div>
+                        </details>
+                    `;
+
+                    dropdownQPicker.querySelectorAll('[data-picker-q]').forEach(item => {
+                        item.onclick = () => {
+                            const targetIdx = Number(item.dataset.pickerQ);
+                            const textarea = $('practice-text-ans');
+                            if (textarea && questions[activeIdx]) {
+                                a.answers[questions[activeIdx].id] = textarea.value;
+                            }
+                            a.activeQuestionIndex = targetIdx;
+                            saveState();
+                            closeQPicker();
+                            renderPractice();
+                        };
+                    });
+
+                    dropdownQPicker.classList.remove('is-hidden');
+                    btnQPicker.classList.add('active');
+                    btnQPicker.setAttribute('aria-expanded', 'true');
+                } else {
+                    closeQPicker();
+                }
+            };
+        }
     }
 
     // Soru Kâğıdını Önizle / Yazdır Butonu
@@ -2684,6 +2775,20 @@ export async function openExamView() {
                         exitStudyFullscreen();
                     }
                 });
+            });
+
+            document.addEventListener('click', (e) => {
+                const picker = $('practice-q-picker-dropdown');
+                const btn = $('btn-practice-q-picker');
+                if (picker && !picker.classList.contains('is-hidden')) {
+                    if (!picker.contains(e.target) && (!btn || !btn.contains(e.target))) {
+                        picker.classList.add('is-hidden');
+                        if (btn) {
+                            btn.classList.remove('active');
+                            btn.setAttribute('aria-expanded', 'false');
+                        }
+                    }
+                }
             });
 
             window.addEventListener('orientationchange', () => {
