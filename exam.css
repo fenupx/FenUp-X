@@ -2170,16 +2170,39 @@ input[type=range].exam-slider {
 
 /* 10. Soru Kâğıdı Baskı Önizlemesi Modalı (Ekran A4 Görünümü) */
 #exam-print-preview-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
-    z-index: 2200;
-    display: flex;
+    position: fixed !important;
+    inset: 0 !important;
+    background: rgba(0, 0, 0, 0.85) !important;
+    backdrop-filter: blur(8px) !important;
+    z-index: 2200 !important;
+    display: none;
     align-items: center;
     justify-content: center;
     padding: 16px;
     box-sizing: border-box;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+#exam-print-preview-modal.is-open {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    z-index: 2200 !important;
+}
+
+#exam-print-preview-modal.is-hidden {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+body.exam-modal-open {
+    overflow: hidden !important;
 }
 
 .print-preview-modal-dialog {
@@ -2203,7 +2226,7 @@ input[type=range].exam-slider {
     flex-wrap: wrap;
     gap: 14px;
     padding: 16px 24px;
-    background: rgba(30, 41, 59, 0.9);
+    background: rgba(30, 41, 59, 0.95);
     border-bottom: 1px solid rgba(148, 163, 184, 0.2);
 }
 
@@ -2230,11 +2253,18 @@ input[type=range].exam-slider {
 }
 
 .print-preview-actions button {
-    min-height: 44px;
-    padding: 10px 18px;
-    border-radius: 10px;
+    min-height: 48px;
+    min-width: 48px;
+    padding: 10px 20px;
+    border-radius: 12px;
     font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     touch-action: manipulation;
+    cursor: pointer;
 }
 
 .print-preview-hint-banner {
@@ -2253,10 +2283,11 @@ input[type=range].exam-slider {
     flex: 1;
     overflow-y: auto;
     background: #1e293b;
-    padding: 28px 16px;
+    padding: 28px 16px 80px 16px;
     display: flex;
     justify-content: center;
     -webkit-overflow-scrolling: touch;
+    min-height: 0;
 }
 
 #exam-print-sheet {
@@ -2272,6 +2303,43 @@ input[type=range].exam-slider {
     box-sizing: border-box;
 }
 
+@media (max-width: 768px) {
+    #exam-print-preview-modal {
+        padding: 8px;
+    }
+    .print-preview-modal-dialog {
+        max-height: 96dvh;
+        border-radius: 14px;
+    }
+    .print-preview-modal-header {
+        padding: 12px 14px;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .print-preview-actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .print-preview-actions button {
+        width: 100%;
+        min-height: 48px;
+        justify-content: center;
+    }
+    .print-preview-hint-banner {
+        padding: 10px 14px;
+        font-size: 0.8rem;
+    }
+    .print-preview-scroll-viewport {
+        padding: 14px 6px 80px 6px;
+    }
+    #exam-print-sheet {
+        padding: 20px 14px;
+    }
+}
+
 /* 11. Kural 7 Erişilebilirlik ve Baskı */
 @media (prefers-reduced-motion: reduce) {
     #scene-yazili *,
@@ -2285,15 +2353,26 @@ input[type=range].exam-slider {
 
 /* 12. YAZDIRILABİLİR SINAV KÂĞIDI (BASKI / PDF ZIRHI) */
 @media print {
-    /* Ekrana ait tüm arayüzü gizle */
-    body * {
-        visibility: hidden !important;
+    @page {
+        size: A4 portrait;
+        margin: 12mm 15mm;
     }
-    
-    #exam-print-preview-modal,
-    #exam-print-sheet,
-    #exam-print-sheet * {
-        visibility: visible !important;
+
+    body {
+        background: #fff !important;
+        color: #000 !important;
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
+    }
+
+    /* Ekrana ait tüm arayüzü gizle */
+    body > *:not(#exam-print-preview-modal) {
+        display: none !important;
+    }
+
+    #scene-home, #quiz-view, #lab-view, #scene-yazili, .top-header, .footer, #starfield {
+        display: none !important;
     }
 
     #exam-print-preview-modal {
@@ -2303,7 +2382,12 @@ input[type=range].exam-slider {
         margin: 0 !important;
         display: block !important;
         width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        overflow: visible !important;
         backdrop-filter: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
     }
 
     .print-preview-modal-dialog {
@@ -2312,7 +2396,10 @@ input[type=range].exam-slider {
         border: none !important;
         padding: 0 !important;
         max-width: 100% !important;
+        max-height: none !important;
+        height: auto !important;
         margin: 0 !important;
+        overflow: visible !important;
     }
 
     .print-preview-modal-header,
@@ -2325,22 +2412,30 @@ input[type=range].exam-slider {
         background: transparent !important;
         display: block !important;
         overflow: visible !important;
+        height: auto !important;
+        max-height: none !important;
     }
 
     #exam-print-sheet {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
         width: 100% !important;
         display: block !important;
         box-shadow: none !important;
         border-radius: 0 !important;
         background: #fff !important;
         color: #000 !important;
-        padding: 10mm 15mm !important;
+        padding: 0 !important;
         font-family: 'Times New Roman', Times, serif, system-ui !important;
         line-height: 1.4 !important;
         box-sizing: border-box !important;
+        overflow: visible !important;
+        visibility: visible !important;
+    }
+
+    #exam-print-sheet * {
+        visibility: visible !important;
     }
 
     .print-header {

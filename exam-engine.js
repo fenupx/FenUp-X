@@ -190,6 +190,7 @@ async function loadData() {
 // --- AKIŞ MOTORU (State Machine): Senaryo Seçimi → Tercih → Konu/Prova → Değerlendirme → Özet ---
 export function goToStep(step) {
     stopAnimation();
+    closePrintPreview();
     state.currentStep = step;
     saveState();
 
@@ -802,7 +803,12 @@ function renderPractice() {
 
     // Soru Kâğıdını Önizle / Yazdır Butonu
     const btnPreviewPrint = $('btn-practice-preview-print');
-    if (btnPreviewPrint) btnPreviewPrint.onclick = () => openPrintPreview();
+    if (btnPreviewPrint) {
+        btnPreviewPrint.onclick = (e) => {
+            e.preventDefault();
+            openPrintPreview(btnPreviewPrint);
+        };
+    }
 
     // Tek Soru Konteyneri: PROVADA RUBRİK, İPUCU VEYA CEVAP KESİNLİKLE GÖSTERİLMEZ!
     const q = questions[activeIdx];
@@ -1404,12 +1410,17 @@ function renderSummary() {
 }
 
 // --- YAZDIRMA VE KÂĞITTA ÇÖZÜM FORMATI (Print / PDF Sheet Preview) ---
-function openPrintPreview() {
+let lastPrintTriggerElement = null;
+
+function openPrintPreview(triggerEl = null) {
     if (!state.attempt) return;
     const qs = state.attempt.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
     const printEl = $('exam-print-sheet');
     const modalEl = $('exam-print-preview-modal');
     if (!printEl || !modalEl) return;
+
+    // Tetikleyen düğmeyi sakla (kapatınca odağı geri vermek için)
+    lastPrintTriggerElement = triggerEl || (document.activeElement && document.activeElement !== document.body ? document.activeElement : $('btn-practice-preview-print'));
 
     printEl.innerHTML = `
         <div class="print-header">
@@ -1473,25 +1484,70 @@ function openPrintPreview() {
         </div>
     `;
 
+    // Ortak modal sözleşmesi: is-hidden kaldır, is-open ve active ekle, display flex yap
     modalEl.classList.remove('is-hidden');
+    modalEl.classList.add('is-open', 'active');
     modalEl.style.display = 'flex';
+    modalEl.setAttribute('aria-hidden', 'false');
 
+    // Arka plan kaydırma kilidi
+    document.body.classList.add('exam-modal-open');
+
+    // Yazdır butonu: gerçek window.print() başlatır, veriyi bozmaz
     const btnSubmit = $('btn-print-preview-submit');
     if (btnSubmit) {
-        btnSubmit.onclick = () => window.print();
+        btnSubmit.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            window.print();
+        };
     }
 
+    // Provaya Dön butonu: modalı kapatır, soru ve cevapları korur
     const btnClose = $('btn-print-preview-close');
     if (btnClose) {
-        btnClose.onclick = () => closePrintPreview();
+        btnClose.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closePrintPreview();
+        };
     }
+
+    // Backdrop tıklandığında kapat
+    modalEl.onclick = (e) => {
+        if (e.target === modalEl) {
+            e.preventDefault();
+            closePrintPreview();
+        }
+    };
+
+    // Açılışta odağı birincil düğmeye veya modal penceresine taşı
+    setTimeout(() => {
+        if (btnSubmit) {
+            btnSubmit.focus();
+        } else if (modalEl) {
+            modalEl.focus();
+        }
+    }, 50);
 }
 
 function closePrintPreview() {
     const modalEl = $('exam-print-preview-modal');
     if (modalEl) {
+        modalEl.classList.remove('is-open', 'active');
         modalEl.classList.add('is-hidden');
         modalEl.style.display = 'none';
+        modalEl.setAttribute('aria-hidden', 'true');
+    }
+
+    // Arka plan kaydırma kilidini temizle
+    document.body.classList.remove('exam-modal-open');
+
+    // Tetikleyen düğmeye odağı geri ver
+    if (lastPrintTriggerElement && typeof lastPrintTriggerElement.focus === 'function') {
+        try {
+            lastPrintTriggerElement.focus();
+        } catch (_) {}
     }
 }
 
@@ -1904,7 +1960,12 @@ export async function openExamView() {
             });
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
-                    closePrintPreview();
+                    const printModal = $('exam-print-preview-modal');
+                    if (printModal && printModal.classList.contains('is-open')) {
+                        e.preventDefault();
+                        closePrintPreview();
+                        return;
+                    }
                     const studyView = $('exam-view-study');
                     if (studyView && studyView.classList.contains('fullscreen-study-active')) {
                         toggleStudyFullscreen();

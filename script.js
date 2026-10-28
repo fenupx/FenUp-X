@@ -406,6 +406,9 @@ const userProfileArea = document.getElementById('user-profile-area');
 
 function switchScene(from, to) {
     if(!from || !to) return;
+    if (from.id === 'scene-yazili' && window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
+        window.FenUpExam.closeExamView();
+    }
     from.classList.add('is-hidden');
     to.classList.remove('is-hidden');
     window.scrollTo(0, 0);
