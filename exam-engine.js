@@ -30,7 +30,8 @@ let state = {
     reviewCardIds: [],
     returnToSummary: false,
     reviewingEval: false,
-    hasSelectedScope: false
+    hasSelectedScope: false,
+    studyPlanOpen: true
 };
 
 let currentProfile = 'dengeli';
@@ -66,6 +67,7 @@ if (typeof localStorage !== 'undefined') {
                 state.returnToSummary = !!parsed.returnToSummary;
                 state.reviewingEval = !!parsed.reviewingEval;
                 state.hasSelectedScope = !!parsed.hasSelectedScope;
+                state.studyPlanOpen = (typeof parsed.studyPlanOpen === 'boolean') ? parsed.studyPlanOpen : (typeof window !== 'undefined' ? window.innerWidth > 820 : true);
 
                 if (parsed.attempt && Array.isArray(parsed.attempt.ids)) {
                     state.attempt = {
@@ -541,6 +543,11 @@ function renderStudy(cardIndex) {
         };
     }
 
+    const btnTogglePlan = $('btn-study-toggle-plan');
+    if (btnTogglePlan) {
+        btnTogglePlan.onclick = () => toggleStudyPlan();
+    }
+
     const btnJumpPractice = $('btn-study-jump-practice');
     if (btnJumpPractice) btnJumpPractice.onclick = () => goToStep('practice');
 
@@ -772,6 +779,52 @@ function renderStudy(cardIndex) {
         if (interId === 'force-compare' || interId === 'distance-compare') setupCompare(interId);
         if (['mission-tools', 'debris-strategies', 'cosmic-levels'].includes(interId)) setupLearning(interId);
     }
+
+    // Çalışma planı açık/kapalı durumunu yansıt
+    applyStudyPlanState();
+}
+
+// Çalışma Planı Aç / Kapat Yönetimi (Genişleyen Ders Alanı)
+export function applyStudyPlanState() {
+    const layout = document.querySelector('.exam-cards-layout');
+    const toggleBtn = $('btn-study-toggle-plan');
+    const cardnav = $('exam-cardnav');
+    const isOpen = !!state.studyPlanOpen;
+
+    if (layout) {
+        layout.classList.toggle('plan-collapsed', !isOpen);
+    }
+    if (toggleBtn) {
+        toggleBtn.setAttribute('aria-expanded', String(isOpen));
+        toggleBtn.classList.toggle('active', isOpen);
+        toggleBtn.innerHTML = isOpen
+            ? '<i class="fas fa-columns"></i> <span>Planı Gizle</span>'
+            : '<i class="fas fa-bars"></i> <span>Çalışma Planı</span>';
+        toggleBtn.title = isOpen
+            ? 'Çalışma planını gizle ve ders kartını tam genişliğe çıkar'
+            : 'Çalışma planını göster';
+    }
+    if (cardnav) {
+        cardnav.setAttribute('aria-hidden', String(!isOpen));
+        if (!isOpen) {
+            if (document.activeElement && cardnav.contains(document.activeElement)) {
+                if (toggleBtn) toggleBtn.focus();
+            }
+        } else {
+            const activeNavBtn = cardnav.querySelector('.exam-cardnav-btn.active');
+            if (activeNavBtn && typeof activeNavBtn.scrollIntoView === 'function') {
+                try {
+                    activeNavBtn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+                } catch (_) {}
+            }
+        }
+    }
+}
+
+export function toggleStudyPlan() {
+    state.studyPlanOpen = !state.studyPlanOpen;
+    saveState();
+    applyStudyPlanState();
 }
 
 // Tam Ekran Çalışma Modu (Fullscreen API + Genişletilmiş Sayfa İçi Fallback)
@@ -2621,7 +2674,9 @@ if (typeof window !== 'undefined') {
         downloadExamPdf,
         calculateQuestionPoints,
         getPartialScore,
-        SCORING_POLICY
+        SCORING_POLICY,
+        toggleStudyPlan,
+        applyStudyPlanState
     };
 }
 

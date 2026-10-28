@@ -78,6 +78,31 @@ body:has(#scene-yazili:not(.is-hidden)) #lab-view {
         gap: 20px !important;
         align-items: stretch !important;
         overflow: hidden !important;
+        transition: grid-template-columns 0.25s ease, gap 0.25s ease;
+    }
+
+    /* Çalışma Planı Kapatıldığında Tek Sütun ve Genişleyen Kart Alanı */
+    #scene-yazili.study-active .exam-cards-layout.plan-collapsed {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 0 !important;
+    }
+
+    #scene-yazili.study-active .exam-cards-layout.plan-collapsed .exam-cardnav {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+
+    #scene-yazili.study-active .exam-cards-layout.plan-collapsed .exam-contentgrid {
+        grid-template-columns: minmax(0, 1.25fr) minmax(320px, 460px);
+        gap: 36px;
+    }
+
+    #scene-yazili.study-active .exam-cards-layout.plan-collapsed .exam-visualbox img,
+    #scene-yazili.study-active .exam-cards-layout.plan-collapsed .exam-visualbox svg {
+        max-width: 480px;
+        height: auto;
+        object-fit: contain;
     }
 
     #scene-yazili.study-active .exam-cardnav {
@@ -632,9 +657,39 @@ body:has(#scene-yazili:not(.is-hidden)) #lab-view {
     border-bottom: 1px solid rgba(148, 163, 184, 0.2);
 }
 
+.study-toolbar-left,
 .study-toolbar-right {
     display: flex;
-    gap: 12px;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#btn-study-toggle-plan {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    min-width: 48px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: all 0.2s ease;
+}
+
+#btn-study-toggle-plan:hover {
+    border-color: rgba(0, 210, 255, 0.5) !important;
+    color: #fff !important;
+}
+
+#btn-study-toggle-plan.active {
+    background: rgba(8, 127, 130, 0.25) !important;
+    border-color: rgba(0, 210, 255, 0.4) !important;
+    color: var(--neon-blue, #00d2ff) !important;
 }
 
 .cardnav-check {
@@ -653,6 +708,30 @@ body:has(#scene-yazili:not(.is-hidden)) #lab-view {
     grid-template-columns: 340px 1fr;
     gap: 28px;
     align-items: start;
+    transition: grid-template-columns 0.25s ease, gap 0.25s ease;
+}
+
+.exam-cards-layout.plan-collapsed {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0 !important;
+}
+
+.exam-cards-layout.plan-collapsed .exam-cardnav {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+.exam-cards-layout.plan-collapsed .exam-contentgrid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(320px, 460px);
+    gap: 36px;
+}
+
+.exam-cards-layout.plan-collapsed .exam-visualbox img,
+.exam-cards-layout.plan-collapsed .exam-visualbox svg {
+    max-width: 480px;
+    height: auto;
+    object-fit: contain;
 }
 
 .exam-cardnav {
@@ -951,6 +1030,21 @@ body:has(#scene-yazili:not(.is-hidden)) #lab-view {
     gap: 20px !important;
     align-items: stretch !important;
     overflow: hidden !important;
+    transition: grid-template-columns 0.25s ease, gap 0.25s ease;
+}
+
+#exam-view-study.fullscreen-study-active .exam-cards-layout.plan-collapsed {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0 !important;
+}
+
+#exam-view-study.fullscreen-study-active .exam-cards-layout.plan-collapsed .exam-cardnav {
+    display: none !important;
+}
+
+#exam-view-study.fullscreen-study-active .exam-cards-layout.plan-collapsed .exam-contentgrid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(320px, 460px);
+    gap: 36px;
 }
 
 #exam-view-study.fullscreen-study-active #exam-card-article {
@@ -2494,6 +2588,9 @@ input[type=range].exam-slider {
         overflow: visible !important;
         gap: 16px;
     }
+    .exam-cards-layout.plan-collapsed .exam-cardnav {
+        display: none !important;
+    }
     .study-mobile-outcome-picker {
         display: block;
         margin-bottom: 8px;
@@ -2918,6 +3015,26 @@ body.exam-modal-open {
 }
 
 /* 11. Kural 7 Erişilebilirlik ve Baskı */
+/* Çerez Bildirimi Zırhı: Ders ve Prova Ekranında Butonların Üzerini Kapatmayı Önleme (Kural 7) */
+body:has(#scene-yazili:not(.is-hidden)) .cookie-banner,
+body:has(#scene-yazili.study-active) .cookie-banner {
+    bottom: 16px !important;
+    left: 20px !important;
+    right: auto !important;
+    max-width: 380px !important;
+    z-index: 99 !important;
+}
+
+@media (max-width: 820px) {
+    body:has(#scene-yazili:not(.is-hidden)) .cookie-banner,
+    body:has(#scene-yazili.study-active) .cookie-banner {
+        bottom: 84px !important;
+        left: 10px !important;
+        right: 10px !important;
+        max-width: none !important;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     #scene-yazili *,
     #scene-yazili *::before,
