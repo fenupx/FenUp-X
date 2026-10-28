@@ -49,13 +49,13 @@ body:has(#scene-yazili:not(.is-hidden)) {
 
 /* Ders çalışma, yazılı provası ve öz değerlendirme ekranlarında tanıtım başlığı gizlenir, üst boşluk sıkılaştırılır */
 #scene-yazili.study-active {
-    margin: 70px auto 10px auto;
+    margin: 96px auto 10px auto;
     padding: 6px 24px 10px 24px;
 }
 
 #scene-yazili.practice-active,
 #scene-yazili.eval-active {
-    margin: 75px auto 20px auto;
+    margin: 96px auto 20px auto;
     padding: 10px 24px 80px 24px;
 }
 
@@ -85,8 +85,8 @@ body:has(#scene-yazili:not(.is-hidden)) {
 
 @media (min-width: 821px) {
     #scene-yazili.study-active {
-        height: calc(100dvh - 84px) !important;
-        max-height: calc(100dvh - 84px) !important;
+        height: calc(100dvh - 108px) !important;
+        max-height: calc(100dvh - 108px) !important;
         min-height: 0 !important;
         display: flex !important;
         flex-direction: column !important;
@@ -2783,7 +2783,7 @@ input[type=range].exam-slider {
         overflow-y: auto !important;
         overflow-x: hidden !important;
         padding: 12px 14px 100px 14px !important;
-        margin-top: 120px !important;
+        margin-top: 135px !important;
         display: block !important;
     }
     #scene-yazili.study-active #exam-view-study:not(.is-hidden) {

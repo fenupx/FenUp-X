@@ -385,7 +385,7 @@ export function goToStep(step) {
         sceneYazili.scrollTop = 0;
     }
     if (typeof window !== 'undefined') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo(0, 0);
     }
 
     // Her ekran değişiminde odak noktasını ilgili ekranın başlığına taşı
@@ -1349,6 +1349,13 @@ function updateAnsweredCountText(questions) {
 function startNewPractice() {
     try {
         setupPracticeNewMode = false;
+        if (typeof window !== 'undefined') {
+            window.scrollTo(0, 0);
+        }
+        const sceneYazili = $('scene-yazili');
+        if (sceneYazili) {
+            sceneYazili.scrollTop = 0;
+        }
         state.profileRuns = state.profileRuns || {};
         const run = state.profileRuns[currentProfile] || 0;
         state.history = state.history || {};
