@@ -26,3 +26,16 @@ test('Marka, müfredat, modül dengesi ve ikon erişimi', async ({page},info)=>{
   await page.locator('#site-logo-link').click();await expect(page.locator('#scene-home')).toBeVisible();
  }
 });
+
+ test('Kök ICO uyumluluk dosyası gerçek ICO ve doğru MIME ile sunulur', async ({page})=>{
+ await page.goto('/');
+ const link=page.locator('link[rel="icon"][type="image/x-icon"]');
+ await expect(link).toHaveCount(1);
+ const response=await page.request.get(await link.getAttribute('href'));
+ expect(response.status()).toBe(200);
+ expect(response.headers()['content-type']).toMatch(/image\/(x-icon|vnd.microsoft.icon)/);
+ const data=await response.body();
+ expect([...data.subarray(0,4)]).toEqual([0,0,1,0]);
+ expect(data.readUInt16LE(4)).toBe(6);
+ expect((await page.request.get('/apple-touch-icon.png')).headers()['content-type']).toContain('image/png');
+ });
