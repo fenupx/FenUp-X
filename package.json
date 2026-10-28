@@ -1,0 +1,18 @@
+{
+  "name": "fenup-x",
+  "version": "1.0.0",
+  "description": "FenUp X - Maarif Modeli Uyumlu Ortaokul Fen Bilimleri Platformu",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:mobile": "playwright test --project=mobile-chrome-android --project=mobile-safari-iphone-390",
+    "test:desktop": "playwright test --project=desktop-1366 --project=desktop-1440",
+    "test:etap": "playwright test --project=etap-board-1920 --project=etap-board-1366",
+    "test:visibility": "playwright test tests/visibility.spec.js",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0"
+  }
+}
