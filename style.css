@@ -17,6 +17,21 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
   background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
 }
 .logo { font-size: 2.5rem; font-weight: 900; color: var(--neon-blue); text-shadow: 0 0 15px var(--neon-blue); cursor: pointer;}
+.site-brand-link {
+  display: inline-flex; align-items: center; gap: 12px;
+  text-decoration: none; cursor: pointer; touch-action: manipulation;
+  transition: transform 0.25s ease;
+}
+.site-logo-img {
+  width: 48px; height: 48px; object-fit: contain; aspect-ratio: 1 / 1;
+  display: block; border-radius: 50%;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.site-brand-link:hover .site-logo-img { transform: scale(1.08) rotate(3deg); }
+.site-brand-text {
+  font-size: 2.2rem; font-weight: 900; color: var(--neon-blue);
+  text-shadow: 0 0 15px var(--neon-blue); letter-spacing: -0.02em;
+}
 .header-right { display: flex; align-items: center; gap: 20px; }
 .text-btn { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; transition:0.3s; font-weight: bold;}
 .text-btn:hover { color: var(--neon-blue); }
@@ -924,6 +939,8 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
         padding: 15px !important; gap: 10px !important;
     }
     .logo { font-size: 2rem !important; margin-bottom: 0 !important; text-align: center; }
+    .site-logo-img { width: 40px !important; height: 40px !important; }
+    .site-brand-text { font-size: 1.7rem !important; }
     .header-right { width: 100%; justify-content: center !important; flex-wrap: wrap !important; gap: 10px !important; }
     .text-btn { font-size: 1rem !important; }
     .outline-btn { padding: 6px 12px !important; font-size: 0.9rem !important; }

@@ -411,6 +411,15 @@ function switchScene(from, to) {
     window.scrollTo(0, 0);
     
     const isHome = (to.id === "scene-home");
+    if (isHome) {
+        document.title = "FenUp X | Fen Bilimleri Platformu";
+    } else if (to.id === "scene-yazili") {
+        document.title = "Yazılıya Hazırlık | FenUp X";
+    } else if (to.id === "lab-view") {
+        document.title = "Sanal Laboratuvar | FenUp X";
+    } else if (to.id === "scene-quiz" || to.id === "scene-tournament-quiz" || to.id === "scene-crossroads") {
+        document.title = "Şampiyonlar Ligi | FenUp X";
+    }
     if (btnHakkimizda && btnIletisim) {
         btnHakkimizda.style.display = isHome ? "block" : "none";
         btnIletisim.style.display = isHome ? "block" : "none";
@@ -522,8 +531,24 @@ if(btnMasterResume) btnMasterResume.onclick = toggleMasterPause;
 let activeMode = "", selectedGrade = null, selectedUnit = null;
 let usedQuestions = []; 
 
-const logoEl = document.querySelector('.logo');
-if(logoEl) logoEl.onclick = () => location.reload();
+const siteLogoLink = document.getElementById('site-logo-link') || document.querySelector('.logo');
+if(siteLogoLink) {
+    siteLogoLink.onclick = (e) => {
+        e.preventDefault();
+        const currentScene = document.querySelector('.scene:not(.is-hidden)');
+        if (currentScene && currentScene !== scenes.home) {
+            if (currentScene.id === 'scene-yazili' && window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
+                window.FenUpExam.closeExamView();
+            }
+            if (currentScene.id === 'lab-view' && window.FenUpLab && typeof window.FenUpLab.closeLabView === "function") {
+                window.FenUpLab.closeLabView();
+            }
+            switchScene(currentScene, scenes.home);
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+}
 
 if(btnHakkimizda) btnHakkimizda.onclick = () => switchScene(scenes.home, scenes.hakkimizda);
 if(btnIletisim) btnIletisim.onclick = () => switchScene(scenes.home, scenes.iletisim);
@@ -2797,10 +2822,52 @@ const adminUserList = document.getElementById('admin-user-list');
 const adminSearchInput = document.getElementById('admin-search-input');
 let allAdminUsers = [];
 
+const btnAdminTabUsers = document.getElementById('btn-admin-tab-users');
+const btnAdminTabQuestions = document.getElementById('btn-admin-tab-questions');
+const adminPanelUsers = document.getElementById('admin-panel-users');
+const adminPanelQuestions = document.getElementById('admin-panel-questions');
+
+function switchAdminTab(tab) {
+    if (tab === 'users') {
+        if (adminPanelUsers) adminPanelUsers.style.display = 'flex';
+        if (adminPanelQuestions) adminPanelQuestions.style.display = 'none';
+        if (btnAdminTabUsers) {
+            btnAdminTabUsers.style.background = 'rgba(245,158,11,0.2)';
+            btnAdminTabUsers.style.color = '#f59e0b';
+            btnAdminTabUsers.style.borderColor = 'rgba(255,255,255,0.2)';
+        }
+        if (btnAdminTabQuestions) {
+            btnAdminTabQuestions.style.background = 'rgba(30,41,59,0.8)';
+            btnAdminTabQuestions.style.color = '#cbd5e1';
+            btnAdminTabQuestions.style.borderColor = 'rgba(255,255,255,0.1)';
+        }
+    } else {
+        if (adminPanelUsers) adminPanelUsers.style.display = 'none';
+        if (adminPanelQuestions) adminPanelQuestions.style.display = 'flex';
+        if (btnAdminTabQuestions) {
+            btnAdminTabQuestions.style.background = 'rgba(245,158,11,0.2)';
+            btnAdminTabQuestions.style.color = '#f59e0b';
+            btnAdminTabQuestions.style.borderColor = 'rgba(255,255,255,0.2)';
+        }
+        if (btnAdminTabUsers) {
+            btnAdminTabUsers.style.background = 'rgba(30,41,59,0.8)';
+            btnAdminTabUsers.style.color = '#cbd5e1';
+            btnAdminTabUsers.style.borderColor = 'rgba(255,255,255,0.1)';
+        }
+        if (window.FenUpExam && typeof window.FenUpExam.renderAdminQuestionReview === 'function') {
+            window.FenUpExam.renderAdminQuestionReview();
+        }
+    }
+}
+
+if (btnAdminTabUsers) btnAdminTabUsers.onclick = () => switchAdminTab('users');
+if (btnAdminTabQuestions) btnAdminTabQuestions.onclick = () => switchAdminTab('questions');
+
 if(btnAdminPanel) {
     btnAdminPanel.onclick = (e) => {
         e.stopPropagation();
         if(profileDropdown) profileDropdown.classList.add('is-hidden');
+        switchAdminTab('users');
         showModal(adminModal);
         loadAdminUsers();
     };

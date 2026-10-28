@@ -138,48 +138,277 @@ body:has(#scene-yazili:not(.is-hidden)) #lab-view {
     white-space: nowrap;
 }
 
-/* 4. MODÜL SEKMELERİ (Konu Kartları / 7 Soruluk Prova / Soru İnceleme) */
-.exam-tabs {
+/* OYSS Rozeti (Ortak Yazılı Sınav Sistemi) */
+.exam-oyss-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    vertical-align: middle;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.15);
+    line-height: 1;
+}
+
+/* Modül Adımları Genel Kapsayıcı */
+.exam-step-view {
+    width: 100%;
+    animation: fadeInStep 0.25s ease-out;
+}
+
+@keyframes fadeInStep {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Aşama 1: Senaryo ve Kapsam */
+.exam-scope-card {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.exam-section-heading {
+    font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+    color: #fff;
+    margin: 8px 0 12px 0;
+    font-weight: 800;
+}
+
+.exam-scope-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+}
+
+.exam-scope-field {
     display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.exam-scope-label {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.exam-scope-accordion {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    transition: all 0.2s ease;
+}
+
+.exam-scope-accordion summary {
+    font-weight: 700;
+    color: #38bdf8;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.exam-scope-accordion summary::-webkit-details-marker {
+    display: none;
+}
+
+.exam-accordion-body {
+    padding-top: 14px;
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.exam-outcome-distribution-list {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 14px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.exam-outcome-distribution-list li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(15, 23, 42, 0.6);
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.outcome-tag {
+    background: rgba(45, 212, 191, 0.2);
+    color: #2dd4bf;
+    border: 1px solid rgba(45, 212, 191, 0.4);
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 0.82rem;
+    font-family: monospace;
+}
+
+.exam-actions-row {
+    margin-top: 24px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Aşama 2: Hazırlık Tercihi */
+.exam-choice-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
     gap: 12px;
     margin-bottom: 24px;
-    flex-wrap: wrap;
 }
 
-.exam-tab-btn {
-    flex: 1 1 180px;
-    min-height: 50px;
-    font-size: 1.05rem;
+.exam-choice-scope-pill {
+    background: rgba(45, 212, 191, 0.15);
+    border: 1px solid rgba(45, 212, 191, 0.35);
+    color: #2dd4bf;
+    padding: 8px 16px;
+    border-radius: 999px;
     font-weight: 700;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.exam-choice-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.exam-choice-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.exam-choice-card {
     background: rgba(15, 23, 42, 0.7);
-    border: 2px solid rgba(148, 163, 184, 0.2);
-    color: #94a3b8;
-    border-radius: 14px;
-    transition: all 0.25s ease;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
 }
 
-.exam-tab-btn[aria-pressed="true"],
-.exam-tab-btn.active {
-    background: linear-gradient(135deg, rgba(8, 127, 130, 0.3), rgba(0, 210, 255, 0.2));
+.exam-choice-card:hover {
+    transform: translateY(-4px);
     border-color: var(--neon-blue, #00d2ff);
+    box-shadow: 0 10px 30px rgba(0, 210, 255, 0.2);
+}
+
+.exam-choice-card.featured {
+    border-color: rgba(45, 212, 191, 0.5);
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.8), rgba(8, 127, 130, 0.25));
+}
+
+.choice-icon-wrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: rgba(0, 210, 255, 0.15);
+    color: var(--neon-blue, #00d2ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin-bottom: 18px;
+}
+
+.exam-choice-card.featured .choice-icon-wrap {
+    background: rgba(45, 212, 191, 0.2);
+    color: #2dd4bf;
+}
+
+.exam-choice-card h4 {
+    font-size: 1.45rem;
     color: #fff;
-    box-shadow: 0 0 20px rgba(0, 210, 255, 0.3);
+    margin: 0 0 10px 0;
+    font-weight: 800;
 }
 
-/* Bildirim / Kapsam Kutusu */
-.exam-notice {
-    background: rgba(245, 158, 11, 0.12);
-    border-left: 4px solid #f59e0b;
-    border-radius: 0 12px 12px 0;
-    padding: 14px 18px;
-    font-size: 0.95rem;
-    color: #fef3c7;
+.exam-choice-card p {
+    color: #cbd5e1;
+    font-size: 0.98rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+.choice-badge-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
     margin-bottom: 24px;
-    line-height: 1.5;
 }
 
-.exam-notice strong {
-    color: #f59e0b;
+.choice-mini-badge {
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    color: #94a3b8;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Konu Kartı Çalışma Üst Çubuk */
+.exam-study-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.study-toolbar-right {
+    display: flex;
+    gap: 12px;
+}
+
+.cardnav-check {
+    color: #10b981;
+    margin-left: auto;
+    font-size: 0.85rem;
+}
+
+.exam-cardnav-btn.visited {
+    border-left: 3px solid #10b981;
 }
 
 /* 5. GÖRÜNÜM 1: KONU KARTLARI */
@@ -761,7 +990,580 @@ input[type=range].exam-slider {
     margin-top: 12px;
 }
 
-/* 8. GÖRÜNÜM 3: ÖĞRETMEN İNCELEMESİ */
+/* 7. AŞAMA 3b & 4 & 5 STİLLERİ */
+
+/* Çözüm Modu Butonları (Ekranda / Kâğıtta) */
+.exam-solve-mode-group {
+    margin: 20px 0;
+}
+
+.exam-solve-modes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.exam-solve-mode-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 14px !important;
+    text-align: left !important;
+    padding: 16px !important;
+    border-radius: 14px !important;
+    border: 2px solid rgba(148, 163, 184, 0.2) !important;
+    background: rgba(15, 23, 42, 0.7) !important;
+    color: #cbd5e1 !important;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.exam-solve-mode-btn i {
+    font-size: 1.6rem;
+    color: #94a3b8;
+}
+
+.exam-solve-mode-btn strong {
+    display: block;
+    color: #fff;
+    font-size: 1.05rem;
+    margin-bottom: 2px;
+}
+
+.exam-solve-mode-btn small {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.82rem;
+}
+
+.exam-solve-mode-btn.active {
+    border-color: #2dd4bf !important;
+    background: rgba(8, 127, 130, 0.25) !important;
+    box-shadow: 0 0 20px rgba(45, 212, 191, 0.25) !important;
+}
+
+.exam-solve-mode-btn.active i {
+    color: #2dd4bf;
+}
+
+/* Prova Tek Soru Görünümü & Gezinme */
+.practice-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 16px;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+}
+
+.practice-status-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #fff;
+}
+
+.practice-pill-tag {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    color: #38bdf8;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.practice-question-nav-strip,
+.eval-question-nav-strip {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.q-nav-btn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    padding: 0 !important;
+    border-radius: 10px !important;
+    border: 1px solid rgba(148, 163, 184, 0.25) !important;
+    background: rgba(30, 41, 59, 0.8) !important;
+    color: #cbd5e1 !important;
+    font-weight: 800 !important;
+    font-size: 1rem !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.q-nav-btn:hover {
+    border-color: #38bdf8 !important;
+    color: #fff !important;
+}
+
+.q-nav-btn.active {
+    border-color: #2dd4bf !important;
+    background: #087f82 !important;
+    color: #fff !important;
+    box-shadow: 0 0 15px rgba(45, 212, 191, 0.4) !important;
+    transform: scale(1.08);
+}
+
+.q-nav-btn.answered {
+    border-color: #10b981 !important;
+    background: rgba(16, 185, 129, 0.2) !important;
+    color: #34d399 !important;
+}
+
+.q-nav-btn.eval-tam {
+    background: rgba(16, 185, 129, 0.3) !important;
+    border-color: #10b981 !important;
+    color: #34d399 !important;
+}
+
+.q-nav-btn.eval-kismen {
+    background: rgba(245, 158, 11, 0.3) !important;
+    border-color: #f59e0b !important;
+    color: #fbbf24 !important;
+}
+
+.q-nav-btn.eval-yapamadim {
+    background: rgba(239, 68, 68, 0.25) !important;
+    border-color: #ef4444 !important;
+    color: #f87171 !important;
+}
+
+.practice-card,
+.eval-card {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.qmeta-points {
+    color: #f59e0b;
+    font-weight: 800;
+}
+
+.exam-paper-note {
+    background: rgba(245, 158, 11, 0.12);
+    border-left: 4px solid #f59e0b;
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+    margin: 14px 0 10px 0;
+    color: #fef3c7;
+    font-size: 0.92rem;
+}
+
+.practice-bottom-bar,
+.eval-bottom-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.practice-nav-middle,
+.eval-progress-text {
+    font-weight: 700;
+    color: #94a3b8;
+    font-size: 0.95rem;
+}
+
+/* Öz Değerlendirme Ekranı */
+.exam-eval-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.eval-student-answer-box {
+    background: rgba(30, 41, 59, 0.6);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 18px 0;
+}
+
+.eval-student-answer-box h4 {
+    margin: 0 0 8px 0;
+    font-size: 0.95rem;
+    color: #38bdf8;
+    font-weight: 700;
+}
+
+.student-answer-content {
+    color: #f8fafc;
+    font-size: 1rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+
+.eval-sample-answer-box {
+    background: rgba(8, 127, 130, 0.15);
+    border: 1px solid rgba(45, 212, 191, 0.35);
+    border-radius: 14px;
+    padding: 20px;
+    margin: 18px 0;
+}
+
+.eval-sample-answer-box h4 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    color: #2dd4bf;
+    font-weight: 800;
+}
+
+.sample-answer-text {
+    color: #f8fafc;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.eval-alt-note {
+    background: rgba(245, 158, 11, 0.12);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #fef3c7;
+    font-size: 0.88rem;
+    margin-bottom: 14px;
+}
+
+.eval-rubric-summary {
+    color: #cbd5e1;
+    font-size: 0.92rem;
+}
+
+.eval-rubric-summary ul {
+    margin: 6px 0 0 0;
+    padding-left: 20px;
+}
+
+/* 3 Net Değerlendirme Seçeneği */
+.eval-choice-section {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.eval-choice-title {
+    display: block;
+    font-weight: 800;
+    color: #fff;
+    font-size: 1.05rem;
+    margin-bottom: 14px;
+}
+
+.eval-choices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+}
+
+.eval-choice-btn {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    text-align: left !important;
+    padding: 14px 18px !important;
+    border-radius: 14px !important;
+    border: 2px solid rgba(148, 163, 184, 0.2) !important;
+    background: rgba(15, 23, 42, 0.7) !important;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.eval-opt-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+}
+
+.eval-opt-body strong {
+    display: block;
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+.eval-opt-body small {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.82rem;
+    line-height: 1.35;
+}
+
+.eval-choice-btn.tam .eval-opt-icon { color: #10b981; }
+.eval-choice-btn.kismen .eval-opt-icon { color: #f59e0b; }
+.eval-choice-btn.yapamadim .eval-opt-icon { color: #ef4444; }
+
+.eval-choice-btn.tam.selected {
+    border-color: #10b981 !important;
+    background: rgba(16, 185, 129, 0.25) !important;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3) !important;
+}
+
+.eval-choice-btn.kismen.selected {
+    border-color: #f59e0b !important;
+    background: rgba(245, 158, 11, 0.25) !important;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3) !important;
+}
+
+.eval-choice-btn.yapamadim.selected {
+    border-color: #ef4444 !important;
+    background: rgba(239, 68, 68, 0.25) !important;
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3) !important;
+}
+
+/* Aşama 5: Çalışma Özeti */
+.exam-summary-hero {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.summary-score-badge {
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(8, 127, 130, 0.3));
+    border: 2px solid #2dd4bf;
+    border-radius: 24px;
+    padding: 30px 48px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(45, 212, 191, 0.25);
+    max-width: 480px;
+    width: 100%;
+}
+
+.score-label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+
+.score-big {
+    font-size: clamp(3rem, 6vw, 4.2rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.1;
+    text-shadow: 0 0 25px rgba(45, 212, 191, 0.5);
+    margin-bottom: 8px;
+}
+
+.score-note {
+    display: block;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+}
+
+.exam-summary-analysis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    margin-bottom: 28px;
+}
+
+.summary-analysis-card {
+    background: rgba(15, 23, 42, 0.75);
+    border-radius: 18px;
+    padding: 22px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.summary-analysis-card.success {
+    border-color: rgba(16, 185, 129, 0.35);
+}
+
+.summary-analysis-card.warning {
+    border-color: rgba(245, 158, 11, 0.35);
+}
+
+.analysis-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.analysis-card-header h4 {
+    margin: 0;
+    font-size: 1.15rem;
+    color: #fff;
+    font-weight: 800;
+}
+
+.analysis-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.analysis-item {
+    background: rgba(30, 41, 59, 0.6);
+    border-radius: 10px;
+    padding: 12px 14px;
+    border-left: 4px solid #94a3b8;
+}
+
+.analysis-item.success { border-left-color: #10b981; }
+.analysis-item.warning { border-left-color: #f59e0b; }
+
+.analysis-item-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+.analysis-item p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+}
+
+/* Eksikleri Çalış Kutusu */
+.exam-needs-study-box {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 28px;
+}
+
+.needs-study-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.needs-study-header i {
+    font-size: 1.8rem;
+    margin-top: 2px;
+}
+
+.needs-study-header h4 {
+    margin: 0 0 4px 0;
+    font-size: 1.25rem;
+    color: #fff;
+    font-weight: 800;
+}
+
+.needs-study-header p {
+    margin: 0;
+    color: #cbd5e1;
+    font-size: 0.95rem;
+}
+
+.summary-return-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+}
+
+.return-card-btn {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    padding: 14px 18px !important;
+    background: rgba(30, 41, 59, 0.8) !important;
+    border: 1px solid rgba(148, 163, 184, 0.25) !important;
+    border-radius: 14px !important;
+    text-align: left !important;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.return-card-btn:hover {
+    border-color: #38bdf8 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.2) !important;
+}
+
+.return-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.return-card-code {
+    font-size: 0.75rem;
+    color: #38bdf8;
+    font-weight: 800;
+}
+
+.return-card-info strong {
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+.return-card-info small {
+    color: #94a3b8;
+    font-size: 0.82rem;
+    max-width: 240px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.return-card-action {
+    color: #38bdf8;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.summary-actions-toolbar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.exam-btn-danger {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border-color: rgba(239, 68, 68, 0.4) !important;
+    color: #fca5a5 !important;
+}
+
+.exam-btn-danger:hover {
+    background: rgba(239, 68, 68, 0.3) !important;
+    border-color: #ef4444 !important;
+}
+
+.exam-btn-warning {
+    background: rgba(245, 158, 11, 0.2) !important;
+    border-color: rgba(245, 158, 11, 0.4) !important;
+    color: #fef3c7 !important;
+}
+
+.exam-btn-secondary {
+    background: rgba(30, 41, 59, 0.85) !important;
+    border-color: rgba(148, 163, 184, 0.25) !important;
+    color: #cbd5e1 !important;
+}
+
+/* 8. GÖRÜNÜM 3: ÖĞRETMEN İNCELEMESİ (ADMIN) */
 .exam-review-panel {
     margin-top: 16px;
 }
@@ -807,23 +1609,13 @@ input[type=range].exam-slider {
     .exam-profiles-grid {
         grid-template-columns: 1fr;
     }
-    .exam-criterion-row {
-        grid-template-columns: 1fr;
-        gap: 8px;
-    }
 }
 
 @media (max-width: 480px) {
     .exam-main-title {
-        font-size: 1.45rem;
-    }
-    .exam-tabs {
+        font-size: 1.4rem;
+        flex-wrap: wrap;
         gap: 8px;
-    }
-    .exam-tab-btn {
-        flex: 1 1 100%;
-        min-height: 48px;
-        font-size: 0.95rem;
     }
     .exam-cardnav {
         grid-template-columns: 1fr;
@@ -831,9 +1623,33 @@ input[type=range].exam-slider {
     .exam-next-bar button {
         width: 100%;
     }
-    .exam-return-btn {
+    .exam-choice-cards-grid {
+        grid-template-columns: 1fr;
+    }
+    .practice-top-bar,
+    .exam-eval-header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .practice-question-nav-strip,
+    .eval-question-nav-strip {
         width: 100%;
-        text-align: left;
+        justify-content: center;
+    }
+    .practice-bottom-bar,
+    .eval-bottom-bar {
+        flex-direction: column;
+        gap: 14px;
+    }
+    .practice-bottom-bar button,
+    .eval-bottom-bar button {
+        width: 100%;
+    }
+    .summary-score-badge {
+        padding: 20px 16px;
+    }
+    .summary-actions-toolbar button {
+        width: 100%;
     }
 }
 
@@ -848,34 +1664,173 @@ input[type=range].exam-slider {
     }
 }
 
+/* 11. YAZDIRILABİLİR SINAV KÂĞIDI (BASKI / PDF ZIRHI) */
 @media print {
-    .exam-header-bar,
-    .exam-tabs,
-    .exam-cardnav,
-    .exam-controls,
-    .exam-next-bar,
-    .exam-profiles-grid,
-    #scene-yazili button,
-    textarea,
-    select {
-        display: none !important;
+    /* Ekrana ait tüm arayüzü gizle */
+    body * {
+        visibility: hidden !important;
     }
-    .exam-cards-layout,
-    .exam-contentgrid,
-    .exam-qgrid {
+    
+    #exam-print-sheet,
+    #exam-print-sheet * {
+        visibility: visible !important;
+    }
+
+    #exam-print-sheet {
+        position: absolute !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
         display: block !important;
-    }
-    .exam-panel,
-    .exam-question-item {
-        border: none !important;
-        background: transparent !important;
-        color: #000 !important;
-        padding: 0 !important;
-    }
-    #scene-yazili {
-        color: #000 !important;
         background: #fff !important;
-        max-width: none !important;
-        padding: 0 !important;
+        color: #000 !important;
+        padding: 10mm 15mm !important;
+        font-family: 'Times New Roman', Times, serif, system-ui !important;
+        line-height: 1.4 !important;
+        box-sizing: border-box !important;
+    }
+
+    .print-header {
+        border-bottom: 2px solid #000;
+        padding-bottom: 12px;
+        margin-bottom: 14px;
+    }
+
+    .print-brand-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 10px;
+    }
+
+    .print-logo {
+        width: 48px;
+        height: 48px;
+        object-fit: contain;
+    }
+
+    .print-school-title {
+        font-size: 16pt;
+        font-weight: bold;
+        margin: 0;
+        color: #000;
+        text-transform: uppercase;
+    }
+
+    .print-sub-title {
+        font-size: 12pt;
+        font-weight: normal;
+        margin: 2px 0 0 0;
+        color: #222;
+    }
+
+    .print-student-info-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 8px;
+        font-size: 10.5pt;
+        margin-top: 10px;
+        padding-top: 8px;
+        border-top: 1px dashed #666;
+    }
+
+    .print-instructions {
+        font-size: 9.5pt;
+        background: #f5f5f5;
+        border: 1px solid #ccc;
+        padding: 8px 12px;
+        border-radius: 4px;
+        margin-bottom: 16px;
+        color: #111;
+    }
+
+    .print-questions-flow {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .print-question-block {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 16px;
+        margin-bottom: 6px;
+    }
+
+    .print-q-header {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        font-size: 11pt;
+        margin-bottom: 6px;
+        border-bottom: 1px solid #000;
+        padding-bottom: 2px;
+    }
+
+    .print-q-num {
+        font-size: 11pt;
+    }
+
+    .print-q-stem {
+        font-size: 10.5pt;
+        line-height: 1.5;
+        margin: 6px 0;
+        color: #000;
+    }
+
+    .print-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 8px 0;
+        font-size: 9.5pt;
+    }
+
+    .print-table th,
+    .print-table td {
+        border: 1px solid #000;
+        padding: 4px 8px;
+        text-align: left;
+    }
+
+    .print-table caption {
+        font-weight: bold;
+        margin-bottom: 4px;
+        text-align: left;
+    }
+
+    .print-qimage {
+        text-align: center;
+        margin: 8px 0;
+    }
+
+    .print-qimage img {
+        max-height: 160px;
+        max-width: 90%;
+        object-fit: contain;
+    }
+
+    .print-answer-lines-container {
+        margin-top: 10px;
+    }
+
+    .print-lines-label {
+        font-size: 9pt;
+        font-weight: bold;
+        font-style: italic;
+        color: #333;
+    }
+
+    .print-ruled-lines {
+        margin-top: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .print-line {
+        border-bottom: 1px dotted #888;
+        height: 1px;
+        width: 100%;
     }
 }
