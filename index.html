@@ -8,10 +8,12 @@
     <meta name="description" content="FenUp X ile fen bilimlerini keşfet: senaryona uygun yazılı provaları, görselli konu kartları, etkileşimli deneyler ve bilgi yarışmaları.">
     
     <!-- İkonlar ve Favicon -->
-    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128 256x256" href="/favicon.ico?v=2026102821">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026102820">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026102820">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026102820">
+    <meta name="apple-mobile-web-app-title" content="FenUp X">
+    <meta name="application-name" content="FenUp X">
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128 256x256" href="/favicon.ico?v=2026102907">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026102907">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026102907">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026102907">
     
     <!-- Open Graph & Sosyal Paylaşım -->
     <meta property="og:type" content="website">
@@ -38,8 +40,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2026102820">
-    <link rel="stylesheet" href="exam.css?v=2026102906">
+    <link rel="stylesheet" href="style.css?v=2026102907">
+    <link rel="stylesheet" href="exam.css?v=2026102907">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -87,38 +89,37 @@
     </header>
 
     <div id="scene-home" class="scene glass-panel">
-        <p class="curriculum-label">Türkiye Yüzyılı Maarif Modeli</p>
-        <h1 class="main-title">Fen bilimlerini keşfet, uygula, başarıya koş!</h1>
-        <p class="main-subtitle">5, 6 ve 7. sınıf fen bilimleri öğrenme çıktılarına göre hazırlanan yarışmalar, etkileşimli deneyler ve yazılı provaları.</p>
+        <p class="curriculum-label">Maarif Modeli’ne uygun</p>
+        <h1 class="main-title">Fen bilimlerini keşfet!</h1>
+        <p class="main-subtitle">5, 6 ve 7. sınıflar için</p>
         <div class="main-menu-grid">
-            <button id="btn-oyun-modulu" class="module-btn primary">
-                <i aria-hidden="true" class="fas fa-trophy"></i>
-                <span>FenUp X Şampiyonlar Ligi</span>
-                <small class="module-summary-tag">10 soru · Jokerler · Bireysel ve Turnuva Modu</small>
-                <span class="module-cta-badge">Hemen Oyna <i aria-hidden="true" class="fas fa-play" style="font-size: 0.85em;"></i></span>
-            </button>
-            <button id="btn-deney-modulu" class="module-btn secondary lab-active">
-                <i aria-hidden="true" class="fas fa-flask"></i>
-                <span>Sanal Laboratuvar</span>
-                <small class="module-summary-tag">30 İnteraktif Deney · 2D Simülasyon · Maarif Modeli</small>
-                <span class="module-cta-badge">Laboratuvara Gir <i aria-hidden="true" class="fas fa-arrow-right" style="font-size: 0.85em;"></i></span>
-            </button>
             <button id="btn-yazili-modulu" class="module-btn secondary exam-active">
                 <i aria-hidden="true" class="fas fa-file-pen"></i>
-                <span style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap;">
+                <span class="module-title-wrap">
                     Yazılıya Hazırlık
                     <span class="exam-oyss-badge" title="Ortak Yazılı Sınav Sistemi" aria-label="Ortak Yazılı Sınav Sistemi">OYSS</span>
                 </span>
                 <small class="module-summary-tag">Senaryona göre çalış, yazılı provası yap.</small>
                 <span class="module-cta-badge">Hazırlanmaya Başla <i aria-hidden="true" class="fas fa-arrow-right" style="font-size: 0.85em;"></i></span>
             </button>
+            <button id="btn-deney-modulu" class="module-btn secondary lab-active">
+                <i aria-hidden="true" class="fas fa-flask"></i>
+                <span class="module-title-wrap">Sanal Laboratuvar</span>
+                <small class="module-summary-tag">İnteraktif Deneyler · 2D Simülasyon</small>
+                <span class="module-cta-badge">Laboratuvara Gir <i aria-hidden="true" class="fas fa-arrow-right" style="font-size: 0.85em;"></i></span>
+            </button>
+            <button id="btn-oyun-modulu" class="module-btn primary">
+                <i aria-hidden="true" class="fas fa-trophy"></i>
+                <span class="module-title-wrap">FenUp X Şampiyonlar Ligi</span>
+                <small class="module-summary-tag">10 soru · Jokerler · Turnuva Modu</small>
+                <span class="module-cta-badge">Hemen Oyna <i aria-hidden="true" class="fas fa-play" style="font-size: 0.85em;"></i></span>
+            </button>
         </div>
-        <p class="play-guest-hint">✨ Üye olmadan oynayabilirsin. Puanlarını kaydetmek için ücretsiz hesap oluştur.</p>
     </div>
 
     <div id="scene-hakkimizda" class="scene is-hidden glass-panel">
         <div style="width: 100%; text-align: left; margin-bottom: 20px;">
-            <button class="back-link btn-back-home" style="position: relative; top: 0; left: 0;"><i class="fas fa-arrow-left"></i> Ana Menüye Dön</button>
+            <button class="back-link btn-back-home" style="position: relative; top: 0; left: 0;"><i class="fas fa-arrow-left"></i> Ana Sayfa</button>
         </div>
         <h2 style="color: var(--neon-blue); font-size: 2.5rem; margin-bottom: 20px;">FenUp X: Fen Bilimlerinde Dijital Dönüşümün Yeni Yüzü 🚀</h2>
         <div style="text-align: left; font-size: 1.2rem; line-height: 1.6; color: #ddd; max-width: 800px; margin: 0 auto;">
@@ -143,7 +144,7 @@
 
     <div id="scene-iletisim" class="scene is-hidden glass-panel">
         <div style="width: 100%; text-align: left; margin-bottom: 20px;">
-            <button class="back-link btn-back-home" style="position: relative; top: 0; left: 0;"><i class="fas fa-arrow-left"></i> Ana Menüye Dön</button>
+            <button class="back-link btn-back-home" style="position: relative; top: 0; left: 0;"><i class="fas fa-arrow-left"></i> Ana Sayfa</button>
         </div>
         <h2 style="color: var(--neon-blue); font-size: 3rem; margin-bottom: 30px;">İletişim</h2>
         <div style="display: flex; flex-direction: column; gap: 20px; font-size: 1.5rem; text-align: left; max-width: 500px; margin: 0 auto; background: rgba(0,0,0,0.5); padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
@@ -153,12 +154,13 @@
     </div>
 
     <div id="scene-crossroads" class="scene is-hidden glass-panel">
-        <button class="back-link btn-back-home">← Ana Menü</button>
+        <button class="back-link btn-back-home">← Ana Sayfa</button>
         <h2>Yarışma Türünü Seç</h2>
         <div class="menu-grid">
             <button id="btn-mode-bireysel" class="mode-btn"><i class="fas fa-user"></i><br>Bireysel Mod</button>
             <button id="btn-mode-turnuva" class="mode-btn"><i class="fas fa-users"></i><br>Turnuva Modu</button>
         </div>
+        <p class="play-guest-hint" style="margin-top: 24px;">✨ Üye olmadan oynayabilirsin. Puanlarını kaydetmek için ücretsiz hesap oluştur.</p>
     </div>
 
     <div id="scene-lobby" class="scene is-hidden glass-panel">
@@ -4057,12 +4059,12 @@
     <!-- ================================================================= -->
     <div id="scene-yazili" class="scene is-hidden glass-panel full-width exam-scene">
         <div class="exam-back-navigation">
-            <button id="btn-exam-step-back" class="exam-btn-secondary" type="button">← Geri</button>
+            <button id="btn-exam-step-back" class="exam-btn-secondary" type="button">← Ana Sayfa</button>
         </div>
 
         <!-- 1. Üst Navigasyon ve Başlık Şeridi -->
         <div class="exam-header-bar">
-            <button id="btn-exam-back-home" class="back-link btn-back-home"><i class="fas fa-arrow-left"></i> Ana Sayfaya Dön</button>
+            <button id="btn-exam-back-home" class="back-link btn-back-home is-hidden"><i class="fas fa-arrow-left"></i> Ana Sayfa</button>
             <div class="exam-nav-title-group">
                 <h2 class="exam-main-title">
                     <i class="fas fa-pen-fancy"></i> Yazılıya Hazırlık
@@ -4094,7 +4096,7 @@
                     <div class="exam-scope-field">
                         <label class="exam-scope-label" for="exam-select-scenario">Senaryo</label>
                         <select id="exam-select-scenario" class="exam-select">
-                            <option value="senaryo2" selected>MEB Senaryo 2 (7 Soru)</option>
+                            <option value="senaryo2" selected>Senaryo 2 · 7 soru</option>
                         </select>
                     </div>
                 </div>
@@ -4119,7 +4121,7 @@
                         </ul>
                         <p class="exam-body-note">Toplam 7 açık uçlu soru içerir.</p>
                         <details class="exam-sub-details" style="margin-top: 8px;">
-                            <summary style="font-size: 0.82rem; color: #94a3b8; cursor: pointer;">Kazanım kodlarını gör</summary>
+                            <summary style="font-size: 0.82rem; color: #94a3b8; cursor: pointer;">Öğrenme çıktılarını gör</summary>
                             <div style="font-size: 0.8rem; color: #94a3b8; padding: 6px 0;">
                                 FB.7.1.1 (2 soru), FB.7.1.3 (1 soru), FB.7.1.5 (1 soru), FB.7.2.1 (3 soru)
                             </div>
@@ -4141,6 +4143,8 @@
                 <button id="btn-choice-change-scope" class="exam-btn-secondary" type="button"><i class="fas fa-arrow-left"></i> Seçimi Değiştir</button>
                 <div class="exam-choice-scope-pill"><i class="fas fa-check-circle"></i> 7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2</div>
             </div>
+
+            <div id="exam-choice-migration-notice" class="exam-migration-banner" style="display: none;" role="status" aria-live="polite"></div>
 
             <div class="exam-choice-header">
                 <h3 class="exam-section-heading">Nasıl hazırlanmak istersin?</h3>
@@ -4240,14 +4244,14 @@
                         <i class="fas fa-list-ul"></i> <span>Konular</span>
                     </button>
                     <div id="study-return-to-summary-box" style="display: none;">
-                        <button id="btn-study-return-summary" class="exam-btn-warning" type="button"><i class="fas fa-undo"></i> <span>Çalışma Özetime Dön</span></button>
+                        <button id="btn-study-return-summary" class="exam-btn-warning" type="button"><i class="fas fa-undo"></i> <span>Sonuçlara Dön</span></button>
                     </div>
                 </div>
                 <div class="study-toolbar-right">
                     <button id="btn-study-jump-practice" class="exam-btn-primary" type="button">
                         <span>Provaya Geç</span> <i class="fas fa-arrow-right"></i>
                     </button>
-                    <button id="btn-study-fullscreen" class="exam-btn-secondary btn-icon-only" type="button" title="Tam Ekran Çalış" aria-label="Tam Ekran Çalış">
+                    <button id="btn-study-fullscreen" class="exam-btn-secondary btn-icon-only" type="button" title="Tam Ekran Çalış" aria-label="Tam Ekran Çalış" aria-pressed="false">
                         <i class="fas fa-expand"></i>
                     </button>
                 </div>
@@ -4656,23 +4660,30 @@
     </div>
 
     <footer id="main-footer" class="fenupx-footer">
-        <div class="policy-links" style="display: flex; gap: 15px; align-items: center;">
-            <button class="text-btn btn-kvkk-open" style="font-size: 0.9rem; color: #aaa;">Gizlilik Politikası</button>
-            <span class="desktop-only" style="color: #555;">|</span>
-            <button class="text-btn btn-terms-open" style="font-size: 0.9rem; color: #aaa;">Kullanım Koşulları</button>
-            <span class="desktop-only" style="color: #555;">|</span>
-            <button class="text-btn btn-cookies-open" style="font-size: 0.9rem; color: #aaa;">Çerez Politikası</button>
-        </div>
-        <div style="display: flex; gap: 30px;">
-            <a href="https://youtube.com/@FenUpX" target="_blank" class="social-icon" title="YouTube"><i class="fab fa-youtube"></i></a>
-            <a href="https://instagram.com/fenupx" target="_blank" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+        <div class="footer-inner">
+            <div class="footer-socials">
+                <a href="https://youtube.com/@FenUpX" target="_blank" class="social-icon" title="YouTube" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <a href="https://instagram.com/fenupx" target="_blank" class="social-icon" title="Instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <div class="footer-info-container">
+                <button id="btn-footer-info" class="footer-info-trigger mobile-only" type="button" aria-expanded="false" aria-controls="footer-info-dropdown">
+                    <i class="fas fa-shield-halved" aria-hidden="true"></i> <span>Bilgilendirme</span> <i class="fas fa-chevron-up info-caret" aria-hidden="true"></i>
+                </button>
+                <div id="footer-info-dropdown" class="policy-links">
+                    <button class="text-btn btn-kvkk-open" type="button">Gizlilik Politikası</button>
+                    <span class="desktop-only" style="color: #555;">|</span>
+                    <button class="text-btn btn-terms-open" type="button">Kullanım Koşulları</button>
+                    <span class="desktop-only" style="color: #555;">|</span>
+                    <button class="text-btn btn-cookies-open" type="button">Çerez Politikası</button>
+                </div>
+            </div>
         </div>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
-    <script type="module" src="exam-engine.js?v=2026102906"></script>
+    <script type="module" src="exam-engine.js?v=2026102907"></script>
     <script type="module" src="lab-engine.js?v=2026102817"></script>
-    <script type="module" src="script.js?v=2026102906"></script>
+    <script type="module" src="script.js?v=2026102907"></script>
 </body>
 </html>

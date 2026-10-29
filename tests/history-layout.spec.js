@@ -78,7 +78,7 @@ test('Tarayıcı geri/ileri cevapları ve soru setini korur', async ({ page }) =
   await page.goForward();
   await expect(page.locator('#practice-text-ans')).toHaveValue('Korunacak bilimsel cevap');
   await page.goBack();
-  await page.locator('#btn-resume-saved-attempt').click();
+  await page.locator('#btn-resume-saved-work, #btn-resume-saved-attempt').first().click();
   await expect(page.locator('#practice-text-ans')).toHaveValue('Korunacak bilimsel cevap');
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('fenupx_exam_pilot_v1')).attempt.ids)).toEqual(before);
 });

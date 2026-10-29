@@ -2120,19 +2120,50 @@ if(policyModal) {
     };
 }
 
+const btnFooterInfo = document.getElementById('btn-footer-info');
+const footerInfoDropdown = document.getElementById('footer-info-dropdown');
+
+function closeFooterInfoDropdown() {
+    if (footerInfoDropdown && footerInfoDropdown.classList.contains('is-open')) {
+        footerInfoDropdown.classList.remove('is-open');
+        btnFooterInfo?.setAttribute('aria-expanded', 'false');
+    }
+}
+
+if (btnFooterInfo && footerInfoDropdown) {
+    btnFooterInfo.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = footerInfoDropdown.classList.toggle('is-open');
+        btnFooterInfo.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!footerInfoDropdown.contains(e.target) && e.target !== btnFooterInfo) {
+            closeFooterInfoDropdown();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeFooterInfoDropdown();
+    });
+}
+
 document.querySelectorAll('.btn-kvkk-open').forEach(btn => btn.onclick = (e) => {
     if(e) e.stopPropagation();
     if(profileDropdown) profileDropdown.classList.add('is-hidden');
+    closeFooterInfoDropdown();
     openModal('kvkk');
 });
 document.querySelectorAll('.btn-terms-open').forEach(btn => btn.onclick = (e) => {
     if(e) e.stopPropagation();
     if(profileDropdown) profileDropdown.classList.add('is-hidden');
+    closeFooterInfoDropdown();
     openModal('terms');
 });
 document.querySelectorAll('.btn-cookies-open').forEach(btn => btn.onclick = (e) => {
     if(e) e.stopPropagation();
     if(profileDropdown) profileDropdown.classList.add('is-hidden');
+    closeFooterInfoDropdown();
     openModal('cookies');
 });
 

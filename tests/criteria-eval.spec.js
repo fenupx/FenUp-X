@@ -18,7 +18,7 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
         return { error: 'distributeCriteriaPoints fonksiyonu bulunamadı' };
       }
 
-      const res = await fetch('/data/exam/pilot_7_senaryo2.json');
+      const res = await fetch('/data/exam/content-v6/pilot_7_senaryo2.json');
       const data = await res.json();
       const questions = data.questions || [];
       const cards = data.cards || [];
@@ -251,30 +251,30 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
           version: 2,
           scoringVersion: 3,
           evaluationVersion: 1, // Eski sürüm
-          ids: ['FB711-E01', 'FB711-E02', 'FB711-E03', 'FB711-E04', 'FB711-E05', 'FB711-E06', 'FB711-M01'],
+          ids: ['FB711-V6-E01', 'FB711-V6-E02', 'FB711-V6-E03', 'FB711-V6-E04', 'FB711-V6-E05', 'FB711-V6-E06', 'FB711-V6-M01'],
           questionPoints: {
-            'FB711-E01': 15,
-            'FB711-E02': 15,
-            'FB711-E03': 15,
-            'FB711-E04': 15,
-            'FB711-E05': 15,
-            'FB711-E06': 15,
-            'FB711-M01': 10
+            'FB711-V6-E01': 15,
+            'FB711-V6-E02': 15,
+            'FB711-V6-E03': 15,
+            'FB711-V6-E04': 15,
+            'FB711-V6-E05': 15,
+            'FB711-V6-E06': 15,
+            'FB711-V6-M01': 10
           },
           totalPoints: 100,
           profile: 'senaryo2_standart',
           solveMode: 'ekranda',
           answers: {
-            'FB711-E01': 'Eski kaydettiğim cevabım.'
+            'FB711-V6-E01': 'Eski kaydettiğim cevabım.'
           },
           evaluations: {
-            'FB711-E01': 'tam',
-            'FB711-E02': 'kismen',
-            'FB711-E03': 'yapamadim',
-            'FB711-E04': 'tam',
-            'FB711-E05': 'tam',
-            'FB711-E06': 'tam',
-            'FB711-M01': 'tam'
+            'FB711-V6-E01': 'tam',
+            'FB711-V6-E02': 'kismen',
+            'FB711-V6-E03': 'yapamadim',
+            'FB711-V6-E04': 'tam',
+            'FB711-V6-E05': 'tam',
+            'FB711-V6-E06': 'tam',
+            'FB711-V6-M01': 'tam'
           },
           status: 'completed',
           finished: true,
@@ -348,40 +348,40 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
 
   test('6. Tekrar Kartları Mobil Taşma Koruması, Negatif Puanların Kaldırılması ve Kart Tekilleştirmesi', async ({ page }) => {
     await page.evaluate(() => {
-      const qIds = ['FB711-E01', 'FB711-E02', 'FB711-E03', 'FB711-E04', 'FB711-E05', 'FB711-E06', 'FB711-M01'];
+      const qIds = ['FB711-V6-E01', 'FB711-V6-E02', 'FB711-V6-E03', 'FB711-V6-E04', 'FB711-V6-E05', 'FB711-V6-E06', 'FB711-V6-M01'];
       const qPoints = {
-        'FB711-E01': 15,
-        'FB711-E02': 15,
-        'FB711-E03': 15,
-        'FB711-E04': 15,
-        'FB711-E05': 15,
-        'FB711-E06': 15,
-        'FB711-M01': 10
+        'FB711-V6-E01': 15,
+        'FB711-V6-E02': 15,
+        'FB711-V6-E03': 15,
+        'FB711-V6-E04': 15,
+        'FB711-V6-E05': 15,
+        'FB711-V6-E06': 15,
+        'FB711-V6-M01': 10
       };
       // 81 puan için: 19 puan eksik olmalı (Q1'de c1=5 puan eksik, Q2'de c3=14 puan eksik -> toplam 81)
       const criteriaMap = {
-        'FB711-E01': [
-          { id: 'c1', text: 'Gök cisimlerini doğru listeler', points: 5, return_card_ids: ['FB711-K01', 'FB711-K02'] },
-          { id: 'c2', text: 'Işık kirliliği nedenini açıklar', points: 10, return_card_ids: ['FB711-K03'] }
+        'FB711-V6-E01': [
+          { id: 'c1', text: 'Gök cisimlerini doğru listeler', points: 5, return_card_ids: ['FB711-V6-K01', 'FB711-V6-K02'] },
+          { id: 'c2', text: 'Işık kirliliği nedenini açıklar', points: 10, return_card_ids: ['FB711-V6-K03'] }
         ],
-        'FB711-E02': [
-          { id: 'c3', text: 'Aynaları sınıflandırır', points: 14, return_card_ids: ['FB711-K04'] },
-          { id: 'c4', text: 'Kullanım alanlarını açıklar', points: 1, return_card_ids: ['FB711-K04'] }
+        'FB711-V6-E02': [
+          { id: 'c3', text: 'Aynaları sınıflandırır', points: 14, return_card_ids: ['FB711-V6-K04'] },
+          { id: 'c4', text: 'Kullanım alanlarını açıklar', points: 1, return_card_ids: ['FB711-V6-K04'] }
         ],
-        'FB711-E03': [{ id: 'c5', text: 'Hücre kısımlarını açıklar', points: 15, return_card_ids: ['FB711-K05'] }],
-        'FB711-E04': [{ id: 'c6', text: 'Mitoz evrelerini sıralar', points: 15, return_card_ids: ['FB711-K06'] }],
-        'FB711-E05': [{ id: 'c7', text: 'Mayoz özelliklerini belirtir', points: 15, return_card_ids: ['FB711-K07'] }],
-        'FB711-E06': [{ id: 'c8', text: 'Kütle ve ağırlık farkı', points: 15, return_card_ids: ['FB711-K08'] }],
-        'FB711-M01': [{ id: 'c9', text: 'Kuvvet ve iş ilişkisi', points: 10, return_card_ids: ['FB711-K09'] }]
+        'FB711-V6-E03': [{ id: 'c5', text: 'Hücre kısımlarını açıklar', points: 15, return_card_ids: ['FB711-V6-K05'] }],
+        'FB711-V6-E04': [{ id: 'c6', text: 'Mitoz evrelerini sıralar', points: 15, return_card_ids: ['FB711-V6-K06'] }],
+        'FB711-V6-E05': [{ id: 'c7', text: 'Mayoz özelliklerini belirtir', points: 15, return_card_ids: ['FB711-V6-K07'] }],
+        'FB711-V6-E06': [{ id: 'c8', text: 'Kütle ve ağırlık farkı', points: 15, return_card_ids: ['FB711-V6-K08'] }],
+        'FB711-V6-M01': [{ id: 'c9', text: 'Kuvvet ve iş ilişkisi', points: 10, return_card_ids: ['FB711-V6-K00'] }]
       };
       const selectedCriteria = {
-        'FB711-E01': ['c2'], // 10 puan (c1 eksik: 5 puan, return_card_ids: ['FB711-K01', 'FB711-K02'])
-        'FB711-E02': ['c4'], // 1 puan (c3 eksik: 14 puan)
-        'FB711-E03': ['c5'], // 15 puan
-        'FB711-E04': ['c6'], // 15 puan
-        'FB711-E05': ['c7'], // 15 puan
-        'FB711-E06': ['c8'], // 15 puan
-        'FB711-M01': ['c9']  // 10 puan
+        'FB711-V6-E01': ['c2'], // 10 puan (c1 eksik: 5 puan)
+        'FB711-V6-E02': ['c4'], // 1 puan (c3 eksik: 14 puan)
+        'FB711-V6-E03': ['c5'], // 15 puan
+        'FB711-V6-E04': ['c6'], // 15 puan
+        'FB711-V6-E05': ['c7'], // 15 puan
+        'FB711-V6-E06': ['c8'], // 15 puan
+        'FB711-V6-M01': ['c9']  // 10 puan
         // Toplam = 10 + 1 + 15 + 15 + 15 + 15 + 10 = 81 puan
       };
       const mockState = {
@@ -456,33 +456,33 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
   test('7. Pedagojik Geri Bildirim ve Buton Hiyerarşisi (100 Tam Puan vs Geliştirilebilir Puan)', async ({ page }) => {
     // 100 Tam Puan Denemesi
     await page.evaluate(() => {
-      const qIds = ['FB711-E01', 'FB711-E02', 'FB711-E03', 'FB711-E04', 'FB711-E05', 'FB711-E06', 'FB711-M01'];
+      const qIds = ['FB711-V6-E01', 'FB711-V6-E02', 'FB711-V6-E03', 'FB711-V6-E04', 'FB711-V6-E05', 'FB711-V6-E06', 'FB711-V6-M01'];
       const qPoints = {
-        'FB711-E01': 15,
-        'FB711-E02': 15,
-        'FB711-E03': 15,
-        'FB711-E04': 15,
-        'FB711-E05': 15,
-        'FB711-E06': 15,
-        'FB711-M01': 10
+        'FB711-V6-E01': 15,
+        'FB711-V6-E02': 15,
+        'FB711-V6-E03': 15,
+        'FB711-V6-E04': 15,
+        'FB711-V6-E05': 15,
+        'FB711-V6-E06': 15,
+        'FB711-V6-M01': 10
       };
       const criteriaMap = {
-        'FB711-E01': [{ id: 'c1', text: 'Ölçüt 1', points: 15, return_card_ids: ['FB711-K01'] }],
-        'FB711-E02': [{ id: 'c2', text: 'Ölçüt 2', points: 15, return_card_ids: ['FB711-K02'] }],
-        'FB711-E03': [{ id: 'c3', text: 'Ölçüt 3', points: 15, return_card_ids: ['FB711-K03'] }],
-        'FB711-E04': [{ id: 'c4', text: 'Ölçüt 4', points: 15, return_card_ids: ['FB711-K04'] }],
-        'FB711-E05': [{ id: 'c5', text: 'Ölçüt 5', points: 15, return_card_ids: ['FB711-K05'] }],
-        'FB711-E06': [{ id: 'c6', text: 'Ölçüt 6', points: 15, return_card_ids: ['FB711-K06'] }],
-        'FB711-M01': [{ id: 'c7', text: 'Ölçüt 7', points: 10, return_card_ids: ['FB711-K07'] }]
+        'FB711-V6-E01': [{ id: 'c1', text: 'Ölçüt 1', points: 15, return_card_ids: ['FB711-V6-K01'] }],
+        'FB711-V6-E02': [{ id: 'c2', text: 'Ölçüt 2', points: 15, return_card_ids: ['FB711-V6-K02'] }],
+        'FB711-V6-E03': [{ id: 'c3', text: 'Ölçüt 3', points: 15, return_card_ids: ['FB711-V6-K03'] }],
+        'FB711-V6-E04': [{ id: 'c4', text: 'Ölçüt 4', points: 15, return_card_ids: ['FB711-V6-K04'] }],
+        'FB711-V6-E05': [{ id: 'c5', text: 'Ölçüt 5', points: 15, return_card_ids: ['FB711-V6-K05'] }],
+        'FB711-V6-E06': [{ id: 'c6', text: 'Ölçüt 6', points: 15, return_card_ids: ['FB711-V6-K06'] }],
+        'FB711-V6-M01': [{ id: 'c7', text: 'Ölçüt 7', points: 10, return_card_ids: ['FB711-V6-K07'] }]
       };
       const selectedCriteria = {
-        'FB711-E01': ['c1'],
-        'FB711-E02': ['c2'],
-        'FB711-E03': ['c3'],
-        'FB711-E04': ['c4'],
-        'FB711-E05': ['c5'],
-        'FB711-E06': ['c6'],
-        'FB711-M01': ['c7']
+        'FB711-V6-E01': ['c1'],
+        'FB711-V6-E02': ['c2'],
+        'FB711-V6-E03': ['c3'],
+        'FB711-V6-E04': ['c4'],
+        'FB711-V6-E05': ['c5'],
+        'FB711-V6-E06': ['c6'],
+        'FB711-V6-M01': ['c7']
       };
       const mockState = {
         history: {},

@@ -2,8 +2,9 @@ import { test, expect } from '@playwright/test';
 test('Marka, müfredat, modül dengesi ve ikon erişimi', async ({page},info)=>{
  await page.goto('/');
  await expect(page).toHaveTitle('FenUp X | Fen Bilimleri Platformu');
- await expect(page.locator('.curriculum-label')).toHaveText('Türkiye Yüzyılı Maarif Modeli');
- await expect(page.locator('.main-subtitle')).toHaveText('5, 6 ve 7. sınıf fen bilimleri öğrenme çıktılarına göre hazırlanan yarışmalar, etkileşimli deneyler ve yazılı provaları.');
+ await expect(page.locator('.curriculum-label')).toHaveText('Maarif Modeli’ne uygun');
+ await expect(page.locator('.main-title')).toHaveText('Fen bilimlerini keşfet!');
+ await expect(page.locator('.main-subtitle')).toHaveText('5, 6 ve 7. sınıflar için');
  expect(await page.locator('.brand-x').evaluate(el=>getComputedStyle(el).color)).toBe('rgb(255, 128, 107)');
  for(const selector of ['.site-brand-link','.curriculum-label','.main-menu-grid', '#btn-oyun-modulu','#btn-deney-modulu','#btn-yazili-modulu']) {
   const b=await page.locator(selector).boundingBox();expect(b.x).toBeGreaterThanOrEqual(0);expect(b.x+b.width).toBeLessThanOrEqual(page.viewportSize().width+1);
@@ -38,4 +39,26 @@ test('Marka, müfredat, modül dengesi ve ikon erişimi', async ({page},info)=>{
  expect([...data.subarray(0,4)]).toEqual([0,0,1,0]);
  expect(data.readUInt16LE(4)).toBe(6);
  expect((await page.request.get('/apple-touch-icon.png')).headers()['content-type']).toContain('image/png');
- });
+ await expect(page.locator('meta[name="apple-mobile-web-app-title"]')).toHaveAttribute('content', 'FenUp X');
+ await expect(page.locator('meta[name="application-name"]')).toHaveAttribute('content', 'FenUp X');
+});
+
+test('Mobil alt bilgi (footer) bilgilendirme açılır butonu ve erişilebilirlik', async ({page}, info)=>{
+ await page.addInitScript(() => localStorage.setItem('fenupx_cookie_consent', 'accepted'));
+ await page.goto('/');
+ const isMobile = (page.viewportSize()?.width || 1000) <= 768;
+ const btnInfo = page.locator('#btn-footer-info');
+ const dropdown = page.locator('#footer-info-dropdown');
+ if (isMobile) {
+  await expect(btnInfo).toBeVisible();
+  await expect(btnInfo).toHaveAttribute('aria-expanded', 'false');
+  await btnInfo.click();
+  await expect(btnInfo).toHaveAttribute('aria-expanded', 'true');
+  await expect(dropdown).toHaveClass(/is-open/);
+  await page.keyboard.press('Escape');
+  await expect(btnInfo).toHaveAttribute('aria-expanded', 'false');
+ } else {
+  await expect(dropdown).toBeVisible();
+  await expect(page.locator('.policy-links .btn-kvkk-open')).toBeVisible();
+ }
+});

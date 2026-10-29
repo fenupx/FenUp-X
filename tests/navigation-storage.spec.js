@@ -338,34 +338,34 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     expect([...repetitionMetrics.leastSeenPick].sort()).toEqual([...repetitionMetrics.firstRunIds].sort());
     expect([...repetitionMetrics.oldestPick].sort()).toEqual([...repetitionMetrics.firstRunIds].sort());
 
-    // (h) Sentetik V2 kaydı varken yeni çalışma gerçekten V6 kullanıyor, Devam Et ise V2 kaydını koruyor
-    const v2Data = await (await page.request.get('/data/exam/content-v2/pilot_7_senaryo2.json')).json();
+    // (h) Kayıtlı V6 çalışması varken Devam Et ile soru ve cevap konumu korunur; yeni çalışma 1. kartı açar
     const v6Data = await (await page.request.get('/data/exam/content-v6/pilot_7_senaryo2.json')).json();
-    const v2Ids = v2Data.questions.slice(0, 7).map(q => q.id);
+    const v6Ids = v6Data.questions.slice(0, 7).map(q => q.id);
 
-    await page.evaluate(({ v2Ids }) => {
+    await page.evaluate(({ v6Ids }) => {
       localStorage.setItem('fenupx_exam_pilot_v1', JSON.stringify({
-        history: { [v2Ids[0]]: { count: 1, last: 1000 } },
+        history: { [v6Ids[0]]: { count: 1, last: 1000 } },
         hasSelectedScope: true,
         currentStep: 'practice',
         studyCardIdx: 4,
+        migratedToV6: true,
         savedStudy: {
           cardIdx: 4,
-          totalCards: 26,
-          contentRevision: '2.0.0',
+          totalCards: 34,
+          contentRevision: '6.0.0',
           visitedCards: ['C01', 'C02', 'C03', 'C04', 'C05']
         },
         attempt: {
-          contentRevision: '2.0.0',
-          rubricRevision: '2.0.0',
-          routeKey: 'synthetic-v2-attempt',
-          ids: v2Ids,
-          questionPoints: Object.fromEntries(v2Ids.map((id, i) => [id, i === 0 ? 10 : 15])),
+          contentRevision: '6.0.0',
+          rubricRevision: '1',
+          routeKey: 'saved-v6-attempt',
+          ids: v6Ids,
+          questionPoints: Object.fromEntries(v6Ids.map((id, i) => [id, i === 0 ? 10 : 15])),
           totalPoints: 100,
           profile: 'dengeli',
           solveMode: 'ekranda',
           activeQuestionIndex: 2,
-          answers: { [v2Ids[2]]: 'Sentetik V2 Cevabı' },
+          answers: { [v6Ids[2]]: 'Kayıtlı V6 Cevabı' },
           evaluations: {},
           selectedCriteria: {},
           evaluatedQuestions: {},
@@ -373,14 +373,14 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
           finished: false
         }
       }));
-    }, { v2Ids });
+    }, { v6Ids });
 
     await page.locator('#btn-yazili-modulu').click();
     await expect(page.locator('#exam-view-choice')).toBeVisible();
     await expect(page.locator('#choice-study-count')).toContainText('34 bilgi kartı');
-    await expect(page.locator('#saved-work-version-note')).toContainText('V6');
+    await expect(page.locator('#choice-saved-work-card')).toBeVisible();
 
-    // Kayıt listesinin (hem konu hem prova + V2 sürüm notu görünürken) dikey ve yatay görünümde taşmadığını ve 48x48 dokunma hedefini doğrula
+    // Kayıt listesinin dikey ve yatay görünümde taşmadığını ve 48x48 dokunma hedefini doğrula
     const checkSavedLayout = async () => {
       const metrics = await page.evaluate(() => {
         const sec = document.getElementById('choice-saved-works-section');
@@ -414,16 +414,16 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
       await page.setViewportSize(vp);
     }
 
-    // Eski V2 prova kaydı korunurken Yeni Konu Çalışması V6 ve 1. kartı açmalı
+    // Kayıtlı V6 provasına Devam Et dediğimizde 3. soru ve cevabı açılmalı
+    await page.locator('#btn-resume-saved-work').click();
+    await expect(page.locator('#practice-current-indicator')).toContainText('Soru 3 / 7');
+    await expect(page.locator('#practice-text-ans')).toHaveValue('Kayıtlı V6 Cevabı');
+    await expect(page.locator('#practice-active-box')).toContainText(v6Data.questions[2].stem);
+
+    // Seçime dönüp Yeni Konu Çalışması seçildiğinde 1. kart açılmalı
+    await page.locator('#btn-exam-step-back').click();
     await page.locator('#btn-choice-go-study').click();
     await expect(page.locator('#scene-yazili')).toHaveClass(/content-v6/);
     await expect(page.locator('.exam-card-title')).toHaveText(v6Data.cards[0].title);
-
-    // Seçime dönüp V2 provasına Devam Et dediğimizde V2 sorusu ve cevabı (Soru 3) açılmalı
-    await page.locator('#btn-study-back-choice').click();
-    await page.locator('#btn-resume-saved-work').click();
-    await expect(page.locator('#practice-current-indicator')).toContainText('Soru 3 / 7');
-    await expect(page.locator('#practice-text-ans')).toHaveValue('Sentetik V2 Cevabı');
-    await expect(page.locator('#practice-active-box')).toContainText(v2Data.questions[2].stem);
   });
 });

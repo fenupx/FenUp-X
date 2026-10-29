@@ -9,8 +9,8 @@
 'use strict';
 
 const CONTENT_REVISION = '6.0.0';
-const CONTENT_PATHS = { '1': 'data/exam/', '2.0.0': 'data/exam/content-v2/', '3.0.0': 'data/exam/content-v3/', '6.0.0': 'data/exam/content-v6/' };
-let ASSET_BASE = 'data/exam/';
+const CONTENT_PATHS = { '6.0.0': 'data/exam/content-v6/' };
+let ASSET_BASE = 'data/exam/content-v6/';
 let loadedRevision = null;
 const dataVersions = new Map();
 const resolvedDataCache = new Map();
@@ -40,7 +40,9 @@ function createDefaultState() {
         returnToSummary: false,
         reviewingEval: false,
         hasSelectedScope: false,
-        studyPlanOpen: typeof window !== 'undefined' && window.innerWidth > 820 && window.innerHeight > 520
+        studyPlanOpen: typeof window !== 'undefined' && window.innerWidth > 820 && window.innerHeight > 520,
+        migrationNotice: null,
+        migratedToV6: false
     };
 }
 
@@ -160,6 +162,40 @@ function loadStateFromStorage() {
                         }
                     });
                 }
+            }
+
+            // Idempotent Migration for Legacy Content (V1 / V2 / V3 -> V6)
+            state.migratedToV6 = !!parsed.migratedToV6;
+            if (!parsed.migratedToV6) {
+                let hadUnfinishedLegacy = false;
+
+                // Unfinished study with old content revision
+                if (state.savedStudy && state.savedStudy.contentRevision && state.savedStudy.contentRevision !== CONTENT_REVISION) {
+                    hadUnfinishedLegacy = true;
+                    state.savedStudy = null;
+                }
+
+                // Attempt with old content revision
+                if (state.attempt && state.attempt.contentRevision && state.attempt.contentRevision !== CONTENT_REVISION) {
+                    const isFinished = state.attempt.finished || state.attempt.status === 'completed';
+                    if (!isFinished) {
+                        hadUnfinishedLegacy = true;
+                        state.attempt = null;
+                    } else {
+                        // Finished legacy attempt: preserve as read-only summary archive
+                        state.attempt.isArchivedLegacy = true;
+                        state.attempt.contentRevision = CONTENT_REVISION;
+                    }
+                }
+
+                if (hadUnfinishedLegacy) {
+                    state.migrationNotice = 'İçerikler yenilendi. Yeni bir çalışma başlatabilirsin.';
+                    if (['study', 'practice', 'eval'].includes(state.currentStep)) {
+                        state.currentStep = 'choice';
+                    }
+                }
+                state.migratedToV6 = true;
+                saveState();
             }
         }
     } catch (e) {
@@ -507,9 +543,8 @@ function applyLoadedData(revision, incoming) {
     loadedRevision = revision;
     const contentScene = $('scene-yazili');
     if (contentScene) {
-        contentScene.classList.toggle('content-v2', revision !== '1');
-        contentScene.classList.toggle('content-v3', revision === '3.0.0');
-        contentScene.classList.toggle('content-v6', revision === '6.0.0');
+        contentScene.classList.remove('content-v2', 'content-v3');
+        contentScene.classList.add('content-v6');
     }
     CARDS = DATA.cards || [];
     QUESTIONS = DATA.questions || [];
@@ -550,26 +585,28 @@ function applyLoadedData(revision, incoming) {
 }
 
 async function loadData(revision = CONTENT_REVISION, showError = true) {
-    if (DATA && loadedRevision === revision) return true;
+    const targetRev = CONTENT_PATHS[revision] ? revision : CONTENT_REVISION;
+    if (DATA && loadedRevision === targetRev) return true;
     try {
-        const base = CONTENT_PATHS[revision];
-        if (!base) throw new Error(`Bilinmeyen içerik sürümü: ${revision}`);
-        if (!dataVersions.has(revision)) {
-            dataVersions.set(revision, fetch(base + 'pilot_7_senaryo2.json').then(async res => {
+        const base = CONTENT_PATHS[targetRev];
+        if (!base) throw new Error(`Bilinmeyen içerik sürümü: ${targetRev}`);
+        if (!dataVersions.has(targetRev)) {
+            dataVersions.set(targetRev, fetch(base + 'pilot_7_senaryo2.json').then(async res => {
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
-                if (revision === '3.0.0' || revision === '6.0.0') {
+                try {
                     const credits = await fetch(base + 'GORSEL_KAYNAKLARI.json');
-                    if (!credits.ok) throw new Error(`Görsel kaynakları HTTP ${credits.status}`);
-                    data.visualCredits = await credits.json();
-                }
-                resolvedDataCache.set(revision, data);
+                    if (credits.ok) {
+                        data.visualCredits = await credits.json();
+                    }
+                } catch (_) {}
+                resolvedDataCache.set(targetRev, data);
                 return data;
             }));
         }
-        const incoming = await dataVersions.get(revision);
-        resolvedDataCache.set(revision, incoming);
-        return applyLoadedData(revision, incoming);
+        const incoming = await dataVersions.get(targetRev);
+        resolvedDataCache.set(targetRev, incoming);
+        return applyLoadedData(targetRev, incoming);
     } catch (err) {
         console.error('Yazılı verisi yüklenemedi:', err);
         dataVersions.delete(revision);
@@ -711,7 +748,7 @@ function updateBackControls() {
     const review = step === 'study' && state.returnToSummary;
     const button = $('btn-exam-step-back');
     if (button) {
-        button.textContent = review ? '← Çalışma Özeti' : (['study', 'practice', 'eval'].includes(step) ? '← Çalışma Seçimi' : '← Geri');
+        button.textContent = review ? '← Çalışma Özeti' : (['study', 'practice', 'eval'].includes(step) ? '← Çalışma Seçimi' : (step === 'scope' ? '← Ana Sayfa' : '← Geri'));
         button.onclick = () => {
             if (step === 'scope') window.returnToHome?.();
             else backStep(review ? 'summary' : step === 'choice' ? 'scope' : 'choice');
@@ -806,6 +843,19 @@ function renderChoice() {
             saveState();
             backStep('scope');
         };
+    }
+
+    // Idempotent V6 Geçiş Bildirimi
+    const noticeEl = $('exam-choice-migration-notice');
+    if (noticeEl) {
+        if (state.migrationNotice) {
+            noticeEl.textContent = state.migrationNotice;
+            noticeEl.style.display = 'block';
+            state.migrationNotice = null;
+            saveState();
+        } else {
+            noticeEl.style.display = 'none';
+        }
     }
 
     const btnStudy = $('btn-choice-go-study');

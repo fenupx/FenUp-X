@@ -121,5 +121,17 @@ test.describe('Üst Başlık ve Ana Sayfa Butonu Örtüşme & Tıklanabilirlik Z
     // Ana sayfaya dönülmeli
     await expect(page.locator('#scene-home')).toBeVisible();
   });
+
+  test('Ana sayfa mobil üst boşluk header altından ilk içeriğe ~16-24px olmalı', async ({ page }) => {
+    await page.goto('/');
+    const headerBox = await page.locator('.top-header').boundingBox();
+    const firstContentBox = await page.locator('#scene-home .curriculum-label').boundingBox();
+    if (headerBox && firstContentBox) {
+      const headerBottom = headerBox.y + headerBox.height;
+      const gap = firstContentBox.y - headerBottom;
+      expect(gap).toBeGreaterThanOrEqual(14);
+      expect(gap).toBeLessThanOrEqual(28);
+    }
+  });
 });
 

@@ -223,6 +223,7 @@ test('4 Galeri Sorusu (2 Gerçek Fotoğraf), PDF ve Soru İnceleme', async ({ pa
     await page.locator('#btn-print-preview-download-pdf').click();
     const file = await download;
     expect(file.suggestedFilename()).toContain('.pdf');
+    await file.saveAs('tests/artifacts/v6-downloaded-exam.pdf');
 
     // Kapatma
     await page.locator('#btn-print-preview-close').click();
