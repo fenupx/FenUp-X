@@ -39,7 +39,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=2026102820">
-    <link rel="stylesheet" href="exam.css?v=2026102902">
+    <link rel="stylesheet" href="exam.css?v=2026102903">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -4174,24 +4174,57 @@
                 </div>
             </div>
 
-            <!-- İkincil Kart: Kayıtlı Çalışmaya Devam Et (Varsa Gösterilir) -->
-            <div id="choice-saved-attempt-card" class="choice-saved-attempt-card" style="display: none;">
-                <div class="saved-attempt-content">
-                    <div class="saved-attempt-icon"><i class="fas fa-clock-rotate-left"></i></div>
-                    <div class="saved-attempt-body">
-                        <div class="saved-attempt-eyebrow">Kayıtlı Çalışma Bulundu</div>
-                        <h4 id="saved-attempt-title">Kayıtlı Çalışmana Devam Et</h4>
-                        <p id="saved-attempt-desc">Önceki oturumunda girdiğin cevaplar ve çalışma durumun bu tarayıcıda saklanıyor.</p>
-                        <div class="saved-attempt-meta" id="saved-attempt-meta">
-                            <span class="saved-attempt-pill" id="saved-attempt-badge"><i class="fas fa-tasks"></i> 3 / 7 Yanıtlandı</span>
-                            <span class="saved-attempt-pill subtle" id="saved-attempt-mode"><i class="fas fa-sliders-h"></i> Dengeli · Ekranda</span>
+            <!-- İkincil Bölüm: Kaldığın Çalışmalar (Varsa Gösterilir) -->
+            <div id="choice-saved-works-section" class="choice-saved-works-section is-hidden" style="display: none;" aria-label="Kaldığın Çalışmalar">
+                <div class="choice-saved-works-header">
+                    <h4 class="choice-saved-works-heading"><i class="fas fa-clock-rotate-left"></i> Kaldığın Çalışmalar</h4>
+                    <p class="choice-saved-works-sub">Yeni bir çalışma başlatabilir veya önceki kaydından kaldığın yerden devam edebilirsin.</p>
+                </div>
+
+                <div class="choice-saved-works-list">
+                    <!-- Kayıtlı Konu Çalışması Kartı -->
+                    <div id="choice-saved-study-card" class="choice-saved-attempt-card choice-saved-study-card is-hidden" style="display: none;">
+                        <div class="saved-attempt-content">
+                            <div class="saved-attempt-icon study-saved-icon"><i class="fas fa-book-open"></i></div>
+                            <div class="saved-attempt-body">
+                                <div class="saved-attempt-eyebrow" id="saved-study-eyebrow">7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2 · Konu Çalışması</div>
+                                <h4 id="saved-study-title">Devam Eden Konu Çalışması</h4>
+                                <p id="saved-study-desc">Önceki konu çalışmana kaldığın karttan devam edebilirsin.</p>
+                                <p id="saved-study-version-note" class="saved-version-note is-hidden" style="display: none;"></p>
+                                <div class="saved-attempt-meta" id="saved-study-meta">
+                                    <span class="saved-attempt-pill" id="saved-study-badge"><i class="fas fa-clone"></i> Kart 1 / 24</span>
+                                    <span class="saved-attempt-pill subtle" id="saved-study-topic"><i class="fas fa-tag"></i> FB.7.1.1.1</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="saved-attempt-actions">
+                            <button type="button" id="btn-resume-saved-study" class="exam-btn-secondary">
+                                <i class="fas fa-play"></i> <span id="btn-resume-saved-study-label">Devam Et</span>
+                            </button>
                         </div>
                     </div>
-                </div>
-                <div class="saved-attempt-actions">
-                    <button type="button" id="btn-resume-saved-attempt" class="exam-btn-primary">
-                        <i class="fas fa-play"></i> <span id="btn-resume-saved-label">Devam Et</span>
-                    </button>
+
+                    <!-- Kayıtlı Yazılı Provası Kartı -->
+                    <div id="choice-saved-attempt-card" class="choice-saved-attempt-card is-hidden" style="display: none;">
+                        <div class="saved-attempt-content">
+                            <div class="saved-attempt-icon"><i class="fas fa-file-signature"></i></div>
+                            <div class="saved-attempt-body">
+                                <div class="saved-attempt-eyebrow" id="saved-attempt-eyebrow">7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2 · Yazılı Provası</div>
+                                <h4 id="saved-attempt-title">Kayıtlı Çalışmana Devam Et</h4>
+                                <p id="saved-attempt-desc">Önceki oturumunda girdiğin cevaplar ve çalışma durumun bu tarayıcıda saklanıyor.</p>
+                                <p id="saved-attempt-version-note" class="saved-version-note is-hidden" style="display: none;"></p>
+                                <div class="saved-attempt-meta" id="saved-attempt-meta">
+                                    <span class="saved-attempt-pill" id="saved-attempt-badge"><i class="fas fa-tasks"></i> 3 / 7 Yanıtlandı</span>
+                                    <span class="saved-attempt-pill subtle" id="saved-attempt-mode"><i class="fas fa-sliders-h"></i> Dengeli · Ekranda</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="saved-attempt-actions">
+                            <button type="button" id="btn-resume-saved-attempt" class="exam-btn-secondary">
+                                <i class="fas fa-play"></i> <span id="btn-resume-saved-label">Devam Et</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -4637,8 +4670,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
-    <script type="module" src="exam-engine.js?v=2026102902"></script>
+    <script type="module" src="exam-engine.js?v=2026102903"></script>
     <script type="module" src="lab-engine.js?v=2026102817"></script>
-    <script type="module" src="script.js?v=2026102819"></script>
+    <script type="module" src="script.js?v=2026102903"></script>
 </body>
 </html>

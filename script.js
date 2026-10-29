@@ -462,7 +462,12 @@ const navigation = (() => {
         if (replaying) return;
         const route = snapshot();
         if (same(history.state?.fenupx?.route, route)) return;
-        if (!replace) index++;
+        if (!replace) {
+            index++;
+            for (const k of entries.keys()) {
+                if (k > index) entries.delete(k);
+            }
+        }
         entries.set(index, route);
         history[replace ? 'replaceState' : 'pushState']({ fenupx: { v: 1, index, route } }, '', url(route));
     }
@@ -661,12 +666,12 @@ let activeMode = "", selectedGrade = null, selectedUnit = null;
 let usedQuestions = []; 
 
 function returnToHome() {
-    if (navigation.backTo({ scene: 'scene-home' })) return;
-    closeMobileMenu();
-    document.querySelector('.top-header')?.classList.remove('module-active');
     if (window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
         window.FenUpExam.closeExamView();
     }
+    if (navigation.backTo({ scene: 'scene-home' })) return;
+    closeMobileMenu();
+    document.querySelector('.top-header')?.classList.remove('module-active');
     if (window.FenUpLab && typeof window.FenUpLab.closeLabView === "function") {
         window.FenUpLab.closeLabView();
     }
@@ -738,6 +743,9 @@ const btnYaziliModulu = document.getElementById('btn-yazili-modulu');
 if(btnYaziliModulu) btnYaziliModulu.onclick = () => {
     const sceneYazili = document.getElementById('scene-yazili');
     if (sceneYazili) {
+        if (window.FenUpExam && typeof window.FenUpExam.prepareModuleEntry === "function") {
+            window.FenUpExam.prepareModuleEntry();
+        }
         switchScene(scenes.home, sceneYazili);
         if (window.FenUpExam && typeof window.FenUpExam.openExamView === "function") {
             window.FenUpExam.openExamView();

@@ -110,7 +110,8 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
     await criterionItems.first().click();
     // Puan canlı artmalı (> 0)
     const scoreAfterFirst = await liveScoreEl.innerText();
-    expect(scoreAfterFirst).not.toContain('0 /');
+    expect(scoreAfterFirst.trim()).not.toMatch(/^0\s*\//);
+    expect(parseInt(scoreAfterFirst, 10)).toBeGreaterThan(0);
 
     // Kalan tüm ölçütleri de işaretle (Soru 1 tam puan)
     for (let i = 1; i < cbCount; i++) {

@@ -13,6 +13,7 @@ const CONTENT_PATHS = { '1': 'data/exam/', '2.0.0': 'data/exam/content-v2/', '3.
 let ASSET_BASE = 'data/exam/';
 let loadedRevision = null;
 const dataVersions = new Map();
+const resolvedDataCache = new Map();
 const STORAGE_KEY = 'fenupx_exam_pilot_v1';
 
 const names = { easy: 'Kolay', medium: 'Orta', hard: 'Zor' };
@@ -22,20 +23,28 @@ let CARDS = [];
 let QUESTIONS = [];
 let profiles = {};
 let storageOK = true;
+let lastSavedRaw = null;
 
-let state = {
-    history: {},
-    attempt: null,
-    profileRuns: {},
-    currentStep: 'scope', // 'scope' | 'choice' | 'study' | 'practice' | 'eval' | 'summary'
-    studyCardIdx: 0,
-    studyMode: 'free', // 'free' | 'review'
-    reviewCardIds: [],
-    returnToSummary: false,
-    reviewingEval: false,
-    hasSelectedScope: false,
-    studyPlanOpen: typeof window !== 'undefined' && window.innerWidth > 820 && window.innerHeight > 520
-};
+function createDefaultState() {
+    return {
+        history: {},
+        attempt: null,
+        savedStudy: null,
+        activeStudyRevision: CONTENT_REVISION,
+        studySessionIsFresh: false,
+        profileRuns: {},
+        currentStep: 'scope', // 'scope' | 'choice' | 'study' | 'practice' | 'eval' | 'summary'
+        studyCardIdx: 0,
+        studyMode: 'free', // 'free' | 'review'
+        reviewCardIds: [],
+        returnToSummary: false,
+        reviewingEval: false,
+        hasSelectedScope: false,
+        studyPlanOpen: typeof window !== 'undefined' && window.innerWidth > 820 && window.innerHeight > 520
+    };
+}
+
+let state = createDefaultState();
 
 let currentProfile = 'dengeli';
 let currentSolveMode = 'ekranda'; // 'ekranda' | 'kagitta'
@@ -55,69 +64,99 @@ const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({
 }[c]));
 
 // LocalStorage Güvenli Yükleme ve Sürümlü Veri Adaptasyonu
-if (typeof localStorage !== 'undefined') {
+function loadStateFromStorage() {
+    if (typeof localStorage === 'undefined') return;
     try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (raw) {
-            const parsed = JSON.parse(raw);
-            if (parsed && typeof parsed.history === 'object') {
-                state.history = parsed.history || {};
-                state.profileRuns = parsed.profileRuns || {};
-                state.currentStep = parsed.currentStep || 'scope';
-                state.studyCardIdx = typeof parsed.studyCardIdx === 'number' ? parsed.studyCardIdx : 0;
-                state.studyMode = parsed.studyMode || 'free';
-                state.reviewCardIds = Array.isArray(parsed.reviewCardIds) ? parsed.reviewCardIds : [];
-                state.returnToSummary = !!parsed.returnToSummary;
-                state.reviewingEval = !!parsed.reviewingEval;
-                state.hasSelectedScope = !!parsed.hasSelectedScope;
-                state.studyPlanOpen = (typeof parsed.studyPlanOpen === 'boolean') ? parsed.studyPlanOpen : (typeof window !== 'undefined' ? window.innerWidth > 820 : true);
+        lastSavedRaw = raw;
+        state = createDefaultState();
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+            state.history = (parsed.history && typeof parsed.history === 'object') ? parsed.history : {};
+            state.profileRuns = (parsed.profileRuns && typeof parsed.profileRuns === 'object') ? parsed.profileRuns : {};
+            state.currentStep = parsed.currentStep || 'scope';
+            state.studyCardIdx = typeof parsed.studyCardIdx === 'number' ? parsed.studyCardIdx : 0;
+            state.studyMode = parsed.studyMode || 'free';
+            state.reviewCardIds = Array.isArray(parsed.reviewCardIds) ? parsed.reviewCardIds : [];
+            state.returnToSummary = !!parsed.returnToSummary;
+            state.reviewingEval = !!parsed.reviewingEval;
+            state.hasSelectedScope = !!parsed.hasSelectedScope;
+            state.studyPlanOpen = (typeof parsed.studyPlanOpen === 'boolean') ? parsed.studyPlanOpen : (typeof window !== 'undefined' ? window.innerWidth > 820 : true);
+            state.activeStudyRevision = parsed.activeStudyRevision || parsed.savedStudy?.contentRevision || CONTENT_REVISION;
+            state.studySessionIsFresh = !!parsed.studySessionIsFresh;
 
-                if (parsed.attempt && Array.isArray(parsed.attempt.ids)) {
-                    state.attempt = {
-                        contentRevision: parsed.attempt.contentRevision || '1',
-                        rubricRevision: parsed.attempt.rubricRevision || '1',
-                        routeKey: parsed.attempt.routeKey || crypto.randomUUID(),
-                        version: parsed.attempt.version || 2,
-                        scoringVersion: parsed.attempt.scoringVersion || 2,
-                        evaluationVersion: parsed.attempt.evaluationVersion || 1,
-                        ids: parsed.attempt.ids,
-                        questionPoints: parsed.attempt.questionPoints || {},
-                        totalPoints: parsed.attempt.totalPoints || 100,
-                        profile: parsed.attempt.profile || 'dengeli',
-                        repeats: parsed.attempt.repeats || 0,
-                        solveMode: parsed.attempt.solveMode || 'ekranda',
-                        activeQuestionIndex: parsed.attempt.activeQuestionIndex || 0,
-                        evalQuestionIndex: parsed.attempt.evalQuestionIndex || 0,
-                        answers: parsed.attempt.answers || {},
-                        evaluations: parsed.attempt.evaluations || {},
-                        revealed: parsed.attempt.revealed || {},
-                        criteriaMap: parsed.attempt.criteriaMap || null,
-                        selectedCriteria: parsed.attempt.selectedCriteria || {},
-                        evaluatedQuestions: parsed.attempt.evaluatedQuestions || {},
-                        score: typeof parsed.attempt.score === 'number' ? parsed.attempt.score : undefined,
-                        finished: !!parsed.attempt.finished,
-                        status: parsed.attempt.status || (parsed.attempt.finished ? 'completed' : 'in_progress'),
-                        visitedCards: Array.isArray(parsed.attempt.visitedCards) ? parsed.attempt.visitedCards : []
-                    };
+            if (parsed.savedStudy && typeof parsed.savedStudy === 'object' && typeof parsed.savedStudy.cardIdx === 'number') {
+                const rev = parsed.savedStudy.contentRevision || CONTENT_REVISION;
+                state.savedStudy = {
+                    cardIdx: Math.max(0, parsed.savedStudy.cardIdx),
+                    totalCards: parsed.savedStudy.totalCards || (rev === '3.0.0' ? 24 : 26),
+                    cardId: parsed.savedStudy.cardId || '',
+                    cardTitle: parsed.savedStudy.cardTitle || '',
+                    outcomeId: parsed.savedStudy.outcomeId || '',
+                    contentRevision: rev,
+                    visitedCards: Array.isArray(parsed.savedStudy.visitedCards) ? parsed.savedStudy.visitedCards : [],
+                    updatedAt: parsed.savedStudy.updatedAt || Date.now()
+                };
+            } else if ((typeof parsed.studyCardIdx === 'number' && parsed.studyCardIdx > 0) || (parsed.currentStep === 'study' && parsed.studyMode !== 'review')) {
+                const rev = parsed.studyRevision || parsed.attempt?.contentRevision || CONTENT_REVISION;
+                state.savedStudy = {
+                    cardIdx: Math.max(0, typeof parsed.studyCardIdx === 'number' ? parsed.studyCardIdx : 0),
+                    totalCards: rev === '3.0.0' ? 24 : 26,
+                    cardId: '',
+                    cardTitle: '',
+                    outcomeId: '',
+                    contentRevision: rev,
+                    visitedCards: Array.isArray(parsed.attempt?.visitedCards) ? [...parsed.attempt.visitedCards] : [],
+                    updatedAt: Date.now()
+                };
+            }
 
-                    // Eski 'scores' yapısını yeni 3-seçenekli öz değerlendirmeye uyarla
-                    if (parsed.attempt.scores && (!parsed.attempt.evaluations || Object.keys(parsed.attempt.evaluations).length === 0)) {
-                        state.attempt.ids.forEach(qid => {
-                            let totalQScore = 0;
-                            let maxQScore = 0;
-                            Object.keys(parsed.attempt.scores).forEach(k => {
-                                if (k.startsWith(qid + '|')) {
-                                    totalQScore += Number(parsed.attempt.scores[k] || 0);
-                                    maxQScore += 10;
-                                }
-                            });
-                            if (maxQScore > 0) {
-                                if (totalQScore >= 8) state.attempt.evaluations[qid] = 'tam';
-                                else if (totalQScore >= 4) state.attempt.evaluations[qid] = 'kismen';
-                                else state.attempt.evaluations[qid] = 'yapamadim';
+            if (parsed.attempt && Array.isArray(parsed.attempt.ids)) {
+                state.attempt = {
+                    contentRevision: parsed.attempt.contentRevision || '1',
+                    rubricRevision: parsed.attempt.rubricRevision || '1',
+                    routeKey: parsed.attempt.routeKey || crypto.randomUUID(),
+                    version: parsed.attempt.version || 2,
+                    scoringVersion: parsed.attempt.scoringVersion || 2,
+                    evaluationVersion: parsed.attempt.evaluationVersion || 1,
+                    ids: parsed.attempt.ids,
+                    questionPoints: parsed.attempt.questionPoints || {},
+                    totalPoints: parsed.attempt.totalPoints || 100,
+                    profile: parsed.attempt.profile || 'dengeli',
+                    repeats: parsed.attempt.repeats || 0,
+                    solveMode: parsed.attempt.solveMode || 'ekranda',
+                    activeQuestionIndex: parsed.attempt.activeQuestionIndex || 0,
+                    evalQuestionIndex: parsed.attempt.evalQuestionIndex || 0,
+                    answers: parsed.attempt.answers || {},
+                    evaluations: parsed.attempt.evaluations || {},
+                    revealed: parsed.attempt.revealed || {},
+                    criteriaMap: parsed.attempt.criteriaMap || null,
+                    selectedCriteria: parsed.attempt.selectedCriteria || {},
+                    evaluatedQuestions: parsed.attempt.evaluatedQuestions || {},
+                    score: typeof parsed.attempt.score === 'number' ? parsed.attempt.score : undefined,
+                    finished: !!parsed.attempt.finished,
+                    status: parsed.attempt.status || (parsed.attempt.finished ? 'completed' : 'in_progress'),
+                    visitedCards: Array.isArray(parsed.attempt.visitedCards) ? parsed.attempt.visitedCards : []
+                };
+
+                // Eski 'scores' yapısını yeni 3-seçenekli öz değerlendirmeye uyarla
+                if (parsed.attempt.scores && (!parsed.attempt.evaluations || Object.keys(parsed.attempt.evaluations).length === 0)) {
+                    state.attempt.ids.forEach(qid => {
+                        let totalQScore = 0;
+                        let maxQScore = 0;
+                        Object.keys(parsed.attempt.scores).forEach(k => {
+                            if (k.startsWith(qid + '|')) {
+                                totalQScore += Number(parsed.attempt.scores[k] || 0);
+                                maxQScore += 10;
                             }
                         });
-                    }
+                        if (maxQScore > 0) {
+                            if (totalQScore >= 8) state.attempt.evaluations[qid] = 'tam';
+                            else if (totalQScore >= 4) state.attempt.evaluations[qid] = 'kismen';
+                            else state.attempt.evaluations[qid] = 'yapamadim';
+                        }
+                    });
                 }
             }
         }
@@ -126,9 +165,13 @@ if (typeof localStorage !== 'undefined') {
     }
 }
 
+loadStateFromStorage();
+
 function saveState() {
     try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        const serialized = JSON.stringify(state);
+        localStorage.setItem(STORAGE_KEY, serialized);
+        lastSavedRaw = serialized;
     } catch (e) {
         storageOK = false;
     }
@@ -379,7 +422,56 @@ function formatScore(score) {
 }
 
 // --- VERİ YÜKLEME ---
-async function loadData(revision = state.attempt?.contentRevision || CONTENT_REVISION, showError = true) {
+function applyLoadedData(revision, incoming) {
+    const base = CONTENT_PATHS[revision];
+    if (!base || !incoming) return false;
+    DATA = incoming;
+    ASSET_BASE = base;
+    loadedRevision = revision;
+    const contentScene = $('scene-yazili');
+    if (contentScene) {
+        contentScene.classList.toggle('content-v2', revision !== '1');
+        contentScene.classList.toggle('content-v3', revision === '3.0.0');
+    }
+    CARDS = DATA.cards || [];
+    QUESTIONS = DATA.questions || [];
+    profiles = DATA.selection_policy?.scenario_profiles || {};
+
+    // Eski kayıtları sürümlü uyarlama: 5'in katı (10, 15, 20) standardına bir kez taşı
+    if (state.attempt && (state.attempt.contentRevision || '1') === revision && Array.isArray(state.attempt.ids)) {
+        const needsMigration = !state.attempt.finished && (!state.attempt.scoringVersion ||
+            state.attempt.scoringVersion < SCORING_POLICY.version ||
+            !state.attempt.questionPoints ||
+            Object.keys(state.attempt.questionPoints).length === 0 ||
+            Object.values(state.attempt.questionPoints).some(p => !SCORING_POLICY.allowedPoints.includes(p)));
+
+        if (needsMigration) {
+            const qs = state.attempt.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
+            if (qs.length === state.attempt.ids.length) {
+                try {
+                    state.attempt.questionPoints = calculateQuestionPoints(qs, SCORING_POLICY.targetTotal);
+                    state.attempt.totalPoints = SCORING_POLICY.targetTotal;
+                    state.attempt.scoringVersion = SCORING_POLICY.version;
+                    saveState();
+                } catch (e) {
+                    console.warn('Soru puanı migrasyon uyarısı:', e);
+                }
+            }
+        }
+
+        // Ölçüt temelli değerlendirme migrasyonu (Henüz tamamlanmamış aktif çalışmalar için)
+        if (!state.attempt.finished && (!state.attempt.evaluationVersion || state.attempt.evaluationVersion < SCORING_POLICY.evaluationVersion)) {
+            ensureAttemptCriteriaMap(state.attempt);
+            state.attempt.evaluationVersion = SCORING_POLICY.evaluationVersion;
+            state.attempt.selectedCriteria = state.attempt.selectedCriteria || {};
+            state.attempt.evaluatedQuestions = state.attempt.evaluatedQuestions || {};
+            saveState();
+        }
+    }
+    return true;
+}
+
+async function loadData(revision = CONTENT_REVISION, showError = true) {
     if (DATA && loadedRevision === revision) return true;
     try {
         const base = CONTENT_PATHS[revision];
@@ -393,77 +485,37 @@ async function loadData(revision = state.attempt?.contentRevision || CONTENT_REV
                     if (!credits.ok) throw new Error(`Görsel kaynakları HTTP ${credits.status}`);
                     data.visualCredits = await credits.json();
                 }
+                resolvedDataCache.set(revision, data);
                 return data;
             }));
         }
         const incoming = await dataVersions.get(revision);
-        DATA = incoming;
-        ASSET_BASE = base;
-        loadedRevision = revision;
-        const contentScene = $('scene-yazili');
-        if (contentScene) {
-            contentScene.classList.toggle('content-v2', revision !== '1');
-            contentScene.classList.toggle('content-v3', revision === '3.0.0');
-        }
-        CARDS = DATA.cards || [];
-        QUESTIONS = DATA.questions || [];
-        profiles = DATA.selection_policy?.scenario_profiles || {};
-
-            // Eski kayıtları sürümlü uyarlama: 5'in katı (10, 15, 20) standardına bir kez taşı
-            if (state.attempt && (state.attempt.contentRevision || '1') === revision && Array.isArray(state.attempt.ids)) {
-                const needsMigration = !state.attempt.finished && (!state.attempt.scoringVersion ||
-                    state.attempt.scoringVersion < SCORING_POLICY.version ||
-                    !state.attempt.questionPoints ||
-                    Object.keys(state.attempt.questionPoints).length === 0 ||
-                    Object.values(state.attempt.questionPoints).some(p => !SCORING_POLICY.allowedPoints.includes(p)));
-
-                if (needsMigration) {
-                    const qs = state.attempt.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
-                    if (qs.length === state.attempt.ids.length) {
-                        try {
-                            state.attempt.questionPoints = calculateQuestionPoints(qs, SCORING_POLICY.targetTotal);
-                            state.attempt.totalPoints = SCORING_POLICY.targetTotal;
-                            state.attempt.scoringVersion = SCORING_POLICY.version;
-                            saveState();
-                        } catch (e) {
-                            console.warn('Soru puanı migrasyon uyarısı:', e);
-                        }
-                    }
-                }
-
-                // Ölçüt temelli değerlendirme migrasyonu (Henüz tamamlanmamış aktif çalışmalar için)
-                if (!state.attempt.finished && (!state.attempt.evaluationVersion || state.attempt.evaluationVersion < SCORING_POLICY.evaluationVersion)) {
-                    ensureAttemptCriteriaMap(state.attempt);
-                    state.attempt.evaluationVersion = SCORING_POLICY.evaluationVersion;
-                    state.attempt.selectedCriteria = state.attempt.selectedCriteria || {};
-                    state.attempt.evaluatedQuestions = state.attempt.evaluatedQuestions || {};
-                    saveState();
-                }
+        resolvedDataCache.set(revision, incoming);
+        return applyLoadedData(revision, incoming);
+    } catch (err) {
+        console.error('Yazılı verisi yüklenemedi:', err);
+        dataVersions.delete(revision);
+        resolvedDataCache.delete(revision);
+        const container = $('scene-yazili');
+        if (container && showError) {
+            container.innerHTML = `
+                <div class="exam-header-bar">
+                    <button class="back-link btn-back-home" id="btn-exam-err-home"><i class="fas fa-arrow-left"></i> Ana Sayfaya Dön</button>
+                    <span class="exam-badge">Yükleme Hatası</span>
+                </div>
+                <div class="exam-panel">
+                    <h3 style="color:#f87171;"><i class="fas fa-exclamation-triangle"></i> İçerik Yüklenemedi</h3>
+                    <p style="color:#cbd5e1;">Yazılıya Hazırlık verileri alınırken bir ağ veya dosya okuma sorunu oluştu.</p>
+                    <button class="exam-btn-primary" onclick="window.FenUpExam.openExamView()"><i class="fas fa-redo"></i> Tekrar Dene</button>
+                </div>
+            `;
+            const btnHome = $('btn-exam-err-home');
+            if (btnHome && window.scenes?.home) {
+                btnHome.onclick = () => window.switchScene(container, window.scenes.home);
             }
-            return true;
-        } catch (err) {
-            console.error('Yazılı verisi yüklenemedi:', err);
-            dataVersions.delete(revision);
-            const container = $('scene-yazili');
-            if (container && showError) {
-                container.innerHTML = `
-                    <div class="exam-header-bar">
-                        <button class="back-link btn-back-home" id="btn-exam-err-home"><i class="fas fa-arrow-left"></i> Ana Sayfaya Dön</button>
-                        <span class="exam-badge">Yükleme Hatası</span>
-                    </div>
-                    <div class="exam-panel">
-                        <h3 style="color:#f87171;"><i class="fas fa-exclamation-triangle"></i> İçerik Yüklenemedi</h3>
-                        <p style="color:#cbd5e1;">Yazılıya Hazırlık verileri alınırken bir ağ veya dosya okuma sorunu oluştu.</p>
-                        <button class="exam-btn-primary" onclick="window.FenUpExam.openExamView()"><i class="fas fa-redo"></i> Tekrar Dene</button>
-                    </div>
-                `;
-                const btnHome = $('btn-exam-err-home');
-                if (btnHome && window.scenes?.home) {
-                    btnHome.onclick = () => window.switchScene(container, window.scenes.home);
-                }
-            }
-            return false;
         }
+        return false;
+    }
 }
 
 // --- AKIŞ MOTORU (State Machine): Senaryo Seçimi → Tercih → Konu/Prova → Değerlendirme → Özet ---
@@ -547,6 +599,13 @@ export function goToStep(step, options = {}) {
 }
 
 function saveProgress() {
+    if (typeof localStorage !== 'undefined') {
+        const currentRaw = localStorage.getItem(STORAGE_KEY);
+        if (currentRaw !== lastSavedRaw) {
+            loadStateFromStorage();
+            return;
+        }
+    }
     const a = state.attempt;
     const answer = $('practice-text-ans');
     if (a && state.currentStep === 'practice' && !setupPracticeNewMode && !a.finished && a.status === 'in_progress' && answer) {
@@ -583,6 +642,10 @@ function restoreExamRoute(route) {
     if (!['scope', 'choice', 'study', 'setup', 'practice', 'eval', 'summary'].includes(step)) step = 'scope';
     const a = state.attempt;
     if (route?.attempt && route.attempt !== a?.routeKey) step = 'choice';
+    const attemptRev = a?.contentRevision || '1';
+    if (['practice', 'eval', 'summary'].includes(step) && loadedRevision !== attemptRev && resolvedDataCache.has(attemptRev)) {
+        applyLoadedData(attemptRev, resolvedDataCache.get(attemptRev));
+    }
     const usableAttempt = a && a.ids.length === 7 && a.ids.every(id => QUESTIONS.some(q => q.id === id));
     if (['practice', 'eval', 'summary'].includes(step) && !usableAttempt) step = 'choice';
     if (!state.hasSelectedScope && step !== 'scope') step = 'scope';
@@ -593,6 +656,14 @@ function restoreExamRoute(route) {
     if (step === 'study') {
         state.returnToSummary = route?.mode === 'review' && !!a?.finished;
         state.studyMode = state.returnToSummary ? 'review' : 'free';
+        const studyRev = state.returnToSummary ? attemptRev : (state.activeStudyRevision || state.savedStudy?.contentRevision || CONTENT_REVISION);
+        if (loadedRevision !== studyRev && resolvedDataCache.has(studyRev)) {
+            applyLoadedData(studyRev, resolvedDataCache.get(studyRev));
+        }
+    } else if (['scope', 'choice', 'setup'].includes(step)) {
+        if (loadedRevision !== CONTENT_REVISION && resolvedDataCache.has(CONTENT_REVISION)) {
+            applyLoadedData(CONTENT_REVISION, resolvedDataCache.get(CONTENT_REVISION));
+        }
     }
     goToStep(step === 'setup' ? 'practice' : step, { restore: true });
 }
@@ -603,11 +674,11 @@ function bindScopeContinue() {
     btnContinue.onclick = async (e) => {
         if (e) e.preventDefault();
         try {
-            if (!DATA) {
+            if (!DATA || loadedRevision !== CONTENT_REVISION) {
                 const origHtml = btnContinue.innerHTML;
                 btnContinue.disabled = true;
                 btnContinue.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hazırlanıyor...';
-                const ok = await loadData();
+                const ok = await loadData(CONTENT_REVISION);
                 btnContinue.disabled = false;
                 btnContinue.innerHTML = origHtml;
                 if (!ok) {
@@ -629,11 +700,24 @@ function bindScopeContinue() {
 
 // 1. AŞAMA: SENARYO VE KAPSAM SEÇİMİ
 function renderScope() {
+    if (loadedRevision !== CONTENT_REVISION && resolvedDataCache.has(CONTENT_REVISION)) {
+        applyLoadedData(CONTENT_REVISION, resolvedDataCache.get(CONTENT_REVISION));
+    }
     bindScopeContinue();
 }
 
 // 2. AŞAMA: HAZIRLIK TERCİHİ
 function renderChoice() {
+    if (loadedRevision !== CONTENT_REVISION) {
+        if (resolvedDataCache.has(CONTENT_REVISION)) {
+            applyLoadedData(CONTENT_REVISION, resolvedDataCache.get(CONTENT_REVISION));
+        } else {
+            loadData(CONTENT_REVISION, false).then(ok => {
+                if (ok && state.currentStep === 'choice') renderChoice();
+            });
+        }
+    }
+
     const btnBack = $('btn-choice-change-scope');
     if (btnBack) {
         btnBack.onclick = () => {
@@ -645,49 +729,154 @@ function renderChoice() {
 
     const btnStudy = $('btn-choice-go-study');
     if (btnStudy) {
-        btnStudy.onclick = () => {
+        btnStudy.onclick = async () => {
+            if (loadedRevision !== CONTENT_REVISION) {
+                const ok = await loadData(CONTENT_REVISION);
+                if (!ok) return;
+            }
             state.studyMode = 'free';
             state.returnToSummary = false;
+            state.activeStudyRevision = CONTENT_REVISION;
+            state.studySessionIsFresh = true;
+            state.studyCardIdx = 0;
             goToStep('study');
         };
     }
 
     const btnPractice = $('btn-choice-go-practice');
     if (btnPractice) {
-        btnPractice.onclick = () => {
+        btnPractice.onclick = async () => {
+            if (loadedRevision !== CONTENT_REVISION) {
+                const ok = await loadData(CONTENT_REVISION);
+                if (!ok) return;
+            }
             setupPracticeNewMode = true;
             goToStep('practice');
         };
     }
 
-    // Dinamik konu ve soru sayaçları
+    // Dinamik konu ve soru sayaçları (Yeni başlangıçlar her zaman güncel V3 içeriğini baz alır)
+    const v3Data = resolvedDataCache.get(CONTENT_REVISION) || DATA;
     const studyCountEl = $('choice-study-count');
-    if (studyCountEl && DATA) {
-        const topicCount = DATA.outcomes ? DATA.outcomes.length : 4;
-        const cardCount = CARDS.length;
+    if (studyCountEl && v3Data) {
+        const topicCount = v3Data.outcomes ? v3Data.outcomes.length : 4;
+        const cardCount = v3Data.cards ? v3Data.cards.length : 24;
         studyCountEl.innerHTML = `<i class="fas fa-clone"></i> ${topicCount} konu · ${cardCount} bilgi kartı`;
     }
 
     const practiceCountEl = $('choice-practice-count');
-    if (practiceCountEl && DATA) {
+    if (practiceCountEl && v3Data) {
         practiceCountEl.innerHTML = `<i class="fas fa-pen-alt"></i> 7 soruluk prova`;
     }
 
-    // Varsa Kayıtlı Çalışma Kartını İkincil Olarak Sun (Kullanıcıyı zorla eski ekrana fırlatma)
+    // Kaldığın Çalışmalar Bölümü (Konu Çalışması ve Yazılı Provası ayrı durumlar olarak listelenir)
+    const savedSection = $('choice-saved-works-section');
+    const savedStudyCard = $('choice-saved-study-card');
     const savedCard = $('choice-saved-attempt-card');
+
+    const s = state.savedStudy;
+    const hasSavedStudy = !!(s && typeof s.cardIdx === 'number' && s.cardIdx >= 0 && (s.cardIdx > 0 || (Array.isArray(s.visitedCards) && s.visitedCards.length > 0)));
+    const hasSavedAttempt = !!(state.attempt && Array.isArray(state.attempt.ids) && state.attempt.ids.length === 7);
+    const anySaved = hasSavedStudy || hasSavedAttempt;
+
+    if (savedSection) {
+        savedSection.classList.toggle('is-hidden', !anySaved);
+        savedSection.style.display = anySaved ? 'block' : 'none';
+    }
+
+    if (savedStudyCard) {
+        if (hasSavedStudy) {
+            savedStudyCard.classList.remove('is-hidden');
+            savedStudyCard.style.display = 'flex';
+            const sRev = s.contentRevision || CONTENT_REVISION;
+            const sData = resolvedDataCache.get(sRev) || (loadedRevision === sRev ? DATA : null);
+            const totalCards = s.totalCards || sData?.cards?.length || (sRev === '3.0.0' ? 24 : 26);
+            const clampedIdx = Math.min(Math.max(0, s.cardIdx), totalCards - 1);
+            const cardObj = sData?.cards?.[clampedIdx] || null;
+            const cardTitle = s.cardTitle || cardObj?.title || '';
+            const outcomeId = s.outcomeId || cardObj?.outcome_id || 'Senaryo 2';
+
+            const studyEyebrowEl = $('saved-study-eyebrow');
+            const studyTitleEl = $('saved-study-title');
+            const studyDescEl = $('saved-study-desc');
+            const studyVersionNoteEl = $('saved-study-version-note');
+            const studyBadgeEl = $('saved-study-badge');
+            const studyTopicEl = $('saved-study-topic');
+            const btnResumeStudy = $('btn-resume-saved-study');
+            const btnResumeStudyLabel = $('btn-resume-saved-study-label');
+
+            if (studyEyebrowEl) studyEyebrowEl.textContent = '7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2 · Konu Çalışması';
+            if (studyTitleEl) studyTitleEl.textContent = 'Devam Eden Konu Çalışması';
+            if (studyDescEl) {
+                studyDescEl.textContent = cardTitle
+                    ? `Kaldığın konu kartı: "${cardTitle}"`
+                    : 'Önceki konu çalışmana kaldığın karttan devam edebilirsin.';
+            }
+            if (studyVersionNoteEl) {
+                if (sRev !== CONTENT_REVISION) {
+                    studyVersionNoteEl.classList.remove('is-hidden');
+                    studyVersionNoteEl.style.display = 'block';
+                    studyVersionNoteEl.textContent = 'Bu kayıt önceki içerik sürümüyle kaldığın karttan sürdürülür. Yeni konu çalışması güncel V3 içeriğiyle başlar.';
+                } else {
+                    studyVersionNoteEl.classList.add('is-hidden');
+                    studyVersionNoteEl.style.display = 'none';
+                    studyVersionNoteEl.textContent = '';
+                }
+            }
+            if (studyBadgeEl) studyBadgeEl.innerHTML = `<i class="fas fa-clone"></i> Kart ${clampedIdx + 1} / ${totalCards}`;
+            if (studyTopicEl) studyTopicEl.innerHTML = `<i class="fas fa-tag"></i> ${esc(outcomeId)}`;
+            if (btnResumeStudyLabel) btnResumeStudyLabel.textContent = 'Devam Et';
+            if (btnResumeStudy) {
+                btnResumeStudy.onclick = async () => {
+                    const targetRev = state.savedStudy?.contentRevision || CONTENT_REVISION;
+                    if (loadedRevision !== targetRev) {
+                        const ok = await loadData(targetRev);
+                        if (!ok) return;
+                    }
+                    state.studyMode = 'free';
+                    state.returnToSummary = false;
+                    state.activeStudyRevision = targetRev;
+                    state.studySessionIsFresh = false;
+                    state.studyCardIdx = typeof state.savedStudy?.cardIdx === 'number' ? state.savedStudy.cardIdx : 0;
+                    goToStep('study');
+                };
+            }
+        } else {
+            savedStudyCard.classList.add('is-hidden');
+            savedStudyCard.style.display = 'none';
+        }
+    }
+
     if (savedCard) {
-        if (state.attempt && Array.isArray(state.attempt.ids) && state.attempt.ids.length === 7) {
+        if (hasSavedAttempt) {
+            savedCard.classList.remove('is-hidden');
             savedCard.style.display = 'flex';
             const a = state.attempt;
+            const aRev = a.contentRevision || '1';
+            const eyebrowEl = $('saved-attempt-eyebrow');
             const titleEl = $('saved-attempt-title');
             const descEl = $('saved-attempt-desc');
+            const versionNoteEl = $('saved-attempt-version-note');
             const badgeEl = $('saved-attempt-badge');
             const modeEl = $('saved-attempt-mode');
             const btnResume = $('btn-resume-saved-attempt');
             const resumeLabel = $('btn-resume-saved-label');
 
+            if (eyebrowEl) eyebrowEl.textContent = '7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2 · Yazılı Provası';
+            if (versionNoteEl) {
+                if (aRev !== CONTENT_REVISION) {
+                    versionNoteEl.classList.remove('is-hidden');
+                    versionNoteEl.style.display = 'block';
+                    versionNoteEl.textContent = 'Bu kayıt önceki içerik sürümüyle kaldığın yerden sürdürülür. Yeni prova güncel V3 içeriğini kullanır.';
+                } else {
+                    versionNoteEl.classList.add('is-hidden');
+                    versionNoteEl.style.display = 'none';
+                    versionNoteEl.textContent = '';
+                }
+            }
+
             const answeredCount = a.ids.filter(qid => (a.answers[qid] || '').trim().length > 0).length;
-            const evalCount = a.ids.filter(qid => !!a.evaluations[qid]).length;
+            const evalCount = a.ids.filter(qid => !!(a.evaluatedQuestions?.[qid] || a.evaluations?.[qid])).length;
             const profileText = names[a.profile] || (a.profile === 'zorlayici' ? 'Zorlayıcı' : (a.profile === 'temel' ? 'Temel' : 'Dengeli'));
             const modeText = a.solveMode === 'kagitta' ? 'Kâğıtta' : 'Ekranda';
 
@@ -695,29 +884,37 @@ function renderChoice() {
                 modeEl.innerHTML = `<i class="fas fa-sliders-h"></i> ${esc(profileText)} · ${esc(modeText)}`;
             }
 
+            const resumeAttemptTo = async (targetStep) => {
+                const targetRev = state.attempt?.contentRevision || '1';
+                if (loadedRevision !== targetRev) {
+                    const ok = await loadData(targetRev);
+                    if (!ok) return;
+                }
+                if (targetStep === 'practice') setupPracticeNewMode = false;
+                goToStep(targetStep);
+            };
+
             if (a.status === 'completed' || a.finished) {
                 if (titleEl) titleEl.textContent = 'Tamamlanmış Prova';
                 if (descEl) descEl.textContent = '7 soruluk provan ve öz değerlendirmen hazır. Sonuçlarını ve konu eksiklerini inceleyebilirsin.';
                 if (badgeEl) badgeEl.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Değerlendirme Tamamlandı`;
                 if (resumeLabel) resumeLabel.textContent = 'Devam Et';
-                if (btnResume) btnResume.onclick = () => goToStep('summary');
+                if (btnResume) btnResume.onclick = () => resumeAttemptTo('summary');
             } else if (a.status === 'evaluating' || evalCount > 0 || a.evalQuestionIndex > 0) {
                 if (titleEl) titleEl.textContent = 'Devam Eden Öz Değerlendirme';
                 if (descEl) descEl.textContent = 'Soruları çözdün; öz değerlendirme aşamasındasın.';
                 if (badgeEl) badgeEl.innerHTML = `<i class="fas fa-balance-scale"></i> ${evalCount} / 7 Soru Değerlendirildi`;
                 if (resumeLabel) resumeLabel.textContent = 'Devam Et';
-                if (btnResume) btnResume.onclick = () => goToStep('eval');
+                if (btnResume) btnResume.onclick = () => resumeAttemptTo('eval');
             } else {
                 if (titleEl) titleEl.textContent = 'Devam Eden Yazılı Prova';
                 if (descEl) descEl.textContent = 'Yazılı provan yarıda kaldı. Cevapların ve soru sıran güvenle saklanıyor.';
                 if (badgeEl) badgeEl.innerHTML = `<i class="fas fa-tasks"></i> ${answeredCount} / 7 Soru Yanıtlandı`;
                 if (resumeLabel) resumeLabel.textContent = 'Devam Et';
-                if (btnResume) btnResume.onclick = () => {
-                    setupPracticeNewMode = false;
-                    goToStep('practice');
-                };
+                if (btnResume) btnResume.onclick = () => resumeAttemptTo('practice');
             }
         } else {
+            savedCard.classList.add('is-hidden');
             savedCard.style.display = 'none';
         }
     }
@@ -732,17 +929,51 @@ function renderStudy(cardIndex) {
 
     state.studyCardIdx = cardIndex;
     const c = CARDS[cardIndex];
+    const isReviewMode = (state.studyMode === 'review' && Array.isArray(state.reviewCardIds) && state.reviewCardIds.length > 0);
 
-    // Ziyaret edilen kartı kaydet
-    if (state.attempt) {
-        state.attempt.visitedCards = state.attempt.visitedCards || [];
-        if (!state.attempt.visitedCards.includes(c.id)) {
-            state.attempt.visitedCards.push(c.id);
+    if (isReviewMode) {
+        if (state.attempt) {
+            state.attempt.visitedCards = state.attempt.visitedCards || [];
+            if (!state.attempt.visitedCards.includes(c.id)) {
+                state.attempt.visitedCards.push(c.id);
+            }
+        }
+    } else {
+        const currentRev = loadedRevision || CONTENT_REVISION;
+        state.activeStudyRevision = currentRev;
+        const shouldPreserveExistingSaved = state.studySessionIsFresh && cardIndex === 0 && state.savedStudy &&
+            (state.savedStudy.cardIdx > 0 || (state.savedStudy.contentRevision && state.savedStudy.contentRevision !== currentRev));
+
+        if (!shouldPreserveExistingSaved) {
+            let nextVisited = [];
+            if (state.studySessionIsFresh) {
+                nextVisited = Array.from(new Set([CARDS[0]?.id, c.id].filter(Boolean)));
+                if (cardIndex > 0) state.studySessionIsFresh = false;
+            } else {
+                const prevVisited = (state.savedStudy && state.savedStudy.contentRevision === currentRev && Array.isArray(state.savedStudy.visitedCards))
+                    ? state.savedStudy.visitedCards
+                    : [];
+                nextVisited = prevVisited.includes(c.id) ? prevVisited : [...prevVisited, c.id];
+            }
+            state.savedStudy = {
+                cardIdx: cardIndex,
+                totalCards: CARDS.length,
+                cardId: c.id,
+                cardTitle: c.title,
+                outcomeId: c.outcome_id,
+                contentRevision: currentRev,
+                visitedCards: nextVisited,
+                updatedAt: Date.now()
+            };
+        }
+        if (state.attempt && (state.attempt.contentRevision || '1') === currentRev) {
+            state.attempt.visitedCards = state.attempt.visitedCards || [];
+            if (!state.attempt.visitedCards.includes(c.id)) {
+                state.attempt.visitedCards.push(c.id);
+            }
         }
     }
     saveState();
-
-    const isReviewMode = (state.studyMode === 'review' && Array.isArray(state.reviewCardIds) && state.reviewCardIds.length > 0);
 
     // Üst Araç Çubuğu
     const btnBackChoice = $('btn-study-back-choice');
@@ -761,7 +992,16 @@ function renderStudy(cardIndex) {
     }
 
     const btnJumpPractice = $('btn-study-jump-practice');
-    if (btnJumpPractice) btnJumpPractice.onclick = () => goToStep('practice');
+    if (btnJumpPractice) {
+        btnJumpPractice.onclick = async () => {
+            if (loadedRevision !== CONTENT_REVISION) {
+                const ok = await loadData(CONTENT_REVISION);
+                if (!ok) return;
+            }
+            setupPracticeNewMode = true;
+            goToStep('practice');
+        };
+    }
 
     const btnFullscreen = $('btn-study-fullscreen');
     if (btnFullscreen) {
@@ -851,7 +1091,8 @@ function renderStudy(cardIndex) {
                                         ${outcomeCards.map((x, jInOutcome) => {
                                             const cardIdxInAll = CARDS.findIndex(card => card.id === x.id);
                                             const isCurrent = (cardIdxInAll === cardIndex);
-                                            const isVisited = state.attempt?.visitedCards?.includes(x.id);
+                                            const activeVisited = state.studySessionIsFresh ? [c.id] : (state.savedStudy?.visitedCards || [c.id]);
+                                            const isVisited = activeVisited.includes(x.id);
                                             return `
                                                 <button type="button" class="exam-cardnav-btn ${isCurrent ? 'active' : ''} ${isVisited ? 'visited' : ''}" data-study-card="${cardIdxInAll}" aria-pressed="${isCurrent}">
                                                     <b>${jInOutcome + 1}</b>
@@ -984,8 +1225,18 @@ function renderStudy(cardIndex) {
                         goToStep('summary');
                     }
                 } else {
-                    if (isLastCard) goToStep('practice');
-                    else renderStudy(cardIndex + 1);
+                    if (isLastCard) {
+                        setupPracticeNewMode = true;
+                        if (loadedRevision !== CONTENT_REVISION) {
+                            loadData(CONTENT_REVISION).then(ok => {
+                                if (ok) goToStep('practice');
+                            });
+                        } else {
+                            goToStep('practice');
+                        }
+                    } else {
+                        renderStudy(cardIndex + 1);
+                    }
                 }
             };
         }
@@ -2237,7 +2488,11 @@ function renderSummary() {
     }
 
     if (btnNewPractice) {
-        btnNewPractice.onclick = () => {
+        btnNewPractice.onclick = async () => {
+            if (loadedRevision !== CONTENT_REVISION) {
+                const ok = await loadData(CONTENT_REVISION);
+                if (!ok) return;
+            }
             setupPracticeNewMode = true;
             goToStep('practice');
         };
@@ -3079,38 +3334,95 @@ export function selectQuestions(profileName, history, run = 0) {
     if (!conf) throw new Error('Geçersiz profil: ' + profileName);
 
     const quota = conf.cycles ? conf.cycles[run % conf.cycles.length] : conf.allocation;
-    const result = [];
-    const updates = [];
-    const now = Date.now();
-    let repeats = 0;
+    const maxExistingLast = Object.values(history || {}).reduce((max, item) => Math.max(max, Number(item?.last) || 0), 0);
+    const now = Math.max(Date.now(), maxExistingLast + 1);
 
     const slots = [];
     for (const allocation of DATA.scenario.allocation) {
         for (const diff of ['easy', 'medium', 'hard']) {
+            const countNeeded = quota[allocation.outcome_id]?.[diff] || 0;
+            if (countNeeded <= 0) continue;
             const pool = QUESTIONS.filter(q => q.outcome_id === allocation.outcome_id && q.difficulty === diff)
-                .map(q => ({ q, count: history[q.id]?.count || 0, last: history[q.id]?.last || 0, tie: Math.random() }))
-                .sort((a,b) => a.count - b.count || a.last - b.last || a.tie - b.tie).map(x => x.q);
-            for (let i = 0; i < quota[allocation.outcome_id][diff]; i++) slots.push(pool);
+                .map(q => ({
+                    q,
+                    count: history[q.id]?.count || 0,
+                    last: history[q.id]?.last || 0,
+                    tie: Math.random()
+                }))
+                .sort((a, b) => a.count - b.count || a.last - b.last || a.tie - b.tie);
+            for (let i = 0; i < countNeeded; i++) slots.push(pool);
         }
     }
-    const compatible = q => result.every(other => other.id !== q.id &&
+
+    const numSlots = slots.length;
+    const minRemRepeats = new Array(numSlots + 1).fill(0);
+    const minRemCount = new Array(numSlots + 1).fill(0);
+    for (let i = numSlots - 1; i >= 0; i--) {
+        const first = slots[i][0];
+        minRemRepeats[i] = minRemRepeats[i + 1] + (first && first.count > 0 ? 1 : 0);
+        minRemCount[i] = minRemCount[i + 1] + (first ? first.count : 0);
+    }
+
+    const current = [];
+    let bestResult = null;
+    let bestRepeats = Infinity;
+    let bestTotalCount = Infinity;
+    let bestMaxCount = Infinity;
+    let bestTotalLast = Infinity;
+    let nodesVisited = 0;
+    const MAX_NODES = 12000;
+
+    const compatible = q => current.every(other => other.id !== q.id &&
         (!q.family_id || q.family_id !== other.family_id) &&
         !(q.incompatible_with || []).includes(other.id) && !(other.incompatible_with || []).includes(q.id));
-    function choose(index) {
-        if (index === slots.length) return result.length === 7;
-        for (const q of slots[index]) {
-            if (!compatible(q)) continue;
-            result.push(q);
-            if (choose(index + 1)) return true;
-            result.pop();
+
+    function search(index, curRepeats, curTotalCount, curMaxCount, curTotalLast) {
+        if (nodesVisited >= MAX_NODES) return;
+        if (curRepeats + minRemRepeats[index] > bestRepeats) return;
+        if (curRepeats + minRemRepeats[index] === bestRepeats && curTotalCount + minRemCount[index] > bestTotalCount) return;
+
+        if (index === numSlots) {
+            if (current.length !== 7) return;
+            const isBetter =
+                curRepeats < bestRepeats ||
+                (curRepeats === bestRepeats && curTotalCount < bestTotalCount) ||
+                (curRepeats === bestRepeats && curTotalCount === bestTotalCount && curMaxCount < bestMaxCount) ||
+                (curRepeats === bestRepeats && curTotalCount === bestTotalCount && curMaxCount === bestMaxCount && curTotalLast < bestTotalLast);
+            if (isBetter) {
+                bestResult = [...current];
+                bestRepeats = curRepeats;
+                bestTotalCount = curTotalCount;
+                bestMaxCount = curMaxCount;
+                bestTotalLast = curTotalLast;
+            }
+            return;
         }
-        return false;
+
+        nodesVisited++;
+        for (const item of slots[index]) {
+            if (bestRepeats === 0) return;
+            const q = item.q;
+            if (!compatible(q)) continue;
+            current.push(q);
+            const nextRepeats = curRepeats + (item.count > 0 ? 1 : 0);
+            const nextTotalCount = curTotalCount + item.count;
+            const nextMaxCount = Math.max(curMaxCount, item.count);
+            const nextTotalLast = curTotalLast + item.last;
+            search(index + 1, nextRepeats, nextTotalCount, nextMaxCount, nextTotalLast);
+            current.pop();
+            if (bestRepeats === 0) return;
+        }
     }
-    if (!choose(0)) throw new Error('Yasak çiftler ve senaryo kotalarıyla uyumlu tam set bulunamadı. Mevcut çalışma korundu.');
+
+    search(0, 0, 0, 0, 0);
+    if (!bestResult) throw new Error('Yasak çiftler ve senaryo kotalarıyla uyumlu tam set bulunamadı. Mevcut çalışma korundu.');
+
+    const result = bestResult;
+    let repeats = 0;
     for (const q of result) {
-        const h = history[q.id] || {count:0,last:0};
+        const h = history[q.id] || { count: 0, last: 0 };
         if (h.count) repeats++;
-        history[q.id] = {count:h.count+1,last:now};
+        history[q.id] = { count: h.count + 1, last: now };
     }
 
     // Soruları rastgele sırala (Fisher-Yates)
@@ -3127,8 +3439,43 @@ export function selectQuestions(profileName, history, run = 0) {
 }
 
 // --- YAŞAM DÖNGÜSÜ (Lifecycle API) ---
+export function prepareModuleEntry() {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem(STORAGE_KEY) !== lastSavedRaw) {
+        loadStateFromStorage();
+    }
+    const initialStep = state.hasSelectedScope ? 'choice' : 'scope';
+    state.currentStep = initialStep;
+    setupPracticeNewMode = false;
+    state.returnToSummary = false;
+    state.reviewingEval = false;
+    state.studyMode = 'free';
+    if (loadedRevision !== CONTENT_REVISION && resolvedDataCache.has(CONTENT_REVISION)) {
+        applyLoadedData(CONTENT_REVISION, resolvedDataCache.get(CONTENT_REVISION));
+    }
+}
+
 export async function openExamView(options = {}) {
-    const ok = await loadData();
+    if (typeof localStorage !== 'undefined' && localStorage.getItem(STORAGE_KEY) !== lastSavedRaw) {
+        loadStateFromStorage();
+    }
+
+    let targetRevision = CONTENT_REVISION;
+    if (options.route) {
+        const rStep = options.route.step;
+        const a = state.attempt;
+        const validRouteAttempt = a && (!options.route.attempt || options.route.attempt === a.routeKey);
+        if (['practice', 'eval', 'summary'].includes(rStep) && validRouteAttempt) {
+            targetRevision = a.contentRevision || '1';
+        } else if (rStep === 'study') {
+            if (options.route.mode === 'review' && validRouteAttempt && a.finished) {
+                targetRevision = a.contentRevision || '1';
+            } else {
+                targetRevision = state.activeStudyRevision || state.savedStudy?.contentRevision || CONTENT_REVISION;
+            }
+        }
+    }
+
+    const ok = await loadData(targetRevision);
     if (!ok) return;
 
     if (!isInitialized) {
@@ -3156,7 +3503,7 @@ export async function openExamView(options = {}) {
                 const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
                 if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') return;
 
-                if (state.step === 'study') {
+                if (state.currentStep === 'study') {
                     if (e.key === 'ArrowRight') {
                         const nextBtn = $('exam-card-next');
                         if (nextBtn && !nextBtn.disabled) {
@@ -3217,11 +3564,18 @@ export function closeExamView() {
     stopAnimation();
     closePrintPreview();
     exitStudyFullscreen();
+    state.currentStep = state.hasSelectedScope ? 'choice' : 'scope';
+    setupPracticeNewMode = false;
+    state.returnToSummary = false;
+    state.reviewingEval = false;
+    state.studyMode = 'free';
+    saveState();
 }
 
 // Global Window Erişimi
 if (typeof window !== 'undefined') {
     window.FenUpExam = {
+        prepareModuleEntry,
         openExamView,
         getRoute,
         saveProgress,
