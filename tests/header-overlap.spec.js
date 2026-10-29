@@ -123,6 +123,7 @@ test.describe('Üst Başlık ve Ana Sayfa Butonu Örtüşme & Tıklanabilirlik Z
   });
 
   test('Ana sayfa mobil üst boşluk header altından ilk içeriğe ~16-24px olmalı', async ({ page }) => {
+    if ((page.viewportSize()?.width || 1000) > 820) return;
     await page.goto('/');
     const headerBox = await page.locator('.top-header').boundingBox();
     const firstContentBox = await page.locator('#scene-home .curriculum-label').boundingBox();

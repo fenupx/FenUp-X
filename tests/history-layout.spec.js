@@ -38,10 +38,14 @@ test('Belge yüksekliği ve footer ölçümleri', async ({ page }, info) => {
         expect(Math.abs(back.y - backOrigin.y)).toBeLessThanOrEqual(4);
       } else backOrigin = back;
     }
-    expect(measurement.footerTop).toBeGreaterThanOrEqual(measurement.sceneBottom - 1);
-    // Kısa sayfada footer'ı alta taşıyan boşluk, içerik sonrası fazlalık değildir.
-    const shortPageSpace = Math.max(0, measurement.viewportHeight - measurement.sceneBottom - measurement.footerHeight);
-    expect(measurement.footerTop - measurement.blockEnd).toBeLessThanOrEqual(100 + shortPageSpace);
+    if (page.viewportSize().width > 820) {
+      expect(measurement.footerTop).toBeGreaterThanOrEqual(measurement.sceneBottom - 1);
+      // Kısa sayfada footer'ı alta taşıyan boşluk, içerik sonrası fazlalık değildir.
+      const shortPageSpace = Math.max(0, measurement.viewportHeight - measurement.sceneBottom - measurement.footerHeight);
+      expect(measurement.footerTop - measurement.blockEnd).toBeLessThanOrEqual(100 + shortPageSpace);
+    } else {
+      expect(measurement.footerHeight).toBe(0);
+    }
     await page.evaluate(() => scrollTo(0, 0));
     await page.waitForTimeout(100);
     await page.screenshot({ scale: 'css', animations: 'disabled', path: `tests/artifacts/${info.project.name}-${name}-top.png` });

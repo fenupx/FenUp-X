@@ -88,7 +88,7 @@ body:has(#scene-yazili:not(.is-hidden)) {
 }
 
 @media (min-width: 821px) {
-    #scene-yazili.study-active {
+    #scene-yazili.study-active:not(.is-hidden) {
         height: calc(100dvh - 88px) !important;
         max-height: calc(100dvh - 88px) !important;
         min-height: 0 !important;
@@ -98,7 +98,7 @@ body:has(#scene-yazili:not(.is-hidden)) {
         padding-bottom: 8px !important;
     }
 
-    #scene-yazili.study-active #exam-view-study {
+    #scene-yazili.study-active:not(.is-hidden) #exam-view-study {
         flex: 1 1 0% !important;
         display: flex !important;
         flex-direction: column !important;
@@ -107,12 +107,12 @@ body:has(#scene-yazili:not(.is-hidden)) {
         overflow: hidden !important;
     }
 
-    #scene-yazili.study-active .exam-study-toolbar {
+    #scene-yazili.study-active:not(.is-hidden) .exam-study-toolbar {
         flex-shrink: 0 !important;
         margin-bottom: 10px !important;
     }
 
-    #scene-yazili.study-active .exam-cards-layout {
+    #scene-yazili.study-active:not(.is-hidden) .exam-cards-layout {
         flex: 1 1 0% !important;
         min-height: 0 !important;
         min-width: 0 !important;
@@ -126,18 +126,18 @@ body:has(#scene-yazili:not(.is-hidden)) {
     }
 
     /* Çalışma Planı Kapatıldığında Tek Sütun ve Genişleyen Kart Alanı */
-    #scene-yazili.study-active .exam-cards-layout.plan-collapsed {
+    #scene-yazili.study-active:not(.is-hidden) .exam-cards-layout.plan-collapsed {
         grid-template-columns: minmax(0, 1fr) !important;
         gap: 0 !important;
     }
 
-    #scene-yazili.study-active .exam-cards-layout.plan-collapsed .exam-cardnav {
+    #scene-yazili.study-active:not(.is-hidden) .exam-cards-layout.plan-collapsed .exam-cardnav {
         display: none !important;
         visibility: hidden !important;
         pointer-events: none !important;
     }
 
-    #scene-yazili.study-active .exam-cards-layout.plan-collapsed .exam-contentgrid {
+    #scene-yazili.study-active:not(.is-hidden) .exam-cards-layout.plan-collapsed .exam-contentgrid {
         grid-template-columns: minmax(0, 1.25fr) minmax(320px, 460px);
         gap: 36px;
     }
@@ -3152,10 +3152,10 @@ input[type=range].exam-slider {
         margin-top: 68px !important;
         scroll-padding-top: 68px !important;
     }
-    #scene-yazili.study-active,
-    #scene-yazili.practice-active,
-    #scene-yazili.eval-active,
-    #scene-yazili.summary-active {
+    #scene-yazili.study-active:not(.is-hidden),
+    #scene-yazili.practice-active:not(.is-hidden),
+    #scene-yazili.eval-active:not(.is-hidden),
+    #scene-yazili.summary-active:not(.is-hidden) {
         height: auto !important;
         max-height: none !important;
         min-height: 100dvh !important;
@@ -3166,7 +3166,7 @@ input[type=range].exam-slider {
         scroll-padding-top: 68px !important;
         display: block !important;
     }
-    #scene-yazili.study-active #exam-view-study:not(.is-hidden) {
+    #scene-yazili.study-active:not(.is-hidden) #exam-view-study:not(.is-hidden) {
         height: auto !important;
         overflow: visible !important;
         display: block !important;
@@ -4356,11 +4356,11 @@ body:has(#scene-yazili.study-active) .cookie-banner {
 }
 #scene-yazili.content-v2 .exam-card-notes summary { min-height: 48px; display: flex; align-items: center; cursor: pointer; touch-action: manipulation; }
 @media (orientation: landscape) and (max-height: 520px) and (min-width: 650px) {
-    #scene-yazili.content-v2.study-active { margin-top: 68px !important; height: calc(100dvh - 76px) !important; max-height: calc(100dvh - 76px) !important; padding: 6px 12px !important; }
-    #scene-yazili.content-v2.study-active .exam-back-navigation { position: absolute; top: 6px; left: 12px; width: 160px; z-index: 30; }
-    #scene-yazili.content-v2.study-active .exam-study-toolbar { padding: 0 0 4px 170px !important; margin: 0 0 4px !important; min-height: 48px; }
+    #scene-yazili.content-v2.study-active:not(.is-hidden) { margin-top: 68px !important; height: calc(100dvh - 76px) !important; max-height: calc(100dvh - 76px) !important; padding: 6px 12px !important; }
+    #scene-yazili.content-v2.study-active:not(.is-hidden) .exam-back-navigation { position: absolute; top: 6px; left: 12px; width: 160px; z-index: 30; }
+    #scene-yazili.content-v2.study-active:not(.is-hidden) .exam-study-toolbar { padding: 0 0 4px 170px !important; margin: 0 0 4px !important; min-height: 48px; }
     #scene-yazili.content-v2 .exam-contentgrid { display: grid !important; grid-template-columns: minmax(0,1.25fr) minmax(0,0.75fr) !important; gap: 12px !important; }
-    #scene-yazili.content-v2.study-active .study-card-content-area { padding: 8px 12px !important; }
+    #scene-yazili.content-v2.study-active:not(.is-hidden) .study-card-content-area { padding: 8px 12px !important; }
     #scene-yazili.content-v2 .exam-visualbox { padding: 8px; }
     #scene-yazili.content-v2 .exam-caption { margin: 4px 0; }
     #scene-yazili.content-v2 .exam-card-title { margin-bottom: 6px; }
@@ -4761,3 +4761,22 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     #scene-yazili.content-v6 .exam-contentgrid { grid-template-columns: minmax(0,1.1fr) minmax(0,1fr) !important; }
 }
 #scene-yazili.content-v6 .exam-contentgrid.exam-text-only { grid-template-columns: minmax(0,1fr) !important; }
+
+/* ==========================================================================
+   KESİN GİZLEME SÖZLEŞMESİ: is-hidden EKLENDİĞİNDE SAHNE KESİNLİKLE YER KAPLAMAZ
+   ========================================================================== */
+#scene-yazili.is-hidden,
+.scene.is-hidden,
+.exam-step-view.is-hidden {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}

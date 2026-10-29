@@ -61,7 +61,7 @@ test('Ortak başlık: mobil sınırlar, erişilebilirlik ve sahne yaşam döngü
     await expect(page.locator('#scene-home')).toBeVisible();
   }
   await toggle.click();
-  await page.locator('#scene-home').click({ position: { x: 5, y: 200 } });
+  await page.locator('#scene-home').click({ position: { x: 5, y: 500 } });
   await expect(toggle).toHaveAttribute('aria-expanded', 'false');
   await page.evaluate(() => window.scrollTo(0, 300));
   await page.screenshot({ path: `tests/artifacts/${info.project.name}-menu-scrolled.png` });

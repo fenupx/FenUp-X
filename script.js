@@ -518,7 +518,6 @@ const navigation = (() => {
     });
     window.addEventListener('load', () => {
         history.scrollRestoration = 'manual';
-        if (index > 0) return;
         const saved = history.state?.fenupx;
         let route = saved?.v === 1 ? saved.route : readURL();
         if (route?.scene === 'scene-yazili') {
@@ -569,7 +568,7 @@ function switchScene(from, to) {
     if(userProfileArea) {
         userProfileArea.style.display = isHome ? "inline-block" : "none";
     }
-    if (mainFooter) mainFooter.classList.toggle('hidden-footer', !isHome);
+    if (mainFooter) mainFooter.classList.remove('hidden-footer');
 
     const isQuiz = (to.id === "scene-quiz" || to.id === "scene-tournament-quiz");
     if (topControls) {

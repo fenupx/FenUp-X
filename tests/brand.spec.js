@@ -47,17 +47,15 @@ test('Mobil alt bilgi (footer) bilgilendirme açılır butonu ve erişilebilirli
  await page.addInitScript(() => localStorage.setItem('fenupx_cookie_consent', 'accepted'));
  await page.goto('/');
  const isMobile = (page.viewportSize()?.width || 1000) <= 768;
- const btnInfo = page.locator('#btn-footer-info');
- const dropdown = page.locator('#footer-info-dropdown');
  if (isMobile) {
-  await expect(btnInfo).toBeVisible();
-  await expect(btnInfo).toHaveAttribute('aria-expanded', 'false');
-  await btnInfo.click();
-  await expect(btnInfo).toHaveAttribute('aria-expanded', 'true');
-  await expect(dropdown).toHaveClass(/is-open/);
-  await page.keyboard.press('Escape');
-  await expect(btnInfo).toHaveAttribute('aria-expanded', 'false');
+  const toggle = page.locator('#btn-mobile-menu');
+  await expect(toggle).toBeVisible();
+  await toggle.click();
+  const mobileFooter = page.locator('#header-navigation .mobile-nav-footer-section');
+  await expect(mobileFooter).toBeVisible();
+  await expect(mobileFooter.locator('.btn-kvkk-open')).toBeVisible();
  } else {
+  const dropdown = page.locator('#footer-info-dropdown');
   await expect(dropdown).toBeVisible();
   await expect(page.locator('.policy-links .btn-kvkk-open')).toBeVisible();
  }

@@ -748,12 +748,18 @@ function updateBackControls() {
     const review = step === 'study' && state.returnToSummary;
     const button = $('btn-exam-step-back');
     if (button) {
-        let label = '← Geri';
-        if (step === 'scope') label = '← Ana Sayfa';
-        else if (step === 'choice') label = '← Senaryo Seçimi';
-        else if (review) label = '← Çalışma Özeti';
-        else if (['study', 'practice', 'eval'].includes(step)) label = '← Çalışma Seçimi';
-        button.textContent = label;
+        let label = 'Geri';
+        if (step === 'scope') label = 'Ana Sayfa';
+        else if (step === 'choice') label = 'Senaryo Seçimi';
+        else if (review) label = 'Çalışma Özeti';
+        else if (['study', 'practice', 'eval'].includes(step)) label = 'Çalışma Seçimi';
+        button.textContent = `← ${label}`;
+        button.setAttribute('aria-label', `${label} sayfasına dön`);
+        if (step === 'scope') {
+            button.classList.add('scope-back-home', 'btn-back-home', 'btn-lab-nav-home');
+        } else {
+            button.classList.remove('scope-back-home', 'btn-back-home');
+        }
         button.onclick = () => {
             if (step === 'scope') window.returnToHome?.();
             else backStep(review ? 'summary' : step === 'choice' ? 'scope' : 'choice');
@@ -3771,6 +3777,12 @@ export function prepareModuleEntry() {
 }
 
 export async function openExamView(options = {}) {
+    const sceneYazili = $('scene-yazili');
+    if (sceneYazili) {
+        sceneYazili.removeAttribute('inert');
+        sceneYazili.removeAttribute('aria-hidden');
+        sceneYazili.classList.remove('is-hidden');
+    }
     if (typeof localStorage !== 'undefined' && localStorage.getItem(STORAGE_KEY) !== lastSavedRaw) {
         loadStateFromStorage();
     }
@@ -3900,6 +3912,19 @@ export function closeExamView() {
     state.reviewingEval = false;
     state.studyMode = 'free';
     saveState();
+    const scene = $('scene-yazili');
+    if (scene) {
+        scene.classList.remove('study-active', 'practice-active', 'eval-active', 'summary-active', 'choice-active');
+        scene.classList.add('is-hidden');
+        scene.setAttribute('aria-hidden', 'true');
+        scene.setAttribute('inert', '');
+        scene.querySelectorAll('.exam-step-view').forEach(v => {
+            v.classList.add('is-hidden');
+            v.setAttribute('aria-hidden', 'true');
+            v.setAttribute('inert', '');
+            v.style.display = 'none';
+        });
+    }
 }
 
 // Global Window Erişimi

@@ -27,7 +27,7 @@ export const EXPERIMENTS_DATABASE = [
         title: "Sürtünme Kuvveti ve Yüzeyler Simülatörü",
         code: "FB.5.2.4", bookRef: "1. Kitap, s. 80–83",
         active: true, // 🏆 AKTİF!
-        desc: "Buz, tahta, zımpara ve halı zeminlerde rampadan bırakılan aracın sürtünme ivmesini ve durma mesafesini karşılaştırın."
+        desc: "Mukavva, kum ve pamuk kaplı zeminlerde aynı rampadan bırakılan aracın sürtünme kuvveti nedeniyle durma mesafelerini karşılaştırın."
     },
     {
         id: "5.4", grade: 5, unit: 4, unitName: "Işığın Dünyası",
@@ -2315,8 +2315,8 @@ function updateEclipsePhysics() {
 function updateEclipseMetricsDOM() {
     const ec = labState.eclipse;
     const isSolar = (ec.mode === "solar");
-    const isTotal = Math.abs(ec.orbitAngle) <= ec.alignmentThreshold;
-    const isPartial = !isTotal && Math.abs(ec.orbitAngle) <= 15;
+    const isTotal = isSolar ? (Math.abs(ec.orbitAngle) <= 5.5) : (Math.abs(ec.orbitAngle) <= 2.3);
+    const isPartial = !isTotal && (isSolar ? (Math.abs(ec.orbitAngle) <= 16.0) : (Math.abs(ec.orbitAngle) <= 10.7));
 
     // Canvas Altı Responsive Metrik Şeridi (#metrics-bar-6-1)
     const mbMode = document.getElementById('mbar-61-mode');
@@ -2330,10 +2330,10 @@ function updateEclipseMetricsDOM() {
 
     if (mbStatus) {
         if (isTotal) {
-            mbStatus.textContent = isSolar ? "☀️ Tam Tutulma (Korona Halkası)" : "🌕 Tam Tutulma (Kızıl / Kanlı Ay)";
+            mbStatus.textContent = isSolar ? "☀️ Tam Güneş Tutulması (Gündüz Kuşağı)" : "🌕 Tam Ay Tutulması (Kızıl / Kanlı Ay)";
             mbStatus.style.borderLeftColor = "#10b981";
         } else if (isPartial) {
-            mbStatus.textContent = "🌓 Parçalı Tutulma (Yarı Gölge)";
+            mbStatus.textContent = isSolar ? "🌓 Parçalı Güneş Tutulması" : "🌓 Parçalı Ay Tutulması";
             mbStatus.style.borderLeftColor = "#f59e0b";
         } else {
             mbStatus.textContent = "✨ Tutulma Yok (Hizalanma Dışında)";
@@ -2349,9 +2349,9 @@ function updateEclipseMetricsDOM() {
 
     if (pOrder) pOrder.textContent = isSolar ? "Güneş-Ay-Dünya" : "Güneş-Dünya-Ay";
     if (pPhase) pPhase.textContent = isSolar ? "Yeniay" : "Dolunay";
-    if (pTimeRegion) pTimeRegion.textContent = isSolar ? "Gündüz (Dar Alan)" : "Gece (Geniş Alan)";
+    if (pTimeRegion) pTimeRegion.textContent = isSolar ? "Gündüz (Dar Kuşak)" : "Gece (Geniş Kuşak)";
     if (pShadow) {
-        pShadow.textContent = isTotal ? "Tam Gölge (Umbra)" : (isPartial ? "Yarı Gölge (Penumbra)" : "Aydınlık");
+        pShadow.textContent = isTotal ? "Tam Gölge" : (isPartial ? "Parçalı Gölge" : "Aydınlık");
     }
 
     // Pedagojik Çıkarım Kartı
@@ -2432,21 +2432,23 @@ function drawEclipseSimulation() {
     ctx.setLineDash([]);
     ctx.restore();
 
-    // Geometrik Koordinatlar
-    const sunX = 100, sunY = 250, sunR = 44;
-    let moonX, moonY, moonR = 21;
+    // Geometrik Koordinatlar (Tek ve Tutarlı Işık/Gölge Modeli)
+    const sunX = 100, sunY = 250, sunR = 48;
+    let moonX, moonY, moonR = 20;
     let earthX, earthY, earthR = 36;
 
     if (isSolar) {
         // Güneş (sol) — Ay (orta) — Dünya (sağ)
-        earthX = 620; earthY = 250;
-        moonX = 430;
+        earthX = 640; earthY = 250;
+        moonX = 420;
         moonY = 250 + (ec.orbitAngle / 30) * 110;
+        moonR = 20;
     } else {
         // Güneş (sol) — Dünya (orta) — Ay (sağ)
         earthX = 380; earthY = 250;
         moonX = 640;
         moonY = 250 + (ec.orbitAngle / 30) * 115;
+        moonR = 16;
     }
 
     // 3. Işık Işınları ve Gölge Konileri (Umbra & Penumbra)
@@ -2458,37 +2460,45 @@ function drawEclipseSimulation() {
     // 5. Dünya Çizimi (Güneş'ten gelen ışığa göre aydınlanma)
     drawEclipseEarth(ctx, earthX, earthY, earthR, true);
 
-    // 5.5. Güneş Tutulmasında Ay'ın Dünya Yüzeyine Düşen Tam Gölge (Umbra) ve Yarı Gölge İzleri
-    if (isSolar && Math.abs(ec.orbitAngle) <= ec.alignmentThreshold * 2.2) {
-        const impactY = earthY + (moonY - sunY) * 0.45;
-        ctx.save();
-        ctx.beginPath();
-        ctx.arc(earthX, earthY, earthR, 0, Math.PI * 2);
-        ctx.clip();
+    // 5.5. Güneş Tutulmasında Ay'ın Dünya Yüzeyine Düşen Tam Gölge (Umbra) ve Yarı Gölge Noktası
+    if (isSolar) {
+        const surfX = earthX - earthR + 4;
+        const impactY = 250 + ((moonY - 250) / (moonX - sunX)) * (surfX - sunX);
+        const distFromEquator = Math.abs(impactY - earthY);
 
-        // Yarı gölge (Penumbra) halkası
-        const penGrad = ctx.createRadialGradient(earthX - earthR + 6, impactY, 3, earthX - earthR + 8, impactY, 22);
-        penGrad.addColorStop(0, "rgba(2, 6, 23, 0.95)");
-        penGrad.addColorStop(0.35, "rgba(2, 6, 23, 0.85)");
-        penGrad.addColorStop(0.75, "rgba(15, 23, 42, 0.45)");
-        penGrad.addColorStop(1, "rgba(15, 23, 42, 0)");
-        ctx.fillStyle = penGrad;
-        ctx.beginPath();
-        ctx.arc(earthX - earthR + 8, impactY, 22, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Tam gölge (Umbra) odak noktası (Dünya yüzeyine değen koyu bölge)
-        if (Math.abs(ec.orbitAngle) <= ec.alignmentThreshold) {
-            ctx.fillStyle = "#020617";
+        if (distFromEquator <= earthR) {
+            ctx.save();
             ctx.beginPath();
-            ctx.ellipse(earthX - earthR + 5, impactY, 6, 10, 0, 0, Math.PI * 2);
+            ctx.arc(earthX, earthY, earthR, 0, Math.PI * 2);
+            ctx.clip();
+
+            // Geniş Yarı Gölge (Penumbra) Geçiş Kuşağı
+            const penGrad = ctx.createRadialGradient(surfX, impactY, 2, surfX, impactY, 32);
+            penGrad.addColorStop(0, "rgba(2, 6, 23, 0.85)");
+            penGrad.addColorStop(0.5, "rgba(15, 23, 42, 0.45)");
+            penGrad.addColorStop(1, "rgba(15, 23, 42, 0)");
+            ctx.fillStyle = penGrad;
+            ctx.beginPath();
+            ctx.arc(surfX, impactY, 32, 0, Math.PI * 2);
             ctx.fill();
+
+            // Odaklanmış Küçük Tam Gölge (Umbra) Noktası (~3.9 px yarıçap)
+            if (Math.abs(ec.orbitAngle) <= 5.5) {
+                ctx.fillStyle = "#020617";
+                ctx.beginPath();
+                ctx.ellipse(surfX, impactY, 4, 4.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.strokeStyle = "rgba(250, 204, 21, 0.5)";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+            ctx.restore();
         }
-        ctx.restore();
     }
 
     // 6. Ay Çizimi
-    const isAligned = Math.abs(ec.orbitAngle) <= ec.alignmentThreshold;
+    const isAligned = isSolar ? (Math.abs(ec.orbitAngle) <= 5.5) : (Math.abs(ec.orbitAngle) <= 2.3);
     drawEclipseMoon(ctx, moonX, moonY, moonR, isSolar, isAligned);
 
     // 7. Gökyüzü İçi Mini Gözlemevi Monitörü ("Dünya'dan Görünüm")
@@ -2503,91 +2513,154 @@ function drawEclipseLightAndShadows(ctx, ec, sunX, sunY, sunR, moonX, moonY, moo
     ctx.save();
 
     if (isSolar) {
-        // Güneş Tutulması Işık Geometrisi (Güneş -> Ay -> Dünya)
-        // A. Yarı Gölge (Penumbra) Geniş Işınları
-        ctx.fillStyle = "rgba(250, 204, 21, 0.05)";
+        // --- GÜNEŞ TUTULMASI IŞIK VE GÖLGE GEOMETRİSİ ---
+        // 1. GÜNEŞ İLE AY ARASI: Yalnızca sıcak, berrak güneş ışığı demeti (Gölge opak cisimden önce ASLA başlamaz)
+        const sunLightGrad = ctx.createLinearGradient(sunX, sunY, moonX, moonY);
+        sunLightGrad.addColorStop(0, "rgba(254, 240, 138, 0.12)");
+        sunLightGrad.addColorStop(1, "rgba(250, 204, 21, 0.05)");
+        ctx.fillStyle = sunLightGrad;
         ctx.beginPath();
         ctx.moveTo(sunX, sunY - sunR);
-        ctx.lineTo(moonX, moonY + moonR);
-        ctx.lineTo(earthX + 80, earthY + 120);
-        ctx.lineTo(earthX + 80, earthY - 120);
         ctx.lineTo(moonX, moonY - moonR);
+        ctx.lineTo(moonX, moonY + moonR);
         ctx.lineTo(sunX, sunY + sunR);
         ctx.closePath();
         ctx.fill();
 
-        // B. Ay'ın Penumbra Gölge Alanı (Dünya'ya vuran)
-        ctx.fillStyle = "rgba(15, 23, 42, 0.45)";
+        // Teğet Sınır Işık Çizgileri (Güneş'ten Ay'a)
+        ctx.strokeStyle = "rgba(250, 204, 21, 0.35)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(sunX, sunY - sunR);
+        ctx.lineTo(moonX, moonY - moonR);
+        ctx.moveTo(sunX, sunY + sunR);
+        ctx.lineTo(moonX, moonY + moonR);
+        ctx.stroke();
+
+        // 2. AY'IN ARKASI: Matematiksel Olarak Hesaplanmış Umbra ve Penumbra Konileri
+        const distSM = moonX - sunX; // 320 px
+        const surfX = earthX - earthR + 4; // 608 px (Dünya yüzeyi)
+        const distME = surfX - moonX; // 188 px
+
+        // Umbra (Dış Teğetler Doğrultusu - Daralan Koni)
+        const k1 = ((moonY - moonR) - (sunY - sunR)) / distSM;
+        const k2 = ((moonY + moonR) - (sunY + sunR)) / distSM;
+        const umbraTopY = (moonY - moonR) + k1 * distME;
+        const umbraBtmY = (moonY + moonR) + k2 * distME;
+
+        // Penumbra (İç Teğetler Doğrultusu - Genişleyen Koni)
+        const k3 = ((moonY - moonR) - (sunY + sunR)) / distSM;
+        const k4 = ((moonY + moonR) - (sunY - sunR)) / distSM;
+        const penTopY = (moonY - moonR) + k3 * distME;
+        const penBtmY = (moonY + moonR) + k4 * distME;
+
+        // A. Penumbra (Geniş Yarı Gölge Alanı)
+        const penGrad = ctx.createLinearGradient(moonX, moonY, surfX, (penTopY + penBtmY) / 2);
+        penGrad.addColorStop(0, "rgba(15, 23, 42, 0.45)");
+        penGrad.addColorStop(1, "rgba(15, 23, 42, 0.22)");
+        ctx.fillStyle = penGrad;
         ctx.beginPath();
         ctx.moveTo(moonX, moonY - moonR);
-        ctx.lineTo(earthX, earthY - 55);
-        ctx.lineTo(earthX, earthY + 55);
+        ctx.lineTo(surfX, penTopY);
+        ctx.lineTo(surfX, penBtmY);
         ctx.lineTo(moonX, moonY + moonR);
         ctx.closePath();
         ctx.fill();
 
-        // C. Ay'ın Tam Gölge (Umbra) Konisi (Dünya yüzeyine fiziksel olarak ulaşan tam gölge konisi)
-        const earthSurfaceX = earthX - earthR + 6;
-        const impactY = earthY + (moonY - sunY) * 0.45;
-        const umbraHalfTip = 6;
+        // Penumbra Teğet Sınır Çizgileri
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.25)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(moonX, moonY - moonR);
+        ctx.lineTo(surfX, penTopY);
+        ctx.moveTo(moonX, moonY + moonR);
+        ctx.lineTo(surfX, penBtmY);
+        ctx.stroke();
 
-        const umbraGrad = ctx.createLinearGradient(moonX, moonY, earthSurfaceX, impactY);
-        umbraGrad.addColorStop(0, "rgba(2, 6, 23, 0.94)");
-        umbraGrad.addColorStop(1, "rgba(2, 6, 23, 0.88)");
+        // B. Umbra (Ay'ın Dünya'ya Ulaşan Dar Tam Gölge Konisi)
+        const umbraGrad = ctx.createLinearGradient(moonX, moonY, surfX, (umbraTopY + umbraBtmY) / 2);
+        umbraGrad.addColorStop(0, "rgba(2, 6, 23, 0.95)");
+        umbraGrad.addColorStop(0.7, "rgba(2, 6, 23, 0.90)");
+        umbraGrad.addColorStop(1, "rgba(2, 6, 23, 0.85)");
         ctx.fillStyle = umbraGrad;
         ctx.beginPath();
         ctx.moveTo(moonX, moonY - moonR);
-        ctx.lineTo(earthSurfaceX, impactY - umbraHalfTip);
-        ctx.lineTo(earthSurfaceX, impactY + umbraHalfTip);
+        ctx.lineTo(surfX, umbraTopY);
+        ctx.lineTo(surfX, umbraBtmY);
         ctx.lineTo(moonX, moonY + moonR);
         ctx.closePath();
         ctx.fill();
 
-        // Tam Tutulma Vurma Noktası (Dünya üzerinde odaklanan tam gölge beneği)
-        if (Math.abs(ec.orbitAngle) <= ec.alignmentThreshold) {
-            ctx.fillStyle = "#020617";
-            ctx.shadowColor = "#000000";
-            ctx.shadowBlur = 8;
-            ctx.beginPath();
-            ctx.ellipse(earthX - earthR + 3, earthY, 5, 8, 0, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-
-            // Halka Halesi Vektör İllüstrasyonu
-            ctx.strokeStyle = "rgba(250, 204, 21, 0.4)";
-            ctx.lineWidth = 1;
-            ctx.stroke();
-        }
+        // Umbra Teğet Çizgileri
+        ctx.strokeStyle = "rgba(250, 204, 21, 0.35)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(moonX, moonY - moonR);
+        ctx.lineTo(surfX, umbraTopY);
+        ctx.moveTo(moonX, moonY + moonR);
+        ctx.lineTo(surfX, umbraBtmY);
+        ctx.stroke();
     } else {
-        // Ay Tutulması Işık Geometrisi (Güneş -> Dünya -> Ay)
-        // Dünya'nın Uzaya Ulaşan Geniş Tam Gölge (Umbra) Konisi
-        const shadowApexX = earthX + 380;
-        const shadowTopY = earthY - 14;
-        const shadowBtmY = earthY + 14;
+        // --- AY TUTULMASI IŞIK VE GÖLGE GEOMETRİSİ ---
+        // 1. GÜNEŞ İLE DÜNYA ARASI: Berrak aydınlanma
+        const sunLightGrad = ctx.createLinearGradient(sunX, sunY, earthX, earthY);
+        sunLightGrad.addColorStop(0, "rgba(254, 240, 138, 0.12)");
+        sunLightGrad.addColorStop(1, "rgba(250, 204, 21, 0.05)");
+        ctx.fillStyle = sunLightGrad;
+        ctx.beginPath();
+        ctx.moveTo(sunX, sunY - sunR);
+        ctx.lineTo(earthX, earthY - earthR);
+        ctx.lineTo(earthX, earthY + earthR);
+        ctx.lineTo(sunX, sunY + sunR);
+        ctx.closePath();
+        ctx.fill();
 
-        // Penumbra (Yarı gölge)
+        // 2. DÜNYA'NIN ARKASI: Geniş Tam Gölge (Umbra) ve Yarı Gölge (Penumbra)
+        const distSE = earthX - sunX; // 280 px
+        const shadowEndX = 760;
+        const distEnd = shadowEndX - earthX; // 380 px
+
+        // Umbra Koni Sınırı (Apex x = 1220'ye uzanır)
+        const kUmbra = (sunR - earthR) / distSE; // (48 - 36) / 280 = 12 / 280
+        const umbraR = earthR - kUmbra * distEnd; // 36 - 16.3 = 19.7 px
+
+        // Penumbra Koni Sınırı
+        const kPen = (sunR + earthR) / distSE; // (48 + 36) / 280 = 84 / 280
+        const penR = earthR + kPen * distEnd; // 36 + 114 = 150 px
+
+        // A. Penumbra
         ctx.fillStyle = "rgba(15, 23, 42, 0.38)";
         ctx.beginPath();
         ctx.moveTo(earthX, earthY - earthR);
-        ctx.lineTo(760, earthY - 95);
-        ctx.lineTo(760, earthY + 95);
+        ctx.lineTo(shadowEndX, earthY - penR);
+        ctx.lineTo(shadowEndX, earthY + penR);
         ctx.lineTo(earthX, earthY + earthR);
         ctx.closePath();
         ctx.fill();
 
-        // Umbra (Tam gölge konisi)
-        const umbraGrad = ctx.createLinearGradient(earthX, earthY, shadowApexX, earthY);
-        umbraGrad.addColorStop(0, "rgba(3, 7, 18, 0.88)");
-        umbraGrad.addColorStop(0.7, "rgba(69, 10, 10, 0.55)"); // Atmosferik kızıl kırılma
-        umbraGrad.addColorStop(1, "rgba(15, 23, 42, 0.2)");
+        // B. Umbra (Ay'ı Tamamen İçine Alabilen Geniş Tam Gölge)
+        const umbraGrad = ctx.createLinearGradient(earthX, earthY, shadowEndX, earthY);
+        umbraGrad.addColorStop(0, "rgba(3, 7, 18, 0.92)");
+        umbraGrad.addColorStop(0.65, "rgba(69, 10, 10, 0.58)"); // Dünya atmosferinden kırılan kızıl ışıklar
+        umbraGrad.addColorStop(1, "rgba(15, 23, 42, 0.25)");
         ctx.fillStyle = umbraGrad;
         ctx.beginPath();
         ctx.moveTo(earthX, earthY - earthR);
-        ctx.lineTo(shadowApexX, shadowTopY);
-        ctx.lineTo(shadowApexX, shadowBtmY);
+        ctx.lineTo(shadowEndX, earthY - umbraR);
+        ctx.lineTo(shadowEndX, earthY + umbraR);
         ctx.lineTo(earthX, earthY + earthR);
         ctx.closePath();
         ctx.fill();
+
+        // Umbra Sınır Çizgileri
+        ctx.strokeStyle = "rgba(239, 68, 68, 0.35)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(earthX, earthY - earthR);
+        ctx.lineTo(shadowEndX, earthY - umbraR);
+        ctx.moveTo(earthX, earthY + earthR);
+        ctx.lineTo(shadowEndX, earthY + umbraR);
+        ctx.stroke();
     }
 
     ctx.restore();
@@ -3180,9 +3253,9 @@ function updateMotionMetricsDOM() {
     const mbSpeed = document.getElementById('mbar-63-speed');
     const mbStatus = document.getElementById('mbar-63-status');
 
-    if (mbDist) mbDist.textContent = `${fmt(m.distanceTraveled, 1)} m / Δx: ${fmt(displacement, 1)} m`;
+    if (mbDist) mbDist.textContent = m.elapsedTime > 0 ? `${fmt(m.distanceTraveled, 1)} m / Δx: ${fmt(displacement, 1)} m` : `0.0 m / Hedef: ${targetTotalDist} m`;
     if (mbTime) mbTime.textContent = `${fmt(m.elapsedTime, 1)} s`;
-    if (mbSpeed) mbSpeed.textContent = `Sürat: ${fmt(m.speed, 1)} / Hız: ${fmt(m.elapsedTime > 0 ? avgVelocity : m.speed, 1)} m/s`;
+    if (mbSpeed) mbSpeed.textContent = m.isPlaying ? `Sürat: ${fmt(m.speed, 1)} / Hız: ${fmt(avgVelocity, 1)} m/s` : `Sürat: ${fmt(m.speed, 1)} m/s (Başlatılmadı)`;
     if (mbStatus) {
         if (m.distanceTraveled >= targetTotalDist) {
             mbStatus.textContent = isRoundTrip ? "🏁 Başlangıca Döndü (Δx = 0 m)" : "🏁 Bitiş Çizgisine Ulaştı";
@@ -3202,8 +3275,8 @@ function updateMotionMetricsDOM() {
     const pSpeed = document.getElementById('metric-63-speed');
     const pStatus = document.getElementById('metric-63-status');
     if (pTime) pTime.textContent = `${fmt(m.elapsedTime, 1)} s`;
-    if (pDist) pDist.textContent = `${fmt(m.distanceTraveled, 1)} m`;
-    if (pSpeed) pSpeed.textContent = `${fmt(m.speed, 1)} m/s / ${fmt(m.elapsedTime > 0 ? avgVelocity : m.speed, 1)} m/s`;
+    if (pDist) pDist.textContent = m.elapsedTime > 0 ? `${fmt(m.distanceTraveled, 1)} m` : `0.0 m`;
+    if (pSpeed) pSpeed.textContent = m.isPlaying ? `${fmt(m.speed, 1)} m/s / ${fmt(avgVelocity, 1)} m/s` : `${fmt(m.speed, 1)} m/s (Başlatılmadı)`;
     if (pStatus) {
         pStatus.textContent = `${fmt(displacement, 1)} m (${isRoundTrip ? "Gidiş-Dönüş" : "Doğu Yönü"})`;
     }
@@ -3690,11 +3763,14 @@ function updateTugOfWarPhysics() {
     tow.netForce = tow.fEast - tow.fWest;
 
     if (tow.isPlaying) {
-        // İvme hesabı (a = R / m), sürtünme sönümlemesi
+        // İvme hesabı (a = R / m)
         const mass = 15; // kg
-        const accel = (tow.netForce / mass) * 0.8;
-        tow.boxSpeed += accel * 0.05;
-        tow.boxSpeed *= 0.94; // Sürtünme sönümlenmesi
+        if (tow.netForce !== 0) {
+            const accel = (tow.netForce / mass) * 0.8;
+            tow.boxSpeed += accel * 0.05;
+            tow.boxSpeed *= 0.96;
+        }
+        // Dengelenmiş kuvvetlerde (R = 0) cisim duruyorsa durmaya, hareketliyse mevcut süratini koruyarak ilerlemeye devam eder
         tow.boxX += tow.boxSpeed * 8;
 
         // Pisti Aşma ve Kazanan Kontrolü
@@ -4336,20 +4412,21 @@ function updateReflectionMetricsDOM() {
         if (isPlane) {
             pillRay.innerHTML = `<i class="fas fa-compass"></i> i: <strong id="mbar-64-inci">${r.incidentAngle}°</strong> · r: <strong id="mbar-64-refl">${r.incidentAngle}°</strong> <span class="pill-sub">(i = r)</span>`;
         } else if (isConcave) {
-            pillRay.innerHTML = `<i class="fas fa-arrows-alt-h"></i> Cisim (do): <strong id="mbar-64-inci">${r.objectDistance} mm</strong> · Odak (f): <strong id="mbar-64-refl">${r.focalLength} mm</strong>`;
+            const posLabel = r.objectDistance < r.focalLength ? "Odaktan Yakın (Düz & Büyük)" : "Odaktan Uzak (Ters Görüntü)";
+            pillRay.innerHTML = `<i class="fas fa-eye"></i> Konum: <strong id="mbar-64-inci">${posLabel}</strong>`;
         } else {
-            pillRay.innerHTML = `<i class="fas fa-arrows-alt-h"></i> Cisim (do): <strong id="mbar-64-inci">${r.objectDistance} mm</strong> · Odak (f): <strong id="mbar-64-refl">-${r.focalLength} mm</strong>`;
+            pillRay.innerHTML = `<i class="fas fa-eye"></i> Konum: <strong id="mbar-64-inci">Geniş Alan (Düz & Küçük)</strong>`;
         }
     } else {
         if (isPlane) {
             if (mbInci) mbInci.textContent = `${r.incidentAngle}°`;
             if (mbRefl) mbRefl.textContent = `${r.incidentAngle}°`;
         } else if (isConcave) {
-            if (mbInci) mbInci.textContent = `${r.objectDistance} mm`;
-            if (mbRefl) mbRefl.textContent = `${r.focalLength} mm`;
+            if (mbInci) mbInci.textContent = r.objectDistance < r.focalLength ? "Odaktan Yakın" : "Odaktan Uzak";
+            if (mbRefl) mbRefl.textContent = r.objectDistance < r.focalLength ? "Düz ve Büyük" : "Ters Görüntü";
         } else {
-            if (mbInci) mbInci.textContent = `${r.objectDistance} mm`;
-            if (mbRefl) mbRefl.textContent = `-${r.focalLength} mm`;
+            if (mbInci) mbInci.textContent = "Her Mesafede";
+            if (mbRefl) mbRefl.textContent = "Düz ve Küçük";
         }
     }
 
@@ -4901,7 +4978,7 @@ const DENSITY_LIQUIDS_DEF = {
 
 const DENSITY_OBJECTS_DEF = {
     wood: { id: "wood", name: "Tahta Blok", mass: 35, volume: 50, density: 0.70, color: "#b45309", label: "Tahta (0.70 g/cm³ - Yüzer)" },
-    plastic: { id: "plastic", name: "Plastik Kapak", mass: 47.5, volume: 50, density: 0.95, color: "#ef4444", label: "Plastik (0.95 g/cm³ - Ara Yüzeyde)" },
+    plastic: { id: "plastic", name: "Plastik Şişe Kapağı", mass: 47.5, volume: 50, density: 0.95, color: "#ef4444", label: "Plastik Kapak (0.95 g/cm³ - Su-Yağ Sınırında Dengede)" },
     iron: { id: "iron", name: "Demir Vida", mass: 156, volume: 20, density: 7.80, color: "#94a3b8", label: "Demir Vida (7.80 g/cm³ - Batar)" }
 };
 
@@ -5475,9 +5552,9 @@ function initHeatTransferState() {
     ht.elapsedHeatingTime = 0.0;
 
     ht.rods = [
-        { id: "copper", name: "Metal Çubuk (İletken)", k: 385, color: "#f97316", temp: 20, isConductor: true, waxMelted: false, ballDropped: false, ballY: 0, ballVy: 0, dropTime: null },
-        { id: "aluminum", name: "Tahta Çubuk (Yalıtkan)", k: 0.15, color: "#b45309", temp: 20, isConductor: false, waxMelted: false, ballDropped: false, ballY: 0, ballVy: 0, dropTime: null },
-        { id: "iron", name: "Plastik Çubuk (Yalıtkan)", k: 0.20, color: "#94a3b8", temp: 20, isConductor: false, waxMelted: false, ballDropped: false, ballY: 0, ballVy: 0, dropTime: null }
+        { id: "copper", name: "Metal Kaşık (İletken)", k: 385, color: "#94a3b8", temp: 20, isConductor: true, waxMelted: false, ballDropped: false, ballY: 0, ballVy: 0, dropTime: null },
+        { id: "aluminum", name: "Tahta Kaşık (Yalıtkan)", k: 0.15, color: "#b45309", temp: 20, isConductor: false, waxMelted: false, ballDropped: false, ballY: 0, ballVy: 0, dropTime: null },
+        { id: "iron", name: "Plastik Kaşık (Yalıtkan)", k: 0.20, color: "#38bdf8", temp: 20, isConductor: false, waxMelted: false, ballDropped: false, ballY: 0, ballVy: 0, dropTime: null }
     ];
 
     ht.insulation = {
@@ -5530,7 +5607,7 @@ function setupHeatTransferControlsDOM() {
         labState.heatTransfer.mode = mode;
         initHeatTransferState();
         updateHeatTransferDOMControls();
-        showLabToast(mode === "metals" ? "1. Mod: Metallerde Isı İletimi Simülasyonu" : "2. Mod: Binalarda Isı Yalıtımı Testi");
+        showLabToast(mode === "metals" ? "1. Mod: İletken ve Yalıtkan Maddeler (Metal, Tahta, Plastik Kaşık)" : "2. Mod: Binalarda Isı Yalıtımı Testi");
     };
 
     ['btn-heat-mode-metals', 'pill-heat-mode-metals'].forEach(id => {
@@ -5712,7 +5789,7 @@ function updateHeatMetricsDOM() {
         if (pTitle && pText && pIcon) {
             pIcon.innerHTML = '<i class="fas fa-home" style="color: #38bdf8;"></i>';
             pTitle.textContent = "🏠 Binalarda Isı Yalıtımı ve Enerji Verimliliği";
-            pText.textContent = "Strafor ve taş yünü gibi yalıtım malzemeleri tanecik boşlukları sayesinde ısının binadan kaçmasını engeller. Yalıtımsız sac ev hızla soğurken, yalıtımlı ev iç sıcaklığını uzun süre korur.";
+            pText.textContent = "Yalıtım malzemeleri ısı akışını tamamen yok etmez; sıcaklık farkı sürdükçe ısı iletim hızını yavaşlatır. Yalıtımsız sac ev hızla ısı kaybederken, strafor kaplı ev iç sıcaklığını uzun süre korur.";
         }
     } else {
         const c = ht.rods[0];
@@ -5727,30 +5804,30 @@ function updateHeatMetricsDOM() {
             mbCopper.textContent = c.ballDropped ? `🥇 Düştü (${fmt(c.dropTime, 1)} s)` : `${fmt(c.temp, 0)}°C`;
         }
         if (mbAl) {
-            mbAl.textContent = al.ballDropped ? `🥈 Düştü (${fmt(al.dropTime, 1)} s)` : `${fmt(al.temp, 0)}°C`;
+            mbAl.textContent = al.ballDropped ? `Düştü` : `Erimedi (Yalıtkan)`;
         }
         if (mbIron) {
-            mbIron.textContent = fe.ballDropped ? `🥉 Düştü (${fmt(fe.dropTime, 1)} s)` : `${fmt(fe.temp, 0)}°C`;
+            mbIron.textContent = fe.ballDropped ? `Düştü` : `Erimedi (Yalıtkan)`;
         }
         if (mbStatus) {
-            mbStatus.textContent = "🔥 Isı metallerde iletim yoluyla yayılır; iletkenlik sıralaması: Bakır > Alüminyum > Demir";
+            mbStatus.textContent = "🥄 Metal ısıyı iyi iletir (İletken); tahta ve plastik kaşık ısıyı iletmez (Yalıtkan)";
             mbStatus.style.color = "#facc15";
         }
 
         if (pCop) {
             pCop.textContent = c.ballDropped ? `Düştü (${fmt(c.dropTime, 1)} s)` : `${fmt(c.temp, 0)}°C`;
             const lbl = pCop.previousElementSibling;
-            if (lbl) lbl.textContent = "Bakır Çubuk";
+            if (lbl) lbl.textContent = "Metal Kaşık (İletken)";
         }
         if (pAl) {
-            pAl.textContent = al.ballDropped ? `Düştü (${fmt(al.dropTime, 1)} s)` : `${fmt(al.temp, 0)}°C`;
+            pAl.textContent = al.ballDropped ? `Düştü` : `Erimedi (Yalıtkan)`;
             const lbl = pAl.previousElementSibling;
-            if (lbl) lbl.textContent = "Alüminyum Çubuk";
+            if (lbl) lbl.textContent = "Tahta Kaşık (Yalıtkan)";
         }
         if (pFe) {
-            pFe.textContent = fe.ballDropped ? `Düştü (${fmt(fe.dropTime, 1)} s)` : `${fmt(fe.temp, 0)}°C`;
+            pFe.textContent = fe.ballDropped ? `Düştü` : `Erimedi (Yalıtkan)`;
             const lbl = pFe.previousElementSibling;
-            if (lbl) lbl.textContent = "Demir Çubuk";
+            if (lbl) lbl.textContent = "Plastik Kaşık (Yalıtkan)";
         }
         if (pFlame) {
             pFlame.textContent = ht.isHeating ? "Yanıyor" : "Sönük";
@@ -5759,9 +5836,9 @@ function updateHeatMetricsDOM() {
         }
 
         if (pTitle && pText && pIcon) {
-            pIcon.innerHTML = '<i class="fas fa-fire" style="color: #f97316;"></i>';
-            pTitle.textContent = "🔥 Metallerde Isı İletim Hızı";
-            pText.textContent = "Tüm metaller ısıyı iletir fakat iletkenlik hızları farklıdır. Bakır en hızlı, demir ise aralarında en yavaş iletendir. Balmumları bu iletkenlik sırasına göre erir.";
+            pIcon.innerHTML = '<i class="fas fa-utensils" style="color: #f59e0b;"></i>';
+            pTitle.textContent = "🥄 İletken ve Yalıtkan Maddeler (Balmumu Testi)";
+            pText.textContent = "Metaller ısıyı iyi ileten iletken maddelerdir; metal kaşık ısıyı hızla ileterek ucundaki balmumunu eritir ve bilyeyi düşürür. Tahta ve plastik ise ısıyı iyi iletmeyen yalıtkan maddelerdir; bu nedenle yemek pişirirken ellerimizin yanmaması için tahta kaşık ve tencerelerde plastik kulplar tercih edilir.";
         }
     }
 }
@@ -7087,7 +7164,7 @@ function updateExpansionMetricsDOM() {
 
     if (elState) elState.textContent = isHot ? "Akkor Sıcak" : "Oda Sıcaklığı";
     if (elTemp) elTemp.textContent = `${ex.sphereTemp.toFixed(0)}°C`;
-    if (elVol) elVol.textContent = isHot ? "Büyük (Genleşti)" : "Normal (Büzüldü)";
+    if (elVol) elVol.textContent = isHot ? "Büyük (Genleşti)" : (ex.step === "quenching" ? "Küçük (Büzüldü)" : "Normal Boyut (Oda Sıcaklığı)");
 
     if (elStatus) {
         if (ex.step === "heating") {
@@ -7116,7 +7193,7 @@ function updateExpansionMetricsDOM() {
     const mPass = document.getElementById('metric-68-pass');
 
     if (mTemp) mTemp.textContent = `${ex.sphereTemp.toFixed(0)}°C`;
-    if (mVol) mVol.textContent = isHot ? "Büyük (Genleşti)" : "Normal";
+    if (mVol) mVol.textContent = isHot ? "Büyük (Genleşti)" : (ex.step === "quenching" ? "Küçük (Büzüldü)" : "Normal Boyut (Oda Sıcaklığı)");
     if (mRing) mRing.textContent = "Sabit Çap";
     if (mPass) {
         mPass.textContent = passes ? "Geçer ✅" : "Takılır ⛔";
@@ -8701,8 +8778,9 @@ function calculateWorkPhysics() {
     const mNetForce = document.getElementById('metric-work-net-force');
     const mJoule = document.getElementById('metric-work-joule');
 
+    const curD = work.progress * dx;
     if (mForce) mForce.textContent = `${F.toFixed(1)} N`;
-    if (mDist) mDist.textContent = `${dx.toFixed(1)} m`;
+    if (mDist) mDist.textContent = work.progress > 0 ? `${curD.toFixed(1)} m / Hedef: ${dx.toFixed(1)} m` : `0.0 m (Planlanan: ${dx.toFixed(1)} m)`;
 
     if (scen === "horizontal") {
         work.frictionForce = work.frictionEnabled ? 20.0 : 0.0;
@@ -8916,7 +8994,7 @@ function calculateWorkPhysics() {
             box.className = "lab-pedagogical-card no-work";
             if (icon) icon.innerHTML = '<i class="fas fa-times-circle"></i>';
             if (title) title.textContent = "❌ Fiziksel Anlamda İş Yapılmaz (Kuvvet ⟂ Hareket)!";
-            if (text) text.textContent = `Öğrencinin çantayı taşımak için uyguladığı kuvvet DÜŞEY yukarı yönlüdür, ancak hareket YATAYDIR. Kuvvet doğrultusu ile hareket doğrultusu birbirine DİK (90°) olduğu için çanta üzerinde fiziksel anlamda iş yapılmaz (0 Joule).`;
+            if (text) text.textContent = `Öğrencinin sırt çantasını taşımak için uyguladığı kaldırma kuvveti düşey yukarı yönlüdür; hareket doğrultusu ise yataydır. Kuvvet ile hareket doğrultusu birbirine dik (90°) olduğu için çanta üzerinde fiziksel anlamda iş yapılmaz (0 Joule). Biyolojik olarak kaslar enerji harcar ve yorulur; ancak fen bilimleri tanımına göre fiziksel iş yapılmamıştır.`;
         }
     } else if (scen === "wall") {
         work.frictionForce = 0;
@@ -10862,8 +10940,9 @@ function updateOpticsHUDAndMetrics() {
     const critEl = document.getElementById('metric-critical-angle');
     const behEl = document.getElementById('metric-behavior');
 
-    if (speed1El) speed1El.textContent = `${med1.speed.toLocaleString('tr-TR')} km/s`;
-    if (speed2El) speed2El.textContent = `${med2.speed.toLocaleString('tr-TR')} km/s`;
+    const getQualitativeSpeed = (mKey) => mKey === 'air' ? 'Çok Hızlı (En Yüksek Sürat)' : (mKey === 'water' ? 'Hızlı (~225.000 km/s)' : 'Daha Yavaş (~200.000 km/s)');
+    if (speed1El) speed1El.textContent = getQualitativeSpeed(medium1);
+    if (speed2El) speed2El.textContent = getQualitativeSpeed(medium2);
     if (critEl) {
         critEl.textContent = med1.n < med2.n
             ? "Az Yoğundan → Çok Yoğuna"
@@ -11876,13 +11955,13 @@ function updateDissolvePedagogicalBox() {
 
     if (dissolve.preset === "temp") {
         title.textContent = "🌡️ Sıcaklık Etkisi Hipotezi (Kontrollü Deney):";
-        text.textContent = `Sıcaklık arttıkça su moleküllerinin kinetik enerjisi ve hareket sürati artar. Şeker tanecikleriyle çarpışma şiddetlenerek çözünme süresi kısalır (${b[0].targetTime.toFixed(1)}s ➔ ${b[1].targetTime.toFixed(1)}s ➔ ${b[2].targetTime.toFixed(1)}s).`;
+        text.textContent = "Sıcaklık arttıkça su moleküllerinin kinetik enerjisi ve hareket sürati artar. Taneciklerle çarpışma sıklaşarak sıcak sudaki şekerin daha kısa sürede çözünmesi beklenir (Beher C > B > A hızı). 'Çözünmeyi Başlat' butonuna basarak süreleri gözlemleyin.";
     } else if (dissolve.preset === "surface") {
         title.textContent = "✨ Temas Yüzeyi (Tanecik Boyutu) Hipotezi:";
-        text.textContent = `Küp şekerden toz ve pudra şekerine geçildikçe katının temas yüzeyi kat kat genişler. Su ile aynı anda temas eden tanecik sayısı çoğaldığı için çözünme süresi kısalır (Pudra: ${b[2].targetTime.toFixed(1)}s < Toz: ${b[1].targetTime.toFixed(1)}s < Küp: ${b[0].targetTime.toFixed(1)}s).`;
+        text.textContent = "Aynı kütledeki şeker tanecikleri küçüldükçe (Küp ➔ Toz ➔ Pudra) toplam temas yüzeyi kat kat genişler. Su ile aynı anda temas eden tanecik sayısı çoğaldığı için çözünmenin hızlanması beklenir (Pudra şekerinde en kısa süre). 'Çözünmeyi Başlat' butonuna basarak süreleri test edin.";
     } else if (dissolve.preset === "stir") {
         title.textContent = "🌀 Karıştırma Etkisi Hipotezi:";
-        text.textContent = `Çözelti karıştırıldığında su molekülleri ile şeker taneciklerinin temas sıklığı artar. Karıştırılan beherde çözünme süresi (${b[1].targetTime.toFixed(1)}s), durgun behere (${b[0].targetTime.toFixed(1)}s) göre belirgin biçimde kısalır.`;
+        text.textContent = "Çözelti karıştırıldığında su molekülleri ile şeker taneciklerinin temas sıklığı artar. Karıştırılan beherde çözünme süresinin, durgun behere göre belirgin biçimde kısalması beklenir. 'Çözünmeyi Başlat' butonuna basarak süreleri karşılaştırın.";
     } else {
         title.textContent = "🔬 Çözünme Hızı Araştırması:";
         text.textContent = `3 beherin parametrelerini bağımsız olarak ayarlayıp "Çözünmeyi Başlat" butonuna basarak süreleri karşılaştırın.`;
@@ -11903,10 +11982,14 @@ function updateDissolveStopwatchDOM() {
             c.textContent = `${bk.targetTime.toFixed(1)} s ✓`;
             c.style.color = '#34d399';
             c.style.borderColor = 'rgba(52, 211, 153, 0.4)';
-        } else {
+        } else if (bk.elapsedTime > 0) {
             c.textContent = `${bk.elapsedTime.toFixed(1)} s`;
             c.style.color = '#facc15';
             c.style.borderColor = 'rgba(250, 204, 21, 0.3)';
+        } else {
+            c.textContent = '0.0 s';
+            c.style.color = '#94a3b8';
+            c.style.borderColor = 'rgba(148, 163, 184, 0.2)';
         }
     });
 
@@ -11918,19 +12001,19 @@ function updateDissolveStopwatchDOM() {
 
     const sugarNames = { powder: "Pudra", granulated: "Toz", cube: "Küp" };
     if (mb1 && b[0]) {
-        const timeStr = b[0].isDissolved ? `${b[0].targetTime.toFixed(1)}s ✓` : `${b[0].elapsedTime.toFixed(1)}s`;
+        const timeStr = b[0].isDissolved ? `${b[0].targetTime.toFixed(1)}s ✓` : (b[0].elapsedTime > 0 ? `${b[0].elapsedTime.toFixed(1)}s` : "0.0s");
         const tVal = b[0].temp !== undefined ? b[0].temp : b[0].temperature;
         const isStir = b[0].stirring !== undefined ? b[0].stirring : b[0].isStirred;
         mb1.textContent = `${tVal}°C · ${sugarNames[b[0].sugar] || b[0].sugar}${isStir ? ' · 🌀' : ''} (${timeStr})`;
     }
     if (mb2 && b[1]) {
-        const timeStr = b[1].isDissolved ? `${b[1].targetTime.toFixed(1)}s ✓` : `${b[1].elapsedTime.toFixed(1)}s`;
+        const timeStr = b[1].isDissolved ? `${b[1].targetTime.toFixed(1)}s ✓` : (b[1].elapsedTime > 0 ? `${b[1].elapsedTime.toFixed(1)}s` : "0.0s");
         const tVal = b[1].temp !== undefined ? b[1].temp : b[1].temperature;
         const isStir = b[1].stirring !== undefined ? b[1].stirring : b[1].isStirred;
         mb2.textContent = `${tVal}°C · ${sugarNames[b[1].sugar] || b[1].sugar}${isStir ? ' · 🌀' : ''} (${timeStr})`;
     }
     if (mb3 && b[2]) {
-        const timeStr = b[2].isDissolved ? `${b[2].targetTime.toFixed(1)}s ✓` : `${b[2].elapsedTime.toFixed(1)}s`;
+        const timeStr = b[2].isDissolved ? `${b[2].targetTime.toFixed(1)}s ✓` : (b[2].elapsedTime > 0 ? `${b[2].elapsedTime.toFixed(1)}s` : "0.0s");
         const tVal = b[2].temp !== undefined ? b[2].temp : b[2].temperature;
         const isStir = b[2].stirring !== undefined ? b[2].stirring : b[2].isStirred;
         mb3.textContent = `${tVal}°C · ${sugarNames[b[2].sugar] || b[2].sugar}${isStir ? ' · 🌀' : ''} (${timeStr})`;
@@ -12640,7 +12723,10 @@ function updateSeparationMetricsDOM() {
         if (mErlenWater) mErlenWater.textContent = `${f.collectedWater.toFixed(1)} mL`;
         if (mFunnelOil) mFunnelOil.textContent = `${f.oilVolume.toFixed(1)} mL`;
         if (mFunnelEff) {
-            if (f.leakedOil > 0.5) {
+            if (f.collectedWater === 0 && f.leakedOil === 0 && !f.isValveOpen) {
+                mFunnelEff.textContent = "— (Başlatılmadı)";
+                mFunnelEff.style.color = "#94a3b8";
+            } else if (f.leakedOil > 0.5) {
                 mFunnelEff.textContent = `%${f.efficiency.toFixed(0)} (Yağ Sızdı)`;
                 mFunnelEff.style.color = "#ef4444";
             } else if (f.collectedWater >= 95) {
@@ -13998,7 +14084,11 @@ function updateElectroPedagogicalBox() {
 
             pIcon.innerHTML = '<i class="fas fa-handshake"></i>';
             pTitle.textContent = `🤝 Dokunma Gerçekleşti: Yükler Eşit Paylaşıldı! (${signText})`;
-            pText.textContent = "Özdeş iletken küreler dokundurulduğunda fazla elektronlar temas noktasından akarak küreler arasında eşit bölündü. Küreler ayrıldığında her ikisi de AYNI CİNS yükle yüklendi!";
+            if (s1Net === 0 && s2Net === 0) {
+                pText.textContent = "Eşit ve zıt yüklü küreler dokundurulduğunda elektron akışıyla yükler birbirini nötrledi; ayrıldıklarında her iki küre de NÖTR kaldı!";
+            } else {
+                pText.textContent = "Özdeş iletken küreler dokundurulduğunda fazla elektronlar temas noktasından akarak küreler arasında eşit bölündü. Küreler ayrıldığında her ikisi de AYNI CİNS yükle yüklendi!";
+            }
         } else {
             pIcon.innerHTML = '<i class="fas fa-arrows-alt-h"></i>';
             pTitle.textContent = "🤝 Dokunma ile Elektriklenme: Küreleri Dokundurun";
@@ -14136,38 +14226,13 @@ function updateElectroMetricsDOM() {
     const mbTransfer = document.getElementById('mbar-77-transfer');
     const mbStatus = document.getElementById('mbar-77-status');
 
-    if (mbRod) {
-        if (el.mode === "friction") mbRod.textContent = el.friction.pair === "ebonite" ? "Ebonit (-)" : "Cam (+)";
-        else if (el.mode === "conduction") mbRod.textContent = "1. Küre";
-        else mbRod.textContent = el.induction.pair === "ebonite" ? "Ebonit (-)" : "Cam (+)";
-    }
-    if (mbCloth) {
-        if (el.mode === "friction") mbCloth.textContent = el.friction.pair === "ebonite" ? "Yün (+)" : "İpek (-)";
-        else if (el.mode === "conduction") mbCloth.textContent = "2. Küre";
-        else mbCloth.textContent = "İletken Küre (Nötr)";
-    }
-    if (mbTransfer) {
-        if (el.mode === "friction") mbTransfer.textContent = "Sürtünme e⁻";
-        else if (el.mode === "conduction") mbTransfer.textContent = el.conduction.hasTouched ? "e⁻ Paylaşıldı" : "Dokunma Yok";
-        else mbTransfer.textContent = el.induction.rod.isApproached ? "Kutuplanma (e⁻ İtildi/Çekildi)" : "Kutuplanma Yok";
-    }
-    if (mbStatus) {
-        if (el.mode === "friction") {
-            const stuckCount = el.friction.papers.filter(p => p.isStuck).length;
-            mbStatus.textContent = stuckCount > 0 ? `Çekim: ${stuckCount} Kağıt` : (el.friction.rod.protons !== el.friction.rod.electrons ? "Yüklü Çubuk" : "Nötr");
-        } else if (el.mode === "conduction") {
-            mbStatus.textContent = el.conduction.hasTouched ? "Yükler Paylaşıldı" : "Temas Bekleniyor";
-        } else {
-            mbStatus.textContent = el.induction.rod.isApproached ? "Kutuplanmış Küre (Net: 0)" : "Nötr Dağılım";
-        }
-    }
-
     if (el.mode === "friction") {
         const f = el.friction;
+        const isEb = (f.pair === "ebonite");
         const rodNet = f.rod.protons - f.rod.electrons;
         const clothNet = f.cloth.protons - f.cloth.electrons;
-        const rodLabel = f.materialPair === "ebonite_wool" ? "Ebonit (Plastik)" : "Cam Çubuk";
-        const clothLabel = f.materialPair === "ebonite_wool" ? "Yün Kumaş" : "İpek Kumaş";
+        const rodLabel = isEb ? "Ebonit (Plastik)" : "Cam Çubuk";
+        const clothLabel = isEb ? "Yün Kumaş" : "İpek Kumaş";
 
         if (mbRod) {
             mbRod.textContent = rodNet === 0 ? `${rodLabel} (Nötr)` : `${rodLabel}: ${rodNet > 0 ? '+' : ''}${rodNet}e (${rodNet > 0 ? 'Pozitif' : 'Negatif'})`;
@@ -14178,25 +14243,26 @@ function updateElectroMetricsDOM() {
             mbCloth.style.color = clothNet > 0 ? '#f87171' : clothNet < 0 ? '#38bdf8' : '#cbd5e1';
         }
         if (mbTransfer) {
-            if (f.materialPair === "ebonite_wool") {
-                mbTransfer.textContent = f.frictionRubCount > 0 ? "Elektronlar: Yün ➔ Ebonit (-)" : "Sürtünme Bekleniyor";
+            if (rodNet !== 0) {
+                mbTransfer.textContent = isEb ? "e⁻ Transferi: Yün ➔ Ebonit (-)" : "e⁻ Transferi: Cam ➔ İpek (-)";
             } else {
-                mbTransfer.textContent = f.frictionRubCount > 0 ? "Elektronlar: Cam ➔ İpek (-)" : "Sürtünme Bekleniyor";
+                mbTransfer.textContent = "Sürtünme Bekleniyor";
             }
         }
         if (mbStatus) {
-            if (Math.abs(rodNet) >= 3) {
-                mbStatus.textContent = "🧲 Çubuk Elektriklendi: Nötr kağıt parçalarını elektrostatik çekimle çeker!";
+            const stuckCount = f.papers.filter(p => p.isStuck).length;
+            if (stuckCount > 0) {
+                mbStatus.textContent = `🧲 Çekim: ${stuckCount} Kağıt Parçası Çekildi!`;
                 mbStatus.style.color = "#34d399";
-            } else if (f.frictionRubCount > 0) {
-                mbStatus.textContent = "⚡ Elektron transferi gerçekleşti, zıt elektrik yükü oluştu";
+            } else if (rodNet !== 0) {
+                mbStatus.textContent = isEb ? "⚡ Ebonit çubuk elektron alarak (-) yüklendi, yün (+) kaldı" : "⚡ Cam çubuk elektron vererek (+) yüklendi, ipek (-) kaldı";
                 mbStatus.style.color = "#facc15";
             } else {
                 mbStatus.textContent = "🧲 Kumaşı çubuğa sürterek elektron aktarımını başlatın";
                 mbStatus.style.color = "#38bdf8";
             }
         }
-    } else {
+    } else if (el.mode === "conduction") {
         const c = el.conduction;
         const s1Net = c.sphere1.protons - c.sphere1.electrons;
         const s2Net = c.sphere2.protons - c.sphere2.electrons;
@@ -14214,12 +14280,30 @@ function updateElectroMetricsDOM() {
         }
         if (mbStatus) {
             if (c.hasTouched) {
-                mbStatus.textContent = "🤝 Dokunma ile Elektriklenme: Toplam yük iletken küreler arasında paylaşıldı!";
+                mbStatus.textContent = (s1Net === 0 && s2Net === 0) ? "🤝 Zıt yükler birbirini nötrledi (Net: 0)" : "🤝 Dokunma ile Elektriklenme: Net yük iletken küreler arasında paylaşıldı!";
                 mbStatus.style.color = "#34d399";
             } else {
                 mbStatus.textContent = "⚡ Küreleri sürükleyip birbirine dokundurun";
                 mbStatus.style.color = "#facc15";
             }
+        }
+    } else {
+        const ind = el.induction;
+        const isEb = (ind.pair === "ebonite");
+        if (mbRod) {
+            mbRod.textContent = isEb ? "(-) Ebonit Çubuk" : "(+) Cam Çubuk";
+            mbRod.style.color = isEb ? '#38bdf8' : '#f87171';
+        }
+        if (mbCloth) {
+            mbCloth.textContent = ind.rod.isApproached ? "Kutuplanmış Küre (Net: 0)" : "İletken Küre (Nötr)";
+            mbCloth.style.color = '#cbd5e1';
+        }
+        if (mbTransfer) {
+            mbTransfer.textContent = ind.rod.isApproached ? (isEb ? "Elektronlar İtildi (Kutuplanma)" : "Elektronlar Çekildi (Kutuplanma)") : "Kutuplanma Yok";
+        }
+        if (mbStatus) {
+            mbStatus.textContent = ind.rod.isApproached ? "🧲 Etki ile Kutuplanma: Çubuk küreye yaklaştığında yükler ayrıştı, toplam yük değişmedi" : "🧲 Çubuğu iletken küreye yaklaştırarak etkiyi gözlemleyin";
+            mbStatus.style.color = ind.rod.isApproached ? "#34d399" : "#38bdf8";
         }
     }
 }
@@ -18185,7 +18269,7 @@ function setupFrictionControlsDOM() {
         fr.surface = s;
         initFrictionState();
         updateFrictionDOMControls();
-        const names = { ice: "Pürüzsüz Zemin (Çok Az Pürüzlü)", wood: "Mukavva Zemin (Ders Kitabı Düzeneği)", sand: "Kumlu Zemin (Pürüzlü)", carpet: "Pamuklu Kumaş (Çok Pürüzlü)" };
+        const names = { ice: "Pürüzsüz Zemin (Çok Az Pürüzlü)", wood: "Mukavva Zemin (Ders Kitabı Düzeneği)", sand: "Kumlu Zemin (Pürüzlü)", carpet: "Pamuk Kaplı Zemin (Çok Pürüzlü)" };
         showLabToast(`Yüzey türü seçildi: ${names[s] || s}`);
     };
 
@@ -19047,18 +19131,18 @@ function drawLightRectSimulation() {
             ctx.stroke();
             ctx.restore();
 
-            // Işın Doğrusal İlerler ve İlk Kıvrıma Çarparak Söner
+            // Işın Doğrusal İlerler ve Opak Borunun İlk İç Çeperine Çarparak Söner (Dışına Taşmaz)
             ctx.strokeStyle = "#facc15";
             ctx.lineWidth = 4;
             ctx.beginPath();
             ctx.moveTo(126, 240);
-            ctx.lineTo(260, 240);
+            ctx.lineTo(205, 240);
             ctx.stroke();
 
-            // Çarpma Parlaması
+            // Çarpma Parlaması (İç çeper temas noktası)
             ctx.fillStyle = "#ef4444";
             ctx.beginPath();
-            ctx.arc(260, 240, 6, 0, Math.PI * 2);
+            ctx.arc(205, 240, 5, 0, Math.PI * 2);
             ctx.fill();
         }
 
@@ -19179,7 +19263,7 @@ function updateShadowPhysics() {
 
     if (mbSrc) mbSrc.textContent = `${sh.sourceDist} cm`;
     if (mbScr) mbScr.textContent = `${sh.screenDist} cm`;
-    if (mbSize) mbSize.textContent = sh.lampOn ? `${sh.shadowDiameter} cm (Tam Gölge)` : "Gölge Yok";
+    if (mbSize) mbSize.textContent = sh.lampOn ? `${sh.shadowDiameter} cm (Tam Gölge)` : "0 cm (Gölge Oluşmaz)";
     if (mbStatus) mbStatus.textContent = statusText;
     if (valSrc) valSrc.textContent = `${sh.sourceDist} cm`;
     if (valScr) valScr.textContent = `${sh.screenDist} cm`;
@@ -19428,7 +19512,7 @@ function setupCompressibilityControlsDOM() {
         cp.plungerPos = 0;
         updateCompressibilityDOMControls();
         updateCompressibilityPhysics();
-        const names = { gas: "Hava (Gaz Hâli)", liquid: "Su (Sıvı Hâli)", solid: "Tahta Takoz (Katı Hâli)" };
+        const names = { gas: "Hava (Gaz Hâli)", liquid: "Su (Sıvı Hâli)", solid: "Küçük Taş Parçaları (Katı Hâli)" };
         showLabToast(`Madde seçildi: ${names[st]}`);
     };
 
@@ -19506,7 +19590,7 @@ function updateCompressibilityPhysics() {
         }
     });
 
-    const stateLabels = { gas: "Hava (Gaz)", liquid: "Su (Sıvı)", solid: "Tahta (Katı)" };
+    const stateLabels = { gas: "Hava (Gaz)", liquid: "Su (Sıvı)", solid: "Küçük Taş Parçaları (Katı)" };
     const gapLabels = { gas: "Çok Fazla (Geniş Boşluk)", liquid: "Çok Az (Yakın)", solid: "Yok Denecek Kadar Az" };
     const compLabels = { gas: "Kolayca Sıkışır", liquid: "Sıkıştırılamaz Kabul Edilir", solid: "Kesinlikle Sıkışmaz" };
 
@@ -19523,7 +19607,7 @@ function updateCompressibilityPhysics() {
     if (mbStatus) {
         if (cp.state === 'gas') mbStatus.textContent = "💨 Gazlar tanecikler arasındaki geniş boşluklar sebebiyle kolayca sıkışır (Hacim azaldı)";
         else if (cp.state === 'liquid') mbStatus.textContent = "💧 Sıvı tanecikleri birbiriyle temas halindedir; sıvı sıkıştırılamaz";
-        else mbStatus.textContent = "🪵 Katı tanecikleri çok sıkı dizilmiştir; katı maddeler sıkıştırılamaz";
+        else mbStatus.textContent = "🪨 Küçük taş tanecikleri çok sıkı dizilmiştir; katı maddeler sıkıştırılamaz";
     }
     if (valForce) valForce.textContent = `%${cp.forcePercent}`;
     if (slider) slider.value = cp.forcePercent;
@@ -19549,9 +19633,9 @@ function updateCompressibilityPhysics() {
             pText.textContent = "Sıvı tanecikleri birbiriyle sürekli temas hâlindedir ve aralarında kayda değer boşluk yoktur. Bu yüzden sıvılar sıkıştırılamaz kabul edilir.";
             if (pIcon) pIcon.innerHTML = '<i class="fas fa-tint" style="color: #06b6d4;"></i>';
         } else {
-            pTitle.textContent = "🪵 Katıların Düzenli ve Sıkı Yapısı";
-            pText.textContent = "Katı tanecikleri belirli bir düzen içinde ve birbirine son derece yakın dizilmiştir; aralarında boşluk yoktur. Katılar kesinlikle sıkıştırılamaz.";
-            if (pIcon) pIcon.innerHTML = '<i class="fas fa-cube" style="color: #fbbf24;"></i>';
+            pTitle.textContent = "🪨 Katıların Düzenli ve Sıkı Yapısı";
+            pText.textContent = "Küçük taş parçaları (katı) tanecikleri belirli bir düzen içinde ve birbirine son derece yakın dizilmiştir; aralarında boşluk yoktur. Katılar kesinlikle sıkıştırılamaz.";
+            if (pIcon) pIcon.innerHTML = '<i class="fas fa-gem" style="color: #94a3b8;"></i>';
         }
     }
 }
@@ -19619,12 +19703,12 @@ function drawCompressibilitySimulation() {
             }
         }
     } else if (cp.state === 'solid') {
-        // Katı (Sert Ahşap Blok)
-        ctx.fillStyle = "#b45309";
+        // Katı (Küçük Taş Parçaları Doldurulmuş Şırınga)
+        ctx.fillStyle = "#334155";
         ctx.fillRect(barrelX, barrelY, barrelW, barrelH);
 
-        // Kristalize Sıkı Kafes Tanecikleri
-        ctx.fillStyle = "#fde68a";
+        // Düzenli ve Sıkı Taş Mineral Tanecikleri (Sıkışmaz, boyutu küçülmez)
+        ctx.fillStyle = "#94a3b8";
         for (let row = 0; row < 6; row++) {
             for (let col = 0; col < 15; col++) {
                 const px = barrelX + 12 + col * 19;
@@ -21001,15 +21085,15 @@ function recordMeasurement() {
             id: sh.measurements.length + 1,
             col1: `${sh.sourceDist} cm`,
             col2: `${sh.screenDist} cm`,
-            col3: `${sh.shadowDiameter} cm`,
-            col4: sh.shadowDiameter > 16 ? "Büyük Boy Gölge" : "Küçük Boy Gölge",
-            col5: "Cisim ışığa yaklaştıkça gölge büyür"
+            col3: sh.lampOn ? `${sh.shadowDiameter} cm` : "0 cm (Gölge Oluşmaz)",
+            col4: sh.lampOn ? (sh.shadowDiameter > 16 ? "Büyük Boy Gölge" : "Küçük Boy Gölge") : "Gölge Yok (Işık Kapalı)",
+            col5: sh.lampOn ? "Cisim ışığa yaklaştıkça gölge büyür" : "Işık kaynağı kapalıyken gölge oluşmaz"
         };
         sh.measurements.push(row);
         showLabToast(`Tam Gölge Gözlemi #${row.id} deftere kaydedildi!`);
     } else if (expId === "5.6") {
         const cp = labState.compressibility;
-        const names = { gas: "Hava", liquid: "Su", solid: "Tahta" };
+        const names = { gas: "Hava", liquid: "Su", solid: "Küçük Taş Parçaları" };
         const states = { gas: "Gaz", liquid: "Sıvı", solid: "Katı" };
         const row = {
             id: cp.measurements.length + 1,
@@ -22171,14 +22255,14 @@ function updateWaterFootprintDOM() {
     if (wf.mode === "aqueduct") {
         const aq = wf.aqueduct;
         if (mbMode) mbMode.textContent = "Su Kemeri (Sinan)";
-        if (mbFlow) mbFlow.textContent = `${aq.waterDelivered} L/s İletim`;
-        if (mbSaving) mbSaving.textContent = aq.slope === 0.2 ? "%0.2 Kusursuz Eğim" : `%${aq.slope.toFixed(1)} Eğim`;
+        if (mbFlow) mbFlow.textContent = `${aq.waterDelivered} L/s (Temsilî İletim)`;
+        if (mbSaving) mbSaving.textContent = aq.slope === 0.2 ? "%0.2 Model Eğimi" : `%${aq.slope.toFixed(1)} Eğim`;
         if (mbType) mbType.textContent = aq.flood ? "Sel Tahliyesi Açık" : "Mavi Su (Kaynak)";
 
         if (lbl1) lbl1.textContent = "Kaynak Debi Girişi";
         if (val1) val1.textContent = `${aq.flow} L/s`;
         if (lbl2) lbl2.textContent = "İstanbul'a Ulaşan Su";
-        if (val2) val2.textContent = `${aq.waterDelivered} L/s`;
+        if (val2) val2.textContent = `~${aq.waterDelivered} L/s (Model)`;
         if (lbl3) lbl3.textContent = "Kanal Eğim Açısı";
         if (val3) val3.textContent = `%${aq.slope.toFixed(1)}`;
         if (lbl4) lbl4.textContent = "Yapı Güvenliği & Sel";
@@ -22188,10 +22272,10 @@ function updateWaterFootprintDOM() {
             pIcon.innerHTML = '<i class="fas fa-archway"></i>';
             if (aq.slope === 0.2) {
                 pTitle.textContent = "🏛️ Mimar Sinan ve Mağlova Kemeri Dehası (%0.2 Eğim)";
-                pText.textContent = "Mimar Sinan, motor ve elektrik gücü olmadan suyu Belgrad Ormanları'ndan İstanbul'a taşırken kanala tam %0.2 (binde iki) eğim vermiştir. Aşırı eğim kanal duvarlarını yıpratır, düşük eğim suyu durdurur!";
+                pText.textContent = "Mimar Sinan, motor ve elektrik gücü olmadan suyu Belgrad Ormanları'ndan İstanbul'a taşırken kanala yerçekimiyle dengeli akışı sağlayacak yaklaşık %0.2 (binde iki) eğim vermiştir. Aşırı eğim kanal duvarlarını yıpratır, düşük eğim suyu durdurur!";
             } else if (aq.slope > 0.4) {
                 pTitle.textContent = "⚠️ Aşırı Kanal Eğimi: Aşınma ve Taşma Riski!";
-                pText.textContent = "Eğim %0.4'ü aştığında su kanalda aşırı hızlanır, sürtünme ve erozyonla kemer taşlarına zarar verir. Mimar Sinan'ın binde 2'lik altın oranına dönün.";
+                pText.textContent = "Eğim %0.4'ü aştığında su kanalda aşırı hızlanır, sürtünme ve erozyonla kemer taşlarına zarar verir. Model için önerilen binde 2'lik eğim dengesine dönün.";
             } else {
                 pTitle.textContent = "🏛️ Kırkçeşme Su Yolu Yerçekimi İletimi";
                 pText.textContent = "Kemer ayaklarındaki piramidal mahmuzlar ve tahliye pencereleri asırlık sellere meydan okumuştur.";

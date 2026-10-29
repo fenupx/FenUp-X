@@ -1361,8 +1361,10 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     gap: 20px;
 }
 
-/* Belirgin Ana Sayfaya Dön Butonu */
-.btn-lab-nav-home {
+/* Belirgin Ortak Ana Sayfaya Dön Buton Standardı (Lab, Yazılı Girişi, Yarışma) */
+.btn-lab-nav-home,
+.btn-back-home,
+#btn-exam-step-back.scope-back-home {
     background: rgba(0, 210, 255, 0.12) !important;
     border: 1.5px solid var(--neon-blue) !important;
     color: #fff !important;
@@ -1376,8 +1378,13 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     transition: all 0.25s ease !important;
     cursor: pointer !important;
     box-shadow: 0 0 12px rgba(0, 210, 255, 0.2) !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    touch-action: manipulation !important;
 }
-.btn-lab-nav-home:hover {
+.btn-lab-nav-home:hover,
+.btn-back-home:hover,
+#btn-exam-step-back.scope-back-home:hover {
     background: var(--neon-blue) !important;
     color: #030712 !important;
     box-shadow: 0 0 20px rgba(0, 210, 255, 0.5) !important;
@@ -3049,10 +3056,10 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     #header-navigation {
         position: absolute; top: 100%; left: 8px; right: 8px;
         width: auto !important; min-width: 0; box-sizing: border-box;
-        display: flex !important; flex-direction: column; align-items: stretch !important;
+        display: flex !important; flex-direction: column !important; flex-wrap: nowrap !important; align-items: stretch !important;
         gap: 4px !important; padding: 12px; background: #0a0f1e;
         border: 1px solid #334155; border-radius: 0 0 12px 12px;
-        max-height: calc(100dvh - 70px); overflow-y: auto;
+        max-height: calc(100dvh - 70px); overflow-y: auto; overflow-x: hidden !important;
         pointer-events: auto; z-index: 500;
     }
     #header-navigation.is-hidden { display: none !important; pointer-events: none !important; }
@@ -3250,11 +3257,9 @@ body > .scene { flex-shrink: 0; }
     display: none !important;
 }
 
-/* Çalışma modüllerinde (Yazılıya Hazırlık, Sanal Laboratuvar) footer gizlenir */
-body:has(#scene-yazili:not(.is-hidden)) #main-footer,
-body:has(#lab-view:not(.is-hidden)) #main-footer,
-#scene-yazili ~ #main-footer,
-#lab-view ~ #main-footer {
+/* Odaklı çalışma ekranlarında (ders ekranı ve deney simülasyon tezgahı) footer gizlenir; diğer adımlarda ve ana sayfada masaüstünde görünür */
+body:has(#exam-view-study:not(.is-hidden)) #main-footer,
+body:has(#lab-workspace-view:not(.is-hidden)) #main-footer {
     display: none !important;
 }
 
@@ -3267,6 +3272,10 @@ body:has(#lab-view:not(.is-hidden)) #main-footer,
     .mobile-nav-footer-section {
         display: flex !important;
         flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        flex-shrink: 0;
         gap: 8px;
         margin-top: 12px;
         padding-top: 12px;
