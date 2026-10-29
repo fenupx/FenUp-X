@@ -60,6 +60,7 @@ body:has(#scene-yazili:not(.is-hidden)) {
     padding: 10px 24px 80px 24px;
 }
 
+#scene-yazili.choice-active .exam-header-bar,
 #scene-yazili.study-active .exam-header-bar,
 #scene-yazili.practice-active .exam-header-bar,
 #scene-yazili.eval-active .exam-header-bar,
@@ -841,6 +842,7 @@ body:has(#scene-yazili:not(.is-hidden)) {
     transition: grid-template-columns 0.25s ease, gap 0.25s ease;
 }
 
+#scene-yazili.study-active .exam-cards-layout.plan-collapsed,
 .exam-cards-layout.plan-collapsed {
     grid-template-columns: minmax(0, 1fr) !important;
     gap: 0 !important;
@@ -4281,9 +4283,12 @@ body:has(#scene-yazili.study-active) .cookie-banner {
 .exam-back-navigation { width: 100%; margin-bottom: 12px; flex-shrink: 0; text-align: left; }
 #btn-exam-step-back { min-width: 48px; min-height: 48px; touch-action: manipulation; }
 #btn-exam-back-home,
-#btn-choice-change-scope, #btn-study-back-choice, #btn-practice-setup-back,
+#btn-choice-change-scope, #btn-practice-setup-back,
 #btn-practice-back-choice, #btn-eval-back-choice {
     display: none !important; pointer-events: none !important;
+}
+#scene-yazili.study-active .exam-back-navigation {
+    display: none !important;
 }
 #scene-yazili { min-width: 0; }
 #scene-yazili .summary-analysis-card,
@@ -4372,3 +4377,331 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     #scene-yazili.content-v3 .study-card-top-meta { flex-wrap: nowrap; }
     #scene-yazili.content-v3 .exam-contentgrid { grid-template-columns: minmax(0,1.1fr) minmax(0,1fr) !important; }
 }
+
+/* ========================================================================= */
+/* FENUP X — V6 İÇERİK, GALERİ VE SADELEŞTİRİLMİŞ ÇALIŞMA AKIŞI STİLLERİ     */
+/* ========================================================================= */
+
+/* 1. Tek Kompakt Kaldığın Yerden Devam Et Kartı ve Kaydı Kaldır */
+.choice-saved-work-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-top: 12px;
+    box-sizing: border-box;
+}
+
+.choice-saved-work-card .saved-attempt-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1 1 0%;
+    min-width: 0;
+}
+
+.choice-saved-work-card .saved-attempt-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.choice-saved-work-card .saved-attempt-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.btn-clear-saved-work {
+    background: transparent !important;
+    border: 1px solid rgba(239, 68, 68, 0.4) !important;
+    color: #f87171 !important;
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 0.85rem !important;
+    padding: 8px 14px !important;
+    min-height: 48px;
+    min-width: 48px;
+    touch-action: manipulation;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-clear-saved-work:hover {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border-color: #ef4444 !important;
+    color: #fca5a5 !important;
+}
+
+@media (max-width: 640px) {
+    .choice-saved-work-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+        padding: 14px;
+    }
+    .choice-saved-work-card .saved-attempt-actions {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        gap: 8px;
+    }
+    .choice-saved-work-card .saved-attempt-actions button {
+        flex: 1 1 0%;
+        justify-content: center;
+    }
+}
+
+/* 2. Ders Araç Çubuğu Kompakt Sıralama ve Tek Satır Güvencesi */
+.exam-study-toolbar .btn-icon-only,
+#btn-study-fullscreen.btn-icon-only {
+    width: 48px !important;
+    min-width: 48px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+}
+
+@media (max-width: 768px) {
+    .exam-study-toolbar {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        margin-bottom: 10px !important;
+        padding-bottom: 8px !important;
+        width: 100% !important;
+    }
+    .study-toolbar-left,
+    .study-toolbar-right {
+        display: flex !important;
+        align-items: center !important;
+        flex-wrap: nowrap !important;
+        gap: 6px !important;
+    }
+    .exam-study-toolbar button {
+        flex: 0 0 auto !important;
+        width: auto !important;
+        max-width: none !important;
+        min-height: 44px !important;
+        padding: 6px 12px !important;
+        font-size: 0.85rem !important;
+    }
+    .exam-study-toolbar .btn-icon-only,
+    #btn-study-fullscreen.btn-icon-only {
+        width: 44px !important;
+        min-width: 44px !important;
+        height: 44px !important;
+        min-height: 44px !important;
+        padding: 0 !important;
+    }
+}
+
+/* 3. V6 Konu Kartı Renderer Alanları (Topics, Facts, Chain, Wide-Table, Dark Theme) */
+.topics {
+    margin: 18px 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: topics;
+    max-width: 820px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 28px;
+    row-gap: 14px;
+}
+
+.topics li {
+    counter-increment: topics;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 1.05rem;
+    line-height: 1.45;
+    color: #e2e8f0;
+}
+
+.topics li:before {
+    content: counter(topics, decimal-leading-zero);
+    font-size: 0.88rem;
+    color: #38bdf8;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.facts {
+    margin: 14px 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 20px;
+}
+
+.facts div {
+    padding: 0 0 8px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    min-width: 0;
+}
+
+.facts dt {
+    font-size: 0.82rem;
+    color: #38bdf8;
+    margin-bottom: 3px;
+    font-weight: 700;
+}
+
+.facts dd {
+    font-size: 0.98rem;
+    line-height: 1.4;
+    margin: 0;
+    color: #f1f5f9;
+}
+
+.chain-note {
+    font-size: 0.88rem;
+    color: #94a3b8;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.chain {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 10px 0 18px;
+    font-size: 1.05rem;
+}
+
+.chain b {
+    font-weight: 700;
+    padding: 6px 12px;
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 8px;
+    background: rgba(15, 23, 42, 0.8);
+    color: #e2e8f0;
+}
+
+.chain span {
+    color: #38bdf8;
+    font-weight: bold;
+}
+
+#exam-card-article.wide-table .exam-contentgrid {
+    grid-template-columns: minmax(0, 1fr) !important;
+}
+
+#exam-card-article.wide-table .exam-visualbox,
+#exam-card-article.wide-table .exam-tablewrap {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.exam-visualbox.theme-dark,
+.exam-visualbox .diagram.theme-dark,
+.diagram.dark-theme {
+    background: #08111e !important;
+    border-color: rgba(56, 189, 248, 0.35) !important;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+@media (max-width: 640px) {
+    .topics,
+    .facts {
+        grid-template-columns: minmax(0, 1fr);
+        column-gap: 0;
+    }
+}
+
+/* 4. Soru Görsel Galerisi (İki Gerçek Fotoğraf Yan Yana) */
+.exam-qgallery,
+.print-qgallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.exam-qgallery figure,
+.print-qgallery figure {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 10px;
+    padding: 8px;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.exam-qgallery figure img,
+.print-qgallery figure img {
+    max-height: 180px;
+    width: 100%;
+    object-fit: contain;
+    border-radius: 6px;
+    display: block;
+}
+
+.exam-qgallery figcaption,
+.print-qgallery figcaption {
+    font-size: 0.82rem;
+    line-height: 1.3;
+    color: #94a3b8;
+    margin-top: 6px;
+    text-align: center;
+    font-weight: 600;
+}
+
+@media (max-width: 580px) {
+    .exam-qgallery {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* 5. V6 İçerik Zırhı ve Uyumluluğu */
+#scene-yazili.content-v6 .exam-visualbox,
+#scene-yazili.content-v6 .exam-visual-credit,
+#scene-yazili.content-v6 .exam-tablewrap { min-width: 0; max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
+#scene-yazili.content-v6 .exam-visualbox img { object-fit: contain; max-height: 220px; border-radius: 0; }
+#scene-yazili.content-v6 .exam-visualbox { padding: 10px; }
+#scene-yazili.content-v6 #exam-visual .exam-tablewrap { width: 100%; margin: 0; }
+#scene-yazili.content-v6 #exam-visual .exam-table { table-layout: fixed; }
+#scene-yazili.content-v6 #exam-visual .exam-table td,
+#scene-yazili.content-v6 #exam-visual .exam-table th { padding: 4px 8px; }
+#scene-yazili.content-v6 #exam-visual .exam-table caption { padding: 6px 8px; }
+#scene-yazili.content-v6 .exam-visual-credit summary { min-width: 48px; min-height: 48px; display: flex; align-items: center; cursor: pointer; touch-action: manipulation; }
+#scene-yazili.content-v6 .exam-visual-credit p { margin: 6px 0; }
+#scene-yazili.content-v6 .exam-visual-credit a { color: #99f6e4; min-height: 48px; display: inline-flex; align-items: center; touch-action: manipulation; }
+@media (max-width: 768px) {
+    #scene-yazili.content-v6 .exam-visual-credit { width: 100%; }
+}
+@media (orientation: landscape) and (max-height: 520px) and (min-width: 650px) {
+    #scene-yazili.content-v6 .exam-visual-credit { width: auto; }
+    #scene-yazili.content-v6 .exam-visualbox img { max-height: 140px !important; }
+    #scene-yazili.content-v6 .study-card-top-meta { flex-wrap: nowrap; }
+    #scene-yazili.content-v6 .exam-contentgrid { grid-template-columns: minmax(0,1.1fr) minmax(0,1fr) !important; }
+}
+#scene-yazili.content-v6 .exam-contentgrid.exam-text-only { grid-template-columns: minmax(0,1fr) !important; }

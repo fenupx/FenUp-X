@@ -33,8 +33,8 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     // Tercih ekranındayız (#exam-view-choice)
     await expect(page.locator('#exam-view-choice')).toBeVisible();
 
-    // Kayıtlı çalışma kartı (#choice-saved-attempt-card) ve "Kaldığın Yerden Devam Et" butonu görünür olmalı
-    const btnResume = page.locator('#btn-resume-saved-attempt');
+    // Kayıtlı çalışma kartı (#choice-saved-work-card) ve "Kaldığın Yerden Devam Et" butonu görünür olmalı
+    const btnResume = page.locator('#btn-resume-saved-work');
     await expect(btnResume).toBeVisible();
     await btnResume.click();
 
@@ -122,7 +122,7 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
   });
 
   test('Akış (a) ve (b): Yeni konu çalışması -> birkaç kart ilerle -> ana sayfa -> modüle dön -> Yeni Konu 1. kartta, Devam Et önceki kartta', async ({ page }) => {
-    const v3Data = await (await page.request.get('/data/exam/content-v3/pilot_7_senaryo2.json')).json();
+    const v6Data = await (await page.request.get('/data/exam/content-v6/pilot_7_senaryo2.json')).json();
     await page.evaluate(() => localStorage.setItem('fenupx_cookie_consent', 'accepted'));
     await page.goto('/');
 
@@ -134,11 +134,11 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
 
     // (a) Yeni konu çalışmasına başla ve 4. karta (index 3) kadar ilerle
     await page.locator('#btn-choice-go-study').click();
-    await expect(page.locator('.exam-card-title')).toHaveText(v3Data.cards[0].title);
+    await expect(page.locator('.exam-card-title')).toHaveText(v6Data.cards[0].title);
     await page.locator('#exam-card-next').click();
     await page.locator('#exam-card-next').click();
     await page.locator('#exam-card-next').click();
-    await expect(page.locator('.exam-card-title')).toHaveText(v3Data.cards[3].title);
+    await expect(page.locator('.exam-card-title')).toHaveText(v6Data.cards[3].title);
 
     // Ana sayfaya çık ve modüle yeniden gir: otomatik olarak eski konu açılmamalı, seçim ekranı açılmalı
     await page.locator('#site-logo-link').click();
@@ -147,11 +147,11 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     await expect(page.locator('#exam-view-choice')).toBeVisible();
     await expect(page.locator('#exam-view-study')).toBeHidden();
 
-    // Kaldığın Çalışmalar bölümünde kayıtlı konu çalışması (Kart 4 / 24) görünmeli ve taşmamalı
+    // Kaldığın Çalışmalar bölümünde kayıtlı konu çalışması (Kart 4 / 34) görünmeli ve taşmamalı
     const savedSection = page.locator('#choice-saved-works-section');
     await expect(savedSection).toBeVisible();
-    await expect(page.locator('#choice-saved-study-card')).toBeVisible();
-    await expect(page.locator('#saved-study-badge')).toContainText('Kart 4 / 24');
+    await expect(page.locator('#choice-saved-work-card')).toBeVisible();
+    await expect(page.locator('#saved-work-badge')).toContainText('Kart 4 / 34');
 
     const overflow = await savedSection.evaluate(el => ({
       clientWidth: el.clientWidth,
@@ -164,15 +164,15 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     // Yeni "Konu Çalışmaya Başla" seçildiğinde senaryonun ilk kartından (Kart 1) başlamalı
     await page.locator('#btn-choice-go-study').click();
     await expect(page.locator('#exam-view-study')).toBeVisible();
-    await expect(page.locator('.exam-card-title')).toHaveText(v3Data.cards[0].title);
-    await expect(page.locator('.study-counter-topic')).toContainText('Kart 1 / 9');
+    await expect(page.locator('.exam-card-title')).toHaveText(v6Data.cards[0].title);
+    await expect(page.locator('.study-counter-topic')).toContainText('Kart 1 / 17');
 
     // (b) Seçim ekranına dönüp aynı eski çalışmayı "Devam Et" ile açtığımızda önceki kart (Kart 4) korunmalı
-    await page.locator('#btn-exam-step-back').click();
+    await page.locator('#btn-study-back-choice').click();
     await expect(page.locator('#exam-view-choice')).toBeVisible();
-    await page.locator('#btn-resume-saved-study').click();
+    await page.locator('#btn-resume-saved-work').click();
     await expect(page.locator('#exam-view-study')).toBeVisible();
-    await expect(page.locator('.exam-card-title')).toHaveText(v3Data.cards[3].title);
+    await expect(page.locator('.exam-card-title')).toHaveText(v6Data.cards[3].title);
   });
 
   test('Akış (c), (d) ve (e): Prova -> cevap yaz -> başka modül -> geri giriş -> Devam Et korur, Yeni Prova boş ve yeni setle başlar, Geri/İleri korur', async ({ page }) => {
@@ -226,7 +226,7 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     expect(await page.evaluate(() => JSON.parse(localStorage.getItem('fenupx_exam_pilot_v1')).history)).toEqual(historyBeforePdf);
 
     // (d) "Devam Et" seçildiğinde eski set, kaldığı soru (Soru 2) ve cevaplar korunmalı
-    await page.locator('#btn-resume-saved-attempt').click();
+    await page.locator('#btn-resume-saved-work').click();
     await expect(page.locator('#practice-active-box')).toBeVisible();
     await expect(page.locator('#practice-current-indicator')).toContainText('Soru 2 / 7');
     await expect(page.locator('#practice-text-ans')).toHaveValue('Soru 2 bilimsel yanıtım');
@@ -259,7 +259,7 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     // (f) & (g) Art arda provalar ve havuz daraldığında kontrollü tekrar, geçerli kota ve toplam 100 puan
     const repetitionMetrics = await page.evaluate(async () => {
       const engine = await import(document.querySelector('script[src*="exam-engine.js"]').src);
-      const v3 = await (await fetch('data/exam/content-v3/pilot_7_senaryo2.json')).json();
+      const v6 = await (await fetch('data/exam/content-v6/pilot_7_senaryo2.json')).json();
       const history = {};
       const runs = [];
 
@@ -270,7 +270,7 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
         const totalScore = Object.values(points).reduce((a, b) => a + b, 0);
 
         // Kota, family_id ve incompatible_with doğrulaması
-        const conf = v3.selection_policy.scenario_profiles.dengeli;
+        const conf = v6.selection_policy.scenario_profiles.dengeli;
         const quota = conf.cycles[run % conf.cycles.length];
         for (const [oid, diffs] of Object.entries(quota)) {
           for (const [diff, n] of Object.entries(diffs)) {
@@ -298,9 +298,9 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
       }
 
       // En az görülmüş ve eşitlikte en eski görülmüş (oldest last) önceliği doğrulaması:
-      // Tüm V3 sorularını count=2, last=5000 olarak işaretle; yalnız ilk provanın 7 sorusunu count=1, last=1000 yap.
+      // Tüm V6 sorularını count=2, last=5000 olarak işaretle; yalnız ilk provanın 7 sorusunu count=1, last=1000 yap.
       const tieHistory = {};
-      for (const q of v3.questions) {
+      for (const q of v6.questions) {
         tieHistory[q.id] = { count: 2, last: 5000 };
       }
       for (const id of runs[0].ids) {
@@ -310,7 +310,7 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
 
       // Eşit count=1 durumunda daha eski last değerine sahip setin seçildiğini doğrula
       const oldestTieHistory = {};
-      for (const q of v3.questions) {
+      for (const q of v6.questions) {
         oldestTieHistory[q.id] = { count: 1, last: 9000 };
       }
       for (const id of runs[0].ids) {
@@ -338,9 +338,9 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     expect([...repetitionMetrics.leastSeenPick].sort()).toEqual([...repetitionMetrics.firstRunIds].sort());
     expect([...repetitionMetrics.oldestPick].sort()).toEqual([...repetitionMetrics.firstRunIds].sort());
 
-    // (h) Sentetik V2 kaydı varken yeni çalışma gerçekten V3 kullanıyor, Devam Et ise V2 kaydını koruyor
+    // (h) Sentetik V2 kaydı varken yeni çalışma gerçekten V6 kullanıyor, Devam Et ise V2 kaydını koruyor
     const v2Data = await (await page.request.get('/data/exam/content-v2/pilot_7_senaryo2.json')).json();
-    const v3Data = await (await page.request.get('/data/exam/content-v3/pilot_7_senaryo2.json')).json();
+    const v6Data = await (await page.request.get('/data/exam/content-v6/pilot_7_senaryo2.json')).json();
     const v2Ids = v2Data.questions.slice(0, 7).map(q => q.id);
 
     await page.evaluate(({ v2Ids }) => {
@@ -377,23 +377,20 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
 
     await page.locator('#btn-yazili-modulu').click();
     await expect(page.locator('#exam-view-choice')).toBeVisible();
-    await expect(page.locator('#choice-study-count')).toContainText('24 bilgi kartı');
-    await expect(page.locator('#saved-study-version-note')).toContainText('V3');
-    await expect(page.locator('#saved-attempt-version-note')).toContainText('V3');
+    await expect(page.locator('#choice-study-count')).toContainText('34 bilgi kartı');
+    await expect(page.locator('#saved-work-version-note')).toContainText('V6');
 
     // Kayıt listesinin (hem konu hem prova + V2 sürüm notu görünürken) dikey ve yatay görünümde taşmadığını ve 48x48 dokunma hedefini doğrula
     const checkSavedLayout = async () => {
       const metrics = await page.evaluate(() => {
         const sec = document.getElementById('choice-saved-works-section');
-        const studyCard = document.getElementById('choice-saved-study-card');
-        const attemptCard = document.getElementById('choice-saved-attempt-card');
-        const btn1 = document.getElementById('btn-resume-saved-study').getBoundingClientRect();
-        const btn2 = document.getElementById('btn-resume-saved-attempt').getBoundingClientRect();
+        const workCard = document.getElementById('choice-saved-work-card');
+        const btn1 = document.getElementById('btn-resume-saved-work').getBoundingClientRect();
+        const btn2 = document.getElementById('btn-clear-saved-work').getBoundingClientRect();
         return {
           docOverflow: document.documentElement.scrollWidth <= window.innerWidth + 1,
           secOverflow: sec.scrollWidth <= sec.clientWidth + 1,
-          studyOverflow: studyCard.scrollWidth <= studyCard.clientWidth + 1,
-          attemptOverflow: attemptCard.scrollWidth <= attemptCard.clientWidth + 1,
+          workOverflow: workCard.scrollWidth <= workCard.clientWidth + 1,
           btn1W: Math.round(btn1.width),
           btn1H: Math.round(btn1.height),
           btn2W: Math.round(btn2.width),
@@ -402,8 +399,7 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
       });
       expect(metrics.docOverflow).toBe(true);
       expect(metrics.secOverflow).toBe(true);
-      expect(metrics.studyOverflow).toBe(true);
-      expect(metrics.attemptOverflow).toBe(true);
+      expect(metrics.workOverflow).toBe(true);
       expect(metrics.btn1W).toBeGreaterThanOrEqual(48);
       expect(metrics.btn1H).toBeGreaterThanOrEqual(48);
       expect(metrics.btn2W).toBeGreaterThanOrEqual(48);
@@ -418,14 +414,14 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
       await page.setViewportSize(vp);
     }
 
-    // Eski V2 prova kaydı korunurken Yeni Konu Çalışması V3 ve 1. kartı açmalı
+    // Eski V2 prova kaydı korunurken Yeni Konu Çalışması V6 ve 1. kartı açmalı
     await page.locator('#btn-choice-go-study').click();
-    await expect(page.locator('#scene-yazili')).toHaveClass(/content-v3/);
-    await expect(page.locator('.exam-card-title')).toHaveText(v3Data.cards[0].title);
+    await expect(page.locator('#scene-yazili')).toHaveClass(/content-v6/);
+    await expect(page.locator('.exam-card-title')).toHaveText(v6Data.cards[0].title);
 
     // Seçime dönüp V2 provasına Devam Et dediğimizde V2 sorusu ve cevabı (Soru 3) açılmalı
-    await page.locator('#btn-exam-step-back').click();
-    await page.locator('#btn-resume-saved-attempt').click();
+    await page.locator('#btn-study-back-choice').click();
+    await page.locator('#btn-resume-saved-work').click();
     await expect(page.locator('#practice-current-indicator')).toContainText('Soru 3 / 7');
     await expect(page.locator('#practice-text-ans')).toHaveValue('Sentetik V2 Cevabı');
     await expect(page.locator('#practice-active-box')).toContainText(v2Data.questions[2].stem);

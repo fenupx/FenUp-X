@@ -39,7 +39,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=2026102820">
-    <link rel="stylesheet" href="exam.css?v=2026102903">
+    <link rel="stylesheet" href="exam.css?v=2026102906">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -4153,7 +4153,7 @@
                     <h4>Konuları Çalış</h4>
                     <p>Senaryondaki konuları adım adım tekrar et.</p>
                     <div class="choice-badge-row">
-                        <span class="choice-mini-badge" id="choice-study-count">4 konu · 24 bilgi kartı</span>
+                        <span class="choice-mini-badge" id="choice-study-count">4 konu · 34 bilgi kartı</span>
                     </div>
                     <button id="btn-choice-go-study" class="exam-btn-primary full-width" type="button">
                         <span>Konu Çalışmaya Başla</span> <i class="fas fa-arrow-right"></i>
@@ -4174,56 +4174,57 @@
                 </div>
             </div>
 
-            <!-- İkincil Bölüm: Kaldığın Çalışmalar (Varsa Gösterilir) -->
+            <!-- İkincil Bölüm: Kaldığın Yerden Devam Et (Tek Kompakt Kart) -->
             <div id="choice-saved-works-section" class="choice-saved-works-section is-hidden" style="display: none;" aria-label="Kaldığın Çalışmalar">
                 <div class="choice-saved-works-header">
-                    <h4 class="choice-saved-works-heading"><i class="fas fa-clock-rotate-left"></i> Kaldığın Çalışmalar</h4>
-                    <p class="choice-saved-works-sub">Yeni bir çalışma başlatabilir veya önceki kaydından kaldığın yerden devam edebilirsin.</p>
+                    <h4 class="choice-saved-works-heading"><i class="fas fa-clock-rotate-left"></i> Kaldığın Yerden Devam Et</h4>
+                    <p class="choice-saved-works-sub">Önceki çalışmana kaldığın yerden devam edebilir veya yukarıdan yeni bir çalışma başlatabilirsin.</p>
                 </div>
 
                 <div class="choice-saved-works-list">
-                    <!-- Kayıtlı Konu Çalışması Kartı -->
-                    <div id="choice-saved-study-card" class="choice-saved-attempt-card choice-saved-study-card is-hidden" style="display: none;">
+                    <!-- Tek Kompakt Kaldığın Yerden Devam Et Kartı -->
+                    <div id="choice-saved-work-card" class="choice-saved-attempt-card choice-saved-work-card is-hidden" style="display: none;">
                         <div class="saved-attempt-content">
-                            <div class="saved-attempt-icon study-saved-icon"><i class="fas fa-book-open"></i></div>
+                            <div class="saved-attempt-icon" id="saved-work-icon"><i class="fas fa-clock-rotate-left"></i></div>
                             <div class="saved-attempt-body">
-                                <div class="saved-attempt-eyebrow" id="saved-study-eyebrow">7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2 · Konu Çalışması</div>
-                                <h4 id="saved-study-title">Devam Eden Konu Çalışması</h4>
-                                <p id="saved-study-desc">Önceki konu çalışmana kaldığın karttan devam edebilirsin.</p>
-                                <p id="saved-study-version-note" class="saved-version-note is-hidden" style="display: none;"></p>
-                                <div class="saved-attempt-meta" id="saved-study-meta">
-                                    <span class="saved-attempt-pill" id="saved-study-badge"><i class="fas fa-clone"></i> Kart 1 / 24</span>
-                                    <span class="saved-attempt-pill subtle" id="saved-study-topic"><i class="fas fa-tag"></i> FB.7.1.1.1</span>
+                                <div class="saved-attempt-eyebrow" id="saved-work-eyebrow">7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2</div>
+                                <h4 id="saved-work-title">Kaldığın Yerden Devam Et</h4>
+                                <p id="saved-work-desc">Önceki oturumundaki çalışmana devam edebilirsin.</p>
+                                <p id="saved-work-version-note" class="saved-version-note is-hidden" style="display: none;"></p>
+                                <div class="saved-attempt-meta" id="saved-work-meta">
+                                    <span class="saved-attempt-pill" id="saved-work-badge"><i class="fas fa-clone"></i> Kart 1 / 34</span>
+                                    <span class="saved-attempt-pill subtle" id="saved-work-meta-tag"><i class="fas fa-tag"></i> FB.7.1.1</span>
                                 </div>
                             </div>
                         </div>
                         <div class="saved-attempt-actions">
-                            <button type="button" id="btn-resume-saved-study" class="exam-btn-secondary">
-                                <i class="fas fa-play"></i> <span id="btn-resume-saved-study-label">Devam Et</span>
+                            <button type="button" id="btn-resume-saved-work" class="exam-btn-secondary">
+                                <i class="fas fa-play"></i> <span id="btn-resume-saved-work-label">Devam Et</span>
+                            </button>
+                            <button type="button" id="btn-clear-saved-work" class="exam-btn-secondary btn-clear-saved-work" title="Kaydı kaldır">
+                                <i class="fas fa-trash-alt"></i> <span>Kaydı Kaldır</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Kayıtlı Yazılı Provası Kartı -->
-                    <div id="choice-saved-attempt-card" class="choice-saved-attempt-card is-hidden" style="display: none;">
-                        <div class="saved-attempt-content">
-                            <div class="saved-attempt-icon"><i class="fas fa-file-signature"></i></div>
-                            <div class="saved-attempt-body">
-                                <div class="saved-attempt-eyebrow" id="saved-attempt-eyebrow">7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2 · Yazılı Provası</div>
-                                <h4 id="saved-attempt-title">Kayıtlı Çalışmana Devam Et</h4>
-                                <p id="saved-attempt-desc">Önceki oturumunda girdiğin cevaplar ve çalışma durumun bu tarayıcıda saklanıyor.</p>
-                                <p id="saved-attempt-version-note" class="saved-version-note is-hidden" style="display: none;"></p>
-                                <div class="saved-attempt-meta" id="saved-attempt-meta">
-                                    <span class="saved-attempt-pill" id="saved-attempt-badge"><i class="fas fa-tasks"></i> 3 / 7 Yanıtlandı</span>
-                                    <span class="saved-attempt-pill subtle" id="saved-attempt-mode"><i class="fas fa-sliders-h"></i> Dengeli · Ekranda</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="saved-attempt-actions">
-                            <button type="button" id="btn-resume-saved-attempt" class="exam-btn-secondary">
-                                <i class="fas fa-play"></i> <span id="btn-resume-saved-label">Devam Et</span>
-                            </button>
-                        </div>
+                    <!-- Geriye Uyumluluk Köprüsü: Testler ve Eski Seçiciler İçin Gizli Referanslar -->
+                    <div id="choice-saved-study-card" class="choice-saved-study-card is-hidden" style="display: none;" aria-hidden="true">
+                        <span id="saved-study-eyebrow"></span>
+                        <span id="saved-study-title"></span>
+                        <span id="saved-study-desc"></span>
+                        <span id="saved-study-version-note"></span>
+                        <span id="saved-study-badge"></span>
+                        <span id="saved-study-topic"></span>
+                        <button type="button" id="btn-resume-saved-study" style="display: none;"></button>
+                    </div>
+                    <div id="choice-saved-attempt-card" class="choice-saved-attempt-card is-hidden" style="display: none;" aria-hidden="true">
+                        <span id="saved-attempt-eyebrow"></span>
+                        <span id="saved-attempt-title"></span>
+                        <span id="saved-attempt-desc"></span>
+                        <span id="saved-attempt-version-note"></span>
+                        <span id="saved-attempt-badge"></span>
+                        <span id="saved-attempt-mode"></span>
+                        <button type="button" id="btn-resume-saved-attempt" style="display: none;"></button>
                     </div>
                 </div>
             </div>
@@ -4235,19 +4236,19 @@
             <div class="exam-study-toolbar">
                 <div class="study-toolbar-left">
                     <button id="btn-study-back-choice" class="exam-btn-secondary" type="button"><i class="fas fa-arrow-left"></i> <span>Çalışma Seçimi</span></button>
-                    <button id="btn-study-toggle-plan" class="exam-btn-secondary" type="button" aria-expanded="true" aria-controls="exam-cardnav" title="Çalışma Planını Aç / Kapat">
-                        <i class="fas fa-columns"></i> <span>Çalışma Planı</span>
+                    <button id="btn-study-toggle-plan" class="exam-btn-secondary" type="button" aria-expanded="true" aria-controls="exam-cardnav" title="Konuları Aç / Kapat">
+                        <i class="fas fa-list-ul"></i> <span>Konular</span>
                     </button>
                     <div id="study-return-to-summary-box" style="display: none;">
                         <button id="btn-study-return-summary" class="exam-btn-warning" type="button"><i class="fas fa-undo"></i> <span>Çalışma Özetime Dön</span></button>
                     </div>
                 </div>
                 <div class="study-toolbar-right">
-                    <button id="btn-study-fullscreen" class="exam-btn-secondary" type="button" title="Ders kitabı / odaklanmış tam ekran modu">
-                        <i class="fas fa-expand"></i> <span>Tam Ekran Çalış</span>
-                    </button>
                     <button id="btn-study-jump-practice" class="exam-btn-primary" type="button">
-                        <span>Yazılı Provasına Geç</span> <i class="fas fa-arrow-right"></i>
+                        <span>Provaya Geç</span> <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button id="btn-study-fullscreen" class="exam-btn-secondary btn-icon-only" type="button" title="Tam Ekran Çalış" aria-label="Tam Ekran Çalış">
+                        <i class="fas fa-expand"></i>
                     </button>
                 </div>
             </div>
@@ -4670,8 +4671,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
-    <script type="module" src="exam-engine.js?v=2026102903"></script>
+    <script type="module" src="exam-engine.js?v=2026102906"></script>
     <script type="module" src="lab-engine.js?v=2026102817"></script>
-    <script type="module" src="script.js?v=2026102903"></script>
+    <script type="module" src="script.js?v=2026102906"></script>
 </body>
 </html>

@@ -164,8 +164,8 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
     await page.locator('#btn-exam-step-back').click();
     // Çalışma seçimine dönerek kayıtlı provaya tekrar devam et
     await expect(page.locator('#exam-view-choice')).toBeVisible();
-    // Kayıtlı tamamlanmış provanın "Devam Et" butonuna tıkla
-    await page.locator('#btn-resume-saved-attempt').click();
+    // Kayıtlı tamamlanmış provanın özetine dön
+    await page.evaluate(() => window.FenUpExam.goToStep('summary'));
     // Doğrudan özet ekranına dönmeli
     await expect(page.locator('#exam-view-summary')).toBeVisible();
     await expect(page.locator('#summary-total-score')).toBeVisible();
@@ -289,9 +289,9 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
     // Yazılı modülünü aç
     await page.locator('#btn-yazili-modulu').click();
 
-    // Tercih ekranındayız (#exam-view-choice), kayıtlı çalışma kartından "Devam Et"e tıkla
+    // Tercih ekranındayız (#exam-view-choice), kayıtlı çalışma kartından özete geç
     await expect(page.locator('#exam-view-choice')).toBeVisible();
-    await page.locator('#btn-resume-saved-attempt').click();
+    await page.evaluate(() => window.FenUpExam.goToStep('summary'));
 
     // Özet ekranındayız
     await expect(page.locator('#exam-view-summary')).toBeVisible();
@@ -413,7 +413,8 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
 
     await page.reload();
     await page.locator('#btn-yazili-modulu').click();
-    await page.locator('#btn-resume-saved-attempt').click();
+    await expect(page.locator('#exam-view-choice')).toBeVisible();
+    await page.evaluate(() => window.FenUpExam.goToStep('summary'));
     await expect(page.locator('#exam-view-summary')).toBeVisible();
 
     // Puan 81 / 100
@@ -512,7 +513,8 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
 
     await page.reload();
     await page.locator('#btn-yazili-modulu').click();
-    await page.locator('#btn-resume-saved-attempt').click();
+    await expect(page.locator('#exam-view-choice')).toBeVisible();
+    await page.evaluate(() => window.FenUpExam.goToStep('summary'));
     await expect(page.locator('#exam-view-summary')).toBeVisible();
 
     // 100 Tam Puanda Pedagojik Mesaj

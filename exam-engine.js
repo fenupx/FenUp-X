@@ -8,8 +8,8 @@
 
 'use strict';
 
-const CONTENT_REVISION = '3.0.0';
-const CONTENT_PATHS = { '1': 'data/exam/', '2.0.0': 'data/exam/content-v2/', '3.0.0': 'data/exam/content-v3/' };
+const CONTENT_REVISION = '6.0.0';
+const CONTENT_PATHS = { '1': 'data/exam/', '2.0.0': 'data/exam/content-v2/', '3.0.0': 'data/exam/content-v3/', '6.0.0': 'data/exam/content-v6/' };
 let ASSET_BASE = 'data/exam/';
 let loadedRevision = null;
 const dataVersions = new Map();
@@ -96,7 +96,7 @@ function loadStateFromStorage() {
                     outcomeId: parsed.savedStudy.outcomeId || '',
                     contentRevision: rev,
                     visitedCards: Array.isArray(parsed.savedStudy.visitedCards) ? parsed.savedStudy.visitedCards : [],
-                    updatedAt: parsed.savedStudy.updatedAt || Date.now()
+                    updatedAt: parsed.savedStudy.updatedAt || parsed.savedStudy.timestamp || 0
                 };
             } else if ((typeof parsed.studyCardIdx === 'number' && parsed.studyCardIdx > 0) || (parsed.currentStep === 'study' && parsed.studyMode !== 'review')) {
                 const rev = parsed.studyRevision || parsed.attempt?.contentRevision || CONTENT_REVISION;
@@ -108,7 +108,7 @@ function loadStateFromStorage() {
                     outcomeId: '',
                     contentRevision: rev,
                     visitedCards: Array.isArray(parsed.attempt?.visitedCards) ? [...parsed.attempt.visitedCards] : [],
-                    updatedAt: Date.now()
+                    updatedAt: 0
                 };
             }
 
@@ -137,7 +137,9 @@ function loadStateFromStorage() {
                     score: typeof parsed.attempt.score === 'number' ? parsed.attempt.score : undefined,
                     finished: !!parsed.attempt.finished,
                     status: parsed.attempt.status || (parsed.attempt.finished ? 'completed' : 'in_progress'),
-                    visitedCards: Array.isArray(parsed.attempt.visitedCards) ? parsed.attempt.visitedCards : []
+                    visitedCards: Array.isArray(parsed.attempt.visitedCards) ? parsed.attempt.visitedCards : [],
+                    updatedAt: parsed.attempt.updatedAt || parsed.attempt.startedAt || parsed.attempt.timestamp || 0,
+                    startedAt: parsed.attempt.startedAt || parsed.attempt.timestamp || 0
                 };
 
                 // Eski 'scores' yapısını yeni 3-seçenekli öz değerlendirmeye uyarla
@@ -214,12 +216,71 @@ function cardTableHtml(table) {
 
 // Tek kaynak kataloğu; fotoğraf ve illüstrasyon ayrımı korunur.
 function visualCreditHtml(visual) {
-    if (!visual?.asset || !DATA?.visualCredits) return '';
-    const credit = DATA.visualCredits[visual.credit_ref] || Object.values(DATA.visualCredits).find(c => visual.asset === 'assets/' + c.asset);
-    if (!credit) return '';
-    const nature = { photograph: 'Fotoğraf', observational_image: 'Gözlem görüntüsü', ai_generated_educational_illustration: 'Ders illüstrasyonu (ImageGen)' }[credit.nature] || 'Görsel';
-    const source = /^https:\/\//.test(credit.source || '') ? `<a href="${esc(credit.source)}" target="_blank" rel="noopener noreferrer">Özgün kaynak</a>` : esc(credit.source);
-    return `<details class="exam-visual-credit"><summary>Görsel kaynakları</summary><p>${esc(nature)} · ${esc(credit.credit)}</p><p>${source}</p>${credit.description ? `<p>${esc(credit.description)}</p>` : ''}${credit.use ? `<p>${esc(credit.use)}</p>` : ''}</details>`;
+    if (!visual || !DATA?.visualCredits) return '';
+    const credits = [];
+    if (visual.kind === 'gallery' && Array.isArray(visual.items)) {
+        for (const item of visual.items) {
+            const cr = DATA.visualCredits[item.credit_ref] || Object.values(DATA.visualCredits).find(c => item.asset === 'assets/' + c.asset);
+            if (cr && !credits.some(x => x.asset === cr.asset)) credits.push(cr);
+        }
+    } else if (visual.asset) {
+        const cr = DATA.visualCredits[visual.credit_ref] || Object.values(DATA.visualCredits).find(c => visual.asset === 'assets/' + c.asset);
+        if (cr) credits.push(cr);
+    }
+    if (credits.length === 0) return '';
+    const natureMap = {
+        photograph: 'Fotoğraf',
+        observational_image: 'Gözlem görüntüsü',
+        ai_generated_educational_illustration: 'Ders illüstrasyonu (ImageGen)',
+        ai_generated_illustration: 'Ders illüstrasyonu'
+    };
+    const content = credits.map(credit => {
+        const nature = natureMap[credit.nature] || 'Görsel';
+        const source = /^https?:\/\//.test(credit.source || '')
+            ? `<a href="${esc(credit.source)}" target="_blank" rel="noopener noreferrer">Özgün kaynak</a>`
+            : esc(credit.source);
+        return `<p><strong>${esc(credit.description || credit.asset)}:</strong> ${esc(nature)} · ${esc(credit.credit)} (${source})</p>`;
+    }).join('');
+    return `<details class="exam-visual-credit"><summary>Görsel kaynakları</summary>${content}</details>`;
+}
+
+export function questionVisualHtml(q, options = {}) {
+    if (!q || !q.visual) return '';
+    const v = q.visual;
+    const isPrint = !!options.forPrint;
+    const boxClass = isPrint ? 'print-qimage' : 'exam-qimage-box';
+    const imgClass = isPrint ? '' : 'exam-qimage';
+
+    if (v.kind === 'gallery' && Array.isArray(v.items) && v.items.length > 0) {
+        const galleryClass = isPrint ? 'print-qgallery' : 'exam-qgallery';
+        return `
+            <div class="${boxClass} exam-qgallery-box">
+                <div class="${galleryClass}">
+                    ${v.items.map(it => `
+                        <figure>
+                            <img class="${imgClass}" src="${esc(ASSET_BASE + it.asset)}" alt="${esc(it.alt || it.label || '')}">
+                            <figcaption>${esc(it.label || '')}</figcaption>
+                        </figure>
+                    `).join('')}
+                </div>
+                ${!isPrint ? visualCreditHtml(v) : ''}
+            </div>
+        `;
+    }
+
+    if (v.asset) {
+        return `
+            <div class="${boxClass}">
+                <figure class="${v.theme === 'dark' ? 'diagram dark-theme' : ''}">
+                    <img class="${imgClass}" src="${esc(ASSET_BASE + v.asset)}" alt="${esc(v.alt || '')}">
+                    ${v.caption ? `<figcaption class="exam-caption">${esc(v.caption)}</figcaption>` : ''}
+                </figure>
+                ${!isPrint ? visualCreditHtml(v) : ''}
+            </div>
+        `;
+    }
+
+    return '';
 }
 
 // --- 5'İN KATLARIYLA 100 PUAN DAĞITIMI VE ÖLÇÜT TEMELLİ DEĞERLENDİRME YAPILANDIRMASI ---
@@ -237,14 +298,30 @@ export const SCORING_POLICY = {
 
 /**
  * Bir sorunun rubrik ölçütlerine soru hedef puanını (10, 15, 20 vb.) deterministik olarak dağıtır.
- * Kural 1: Mümkün olduğunda (targetPoint >= n * 5 ve targetPoint % 5 === 0) 5'in katları pozitif tamsayılar kullanılır.
- * Kural 2: Diğer durumlarda Hamilton (Largest Remainder) yöntemiyle pozitif tam sayılar (min 1) üretilir.
- * Kural 3: Bütün ölçüt puanları pozitif tamsayıdır ve toplamları TAM targetPoint'e eşittir.
+ * Kural 1: V6 hazır rubric_point_examples varsa doğrudan kullanılır.
+ * Kural 2: Mümkün olduğunda (targetPoint >= n * 5 ve targetPoint % 5 === 0) 5'in katları pozitif tamsayılar kullanılır.
+ * Kural 3: Diğer durumlarda Hamilton (Largest Remainder) yöntemiyle pozitif tam sayılar (min 1) üretilir.
+ * Kural 4: Bütün ölçüt puanları pozitif tamsayıdır ve toplamları TAM targetPoint'e eşittir.
  */
-export function distributeCriteriaPoints(rubrics, targetPoint) {
+export function distributeCriteriaPoints(rubrics, targetPoint, question = null) {
     if (!Array.isArray(rubrics) || rubrics.length === 0) return [];
     const n = rubrics.length;
     const pt = Number(targetPoint);
+
+    // V6 Hazır Onaylı Dağıtım Haritası: rubric_point_examples varsa doğrudan kullan
+    if (question?.rubric_point_examples?.[String(pt)]) {
+        const preAlloc = question.rubric_point_examples[String(pt)];
+        const mapped = rubrics.map(r => ({
+            id: r.id,
+            text: r.text,
+            return_card_ids: Array.isArray(r.return_card_ids) ? [...r.return_card_ids] : [],
+            points: typeof preAlloc[r.id] === 'number' ? preAlloc[r.id] : (r.points || 1)
+        }));
+        const sum = mapped.reduce((s, c) => s + c.points, 0);
+        if (sum === pt && mapped.every(c => Number.isInteger(c.points) && c.points > 0)) {
+            return mapped;
+        }
+    }
 
     // 1. Mümkün olduğunda 5'in katlarıyla dağıtım:
     if (pt % 5 === 0 && pt >= n * 5) {
@@ -312,7 +389,7 @@ export function ensureAttemptCriteriaMap(attempt) {
     questions.forEach(q => {
         if (!attempt.criteriaMap[q.id] || !Array.isArray(attempt.criteriaMap[q.id]) || attempt.criteriaMap[q.id].length === 0) {
             const qPt = attempt.questionPoints?.[q.id] || 15;
-            attempt.criteriaMap[q.id] = distributeCriteriaPoints(q.rubric || [], qPt).map(c => ({...c, contentRevision: attempt.contentRevision || '1', rubricRevision: attempt.rubricRevision || '1'}));
+            attempt.criteriaMap[q.id] = distributeCriteriaPoints(q.rubric || [], qPt, q).map(c => ({...c, contentRevision: attempt.contentRevision || '1', rubricRevision: attempt.rubricRevision || '1'}));
         }
     });
 }
@@ -432,6 +509,7 @@ function applyLoadedData(revision, incoming) {
     if (contentScene) {
         contentScene.classList.toggle('content-v2', revision !== '1');
         contentScene.classList.toggle('content-v3', revision === '3.0.0');
+        contentScene.classList.toggle('content-v6', revision === '6.0.0');
     }
     CARDS = DATA.cards || [];
     QUESTIONS = DATA.questions || [];
@@ -480,7 +558,7 @@ async function loadData(revision = CONTENT_REVISION, showError = true) {
             dataVersions.set(revision, fetch(base + 'pilot_7_senaryo2.json').then(async res => {
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
-                if (revision === '3.0.0') {
+                if (revision === '3.0.0' || revision === '6.0.0') {
                     const credits = await fetch(base + 'GORSEL_KAYNAKLARI.json');
                     if (!credits.ok) throw new Error(`Görsel kaynakları HTTP ${credits.status}`);
                     data.visualCredits = await credits.json();
@@ -610,7 +688,10 @@ function saveProgress() {
     const answer = $('practice-text-ans');
     if (a && state.currentStep === 'practice' && !setupPracticeNewMode && !a.finished && a.status === 'in_progress' && answer) {
         const id = a.ids[a.activeQuestionIndex || 0];
-        if (id) a.answers[id] = answer.value;
+        if (id) {
+            a.answers[id] = answer.value;
+            a.updatedAt = Date.now();
+        }
     }
     saveState();
 }
@@ -755,77 +836,206 @@ function renderChoice() {
         };
     }
 
-    // Dinamik konu ve soru sayaçları (Yeni başlangıçlar her zaman güncel V3 içeriğini baz alır)
-    const v3Data = resolvedDataCache.get(CONTENT_REVISION) || DATA;
+    // Dinamik konu ve soru sayaçları (Yeni başlangıçlar her zaman güncel V6 içeriğini baz alır)
+    const activeData = resolvedDataCache.get(CONTENT_REVISION) || DATA;
     const studyCountEl = $('choice-study-count');
-    if (studyCountEl && v3Data) {
-        const topicCount = v3Data.outcomes ? v3Data.outcomes.length : 4;
-        const cardCount = v3Data.cards ? v3Data.cards.length : 24;
+    if (studyCountEl && activeData) {
+        const topicCount = activeData.outcomes ? activeData.outcomes.length : 4;
+        const cardCount = activeData.cards ? activeData.cards.length : 34;
         studyCountEl.innerHTML = `<i class="fas fa-clone"></i> ${topicCount} konu · ${cardCount} bilgi kartı`;
     }
 
     const practiceCountEl = $('choice-practice-count');
-    if (practiceCountEl && v3Data) {
+    if (practiceCountEl && activeData) {
         practiceCountEl.innerHTML = `<i class="fas fa-pen-alt"></i> 7 soruluk prova`;
     }
 
-    // Kaldığın Çalışmalar Bölümü (Konu Çalışması ve Yazılı Provası ayrı durumlar olarak listelenir)
+    // Kaldığın Çalışmalar Bölümü (Tek Kompakt Kart & Kaydı Kaldır)
     const savedSection = $('choice-saved-works-section');
+    const singleWorkCard = $('choice-saved-work-card');
     const savedStudyCard = $('choice-saved-study-card');
     const savedCard = $('choice-saved-attempt-card');
 
     const s = state.savedStudy;
-    const hasSavedStudy = !!(s && typeof s.cardIdx === 'number' && s.cardIdx >= 0 && (s.cardIdx > 0 || (Array.isArray(s.visitedCards) && s.visitedCards.length > 0)));
-    const hasSavedAttempt = !!(state.attempt && Array.isArray(state.attempt.ids) && state.attempt.ids.length === 7);
-    const anySaved = hasSavedStudy || hasSavedAttempt;
+    const hasUnfinishedStudy = !!(s && typeof s.cardIdx === 'number' && s.cardIdx >= 0 && (s.cardIdx > 0 || (Array.isArray(s.visitedCards) && s.visitedCards.length > 0)));
+
+    const a = state.attempt;
+    const isAttemptFinished = !!(a && (a.status === 'completed' || a.finished));
+    const hasUnfinishedAttempt = !!(a && Array.isArray(a.ids) && a.ids.length === 7 && !isAttemptFinished);
+
+    const anySaved = hasUnfinishedStudy || hasUnfinishedAttempt;
 
     if (savedSection) {
         savedSection.classList.toggle('is-hidden', !anySaved);
         savedSection.style.display = anySaved ? 'block' : 'none';
     }
 
-    if (savedStudyCard) {
-        if (hasSavedStudy) {
-            savedStudyCard.classList.remove('is-hidden');
-            savedStudyCard.style.display = 'flex';
-            const sRev = s.contentRevision || CONTENT_REVISION;
-            const sData = resolvedDataCache.get(sRev) || (loadedRevision === sRev ? DATA : null);
-            const totalCards = s.totalCards || sData?.cards?.length || (sRev === '3.0.0' ? 24 : 26);
-            const clampedIdx = Math.min(Math.max(0, s.cardIdx), totalCards - 1);
-            const cardObj = sData?.cards?.[clampedIdx] || null;
-            const cardTitle = s.cardTitle || cardObj?.title || '';
-            const outcomeId = s.outcomeId || cardObj?.outcome_id || 'Senaryo 2';
+    // Tek kart için en son oturumu belirle
+    let activeSessionType = null;
+    if (hasUnfinishedStudy && hasUnfinishedAttempt) {
+        const studyTime = Number(s.updatedAt || s.timestamp || 0);
+        const attemptTime = Number(a.updatedAt || a.startedAt || a.timestamp || 0);
+        activeSessionType = (studyTime > attemptTime) ? 'study' : 'attempt';
+    } else if (hasUnfinishedAttempt) {
+        activeSessionType = 'attempt';
+    } else if (hasUnfinishedStudy) {
+        activeSessionType = 'study';
+    }
 
-            const studyEyebrowEl = $('saved-study-eyebrow');
-            const studyTitleEl = $('saved-study-title');
-            const studyDescEl = $('saved-study-desc');
-            const studyVersionNoteEl = $('saved-study-version-note');
-            const studyBadgeEl = $('saved-study-badge');
-            const studyTopicEl = $('saved-study-topic');
-            const btnResumeStudy = $('btn-resume-saved-study');
-            const btnResumeStudyLabel = $('btn-resume-saved-study-label');
+    // Tek Kompakt Kart Render
+    if (singleWorkCard) {
+        if (anySaved && activeSessionType) {
+            singleWorkCard.classList.remove('is-hidden');
+            singleWorkCard.style.display = 'flex';
 
-            if (studyEyebrowEl) studyEyebrowEl.textContent = '7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2 · Konu Çalışması';
-            if (studyTitleEl) studyTitleEl.textContent = 'Devam Eden Konu Çalışması';
-            if (studyDescEl) {
-                studyDescEl.textContent = cardTitle
-                    ? `Kaldığın konu kartı: "${cardTitle}"`
-                    : 'Önceki konu çalışmana kaldığın karttan devam edebilirsin.';
+            const iconEl = $('saved-work-icon');
+            const eyebrowEl = $('saved-work-eyebrow');
+            const titleEl = $('saved-work-title');
+            const descEl = $('saved-work-desc');
+            const versionNoteEl = $('saved-work-version-note');
+            const badgeEl = $('saved-work-badge');
+            const metaTagEl = $('saved-work-meta-tag');
+            const btnResume = $('btn-resume-saved-work');
+            const btnResumeLabel = $('btn-resume-saved-work-label');
+            const btnClear = $('btn-clear-saved-work');
+
+            if (btnClear) {
+                btnClear.onclick = () => {
+                    const ok = (typeof window !== 'undefined' && typeof window.confirm === 'function')
+                        ? window.confirm('Kaldığın çalışma kaydı silinsin mi?')
+                        : true;
+                    if (ok) {
+                        state.savedStudy = null;
+                        if (state.attempt && !state.attempt.finished && state.attempt.status !== 'completed') {
+                            state.attempt = null;
+                        }
+                        saveState();
+                        renderChoice();
+                    }
+                };
             }
-            if (studyVersionNoteEl) {
-                if (sRev !== CONTENT_REVISION) {
-                    studyVersionNoteEl.classList.remove('is-hidden');
-                    studyVersionNoteEl.style.display = 'block';
-                    studyVersionNoteEl.textContent = 'Bu kayıt önceki içerik sürümüyle kaldığın karttan sürdürülür. Yeni konu çalışması güncel V3 içeriğiyle başlar.';
-                } else {
-                    studyVersionNoteEl.classList.add('is-hidden');
-                    studyVersionNoteEl.style.display = 'none';
-                    studyVersionNoteEl.textContent = '';
+
+            if (activeSessionType === 'study') {
+                const sRev = s.contentRevision || CONTENT_REVISION;
+                const sData = resolvedDataCache.get(sRev) || (loadedRevision === sRev ? DATA : null);
+                const totalCards = s.totalCards || sData?.cards?.length || (sRev === '3.0.0' ? 24 : 34);
+                const clampedIdx = Math.min(Math.max(0, s.cardIdx), totalCards - 1);
+                const cardObj = sData?.cards?.[clampedIdx] || null;
+                const cardTitle = s.cardTitle || cardObj?.title || '';
+                const outcomeId = s.outcomeId || cardObj?.outcome_id || 'Senaryo 2';
+
+                if (iconEl) iconEl.innerHTML = '<i class="fas fa-book-open"></i>';
+                if (eyebrowEl) eyebrowEl.textContent = '7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2 · Konu Çalışması';
+                if (titleEl) titleEl.textContent = 'Devam Eden Konu Çalışması';
+                if (descEl) {
+                    descEl.textContent = cardTitle
+                        ? `Kaldığın konu kartı: "${cardTitle}"`
+                        : 'Önceki konu çalışmana kaldığın karttan devam edebilirsin.';
+                }
+                if (versionNoteEl) {
+                    if (sRev !== CONTENT_REVISION) {
+                        versionNoteEl.classList.remove('is-hidden');
+                        versionNoteEl.style.display = 'block';
+                        versionNoteEl.textContent = `Bu kayıt önceki içerik sürümüyle (${sRev}) kaldığın karttan sürdürülür. Yeni konu çalışması güncel V6 içeriğiyle başlar.`;
+                    } else {
+                        versionNoteEl.classList.add('is-hidden');
+                        versionNoteEl.style.display = 'none';
+                        versionNoteEl.textContent = '';
+                    }
+                }
+                if (badgeEl) badgeEl.innerHTML = `<i class="fas fa-clone"></i> Kart ${clampedIdx + 1} / ${totalCards}`;
+                if (metaTagEl) metaTagEl.innerHTML = `<i class="fas fa-tag"></i> ${esc(outcomeId)}`;
+                if (btnResumeLabel) btnResumeLabel.textContent = 'Devam Et';
+
+                if (btnResume) {
+                    btnResume.onclick = async () => {
+                        const targetRev = state.savedStudy?.contentRevision || CONTENT_REVISION;
+                        if (loadedRevision !== targetRev) {
+                            const ok = await loadData(targetRev);
+                            if (!ok) return;
+                        }
+                        state.studyMode = 'free';
+                        state.returnToSummary = false;
+                        state.activeStudyRevision = targetRev;
+                        state.studySessionIsFresh = false;
+                        state.studyCardIdx = typeof state.savedStudy?.cardIdx === 'number' ? state.savedStudy.cardIdx : 0;
+                        goToStep('study');
+                    };
+                }
+            } else {
+                // activeSessionType === 'attempt'
+                const aRev = a.contentRevision || '1';
+                const answeredCount = a.ids.filter(qid => (a.answers[qid] || '').trim().length > 0).length;
+                const evalCount = a.ids.filter(qid => !!(a.evaluatedQuestions?.[qid] || a.evaluations?.[qid])).length;
+                const profileText = names[a.profile] || (a.profile === 'zorlayici' ? 'Zorlayıcı' : (a.profile === 'temel' ? 'Temel' : 'Dengeli'));
+                const modeText = a.solveMode === 'kagitta' ? 'Kâğıtta' : 'Ekranda';
+
+                if (iconEl) iconEl.innerHTML = '<i class="fas fa-file-signature"></i>';
+                if (eyebrowEl) eyebrowEl.textContent = '7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2 · Yazılı Provası';
+
+                const isEvaluating = (a.status === 'evaluating' || evalCount > 0 || a.evalQuestionIndex > 0);
+                const targetStep = isEvaluating ? 'eval' : 'practice';
+
+                if (titleEl) titleEl.textContent = isEvaluating ? 'Devam Eden Öz Değerlendirme' : 'Devam Eden Yazılı Prova';
+                if (descEl) {
+                    descEl.textContent = isEvaluating
+                        ? 'Soruları çözdün; öz değerlendirme aşamasındasın.'
+                        : 'Yazılı provan yarıda kaldı. Cevapların ve soru sıran güvenle saklanıyor.';
+                }
+                if (badgeEl) {
+                    badgeEl.innerHTML = isEvaluating
+                        ? `<i class="fas fa-balance-scale"></i> ${evalCount} / 7 Soru Değerlendirildi`
+                        : `<i class="fas fa-tasks"></i> ${answeredCount} / 7 Soru Yanıtlandı`;
+                }
+                if (metaTagEl) metaTagEl.innerHTML = `<i class="fas fa-sliders-h"></i> ${esc(profileText)} · ${esc(modeText)}`;
+                if (btnResumeLabel) btnResumeLabel.textContent = 'Devam Et';
+
+                if (versionNoteEl) {
+                    if (aRev !== CONTENT_REVISION) {
+                        versionNoteEl.classList.remove('is-hidden');
+                        versionNoteEl.style.display = 'block';
+                        versionNoteEl.textContent = `Bu kayıt önceki içerik sürümüyle (${aRev}) kaldığın yerden sürdürülür. Yeni prova güncel V6 içeriğini kullanır.`;
+                    } else {
+                        versionNoteEl.classList.add('is-hidden');
+                        versionNoteEl.style.display = 'none';
+                        versionNoteEl.textContent = '';
+                    }
+                }
+
+                if (btnResume) {
+                    btnResume.onclick = async () => {
+                        const targetRev = state.attempt?.contentRevision || '1';
+                        if (loadedRevision !== targetRev) {
+                            const ok = await loadData(targetRev);
+                            if (!ok) return;
+                        }
+                        if (targetStep === 'practice') setupPracticeNewMode = false;
+                        goToStep(targetStep);
+                    };
                 }
             }
-            if (studyBadgeEl) studyBadgeEl.innerHTML = `<i class="fas fa-clone"></i> Kart ${clampedIdx + 1} / ${totalCards}`;
-            if (studyTopicEl) studyTopicEl.innerHTML = `<i class="fas fa-tag"></i> ${esc(outcomeId)}`;
-            if (btnResumeStudyLabel) btnResumeStudyLabel.textContent = 'Devam Et';
+        } else {
+            singleWorkCard.classList.add('is-hidden');
+            singleWorkCard.style.display = 'none';
+        }
+    }
+
+    // Geriye Uyumluluk Köprüsü: Testlerin aradığı seçicileri senkronize et
+    if (savedStudyCard) {
+        savedStudyCard.classList.toggle('is-hidden', !hasUnfinishedStudy);
+        if (hasUnfinishedStudy) {
+            const sRev = s.contentRevision || CONTENT_REVISION;
+            const totalCards = s.totalCards || (sRev === '3.0.0' ? 24 : 34);
+            const clampedIdx = Math.min(Math.max(0, s.cardIdx), totalCards - 1);
+            const studyBadgeEl = $('saved-study-badge');
+            if (studyBadgeEl) studyBadgeEl.textContent = `Kart ${clampedIdx + 1} / ${totalCards}`;
+            const studyVersionNoteEl = $('saved-study-version-note');
+            if (studyVersionNoteEl) {
+                studyVersionNoteEl.classList.toggle('is-hidden', sRev === CONTENT_REVISION);
+                studyVersionNoteEl.style.display = (sRev === CONTENT_REVISION) ? 'none' : 'block';
+                studyVersionNoteEl.textContent = (sRev === CONTENT_REVISION) ? '' : `Bu kayıt önceki içerik sürümüyle (${sRev}) kaldığın karttan sürdürülür. Yeni konu çalışması güncel V6 içeriğiyle başlar.`;
+            }
+            const btnResumeStudy = $('btn-resume-saved-study');
             if (btnResumeStudy) {
                 btnResumeStudy.onclick = async () => {
                     const targetRev = state.savedStudy?.contentRevision || CONTENT_REVISION;
@@ -841,81 +1051,34 @@ function renderChoice() {
                     goToStep('study');
                 };
             }
-        } else {
-            savedStudyCard.classList.add('is-hidden');
-            savedStudyCard.style.display = 'none';
         }
     }
 
     if (savedCard) {
-        if (hasSavedAttempt) {
-            savedCard.classList.remove('is-hidden');
-            savedCard.style.display = 'flex';
-            const a = state.attempt;
+        savedCard.classList.toggle('is-hidden', !hasUnfinishedAttempt);
+        if (hasUnfinishedAttempt) {
             const aRev = a.contentRevision || '1';
-            const eyebrowEl = $('saved-attempt-eyebrow');
-            const titleEl = $('saved-attempt-title');
-            const descEl = $('saved-attempt-desc');
-            const versionNoteEl = $('saved-attempt-version-note');
-            const badgeEl = $('saved-attempt-badge');
-            const modeEl = $('saved-attempt-mode');
-            const btnResume = $('btn-resume-saved-attempt');
-            const resumeLabel = $('btn-resume-saved-label');
-
-            if (eyebrowEl) eyebrowEl.textContent = '7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2 · Yazılı Provası';
-            if (versionNoteEl) {
-                if (aRev !== CONTENT_REVISION) {
-                    versionNoteEl.classList.remove('is-hidden');
-                    versionNoteEl.style.display = 'block';
-                    versionNoteEl.textContent = 'Bu kayıt önceki içerik sürümüyle kaldığın yerden sürdürülür. Yeni prova güncel V3 içeriğini kullanır.';
-                } else {
-                    versionNoteEl.classList.add('is-hidden');
-                    versionNoteEl.style.display = 'none';
-                    versionNoteEl.textContent = '';
-                }
-            }
-
             const answeredCount = a.ids.filter(qid => (a.answers[qid] || '').trim().length > 0).length;
-            const evalCount = a.ids.filter(qid => !!(a.evaluatedQuestions?.[qid] || a.evaluations?.[qid])).length;
-            const profileText = names[a.profile] || (a.profile === 'zorlayici' ? 'Zorlayıcı' : (a.profile === 'temel' ? 'Temel' : 'Dengeli'));
-            const modeText = a.solveMode === 'kagitta' ? 'Kâğıtta' : 'Ekranda';
-
-            if (modeEl) {
-                modeEl.innerHTML = `<i class="fas fa-sliders-h"></i> ${esc(profileText)} · ${esc(modeText)}`;
+            const attemptBadgeEl = $('saved-attempt-badge');
+            if (attemptBadgeEl) attemptBadgeEl.textContent = `${answeredCount} / 7 Yanıtlandı`;
+            const attemptVersionNoteEl = $('saved-attempt-version-note');
+            if (attemptVersionNoteEl) {
+                attemptVersionNoteEl.classList.toggle('is-hidden', aRev === CONTENT_REVISION);
+                attemptVersionNoteEl.style.display = (aRev === CONTENT_REVISION) ? 'none' : 'block';
+                attemptVersionNoteEl.textContent = (aRev === CONTENT_REVISION) ? '' : `Bu kayıt önceki içerik sürümüyle (${aRev}) kaldığın yerden sürdürülür. Yeni prova güncel V6 içeriğini kullanır.`;
             }
-
-            const resumeAttemptTo = async (targetStep) => {
-                const targetRev = state.attempt?.contentRevision || '1';
-                if (loadedRevision !== targetRev) {
-                    const ok = await loadData(targetRev);
-                    if (!ok) return;
-                }
-                if (targetStep === 'practice') setupPracticeNewMode = false;
-                goToStep(targetStep);
-            };
-
-            if (a.status === 'completed' || a.finished) {
-                if (titleEl) titleEl.textContent = 'Tamamlanmış Prova';
-                if (descEl) descEl.textContent = '7 soruluk provan ve öz değerlendirmen hazır. Sonuçlarını ve konu eksiklerini inceleyebilirsin.';
-                if (badgeEl) badgeEl.innerHTML = `<i class="fas fa-check-circle" style="color:#10b981;"></i> Değerlendirme Tamamlandı`;
-                if (resumeLabel) resumeLabel.textContent = 'Devam Et';
-                if (btnResume) btnResume.onclick = () => resumeAttemptTo('summary');
-            } else if (a.status === 'evaluating' || evalCount > 0 || a.evalQuestionIndex > 0) {
-                if (titleEl) titleEl.textContent = 'Devam Eden Öz Değerlendirme';
-                if (descEl) descEl.textContent = 'Soruları çözdün; öz değerlendirme aşamasındasın.';
-                if (badgeEl) badgeEl.innerHTML = `<i class="fas fa-balance-scale"></i> ${evalCount} / 7 Soru Değerlendirildi`;
-                if (resumeLabel) resumeLabel.textContent = 'Devam Et';
-                if (btnResume) btnResume.onclick = () => resumeAttemptTo('eval');
-            } else {
-                if (titleEl) titleEl.textContent = 'Devam Eden Yazılı Prova';
-                if (descEl) descEl.textContent = 'Yazılı provan yarıda kaldı. Cevapların ve soru sıran güvenle saklanıyor.';
-                if (badgeEl) badgeEl.innerHTML = `<i class="fas fa-tasks"></i> ${answeredCount} / 7 Soru Yanıtlandı`;
-                if (resumeLabel) resumeLabel.textContent = 'Devam Et';
-                if (btnResume) btnResume.onclick = () => resumeAttemptTo('practice');
+            const btnResumeAttempt = $('btn-resume-saved-attempt');
+            if (btnResumeAttempt) {
+                btnResumeAttempt.onclick = async () => {
+                    const targetRev = state.attempt?.contentRevision || '1';
+                    if (loadedRevision !== targetRev) {
+                        const ok = await loadData(targetRev);
+                        if (!ok) return;
+                    }
+                    setupPracticeNewMode = false;
+                    goToStep('practice');
+                };
             }
-        } else {
-            savedCard.classList.add('is-hidden');
-            savedCard.style.display = 'none';
         }
     }
 }
@@ -1010,9 +1173,12 @@ function renderStudy(cardIndex) {
         const isFs = studyView?.classList.contains('fullscreen-study-active') || (typeof document !== 'undefined' && (!!document.fullscreenElement || !!document.webkitFullscreenElement));
         btnFullscreen.classList.toggle('active', !!isFs);
         btnFullscreen.setAttribute('aria-pressed', String(!!isFs));
+        const fsTitle = isFs ? 'Tam Ekrandan Çık' : 'Tam Ekran Çalış';
+        btnFullscreen.setAttribute('title', fsTitle);
+        btnFullscreen.setAttribute('aria-label', fsTitle);
         btnFullscreen.innerHTML = isFs
-            ? '<i class="fas fa-compress"></i> <span>Tam Ekrandan Çık</span>'
-            : '<i class="fas fa-expand"></i> <span>Tam Ekran Çalış</span>';
+            ? '<i class="fas fa-compress"></i>'
+            : '<i class="fas fa-expand"></i>';
     }
 
     const returnSummaryBox = $('study-return-to-summary-box');
@@ -1141,6 +1307,10 @@ function renderStudy(cardIndex) {
         const cardNumInOutcome = idxInOutcome !== -1 ? (idxInOutcome + 1) : 1;
         const isLastCard = (cardIndex === CARDS.length - 1);
 
+        if (cardPanel) {
+            cardPanel.classList.toggle('wide-table', c.layout === 'wide_table');
+        }
+
         cardPanel.innerHTML = `
             <div class="study-card-content-area">
                 <div class="study-card-top-meta">
@@ -1163,16 +1333,31 @@ function renderStudy(cardIndex) {
 
                 <div class="exam-contentgrid ${!c.visual && !c.table ? 'exam-text-only' : ''}">
                     <div class="study-text-column">
-                        <p class="exam-lead">${esc(c.lead)}</p>
+                        ${c.concept_chain?.length ? `
+                            <div class="chain-note">${esc(c.chain_relation || '')}</div>
+                            <div class="chain">
+                                ${c.concept_chain.map((item, j) => `<b>${esc(item)}</b>${j < c.concept_chain.length - 1 ? '<span aria-hidden="true">→</span>' : ''}`).join('')}
+                            </div>
+                        ` : ''}
+                        ${c.lead ? `<p class="exam-lead">${esc(c.lead)}</p>` : ''}
                         ${(c.body || []).map(p => `<p class="exam-body-p">${esc(p)}</p>`).join('')}
+                        ${c.facts?.length ? `
+                            <dl class="facts">
+                                ${c.facts.map(f => `<div><dt>${esc(f.label)}</dt><dd>${esc(f.value)}</dd></div>`).join('')}
+                            </dl>
+                        ` : ''}
+                        ${c.topics?.length ? `
+                            <ul class="topics">
+                                ${c.topics.map(t => `<li>${esc(t)}</li>`).join('')}
+                            </ul>
+                        ` : ''}
                         ${loadedRevision === '1' ? `<div class="exam-takeaway"><strong>📌 Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>
                         ${c.misconception ? `<p class="exam-warning"><strong>⚠️ Karıştırma:</strong> ${esc(c.misconception)}</p>` : ''}` : ''}
                     </div>
-                    <div class="exam-visualbox ${!c.visual && !c.table ? 'is-hidden' : ''}" id="exam-visual">
+                    <div class="exam-visualbox ${!c.visual && !c.table ? 'is-hidden' : ''} ${c.visual?.theme === 'dark' ? 'theme-dark diagram' : ''}" id="exam-visual">
                         ${visualAssetPath ? `<img src="${esc(visualAssetPath)}" alt="${esc(c.visual?.alt || '')}">` : ''}
                         ${c.table ? cardTableHtml(c.table) : ''}
-                        ${c.visual?.caption || loadedRevision !== '3.0.0' ? `<p class="exam-caption">${esc(c.visual?.caption || 'Şematik öğretim modeli; ölçekli değildir.')}</p>` : ''}
-
+                        ${c.visual?.caption ? `<p class="exam-caption">${esc(c.visual.caption)}</p>` : (loadedRevision !== '3.0.0' && loadedRevision !== '6.0.0' ? '<p class="exam-caption">Şematik öğretim modeli; ölçekli değildir.</p>' : '')}
                     </div>
                 </div>
 
@@ -1265,12 +1450,10 @@ export function applyStudyPlanState() {
     if (toggleBtn) {
         toggleBtn.setAttribute('aria-expanded', String(isOpen));
         toggleBtn.classList.toggle('active', isOpen);
-        toggleBtn.innerHTML = isOpen
-            ? '<i class="fas fa-columns"></i> <span>Planı Gizle</span>'
-            : '<i class="fas fa-bars"></i> <span>Çalışma Planı</span>';
+        toggleBtn.innerHTML = '<i class="fas fa-list-ul"></i> <span>Konular</span>';
         toggleBtn.title = isOpen
-            ? 'Çalışma planını gizle ve ders kartını tam genişliğe çıkar'
-            : 'Çalışma planını göster';
+            ? 'Konular listesini gizle ve kartı tam genişliğe çıkar'
+            : 'Konular listesini göster';
     }
     if (cardnav) {
         cardnav.setAttribute('aria-hidden', String(!isOpen));
@@ -1446,6 +1629,13 @@ function renderPractice() {
     if (activeBox) activeBox.style.display = 'block';
 
     const a = state.attempt;
+    const targetRev = a.contentRevision || '1';
+    if (loadedRevision !== targetRev) {
+        loadData(targetRev, false).then(ok => {
+            if (ok && state.currentStep === 'practice') renderPractice();
+        });
+        return;
+    }
     const questions = a.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
     if (questions.length !== 7) {
         // Hata durumunda güvenli sıfırlama
@@ -1647,6 +1837,7 @@ function renderPractice() {
                     a.answers[questions[activeIdx].id] = textarea.value;
                 }
                 a.activeQuestionIndex = Number(btn.dataset.navQ);
+                a.updatedAt = Date.now();
                 saveState();
                 renderPractice();
             };
@@ -1660,11 +1851,7 @@ function renderPractice() {
     const qPoints = a.questionPoints?.[q.id] || (q.score_weight || 14);
 
     if (qContainer && q) {
-        const visual = q.visual?.asset ? `
-            <div class="exam-qimage-box">
-                <img class="exam-qimage" src="${esc(ASSET_BASE + q.visual.asset)}" alt="${esc(q.visual.alt || '')}">
-            </div>
-        ` : '';
+        const visual = questionVisualHtml(q);
 
         const t = q.table;
         const table = t ? `
@@ -1727,6 +1914,7 @@ function renderPractice() {
                     a.answers[questions[activeIdx].id] = textarea.value;
                 }
                 a.activeQuestionIndex = activeIdx - 1;
+                a.updatedAt = Date.now();
                 saveState();
                 renderPractice();
             }
@@ -1746,6 +1934,7 @@ function renderPractice() {
                     a.answers[questions[activeIdx].id] = textarea.value;
                 }
                 a.activeQuestionIndex = activeIdx + 1;
+                a.updatedAt = Date.now();
                 saveState();
                 renderPractice();
             };
@@ -1855,7 +2044,9 @@ async function startNewPractice() {
             revealed: {},
             status: 'in_progress',
             finished: false,
-            visitedCards: []
+            visitedCards: [],
+            updatedAt: Date.now(),
+            startedAt: Date.now()
         };
         saveState();
         renderPractice();
@@ -1894,6 +2085,13 @@ function renderEval() {
     }
 
     const a = state.attempt;
+    const targetRev = a.contentRevision || '1';
+    if (loadedRevision !== targetRev) {
+        loadData(targetRev, false).then(ok => {
+            if (ok && state.currentStep === 'eval') renderEval();
+        });
+        return;
+    }
     const questions = a.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
     if (questions.length !== 7) {
         goToStep('practice');
@@ -1969,11 +2167,7 @@ function renderEval() {
     const qContainer = $('eval-single-question-container');
 
     if (qContainer && q) {
-        const visual = q.visual?.asset ? `
-            <div class="exam-qimage-box">
-                <img class="exam-qimage" src="${esc(ASSET_BASE + q.visual.asset)}" alt="${esc(q.visual.alt || '')}">
-            </div>
-        ` : '';
+        const visual = questionVisualHtml(q);
 
         const t = q.table;
         const table = t ? `
@@ -2178,6 +2372,13 @@ function renderSummary() {
     }
 
     const a = state.attempt;
+    const targetRev = a.contentRevision || '1';
+    if (loadedRevision !== targetRev) {
+        loadData(targetRev, false).then(ok => {
+            if (ok && state.currentStep === 'summary') renderSummary();
+        });
+        return;
+    }
     const questions = a.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
     if (questions.length !== 7) {
         goToStep('scope');
@@ -2581,6 +2782,17 @@ async function generateExamPdfBlob(questions, attempt) {
     } catch (_) {}
 
     const visualPromises = questions.map(async q => {
+        if (q.visual?.kind === 'gallery' && Array.isArray(q.visual.items) && q.visual.items.length > 0) {
+            try {
+                const itemVisuals = await Promise.all(q.visual.items.map(async it => {
+                    const img = await imageToDataUrl(assetBase + it.asset, 180, 130);
+                    return { ...img, label: it.label || '' };
+                }));
+                return { kind: 'gallery', items: itemVisuals };
+            } catch (_) {
+                return null;
+            }
+        }
         if (q.visual?.asset) {
             try {
                 return await imageToDataUrl(assetBase + q.visual.asset, 260, 180);
@@ -2591,7 +2803,12 @@ async function generateExamPdfBlob(questions, attempt) {
         return null;
     });
     const visuals = await Promise.all(visualPromises);
-    if (questions.some((q, i) => q.visual?.asset && !visuals[i])) {
+    if (questions.some((q, i) => {
+        if (q.visual?.kind === 'gallery') {
+            return !visuals[i] || !Array.isArray(visuals[i].items) || visuals[i].items.some(it => !it || !it.dataUrl);
+        }
+        return q.visual?.asset && !visuals[i];
+    })) {
         const error = new Error('Soru görseli yüklenemedi; eksik PDF oluşturulmadı.');
         error.code = 'EXAM_IMAGE_LOAD';
         throw error;
@@ -2705,14 +2922,29 @@ async function generateExamPdfBlob(questions, attempt) {
             });
         }
 
-        // Varsa Görsel
-        if (visuals[i] && visuals[i].dataUrl) {
-            qStack.push({
-                image: visuals[i].dataUrl,
-                width: Math.min(visuals[i].width, 240),
-                alignment: 'center',
-                margin: [0, 3, 0, 5]
-            });
+        // Varsa Görsel (Galeri veya Tek Görsel)
+        if (visuals[i]) {
+            if (visuals[i].kind === 'gallery' && Array.isArray(visuals[i].items)) {
+                const galleryCols = visuals[i].items.map(it => ({
+                    stack: [
+                        { image: it.dataUrl, width: Math.min(it.width || 140, 140), alignment: 'center' },
+                        { text: it.label || '', fontSize: 8, alignment: 'center', color: '#64748b', margin: [0, 2, 0, 0] }
+                    ],
+                    width: '*'
+                }));
+                qStack.push({
+                    columns: galleryCols,
+                    columnGap: 12,
+                    margin: [0, 3, 0, 5]
+                });
+            } else if (visuals[i].dataUrl) {
+                qStack.push({
+                    image: visuals[i].dataUrl,
+                    width: Math.min(visuals[i].width, 240),
+                    alignment: 'center',
+                    margin: [0, 3, 0, 5]
+                });
+            }
         }
 
         // Çizgili Cevap Alanı
@@ -2864,11 +3096,7 @@ function openPrintPreview(triggerEl = null) {
         <div class="print-questions-flow">
             ${qs.map((q, i) => {
                 const qPoints = state.attempt.questionPoints?.[q.id] || 15;
-                const visual = q.visual?.asset ? `
-                    <div class="print-qimage">
-                        <img src="${esc(ASSET_BASE + q.visual.asset)}" alt="${esc(q.visual?.alt || '')}">
-                    </div>
-                ` : '';
+                const visual = questionVisualHtml(q, { forPrint: true });
 
                 const table = q.table ? `
                     <table class="print-table">
@@ -3329,6 +3557,23 @@ function setupLearning(kind) {
 }
 
 // --- SENARYO SORU SEÇİMİ VE GEÇMİŞ YÖNETİMİ ---
+export function getQuestionHistoryStats(q, history) {
+    if (!history) return { count: 0, last: 0 };
+    let totalCount = 0;
+    let maxLast = 0;
+    const rKey = q.repeat_key || q.id.replace(/-V\d+-/, '-');
+
+    for (const [key, val] of Object.entries(history)) {
+        if (!val) continue;
+        const normKey = val.repeat_key || key.replace(/-V\d+-/, '-');
+        if (key === q.id || normKey === rKey || (q.repeat_key && (key === q.repeat_key || normKey === q.repeat_key))) {
+            totalCount += (Number(val.count) || 0);
+            maxLast = Math.max(maxLast, Number(val.last) || 0);
+        }
+    }
+    return { count: totalCount, last: maxLast };
+}
+
 export function selectQuestions(profileName, history, run = 0) {
     const conf = profiles[profileName];
     if (!conf) throw new Error('Geçersiz profil: ' + profileName);
@@ -3343,12 +3588,15 @@ export function selectQuestions(profileName, history, run = 0) {
             const countNeeded = quota[allocation.outcome_id]?.[diff] || 0;
             if (countNeeded <= 0) continue;
             const pool = QUESTIONS.filter(q => q.outcome_id === allocation.outcome_id && q.difficulty === diff)
-                .map(q => ({
-                    q,
-                    count: history[q.id]?.count || 0,
-                    last: history[q.id]?.last || 0,
-                    tie: Math.random()
-                }))
+                .map(q => {
+                    const stats = getQuestionHistoryStats(q, history);
+                    return {
+                        q,
+                        count: stats.count,
+                        last: stats.last,
+                        tie: Math.random()
+                    };
+                })
                 .sort((a, b) => a.count - b.count || a.last - b.last || a.tie - b.tie);
             for (let i = 0; i < countNeeded; i++) slots.push(pool);
         }
@@ -3420,9 +3668,14 @@ export function selectQuestions(profileName, history, run = 0) {
     const result = bestResult;
     let repeats = 0;
     for (const q of result) {
-        const h = history[q.id] || { count: 0, last: 0 };
-        if (h.count) repeats++;
-        history[q.id] = { count: h.count + 1, last: now };
+        const stats = getQuestionHistoryStats(q, history);
+        if (stats.count > 0) repeats++;
+        const prev = history[q.id] || { count: 0, last: 0 };
+        history[q.id] = {
+            count: prev.count + 1,
+            last: now,
+            repeat_key: q.repeat_key || null
+        };
     }
 
     // Soruları rastgele sırala (Fisher-Yates)
@@ -3597,7 +3850,10 @@ if (typeof window !== 'undefined') {
         applyStudyPlanState,
         toggleStudyFullscreen,
         enterStudyFullscreen,
-        exitStudyFullscreen
+        exitStudyFullscreen,
+        selectQuestions,
+        getQuestionHistoryStats,
+        questionVisualHtml
     };
 }
 

@@ -1,0 +1,272 @@
+{
+  "cassini": {
+    "asset": "cassini.jpg",
+    "url": "https://assets.science.nasa.gov/content/dam/science/psd/photojournal/pia/pia04/pia04603/PIA04603.jpg/jcr:content/renditions/cq5dam.web.1280.1280.jpeg",
+    "source": "https://science.nasa.gov/photojournal/cassini-spacecraft-in-a-jpl-assembly-room/",
+    "bytes": 349983,
+    "dimensions": [
+      1280,
+      1255
+    ],
+    "credit": "NASA/JPL",
+    "nature": "photograph",
+    "use": "Kaynak sayfası ve hak notları korunur; logo/onay ilişkisi kurulmaz."
+  },
+  "hubble": {
+    "asset": "hubble.jpg",
+    "url": "https://assets.science.nasa.gov/content/dam/science/missions/hubble/servicing-missions/sm2/STScI-01EVT1Q2KXWQA9Q05P0XPP0GAX.tif/jcr:content/renditions/cq5dam.web.1280.1280.jpeg",
+    "source": "https://science.nasa.gov/asset/hubble/hubble-in-flight-1997/",
+    "bytes": 149151,
+    "dimensions": [
+      1280,
+      1280
+    ],
+    "credit": "NASA",
+    "nature": "photograph",
+    "use": "Kaynak sayfası ve hak notları korunur; logo/onay ilişkisi kurulmaz."
+  },
+  "iss": {
+    "asset": "iss.jpg",
+    "url": "https://www.nasa.gov/wp-content/uploads/2023/03/s133e006859.jpg",
+    "source": "https://www.nasa.gov/image-article/international-space-station-40/",
+    "bytes": 93118,
+    "dimensions": [
+      1041,
+      711
+    ],
+    "credit": "NASA",
+    "nature": "photograph",
+    "use": "Kaynak sayfası ve hak notları korunur; logo/onay ilişkisi kurulmaz."
+  },
+  "rocket": {
+    "asset": "rocket.jpg",
+    "source": "https://images.nasa.gov/details/6900540",
+    "url": "https://images-assets.nasa.gov/image/6900540/6900540~medium.jpg",
+    "nature": "photograph",
+    "credit": "NASA/MSFC",
+    "dimensions": [
+      1006,
+      1280
+    ],
+    "description": "Apollo 11 görevinin Satürn V roketiyle fırlatılışı, 16 Temmuz 1969."
+  },
+  "deepfield": {
+    "asset": "deepfield.jpg",
+    "source": "https://science.nasa.gov/asset/hubble/the-hubble-ultra-deep-field/",
+    "url": "https://assets.science.nasa.gov/content/dam/science/missions/hubble/releases/2006/09/STScI-01EVT7KG76K1KYW4P3KFEC8YS4.tif/jcr:content/renditions/cq5dam.web.1280.1280.jpeg",
+    "dimensions": [
+      1280,
+      1279
+    ],
+    "bytes": 574886,
+    "credit": "NASA, ESA ve S. Beckwith (STScI), HUDF Team",
+    "nature": "observational_image",
+    "use": "Kaynak sayfası ve hak notları korunur; logo/onay ilişkisi kurulmaz."
+  },
+  "sun": {
+    "asset": "sun.jpg",
+    "source": "https://eso.org/public/images/eso1703e-comparisona/",
+    "url": "https://cdn.eso.org/images/screen/eso1703e-comparisona.jpg",
+    "dimensions": [
+      1280,
+      1280
+    ],
+    "bytes": 254091,
+    "credit": "NASA/SDO, ALMA (ESO/NAOJ/NRAO)",
+    "nature": "observational_image",
+    "use": "Kaynak sayfası ve hak notları korunur; logo/onay ilişkisi kurulmaz."
+  },
+  "shuttle-day": {
+    "asset": "shuttle-day.jpg",
+    "source": "https://images.nasa.gov/details/iss011e11263",
+    "url": "https://images-assets.nasa.gov/image/iss011e11263/iss011e11263~medium.jpg",
+    "nature": "photograph",
+    "credit": "NASA",
+    "dimensions": [
+      1280,
+      834
+    ],
+    "description": "Discovery mekiğinin alt yüzeyi, yörüngede kontrol manevrası sırasında, 28 Temmuz 2005."
+  },
+  "lift-hold-carry": {
+    "asset": "lift-hold-carry.png",
+    "nature": "ai_generated_educational_illustration",
+    "credit": "FenUp X / OpenAI ImageGen",
+    "source": "Özgün üretim; gerçek fotoğraf değildir. Kaldırma/tutma/taşıma durumları, hareket bilgisi metinde verilir."
+  },
+  "push-pull": {
+    "asset": "push-pull.png",
+    "nature": "ai_generated_educational_illustration",
+    "credit": "FenUp X / OpenAI ImageGen",
+    "source": "Özgün üretim; gerçek fotoğraf değildir. Kuvvet şeması yerine durumu betimler."
+  },
+  "satellite-photo": {
+    "asset": "satellite-photo.jpg",
+    "nature": "photograph",
+    "source": "https://images.nasa.gov/details/s89-27381",
+    "credit": "NASA",
+    "description": "TDRS-D uydusunun Kennedy Space Center hazırlığı, 29 Aralık 1988."
+  },
+  "debris-impact": {
+    "asset": "debris-impact.jpg",
+    "nature": "photograph",
+    "source": "https://orbitaldebris.jsc.nasa.gov/photo-gallery/",
+    "original_url": "https://orbitaldebris.jsc.nasa.gov/photo-gallery/_images/fullsize/impacts-solarmax-hole.jpg",
+    "credit": "NASA Orbital Debris Program Office",
+    "description": "Solar Max deney panelinde uzay enkazının oluşturduğu delik; özgün fotoğraftaki mikroskop ölçek işaretleri korunmuştur."
+  },
+  "andromeda": {
+    "asset": "andromeda.jpg",
+    "nature": "observational_image",
+    "source": "https://science.nasa.gov/asset/hubble/andromeda-galaxy-m31-mosaic/",
+    "url": "https://assets.science.nasa.gov/content/dam/science/missions/hubble/releases/2015/09/STScI-01EVVC2PHV4W0A4PQV8S9GJS9J.tif/jcr:content/renditions/cq5dam.web.1280.1280.jpeg",
+    "credit": "NASA, ESA, J. Dalcanton, B.F. Williams, L.C. Johnson (University of Washington), PHAT team ve R. Gendler",
+    "description": "Andromeda galaksisinin bir bölümünü gösteren Hubble gözlem mozaiği; tüm galaksinin dıştan çekilmiş tek karesi değildir."
+  },
+  "force-compare": {
+    "asset": "force-compare.svg",
+    "nature": "original_vector_diagram",
+    "credit": "FenUp X",
+    "source": "FenUp X özgün öğretim şeması",
+    "description": "FenUp X özgün, şeffaf zeminli ve koyu arayüze uyarlanmış kuvvet/yer değiştirme şeması."
+  },
+  "distance-compare": {
+    "asset": "distance-compare.svg",
+    "nature": "original_vector_diagram",
+    "credit": "FenUp X",
+    "source": "FenUp X özgün öğretim şeması",
+    "description": "FenUp X özgün, şeffaf zeminli ve koyu arayüze uyarlanmış kuvvet/yer değiştirme şeması."
+  },
+  "debris-data": {
+    "asset": "debris-data.svg",
+    "nature": "original_vector_diagram",
+    "credit": "FenUp X",
+    "source": "FenUp X özgün öğretim şeması",
+    "description": "Gözlem grafiği görseli"
+  },
+  "question-force": {
+    "asset": "question-force.svg",
+    "nature": "original_vector_diagram",
+    "credit": "FenUp X",
+    "source": "FenUp X özgün öğretim şeması",
+    "description": "Aynı yol, iki kuvvet görseli"
+  },
+  "question-distance": {
+    "asset": "question-distance.svg",
+    "nature": "original_vector_diagram",
+    "credit": "FenUp X",
+    "source": "FenUp X özgün öğretim şeması",
+    "description": "Eşit kuvvet, farklı yol görseli"
+  },
+  "force-data": {
+    "asset": "force-data.svg",
+    "nature": "original_vector_diagram",
+    "credit": "FenUp X",
+    "source": "FenUp X özgün öğretim şeması",
+    "description": "Grafikteki üç düzenek görseli"
+  },
+  "tug": {
+    "asset": "tug.jpg",
+    "source": "https://trgozlemevleri.gov.tr/tr/yerleskeler/antalya-tug",
+    "url": "https://trgozlemevleri.gov.tr/photos/campus/antalya-tug/tug-yerleske.jpg",
+    "credit": "Türkiye Ulusal Gözlemevleri",
+    "nature": "photograph",
+    "description": "Antalya Bakırlıtepe TUG yerleşkesi.",
+    "dimensions": [
+      1424,
+      1211
+    ],
+    "bytes": 891177
+  },
+  "webb": {
+    "asset": "webb.jpg",
+    "source": "https://esawebb.org/images/weic2202a/",
+    "url": "https://esawebb.org/media/archives/images/screen/weic2202a.jpg",
+    "credit": "NASA/Chris Gunn",
+    "nature": "photograph",
+    "description": "James Webb Uzay Teleskobu, uçuş öncesi temiz odada.",
+    "dimensions": [
+      1280,
+      1028
+    ],
+    "bytes": 250370
+  },
+  "istanbul": {
+    "asset": "istanbul.jpg",
+    "source": "https://www.nasa.gov/image-article/istanbul-turkey-separated-by-bosphorus-strait/",
+    "url": "https://images-assets.nasa.gov/image/iss067e213409/iss067e213409~medium.jpg",
+    "credit": "NASA",
+    "nature": "photograph",
+    "description": "İstanbul ve Boğaz, Uluslararası Uzay İstasyonu’ndan, 30 Temmuz 2022.",
+    "dimensions": [
+      1280,
+      853
+    ],
+    "bytes": 162155
+  },
+  "alper": {
+    "asset": "alper.jpg",
+    "source": "https://tubitak.gov.tr/tr/haber/ilk-turk-astronot-uluslararasi-uzay-istasyonuna-ulasti",
+    "url": "https://tubitak.gov.tr/sites/default/files/iss_astronot_ana.jpg",
+    "credit": "TÜBİTAK / kaynak haber görseli",
+    "nature": "photo_collage",
+    "description": "Alper Gezeravcı’nın istasyona ulaşmasına ilişkin resmî haber fotoğrafı.",
+    "dimensions": [
+      940,
+      310
+    ],
+    "bytes": 237497
+  },
+  "juno": {
+    "asset": "juno.jpg",
+    "source": "https://science.nasa.gov/photojournal/nasas-juno-spacecraft-taking-shape-in-denver/",
+    "url": "https://assets.science.nasa.gov/content/dam/science/psd/photojournal/pia/pia13/pia13905/PIA13905.jpg/jcr:content/renditions/cq5dam.web.1280.1280.jpeg",
+    "credit": "NASA/JPL-Caltech/LMSS",
+    "nature": "photograph",
+    "description": "Juno sondası, uçuş öncesi testte; güneş panelleri katlı durumda.",
+    "dimensions": [
+      1280,
+      853
+    ],
+    "bytes": 409645
+  },
+  "removedebris": {
+    "asset": "removedebris.jpg",
+    "source": "https://www.nasa.gov/image-article/small-satellite-demonstrates-possible-solution-space-junk/",
+    "url": "https://www.nasa.gov/wp-content/uploads/2023/03/iss056e025387.jpg",
+    "credit": "NASA",
+    "nature": "photograph",
+    "description": "RemoveDEBRIS deney uydusunun uzaya bırakılması, 20 Haziran 2018.",
+    "dimensions": [
+      1041,
+      694
+    ],
+    "bytes": 116910
+  },
+  "hubble-print": {
+    "asset": "hubble-print.jpg",
+    "source": "https://science.nasa.gov/image-detail/hst-assembly-3/",
+    "url": "https://science.nasa.gov/wp-content/uploads/2023/07/hst-assembly-3.jpg?resize=1226,1536",
+    "credit": "NASA/Lockheed Martin",
+    "nature": "photograph",
+    "bytes": 468665
+  },
+  "station-print": {
+    "asset": "station-print.jpg",
+    "source": "https://images.nasa.gov/details/s132e012208",
+    "url": "https://images-assets.nasa.gov/image/s132e012208/s132e012208~medium.jpg",
+    "credit": "NASA",
+    "nature": "photograph",
+    "bytes": 150007,
+    "description": "Uzay istasyonu, STS-132 ekibinden gerçek fotoğraf, 23 Mayıs 2010."
+  },
+  "lift-hold-only": {
+    "asset": "lift-hold-only.png",
+    "nature": "ai_generated_illustration",
+    "credit": "FenUp X",
+    "source": "FenUp X için mevcut üç sahneli illüstrasyondan iki sahneli düzenleme",
+    "description": "Solda kaldırma, sağda hareketsiz tutma. Hareket sorunun metninde belirtilir; ok veya çözüm yazısı yok.",
+    "tool": "built-in image_gen",
+    "transparent_background": true
+  }
+}
