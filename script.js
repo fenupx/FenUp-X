@@ -319,7 +319,9 @@ function updateFullscreenIcons() {
     const isFull = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
     const btns = [
         document.getElementById('btn-global-fullscreen'),
-        document.getElementById('fullscreen-btn')
+        document.getElementById('fullscreen-btn'),
+        document.getElementById('btn-lab-fullscreen'),
+        document.getElementById('btn-study-fullscreen')
     ];
     btns.forEach(btn => {
         if (!btn) return;
@@ -327,17 +329,10 @@ function updateFullscreenIcons() {
         if (icon) {
             icon.className = isFull ? 'fas fa-compress' : 'fas fa-expand';
         }
-        btn.setAttribute('title', isFull ? 'Tam Ekrandan Çık (ESC / F11)' : 'Tam Ekran (F11)');
+        btn.setAttribute('aria-pressed', isFull ? 'true' : 'false');
+        btn.setAttribute('title', isFull ? 'Tam Ekrandan Çık' : 'Tam Ekran');
+        btn.setAttribute('aria-label', isFull ? 'Tam Ekrandan Çık' : 'Tam Ekran');
     });
-
-    const labFsBtn = document.getElementById('btn-lab-fullscreen');
-    if (labFsBtn) {
-        const icon = labFsBtn.querySelector('i');
-        const text = labFsBtn.querySelector('span');
-        if (icon) icon.className = isFull ? 'fas fa-compress' : 'fas fa-expand';
-        if (text) text.textContent = isFull ? 'Küçült' : 'Tam Ekran';
-        labFsBtn.setAttribute('title', isFull ? 'Tam Ekrandan Çık' : 'Tam Ekran');
-    }
 }
 
 ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
@@ -523,6 +518,7 @@ const navigation = (() => {
     });
     window.addEventListener('load', () => {
         history.scrollRestoration = 'manual';
+        if (index > 0) return;
         const saved = history.state?.fenupx;
         let route = saved?.v === 1 ? saved.route : readURL();
         if (route?.scene === 'scene-yazili') {
@@ -573,7 +569,7 @@ function switchScene(from, to) {
     if(userProfileArea) {
         userProfileArea.style.display = isHome ? "inline-block" : "none";
     }
-    if (mainFooter) mainFooter.classList.toggle('hidden-footer', !isHome && to.id !== 'scene-yazili');
+    if (mainFooter) mainFooter.classList.toggle('hidden-footer', !isHome);
 
     const isQuiz = (to.id === "scene-quiz" || to.id === "scene-tournament-quiz");
     if (topControls) {

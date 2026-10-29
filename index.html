@@ -10,10 +10,10 @@
     <!-- İkonlar ve Favicon -->
     <meta name="apple-mobile-web-app-title" content="FenUp X">
     <meta name="application-name" content="FenUp X">
-    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128 256x256" href="/favicon.ico?v=2026102908">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026102908">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026102908">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026102908">
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128 256x256" href="/favicon.ico?v=2026102910">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026102910">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026102910">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026102910">
     
     <!-- Open Graph & Sosyal Paylaşım -->
     <meta property="og:type" content="website">
@@ -40,8 +40,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2026102908">
-    <link rel="stylesheet" href="exam.css?v=2026102908">
+    <link rel="stylesheet" href="style.css?v=2026102910">
+    <link rel="stylesheet" href="exam.css?v=2026102910">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -83,7 +83,21 @@
                     <i class="fas fa-volume-up" id="mute-btn"></i>
                     <input type="range" id="volume-slider" min="0" max="100" value="70">
                 </div>
-                <button id="btn-global-fullscreen" class="icon-btn" title="Tam Ekran (F11)"><i class="fas fa-expand"></i></button>
+                <button id="btn-global-fullscreen" class="icon-btn" title="Tam Ekran (F11)" aria-label="Tam Ekran (F11)" aria-pressed="false"><i class="fas fa-expand"></i></button>
+            </div>
+
+            <!-- Mobil Menü İçi Sosyal Medya ve Politikalar (Yalnızca Mobilde Görünür) -->
+            <div class="mobile-nav-footer-section">
+                <div class="mobile-nav-divider"></div>
+                <div class="mobile-nav-socials">
+                    <a href="https://youtube.com/@FenUpX" target="_blank" class="mobile-nav-social-link" title="YouTube" aria-label="YouTube"><i class="fab fa-youtube"></i> <span>YouTube</span></a>
+                    <a href="https://instagram.com/fenupx" target="_blank" class="mobile-nav-social-link" title="Instagram" aria-label="Instagram"><i class="fab fa-instagram"></i> <span>Instagram</span></a>
+                </div>
+                <div class="mobile-nav-policies">
+                    <button class="mobile-nav-policy-btn btn-kvkk-open" type="button">Gizlilik Politikası</button>
+                    <button class="mobile-nav-policy-btn btn-terms-open" type="button">Kullanım Koşulları</button>
+                    <button class="mobile-nav-policy-btn btn-cookies-open" type="button">Çerez Politikası</button>
+                </div>
             </div>
         </nav>
     </header>
@@ -387,10 +401,10 @@
         <!-- 1. Laboratuvar Katalog Görünümü (#lab-catalog-view) -->
         <div id="lab-catalog-view" class="lab-subview is-hidden">
             <div class="lab-nav-header">
-                <button id="btn-lab-back-home" class="back-link btn-back-home btn-lab-nav-home"><i class="fas fa-arrow-left"></i> Ana Sayfaya Dön</button>
+                <button id="btn-lab-back-home" class="back-link btn-back-home btn-lab-nav-home" aria-label="Ana Sayfaya Dön"><i class="fas fa-arrow-left"></i> <span>Ana Sayfa</span></button>
                 <div class="lab-title-group">
                     <h2 class="lab-main-heading"><i class="fas fa-flask"></i> Sanal Bilim Laboratuvarı</h2>
-                    <p class="lab-subheading">MEB Türkiye Yüzyılı Maarif Modeli ile %100 uyumlu, dokunmatik 2D deney simülasyonları</p>
+                    <p class="lab-subheading">Türkiye Yüzyılı Maarif Modeli fen etkinlikleri ve dokunmatik deney simülasyonları</p>
                 </div>
                 <div class="lab-header-spacer"></div>
             </div>
@@ -419,15 +433,15 @@
         <div id="lab-workspace-view" class="lab-subview is-hidden">
             <!-- Üst Çubuk (Header) -->
             <div class="lab-workspace-header">
-                <button id="btn-lab-back-catalog" class="back-link"><i class="fas fa-arrow-left"></i> Laboratuvara Dön</button>
+                <button id="btn-lab-back-catalog" class="back-link" aria-label="Deneylere Dön"><i class="fas fa-arrow-left"></i> <span>Deneyler</span></button>
                 <div class="lab-workspace-title-box">
                     <span id="lab-exp-badge" class="lab-badge">7. Sınıf / 4. Ünite · FB.7.4.1</span>
-                    <h3 id="lab-exp-title">Deney 7.3: Işığın Kırılması ve Sınır Açısı Simülatörü</h3>
+                    <h3 id="lab-exp-title">Deney 7.3: Işığın Kırılması Simülatörü</h3>
                     <small id="lab-exp-ref">MEB 2. Kitap, s. 16–29 (Etkinlik Noktası: Işığın Ortam Değiştirmesi ve Kırılma)</small>
                 </div>
                 <div class="lab-workspace-actions">
                     <button id="btn-lab-reset" class="lab-action-pill" title="Deneyi Sıfırla"><i class="fas fa-redo"></i> <span>Sıfırla</span></button>
-                    <button id="btn-lab-fullscreen" class="lab-action-pill" title="Tam Ekran"><i class="fas fa-expand"></i> <span>Tam Ekran</span></button>
+                    <button id="btn-lab-fullscreen" class="lab-action-pill" title="Tam Ekran" aria-label="Tam Ekran" aria-pressed="false"><i class="fas fa-expand"></i></button>
                 </div>
             </div>
 
@@ -448,9 +462,9 @@
 
                     <!-- Canvas Altı Responsive Metrik Şeridi (Deney 7.3 - Mobilde Tuvali Asla Kapatmaz) -->
                     <div id="metrics-bar-7-3" class="lab-canvas-metrics-bar">
-                        <div class="metrics-pill med1"><span class="pill-dot"></span> 1. Ortam: <strong id="mbar-med1-name">Hava</strong> <span class="pill-sub">(n=<span id="mbar-med1-n">1.00</span>)</span></div>
-                        <div class="metrics-pill med2"><span class="pill-dot"></span> 2. Ortam: <strong id="mbar-med2-name">Cam</strong> <span class="pill-sub">(n=<span id="mbar-med2-n">1.50</span>)</span></div>
-                        <div class="metrics-pill angle"><i class="fas fa-compass"></i> i: <strong id="hud-val-incident">30°</strong> · r: <strong id="hud-val-refract">19.5°</strong></div>
+                        <div class="metrics-pill med1"><span class="pill-dot"></span> 1. Ortam: <strong id="mbar-med1-name">Hava</strong> <span class="pill-sub">(<span id="mbar-med1-n">Az Yoğun</span>)</span></div>
+                        <div class="metrics-pill med2"><span class="pill-dot"></span> 2. Ortam: <strong id="mbar-med2-name">Su</strong> <span class="pill-sub">(<span id="mbar-med2-n">Çok Yoğun</span>)</span></div>
+                        <div class="metrics-pill angle"><i class="fas fa-compass"></i> Gelme: <strong id="hud-val-incident">30°</strong> · Kırılma: <strong id="hud-val-refract">22.1°</strong></div>
                         <div class="metrics-pill status" id="lab-hud-status">Normale Yaklaşıyor</div>
                     </div>
 
@@ -458,14 +472,14 @@
                     <div id="metrics-bar-7-1" class="lab-canvas-metrics-bar is-hidden">
                         <div class="metrics-pill work-val"><i class="fas fa-bolt"></i> Yapılan İş: <strong id="mbar-work-joule">0.0 J</strong></div>
                         <div class="metrics-pill work-status" id="mbar-work-status"><span id="mbar-work-status-text">⏳ Hareketsiz</span></div>
-                        <div class="metrics-pill work-force"><i class="fas fa-arrows-alt-h"></i> F = <strong id="mbar-work-force">40 N</strong> · Yol = <strong id="mbar-work-dist">0.0 m</strong></div>
+                        <div class="metrics-pill work-force"><i class="fas fa-arrows-alt-h"></i> Kuvvet: <strong id="mbar-work-force">40 N</strong> · Yol: <strong id="mbar-work-dist">0.0 m</strong></div>
                     </div>
 
                     <!-- Canvas Altı Responsive Metrik Şeridi (Deney 7.2 - Mekanik Enerji Dönüşümü) -->
                     <div id="metrics-bar-7-2" class="lab-canvas-metrics-bar is-hidden">
-                        <div class="metrics-pill" style="color: #10b981;"><i class="fas fa-mountain"></i> Ep: <strong id="mbar-72-ep">0.0 J</strong></div>
-                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-bolt"></i> Ek: <strong id="mbar-72-ek">0.0 J</strong></div>
-                        <div class="metrics-pill" style="color: #facc15;"><i class="fas fa-shield-alt"></i> E_top: <strong id="mbar-72-etot">0.0 J</strong></div>
+                        <div class="metrics-pill" style="color: #10b981;"><i class="fas fa-mountain"></i> Potansiyel: <strong id="mbar-72-ep">0.0 J</strong></div>
+                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-bolt"></i> Kinetik: <strong id="mbar-72-ek">0.0 J</strong></div>
+                        <div class="metrics-pill" style="color: #facc15;"><i class="fas fa-shield-alt"></i> Toplam: <strong id="mbar-72-etot">0.0 J</strong></div>
                         <div class="metrics-pill" style="color: #a78bfa;"><i class="fas fa-tachometer-alt"></i> Sürat: <strong id="mbar-72-speed">0.0 m/s</strong></div>
                         <div class="metrics-pill status" id="mbar-72-status">⚡ Potansiyel ve Kinetik Enerji Birbirine Dönüşür</div>
                     </div>
@@ -473,9 +487,9 @@
                     <!-- Canvas Altı Responsive Metrik Şeridi (Deney 7.4 - İnce ve Kalın Kenarlı Mercekler) -->
                     <div id="metrics-bar-7-4" class="lab-canvas-metrics-bar is-hidden">
                         <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-search"></i> Mercek: <strong id="mbar-74-type">İnce Kenarlı</strong></div>
-                        <div class="metrics-pill" style="color: #facc15;"><i class="fas fa-dot-circle"></i> Odak (F): <strong id="mbar-74-focus">120 mm</strong></div>
-                        <div class="metrics-pill" style="color: #c084fc;"><i class="fas fa-ruler-combined"></i> Cisim (do): <strong id="mbar-74-do">200 mm</strong></div>
-                        <div class="metrics-pill" style="color: #10b981;"><i class="fas fa-image"></i> Görüntü: <strong id="mbar-74-img-prop">Gerçek, Ters, Küçültülmüş</strong></div>
+                        <div class="metrics-pill" style="color: #facc15;"><i class="fas fa-dot-circle"></i> Odak: <strong id="mbar-74-focus">Orta Odak</strong></div>
+                        <div class="metrics-pill" style="color: #c084fc;"><i class="fas fa-ruler-combined"></i> Cisim Konumu: <strong id="mbar-74-do">Odak Dışında</strong></div>
+                        <div class="metrics-pill" style="color: #10b981;"><i class="fas fa-image"></i> Görüntü: <strong id="mbar-74-img-prop">Gerçek, Ters</strong></div>
                         <div class="metrics-pill status" id="mbar-74-status">🔥 Işığı Odakta Toplar</div>
                     </div>
 
@@ -489,9 +503,9 @@
 
                     <!-- Canvas Altı Responsive Metrik Şeridi (Deney 7.6 - Çözünme Hızını Etkileyen Faktörler) -->
                     <div id="metrics-bar-7-6" class="lab-canvas-metrics-bar is-hidden">
-                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-flask"></i> A (Hızlı): <strong id="mbar-76-b1">60°C · Pudra (0.0s)</strong></div>
-                        <div class="metrics-pill" style="color: #2dd4bf;"><i class="fas fa-flask"></i> B (Orta): <strong id="mbar-76-b2">20°C · Toz (0.0s)</strong></div>
-                        <div class="metrics-pill" style="color: #fb923c;"><i class="fas fa-flask"></i> C (Yavaş): <strong id="mbar-76-b3">20°C · Küp (0.0s)</strong></div>
+                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-flask"></i> Beher A: <strong id="mbar-76-b1">20°C · Toz (0.0s)</strong></div>
+                        <div class="metrics-pill" style="color: #2dd4bf;"><i class="fas fa-flask"></i> Beher B: <strong id="mbar-76-b2">40°C · Toz (0.0s)</strong></div>
+                        <div class="metrics-pill" style="color: #fb923c;"><i class="fas fa-flask"></i> Beher C: <strong id="mbar-76-b3">60°C · Toz (0.0s)</strong></div>
                         <div class="metrics-pill status" id="mbar-76-status">🧪 Sıcaklık, Temas Yüzeyi ve Karıştırma Çözünmeyi Hızlandırır</div>
                     </div>
 
@@ -547,9 +561,9 @@
 
                     <!-- Canvas Altı Responsive Metrik Şeridi (Deney 6.3 - Sabit Süratli Hareket Simülatörü) -->
                     <div id="metrics-bar-6-3" class="lab-canvas-metrics-bar is-hidden">
-                        <div class="metrics-pill"><i class="fas fa-route"></i> Alınan Yol (x): <strong id="mbar-63-dist">0.0 m</strong></div>
+                        <div class="metrics-pill"><i class="fas fa-route"></i> Alınan Yol: <strong id="mbar-63-dist">0.0 m</strong></div>
                         <div class="metrics-pill"><i class="fas fa-stopwatch"></i> Geçen Süre (t): <strong id="mbar-63-time">0.0 s</strong></div>
-                        <div class="metrics-pill"><i class="fas fa-tachometer-alt"></i> Sürat (v): <strong id="mbar-63-speed">10.0 m/s</strong></div>
+                        <div class="metrics-pill"><i class="fas fa-tachometer-alt"></i> Sürat / Hız: <strong id="mbar-63-speed">10.0 m/s</strong></div>
                         <div class="metrics-pill status" id="mbar-63-status">Hazır (Bekliyor)</div>
                     </div>
 
@@ -563,10 +577,10 @@
 
                     <!-- Canvas Altı Responsive Metrik Şeridi (Deney 6.5 - Sıvıların Yoğunluğu ve Yoğunluk Kulesi) -->
                     <div id="metrics-bar-6-5" class="lab-canvas-metrics-bar is-hidden">
-                        <div class="metrics-pill"><i class="fas fa-layer-group"></i> Sıvı Sayısı: <strong id="mbar-65-liquid-count">0 / 4</strong></div>
-                        <div class="metrics-pill" style="color: #fbbf24;"><i class="fas fa-arrow-down"></i> En Yoğun: <strong id="mbar-65-bottom-layer">—</strong></div>
-                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-arrow-up"></i> En Az Yoğun: <strong id="mbar-65-top-layer">—</strong></div>
-                        <div class="metrics-pill status" id="mbar-65-status">Silindir Boş</div>
+                        <div class="metrics-pill"><i class="fas fa-layer-group"></i> Sıvı Sayısı: <strong id="mbar-65-liquid-count">0 / 2</strong></div>
+                        <div class="metrics-pill" style="color: #fbbf24;"><i class="fas fa-arrow-down"></i> En Yoğun (Alt): <strong id="mbar-65-bottom-layer">—</strong></div>
+                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-arrow-up"></i> Az Yoğun (Üst): <strong id="mbar-65-top-layer">—</strong></div>
+                        <div class="metrics-pill status" id="mbar-65-status">Silindir Boş (d = m / V)</div>
                     </div>
 
                     <!-- Canvas Altı Responsive Metrik Şeridi (Deney 6.6 - Tohumun Çimlenmesi) -->
@@ -631,7 +645,7 @@
 
                     <!-- Canvas Altı Responsive Metrik Şeridi (Deney 5.3 - Sürtünme Kuvveti ve Yüzeyler) -->
                     <div id="metrics-bar-5-3" class="lab-canvas-metrics-bar is-hidden">
-                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-layer-group"></i> Yüzey Türü: <strong id="mbar-53-surface">Buz Pisti</strong></div>
+                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-layer-group"></i> Yüzey Türü: <strong id="mbar-53-surface">Pürüzsüz Zemin</strong></div>
                         <div class="metrics-pill" style="color: #cbd5e1;"><i class="fas fa-shield-alt"></i> Sürtünme Kuvveti: <strong id="mbar-53-friction">Çok Düşük</strong></div>
                         <div class="metrics-pill" style="color: #10b981;"><i class="fas fa-route"></i> Alınan Yol (Mesafe): <strong id="mbar-53-distance">0.0 m</strong></div>
                         <div class="metrics-pill status" id="mbar-53-status">🚗 Pürüzsüz ve kaygan yüzeylerde sürtünme azdır, cisim daha uzağa gider</div>
@@ -700,8 +714,8 @@
                         <button class="lab-btn-step" id="btn-angle-minus-5" title="-5 Derece">-5°</button>
                         <button class="lab-btn-step" id="btn-angle-minus-1" title="-1 Derece">-1°</button>
                         <div class="lab-angle-slider-wrap">
-                            <label for="lab-angle-range">Gelme Açısı (i): <span id="lab-angle-display">30°</span></label>
-                            <input type="range" id="lab-angle-range" min="0" max="85" value="30" step="1">
+                            <label for="lab-angle-range">Gelme Açısı: <span id="lab-angle-display">30°</span></label>
+                            <input type="range" id="lab-angle-range" min="0" max="40" value="30" step="1">
                         </div>
                         <button class="lab-btn-step" id="btn-angle-plus-1" title="+1 Derece">+1°</button>
                         <button class="lab-btn-step" id="btn-angle-plus-5" title="+5 Derece">+5°</button>
@@ -721,11 +735,11 @@
                         </div>
                         <div class="lab-lens-sliders-row">
                             <div class="lab-angle-slider-wrap" id="wrap-object-distance" style="display: none;">
-                                <label for="lab-object-range">Cisim Mesafesi (do): <span id="lab-object-display">200 mm</span></label>
+                                <label for="lab-object-range">Cisim Konumu: <span id="lab-object-display">Odak Dışında</span></label>
                                 <input type="range" id="lab-object-range" min="50" max="320" value="200" step="2">
                             </div>
                             <div class="lab-angle-slider-wrap">
-                                <label for="lab-focal-range">Odak Uzaklığı (f): <span id="lab-focal-display">120 mm</span></label>
+                                <label for="lab-focal-range">Odak Bölgesi (F): <span id="lab-focal-display">Orta Odak</span></label>
                                 <input type="range" id="lab-focal-range" min="80" max="160" value="120" step="5">
                             </div>
                         </div>
@@ -748,11 +762,11 @@
                         </div>
                         <div class="lab-lens-sliders-row">
                             <div class="lab-angle-slider-wrap">
-                                <label for="lab-work-force-range">Uygulanan Kuvvet (F): <span id="lab-work-force-display">40 N</span></label>
+                                <label for="lab-work-force-range">Uygulanan Kuvvet: <span id="lab-work-force-display">40 N</span></label>
                                 <input type="range" id="lab-work-force-range" min="10" max="100" value="40" step="5">
                             </div>
                             <div class="lab-angle-slider-wrap" id="wrap-work-distance">
-                                <label for="lab-work-distance-range"><span id="label-work-dist-title">Alınan Yol (Δx)</span>: <span id="lab-work-distance-display">5.0 m</span></label>
+                                <label for="lab-work-distance-range"><span id="label-work-dist-title">Alınan Yol</span>: <span id="lab-work-distance-display">5.0 m</span></label>
                                 <input type="range" id="lab-work-distance-range" min="1" max="10" value="5" step="0.5">
                             </div>
                         </div>
@@ -774,11 +788,11 @@
                         </div>
                         <div class="lab-lens-sliders-row">
                             <div class="lab-angle-slider-wrap">
-                                <label for="lab-energy-mass-range">Cisim Kütlesi (m): <span id="lab-energy-mass-display">2.0 kg</span></label>
+                                <label for="lab-energy-mass-range">Cisim Kütlesi: <span id="lab-energy-mass-display">2.0 kg</span></label>
                                 <input type="range" id="lab-energy-mass-range" min="1" max="5" value="2" step="0.5">
                             </div>
                             <div class="lab-angle-slider-wrap">
-                                <label for="lab-energy-angle-range">Bırakma Açısı / Yükseklik (θ): <span id="lab-energy-angle-display">45°</span></label>
+                                <label for="lab-energy-angle-range">Bırakma Yüksekliği: <span id="lab-energy-angle-display">45°</span></label>
                                 <input type="range" id="lab-energy-angle-range" min="15" max="60" value="45" step="5">
                             </div>
                         </div>
@@ -789,7 +803,7 @@
                         <div class="lab-quick-lens-row">
                             <div class="lab-toggle-btn-group" id="group-modes-7-5">
                                 <button class="lab-toggle-btn active" id="btn-mode-funnel" title="Ayırma Hunisi ile Yoğunluk Farkı"><i class="fas fa-filter"></i> 🧪 Ayırma Hunisi (Yoğunluk)</button>
-                                <button class="lab-toggle-btn" id="btn-mode-distill" title="Basit Damıtma ile Kaynama Noktası Farkı"><i class="fas fa-fire"></i> 🔥 Basit Damıtma (K.N. Farkı)</button>
+                                <button class="lab-toggle-btn" id="btn-mode-distill" title="Ayrımsal Damıtma ile Kaynama Noktası Farkı"><i class="fas fa-fire"></i> 🔥 Ayrımsal Damıtma (K.N. Farkı)</button>
                             </div>
                             <div class="lab-toggle-btn-group" id="group-controls-funnel">
                                 <button class="lab-toggle-btn active" id="btn-funnel-valve" title="Musluğu Aç / Kapat"><i class="fas fa-faucet"></i> <span id="label-funnel-valve">Musluğu Aç</span></button>
@@ -874,9 +888,9 @@
                                 <button class="lab-toggle-btn" id="btn-pyramid-mode-bioaccum" title="Biyolojik Birikim (Zehir) Simülasyonu"><i class="fas fa-skull-crossbones"></i> ☠️ Biyobirikim (Zehir)</button>
                             </div>
                             <div class="lab-toggle-btn-group" id="group-sunlight-7-9">
-                                <button class="lab-toggle-btn" id="btn-sun-50k" title="Düşük Güneş Enerjisi: 50.000 J">50k J</button>
-                                <button class="lab-toggle-btn active" id="btn-sun-100k" title="Standart Güneş Enerjisi: 100.000 J">100k J</button>
-                                <button class="lab-toggle-btn" id="btn-sun-200k" title="Yüksek Güneş Enerjisi: 200.000 J">200k J</button>
+                                <button class="lab-toggle-btn" id="btn-sun-50k" title="Üretici Başlangıç Enerjisi: 5.000 J">Üretici: 5.000 J</button>
+                                <button class="lab-toggle-btn active" id="btn-sun-100k" title="Üretici Başlangıç Enerjisi: 10.000 J">Üretici: 10.000 J</button>
+                                <button class="lab-toggle-btn" id="btn-sun-200k" title="Üretici Başlangıç Enerjisi: 20.000 J">Üretici: 20.000 J</button>
                             </div>
                             <div class="lab-toggle-btn-group is-hidden" id="group-pesticide-7-9">
                                 <button class="lab-toggle-btn" id="btn-pest-low" title="Düşük Doz DDT (0.05 ppm)">Az Zehir</button>
@@ -959,8 +973,8 @@
                                 <button class="lab-toggle-btn" id="btn-speed-20" title="20 m/s (Hızlı)">20 m/s</button>
                             </div>
                             <div class="lab-toggle-btn-group" id="group-motion-graph">
-                                <button class="lab-toggle-btn active" id="btn-graph-xt" title="Yol-Zaman Grafiği"><i class="fas fa-chart-line"></i> Yol-Zaman (x-t)</button>
-                                <button class="lab-toggle-btn" id="btn-graph-vt" title="Sürat-Zaman Grafiği"><i class="fas fa-chart-area"></i> Sürat-Zaman (v-t)</button>
+                                <button class="lab-toggle-btn active" id="btn-graph-xt" title="Tek Yönlü Düz Pist (Alınan Yol = Yer Değiştirme)"><i class="fas fa-arrow-right"></i> ➡️ Tek Yön (Düz Pist)</button>
+                                <button class="lab-toggle-btn" id="btn-graph-vt" title="Gidiş-Dönüş Pisti (Yer Değiştirme = 0 m)"><i class="fas fa-exchange-alt"></i> 🔄 Gidiş-Dönüş (2L Yol)</button>
                             </div>
                         </div>
                     </div>
@@ -989,10 +1003,10 @@
                     <div id="quick-controls-6-5" class="lab-canvas-quick-controls is-hidden">
                         <div class="lab-quick-lens-row">
                             <div class="lab-toggle-btn-group">
-                                <button class="lab-toggle-btn" id="btn-pour-honey" title="Bal Ekle (1.40 g/cm³)"><i class="fas fa-fill-drip" style="color: #f59e0b;"></i> + Bal</button>
-                                <button class="lab-toggle-btn" id="btn-pour-glycerin" title="Gliserin Ekle (1.26 g/cm³)"><i class="fas fa-fill-drip" style="color: #c084fc;"></i> + Gliserin</button>
-                                <button class="lab-toggle-btn" id="btn-pour-water" title="Su Ekle (1.00 g/cm³)"><i class="fas fa-fill-drip" style="color: #38bdf8;"></i> + Su</button>
-                                <button class="lab-toggle-btn" id="btn-pour-oil" title="Zeytinyağı Ekle (0.90 g/cm³)"><i class="fas fa-fill-drip" style="color: #facc15;"></i> + Zeytinyağı</button>
+                                <button class="lab-toggle-btn is-hidden" id="btn-pour-honey" title="Bal Ekle (1.40 g/cm³)" aria-hidden="true"><i class="fas fa-fill-drip" style="color: #f59e0b;"></i> + Bal</button>
+                                <button class="lab-toggle-btn is-hidden" id="btn-pour-glycerin" title="Gliserin Ekle (1.26 g/cm³)" aria-hidden="true"><i class="fas fa-fill-drip" style="color: #c084fc;"></i> + Gliserin</button>
+                                <button class="lab-toggle-btn" id="btn-pour-water" title="Su Ekle (m=100g, V=100cm³, d=1.00 g/cm³)"><i class="fas fa-fill-drip" style="color: #38bdf8;"></i> + Su (1.00 g/cm³)</button>
+                                <button class="lab-toggle-btn" id="btn-pour-oil" title="Zeytinyağı Ekle (m=90g, V=100cm³, d=0.90 g/cm³)"><i class="fas fa-fill-drip" style="color: #facc15;"></i> + Zeytinyağı (0.90 g/cm³)</button>
                             </div>
                             <div class="lab-toggle-btn-group">
                                 <button class="lab-toggle-btn" id="btn-drop-wood" title="Tahta Blok Bırak (Yüzer)"><i class="fas fa-cube" style="color: #b45309;"></i> Tahta Bırak</button>
@@ -1124,10 +1138,10 @@
                     <div id="quick-controls-5-3" class="lab-canvas-quick-controls is-hidden">
                         <div class="lab-quick-lens-row">
                             <div class="lab-toggle-btn-group">
-                                <button class="lab-toggle-btn active" id="btn-53-surf-ice" title="Buz Zemin (En Az Sürtünme)">🧊 Buz Pisti</button>
-                                <button class="lab-toggle-btn" id="btn-53-surf-wood" title="Cilalı Tahta Zemin">🪵 Ahşap</button>
-                                <button class="lab-toggle-btn" id="btn-53-surf-sand" title="Zımpara Kağıdı Zemin">📜 Zımpara</button>
-                                <button class="lab-toggle-btn" id="btn-53-surf-carpet" title="Halı / Kumaş Zemin">🧶 Halı</button>
+                                <button class="lab-toggle-btn active" id="btn-53-surf-ice" title="Pürüzsüz Zemin (En Az Sürtünme)">✨ Pürüzsüz Zemin</button>
+                                <button class="lab-toggle-btn" id="btn-53-surf-wood" title="Mukavva Zemin">📦 Mukavva Zemin</button>
+                                <button class="lab-toggle-btn" id="btn-53-surf-sand" title="Kumlu Zemin">🏖️ Kumlu Zemin</button>
+                                <button class="lab-toggle-btn" id="btn-53-surf-carpet" title="Pamuklu Kumaş Zemin">🧶 Pamuklu Kumaş</button>
                             </div>
                             <div class="lab-toggle-btn-group">
                                 <button class="lab-toggle-btn active" id="btn-53-launch" title="Aracı Rampadan Bırak"><i class="fas fa-play"></i> Bırak</button>
@@ -1267,18 +1281,18 @@
                             <div class="lab-panel-box">
                                 <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
                                 <div class="lab-vars-list">
-                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Uygulanan Kuvvet (F), Alınan Yol (Δx), Kuvvet Doğrultusu ve Sürtünme</div>
-                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Yapılan Fiziksel İş (Kuvvet ve Alınan Yol Etkisi) ve İş Durumu (Yapıldı / Yapılmadı)</div>
-                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Cisim Kütlesi (m = 10 kg), Yer Çekimi İvmesi</div>
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Uygulanan Kuvvet, Alınan Yol (Yer Değiştirme), Kuvvet Doğrultusu ve Sürtünme</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Yapılan Fiziksel İş (Joule) ve İş Durumu (Yapıldı / Yapılmadı)</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Cisim Kütlesi (10 kg), Yer Çekimi</div>
                                 </div>
                             </div>
 
                             <!-- Dinamik Maarif Pedagojik Çıkarım & Uyarı Kartı -->
-                            <div class="lab-pedagogical-card is-work" id="work-pedagogical-box">
-                                <div class="pedagogical-icon" id="work-pedagogical-icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="lab-pedagogical-card" id="work-pedagogical-box">
+                                <div class="pedagogical-icon" id="work-pedagogical-icon"><i class="fas fa-play-circle" style="color: #38bdf8;"></i></div>
                                 <div class="pedagogical-content">
-                                    <strong id="work-pedagogical-title">✅ Fiziksel Anlamda İş Yapıldı!</strong>
-                                    <p id="work-pedagogical-text">Uygulanan kuvvet ile cismin hareket doğrultusu aynıdır (yatay). Cisim uygulanan kuvvet doğrultusunda yer değiştirdiği için fiziksel anlamda iş yapılmıştır.</p>
+                                    <strong id="work-pedagogical-title">🏁 Deneye Hazır (Simülasyonu Başlatın)</strong>
+                                    <p id="work-pedagogical-text">Uygulanan kuvvet ile hareket doğrultusu aynıdır (yatay). Sandık hareket ettirildiğinde fiziksel iş yapılacaktır. Hareketi gözlemlemek için "Oynat" butonuna basınız.</p>
                                 </div>
                             </div>
 
@@ -1298,7 +1312,7 @@
                                         <label class="lab-field-label">Zemin Sürtünmesi (Yatay İtme İçin):</label>
                                         <div class="lab-select-pills">
                                             <button class="lab-select-pill active" id="pill-work-friction-off">🛡️ Sürtünmesiz (İdeal)</button>
-                                            <button class="lab-select-pill" id="pill-work-friction-on">💨 Sürtünmeli (fs = 20 N)</button>
+                                            <button class="lab-select-pill" id="pill-work-friction-on">💨 Sürtünmeli Zemin</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1308,11 +1322,11 @@
                                 <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Anlık Ölçüm ve İş Değerleri</h4>
                                 <div class="lab-stats-grid">
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Uygulanan Kuvvet (F)</span>
+                                        <span class="chip-label">Uygulanan Kuvvet</span>
                                         <strong class="chip-val" id="metric-work-force" style="color: #ef4444;">40.0 N</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Yer Değiştirme (Δx)</span>
+                                        <span class="chip-label">Yer Değiştirme (Yol)</span>
                                         <strong class="chip-val" id="metric-work-distance" style="color: #38bdf8;">5.0 m</strong>
                                     </div>
                                     <div class="lab-stat-chip">
@@ -1320,12 +1334,12 @@
                                         <strong class="chip-val" id="metric-work-alignment" style="color: #10b981;">Aynı Doğrultu (0°)</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Sürtünme / Net Kuvvet</span>
-                                        <strong class="chip-val" id="metric-work-net-force" style="color: #cbd5e1;">Fnet = 40.0 N</strong>
+                                        <span class="chip-label">Zemin Durumu</span>
+                                        <strong class="chip-val" id="metric-work-net-force" style="color: #cbd5e1;">Sürtünmesiz</strong>
                                     </div>
                                     <div class="lab-stat-chip" style="grid-column: span 2;">
-                                        <span class="chip-label">Yapılan Fiziksel İş (W)</span>
-                                        <strong class="chip-val" id="metric-work-joule" style="color: #10b981; font-size: 1.1rem;">W = 200.0 J (İş Yapıldı)</strong>
+                                        <span class="chip-label">Yapılan Fiziksel İş (Joule)</span>
+                                        <strong class="chip-val" id="metric-work-joule" style="color: #94a3b8; font-size: 1.1rem;">0.0 J (Başlatılmadı)</strong>
                                     </div>
                                 </div>
                                 <button id="btn-record-data-7-1" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
@@ -1337,9 +1351,9 @@
                             <div class="lab-panel-box">
                                 <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
                                 <div class="lab-vars-list">
-                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Bırakma yüksekliği (h / açı), Cisim kütlesi (m) ve Sürtünme durumu</div>
-                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Kinetik enerji (Ek), Çekim potansiyel enerjisi (Ep) ve Maksimum sürat (v)</div>
-                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Yer çekimi ivmesi (g = 9.8 m/s²), İp boyu / Ray eğriliği</div>
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Bırakma yüksekliği, Cisim kütlesi ve Sürtünme durumu</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Kinetik enerji, Çekim potansiyel enerjisi ve Maksimum sürat</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Ortam yer çekimi, İp boyu / Ray eğriliği</div>
                                 </div>
                             </div>
 
@@ -1348,7 +1362,7 @@
                                 <div class="pedagogical-icon" id="energy-pedagogical-icon"><i class="fas fa-sync-alt"></i></div>
                                 <div class="pedagogical-content">
                                     <strong id="energy-pedagogical-title">🔄 Enerji Dönüşümü Devam Ediyor:</strong>
-                                    <p id="energy-pedagogical-text">Potansiyel ve kinetik enerji birbirine dönüşmektedir. Mekanik enerji toplamı (Ep + Ek) sürtünmesiz ortamda sabit kalır.</p>
+                                    <p id="energy-pedagogical-text">Potansiyel ve kinetik enerji birbirine dönüşmektedir. Sürtünmesiz ortamda toplam mekanik enerji sabit kalır.</p>
                                 </div>
                             </div>
 
@@ -1366,7 +1380,7 @@
                                         <label class="lab-field-label">Sürtünme / Direnç:</label>
                                         <div class="lab-select-pills">
                                             <button class="lab-select-pill active" id="pill-energy-friction-off">🛡️ Sürtünmesiz (İdeal)</button>
-                                            <button class="lab-select-pill" id="pill-energy-friction-on">💨 Sürtünmeli (Isı Kayıplı)</button>
+                                            <button class="lab-select-pill" id="pill-energy-friction-on">💨 Sürtünmeli (Isı Dönüşümlü)</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1376,31 +1390,31 @@
                                 <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Anlık Ölçüm ve Enerji Değerleri</h4>
                                 <div class="lab-stats-grid">
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Cisim Kütlesi (m)</span>
+                                        <span class="chip-label">Cisim Kütlesi</span>
                                         <strong class="chip-val" id="metric-energy-mass" style="color: #cbd5e1;">2.0 kg</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Yükseklik (h)</span>
+                                        <span class="chip-label">Yükseklik</span>
                                         <strong class="chip-val" id="metric-energy-height" style="color: #10b981;">0.44 m</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Anlık Sürat (v)</span>
+                                        <span class="chip-label">Anlık Sürat</span>
                                         <strong class="chip-val" id="metric-energy-speed" style="color: #38bdf8;">0.00 m/s</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Potansiyel Enerji (Ep)</span>
+                                        <span class="chip-label">Potansiyel Enerji</span>
                                         <strong class="chip-val" id="metric-energy-ep" style="color: #10b981;">8.62 J</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Kinetik Enerji (Ek)</span>
+                                        <span class="chip-label">Kinetik Enerji</span>
                                         <strong class="chip-val" id="metric-energy-ek" style="color: #38bdf8;">0.00 J</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Isıya Dönüşen (Eısı)</span>
+                                        <span class="chip-label">Isıya Dönüşen</span>
                                         <strong class="chip-val" id="metric-energy-heat" style="color: #ef4444;">0.00 J</strong>
                                     </div>
                                     <div class="lab-stat-chip" style="grid-column: span 2;">
-                                        <span class="chip-label">Toplam Enerji (Etop = Ep + Ek + Eısı)</span>
+                                        <span class="chip-label">Toplam Enerji (Korunum)</span>
                                         <strong class="chip-val" id="metric-energy-total" style="color: #facc15;">8.62 J (Sabit)</strong>
                                     </div>
                                 </div>
@@ -1413,9 +1427,9 @@
                             <div class="lab-panel-box">
                                 <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
                                 <div class="lab-vars-list">
-                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Gelme açısı (i) ve ortam kırıcılık indisleri (n₁, n₂)</div>
-                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Kırılma açısı (r), ışık sürati (v) ve yayılma doğrultusu</div>
-                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Işık Kaynağının Rengi / Frekansı, yüzey ayırıcı düzlem ve normal (N)</div>
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Gelme açısı ve saydam ortamların yoğunluk farkı</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Kırılma açısı, ışığın yayılma sürati ve doğrultusu</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Işık kaynağının rengi, yüzey ayırıcı düzlem ve normal (N)</div>
                                 </div>
                             </div>
 
@@ -1425,19 +1439,17 @@
                                     <div class="lab-field-group">
                                         <label for="select-medium-1" class="lab-field-label">1. Ortam (Üst / Gelen):</label>
                                         <select id="select-medium-1" class="fenupx-input lab-select">
-                                            <option value="air" selected>Hava (n = 1.00 - Az Yoğun)</option>
-                                            <option value="water">Su (n = 1.33 - Çok Yoğun)</option>
-                                            <option value="glass">Cam (n = 1.50 - Çok Yoğun)</option>
-                                            <option value="diamond">Elmas (n = 2.42 - Aşırı Yoğun)</option>
+                                            <option value="air" selected>Hava (Az Yoğun Ortam)</option>
+                                            <option value="water">Su (Orta Yoğun Ortam)</option>
+                                            <option value="glass">Cam (Çok Yoğun Ortam)</option>
                                         </select>
                                     </div>
                                     <div class="lab-field-group">
                                         <label for="select-medium-2" class="lab-field-label">2. Ortam (Alt / Kırılan):</label>
                                         <select id="select-medium-2" class="fenupx-input lab-select">
-                                            <option value="air">Hava (n = 1.00 - Az Yoğun)</option>
-                                            <option value="water" selected>Su (n = 1.33 - Çok Yoğun)</option>
-                                            <option value="glass">Cam (n = 1.50 - Çok Yoğun)</option>
-                                            <option value="diamond">Elmas (n = 2.42 - Aşırı Yoğun)</option>
+                                            <option value="air">Hava (Az Yoğun Ortam)</option>
+                                            <option value="water" selected>Su (Orta Yoğun Ortam)</option>
+                                            <option value="glass">Cam (Çok Yoğun Ortam)</option>
                                         </select>
                                     </div>
                                 </div>
@@ -1448,16 +1460,16 @@
                                 <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Anlık Ölçüm ve Işık Sürati</h4>
                                 <div class="lab-stats-grid">
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">1. Ortam Hızı (v₁)</span>
+                                        <span class="chip-label">1. Ortam Sürati</span>
                                         <strong class="chip-val" id="metric-speed-1">300.000 km/s</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">2. Ortam Hızı (v₂)</span>
+                                        <span class="chip-label">2. Ortam Sürati</span>
                                         <strong class="chip-val" id="metric-speed-2">225.564 km/s</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Sınır Açısı (θc)</span>
-                                        <strong class="chip-val" id="metric-critical-angle">—</strong>
+                                        <span class="chip-label">Ortam Yoğunluk Farkı</span>
+                                        <strong class="chip-val" id="metric-critical-angle">Az Yoğun ➔ Çok Yoğun</strong>
                                     </div>
                                     <div class="lab-stat-chip">
                                         <span class="chip-label">Işının Hareketi</span>
@@ -1473,8 +1485,8 @@
                             <div class="lab-panel-box">
                                 <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
                                 <div class="lab-vars-list">
-                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Mercek çeşidi (İnce/Kalın) ve Cisim mesafesi (do) / Işın modu</div>
-                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Işınların davranışı (Toplama/Dağıtma), Odak noktası (F) ve Görüntü boyu/yönü</div>
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Mercek çeşidi (İnce / Kalın Kenarlı) ve Cismin Konumu / Işın Modu</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Işınların davranışı (Toplama / Dağıtma), Odak noktası (F) ve Görüntü özellikleri</div>
                                     <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Optik merkez (O), ışık kaynağı ve ortam (Hava)</div>
                                 </div>
                             </div>
@@ -1509,23 +1521,23 @@
                             </div>
 
                             <div class="lab-panel-box" style="margin-top: 12px;">
-                                <h4 class="lab-box-heading"><i class="fas fa-chart-line"></i> Anlık Optik Ölçüm ve Görüntü</h4>
+                                <h4 class="lab-box-heading"><i class="fas fa-chart-line"></i> Anlık Optik Gözlem ve Görüntü</h4>
                                 <div class="lab-stats-grid">
                                     <div class="lab-stat-chip">
                                         <span class="chip-label">Mercek Tipi</span>
                                         <strong class="chip-val" id="metric-lens-type" style="color: #38bdf8;">İnce Kenarlı</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Odak Uzaklığı (f)</span>
-                                        <strong class="chip-val" id="metric-lens-f">120 mm</strong>
+                                        <span class="chip-label">Odak Özelliği</span>
+                                        <strong class="chip-val" id="metric-lens-f">Orta Odak (Yakınsak)</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Cisim Mesafesi (do)</span>
-                                        <strong class="chip-val" id="metric-lens-do">200 mm</strong>
+                                        <span class="chip-label">Cisim Konumu</span>
+                                        <strong class="chip-val" id="metric-lens-do">Odak Dışında</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Görüntü (di) / Durum</span>
-                                        <strong class="chip-val" id="metric-lens-di" style="color: #34d399;">Gerçek, Ters, Büyütülmüş</strong>
+                                        <span class="chip-label">Görüntü Özellikleri</span>
+                                        <strong class="chip-val" id="metric-lens-di" style="color: #34d399;">Gerçek, Ters</strong>
                                     </div>
                                 </div>
                                 <button id="btn-record-data-7-4" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
@@ -1600,7 +1612,7 @@
                                         <strong class="chip-val" id="metric-distill-boiling" style="color: #94a3b8;">Yok (Isınıyor)</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Damıtılan Alkol</span>
+                                        <span class="chip-label">Damıtılan Sıvı (Alkolce Zengin)</span>
                                         <strong class="chip-val" id="metric-distill-alcohol" style="color: #38bdf8;">0.0 mL</strong>
                                     </div>
                                     <div class="lab-stat-chip">
@@ -2041,8 +2053,8 @@
                                         <strong class="chip-val" id="metric-tier-energy" style="color: #10b981;">10.000 J</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Isı Kaybı (%90)</span>
-                                        <strong class="chip-val" id="metric-tier-heat" style="color: #f87171;">90.000 J</strong>
+                                        <span class="chip-label">Yaşamsal Faaliyet & Isı (%90)</span>
+                                        <strong class="chip-val" id="metric-tier-heat" style="color: #f87171;">9.000 J</strong>
                                     </div>
                                     <div class="lab-stat-chip">
                                         <span class="chip-label">Biyolojik Birikim</span>
@@ -2288,9 +2300,9 @@
                             <div class="lab-panel-box">
                                 <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
                                 <div class="lab-vars-list">
-                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Geçen Süre (t)</div>
-                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Alınan Yol (x)</div>
-                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Sürat (v = sabit, yön ve doğrultu değişmez)</div>
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Hareket Rotası (Tek Yön / Gidiş-Dönüş) ve Geçen Süre (t)</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Alınan Yol, Yer Değiştirme, Sürat ve Hız</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Hareketlinin Sabit Sürat Büyüklüğü</div>
                                 </div>
                             </div>
 
@@ -2298,8 +2310,8 @@
                             <div class="lab-pedagogical-card is-work" id="motion-pedagogical-box">
                                 <div class="pedagogical-icon" id="motion-pedagogical-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 <div class="pedagogical-content">
-                                    <strong id="motion-pedagogical-title">⚡ Sabit Süratli Hareket</strong>
-                                    <p id="motion-pedagogical-text">Hareketli eşit zaman aralıklarında eşit yollar almaktadır. Sürat zamanla değişmez; Yol-Zaman grafiği düzgün artan bir doğrudur.</p>
+                                    <strong id="motion-pedagogical-title">⚡ Sürat ve Hız · Alınan Yol ve Yer Değiştirme</strong>
+                                    <p id="motion-pedagogical-text">Tek yönlü doğrusal harekette alınan yol ile yer değiştirme büyüklüğü eşittir. Gidiş-dönüş hareketinde ise hareketli başlangıç noktasına döndüğünde alınan yol 2 katına çıkarken yer değiştirme ve ortalama hız sıfır olur!</p>
                                 </div>
                             </div>
 
@@ -2307,7 +2319,7 @@
                                 <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Hareket Parametreleri</h4>
                                 <div class="lab-lens-controls-box">
                                     <div class="lab-field-group">
-                                        <label class="lab-field-label">Sabit Sürat Değeri (v): <span id="label-motion-speed-val" style="color:var(--neon-blue); font-weight:800;">10 m/s</span></label>
+                                        <label class="lab-field-label">Sabit Sürat Değeri: <span id="label-motion-speed-val" style="color:var(--neon-blue); font-weight:800;">10 m/s</span></label>
                                         <input type="range" id="slider-motion-speed" min="2" max="25" step="1" value="10" style="width:100%;">
                                     </div>
                                     <div class="lab-field-group" style="margin-top: 8px;">
@@ -2319,28 +2331,28 @@
                                         </div>
                                     </div>
                                     <div class="lab-field-group" style="margin-top: 8px;">
-                                        <label class="lab-field-label">Canlı Grafik Türü:</label>
+                                        <label class="lab-field-label">Hareket Rotası (Yol vs Yer Değiştirme):</label>
                                         <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-                                            <button class="lab-select-pill active" id="pill-graph-xt"><i class="fas fa-chart-line"></i> Yol - Zaman (x-t)</button>
-                                            <button class="lab-select-pill" id="pill-graph-vt"><i class="fas fa-chart-bar"></i> Sürat - Zaman (v-t)</button>
+                                            <button class="lab-select-pill active" id="pill-graph-xt"><i class="fas fa-arrow-right"></i> ➡️ Tek Yön (Düz Pist)</button>
+                                            <button class="lab-select-pill" id="pill-graph-vt"><i class="fas fa-exchange-alt"></i> 🔄 Gidiş-Dönüş (Başlangıca Dönüş)</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="lab-panel-box" style="margin-top: 12px;">
-                                <h4 class="lab-box-heading"><i class="fas fa-calculator"></i> Anlık Ölçüm Verileri</h4>
+                                <h4 class="lab-box-heading"><i class="fas fa-calculator"></i> Anlık Ölçüm Verileri (Sürat vs Hız)</h4>
                                 <div class="lab-stats-grid">
                                     <div class="lab-stat-chip">
                                         <span class="chip-label">Geçen Süre (t)</span>
                                         <strong class="chip-val" id="metric-63-time" style="color: #38bdf8;">0.0 s</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Alınan Yol (x)</span>
-                                        <strong class="chip-val" id="metric-63-dist" style="color: #10b981;">0.0 m</strong>
+                                        <span class="chip-label">Alınan Yol / Yer Değiştirme</span>
+                                        <strong class="chip-val" id="metric-63-dist" style="color: #10b981;">0.0 m / Δx: 0.0 m</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Sabit Sürat (v)</span>
+                                        <span class="chip-label">Sürat / Hız</span>
                                         <strong class="chip-val" id="metric-63-speed" style="color: #fbbf24;">10.0 m/s</strong>
                                     </div>
                                     <div class="lab-stat-chip">
@@ -2430,9 +2442,9 @@
                             <div class="lab-panel-box">
                                 <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
                                 <div class="lab-vars-list">
-                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Sıvıların ve Cisimlerin Yoğunlukları (Yoğunluk Farkı)</div>
-                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Sıvıların Kuledeki Düşey Konumu ve Cisimlerin Yüzme/Batma Durumu</div>
-                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Sıcaklık (Oda Sıcaklığı 20°C), Yer Çekimi</div>
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Maddelerin Kütle (m), Hacim (V) ve Yoğunlukları (d = m / V)</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Su ve Zeytinyağının Düşey Konumu ile Katı Cisimlerin Yüzme / Batma Durumu</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Ortam Sıcaklığı (20°C) ve Yer Çekimi</div>
                                 </div>
                             </div>
 
@@ -2440,8 +2452,8 @@
                             <div class="lab-pedagogical-card is-work" id="density-pedagogical-box">
                                 <div class="pedagogical-icon" id="density-pedagogical-icon"><i class="fas fa-layer-group"></i></div>
                                 <div class="pedagogical-content">
-                                    <strong id="density-pedagogical-title">🧪 Sıvı Yoğunluğu İlkesi</strong>
-                                    <p id="density-pedagogical-text">Birbiri içinde çözünmeyen sıvılarda yoğunluğu büyük olan sıvı daima en altta toplanır; küçük olan en üstte yüzer. (Pedagojik Not: Bu modelde tabakalaşmanın gözlenmesi için temsilî sıvılar kullanılmıştır; gliserin ve su normalde birbiri içinde çözünür.)</p>
+                                    <strong id="density-pedagogical-title">🧪 Yoğunluk Hesabı (d = m / V) ve Su – Zeytinyağı Katmanları</strong>
+                                    <p id="density-pedagogical-text">Birim hacimdeki kütle miktarına yoğunluk (d = m / V) denir. Birbiri içinde çözünmeyen sıvılardan yoğunluğu büyük olan Su (d = 100 g / 100 cm³ = 1.00 g/cm³) altta, yoğunluğu küçük olan Zeytinyağı (d = 90 g / 100 cm³ = 0.90 g/cm³) üstte toplanır.</p>
                                 </div>
                             </div>
 
@@ -2449,20 +2461,20 @@
                                 <h4 class="lab-box-heading"><i class="fas fa-tint"></i> Sıvı ve Katı Madde Ekleme</h4>
                                 <div class="lab-lens-controls-box">
                                     <div class="lab-field-group">
-                                        <label class="lab-field-label">Sıvı Ekle (Dilediğin Sırayla Ekle):</label>
+                                        <label class="lab-field-label">Birbiri İçinde Çözünmeyen Sıvıları Ekle:</label>
                                         <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-                                            <button class="lab-select-pill" id="pill-add-honey">🍯 Bal (1.40 g/cm³)</button>
-                                            <button class="lab-select-pill" id="pill-add-glycerin">🔮 Gliserin (1.26 g/cm³)</button>
-                                            <button class="lab-select-pill" id="pill-add-water">💧 Su (1.00 g/cm³)</button>
-                                            <button class="lab-select-pill" id="pill-add-oil">🫒 Zeytinyağı (0.90 g/cm³)</button>
+                                            <button class="lab-select-pill is-hidden" id="pill-add-honey" aria-hidden="true">🍯 Bal (1.40 g/cm³)</button>
+                                            <button class="lab-select-pill is-hidden" id="pill-add-glycerin" aria-hidden="true">🔮 Gliserin (1.26 g/cm³)</button>
+                                            <button class="lab-select-pill" id="pill-add-water">💧 Su (100g / 100cm³ = 1.00 g/cm³)</button>
+                                            <button class="lab-select-pill" id="pill-add-oil">🫒 Zeytinyağı (90g / 100cm³ = 0.90 g/cm³)</button>
                                         </div>
                                     </div>
                                     <div class="lab-field-group" style="margin-top: 8px;">
-                                        <label class="lab-field-label">Katı Cisim Bırak:</label>
+                                        <label class="lab-field-label">Katı Cisim Bırak (Yüzme / Batma):</label>
                                         <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
-                                            <button class="lab-select-pill" id="pill-drop-wood">Tahta (Yüzer)</button>
-                                            <button class="lab-select-pill" id="pill-drop-plastic">Plastik (Askıda)</button>
-                                            <button class="lab-select-pill" id="pill-drop-iron">Vida (Batar)</button>
+                                            <button class="lab-select-pill" id="pill-drop-wood">Tahta (0.60 g/cm³ - Yüzer)</button>
+                                            <button class="lab-select-pill" id="pill-drop-plastic">Plastik (0.95 g/cm³ - Ara Sınırda)</button>
+                                            <button class="lab-select-pill" id="pill-drop-iron">Demir Vida (7.80 g/cm³ - Batar)</button>
                                         </div>
                                     </div>
                                     <div class="lab-field-group" style="margin-top: 8px;">
@@ -2472,11 +2484,11 @@
                             </div>
 
                             <div class="lab-panel-box" style="margin-top: 12px;">
-                                <h4 class="lab-box-heading"><i class="fas fa-list-ol"></i> Kule Katmanlaşma Sırası</h4>
+                                <h4 class="lab-box-heading"><i class="fas fa-list-ol"></i> Yoğunluk (d = m / V) ve Konum Analizi</h4>
                                 <div class="lab-stats-grid">
                                     <div class="lab-stat-chip">
                                         <span class="chip-label">Eklenen Sıvılar</span>
-                                        <strong class="chip-val" id="metric-65-count" style="color: #38bdf8;">0 / 4</strong>
+                                        <strong class="chip-val" id="metric-65-count" style="color: #38bdf8;">0 / 2</strong>
                                     </div>
                                     <div class="lab-stat-chip">
                                         <span class="chip-label">En Alttaki Sıvı</span>
@@ -2953,8 +2965,8 @@
                             <div class="lab-panel-box">
                                 <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
                                 <div class="lab-vars-list">
-                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Zemin Türü ve Pürüzlülüğü (Buz, Tahta, Zımpara, Halı)</div>
-                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Cismin Durma Mesafesi (Alınan Yol) ve Yavaşlama Hızı</div>
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Zemin Türü ve Pürüzlülüğü (Pürüzsüz, Mukavva, Kumlu, Pamuklu Kumaş)</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Cismin Durma Mesafesi (Alınan Yol) ve Yavaşlama Durumu</div>
                                     <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Cismin Kütlesi, Rampadan Bırakılma Yüksekliği</div>
                                 </div>
                             </div>
@@ -2963,7 +2975,7 @@
                             <div class="lab-pedagogical-card is-work" id="friction-pedagogical-box">
                                 <div class="pedagogical-icon" id="friction-pedagogical-icon"><i class="fas fa-car-side"></i></div>
                                 <div class="pedagogical-content">
-                                    <strong id="friction-pedagogical-title">🧊 Pürüzsüz Zemin (Buz Pisti)</strong>
+                                    <strong id="friction-pedagogical-title">✨ Pürüzsüz Zemin (Az Sürtünme)</strong>
                                     <p id="friction-pedagogical-text">Pürüzsüz ve kaygan yüzeylerde sürtünme kuvveti çok azdır. Cisim zor yavaşlar ve en uzun mesafeyi kateder.</p>
                                 </div>
                             </div>
@@ -2971,10 +2983,10 @@
                             <div class="lab-panel-box" style="margin-top: 12px;">
                                 <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Zemin ve Rampa Kontrolleri</h4>
                                 <div class="lab-pills-row">
-                                    <button class="lab-mini-pill-btn active" id="pill-53-ice">🧊 Buz (Çok Kaygan)</button>
-                                    <button class="lab-mini-pill-btn" id="pill-53-wood">🪵 Cilalı Tahta</button>
-                                    <button class="lab-mini-pill-btn" id="pill-53-sand">📜 Zımpara Kağıdı</button>
-                                    <button class="lab-mini-pill-btn" id="pill-53-carpet">🧶 Kumaş / Halı</button>
+                                    <button class="lab-mini-pill-btn active" id="pill-53-ice">✨ Pürüzsüz Zemin</button>
+                                    <button class="lab-mini-pill-btn" id="pill-53-wood">📦 Mukavva Zemin</button>
+                                    <button class="lab-mini-pill-btn" id="pill-53-sand">🏖️ Kumlu Zemin</button>
+                                    <button class="lab-mini-pill-btn" id="pill-53-carpet">🧶 Pamuklu Kumaş</button>
                                 </div>
                                 <div class="lab-slider-row" style="margin-top: 10px;">
                                     <label for="slider-53-height">Rampa Yüksekliği (Takoz): <span id="val-53-height">2 Takoz (Orta Hız)</span></label>
@@ -3367,11 +3379,11 @@
                                 </div>
                                 <div class="guide-item">
                                     <strong>3. Çantayla Düz Yürüme Yanılgısı (Kuvvet ⟂ Hareket):</strong>
-                                    <p>Öğrenci elinde veya omzunda çantayla yatay bir yolda sabit süratle yürürken, çantayı taşımak için uyguladığı kuvvet <strong>düşey yukarı yönlüdür</strong>; ancak çantanın yer değiştirmesi <strong>yataydır</strong>. Kuvvet ile hareket doğrultuları birbirine <strong>DİK ($90^\circ$)</strong> olduğu için çanta üzerinde fiziksel anlamda <strong>iş yapılmaz</strong>!</p>
+                                    <p>Öğrenci elinde veya omzunda çantayla yatay bir yolda sabit süratle yürürken, çantayı taşımak için uyguladığı kuvvet <strong>düşey yukarı yönlüdür</strong>; ancak çantanın yer değiştirmesi <strong>yataydır</strong>. Kuvvet ile hareket doğrultuları birbirine <strong>DİK (90°)</strong> olduğu için çanta üzerinde fiziksel anlamda <strong>iş yapılmaz</strong>!</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>4. Duvarı İtme Yanılgısı (Yorulmak ≠ Fiziksel İş):</strong>
-                                    <p>Sabit bir duvara ne kadar büyük bir kuvvetle yüklenirseniz yüklenin, duvar yer değiştirmediği için ($\Delta x = 0\text{ m}$), fiziksel anlamda <strong>iş yapılmaz</strong>. Biyolojik olarak yorulmak ve enerji harcamak, cisim üzerinde fiziksel anlamda iş yapıldığı anlamına gelmez.</p>
+                                    <p>Sabit bir duvara ne kadar büyük bir kuvvetle yüklenirseniz yüklenin, duvar yer değiştirmediği için (alınan yol sıfır olduğundan), fiziksel anlamda <strong>iş yapılmaz</strong>. Biyolojik olarak yorulmak ve enerji harcamak, cisim üzerinde fiziksel anlamda iş yapıldığı anlamına gelmez.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>5. Yer Çekimine Karşı Yapılan İş:</strong>
@@ -3405,27 +3417,23 @@
 
                         <!-- DENEY 7.3 REHBERİ -->
                         <div id="guide-container-7-3" class="lab-panel-box">
-                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Maarif Modeli Bilimsel Rehberi</h4>
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Işığın Kırılması Bilimsel Rehberi (FB.7.4.1)</h4>
                             <div class="lab-guide-text">
                                 <div class="guide-item">
-                                    <strong>1. Az Yoğundan Çok Yoğuna (Örn: Hava ➔ Su / Cam):</strong>
-                                    <p>Işık sürati <em>azalır</em> ve ışın normal çizgisine <em>yaklaşarak</em> kırılır. Gelme açısı kırılma açısından büyüktür (i &gt; r).</p>
+                                    <strong>1. Az Yoğundan Çok Yoğuna Geçiş (Örn: Hava ➔ Su / Cam):</strong>
+                                    <p>Işık sürati <em>azalır</em> ve ışın yüzey normaline <em>yaklaşarak</em> kırılır. Gelme açısı kırılma açısından büyüktür (i &gt; r).</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>2. Çok Yoğundan Az Yoğuna (Örn: Su / Cam ➔ Hava):</strong>
-                                    <p>Işık sürati <em>artar</em> ve ışın normal çizgisinden <em>uzaklaşarak</em> kırılır (r &gt; i).</p>
+                                    <strong>2. Çok Yoğundan Az Yoğuna Geçiş (Örn: Su / Cam ➔ Hava):</strong>
+                                    <p>Işık sürati <em>artar</em> ve ışın yüzey normalinden <em>uzaklaşarak</em> kırılır (r &gt; i).</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>3. Sınır Açısı ve Tam Yansıma:</strong>
-                                    <p>Çok yoğundan az yoğuna geçerken kırılma açısını 90° yapan gelme açısına <strong>sınır açısı</strong> denir. Gelme açısı sınır açısından büyük olursa ışın diğer ortama geçemez ve aynı açıyla kendi ortamına yansır (<strong>Tam Yansıma</strong>). Fiber optik ve endoskopi teknolojisi bu prensiple çalışır.</p>
+                                    <strong>3. Yüzeye Dik Gelen Işın (0°):</strong>
+                                    <p>Yüzeye dik gelen ışın doğrultusunu ve yönünü değiştirmez (kırılmaz); ancak ortam yoğunlukları farklı olduğu için sürati kesinlikle değişir.</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>4. Yüzeye Dik Gelen Işın (i = 0°):</strong>
-                                    <p>Doğrultusunu ve yönünü değiştirmez (kırılmaz), ancak ortam yoğunlukları farklı ise sürati kesinlikle değişir!</p>
-                                </div>
-                                <div class="guide-item">
-                                    <strong>5. Işığın Frekansı ve Dalga Boyu Değişimi:</strong>
-                                    <p>Işık bir ortamdan diğerine geçerken <strong>kaynağa bağlı olan frekansı ve rengi asla değişmez</strong> (sabit tutulan değişken). Ortam yoğunluğu değiştikçe ışığın yayılma sürati ($v$) değişir; sürat değişimine bağlı olarak dalga boyu ($\lambda = v / f$) da aynı oranda değişir.</p>
+                                    <strong>4. Işığın Yayılma Sürati ve Rengi:</strong>
+                                    <p>Işık bir ortamdan diğerine geçerken kaynağa bağlı olan rengi asla değişmez; ortam yoğunluğuna bağlı olarak yayılma sürati ve doğrultusu değişir.</p>
                                 </div>
                             </div>
                         </div>
@@ -3444,7 +3452,7 @@
                                 </div>
                                 <div class="guide-item">
                                     <strong>3. Cisim ve Görüntü Oluşumu (Mum Modu):</strong>
-                                    <p>İnce mercekte cisim odaktan uzaktaysa (do &gt; f) <strong>ters ve gerçek</strong> görüntü oluşur (perdeye düşürülebilir). Cisim odak ile mercek arasındaysa (do &lt; f) <strong>düz, cisimden büyük ve sanal</strong> bir görüntü oluşur; bu durum büyütecin çalışma prensibidir! Kalın mercekte ise görüntü daima <strong>düz, küçük ve sanaldır</strong>.</p>
+                                    <p>İnce kenarlı mercekte cisim odaktan uzaktaysa <strong>ters ve gerçek</strong> görüntü oluşur (perdeye düşürülebilir). Cisim odak ile mercek arasındaysa <strong>düz, cisimden büyük ve sanal</strong> bir görüntü oluşur; bu durum büyütecin çalışma prensibidir! Kalın kenarlı mercekte ise görüntü daima <strong>düz, küçük ve sanaldır</strong>.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>4. Orman Yangını Uyarısı:</strong>
@@ -3459,7 +3467,7 @@
                             <div class="lab-guide-text">
                                 <div class="guide-item">
                                     <strong>1. Yoğunluk Farkı ile Ayırma (Ayırma Hunisi):</strong>
-                                    <p>Birbiri içinde çözünmeyen, yoğunlukları birbirinden farklı iki sıvıdan oluşan heterojen karışımlara (emülsiyon) uygulanır. En bilinen örnek <strong>zeytinyağı-su</strong> karışımıdır. Karışım ayırma hunisine konulduğunda yoğunluğu büyük olan su ($d = 1.0\text{ g/cm}^3$) dipte, yoğunluğu küçük olan zeytinyağı ($d = 0.9\text{ g/cm}^3$) üstte toplanır.</p>
+                                    <p>Birbiri içinde çözünmeyen, yoğunlukları birbirinden farklı iki sıvıdan oluşan heterojen karışımlara (emülsiyon) uygulanır. En bilinen örnek <strong>zeytinyağı-su</strong> karışımıdır. Karışım ayırma hunisine konulduğunda yoğunluğu büyük olan su (1.0 g/cm³) dipte, yoğunluğu küçük olan zeytinyağı (0.9 g/cm³) üstte toplanır.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>2. Ayırma Hunisinde Musluk Kontrolü ve Faz Sınırı:</strong>
@@ -3467,11 +3475,11 @@
                                 </div>
                                 <div class="guide-item">
                                     <strong>3. Kaynama Noktası Farkı ile Ayırma (Ayrımsal Damıtma):</strong>
-                                    <p>Birbiri içinde homojen karışan (çözelti) ve kaynama noktaları birbirine yakın (etil alkol 78°C, su 100°C) sıvıları ayırmak için <strong>ayrımsal damıtma</strong> yöntemi kullanılır. Ayrımsal damıtma yöntemiyle kaynama noktası farkından yararlanılarak alkolce zengin sıvı elde edilir. (Tek kademeli basit damıtmada su buharı da bir miktar eşlik ettiğinden %100 saf alkol elde edilemez; yüksek saflık için fraksiyonel kolon gereklidir).</p>
+                                    <p>Birbiri içinde homojen karışan (çözelti) ve kaynama noktaları birbirinden farklı (etil alkol 78 °C, su 100 °C) sıvıları ayırmak için <strong>ayrımsal damıtma</strong> yöntemi kullanılır. Ayrımsal damıtma yöntemiyle kaynama noktası farkından yararlanılarak alkolce zengin sıvı elde edilir.</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>4. Hal Değişimi Süresince Sıcaklığın Sabit Kalması:</strong>
-                                    <p>Damıtma balonu ısıtıldığında sıcaklık $78^\circ\text{C}$'ye ulaştığında kaynama noktası daha düşük olan <strong>etil alkol kaynamaya başlar</strong>. Saf maddeler hal değiştirirken (kaynarken) <strong>sıcaklıkları sabit kalır</strong>! Bu nedenle alkol tamamen buharlaşıp kondenserde yoğuşarak toplama kabına akana kadar sıcaklık $78^\circ\text{C}$'de asılı kalır. Alkol bitince sıcaklık suyun kaynama noktası olan $100^\circ\text{C}$'ye doğru tırmanışa geçer.</p>
+                                    <strong>4. Ayrımsal Damıtmada Sıcaklık Değişimi ve Zenginleşme:</strong>
+                                    <p>Alkol-su çözeltisi ısıtıldığında kaynama noktası daha düşük olan <strong>etil alkol (78 °C)</strong> suyla birlikte ancak çok daha yoğun biçimde buharlaşmaya başlar. Karışım saf bir madde olmadığı için ayırma süresince sıcaklık 78 °C'de tamamen sabit kalmaz; alkol oranı azaldıkça karışımın sıcaklığı yavaşça yükselir ve toplama kabında <strong>alkolce zengin damıtık sıvı</strong> elde edilir.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>5. Günlük Hayat ve Endüstrideki Uygulamalar:</strong>
@@ -3593,8 +3601,8 @@
                             <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Su Ayak İzi ve Sürdürülebilir Su Yönetimi Bilimsel Rehberi (FB.7.7.2)</h4>
                             <div class="lab-guide-text">
                                 <div class="guide-item">
-                                    <strong>1. Mimar Sinan ve Mağlova Kemeri Hidrolik Dehası:</strong>
-                                    <p>UNESCO dünya mirası olan Mağlova Kemeri, Mimar Sinan tarafından Kırkçeşme su yolunda 1554-1562 yılları arasında inşa edilmiştir. Elektrik ve motor gücünün olmadığı dönemde suyun Belgrad Ormanları'ndan İstanbul'a ulaştırılması için kanal tabanına binde 2'lik (<strong>%0.2</strong>) kusursuz bir yerçekimi eğimi verilmiştir. Şiddetli yağış ve sellerde yapının yıkılmaması için kemer ayaklarına piramidal mahmuzlar ve tahliye pencereleri (sel dehlizleri) açılmıştır.</p>
+                                    <strong>1. Mimar Sinan, Selimiye (UNESCO) ve Mağlova Kemeri Hidrolik Mirası:</strong>
+                                    <p>Mimar Sinan'ın ustalık eseri <strong>Edirne Selimiye Camii ve Külliyesi UNESCO Dünya Mirası Listesi'nde</strong> yer alırken, Kırkçeşme su yolunda 1554-1562 yılları arasında inşa ettiği <strong>Mağlova Kemeri</strong> dünya su mühendisliği tarihinin başyapıtlarından biridir. Suyun Belgrad Ormanları'ndan İstanbul'a cazibeyle iletilmesi için kanal tabanına yaklaşık binde 2'lik (<strong>~%0.2</strong>) hassas bir eğim verilmiş; taşkınlara karşı kemer ayaklarına piramidal mahmuzlar ve tahliye gözleri açılmıştır.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>2. Su Ayak İzi Nedir? (Prof. Arjen Hoekstra Modeli):</strong>
@@ -3614,10 +3622,10 @@
                                     <br><small style="color: #cbd5e1; display: inline-block; margin-top: 4px;"><em>* Not: Bu değerler Prof. Arjen Hoekstra / Water Footprint Network modeline dayalı küresel yaklaşık ortalama değerlerdir.</em></small></p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>4. Modern Su Tasarruf Teknolojileri:</strong>
-                                    <p>• <strong>Perlatörlü Musluk:</strong> Su akışına hava kabarcıkları katarak hacmi dolgunlaştırır; su tüketimini <strong>%50 azaltır</strong>.
-                                    <br>• <strong>Damla Sulama:</strong> Geleneksel vahşi (salma) sulamada suyun büyük kısmı buharlaşır; damla sulama suyu doğrudan bitki köküne vererek <strong>%65 su tasarrufu</strong> sağlar.
-                                    <br>• <strong>Gri Su Geri Kazanımı:</strong> Lavabo ve duşlardan çıkan az kirli suların filtrelenerek tuvalet rezervuarlarında veya bahçe sulamasında tekrar kullanılmasıdır.</p>
+                                    <strong>4. Modern Su Tasarruf Teknolojileri (Yaklaşık Model Değerleri):</strong>
+                                    <p>• <strong>Perlatörlü Musluk:</strong> Su akışına hava katarak su tüketimini yaklaşık <strong>~%50 oranında azaltabilir</strong>.
+                                    <br>• <strong>Damla Sulama:</strong> Suyu doğrudan bitki kök bölgesine vererek geleneksel salma sulamaya kıyasla yaklaşık <strong>~%65 su tasarrufu</strong> sağlayabilir.
+                                    <br>• <strong>Gri Su Geri Kazanımı:</strong> Lavabo ve duşlardan çıkan az kirli suların arıtılarak rezervuarlarda veya bahçe sulamasında yeniden kullanılmasıdır.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>5. Bireysel Sorumluluk ve Sürdürülebilirlik:</strong>
@@ -3668,42 +3676,34 @@
                                 </div>
                                 <div class="guide-item">
                                     <strong>3. Zıt Yönlü Kuvvetlerin Bileşkesi:</strong>
-                                    <p>Aynı doğrultuda fakat zıt yönlerde uygulanan iki kuvvetin bileşkesi, büyük kuvvetten küçük kuvvetin çıkarılmasıyla bulunur ($R = F_{\text{büyük}} - F_{\text{küçük}}$). Bileşke kuvvetin yönü daima <strong>büyük kuvvetin yönündedir</strong>.</p>
+                                    <p>Aynı doğrultuda fakat zıt yönlerde uygulanan iki kuvvetin bileşkesi, büyük kuvvetten küçük kuvvetin çıkarılmasıyla bulunur (R = Fbüyük - Fküçük). Bileşke kuvvetin yönü daima <strong>büyük kuvvetin yönündedir</strong>.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>4. Dengelenmiş Kuvvetler (R = 0):</strong>
-                                    <p>Bir cisme etki eden kuvvetlerin bileşkesi sıfır ise ($R = 0\text{ N}$), cisim <strong>dengelenmiş kuvvetler</strong> etkisindedir. Bu durumdaki bir cisim duruyorsa durmaya devam eder; hareket halindeyse sabit süratli hareketini korur (Eylemsizlik ilkesi).</p>
+                                    <p>Bir cisme etki eden kuvvetlerin bileşkesi sıfır ise (R = 0 N), cisim <strong>dengelenmiş kuvvetler</strong> etkisindedir. Bu durumdaki bir cisim duruyorsa durmaya devam eder; hareket halindeyse sabit süratli hareketini korur (Eylemsizlik ilkesi).</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>5. Dengelenmemiş Kuvvetler (R ≠ 0):</strong>
-                                    <p>Bir cisme etki eden bileşke kuvvet sıfırdan farklı ise ($R \neq 0\text{ N}$), cisim <strong>dengelenmemiş kuvvetler</strong> etkisindedir. Cisim bileşke kuvvet yönünde hızlanan hareket yapar, hareketine zıt yönde kuvvet uygulanırsa yavaşlar veya durur.</p>
+                                    <p>Bir cisme etki eden bileşke kuvvet sıfırdan farklı ise (R ≠ 0 N), cisim <strong>dengelenmemiş kuvvetler</strong> etkisindedir. Cisim bileşke kuvvet yönünde hızlanan hareket yapar, hareketine zıt yönde kuvvet uygulanırsa yavaşlar veya durur.</p>
                                 </div>
                             </div>
                         </div>
 
                         <!-- DENEY 6.3 REHBERİ: SABİT SÜRATLİ HAREKET -->
                         <div id="guide-container-6-3" class="lab-panel-box is-hidden">
-                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Sabit Süratli Hareket Bilimsel Rehberi (FB.6.2.3)</h4>
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Sürat, Hız, Alınan Yol ve Yer Değiştirme Rehberi (FB.6.2.3)</h4>
                             <div class="lab-guide-text">
                                 <div class="guide-item">
-                                    <strong>1. Sürat Nedir?</strong>
-                                    <p>Bir hareketlinin birim zamanda (örneğin 1 saniyede veya 1 saatte) aldığı yola <strong>sürat</strong> denir. Sürat skaler bir büyüklüktür ve yön belirtmez. SI birim sisteminde sürat birimi <strong>metre/saniye (m/s)</strong> veya günlük hayatta <strong>kilometre/saat (km/h)</strong> olarak ifade edilir.</p>
+                                    <strong>1. Alınan Yol ve Yer Değiştirme Farkı:</strong>
+                                    <p>Hareketlinin izlediği yörüngenin toplam uzunluğuna <strong>alınan yol</strong> denir. Hareketlinin ilk konumu ile son konumu arasındaki en kısa yönlü uzaklığa ise <strong>yer değiştirme (Δx)</strong> denir. Gidiş-dönüş hareketi yaparak başladığı noktaya geri dönen bir sporcunun aldığı yol pist boyunun iki katıdır, ancak <strong>yer değiştirmesi sıfırdır (0 m)</strong>.</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>2. Sabit Süratli Hareketin Tanımı:</strong>
-                                    <p>Bir hareketli doğrusal bir yörüngede hareket ederken <strong>eşit zaman aralıklarında eşit yollar alıyorsa</strong> bu harekete <strong>sabit süratli hareket</strong> denir. Bu harekette sürat büyüklüğü zaman geçtikçe artmaz veya azalmaz, daima sabit kalır.</p>
+                                    <strong>2. Sürat ve Hız Karşılaştırması:</strong>
+                                    <p>Birim zamanda alınan yola <strong>sürat</strong>, birim zamandaki yer değiştirmeye ise <strong>hız</strong> denir. Birimi <strong>metre/saniye (m/s)</strong> veya <strong>kilometre/saat (km/h)</strong>'tir.</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>3. Yol - Zaman Grafiği Analizi:</strong>
-                                    <p>Sabit süratle hareket eden bir cismin aldığı yol zamanla düzgün bir şekilde artar. Bu nedenle Yol-Zaman grafiği orijinden (0,0) başlayan <strong>düzgün artan bir doğru</strong> şeklindedir. Grafiğin eğimi ne kadar dik ise aracın sürati o kadar büyüktür.</p>
-                                </div>
-                                <div class="guide-item">
-                                    <strong>4. Sürat - Zaman Grafiği Analizi:</strong>
-                                    <p>Sürat değeri zaman akışı boyunca hiç değişmediği için, Sürat-Zaman grafiğinde çizgi zaman eksenine <strong>tamamen paralel yatay bir doğru</strong> oluşturur. Bu grafiğin altında kalan alan cismin aldığı toplam yolu verir.</p>
-                                </div>
-                                <div class="guide-item">
-                                    <strong>5. Maarif Modeli Çıkarımı:</strong>
-                                    <p>Sürati 10 m/s olan bir araç; 1. saniyede 10 m, 2. saniyede 20 m, 3. saniyede 30 m yol alır. Yani geçen her bir saniyede tam 10 metre yol kat eder.</p>
+                                    <strong>3. Sabit Süratli Hareket:</strong>
+                                    <p>Bir hareketli eşit zaman aralıklarında eşit yollar alıyorsa <strong>sabit süratli hareket</strong> yapıyor demektir. Aynı yolu daha kısa sürede tamamlayan veya eşit sürede daha çok yol alan hareketlinin sürati daha büyüktür.</p>
                                 </div>
                             </div>
                         </div>
@@ -3715,14 +3715,14 @@
                                 <div class="guide-item">
                                     <strong>1. Işığın Yansıması ve Yansıma Kanunları:</strong>
                                     <p>Işığın parlak bir yüzeye çarpıp geldiği ortama geri dönmesine <strong>yansıma</strong> denir. İki temel kanunu vardır:<br>
-                                    • Gelen ışın, yansıyan ışın ve yüzey normali ($N$) aynı düzlemdedir.<br>
-                                    • <strong>Gelme açısı, yansıma açısına daima eşittir ($i = r$)</strong>.<br>
-                                    • Yüzeye dik ($i = 0^\circ$) gelen ışın kendi üzerinden geri yansır.</p>
+                                    • Gelen ışın, yansıyan ışın ve yüzey normali (N) aynı düzlemdedir.<br>
+                                    • <strong>Gelme açısı, yansıma açısına daima eşittir (i = r)</strong>.<br>
+                                    • Yüzeye dik (0°) gelen ışın kendi üzerinden geri yansır.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>2. Düzgün ve Dağınık Yansıma:</strong>
                                     <p>• <strong>Düzgün Yansıma:</strong> Pürüzsüz ve parlak yüzeylere (düzlem ayna, durgun su, cilalı metal) gelen paralel ışınlar birbirine paralel olarak yansır. Cisimlerin net ve parlak bir görüntüsü oluşur.<br>
-                                    • <strong>Dağınık Yansıma:</strong> Pürüzlü yüzeylere (dalgalı su, tahta, kumaş, duvar) gelen paralel ışınlar farklı yönlere saçılır. Işık her noktadaki yerel normale göre yansır ($i = r$ korunur) ancak yüzey düzgün olmadığı için net görüntü oluşmaz.</p>
+                                    • <strong>Dağınık Yansıma:</strong> Pürüzlü yüzeylere (dalgalı su, tahta, kumaş, duvar) gelen paralel ışınlar farklı yönlere saçılır. Işık her noktadaki yerel normale göre yansır (i = r korunur) ancak yüzey düzgün olmadığı için net görüntü oluşmaz.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>3. Düzlem Aynada Görüntü Özellikleri:</strong>
@@ -3730,40 +3730,40 @@
                                 </div>
                                 <div class="guide-item">
                                     <strong>4. Çukur Ayna (İçbükey Ayna):</strong>
-                                    <p>Yansıtıcı yüzeyi bir kürenin iç yüzeyi gibi olan aynalardır. <strong>Işığı bir noktada (Odak Noktası, F) toplar</strong>. Cisim aynaya çok yakınken ($d < f$) görüntü <strong>düz ve cisimden devasa büyüktür</strong> (dişçi aynası, makyaj aynası, mikroskop). Uzaktayken ters görüntü oluşturur (araba farları, el fenerleri, deniz fenerleri, teleskoplar).</p>
+                                    <p>Yansıtıcı yüzeyi bir kürenin iç yüzeyi gibi olan aynalardır. <strong>Işığı bir noktada (Odak Noktası, F) toplar</strong>. Cisim aynaya çok yakınken (odak ile ayna arasındayken) görüntü <strong>düz ve cisimden büyüktür</strong> (dişçi aynası, makyaj aynası). Uzaktayken ters görüntü oluşturur.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>5. Tümsek Ayna (Dışbükey Ayna):</strong>
-                                    <p>Yansıtıcı yüzeyi bir kürenin dış yüzeyi gibi olan aynalardır. <strong>Işığı sanki arkadaki odaktan çıkıyormuş gibi dağıtır</strong>. Cisim nerede olursa olsun görüntü daima <strong>düz ve cisimden küçüktür</strong>. Çok <strong>geniş bir görüş alanı</strong> sağlar. Kavşak aynaları, otopark çıkışları, mağaza güvenlik aynaları ve otomobillerin yan dikiz aynalarında kullanılır.</p>
+                                    <p>Yansıtıcı yüzeyi bir kürenin dış yüzeyi gibi olan aynalardır. <strong>Işığı sanki arkadaki odaktan çıkıyormuş gibi dağıtır</strong>. Cisim nerede olursa olsun görüntü daima <strong>düz ve cisimden küçüktür</strong>. Çok <strong>geniş bir görüş alanı</strong> sağlar. Kavşak aynaları, otopark çıkışları ve araç yan aynalarında kullanılır.</p>
                                 </div>
                             </div>
                         </div>
 
                         <!-- DENEY 6.5 REHBERİ: SIVILARIN YOĞUNLUĞU -->
                         <div id="guide-container-6-5" class="lab-panel-box is-hidden">
-                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Sıvıların Yoğunluğu ve Kule Fiziği Rehberi (FB.6.5.3 - FB.6.5.4)</h4>
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Sıvıların Yoğunluğu ve Yüzme-Batma Rehberi (FB.6.5.3 - FB.6.5.4)</h4>
                             <div class="lab-guide-text">
                                 <div class="guide-item">
                                     <strong>1. Yoğunluk (Özkütle) Nedir?</strong>
-                                    <p>Bir maddenin birim hacimdeki (1 cm³ veya 1 m³) kütlesine <strong>yoğunluk ($d$)</strong> denir. Yoğunluk $d = m / V$ (Kütle / Hacim) bağıntısıyla ifade edilir. Birimi $\text{g/cm}^3$ veya $\text{kg/m}^3$'tür.</p>
+                                    <p>Bir maddenin birim hacimdeki (1 cm³ veya 1 m³) kütlesine <strong>yoğunluk (d)</strong> denir. Yoğunluk d = m / V (Kütle / Hacim) bağıntısıyla ifade edilir. Birimi g/cm³ veya kg/m³'tür.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>2. Maddeler İçin Ayırt Edici Özellik:</strong>
                                     <p>Sabit sıcaklık ve basınç altında saf maddelerin kütlesi arttıkça hacmi de aynı oranda artar; bu nedenle kütle/hacim oranı yani <strong>yoğunluk daima sabit kalır</strong>. Yoğunluk saf maddeler için ayırt edici bir kimlik özelliğidir.</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>3. Yoğunluk Kulesi İlkesi:</strong>
-                                    <p>Birbiri içinde çözünmeyen ve karışmayan sıvılar aynı kaba konulduğunda; <strong>yoğunluğu en büyük olan sıvı en alta</strong> çöker, <strong>yoğunluğu en küçük olan sıvı ise en üstte</strong> toplanır. Sıvıların kaba hangi sırayla döküldüğü sonucu değiştirmez; yer çekimi etkisiyle sıvılar yoğunluklarına göre otomatik sıralanır.<br><small style="color: #cbd5e1; display: inline-block; margin-top: 4px;"><em>* Pedagojik Not: Bu modelde tabakalaşmanın gözlenmesi için temsilî sıvılar kullanılmıştır; gliserin ve su kimyasal olarak polar yapıda olduklarından normalde birbiri içinde çözünür.</em></small></p>
+                                    <strong>3. Karışmayan Sıvıların Sıralanması:</strong>
+                                    <p>Birbiri içinde çözünmeyen ve karışmayan sıvılar (örneğin su ve zeytinyağı) aynı kaba konulduğunda; <strong>yoğunluğu büyük olan sıvı (su: 1.0 g/cm³) altta</strong>, <strong>yoğunluğu küçük olan sıvı (zeytinyağı: 0.9 g/cm³) üstte</strong> toplanır.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>4. Cisimlerin Sıvıdaki Konumu (Yüzme - Askıda Kalma - Batma):</strong>
-                                    <p>• Cismin yoğunluğu sıvının yoğunluğundan küçükse ($d_{\text{cisim}} < d_{\text{sıvı}}$) cisim <strong>yüzer</strong>.<br>
-                                    • Cismin yoğunluğu sıvıya eşitse ($d_{\text{cisim}} = d_{\text{sıvı}}$) cisim sıvı içinde herhangi bir derinlikte <strong>askıda kalır</strong>.<br>
-                                    • Cismin yoğunluğu sıvının yoğunluğundan büyükse ($d_{\text{cisim}} > d_{\text{sıvı}}$) cisim <strong>dibe batar</strong>.</p>
+                                    <p>• Cismin yoğunluğu sıvının yoğunluğundan küçükse (dcisim &lt; dsıvı) cisim <strong>yüzer</strong>.<br>
+                                    • Cismin yoğunluğu sıvıya eşitse (dcisim = dsıvı) cisim sıvı içinde herhangi bir derinlikte <strong>askıda kalır</strong>.<br>
+                                    • Cismin yoğunluğu sıvının yoğunluğundan büyükse (dcisim &gt; dsıvı) cisim <strong>dibe batar</strong>.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>5. Suyun Hayat Veren Yoğunluk Anomalisi:</strong>
-                                    <p>Maddelerin çoğu katı hale geçerken büzüşür ve yoğunluğu artar. Ancak su $+4^\circ\text{C}$'den $0^\circ\text{C}$'ye doğru soğuyup donarken hacmi genişler ve yoğunluğu azalır ($d_{\text{su}} = 1\text{ g/cm}^3$, $d_{\text{buz}} = 0.92\text{ g/cm}^3$). Bu sayede buzullar ve göller <strong>üstten donar</strong>; buz tabakası yalıtım sağlayarak su altındaki balıkların ve su canlılarının yaşamını korur.</p>
+                                    <p>Maddelerin çoğu katı hale geçerken büzüşür ve yoğunluğu artar. Ancak su +4 °C'den 0 °C'ye doğru soğuyup donarken hacmi genişler ve yoğunluğu azalır (dsu = 1 g/cm³, dbuz = 0.92 g/cm³). Bu sayede buzullar ve göller <strong>üstten donar</strong>; buz tabakası yalıtım sağlayarak su altındaki canlıların yaşamını korur.</p>
                                 </div>
                             </div>
                         </div>
@@ -3879,13 +3879,13 @@
                                 </div>
                                 <div class="guide-item">
                                     <strong>2. Direnci Etkileyen 3 Temel Faktör:</strong>
-                                    <p>• <strong>1. Telin Boyu (L):</strong> Telin boyu uzadıkça elektronların atomlarla çarpışma sayısı artar; direnç artar ve ampul parlaklığı azalır ($R \propto L$). Uzun tel = Yüksek Direnç = Sönük Ampul.<br>
-                                    • <strong>2. Telin Dik Kesit Alanı / Kalınlığı (S):</strong> Tel kalınlaştıkça elektronlar daha geniş bir alandan rahatça geçer; direnç azalır ve ampul parlaklığı artar ($R \propto 1/S$). Kalın tel = Düşük Direnç = Parlak Ampul.<br>
+                                    <p>• <strong>1. Telin Boyu (L):</strong> Telin boyu uzadıkça direnç artar ve ampul parlaklığı azalır (boy arttıkça direnç artar). Uzun tel = Yüksek Direnç = Sönük Ampul.<br>
+                                    • <strong>2. Telin Dik Kesit Alanı / Kalınlığı (S):</strong> Tel kalınlaştıkça direnç azalır ve ampul parlaklığı artar (kesit arttıkça direnç azalır). Kalın tel = Düşük Direnç = Parlak Ampul.<br>
                                     • <strong>3. Telin Cinsi (Öz Direnç):</strong> Farklı iletkenlerin atomik yapıları farklıdır. Bu modelde aynı boy ve kesitteki teller karşılaştırıldığında bakır en az direnci gösterirken, demir orta, nikel-krom tel çok yüksek direnç gösterir.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>3. Reosta (Ayarlanabilir Direnç):</strong>
-                                    <p>Bir elektrik devresinde direnci istenen düzeyde değiştirerek akımı ve ampul parlaklığını ayarlamaya yarayan alete <strong>reosta</strong> denir. Reosta sürgüsü kaydırıldığında devrede kullanılan telin uzunluğu değişir; böylece direnç artırılıp azaltılabilir. Evlerimizdeki ayarlı ışık anahtarları (dimmer), ses açma-kapatma düğmeleri ve elektrikli ocak sıcaklık ayarları birer reostadır.</p>
+                                    <p>Bir elektrik devresinde direnci istenen düzeyde değiştirerek akımı ve ampul parlaklığını ayarlamaya yarayan alete <strong>reosta</strong> denir. Reosta sürgüsü kaydırıldığında devrede kullanılan telin uzunluğu değişir; böylece direnç artırılıp azaltılabilir. Evlerdeki bazı ayarlı ışık anahtarları (dimmer) ve klasik ses ayar düğmeleri direnç değiştirme ilkesiyle çalışan düzeneklere örnektir.</p>
                                 </div>
                             </div>
                         </div>
@@ -3896,7 +3896,7 @@
                             <div class="lab-guide-text">
                                 <div class="guide-item">
                                     <strong>1. Ay Neden Farklı Şekillerde Görünür?</strong>
-                                    <p>Ay bir ışık kaynağı değildir; Güneş'ten aldığı ışığı yansıtır. Ay, Dünya etrafında yaklaşık 29.5 günde dolanır. Bu dolanma sırasında Güneş'e bakan tarafı daima aydınlıktır; ancak Dünya'dan bakış açımız sürekli değiştiği için aydınlık kısmın farklı büyüklükteki parçalarını görürüz.</p>
+                                    <p>Ay bir ışık kaynağı değildir; Güneş'ten aldığı ışığı yansıtır. Ay'ın Dünya etrafındaki dolanım süresi (yıldızıl ay) yaklaşık 27,3 gün iken, evrelerin tamamlanma döngüsü (sinodik ay) yaklaşık 29,5 gündür. Bu dolanma sırasında Güneş'e bakan tarafı daima aydınlıktır; ancak Dünya'dan bakış açımız sürekli değiştiği için aydınlık kısmın farklı büyüklükteki parçalarını görürüz.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>2. Dört Ana Evre ve Süreleri:</strong>
@@ -4682,8 +4682,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
-    <script type="module" src="exam-engine.js?v=2026102908"></script>
-    <script type="module" src="lab-engine.js?v=2026102817"></script>
-    <script type="module" src="script.js?v=2026102908"></script>
+    <script type="module" src="exam-engine.js?v=2026102910"></script>
+    <script type="module" src="lab-engine.js?v=2026102910"></script>
+    <script type="module" src="script.js?v=2026102910"></script>
 </body>
 </html>

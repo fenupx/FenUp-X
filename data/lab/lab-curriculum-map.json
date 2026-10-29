@@ -1,0 +1,936 @@
+[
+  {
+    "experiment_id": "5.1",
+    "grade": 5,
+    "unit": 1,
+    "output_codes": [
+      "FB.5.1.3"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/368",
+    "textbook_name": "Fen Bilimleri - 5 Ders Kitabı (1. Kitap)",
+    "textbook_pdf_pages": "37-39",
+    "textbook_printed_pages": "35-37",
+    "activity_title": "Ay'ın Görünümündeki Farklılıklar / Ay'ın Evrelerinin Süresi",
+    "expected_observation": "Ay'ın Dünya etrafındaki dolanımı sırasında Güneş ışığını yansıtma açısına göre Dünya'dan görünen aydınlık alanının periyodik olarak değiştiği ve evre döngüsünün yaklaşık 29,5 günde tamamlandığı gözlemlenir.",
+    "independent_variable": "Ay'ın Dünya etrafındaki yörünge konumu (açı)",
+    "dependent_variable": "Ay'ın Dünya'dan görünen evresi ve aydınlık yüzdesi",
+    "controlled_variables": [
+      "Güneş ışığının geliş yönü",
+      "Dünya'nın gözlem konumu (Kuzey Yarım Küre / Türkiye)"
+    ],
+    "scope_exclusions": [
+      "27,3 günlük sideral periyot ayrıntısı",
+      "Ay yüzeyi krater topografyası",
+      "Dünya gölgesi (tutulma ile karıştırılmamalıdır)"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Ay'ın Dünya'dan farklı şekillerde görünmesinin temel nedeni nedir?",
+      "İki ana evre arasında yaklaşık kaç gün geçer ve tüm evre döngüsü kaç günde tamamlanır?"
+    ]
+  },
+  {
+    "experiment_id": "5.2",
+    "grade": 5,
+    "unit": 2,
+    "output_codes": [
+      "FB.5.2.1",
+      "FB.5.2.2"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/368",
+    "textbook_name": "Fen Bilimleri - 5 Ders Kitabı (1. Kitap)",
+    "textbook_pdf_pages": "63-67",
+    "textbook_printed_pages": "61-65",
+    "activity_title": "Kuvvet Büyüklüğünün Ölçümü / Farklı Dinamometrelerle Ölçüm",
+    "expected_observation": "Aynı kuvvete maruz kalan farklı kalınlıktaki yaylarda incenin daha çok, kalının daha az uzadığı; kuvvet arttıkça uzamanın doğru orantılı arttığı ve esneklik sınırı aşıldığında yayın kalıcı deformasyona uğradığı gözlemlenir.",
+    "independent_variable": "Uygulanan kuvvet (ağırlık) ve yay kalınlığı (ince, orta, kalın)",
+    "dependent_variable": "Yayın uzama miktarı (cm)",
+    "controlled_variables": [
+      "Yay malzemesi",
+      "Sıfır noktası ayarı",
+      "Yer çekimi ivmesi"
+    ],
+    "scope_exclusions": [
+      "Hooke Yasası matematiksel formülü (F=k·x)",
+      "Yay sabiti (k) sayısal hesaplamaları"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Aynı ağırlık asıldığında ince yay ile kalın yayın uzama miktarları nasıl farklılaşır?",
+      "Dinamometredeki yayın esneklik sınırı aşılırsa ölçüm doğruluğu nasıl etkilenir?"
+    ]
+  },
+  {
+    "experiment_id": "5.3",
+    "grade": 5,
+    "unit": 2,
+    "output_codes": [
+      "FB.5.2.4"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/368",
+    "textbook_name": "Fen Bilimleri - 5 Ders Kitabı (1. Kitap)",
+    "textbook_pdf_pages": "81-83",
+    "textbook_printed_pages": "79-81",
+    "activity_title": "Sürtünmenin Araç Hareketine Etkisi",
+    "expected_observation": "Aynı rampadan aynı yükseklikten bırakılan özdeş oyuncak arabanın mukavva/ahşap (az pürüzlü) zeminde en uzağa gittiği, pamuklu kumaşta yavaşladığı, kum kaplı zeminde ise sürtünme nedeniyle en kısa mesafede durduğu gözlemlenir.",
+    "independent_variable": "Zemin yüzeyinin pürüzlülük türü (mukavva, kumaş, kum)",
+    "dependent_variable": "Arabanın durma mesafesi (cm)",
+    "controlled_variables": [
+      "Araba kütlesi",
+      "Rampa yüksekliği / bırakılma eğimi",
+      "Bırakılma şekli (ilk hızsız)"
+    ],
+    "scope_exclusions": [
+      "Sürtünme katsayısı (μ) hesabı",
+      "İvme ve kinetik enerji matematiksel bağıntıları"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Aynı eğimli rampadan bırakılan oyuncak araba hangi zeminde en uzağa ulaştı? Neden?",
+      "Yüzey pürüzlülüğü arttıkça sürtünme kuvveti ve aracın aldığı yol nasıl değişir?"
+    ]
+  },
+  {
+    "experiment_id": "5.4",
+    "grade": 5,
+    "unit": 4,
+    "output_codes": [
+      "FB.5.4.1"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/404",
+    "textbook_name": "Fen Bilimleri - 5 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "19-22",
+    "textbook_printed_pages": "17-20",
+    "activity_title": "Işığın Yayılması (Düz ve Eğik Boru, Delikli Kartonlar)",
+    "expected_observation": "Düz borudan bakıldığında mum alevinin görüldüğü, boru büküldüğünde ışığın engellendiği; delikli levhalar tek bir doğru boyunca hizalandığında ışığın geçtiği, hizalama bozulduğunda ışığın geçemediği gözlemlenir.",
+    "independent_variable": "Işık yolunun doğrusallığı (düz boru vs bükük boru / hizalı delikler vs kaydırılmış delik)",
+    "dependent_variable": "Işığın gözlemciye ulaşıp ulaşmaması (görünürlük)",
+    "controlled_variables": [
+      "Işık kaynağı (mum alevi)",
+      "Ortamın homojen saydamlığı (hava)",
+      "Gözlemci konumu"
+    ],
+    "scope_exclusions": [
+      "Işığın dalga boyu / frekansı",
+      "Kırınım ve girişim olayları",
+      "Foton fiziği"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Delikli kartonlardan birinin konumu kaydırıldığında veya boru büküldüğünde mum ışığı neden görünmez?",
+      "Bu etkinlikten ışığın yayılma doğrultusu hakkında hangi sonuca ulaşılır?"
+    ]
+  },
+  {
+    "experiment_id": "5.5",
+    "grade": 5,
+    "unit": 4,
+    "output_codes": [
+      "FB.5.4.3"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/404",
+    "textbook_name": "Fen Bilimleri - 5 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "37-39",
+    "textbook_printed_pages": "35-37",
+    "activity_title": "Gölge Büyüklüğündeki Değişim",
+    "expected_observation": "Işık kaynağı opak cisme yaklaştırıldığında veya perde cisimden uzaklaştırıldığında tam gölgenin büyüdüğü; ışık kaynağı kapatıldığında perdede hiçbir gölgenin oluşmadığı gözlemlenir.",
+    "independent_variable": "Işık kaynağı-cisim mesafesi ve cisim-perde mesafesi",
+    "dependent_variable": "Perdedeki tam gölgenin alanı ve çapı (cm)",
+    "controlled_variables": [
+      "Opak cismin boyutu",
+      "Işık kaynağının şiddeti",
+      "Perdenin doğrultusu"
+    ],
+    "scope_exclusions": [
+      "Benzer üçgenler optik oran formülü",
+      "Yarı gölge (penumbra) ayrıntısı (5. sınıfta sadece tam gölge verilir)"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Tam gölgenin boyunu büyütmek için ışık kaynağı veya opak cisim hangi yönde hareket ettirilmelidir?",
+      "Deneyde bağımsız, bağımlı ve kontrol edilen değişkenler nelerdir?"
+    ]
+  },
+  {
+    "experiment_id": "5.6",
+    "grade": 5,
+    "unit": 5,
+    "output_codes": [
+      "FB.5.5.1"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/404",
+    "textbook_name": "Fen Bilimleri - 5 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "57-59",
+    "textbook_printed_pages": "55-57",
+    "activity_title": "Maddeler Şırıngalarda (Katı, Sıvı ve Gaz Sıkıştırılabilirliği)",
+    "expected_observation": "Ucu kapalı şırıngada hava (gaz) bulunan pistonun kolayca itilerek hacminin küçüldüğü; su (sıvı) ve taş/kum (katı) bulunan şırıngaların pistonunun ise bu koşullarda hareket ettirilemediği gözlemlenir.",
+    "independent_variable": "Maddenin fiziksel hâli (katı, sıvı, gaz)",
+    "dependent_variable": "Kuvvet uygulandığında hacimdeki değişim (sıkışabilme miktarı)",
+    "controlled_variables": [
+      "Şırınga hacmi ve kesiti",
+      "Şırınga ucunun sızdırmazlığı",
+      "Uygulanan kuvvet"
+    ],
+    "scope_exclusions": [
+      "Gaz yasaları (Boyle-Mariotte formülleri)",
+      "Aşırı basınç altındaki sıvı sıkışmaları"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "İçinde hava, su ve katı madde bulunan şırıngalardan hangisinin pistonu itilebildi? Tanecikli yapıyla açıklayınız.",
+      "Gazların sıkıştırılabilirken katı ve sıvıların sıkıştırılamamasının tanecikler arası boşlukla ilişkisi nedir?"
+    ]
+  },
+  {
+    "experiment_id": "5.7",
+    "grade": 5,
+    "unit": 5,
+    "output_codes": [
+      "FB.5.5.3"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/404",
+    "textbook_name": "Fen Bilimleri - 5 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "72-74",
+    "textbook_printed_pages": "70-72",
+    "activity_title": "Sıcaklık Değişimi (Sıvılarda Isı Alışverişi ve Denge Sıcaklığı)",
+    "expected_observation": "Farklı sıcaklıktaki iki su karıştırıldığında ısının sıcaktan soğuğa doğru aktığı, sıcak suyun soğuduğu, soğuk suyun ısındığı ve ısı alışverişinin sıcaklıklar eşitlenene (denge sıcaklığı) kadar devam ettiği gözlemlenir.",
+    "independent_variable": "Sıvıların ilk sıcaklıkları ve karışım miktarları (mL)",
+    "dependent_variable": "Isı akış yönü ve karışımın ulaştığı denge sıcaklığı (°C)",
+    "controlled_variables": [
+      "Sıvı türü (saf su)",
+      "Çevreyle ısı yalıtımı",
+      "Karıştırma süresi"
+    ],
+    "scope_exclusions": [
+      "Q = m·c·Δt matematiksel ısı hesabı",
+      "Öz ısı sayısal değerleri"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Sıcaklıkları farklı iki su karıştırıldığında ısı akışı hangi yönde gerçekleşir?",
+      "Karışımın son sıcaklığı (denge sıcaklığı) başlangıç sıcaklıkları arasında nasıl bir değer alır?"
+    ]
+  },
+  {
+    "experiment_id": "5.8",
+    "grade": 5,
+    "unit": 5,
+    "output_codes": [
+      "FB.5.5.4"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/404",
+    "textbook_name": "Fen Bilimleri - 5 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "78-82",
+    "textbook_printed_pages": "76-80",
+    "activity_title": "Muma Ne Oldu? / Suya Ne Oldu? (Suyun Hâl Değişimi ve Sıcaklık Platosu)",
+    "expected_observation": "Saf buzun ısıtıldığında 0°C'ye gelene kadar sıcaklığının arttığı, erime süresince sıcaklığın 0°C'de sabit kaldığı; sıvı suyun ısınarak 100°C'de kaynamaya başladığı ve kaynama süresince sıcaklığının 100°C'de sabit kaldığı gözlemlenir.",
+    "independent_variable": "Isıtma süresi (dakika)",
+    "dependent_variable": "Maddenin sıcaklığı (°C) ve fiziksel hâli (katı, sıvı, gaz)",
+    "controlled_variables": [
+      "Madde türü (saf su)",
+      "Isıtıcı gücü",
+      "Açık hava basıncı standardı (1 atm)"
+    ],
+    "scope_exclusions": [
+      "Erime/buharlaşma gizli ısısı (L_e, L_b) formülleri",
+      "Farklı yükseltilerdeki kaynama noktası hesapları"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Saf buz erirken ve saf su kaynarken ısıtıcı açık olmasına rağmen sıcaklık neden sabit kalır?",
+      "Sıcaklık-zaman grafiğindeki yatay düzlem bölgeleri maddenin hangi durumunu gösterir?"
+    ]
+  },
+  {
+    "experiment_id": "5.9",
+    "grade": 5,
+    "unit": 5,
+    "output_codes": [
+      "FB.5.5.5",
+      "FB.5.5.6"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/404",
+    "textbook_name": "Fen Bilimleri - 5 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "88-95",
+    "textbook_printed_pages": "86-93",
+    "activity_title": "Maddelerde Isı Aktarımı (Isı İletkenleri, Yalıtkanlar ve Bina Yalıtımı)",
+    "expected_observation": "Metal kaşığın ısıyı hızlı ileterek el yakarken, tahta kaşık ve plastik sapın ısıyı yavaş ilettiği; binalarda taş yünü, strafor gibi yalıtım malzemelerinin kışın ısı kaybını, yazın ise içeri ısı girişini azalttığı gözlemlenir.",
+    "independent_variable": "Kullanılan malzemenin türü (metal iletken vs tahta/plastik yalıtkan / yalıtımlı duvar vs sac duvar)",
+    "dependent_variable": "Isı aktarım hızı ve iç ortam sıcaklığının korunma süresi",
+    "controlled_variables": [
+      "Isı kaynağının sıcaklığı",
+      "Malzeme kalınlığı",
+      "Dış ortam sıcaklığı"
+    ],
+    "scope_exclusions": [
+      "Metallerin kendi aralarında ısı iletkenlik yarışı (Cu > Al > Fe sıralaması Maarif programı FB.5.5.5 kapsam dışıdır)",
+      "Fourier ısı iletim denklemi",
+      "U-değeri teknik katsayıları"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Günlük yaşamda tencere gövdelerinde metal, saplarında ise bakalit/tahta tercih edilmesinin nedeni nedir?",
+      "Binalarda ısı yalıtım malzemesi kullanmanın aile bütçesine ve çevreye katkıları nelerdir?"
+    ]
+  },
+  {
+    "experiment_id": "5.10",
+    "grade": 5,
+    "unit": 6,
+    "output_codes": [
+      "FB.5.6.3"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/404",
+    "textbook_name": "Fen Bilimleri - 5 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "123-125",
+    "textbook_printed_pages": "121-123",
+    "activity_title": "Ampul Parlaklığı Nasıl Değişir? (Pil ve Ampul Sayısı Değişkenleri)",
+    "expected_observation": "Basit elektrik devresinde ampul sayısı sabitken pil sayısı artırıldığında ampulün daha parlak yandığı; pil sayısı sabitken seri bağlı ampul sayısı artırıldığında ampullerin parlaklığının azaldığı gözlemlenir.",
+    "independent_variable": "1. Deneyde: Pil sayısı / 2. Deneyde: Ampul sayısı",
+    "dependent_variable": "Ampulün parlaklık seviyesi",
+    "controlled_variables": [
+      "1. Deneyde: Ampul sayısı ve bağlantı türü / 2. Deneyde: Pil sayısı ve bağlantı türü",
+      "İletken tel cinsi ve uzunluğu"
+    ],
+    "scope_exclusions": [
+      "Ohm Yasası (V=I·R)",
+      "Paralel devre bağlantıları (7. sınıf konusudur)",
+      "Elektriksel güç (Watt) hesabı"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Ampul sayısı sabit tutulup pil sayısı artırıldığında ampul parlaklığı nasıl değişir?",
+      "Pil sayısı sabit tutulup devredeki ampul sayısı artırıldığında ampul parlaklığı neden azalır?"
+    ]
+  },
+  {
+    "experiment_id": "6.1",
+    "grade": 6,
+    "unit": 1,
+    "output_codes": [
+      "FB.6.1.3",
+      "FB.6.1.4"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/410",
+    "textbook_name": "Fen Bilimleri - 6 Ders Kitabı (1. Kitap)",
+    "textbook_pdf_pages": "32-35",
+    "textbook_printed_pages": "30-33",
+    "activity_title": "Güneş ve Ay Tutulması Modeli (Etkinlik İstasyonu 3 ve 5)",
+    "expected_observation": "Güneş tutulmasında Ay'ın Güneş ile Dünya arasına girdiği (Yeniay), dar bir alanda Ay'ın tam gölgesinin Dünya yüzeyine ulaştığı; Ay tutulmasında ise Dünya'nın Güneş ile Ay arasına girdiği (Dolunay) ve gece tarafında Ay'ın Dünya'nın tam gölge konisine girdiği gözlemlenir.",
+    "independent_variable": "Gök cisimlerinin dizilim sırası ve yörünge hizalanması (açı)",
+    "dependent_variable": "Oluşan tutulma türü (Güneş tutulması, Ay tutulması, Tutulma yok)",
+    "controlled_variables": [
+      "Işık kaynağı (Güneş)",
+      "Cisimlerin yörünge düzlemleri"
+    ],
+    "scope_exclusions": [
+      "Halkalı tutulma geometrisi (Maarif 6. sınıf odak noktası değildir)",
+      "Saros döngüsü sayısal hesabı",
+      "Gezegen transitleri"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Güneş tutulması ve Ay tutulması sırasında Güneş, Dünya ve Ay'ın dizilim sırası ile Ay'ın evresi nedir?",
+      "Her Yeniay ve Dolunay evresinde neden tutulma gerçekleşmez?"
+    ]
+  },
+  {
+    "experiment_id": "6.2",
+    "grade": 6,
+    "unit": 2,
+    "output_codes": [
+      "FB.6.2.1",
+      "FB.6.2.2"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/410",
+    "textbook_name": "Fen Bilimleri - 6 Ders Kitabı (1. Kitap)",
+    "textbook_pdf_pages": "52, 58-60",
+    "textbook_printed_pages": "50, 56-58",
+    "activity_title": "Bileşke Kuvvet Deneyi / Deney Tasarımım (Halat Çekmece)",
+    "expected_observation": "Aynı doğrultulu kuvvetlerin aynı yönde toplandığı (R=F1+F2), zıt yönde çıkarıldığı (R=|F1-F2|); bileşke sıfır olduğunda duran cismin durmaya devam ettiği, bileşke sıfırdan farklı olduğunda cismin bileşke kuvvet yönünde harekete geçtiği gözlemlenir.",
+    "independent_variable": "Uygulanan kuvvetlerin büyüklükleri ve yönleri (Doğu/Batı)",
+    "dependent_variable": "Bileşke kuvvet (Net Kuvvet, R) ve cismin hareket durumu",
+    "controlled_variables": [
+      "Kuvvetlerin doğrultusu (aynı doğrultu)",
+      "Cismin kütlesi"
+    ],
+    "scope_exclusions": [
+      "Açılı vektör bileşenleri (trigonometrik sin/cos)",
+      "2 ve 3 boyutlu kuvvet vektörleri"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Bir cisme aynı doğrultuda ve zıt yönlerde etki eden kuvvetlerin bileşkesi nasıl bulunur?",
+      "Halat çekme yarışında iki takım eşit kuvvet uyguladığında bileşke kuvvet ve hareket durumu ne olur?"
+    ]
+  },
+  {
+    "experiment_id": "6.3",
+    "grade": 6,
+    "unit": 2,
+    "output_codes": [
+      "FB.6.2.3"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/410",
+    "textbook_name": "Fen Bilimleri - 6 Ders Kitabı (1. Kitap)",
+    "textbook_pdf_pages": "64-73",
+    "textbook_printed_pages": "62-71",
+    "activity_title": "Sabit Süratli ve Sabit Hızlı Hareket / Alınan Yol ve Yer Değiştirme",
+    "expected_observation": "Sabit süratle hareket eden bir aracın eşit zaman aralıklarında eşit yollar aldığı; gidiş-dönüş rotasında toplam alınan yol artarken, başlangıç noktasına dönüldüğünde net yer değiştirmenin sıfır olduğu gözlemlenir.",
+    "independent_variable": "Hareketlinin rotası (tek yönlü düz gidiş vs başlangıca dönüş)",
+    "dependent_variable": "Alınan yol (skaler) ile yer değiştirme (vektörel) arasındaki fark",
+    "controlled_variables": [
+      "Aracın sürati",
+      "Zaman ölçümü"
+    ],
+    "scope_exclusions": [
+      "Grafik eğimi ve alanından türev/integral hesapları (FB.6.2.3 uyarınca grafik okuma ve matematiksel hesaplamalara girilmez)",
+      "Birim dönüştürme karmaşası"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Sabit süratle hareket eden bir aracın eşit zaman aralıklarında aldığı yollar nasıldır?",
+      "Başlangıç noktasına geri dönen bir hareketlinin aldığı toplam yol ile yer değiştirmesi arasındaki fark nedir?"
+    ]
+  },
+  {
+    "experiment_id": "6.4",
+    "grade": 6,
+    "unit": 4,
+    "output_codes": [
+      "FB.6.4.1",
+      "FB.6.4.2",
+      "FB.6.4.3"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/410",
+    "textbook_name": "Fen Bilimleri - 6 Ders Kitabı (1. Kitap)",
+    "textbook_pdf_pages": "141, 147-149, 155-157",
+    "textbook_printed_pages": "139, 145-147, 153-155",
+    "activity_title": "Işığın Yansıması ve Aynalar (Düzlem, Çukur ve Tümsek Aynalar)",
+    "expected_observation": "Yansımada gelme açısının yüzey normaline göre ölçüldüğü ve yansıma açısına eşit olduğu (i=r); çukur aynada ışığın odak noktasında toplandığı ve yakındaki cisimlerin görüntüsünün düz-büyük olduğu; tümsek aynada ise geniş görüş alanı sağlandığı gözlemlenir.",
+    "independent_variable": "Ayna yüzeyinin geometrisi (düzlem, çukur, tümsek) ve gelme açısı",
+    "dependent_variable": "Yansıyan ışınların doğrultusu ve oluşan görüntünün özellikleri",
+    "controlled_variables": [
+      "Işık kaynağı",
+      "Yüzey normali tanımı"
+    ],
+    "scope_exclusions": [
+      "Özel ışın çizim kuralları ve sınav tipi optik çizim problemleri",
+      "Nicel görüntü bağıntıları (1/f = 1/do + 1/di)"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Düzgün ve dağınık yansımada gelme açısı ile yansıma açısı arasındaki ilişki (i = r) korunur mu?",
+      "Düzlem, çukur ve tümsek aynalarda oluşan görüntülerin günlük hayattaki kullanım alanları nelerdir?"
+    ]
+  },
+  {
+    "experiment_id": "6.5",
+    "grade": 6,
+    "unit": 5,
+    "output_codes": [
+      "FB.6.5.3",
+      "FB.6.5.4"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/413",
+    "textbook_name": "Fen Bilimleri - 6 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "40-50",
+    "textbook_printed_pages": "40-50",
+    "activity_title": "Sıvıların Yoğunluğu ve Katıların Yüzme-Batma Durumları (Su ve Zeytinyağı)",
+    "expected_observation": "Birbirine karışmayan sıvılardan yoğunluğu büyük olan suyun (d=1.0 g/cm³) altta, zeytinyağının (d=0.9 g/cm³) üstte kaldığı; yoğunluğu sıvıdan küçük katıların (tahta) yüzdüğü, büyük olanların (demir vida) battığı gözlemlenir.",
+    "independent_variable": "Sıvı ve katı maddelerin kütle/hacim oranları (yoğunlukları)",
+    "dependent_variable": "Tabakalaşma sırası ve cisimlerin yüzme, askıda kalma veya batma durumları",
+    "controlled_variables": [
+      "Sıvı hacimleri",
+      "Ortam sıcaklığı"
+    ],
+    "scope_exclusions": [
+      "Suyla homojen karışan gliserin ile yapay 4'lü tabaka iddiası",
+      "Arşimet kaldırma kuvveti nicel formülü (F_k = V_batan·d_sıvı·g)"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Birbiri içinde çözünmeyen su ve zeytinyağı aynı kaba konulduğunda neden zeytinyağı üstte kalır?",
+      "Yoğunluğu suyun yoğunluğundan küçük ve büyük olan katı cisimlerin sudaki yüzme-batma durumu nasıldır?"
+    ]
+  },
+  {
+    "experiment_id": "6.6",
+    "grade": 6,
+    "unit": 3,
+    "output_codes": [
+      "FB.6.3.3"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/410",
+    "textbook_name": "Fen Bilimleri - 6 Ders Kitabı (1. Kitap)",
+    "textbook_pdf_pages": "96-98",
+    "textbook_printed_pages": "94-96",
+    "activity_title": "Tohumun Çimlenmesine Etki Eden Faktörler (Etkinlik İstasyonu 9-10)",
+    "expected_observation": "Tohumun çimlenmesi için uygun sıcaklık ve suyun (nem) zorunlu olduğu; karanlık ortamda da çimlenmenin gerçekleştiği, dolayısıyla tohum çimlenmesinde ışığın doğrudan etkili olmadığı gözlemlenir.",
+    "independent_variable": "Çevre şartları (su varlığı, sıcaklık derecesi, ışık varlığı)",
+    "dependent_variable": "Tohumun çimlenme durumu (çimlendi / çimlenmedi)",
+    "controlled_variables": [
+      "Tohum cinsi (özdeş fasulye tohumları)",
+      "Oksijen varlığı (kitap uyarısı uyarınca sabit tutulur)",
+      "Tohum sayısı"
+    ],
+    "scope_exclusions": [
+      "Oksijensiz çimlenme testi (kitap uyarısı: ev/okul ortamında oksijensiz ortam sağlanamayacağından oksijen bağımsız değişken yapılmaz)",
+      "Fotosentez ve klorofil sentezi"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Tohumun çimlenmesi için hangi temel şartlar (Su, Oksijen, Uygun Sıcaklık) gereklidir?",
+      "Karanlık ve aydınlık ortamda tutulan özdeş nemli fasulye tohumlarının ikisinin de çimlenmesi ışığın çimlenmedeki rolü hakkında ne gösterir?"
+    ]
+  },
+  {
+    "experiment_id": "6.7",
+    "grade": 6,
+    "unit": 4,
+    "output_codes": [
+      "FB.6.4.4",
+      "FB.6.4.5",
+      "FB.6.4.6"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/410",
+    "textbook_name": "Fen Bilimleri - 6 Ders Kitabı (1. Kitap)",
+    "textbook_pdf_pages": "166-168",
+    "textbook_printed_pages": "164-166",
+    "activity_title": "Işığın Soğurulması ve Radyometre (Etkinlik İstasyonu 13-14)",
+    "expected_observation": "Özdeş termometrelerden siyah kâğıtla kaplı olanın ışığı en çok soğurarak en yüksek sıcaklığa ulaştığı, beyazın ışığı yansıttığı için en az ısındığı; radyometrede siyah yüzeyin ışığı soğurarak dönme hareketi oluşturduğu gözlemlenir.",
+    "independent_variable": "Yüzey rengi (siyah, beyaz, mavi)",
+    "dependent_variable": "Işığın soğurulma miktarı (termometre sıcaklık artışı °C) ve radyometre dönme hareketi",
+    "controlled_variables": [
+      "Işık kaynağı şiddeti ve mesafesi",
+      "Aydınlatma süresi",
+      "Termometre türü"
+    ],
+    "scope_exclusions": [
+      "Kuantum foton basıncı hesapları",
+      "Radyometre içi seyreltik gaz kinetik teorisi"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Güneş ışığı altında eşit süre bekletilen siyah, mavi ve beyaz kaplardan hangisinin sıcaklığı en fazla artar?",
+      "Radyometre çarkının ışık şiddeti arttığında daha hızlı dönmesi hangi enerji dönüşümünü kanıtlar?"
+    ]
+  },
+  {
+    "experiment_id": "6.8",
+    "grade": 6,
+    "unit": 5,
+    "output_codes": [
+      "FB.6.5.1"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/413",
+    "textbook_name": "Fen Bilimleri - 6 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "22",
+    "textbook_printed_pages": "22",
+    "activity_title": "Katılarda Genleşme ve Büzülme (Gravzant Halkası Deneyi)",
+    "expected_observation": "Oda sıcaklığında halkadan kolayca geçen metal kürenin, ısıtıldığında hacmi artarak (genleşme) halkadan geçemediği; soğuk suya daldırılıp büzüldüğünde ise halkadan tekrar geçtiği gözlemlenir.",
+    "independent_variable": "Metal kürenin sıcaklığı (ısıtılma ve soğutulma adımları)",
+    "dependent_variable": "Kürenin hacmi ve halkadan geçip geçememe durumu",
+    "controlled_variables": [
+      "Halkanın çapı ve sıcaklığı",
+      "Kürenin yapıldığı metal türü"
+    ],
+    "scope_exclusions": [
+      "Hacimce genleşme katsayısı formülleri (ΔV = V0·γ·ΔT)",
+      "Atomik yarıçap değişim yanılgısı (tanecik büyümez, boşluk artar)"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Başlangıçta halkadan geçen metal küre ısıtıldığında neden halkadan geçemez?",
+      "Isıtılan küre soğuk suya daldırıldığında hacminde ve tanecikleri arasındaki mesafede nasıl bir değişim olur?"
+    ]
+  },
+  {
+    "experiment_id": "6.9",
+    "grade": 6,
+    "unit": 6,
+    "output_codes": [
+      "FB.6.6.1"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/414",
+    "textbook_name": "Fen Bilimleri - 6 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "70-72",
+    "textbook_printed_pages": "70-72",
+    "activity_title": "Maddelerin Elektriksel İletkenliği (Katı ve Sıvı İletkenler / Yalıtkanlar)",
+    "expected_observation": "Devre uçları arasına bakır, demir çivi, grafit kurşun kalem ucu veya tuzlu su konulduğunda devrenin tamamlanıp ampulün yandığı; kuru tahta, plastik, silgi veya saf su konulduğunda ampulün yanmadığı, uçlar boşa çıkarıldığında devrenin açık kalarak söndüğü gözlemlenir.",
+    "independent_variable": "Devreye bağlanan katı veya sıvı maddenin cinsi",
+    "dependent_variable": "Devreden elektrik akımının geçmesi ve ampulün yanma durumu",
+    "controlled_variables": [
+      "Pil gerilimi",
+      "Ampul türü",
+      "Elektrot aralığı"
+    ],
+    "scope_exclusions": [
+      "İyonik dissosiasyon ve serbest elektron mobilitesi formülleri",
+      "Yarı iletken fiziği"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Hangi katı ve sıvı maddeler devreye bağlandığında ampul ışık verdi?",
+      "Saf su elektriği iletmezken tuzlu suyun elektriği iletmesinin nedeni nedir?"
+    ]
+  },
+  {
+    "experiment_id": "6.10",
+    "grade": 6,
+    "unit": 6,
+    "output_codes": [
+      "FB.6.6.2",
+      "FB.6.6.3"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/414",
+    "textbook_name": "Fen Bilimleri - 6 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "81-86",
+    "textbook_printed_pages": "81-86",
+    "activity_title": "Elektriksel Direnç ve Reosta (Telin Boyu, Kesiti, Cinsi ve Reosta Sürgüsü)",
+    "expected_observation": "İletken telin boyu uzadıkça direncin arttığı ve ampulün sönükleştiği; tel kalınlaştıkça direncin azaldığı ve ampulün parladığı; reosta sürgüsü kaydırılarak devredeki etkin tel boyu değiştirildiğinde ampul parlaklığının pürüzsüz biçimde ayarlandığı gözlemlenir.",
+    "independent_variable": "Telin boyu (L), dik kesit alanı (S), telin cinsi ve reosta sürgü konumu",
+    "dependent_variable": "Devrenin elektriksel direnci ve ampulün parlaklık seviyesi",
+    "controlled_variables": [
+      "Pil sayısı / gerilimi",
+      "Diğer tel parametreleri"
+    ],
+    "scope_exclusions": [
+      "Özdirenç matematiksel bağıntısı (R = ρ·L/S formülü ve ham TeX kalıntıları)",
+      "Dimmer ve potansiyometre iç devre ayrıntıları"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "İletken telin boyu uzadıkça ve dik kesit alanı küçüldükçe elektriksel direnç ve ampul parlaklığı nasıl değişir?",
+      "Reosta sürgüsü hareket ettirildiğinde ampul parlaklığının değişmesinin temel nedeni nedir?"
+    ]
+  },
+  {
+    "experiment_id": "7.1",
+    "grade": 7,
+    "unit": 2,
+    "output_codes": [
+      "FB.7.2.1"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/429",
+    "textbook_name": "Fen Bilimleri - 7 Ders Kitabı (1. Kitap)",
+    "textbook_pdf_pages": "61-64",
+    "textbook_printed_pages": "60-63",
+    "activity_title": "Fiziksel Anlamda İş (Kuvvet ve Hareket Doğrultusu Karşılaştırması)",
+    "expected_observation": "Kuvvet ile yer değiştirme aynı doğrultuda olduğunda (sandığı yatay itme, kutuyu yukarı kaldırma) fiziksel anlamda iş yapıldığı; kuvvet uygulanmasına rağmen hareket yoksa (duvarı itme) veya kuvvet doğrultusu ile hareket dik ise (çantayı elde yatay yolda taşıma) fiziksel anlamda iş yapılmadığı gözlemlenir.",
+    "independent_variable": "Kuvvetin uygulanma senaryosu ve doğrultusu (yatay itme, kaldırma, taşıma, sabit duvar)",
+    "dependent_variable": "Fiziksel anlamda iş yapılıp yapılmadığı ve yapılan iş miktarı (Joule)",
+    "controlled_variables": [
+      "Uygulanan kuvvet",
+      "Yer değiştirme mesafesi"
+    ],
+    "scope_exclusions": [
+      "Açılı çekme ve kosinüs teorem formülleri (W = F·d·cosθ)",
+      "Hedef joule sayısal bulmaca yükü"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Bir kuvvetin fiziksel anlamda iş yapabilmesi için hangi iki şartın aynı anda gerçekleşmesi gerekir?",
+      "Sırtında veya elinde çantayla yatay yolda yürüyen ya da sabit duvarı iten biri fiziksel anlamda iş yapar mı? Neden?"
+    ]
+  },
+  {
+    "experiment_id": "7.2",
+    "grade": 7,
+    "unit": 2,
+    "output_codes": [
+      "FB.7.2.2",
+      "FB.7.2.3"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/429",
+    "textbook_name": "Fen Bilimleri - 7 Ders Kitabı (1. Kitap)",
+    "textbook_pdf_pages": "73-77",
+    "textbook_printed_pages": "72-76",
+    "activity_title": "Enerji Dönüşümü ve Korunumu (Sarkaç ve Rampa)",
+    "expected_observation": "En üst noktada çekim potansiyel enerjisinin maksimum, kinetik enerjinin sıfır olduğu; aşağı inerken potansiyel enerjinin kinetik enerjiye dönüştüğü; sürtünmesiz ortamda toplam mekanik enerjinin korunduğu; sürtünmeli ortamda ise mekanik enerjinin ısıya dönüştüğü fakat toplam enerjinin yok olmadığı gözlemlenir.",
+    "independent_variable": "Bırakılma yüksekliği/açısı ve sürtünme durumu (açık/kapalı)",
+    "dependent_variable": "Potansiyel, kinetik ve ısı enerjisi çubukları",
+    "controlled_variables": [
+      "Cisim kütlesi",
+      "Yer çekimi ivmesi",
+      "Sarkaç ip boyu"
+    ],
+    "scope_exclusions": [
+      "E_p = m·g·h ve E_k = 1/2·m·v² sayısal hesaplamaları (program nitel dönüşüm ister)",
+      "Açısal momentum denklemleri"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Sarkaç veya kaykaycı en tepeden en alt noktaya inerken çekim potansiyel ve kinetik enerjisi nasıl değişir?",
+      "Sürtünmeli ortamda mekanik enerji azalırken toplam enerji korunur mu? Azalan mekanik enerji neye dönüşür?"
+    ]
+  },
+  {
+    "experiment_id": "7.3",
+    "grade": 7,
+    "unit": 4,
+    "output_codes": [
+      "FB.7.4.1"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/431",
+    "textbook_name": "Fen Bilimleri - 7 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "17-20",
+    "textbook_printed_pages": "16-19",
+    "activity_title": "Işığın Kırılması (Işığın Ortam Değiştirmesi ve Doğrultu Değişimi)",
+    "expected_observation": "Işığın az yoğun ortamdan (hava) çok yoğun ortama (su/cam) geçerken normale yaklaşarak kırıldığı ve süratinin azaldığı; çok yoğundan az yoğuna geçerken normalden uzaklaşarak kırıldığı ve süratinin arttığı; ayırıcı yüzeye dik (90°) gelen ışının ise doğrultu değiştirmeden geçtiği gözlemlenir.",
+    "independent_variable": "Işığın geçtiği ortam çifti ve gelme açısı",
+    "dependent_variable": "Işığın kırılma doğrultusu (normale yaklaşma/uzaklaşma) ve sürat değişimi",
+    "controlled_variables": [
+      "Işığın kaynağı ve rengi",
+      "Yüzey düzlemi"
+    ],
+    "scope_exclusions": [
+      "Snell Yasası (n1·sinθ1 = n2·sinθ2) sayısal hesaplamaları",
+      "Kritik açı ve tam yansıma (7. sınıf FB.7.4.1 kapsam dışıdır)",
+      "Işık dalga boyu/frekans bağıntısı"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Işık az yoğun ortamdan (hava) çok yoğun ortama (su/cam) geçerken normale nasıl kırılır ve sürati nasıl değişir?",
+      "Ayırıcı yüzeye dik (normal üzerinden, 0° gelme açısıyla) gönderilen ışık ışını neden kırılmadan geçer?"
+    ]
+  },
+  {
+    "experiment_id": "7.4",
+    "grade": 7,
+    "unit": 4,
+    "output_codes": [
+      "FB.7.4.2",
+      "FB.7.4.3"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/431",
+    "textbook_name": "Fen Bilimleri - 7 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "25-31",
+    "textbook_printed_pages": "24-30",
+    "activity_title": "İnce ve Kalın Kenarlı Mercekler ve Odaklama",
+    "expected_observation": "İnce kenarlı (yakınsak) merceğin üzerine gelen paralel ışınları odak noktasında topladığı ve büyüteç olarak kullanılabildiği; kalın kenarlı (ıraksak) merceğin ise paralel ışınları odaktan çıkıyormuş gibi dağıttığı gözlemlenir.",
+    "independent_variable": "Mercek türü (ince kenarlı / kalın kenarlı)",
+    "dependent_variable": "Kırılan ışınların davranışı (toplanma / dağılma) ve oluşan görüntünün niteliği",
+    "controlled_variables": [
+      "Işık demeti",
+      "Odak uzaklığı"
+    ],
+    "scope_exclusions": [
+      "Özel ışınlarla görüntü çizim kuralları",
+      "1/f = 1/do + 1/di mercek bağıntıları ve sayısal büyütme formülleri"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "İnce kenarlı (yakınsak) ve kalın kenarlı (ıraksak) mercekler paralel ışık demetini nasıl kırar?",
+      "Ormanlık alanlara bırakılan cam şişelerin yangına yol açmasının merceklerin odaklama özelliğiyle ilişkisi nedir?"
+    ]
+  },
+  {
+    "experiment_id": "7.5",
+    "grade": 7,
+    "unit": 5,
+    "output_codes": [
+      "FB.7.5.10"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/433",
+    "textbook_name": "Fen Bilimleri - 7 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "91-95",
+    "textbook_printed_pages": "90-94",
+    "activity_title": "Karışımların Ayrılması (Ayırma Hunisi ve Ayrımsal Damıtma)",
+    "expected_observation": "Zeytinyağı-su gibi birbirine karışmayan heterojen sıvıların ayırma hunisinde yoğunluk farkıyla alt katmanın musluktan akıtılarak ayrıldığı; alkol-su gibi homojen sıvı karışımların ise ayrımsal damıtma düzeneğinde kaynama noktası farkıyla buharlaşıp yoğuşturularak ayrıldığı gözlemlenir.",
+    "independent_variable": "Karışımın türü (heterojen emülsiyon vs homojen çözelti)",
+    "dependent_variable": "Kullanılan ayırma yöntemi (yoğunluk farkı / kaynama noktası farkı) ve ayrılan bileşenler",
+    "controlled_variables": [
+      "Karışım hacimleri",
+      "Soğutucu kondenser devresi"
+    ],
+    "scope_exclusions": [
+      "Azeotropik karışım dersi",
+      "Raoult Kanunu ve buhar basıncı matematiksel hesapları"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Zeytinyağı-su gibi heterojen sıvı-sıvı karışımlar ile etil alkol-su gibi homojen sıvı-sıvı karışımlar hangi yöntemlerle ayrılır?",
+      "Ayırma hunisinde ve ayrımsal damıtmada yararlanılan temel fiziksel özellik farkları nelerdir?"
+    ]
+  },
+  {
+    "experiment_id": "7.6",
+    "grade": 7,
+    "unit": 5,
+    "output_codes": [
+      "FB.7.5.9"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/433",
+    "textbook_name": "Fen Bilimleri - 7 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "85-87",
+    "textbook_printed_pages": "84-86",
+    "activity_title": "Çözünme Hızını Etkileyen Faktörler (Sıcaklık, Temas Yüzeyi ve Karıştırma)",
+    "expected_observation": "Sıcaklığın artırılmasının (60°C > 20°C), temas yüzeyinin artırılmasının (pudra > toz > küp şeker) ve karıştırmanın çözünme süresini kısalttığı (çözünme hızını artırdığı) kontrollü olarak gözlemlenir.",
+    "independent_variable": "Seçilen şablona göre tek değişken: Sıcaklık (20/40/60°C) VEYA Tane boyutu VEYA Karıştırma",
+    "dependent_variable": "Şekerin tamamen çözünme süresi (saniye) ve çözünme hızı",
+    "controlled_variables": [
+      "Çözücü cinsi ve hacmi (100 mL saf su)",
+      "Çözünen kütlesi (10 g)",
+      "Diğer iki değişken"
+    ],
+    "scope_exclusions": [
+      "Çözünürlük çarpımı (Kçç) hesapları",
+      "Arrhenius aktivasyon enerjisi formülleri"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Çözücü sıcaklığı, temas yüzeyi (tanecik boyutu) ve karıştırma işlemi katıların çözünme hızını nasıl etkiler?",
+      "Sıcaklığın çözünme hızına etkisini test ederken şeker miktarı ve tanecik boyutu neden sabit tutulmalıdır?"
+    ]
+  },
+  {
+    "experiment_id": "7.7",
+    "grade": 7,
+    "unit": 6,
+    "output_codes": [
+      "FB.7.6.1",
+      "FB.7.6.2"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/433",
+    "textbook_name": "Fen Bilimleri - 7 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "111-119",
+    "textbook_printed_pages": "110-118",
+    "activity_title": "Elektriklenme Çeşitleri (Sürtünme, Dokunma ve Etki ile Elektriklenme)",
+    "expected_observation": "Ebonit çubuğun yün kumaşa sürtüldüğünde elektron alarak negatif (-), cam çubuğun ipek kumaşa sürtüldüğünde elektron vererek pozitif (+) yüklendiği; toplam yükün daima korunduğu ve yalnızca elektronların hareket ettiği gözlemlenir.",
+    "independent_variable": "Elektriklenme yöntemi ve sürtünen malzeme çifti (ebonit-yün / cam-ipek / dokunan küreler)",
+    "dependent_variable": "Cisimlerin kazandığı net yük ve elektriksel çekim/itme etkileşimi",
+    "controlled_variables": [
+      "Toplam yük miktarı (yük korunumu)",
+      "Yalıtkan saplar"
+    ],
+    "scope_exclusions": [
+      "Coulomb Kanunu kuvvet formülleri (F = k·q1·q2/d²)",
+      "Proton transferi kavram yanılgısı (protonlar asla aktarılmaz)"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Ebonit çubuk yün kumaşa, cam çubuk ipek kumaşa sürtüldüğünde hangi yük geçişi olur ve toplam yük korunur mu?",
+      "Elektriklenme olaylarında neden yalnızca negatif yükler (elektronlar) hareket eder?"
+    ]
+  },
+  {
+    "experiment_id": "7.8",
+    "grade": 7,
+    "unit": 6,
+    "output_codes": [
+      "FB.7.6.2",
+      "FB.7.6.3"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/433",
+    "textbook_name": "Fen Bilimleri - 7 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "119-120",
+    "textbook_printed_pages": "118-119",
+    "activity_title": "Elektroskop ile Yük Tayini ve Topraklama",
+    "expected_observation": "Nötr elektroskoba yüklü bir cisim yaklaştırıldığında veya dokundurulduğunda yaprakların aynı cins yükle yüklenerek açıldığı (fakat nötr elektroskobun tek başına cismin işaretini belirleyemediği); topraklama yapıldığında fazla yükün toprağa akarak elektroskobun nötrlendiği gözlemlenir.",
+    "independent_variable": "Elektroskoba yaklaştırılan veya dokundurulan cismin yük durumu ve topraklama",
+    "dependent_variable": "Elektroskop topuz ve yaprak yük dağılımı ile yaprak açılma açısı",
+    "controlled_variables": [
+      "Elektroskop gövdesi ve cam muhafazası",
+      "Yalıtkan tıpa"
+    ],
+    "scope_exclusions": [
+      "Yaprak açısının elektrostatik tork açı formülü",
+      "Kapasitans (C = Q/V) hesapları"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Nötr bir elektroskoba yüklü bir çubuk yaklaştırıldığında yaprakların açılması cismin yük işaretini tek başına belirlemeye yeter mi?",
+      "Yüklü bir elektroskoba topraklama yapıldığında elektron akışı ve yaprakların durumu nasıl değişir?"
+    ]
+  },
+  {
+    "experiment_id": "7.9",
+    "grade": 7,
+    "unit": 7,
+    "output_codes": [
+      "FB.7.7.1"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/434",
+    "textbook_name": "Fen Bilimleri - 7 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "134-143",
+    "textbook_printed_pages": "133-142",
+    "activity_title": "Besin Zinciri, Enerji Akışı ve Biyolojik Birikim",
+    "expected_observation": "Üreticilerden tüketicilere doğru gidildikçe trofik basamaklar arasında enerjinin yaklaşık %10'unun aktarıldığı, %90'ının yaşamsal faaliyetlerde kullanılıp çevreye ısı olarak verildiği; kalıcı kimyasal kirleticilerin (biyolojik birikim) ise üst basamaklara doğru katlanarak arttığı gözlemlenir.",
+    "independent_variable": "Besin piramidindeki trofik basamak seviyesi (üretici, 1. tüketici, 2. tüketici, tepe avcı)",
+    "dependent_variable": "Kullanılabilir enerji miktarı (Joule), biyokütle ve biyolojik birikim (ppm)",
+    "controlled_variables": [
+      "Üreticilerin fotosentezle bağladığı başlangıç enerjisi",
+      "Ayrıştırıcıların tüm basamaklardaki ayrıştırma rolü"
+    ],
+    "scope_exclusions": [
+      "Güneş enerjisine trofik %10 kuralı uygulama yanılgısı (Güneş->üretici trofik basamak değildir)",
+      "Enerji kayboldu yanılgısı (ısı olarak aktarılır)",
+      "Lindeman verimlilik integral modelleri"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Besin piramidinde üreticilerden üst basamaklara çıkıldıkça aktarılan enerji, biyokütle ve biyolojik birikim nasıl değişir?",
+      "Bir basamaktan üst basamağa aktarılmayan enerjinin yaklaşık %90'ına ne olur; enerji yok olur mu?"
+    ]
+  },
+  {
+    "experiment_id": "7.10",
+    "grade": 7,
+    "unit": 7,
+    "output_codes": [
+      "FB.7.7.2"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/434",
+    "textbook_name": "Fen Bilimleri - 7 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "146-155",
+    "textbook_printed_pages": "145-154",
+    "activity_title": "Su Kaynakları, Su Ayak İzi ve Sürdürülebilir Tasarruf (Mağlova Kemeri ve Su Yönetimi)",
+    "expected_observation": "Tüketim maddelerinin üretiminde harcanan doğrudan ve dolaylı suyun (yeşil, mavi, gri su ayak izi) musluk tüketiminden çok daha büyük olduğu; perlatör, damla sulama ve su tasarruf alışkanlıklarının tatlı su kaynaklarını korumada kritik rol oynadığı gözlemlenir.",
+    "independent_variable": "Tüketilen ürün türü ve uygulanan su tasarruf yöntemi",
+    "dependent_variable": "Toplam su ayak izi (Litre) ve tasarruf edilen tatlı su miktarı",
+    "controlled_variables": [
+      "Temel bireysel ihtiyaç katsayısı",
+      "Hesaplama referans hacimleri"
+    ],
+    "scope_exclusions": [
+      "UNESCO koruma unvanının Selimiye yerine Mağlova'ya yanlış atfedilmesi (Mağlova Sinan'ın su şaheseridir, UNESCO Selimiye'dedir)",
+      "Karmaşık hidrolik açık kanal debi integralleri"
+    ],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Mavi, yeşil ve gri su ayak izi kavramları neyi ifade eder; doğrudan su tüketimi ile sanal su tüketimi arasındaki fark nedir?",
+      "Perlatör, damla sulama ve Mimar Sinan'ın su kemeri mühendisliği su kaynaklarının sürdürülebilirliğine nasıl katkı sağlar?"
+    ]
+  }
+]

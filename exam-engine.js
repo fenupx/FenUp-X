@@ -1556,9 +1556,11 @@ export function exitStudyFullscreen() {
         } catch (_) {}
     }
     if (btn) {
-        btn.innerHTML = '<i class="fas fa-expand"></i> <span>Tam Ekran Çalış</span>';
+        btn.innerHTML = '<i class="fas fa-expand"></i>';
         btn.classList.remove('active');
         btn.setAttribute('aria-pressed', 'false');
+        btn.setAttribute('title', 'Tam Ekran Çalış');
+        btn.setAttribute('aria-label', 'Tam Ekran Çalış');
     }
     applyStudyPlanState();
 }
@@ -1582,9 +1584,11 @@ export function enterStudyFullscreen() {
     }
 
     if (btn) {
-        btn.innerHTML = '<i class="fas fa-compress"></i> <span>Tam Ekrandan Çık</span>';
+        btn.innerHTML = '<i class="fas fa-compress"></i>';
         btn.classList.add('active');
         btn.setAttribute('aria-pressed', 'true');
+        btn.setAttribute('title', 'Tam Ekrandan Çık');
+        btn.setAttribute('aria-label', 'Tam Ekrandan Çık');
     }
     applyStudyPlanState();
 }
