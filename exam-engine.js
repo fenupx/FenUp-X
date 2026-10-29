@@ -748,7 +748,12 @@ function updateBackControls() {
     const review = step === 'study' && state.returnToSummary;
     const button = $('btn-exam-step-back');
     if (button) {
-        button.textContent = review ? '← Çalışma Özeti' : (['study', 'practice', 'eval'].includes(step) ? '← Çalışma Seçimi' : (step === 'scope' ? '← Ana Sayfa' : '← Geri'));
+        let label = '← Geri';
+        if (step === 'scope') label = '← Ana Sayfa';
+        else if (step === 'choice') label = '← Senaryo Seçimi';
+        else if (review) label = '← Çalışma Özeti';
+        else if (['study', 'practice', 'eval'].includes(step)) label = '← Çalışma Seçimi';
+        button.textContent = label;
         button.onclick = () => {
             if (step === 'scope') window.returnToHome?.();
             else backStep(review ? 'summary' : step === 'choice' ? 'scope' : 'choice');
@@ -766,7 +771,7 @@ function restoreExamRoute(route) {
     }
     const usableAttempt = a && a.ids.length === 7 && a.ids.every(id => QUESTIONS.some(q => q.id === id));
     if (['practice', 'eval', 'summary'].includes(step) && !usableAttempt) step = 'choice';
-    if (!state.hasSelectedScope && step !== 'scope') step = 'scope';
+    if (step !== 'scope') state.hasSelectedScope = true;
     if (a && step === 'practice' && (a.finished || a.status !== 'in_progress')) step = a.finished ? 'summary' : 'eval';
     if (step === 'eval') state.reviewingEval = !!a?.finished;
     if (step === 'summary' && !a?.finished) step = 'choice';
@@ -1188,15 +1193,28 @@ function renderStudy(cardIndex) {
     }
     saveState();
 
-    // Üst Araç Çubuğu
+    // Üst Araç Çubuğu: Tek Dönüş Kontrolü (Çalışma Seçimi veya Çalışma Özeti)
     const btnBackChoice = $('btn-study-back-choice');
     if (btnBackChoice) {
-        btnBackChoice.onclick = () => {
-            state.studyMode = 'free';
-            state.returnToSummary = false;
-            saveState();
-            backStep('choice');
-        };
+        if (state.returnToSummary || isReviewMode) {
+            btnBackChoice.innerHTML = '<i class="fas fa-undo"></i> <span>Çalışma Özeti</span>';
+            btnBackChoice.setAttribute('title', 'Çalışma özetine geri dön');
+            btnBackChoice.onclick = () => {
+                state.studyMode = 'free';
+                state.returnToSummary = false;
+                saveState();
+                backStep('summary');
+            };
+        } else {
+            btnBackChoice.innerHTML = '<i class="fas fa-arrow-left"></i> <span>Çalışma Seçimi</span>';
+            btnBackChoice.setAttribute('title', 'Çalışma seçimine geri dön');
+            btnBackChoice.onclick = () => {
+                state.studyMode = 'free';
+                state.returnToSummary = false;
+                saveState();
+                backStep('choice');
+            };
+        }
     }
 
     const btnTogglePlan = $('btn-study-toggle-plan');
@@ -1231,20 +1249,10 @@ function renderStudy(cardIndex) {
             : '<i class="fas fa-expand"></i>';
     }
 
+    // İkinci dönüş kutusu gizlenir (Ders Ekranında Tek Dönüş Kontrolü Sözleşmesi)
     const returnSummaryBox = $('study-return-to-summary-box');
-    const btnReturnSummary = $('btn-study-return-summary');
-    if (returnSummaryBox && btnReturnSummary) {
-        if (state.returnToSummary || isReviewMode) {
-            returnSummaryBox.style.display = 'block';
-            btnReturnSummary.onclick = () => {
-                state.studyMode = 'free';
-                state.returnToSummary = false;
-                saveState();
-                backStep('summary');
-            };
-        } else {
-            returnSummaryBox.style.display = 'none';
-        }
+    if (returnSummaryBox) {
+        returnSummaryBox.style.display = 'none';
     }
 
     // Sol Panel / Konu Çalışma Planı (Desktop Plan & Mobil Kompakt Seçici)
@@ -1370,7 +1378,7 @@ function renderStudy(cardIndex) {
                     </div>
                     ${outcome ? `
                         <details class="study-outcome-expandable">
-                            <summary><i class="fas fa-info-circle"></i> MEB Kazanımı: <span>${esc(outcome.short_title || outcome.id)}</span> <span class="study-outcome-expand-hint">(Detay)</span></summary>
+                            <summary><i class="fas fa-info-circle"></i> Öğrenme Çıktısı: <span>${esc(outcome.short_title || outcome.id)}</span> <span class="study-outcome-expand-hint">(Detay)</span></summary>
                             <p class="study-outcome-full-desc">${esc(outcome.title)}${c.book_section ? `<br>Kitap başlığı: ${esc(c.book_section)}` : ''}</p>
                         </details>
                     ` : ''}
@@ -2918,35 +2926,35 @@ async function generateExamPdfBlob(questions, attempt) {
 
     // 3. Kısa Yönerge (Ayrı kapak sayfası olmadan Soru 1 hemen ardından başlar)
     docContent.push({
-        text: 'Yönerge: Bu sınav MEB Senaryo 2 kazanım dağılımına uygun 7 açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.',
+        text: 'Yönerge: Bu sınav MEB Senaryo 2 öğrenme çıktısı dağılımına uygun 7 açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.',
         fontSize: 7.6,
         italics: true,
         color: '#64748b',
-        margin: [0, 0, 0, 10]
+        margin: [0, 0, 0, 8]
     });
 
     // 4. Sorular Akışı (Bölünmeyi engelleyen unbreakable soru blokları)
     questions.forEach((q, i) => {
         const qPoints = pointsMap[q.id] || 15;
-        const lineCount = qPoints >= 20 ? 8 : (qPoints >= 15 ? 6 : 4);
+        const lineCount = qPoints >= 20 ? 7 : (qPoints >= 15 ? 5 : 4);
         const qStack = [];
 
-        // Soru Başlığı: Sade "Soru 1", "Soru 2" (öğrenci kâğıdında teknik kazanım kodu YER ALMAZ)
+        // Soru Başlığı: Sade "Soru 1", "Soru 2" (öğrenci kâğıdında teknik kazanım/çıktı kodu YER ALMAZ)
         qStack.push({
             text: `Soru ${i + 1}`,
-            fontSize: 10.5,
+            fontSize: 10,
             bold: true,
             color: '#0f172a',
-            margin: [0, 0, 0, 3]
+            margin: [0, 0, 0, 2]
         });
 
         // Soru Metni: Kökün sonunda parantez içinde soru puanı
         qStack.push({
             text: [
-                { text: q.stem + ' ', fontSize: 9.2, color: '#1e293b', lineHeight: 1.25 },
-                { text: `(${qPoints} puan)`, fontSize: 9.2, bold: true, color: '#0f172a' }
+                { text: q.stem + ' ', fontSize: 9.1, color: '#1e293b', lineHeight: 1.25 },
+                { text: `(${qPoints} puan)`, fontSize: 9.1, bold: true, color: '#0f172a' }
             ],
-            margin: [0, 0, 0, 5]
+            margin: [0, 0, 0, 4]
         });
 
         // Varsa Tablo
@@ -2968,7 +2976,7 @@ async function generateExamPdfBlob(questions, attempt) {
                     paddingTop: () => 3,
                     paddingBottom: () => 3
                 },
-                margin: [0, 2, 0, 5]
+                margin: [0, 2, 0, 4]
             });
         }
 
@@ -2977,22 +2985,22 @@ async function generateExamPdfBlob(questions, attempt) {
             if (visuals[i].kind === 'gallery' && Array.isArray(visuals[i].items)) {
                 const galleryCols = visuals[i].items.map(it => ({
                     stack: [
-                        { image: it.dataUrl, width: Math.min(it.width || 140, 140), alignment: 'center' },
+                        { image: it.dataUrl, width: Math.min(it.width || 130, 130), alignment: 'center' },
                         { text: it.label || '', fontSize: 8, alignment: 'center', color: '#64748b', margin: [0, 2, 0, 0] }
                     ],
                     width: '*'
                 }));
                 qStack.push({
                     columns: galleryCols,
-                    columnGap: 12,
-                    margin: [0, 3, 0, 5]
+                    columnGap: 10,
+                    margin: [0, 2, 0, 4]
                 });
             } else if (visuals[i].dataUrl) {
                 qStack.push({
                     image: visuals[i].dataUrl,
-                    width: Math.min(visuals[i].width, 240),
+                    width: Math.min(visuals[i].width, 190),
                     alignment: 'center',
-                    margin: [0, 3, 0, 5]
+                    margin: [0, 2, 0, 4]
                 });
             }
         }
@@ -3004,11 +3012,11 @@ async function generateExamPdfBlob(questions, attempt) {
             bold: true,
             italics: true,
             color: '#475569',
-            margin: [0, 4, 0, 2]
+            margin: [0, 3, 0, 2]
         });
 
         const ruledLinesBody = Array(lineCount).fill(0).map(() => [
-            { text: ' ', height: 16, border: [false, false, false, true], borderColor: ['#fff', '#fff', '#fff', '#94a3b8'] }
+            { text: ' ', height: 14, border: [false, false, false, true], borderColor: ['#fff', '#fff', '#fff', '#94a3b8'] }
         ]);
 
         qStack.push({
@@ -3024,14 +3032,14 @@ async function generateExamPdfBlob(questions, attempt) {
                 paddingTop: () => 0,
                 paddingBottom: () => 0
             },
-            margin: [0, 0, 0, 8]
+            margin: [0, 0, 0, 6]
         });
 
         // unbreakable: true soru bloğunun sayfa sınırında bölünmesini engeller
         docContent.push({
             stack: qStack,
             unbreakable: true,
-            margin: [0, 0, 0, 8]
+            margin: [0, 0, 0, 6]
         });
     });
 
@@ -3141,7 +3149,7 @@ function openPrintPreview(triggerEl = null) {
             </div>
         </div>
         <div class="print-instructions">
-            <strong>Yönerge:</strong> Bu sınav MEB Senaryo 2 kazanım dağılımına uygun 7 açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.
+            <strong>Yönerge:</strong> Bu sınav MEB Senaryo 2 öğrenme çıktısı dağılımına uygun 7 açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.
         </div>
         <div class="print-questions-flow">
             ${qs.map((q, i) => {
@@ -3746,8 +3754,9 @@ export function prepareModuleEntry() {
     if (typeof localStorage !== 'undefined' && localStorage.getItem(STORAGE_KEY) !== lastSavedRaw) {
         loadStateFromStorage();
     }
-    const initialStep = state.hasSelectedScope ? 'choice' : 'scope';
-    state.currentStep = initialStep;
+    // Modüle yeni girişte DAİMA sınıf/yazılı/senaryo seçimi (scope) ekranı açılır.
+    state.currentStep = 'scope';
+    state.hasSelectedScope = false;
     setupPracticeNewMode = false;
     state.returnToSummary = false;
     state.reviewingEval = false;
@@ -3855,11 +3864,24 @@ export async function openExamView(options = {}) {
     }
 
     saveState();
-    // İlk kez gelen veya seçimini sıfırlayan kullanıcı önce kapsamı ('scope') görür.
-    // Kapsam seçimini yapmış kullanıcı doğrudan 2 seçenekli Hazırlık Ekranına ('choice') gelir.
-    const initialStep = state.hasSelectedScope ? 'choice' : 'scope';
-    if (options.route) restoreExamRoute(options.route);
-    else goToStep(initialStep, { replace: true });
+    if (options.entry) {
+        // Açık yeni giriş (ana sayfadan veya başka modülden): DAİMA scope ekranı açılır
+        state.currentStep = 'scope';
+        state.hasSelectedScope = false;
+        goToStep('scope', { replace: true });
+    } else if (options.intent === 'popstate' && options.route) {
+        // Tarayıcı geri / ileri geçmişi: gerçek rota adımı geri yüklenir
+        restoreExamRoute(options.route);
+    } else if (options.intent === 'reload' || (options.route && options.route.step === 'scope')) {
+        // Yenileme / soğuk açılış: sözleşme gereği scope ekranından başlar
+        state.currentStep = 'scope';
+        state.hasSelectedScope = false;
+        goToStep('scope', { replace: true });
+    } else if (options.route) {
+        restoreExamRoute(options.route);
+    } else {
+        goToStep('scope', { replace: true });
+    }
 }
 
 export function closeExamView() {
@@ -3867,7 +3889,8 @@ export function closeExamView() {
     stopAnimation();
     closePrintPreview();
     exitStudyFullscreen();
-    state.currentStep = state.hasSelectedScope ? 'choice' : 'scope';
+    state.currentStep = 'scope';
+    state.hasSelectedScope = false;
     setupPracticeNewMode = false;
     state.returnToSummary = false;
     state.reviewingEval = false;

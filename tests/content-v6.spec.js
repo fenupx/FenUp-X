@@ -191,6 +191,10 @@ test('4 Galeri Sorusu (2 Gerçek Fotoğraf), PDF ve Soru İnceleme', async ({ pa
             localStorage.setItem('fenupx_exam_pilot_v1', JSON.stringify(stateObj));
         }, gq);
         await page.reload();
+        await expect(page.locator('#exam-view-scope')).toBeVisible();
+        await page.locator('#btn-scope-continue').click();
+        await page.locator('#btn-resume-saved-work, #btn-resume-saved-attempt').first().click();
+        await expect(page.locator('#practice-active-box')).toBeVisible();
 
         const gallery = page.locator('.exam-qgallery');
         await expect(gallery).toBeVisible();

@@ -144,6 +144,8 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     await page.locator('#site-logo-link').click();
     await expect(page.locator('#scene-home')).toBeVisible();
     await page.locator('#btn-yazili-modulu').click();
+    await expect(page.locator('#exam-view-scope')).toBeVisible();
+    await page.locator('#btn-scope-continue').click();
     await expect(page.locator('#exam-view-choice')).toBeVisible();
     await expect(page.locator('#exam-view-study')).toBeHidden();
 
@@ -215,6 +217,8 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     await expect(page.locator('#scene-home')).toBeVisible();
 
     await page.locator('#btn-yazili-modulu').click();
+    await expect(page.locator('#exam-view-scope')).toBeVisible();
+    await page.locator('#btn-scope-continue').click();
     await expect(page.locator('#exam-view-choice')).toBeVisible();
     await expect(page.locator('#exam-view-practice')).toBeHidden();
 
@@ -236,6 +240,8 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     // (c) Tekrar çıkıp gir ve Yeni "Provaya Başla" -> "Başla" seç: yeni soru seti (0 tekrar) ve boş cevaplarla 1. sorudan başlamalı
     await page.locator('#site-logo-link').click();
     await page.locator('#btn-yazili-modulu').click();
+    await expect(page.locator('#exam-view-scope')).toBeVisible();
+    await page.locator('#btn-scope-continue').click();
     await expect(page.locator('#exam-view-choice')).toBeVisible();
     await page.locator('#btn-choice-go-practice').click();
     await page.locator('#exam-start-practice').click();
@@ -376,6 +382,8 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     }, { v6Ids });
 
     await page.locator('#btn-yazili-modulu').click();
+    await expect(page.locator('#exam-view-scope')).toBeVisible();
+    await page.locator('#btn-scope-continue').click();
     await expect(page.locator('#exam-view-choice')).toBeVisible();
     await expect(page.locator('#choice-study-count')).toContainText('34 bilgi kartı');
     await expect(page.locator('#choice-saved-work-card')).toBeVisible();
@@ -425,5 +433,151 @@ test.describe('Gezinme ve Kayıt / Devam Et Akışı Testleri', () => {
     await page.locator('#btn-choice-go-study').click();
     await expect(page.locator('#scene-yazili')).toHaveClass(/content-v6/);
     await expect(page.locator('.exam-card-title')).toHaveText(v6Data.cards[0].title);
+  });
+
+  test('Modüle Giriş Sözleşmesi: Kayıtlı adım choice/study/practice/eval/summary iken Ana Sayfa -> Yazılıya Hazırlık DAİMA scope açmalı', async ({ page }) => {
+    const steps = ['choice', 'study', 'practice', 'eval', 'summary'];
+
+    for (const step of steps) {
+      await page.goto('/');
+      // Mock oturum verisi hazırla
+      await page.evaluate((s) => {
+        const dummy = {
+          hasSelectedScope: true,
+          currentStep: s,
+          scope: { grade: '7', period: '1-1', scenario: 'senaryo2' },
+          attempt: {
+            routeKey: 'dummy-attempt-1',
+            contentRevision: '6.0.0',
+            ids: ['FB711-V6-E01', 'FB711-V6-E02', 'FB713-V6-E01', 'FB715-V6-E01', 'FB721-V6-E01', 'FB721-V6-E02', 'FB721-V6-E03'],
+            answers: {},
+            finished: s === 'summary',
+            status: s === 'summary' ? 'completed' : 'in_progress',
+            score: s === 'summary' ? 85 : 0
+          },
+          savedStudy: {
+            cardIndex: 5,
+            contentRevision: '6.0.0'
+          }
+        };
+        localStorage.setItem('fenupx_exam_pilot_v1', JSON.stringify(dummy));
+      }, step);
+
+      // Ana sayfadan açık kullanıcı seçimiyle Yazılı modülüne gir
+      await page.locator('#btn-yazili-modulu').click();
+
+      // DAİMA kapsam (scope) görünümü açılmalı
+      await expect(page.locator('#exam-view-scope')).toBeVisible();
+      await expect(page.locator('#exam-view-choice')).toBeHidden();
+      await expect(page.locator('#exam-view-study')).toBeHidden();
+      await expect(page.locator('#exam-view-practice')).toBeHidden();
+
+      // Kapsam ekranındaki tek dönüş düğmesi "← Ana Sayfa" olmalı ve tıklandığında ana sayfaya dönmeli
+      const backHome = page.locator('#btn-exam-step-back');
+      await expect(backHome).toBeVisible();
+      await expect(backHome).toHaveText('← Ana Sayfa');
+      await backHome.click();
+      await expect(page.locator('#scene-home')).toBeVisible();
+    }
+  });
+
+  test('Diğer Modüllerden Giriş ve İki Defa Çık/Gir Senaryosu DAİMA scope açmalı', async ({ page }) => {
+    await page.goto('/');
+
+    // 1. Sanal Laboratuvar modülüne gir
+    await page.locator('#btn-deney-modulu').click();
+    await expect(page.locator('#lab-catalog-view')).toBeVisible();
+
+    // Laboratuvardan Ana Sayfaya dön ve Yazılıya Hazırlık aç
+    await page.locator('#btn-lab-back-home').click();
+    await expect(page.locator('#scene-home')).toBeVisible();
+
+    await page.locator('#btn-yazili-modulu').click();
+    await expect(page.locator('#exam-view-scope')).toBeVisible();
+
+    // Kapsamda Devam Et -> Tercih -> Ders Çalış
+    await page.locator('#btn-scope-continue').click();
+    await expect(page.locator('#exam-view-choice')).toBeVisible();
+    await page.locator('#btn-choice-go-study').click();
+    await expect(page.locator('#exam-view-study')).toBeVisible();
+
+    // Dersten tercihe dön, tercihten kapsama dön, kapsamdan ana sayfaya çık
+    await page.locator('#btn-study-back-choice').click();
+    await expect(page.locator('#exam-view-choice')).toBeVisible();
+    await page.locator('#btn-exam-step-back').click();
+    await expect(page.locator('#exam-view-scope')).toBeVisible();
+    await page.locator('#btn-exam-step-back').click();
+    await expect(page.locator('#scene-home')).toBeVisible();
+
+    // İkinci kez Yazılıya Hazırlık modülüne girildiğinde DAİMA scope ekranı açılmalı
+    await page.locator('#btn-yazili-modulu').click();
+    await expect(page.locator('#exam-view-scope')).toBeVisible();
+    await expect(page.locator('#exam-view-choice')).toBeHidden();
+    await expect(page.locator('#exam-view-study')).toBeHidden();
+  });
+
+  test('Yenileme (Reload) ve Soğuk Açılışta Scope Ekranından Başlamalı, Veri Korunmalı', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('#btn-yazili-modulu').click();
+    await page.locator('#btn-scope-continue').click();
+    await page.locator('#btn-choice-go-practice').click();
+    await page.locator('#exam-start-practice').click();
+
+    // Soruya özel cevap yaz
+    const ansText = 'Reload test bilimsel cevabı: Kütleçekim potansiyel enerjisi yüksekliğe bağlıdır.';
+    await page.locator('#practice-text-ans').fill(ansText);
+
+    // Sayfayı yenile (F5 / reload)
+    await page.reload();
+
+    // Sözleşme gereği sayfa yenilendiğinde scope ekranından başlar
+    await expect(page.locator('#exam-view-scope')).toBeVisible();
+    await expect(page.locator('#exam-view-practice')).toBeHidden();
+
+    // Ancak kayıtlı çalışma verisi localStorage içinde korunmuştur
+    await page.locator('#btn-scope-continue').click();
+    await expect(page.locator('#exam-view-choice')).toBeVisible();
+
+    const resumeBtn = page.locator('#btn-resume-saved-work');
+    await expect(resumeBtn).toBeVisible();
+    await resumeBtn.click();
+
+    // Provaya dönüldüğünde yazılan cevap aynen korunmalıdır
+    await expect(page.locator('#practice-active-box')).toBeVisible();
+    await expect(page.locator('#practice-text-ans')).toHaveValue(ansText);
+  });
+
+  test('Ders ve Tercih Ekranlarında Tek Dönüş Düğmesi ve Doğru Adlandırma Sözleşmesi', async ({ page }) => {
+    await page.goto('/');
+    await page.locator('#btn-yazili-modulu').click();
+
+    // 1. Kapsam Ekranı
+    await expect(page.locator('#exam-view-scope')).toBeVisible();
+    const backScope = page.locator('#btn-exam-step-back');
+    await expect(backScope).toBeVisible();
+    await expect(backScope).toHaveText('← Ana Sayfa');
+
+    // 2. Tercih Ekranı
+    await page.locator('#btn-scope-continue').click();
+    await expect(page.locator('#exam-view-choice')).toBeVisible();
+    const backChoice = page.locator('#btn-exam-step-back');
+    await expect(backChoice).toBeVisible();
+    await expect(backChoice).toHaveText('← Senaryo Seçimi');
+
+    // 3. Ders Çalışma Ekranı
+    await page.locator('#btn-choice-go-study').click();
+    await expect(page.locator('#exam-view-study')).toBeVisible();
+
+    // Ders ekranında YALNIZCA BİR dönüş düğmesi görünür olmalı
+    const visibleStudyBacks = await page.locator('#scene-yazili button:visible').filter({ hasText: /Çalışma Seçimi|Çalışma Özeti/ }).count();
+    expect(visibleStudyBacks).toBe(1);
+
+    const studyBackBtn = page.locator('#btn-study-back-choice');
+    await expect(studyBackBtn).toBeVisible();
+    await expect(studyBackBtn).toContainText('Çalışma Seçimi');
+
+    // Dersten dönüş tercih ekranına dönmeli
+    await studyBackBtn.click();
+    await expect(page.locator('#exam-view-choice')).toBeVisible();
   });
 });

@@ -491,7 +491,7 @@ const navigation = (() => {
             if (route.scene === 'scene-home') returnToHome();
             else {
                 showScene(route.scene);
-                if (route.scene === 'scene-yazili') await window.FenUpExam?.openExamView({ route });
+                if (route.scene === 'scene-yazili') await window.FenUpExam?.openExamView({ route, intent: route.intent || 'popstate' });
                 if (route.scene === 'lab-view') window.FenUpLab?.openLabView();
             }
         } finally {
@@ -512,7 +512,11 @@ const navigation = (() => {
     window.addEventListener('popstate', e => {
         const saved = e.state?.fenupx;
         index = saved?.v === 1 ? safeIndex(saved.index) : 0;
-        apply(saved?.v === 1 ? saved.route : readURL());
+        const route = saved?.v === 1 ? saved.route : readURL();
+        if (route && route.scene === 'scene-yazili') {
+            route.intent = 'popstate';
+        }
+        apply(route);
     });
     window.addEventListener('hashchange', () => {
         if (location.hash !== url(history.state?.fenupx?.route || {})) apply(readURL());
@@ -520,10 +524,19 @@ const navigation = (() => {
     window.addEventListener('load', () => {
         history.scrollRestoration = 'manual';
         const saved = history.state?.fenupx;
-        const route = saved?.v === 1 ? saved.route : readURL();
+        let route = saved?.v === 1 ? saved.route : readURL();
+        if (route?.scene === 'scene-yazili') {
+            // Soğuk açılış / yenileme: Modül sözleşmesi gereği daima scope ekranından başla
+            route = { scene: 'scene-yazili', step: 'scope', intent: 'reload' };
+        }
         entries.set(index, route);
         apply(route);
     }, { once: true });
+    window.addEventListener('pageshow', e => {
+        if (e.persisted) {
+            cleanLayers();
+        }
+    });
     return { record, backTo, get replaying() { return replaying; } };
 })();
 window.FenUpNavigation = navigation;
@@ -531,7 +544,7 @@ window.FenUpNavigation = navigation;
 function switchScene(from, to) {
     closeMobileMenu();
     if(!from || !to) return;
-    if (from.id === 'scene-yazili' && window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
+    if (from.id === 'scene-yazili' && to.id !== 'scene-yazili' && window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
         window.FenUpExam.closeExamView();
     }
     from.classList.add('is-hidden');
@@ -748,7 +761,7 @@ if(btnYaziliModulu) btnYaziliModulu.onclick = () => {
         }
         switchScene(scenes.home, sceneYazili);
         if (window.FenUpExam && typeof window.FenUpExam.openExamView === "function") {
-            window.FenUpExam.openExamView();
+            window.FenUpExam.openExamView({ entry: true });
         }
     }
 };

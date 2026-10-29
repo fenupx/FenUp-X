@@ -105,8 +105,9 @@ test('Mantıksal geri hedefleri ve seçim geçmişi', async ({ page }) => {
   await page.locator('#btn-exam-step-back').click();
   await expect(page.locator('#exam-view-choice')).toBeVisible();
   await page.locator('#btn-choice-go-study').click();
-  await expect(page.locator('#btn-exam-step-back')).toHaveText('← Çalışma Seçimi');
-  await page.locator('#btn-exam-step-back').click();
+  const backStudy = page.locator('#btn-study-back-choice');
+  await expect(backStudy).toBeVisible();
+  await backStudy.click();
   await expect(page.locator('#exam-view-choice')).toBeVisible();
   await page.locator('#btn-exam-step-back').click();
   await expect(page.locator('#exam-view-scope')).toBeVisible();
@@ -133,13 +134,14 @@ test('Ölçütler, özet ve tekrar kartları geri/ileri korunur', async ({ page 
   await page.locator('#btn-eval-to-summary').click();
   const result = await page.evaluate(() => JSON.parse(localStorage.getItem('fenupx_exam_pilot_v1')).attempt);
   await page.locator('#btn-summary-study-missed').click();
-  await expect(page.locator('#btn-exam-step-back')).toHaveText('← Çalışma Özeti');
+  const returnSummaryBtn = page.locator('#btn-study-back-choice');
+  await expect(returnSummaryBtn).toBeVisible();
   await page.goBack();
   await expect(page.locator('#exam-view-summary')).toBeVisible();
   expect(await page.evaluate(() => JSON.parse(localStorage.getItem('fenupx_exam_pilot_v1')).attempt.score)).toBe(result.score);
   await page.goForward();
   await expect(page.locator('#exam-view-study')).toBeVisible();
-  await page.locator('#btn-exam-step-back').click();
+  await returnSummaryBtn.click();
   await expect(page.locator('#exam-view-summary')).toBeVisible();
   await page.goBack();
   await expect(page.locator('#exam-view-eval')).toBeVisible();
@@ -169,6 +171,10 @@ test('Yeni prova eski geçmişten veri almaz ve yenileme yeni set üretmez', asy
   await page.goForward();
   await expect(page.locator('#practice-text-ans')).toHaveValue('Yeni cevap');
   await page.reload();
+  await expect(page.locator('#exam-view-scope')).toBeVisible();
+  await page.locator('#btn-scope-continue').click();
+  await expect(page.locator('#exam-view-choice')).toBeVisible();
+  await page.locator('#btn-resume-saved-work, #btn-resume-saved-attempt').first().click();
   await expect(page.locator('#practice-text-ans')).toHaveValue('Yeni cevap');
   await page.evaluate(old => {
     history.pushState({ fenupx: { v: 1, index: 99, route: old } }, '', '#scene-yazili/practice/free');

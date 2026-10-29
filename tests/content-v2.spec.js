@@ -50,6 +50,8 @@ test.describe('Eski İçerik Temizliği ve V6 İdempotent Göç (Migration)', ()
 
       await page.goto('/');
       await page.locator('#btn-yazili-modulu').click();
+      await expect(page.locator('#exam-view-scope')).toBeVisible();
+      await page.locator('#btn-scope-continue').click();
 
       // Seçim ekranı açılmalı ve idempotent göç bildirimi görünmeli
       await expect(page.locator('#exam-view-choice')).toBeVisible();
@@ -65,6 +67,8 @@ test.describe('Eski İçerik Temizliği ve V6 İdempotent Göç (Migration)', ()
 
       // Sayfa yenilendiğinde göç bildirimi idempotent olmalı (tekrar gösterilmemeli)
       await page.reload();
+      await expect(page.locator('#exam-view-scope')).toBeVisible();
+      await page.locator('#btn-scope-continue').click();
       await expect(page.locator('#exam-view-choice')).toBeVisible();
       await expect(notice).not.toBeVisible();
 

@@ -4316,6 +4316,9 @@ body:has(#scene-yazili.study-active) .cookie-banner {
 #btn-practice-back-choice, #btn-eval-back-choice {
     display: none !important; pointer-events: none !important;
 }
+#scene-yazili.study-active .exam-back-navigation {
+    display: none !important; pointer-events: none !important;
+}
 #scene-yazili { min-width: 0; }
 #scene-yazili .summary-analysis-card,
 #scene-yazili .exam-summary-analysis-grid,
@@ -4528,18 +4531,45 @@ body:has(#scene-yazili.study-active) .cookie-banner {
         flex: 0 0 auto !important;
         width: auto !important;
         max-width: none !important;
-        min-height: 44px !important;
-        padding: 6px 12px !important;
-        font-size: 0.85rem !important;
+        min-height: 48px !important;
+        padding: 8px 12px !important;
+        font-size: 0.88rem !important;
+        touch-action: manipulation !important;
     }
     .exam-study-toolbar .btn-icon-only,
     #btn-study-fullscreen.btn-icon-only {
-        width: 44px !important;
-        min-width: 44px !important;
-        height: 44px !important;
-        min-height: 44px !important;
+        width: 48px !important;
+        min-width: 48px !important;
+        height: 48px !important;
+        min-height: 48px !important;
         padding: 0 !important;
+        touch-action: manipulation !important;
     }
+}
+
+.study-meta-left {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-right: 8px;
+    flex-wrap: wrap;
+}
+.outcome-pill-code {
+    background: rgba(45, 212, 191, 0.15);
+    color: #2dd4bf;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    border: 1px solid rgba(45, 212, 191, 0.3);
+}
+.study-counter-topic {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 /* 3. V6 Konu Kartı Renderer Alanları (Topics, Facts, Chain, Wide-Table, Dark Theme) */

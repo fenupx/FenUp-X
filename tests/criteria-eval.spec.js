@@ -158,11 +158,10 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
     // Öz değerlendirme başlığı
     await expect(page.locator('.summary-score-badge .score-label')).toHaveText('Öz Değerlendirme Puanın');
 
-    // Yenileme mevcut özet rotasını ve tamamlanmış sonucu korur.
+    // Yenileme sözleşmesi: reload scope ekranından başlar, kayıt korunur
     await page.reload();
-    await expect(page.locator('#exam-view-summary')).toBeVisible();
-    await page.locator('#btn-exam-step-back').click();
-    // Çalışma seçimine dönerek kayıtlı provaya tekrar devam et
+    await expect(page.locator('#exam-view-scope')).toBeVisible();
+    await page.locator('#btn-scope-continue').click();
     await expect(page.locator('#exam-view-choice')).toBeVisible();
     // Kayıtlı tamamlanmış provanın özetine dön
     await page.evaluate(() => window.FenUpExam.goToStep('summary'));
@@ -227,11 +226,12 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
     // Ders ekranı açılmalı (#exam-view-study)
     await expect(page.locator('#exam-view-study')).toBeVisible();
 
-    // Üstte "Çalışma Özetime Dön" butonu yer almalı
-    const btnReturnSummary = page.locator('#btn-study-return-summary');
+    // Üstte tek dönüş butonu ("Çalışma Özeti") yer almalı
+    const btnReturnSummary = page.locator('#btn-study-back-choice');
     await expect(btnReturnSummary).toBeVisible();
+    await expect(btnReturnSummary).toContainText('Çalışma Özeti');
 
-    // "Çalışma Özetime Dön" butonuna tıkla
+    // "Çalışma Özeti" butonuna tıkla
     await btnReturnSummary.click();
 
     // Tekrar aynı özet ekranına dönülmeli
@@ -286,8 +286,10 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
 
     await page.reload();
 
-    // Yazılı modülünü aç
+    // Yazılı modülünü aç: Sözleşme gereği daima scope açılır, Devam Et ile choice'a geçilir
     await page.locator('#btn-yazili-modulu').click();
+    await expect(page.locator('#exam-view-scope')).toBeVisible();
+    await page.locator('#btn-scope-continue').click();
 
     // Tercih ekranındayız (#exam-view-choice), kayıtlı çalışma kartından özete geç
     await expect(page.locator('#exam-view-choice')).toBeVisible();
@@ -413,6 +415,8 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
 
     await page.reload();
     await page.locator('#btn-yazili-modulu').click();
+    await expect(page.locator('#exam-view-scope')).toBeVisible();
+    await page.locator('#btn-scope-continue').click();
     await expect(page.locator('#exam-view-choice')).toBeVisible();
     await page.evaluate(() => window.FenUpExam.goToStep('summary'));
     await expect(page.locator('#exam-view-summary')).toBeVisible();
@@ -513,6 +517,8 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
 
     await page.reload();
     await page.locator('#btn-yazili-modulu').click();
+    await expect(page.locator('#exam-view-scope')).toBeVisible();
+    await page.locator('#btn-scope-continue').click();
     await expect(page.locator('#exam-view-choice')).toBeVisible();
     await page.evaluate(() => window.FenUpExam.goToStep('summary'));
     await expect(page.locator('#exam-view-summary')).toBeVisible();
