@@ -8,7 +8,8 @@
 
 'use strict';
 
-const CONTENT_REVISION = '2.0.0';
+const CONTENT_REVISION = '3.0.0';
+const CONTENT_PATHS = { '1': 'data/exam/', '2.0.0': 'data/exam/content-v2/', '3.0.0': 'data/exam/content-v3/' };
 let ASSET_BASE = 'data/exam/';
 let loadedRevision = null;
 const dataVersions = new Map();
@@ -162,6 +163,20 @@ function sourcesHtml(refs) {
         const s = DATA.sources.find(src => src.id === id);
         return s ? `<a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(id)}</a>` : '';
     }).filter(Boolean).join(' ');
+}
+
+function cardTableHtml(table) {
+    return `<div class="exam-tablewrap"><table class="exam-table"><caption>${esc(table.caption)}</caption><thead><tr>${table.headers.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${table.rows.map(row => `<tr>${row.map(cell => `<td>${esc(cell)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+
+// Tek kaynak kataloğu; fotoğraf ve illüstrasyon ayrımı korunur.
+function visualCreditHtml(visual) {
+    if (!visual?.asset || !DATA?.visualCredits) return '';
+    const credit = DATA.visualCredits[visual.credit_ref] || Object.values(DATA.visualCredits).find(c => visual.asset === 'assets/' + c.asset);
+    if (!credit) return '';
+    const nature = { photograph: 'Fotoğraf', observational_image: 'Gözlem görüntüsü', ai_generated_educational_illustration: 'Ders illüstrasyonu (ImageGen)' }[credit.nature] || 'Görsel';
+    const source = /^https:\/\//.test(credit.source || '') ? `<a href="${esc(credit.source)}" target="_blank" rel="noopener noreferrer">Özgün kaynak</a>` : esc(credit.source);
+    return `<details class="exam-visual-credit"><summary>Görsel kaynakları</summary><p>${esc(nature)} · ${esc(credit.credit)}</p><p>${source}</p>${credit.description ? `<p>${esc(credit.description)}</p>` : ''}${credit.use ? `<p>${esc(credit.use)}</p>` : ''}</details>`;
 }
 
 // --- 5'İN KATLARIYLA 100 PUAN DAĞITIMI VE ÖLÇÜT TEMELLİ DEĞERLENDİRME YAPILANDIRMASI ---
@@ -367,11 +382,18 @@ function formatScore(score) {
 async function loadData(revision = state.attempt?.contentRevision || CONTENT_REVISION, showError = true) {
     if (DATA && loadedRevision === revision) return true;
     try {
-        const base = revision === CONTENT_REVISION ? 'data/exam/content-v2/' : 'data/exam/';
+        const base = CONTENT_PATHS[revision];
+        if (!base) throw new Error(`Bilinmeyen içerik sürümü: ${revision}`);
         if (!dataVersions.has(revision)) {
             dataVersions.set(revision, fetch(base + 'pilot_7_senaryo2.json').then(async res => {
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                return res.json();
+                const data = await res.json();
+                if (revision === '3.0.0') {
+                    const credits = await fetch(base + 'GORSEL_KAYNAKLARI.json');
+                    if (!credits.ok) throw new Error(`Görsel kaynakları HTTP ${credits.status}`);
+                    data.visualCredits = await credits.json();
+                }
+                return data;
             }));
         }
         const incoming = await dataVersions.get(revision);
@@ -379,7 +401,10 @@ async function loadData(revision = state.attempt?.contentRevision || CONTENT_REV
         ASSET_BASE = base;
         loadedRevision = revision;
         const contentScene = $('scene-yazili');
-        if (contentScene) contentScene.classList.toggle('content-v2', revision === CONTENT_REVISION);
+        if (contentScene) {
+            contentScene.classList.toggle('content-v2', revision !== '1');
+            contentScene.classList.toggle('content-v3', revision === '3.0.0');
+        }
         CARDS = DATA.cards || [];
         QUESTIONS = DATA.questions || [];
         profiles = DATA.selection_policy?.scenario_profiles || {};
@@ -885,25 +910,28 @@ function renderStudy(cardIndex) {
                     ${outcome ? `
                         <details class="study-outcome-expandable">
                             <summary><i class="fas fa-info-circle"></i> MEB Kazanımı: <span>${esc(outcome.short_title || outcome.id)}</span> <span class="study-outcome-expand-hint">(Detay)</span></summary>
-                            <p class="study-outcome-full-desc">${esc(outcome.title)}</p>
+                            <p class="study-outcome-full-desc">${esc(outcome.title)}${c.book_section ? `<br>Kitap başlığı: ${esc(c.book_section)}` : ''}</p>
                         </details>
                     ` : ''}
-                    ${loadedRevision === CONTENT_REVISION ? `<details class="exam-card-notes"><summary>Hatırlatmalar</summary><div class="exam-takeaway"><strong>📌 Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>
+                    ${visualCreditHtml(c.visual)}
+                    ${loadedRevision === '2.0.0' ? `<details class="exam-card-notes"><summary>Hatırlatmalar</summary><div class="exam-takeaway"><strong>📌 Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>
                         ${c.misconception ? `<p class="exam-warning"><strong>⚠️ Karıştırma:</strong> ${esc(c.misconception)}</p>` : ''}</details>` : ''}
                 </div>
 
                 <h2 class="exam-card-title">${esc(c.title)}</h2>
 
-                <div class="exam-contentgrid">
+                <div class="exam-contentgrid ${!c.visual && !c.table ? 'exam-text-only' : ''}">
                     <div class="study-text-column">
                         <p class="exam-lead">${esc(c.lead)}</p>
                         ${(c.body || []).map(p => `<p class="exam-body-p">${esc(p)}</p>`).join('')}
-                        ${loadedRevision !== CONTENT_REVISION ? `<div class="exam-takeaway"><strong>📌 Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>
+                        ${loadedRevision === '1' ? `<div class="exam-takeaway"><strong>📌 Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>
                         ${c.misconception ? `<p class="exam-warning"><strong>⚠️ Karıştırma:</strong> ${esc(c.misconception)}</p>` : ''}` : ''}
                     </div>
-                    <div class="exam-visualbox" id="exam-visual">
+                    <div class="exam-visualbox ${!c.visual && !c.table ? 'is-hidden' : ''}" id="exam-visual">
                         ${visualAssetPath ? `<img src="${esc(visualAssetPath)}" alt="${esc(c.visual?.alt || '')}">` : ''}
-                        <p class="exam-caption">Şematik öğretim modeli; ölçekli değildir.</p>
+                        ${c.table ? cardTableHtml(c.table) : ''}
+                        ${c.visual?.caption || loadedRevision !== '3.0.0' ? `<p class="exam-caption">${esc(c.visual?.caption || 'Şematik öğretim modeli; ölçekli değildir.')}</p>` : ''}
+
                     </div>
                 </div>
 
@@ -1521,7 +1549,7 @@ async function startNewPractice() {
     const previousRevision = loadedRevision;
     try {
         if (!await loadData(CONTENT_REVISION, false)) throw new Error('Yeni içerik yüklenemedi.');
-        if (state.currentStep !== 'practice' || !setupPracticeNewMode || $('scene-yazili')?.classList.contains('is-hidden')) {
+        if (state.currentStep !== 'practice' || (!setupPracticeNewMode && state.attempt) || $('scene-yazili')?.classList.contains('is-hidden')) {
             if (previousRevision) await loadData(previousRevision);
             return;
         }
@@ -2259,8 +2287,10 @@ function imageToDataUrl(src, maxWidth = 480, maxHeight = 360) {
     return new Promise((resolve) => {
         if (!src || typeof document === 'undefined') return resolve(null);
         const img = new Image();
+        const timeout = setTimeout(() => { img.onload = img.onerror = null; resolve(null); }, 15000);
         img.crossOrigin = 'anonymous';
         img.onload = () => {
+            clearTimeout(timeout);
             try {
                 let w = img.naturalWidth || 400;
                 let h = img.naturalHeight || 300;
@@ -2280,12 +2310,13 @@ function imageToDataUrl(src, maxWidth = 480, maxHeight = 360) {
                 resolve(null);
             }
         };
-        img.onerror = () => resolve(null);
+        img.onerror = () => { clearTimeout(timeout); resolve(null); };
         img.src = src;
     });
 }
 
 async function generateExamPdfBlob(questions, attempt) {
+    const assetBase = ASSET_BASE;
     const pdfMake = await loadPdfMake();
     const pointsMap = attempt.questionPoints || calculateQuestionPoints(questions, SCORING_POLICY.targetTotal);
 
@@ -2297,7 +2328,7 @@ async function generateExamPdfBlob(questions, attempt) {
     const visualPromises = questions.map(async q => {
         if (q.visual?.asset) {
             try {
-                return await imageToDataUrl(ASSET_BASE + q.visual.asset, 260, 180);
+                return await imageToDataUrl(assetBase + q.visual.asset, 260, 180);
             } catch (_) {
                 return null;
             }
@@ -2305,6 +2336,11 @@ async function generateExamPdfBlob(questions, attempt) {
         return null;
     });
     const visuals = await Promise.all(visualPromises);
+    if (questions.some((q, i) => q.visual?.asset && !visuals[i])) {
+        const error = new Error('Soru görseli yüklenemedi; eksik PDF oluşturulmadı.');
+        error.code = 'EXAM_IMAGE_LOAD';
+        throw error;
+    }
 
     const docContent = [];
 
@@ -2516,9 +2552,14 @@ async function downloadExamPdf(btnDownload = null) {
         document.body.removeChild(a);
         setTimeout(() => URL.revokeObjectURL(url), 2000);
     } catch (err) {
-        console.warn('pdfMake PDF oluşturma hatası, yazdırma penceresine yönlendiriliyor:', err);
+        console.warn('PDF oluşturulamadı:', err);
+        if (err.code === 'EXAM_IMAGE_LOAD') {
+            alert('Bir soru görseli yüklenemediği için eksik PDF indirilmedi. Bağlantını kontrol edip tekrar deneyebilirsin; cevapların korundu.');
+            return;
+        }
         alert("Doğrudan PDF indirme bu tarayıcıda tamamlanamadı. Açılacak yazdırma penceresinden 'PDF Olarak Kaydet' seçeneğini kullanabilirsiniz.");
-        window.print();
+        const images = [...document.querySelectorAll('#exam-print-sheet img')];
+        if (images.every(img => img.complete && img.naturalWidth > 0)) window.print();
     } finally {
         if (btnDownload) {
             btnDownload.disabled = false;

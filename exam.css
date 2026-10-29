@@ -4257,3 +4257,31 @@ body:has(#scene-yazili.study-active) .cookie-banner {
 @media (orientation: landscape) and (max-height: 520px) and (min-width: 650px) {
     #scene-yazili.content-v2 .exam-visualbox img { max-height: 140px !important; object-fit: contain; }
 }
+
+/* V3: özgün oranlar, kaynak bilgisi ve görsel yerine gelen kart tabloları. */
+#scene-yazili.content-v3 .exam-visualbox,
+#scene-yazili.content-v3 .exam-visual-credit,
+#scene-yazili.content-v3 .exam-tablewrap { min-width: 0; max-width: 100%; box-sizing: border-box; overflow-wrap: anywhere; }
+#scene-yazili.content-v3 .exam-visualbox img { object-fit: contain; max-height: 220px; border-radius: 0; }
+#scene-yazili.content-v3 .exam-visualbox { padding: 10px; }
+#scene-yazili.content-v3 #exam-visual .exam-tablewrap { width: 100%; margin: 0; }
+#scene-yazili.content-v3 #exam-visual .exam-table { table-layout: fixed; }
+#scene-yazili.content-v3 #exam-visual .exam-table td,
+#scene-yazili.content-v3 #exam-visual .exam-table th { padding: 4px 8px; }
+#scene-yazili.content-v3 #exam-visual .exam-table caption { padding: 6px 8px; }
+#scene-yazili.content-v3 .exam-visual-credit summary { min-width: 48px; min-height: 48px; display: flex; align-items: center; cursor: pointer; touch-action: manipulation; }
+#scene-yazili.content-v3 .exam-visual-credit p { margin: 6px 0; }
+#scene-yazili.content-v3 .exam-visual-credit a { color: #99f6e4; min-height: 48px; display: inline-flex; align-items: center; touch-action: manipulation; }
+@media (max-width: 768px) {
+    #scene-yazili.content-v3 .exam-visual-credit { width: 100%; }
+}
+@media (orientation: landscape) and (max-height: 520px) and (min-width: 650px) {
+    #scene-yazili.content-v3 .exam-visual-credit { width: auto; }
+    #scene-yazili.content-v3 .exam-visualbox img { max-height: 140px !important; }
+}
+
+#scene-yazili.content-v3 .exam-contentgrid.exam-text-only { grid-template-columns: minmax(0,1fr) !important; }
+@media (orientation: landscape) and (max-height: 520px) and (min-width: 650px) {
+    #scene-yazili.content-v3 .study-card-top-meta { flex-wrap: nowrap; }
+    #scene-yazili.content-v3 .exam-contentgrid { grid-template-columns: minmax(0,1.1fr) minmax(0,1fr) !important; }
+}
