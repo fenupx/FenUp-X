@@ -198,8 +198,9 @@ test('4 Galeri Sorusu (2 Gerçek Fotoğraf), PDF ve Soru İnceleme', async ({ pa
         await expect(imgs).toHaveCount(2);
 
         // Her iki görsel de decode edilmiş olmalı
-        const decoded = await imgs.evaluateAll(list => list.every(img => img.complete && img.naturalWidth > 0));
-        expect(decoded).toBe(true);
+        await expect.poll(async () => {
+            return imgs.evaluateAll(list => list.every(img => img.complete && img.naturalWidth > 0));
+        }).toBe(true);
 
         const caps = gallery.locator('figure figcaption');
         await expect(caps).toHaveCount(2);
