@@ -885,7 +885,7 @@ let labCurriculumMapCache = null;
 async function loadLabCurriculumMap() {
     if (labCurriculumMapCache) return labCurriculumMapCache;
     try {
-        const res = await fetch('data/lab/lab-curriculum-map.json?v=2026102910');
+        const res = await fetch('data/lab/lab-curriculum-map.json?v=2026102911');
         if (!res.ok) return null;
         const data = await res.json();
         const normalized = {};
@@ -13814,6 +13814,7 @@ function setElectroMode(mode) {
 
     // Diğer modların eski yüklerini ve artıklarını temizle
     if (isFriction) {
+        setFrictionPair(labState.electro.friction.pair || "ebonite");
         neutralizeElectro();
     } else if (isConduction) {
         setConductionPreset("pos6_zero");
@@ -14032,6 +14033,7 @@ function initPaperBits() {
 
 function initElectroState() {
     initPaperBits();
+    setFrictionPair(labState.electro.friction.pair || "ebonite");
     setElectroMode(labState.electro.mode || "friction");
     updateElectroMetricsDOM();
     updateElectroPedagogicalBox();
@@ -14062,16 +14064,16 @@ function updateElectroPedagogicalBox() {
             if (isEbonite) {
                 pIcon.innerHTML = '<i class="fas fa-bolt"></i>';
                 pTitle.textContent = `⚡ Ebonit Çubuk (-) Yüklendi! (Net: -${Math.abs(rodNet)}e)`;
-                pText.textContent = "Yün kumaştan ebonit çubuğa elektron (e⁻) aktarıldı. Çubuk e⁻ alarak negatif (-), yün kumaş e⁻ vererek pozitif (+) yüklendi. Pozitif protonlar çekirdekte sabit kaldı!";
+                pText.textContent = "Yün kumaştan ebonit çubuğa elektron (e⁻) aktarıldı. Çubuk e⁻ alarak negatif (-), yün kumaş e⁻ vererek pozitif (+) yüklendi. Çekirdekteki protonlar bu sürtünmede sabit kaldı!";
             } else {
                 pIcon.innerHTML = '<i class="fas fa-sparkles"></i>';
                 pTitle.textContent = `✨ Cam Çubuk (+) Yüklendi! (Net: +${rodNet}e)`;
-                pText.textContent = "Cam çubuktan ipek kumaşa elektron (e⁻) aktarıldı. Cam çubuk e⁻ kaybederek pozitif (+), ipek kumaş e⁻ kazanarak negatif (-) yüklendi. Sadece elektronlar hareket etti!";
+                pText.textContent = "Cam çubuktan ipek kumaşa elektron (e⁻) aktarıldı. Cam çubuk e⁻ kaybederek pozitif (+), ipek kumaş e⁻ kazanarak negatif (-) yüklendi. Çekirdekteki protonlar bu sürtünmede sabit kaldı!";
             }
         } else {
             pIcon.innerHTML = '<i class="fas fa-hand-sparkles"></i>';
-            pTitle.textContent = "⚡ Kritik Kural: Yalnızca Elektronlar Hareket Eder!";
-            pText.textContent = "Maddeler başlangıçta nötrdür (proton ve elektron sayıları eşittir). Kumaşı parmağınızla/fareyle çubuğun üzerine sürterek elektriklenmeyi başlatın!";
+            pTitle.textContent = "⚡ Bilimsel Kural: Yalnızca Elektronlar Aktarılır";
+            pText.textContent = "Katı cisimler arasındaki sürtünmeyle elektriklenmede atom çekirdeğindeki pozitif protonlar aktarılmaz; yalnızca elektronlar hareket eder ve aktarılır. Maddeler başlangıçta nötrdür; kumaşı çubuğa sürterek elektriklenmeyi başlatın!";
         }
     } else if (el.mode === "conduction") {
         const c = el.conduction;

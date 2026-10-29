@@ -772,8 +772,9 @@ if(btnModeBireysel) btnModeBireysel.onclick = () => {
 const btnModeTurnuva = document.getElementById('btn-mode-turnuva');
 if(btnModeTurnuva) btnModeTurnuva.onclick = () => { activeMode = "turnuva"; initTournamentLobby(); switchScene(scenes.crossroads, scenes.tournamentLobby); };
 
-document.querySelectorAll('.btn-back-home').forEach(btn => {
+document.querySelectorAll('.btn-back-home:not(#btn-exam-step-back)').forEach(btn => {
     btn.addEventListener('click', e => {
+        if (e.target.closest('#btn-exam-step-back')) return;
         e.stopImmediatePropagation();
         returnToHome();
     }, true);

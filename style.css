@@ -1391,6 +1391,14 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     transform: translateX(-3px);
 }
 
+.back-link.btn-back-home {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    align-self: flex-start !important;
+    margin-bottom: 16px !important;
+}
+
 /* Katalog Başlığı */
 .lab-nav-header {
     display: flex;
@@ -3258,8 +3266,9 @@ body > .scene { flex-shrink: 0; }
 }
 
 /* Odaklı çalışma ekranlarında (ders ekranı ve deney simülasyon tezgahı) footer gizlenir; diğer adımlarda ve ana sayfada masaüstünde görünür */
-body:has(#exam-view-study:not(.is-hidden)) #main-footer,
-body:has(#lab-workspace-view:not(.is-hidden)) #main-footer {
+body:has(#scene-yazili:not(.is-hidden).study-active) #main-footer,
+body:has(#scene-yazili:not(.is-hidden) #exam-view-study:not(.is-hidden):not([style*="display: none"])) #main-footer,
+body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([style*="display: none"])) #main-footer {
     display: none !important;
 }
 

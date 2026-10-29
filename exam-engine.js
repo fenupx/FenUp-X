@@ -758,7 +758,7 @@ function updateBackControls() {
         if (step === 'scope') {
             button.classList.add('scope-back-home', 'btn-back-home', 'btn-lab-nav-home');
         } else {
-            button.classList.remove('scope-back-home', 'btn-back-home');
+            button.classList.remove('scope-back-home', 'btn-back-home', 'btn-lab-nav-home');
         }
         button.onclick = () => {
             if (step === 'scope') window.returnToHome?.();

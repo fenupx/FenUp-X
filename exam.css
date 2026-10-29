@@ -1149,7 +1149,7 @@ body:has(#scene-yazili:not(.is-hidden)) {
 }
 
 /* Tam Ekran Çalışma Modu (Ders Kitabı Modu) */
-#exam-view-study.fullscreen-study-active {
+#exam-view-study.fullscreen-study-active:not(.is-hidden) {
     position: fixed !important;
     inset: 0 !important;
     width: 100vw !important;
@@ -1162,6 +1162,24 @@ body:has(#scene-yazili:not(.is-hidden)) {
     box-sizing: border-box !important;
     display: flex !important;
     flex-direction: column !important;
+}
+
+/* Gizli adımlar ve sahneler için kesin sıfır-boyut zırhı */
+#scene-yazili.is-hidden #exam-view-study,
+#exam-view-study.is-hidden,
+.exam-step-view.is-hidden {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
 }
 
 #exam-view-study.fullscreen-study-active .exam-study-toolbar {
@@ -3117,10 +3135,27 @@ input[type=range].exam-slider {
     color: #fef3c7 !important;
 }
 
-.exam-btn-secondary {
+.exam-btn-secondary:not(.scope-back-home):not(.btn-back-home):not(.btn-lab-nav-home) {
     background: rgba(30, 41, 59, 0.85) !important;
     border-color: rgba(148, 163, 184, 0.25) !important;
     color: #cbd5e1 !important;
+}
+
+/* Birleşik Ortak Ana Sayfa Butonu Standardı (Yazılı Kapsam Girişi) */
+.btn-lab-nav-home,
+.btn-back-home,
+#btn-exam-step-back.scope-back-home {
+    background: rgba(0, 210, 255, 0.12) !important;
+    border: 1.5px solid var(--neon-blue) !important;
+    color: #fff !important;
+    box-shadow: 0 0 12px rgba(0, 210, 255, 0.2) !important;
+}
+.btn-lab-nav-home:hover,
+.btn-back-home:hover,
+#btn-exam-step-back.scope-back-home:hover {
+    background: var(--neon-blue) !important;
+    color: #030712 !important;
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.5) !important;
 }
 
 /* 8. GÖRÜNÜM 3: ÖĞRETMEN İNCELEMESİ (ADMIN) */

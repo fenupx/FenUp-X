@@ -10,10 +10,10 @@
     <!-- İkonlar ve Favicon -->
     <meta name="apple-mobile-web-app-title" content="FenUp X">
     <meta name="application-name" content="FenUp X">
-    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128 256x256" href="/favicon.ico?v=2026102910">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026102910">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026102910">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026102910">
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128 256x256" href="/favicon.ico?v=2026102911">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026102911">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026102911">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026102911">
     
     <!-- Open Graph & Sosyal Paylaşım -->
     <meta property="og:type" content="website">
@@ -40,8 +40,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2026102910">
-    <link rel="stylesheet" href="exam.css?v=2026102910">
+    <link rel="stylesheet" href="style.css?v=2026102911">
+    <link rel="stylesheet" href="exam.css?v=2026102911">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -168,7 +168,7 @@
     </div>
 
     <div id="scene-crossroads" class="scene is-hidden glass-panel">
-        <button class="back-link btn-back-home">← Ana Sayfa</button>
+        <button class="back-link btn-back-home btn-lab-nav-home" aria-label="Ana Sayfaya Dön">← Ana Sayfa</button>
         <h2>Yarışma Türünü Seç</h2>
         <div class="menu-grid">
             <button id="btn-mode-bireysel" class="mode-btn"><i class="fas fa-user"></i><br>Bireysel Mod</button>
@@ -1296,27 +1296,6 @@
                                 </div>
                             </div>
 
-                            <div class="lab-panel-box" style="margin-top: 12px;">
-                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Kavram Yanılgısı Senaryoları</h4>
-                                <div class="lab-lens-controls-box">
-                                    <div class="lab-field-group">
-                                        <label class="lab-field-label">Senaryo Seçimi:</label>
-                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-                                            <button class="lab-select-pill active" id="pill-scenario-horizontal">📦 1. Yatay İtme</button>
-                                            <button class="lab-select-pill" id="pill-scenario-lift">🏋️ 2. Yukarı Kaldırma</button>
-                                            <button class="lab-select-pill" id="pill-scenario-carry">🎒 3. Çantayla Yürüme</button>
-                                            <button class="lab-select-pill" id="pill-scenario-wall">🧱 4. Duvarı İtme</button>
-                                        </div>
-                                    </div>
-                                    <div class="lab-field-group" id="group-friction-pills" style="margin-top: 8px;">
-                                        <label class="lab-field-label">Zemin Sürtünmesi (Yatay İtme İçin):</label>
-                                        <div class="lab-select-pills">
-                                            <button class="lab-select-pill active" id="pill-work-friction-off">🛡️ Sürtünmesiz (İdeal)</button>
-                                            <button class="lab-select-pill" id="pill-work-friction-on">💨 Sürtünmeli Zemin</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                             <div class="lab-panel-box" style="margin-top: 12px;">
                                 <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Anlık Ölçüm ve İş Değerleri</h4>
@@ -1366,25 +1345,6 @@
                                 </div>
                             </div>
 
-                            <div class="lab-panel-box" style="margin-top: 12px;">
-                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Deney Parametreleri</h4>
-                                <div class="lab-lens-controls-box">
-                                    <div class="lab-field-group">
-                                        <label class="lab-field-label">Simülasyon Modu:</label>
-                                        <div class="lab-select-pills">
-                                            <button class="lab-select-pill active" id="pill-energy-pendulum">🔄 Sarkaç Modu</button>
-                                            <button class="lab-select-pill" id="pill-energy-ramp">🛹 U-Rampa Modu</button>
-                                        </div>
-                                    </div>
-                                    <div class="lab-field-group" style="margin-top: 8px;">
-                                        <label class="lab-field-label">Sürtünme / Direnç:</label>
-                                        <div class="lab-select-pills">
-                                            <button class="lab-select-pill active" id="pill-energy-friction-off">🛡️ Sürtünmesiz (İdeal)</button>
-                                            <button class="lab-select-pill" id="pill-energy-friction-on">💨 Sürtünmeli (Isı Dönüşümlü)</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                             <div class="lab-panel-box" style="margin-top: 12px;">
                                 <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Anlık Ölçüm ve Enerji Değerleri</h4>
@@ -1759,7 +1719,7 @@
                                 <div class="lab-vars-list">
                                     <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Sürtünen Maddelerin Cinsi (Ebonit/Yün veya Cam/İpek) / Dokunan Kürelerin İlk Yükü</div>
                                     <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Maddelerin Kazandığı Yük Cinsi (+ / -) ve Elektron Akış Yönü</div>
-                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Pozitif Yük (Proton) Sayısı (Çekirdekte Hareketsizdir, ASLA Aktarılmaz!)</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Pozitif Yük (Proton) Sayısı (Sürtünmeyle elektriklenmede çekirdekteki protonlar aktarılmaz, sabit kalır)</div>
                                 </div>
                             </div>
 
@@ -1767,8 +1727,8 @@
                             <div class="lab-pedagogical-card is-work" id="electro-pedagogical-box" style="margin-top: 12px;">
                                 <div class="pedagogical-icon" id="electro-pedagogical-icon"><i class="fas fa-atom"></i></div>
                                 <div class="pedagogical-content">
-                                    <strong id="electro-pedagogical-title">⚡ Kritik Kural: Yalnızca Elektronlar Hareket Eder!</strong>
-                                    <p id="electro-pedagogical-text">Pozitif yükler (protonlar) atom çekirdeğinde sabittir, asla hareket etmez. Maddeler arasındaki tüm elektriklenme olayları negatif yüklerin (elektronların) transferiyle gerçekleşir!</p>
+                                    <strong id="electro-pedagogical-title">⚡ Bilimsel Kural: Yalnızca Elektronlar Aktarılır</strong>
+                                    <p id="electro-pedagogical-text">Katı cisimler arasındaki sürtünmeyle elektriklenmede atom çekirdeğindeki pozitif protonlar aktarılmaz; yalnızca elektronlar hareket eder ve aktarılır.</p>
                                 </div>
                             </div>
 
@@ -2184,13 +2144,6 @@
                                 <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Yörünge ve Tutulma Parametreleri</h4>
                                 <div class="lab-lens-controls-box">
                                     <div class="lab-field-group">
-                                        <label class="lab-field-label">Tutulma Türü Seçimi:</label>
-                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-                                            <button class="lab-select-pill active" id="pill-eclipse-solar"><i class="fas fa-sun"></i> ☀️ Güneş Tutulması</button>
-                                            <button class="lab-select-pill" id="pill-eclipse-lunar"><i class="fas fa-moon"></i> 🌕 Ay Tutulması</button>
-                                        </div>
-                                    </div>
-                                    <div class="lab-field-group" style="margin-top: 8px;">
                                         <label class="lab-field-label">Ay Yörünge Açısı (θ): <span id="label-eclipse-angle-val" style="color:var(--neon-blue); font-weight:800;">0.0° (Tam Hizada)</span></label>
                                         <input type="range" id="slider-eclipse-angle" min="-30" max="30" step="0.5" value="0" style="width:100%;">
                                     </div>
@@ -4059,7 +4012,7 @@
     <!-- ================================================================= -->
     <div id="scene-yazili" class="scene is-hidden glass-panel full-width exam-scene">
         <div class="exam-back-navigation">
-            <button id="btn-exam-step-back" class="exam-btn-secondary" type="button">← Ana Sayfa</button>
+            <button id="btn-exam-step-back" class="exam-btn-secondary scope-back-home btn-back-home btn-lab-nav-home" type="button">← Ana Sayfa</button>
         </div>
 
         <!-- 1. Üst Navigasyon ve Başlık Şeridi -->
@@ -4138,7 +4091,7 @@
         </section>
 
         <!-- 3. Aşama 2: Hazırlık Tercihi Ekranı -->
-        <section id="exam-view-choice" class="exam-step-view" style="display: none;">
+        <section id="exam-view-choice" class="exam-step-view is-hidden" style="display: none;">
             <div class="exam-choice-nav">
                 <button id="btn-choice-change-scope" class="exam-btn-secondary" type="button"><i class="fas fa-arrow-left"></i> Seçimi Değiştir</button>
                 <div class="exam-choice-scope-pill"><i class="fas fa-check-circle"></i> 7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2</div>
@@ -4235,7 +4188,7 @@
         </section>
 
         <!-- 4. Aşama 3a: Konu Kartları Çalışma Ekranı -->
-        <section id="exam-view-study" class="exam-step-view" style="display: none;">
+        <section id="exam-view-study" class="exam-step-view is-hidden" style="display: none;">
             <!-- Üst Çubuk -->
             <div class="exam-study-toolbar">
                 <div class="study-toolbar-left">
@@ -4265,7 +4218,7 @@
         </section>
 
         <!-- 5. Aşama 3b: Yazılı Provası Ekranı (Kurulum & Tek Soru Akışı) -->
-        <section id="exam-view-practice" class="exam-step-view" style="display: none;">
+        <section id="exam-view-practice" class="exam-step-view is-hidden" style="display: none;">
             <!-- Prova Başlatma / Kurulum Kutusu -->
             <div id="practice-setup-box" class="exam-panel">
                 <div class="exam-card-eyebrow">Yazılı Provası Ayarları</div>
@@ -4389,7 +4342,7 @@
         </section>
 
         <!-- 6. Aşama 4: Öz Değerlendirme Ekranı (Ölçüt Temelli Soru Değerlendirme) -->
-        <section id="exam-view-eval" class="exam-step-view" style="display: none;">
+        <section id="exam-view-eval" class="exam-step-view is-hidden" style="display: none;">
             <div class="exam-eval-header-bar">
                 <div class="eval-top-row">
                     <button type="button" id="btn-eval-back-choice" class="exam-btn-secondary" title="Değerlendirmeyi kaydet ve hazırlık ekranına dön">
@@ -4427,7 +4380,7 @@
         </section>
 
         <!-- 7. Aşama 5: Çalışma Özeti Ekranı -->
-        <section id="exam-view-summary" class="exam-step-view" style="display: none;">
+        <section id="exam-view-summary" class="exam-step-view is-hidden" style="display: none;">
             <div class="exam-summary-hero">
                 <div class="summary-score-badge">
                     <span class="score-label">Öz Değerlendirme Puanın</span>
@@ -4682,8 +4635,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
-    <script type="module" src="exam-engine.js?v=2026102910"></script>
-    <script type="module" src="lab-engine.js?v=2026102910"></script>
-    <script type="module" src="script.js?v=2026102910"></script>
+    <script type="module" src="exam-engine.js?v=2026102911"></script>
+    <script type="module" src="lab-engine.js?v=2026102911"></script>
+    <script type="module" src="script.js?v=2026102911"></script>
 </body>
 </html>
