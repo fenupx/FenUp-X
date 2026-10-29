@@ -885,7 +885,7 @@ let labCurriculumMapCache = null;
 async function loadLabCurriculumMap() {
     if (labCurriculumMapCache) return labCurriculumMapCache;
     try {
-        const res = await fetch('data/lab/lab-curriculum-map.json?v=2026102911');
+        const res = await fetch('data/lab/lab-curriculum-map.json?v=2026102912');
         if (!res.ok) return null;
         const data = await res.json();
         const normalized = {};
