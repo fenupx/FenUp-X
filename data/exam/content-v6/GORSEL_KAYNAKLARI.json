@@ -66,15 +66,10 @@
   "sun": {
     "asset": "sun.jpg",
     "source": "https://eso.org/public/images/eso1703e-comparisona/",
-    "url": "https://cdn.eso.org/images/screen/eso1703e-comparisona.jpg",
-    "dimensions": [
-      1280,
-      1280
-    ],
-    "bytes": 254091,
     "credit": "NASA/SDO, ALMA (ESO/NAOJ/NRAO)",
-    "nature": "observational_image",
-    "use": "Kaynak sayfası ve hak notları korunur; logo/onay ilişkisi kurulmaz."
+    "nature": "photograph",
+    "type": "",
+    "use": ""
   },
   "shuttle-day": {
     "asset": "shuttle-day.jpg",
@@ -168,15 +163,10 @@
   "tug": {
     "asset": "tug.jpg",
     "source": "https://trgozlemevleri.gov.tr/tr/yerleskeler/antalya-tug",
-    "url": "https://trgozlemevleri.gov.tr/photos/campus/antalya-tug/tug-yerleske.jpg",
     "credit": "Türkiye Ulusal Gözlemevleri",
     "nature": "photograph",
-    "description": "Antalya Bakırlıtepe TUG yerleşkesi.",
-    "dimensions": [
-      1424,
-      1211
-    ],
-    "bytes": 891177
+    "type": "",
+    "use": ""
   },
   "webb": {
     "asset": "webb.jpg",
@@ -268,5 +258,45 @@
     "description": "Solda kaldırma, sağda hareketsiz tutma. Hareket sorunun metninde belirtilir; ok veya çözüm yazısı yok.",
     "tool": "built-in image_gen",
     "transparent_background": true
+  },
+  "orion": {
+    "asset": "orion.jpg",
+    "source": "https://svs.gsfc.nasa.gov/30947/",
+    "credit": "NASA, ESA, M. Robberto (STScI/ESA), Hubble Space Telescope Orion Treasury Project Team",
+    "nature": "photograph",
+    "type": "Teleskop gözlemi; yapay çizim değildir.",
+    "use": "NASA medya kullanım koşulları; kaynak kredisi gösterilir."
+  },
+  "southern-ring": {
+    "asset": "southern-ring.webp",
+    "source": "https://science.nasa.gov/image-detail/c74-1/",
+    "credit": "Hubble Heritage Team (STScI/AURA/NASA/ESA)",
+    "nature": "photograph",
+    "type": "Hubble teleskop gözlemi; gerçek gözlem verisi.",
+    "use": "Kaynak kredisi gösterilir."
+  },
+  "omega-centauri": {
+    "asset": "omega-centauri.jpg",
+    "source": "https://svs.gsfc.nasa.gov/30948",
+    "credit": "NASA, ESA, and the Hubble SM4 ERO Team",
+    "nature": "photograph",
+    "type": "Teleskop gözlemi; UV/görünür filtrelerden oluşturulmuş görüntü.",
+    "use": "Kaynak kredisi gösterilir."
+  },
+  "spring": {
+    "asset": "spring.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:Coil_spring_of_a_steam_locomotive.jpg",
+    "credit": "Jeuwre / Wikimedia Commons",
+    "nature": "photograph",
+    "type": "",
+    "use": ""
+  },
+  "swing": {
+    "asset": "swing.jpg",
+    "source": "https://commons.wikimedia.org/wiki/File:A_playground_swing.jpg",
+    "credit": "Jon Pallbo / Wikimedia Commons",
+    "nature": "photograph",
+    "type": "",
+    "use": ""
   }
 }

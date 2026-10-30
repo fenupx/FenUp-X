@@ -27,6 +27,7 @@ let lastSavedRaw = null;
 
 function createDefaultState() {
     return {
+        selectedScenario: '2',
         history: {},
         attempt: null,
         savedStudy: null,
@@ -75,6 +76,7 @@ function loadStateFromStorage() {
         if (!raw) return;
         const parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object') {
+            state.selectedScenario = parsed.selectedScenario || '2';
             state.history = (parsed.history && typeof parsed.history === 'object') ? parsed.history : {};
             state.profileRuns = (parsed.profileRuns && typeof parsed.profileRuns === 'object') ? parsed.profileRuns : {};
             state.currentStep = parsed.currentStep || 'scope';
@@ -421,7 +423,7 @@ export function ensureAttemptCriteriaMap(attempt) {
     attempt.selectedCriteria = attempt.selectedCriteria || {};
     attempt.evaluatedQuestions = attempt.evaluatedQuestions || {};
 
-    const questions = attempt.ids.map(id => (QUESTIONS || []).find(q => q.id === id)).filter(Boolean);
+    const questions = attempt.ids.map(id => (DATA?.allQuestions || QUESTIONS || []).find(q => q.id === id)).filter(Boolean);
     questions.forEach(q => {
         if (!attempt.criteriaMap[q.id] || !Array.isArray(attempt.criteriaMap[q.id]) || attempt.criteriaMap[q.id].length === 0) {
             const qPt = attempt.questionPoints?.[q.id] || 15;
@@ -534,6 +536,54 @@ function formatScore(score) {
     return Number.isInteger(score) ? String(score) : score.toFixed(1);
 }
 
+export function getActiveScenarioNumber() {
+    let sc = state.selectedScenario;
+    if (typeof sc === 'string') {
+        const m = sc.match(/\d+/);
+        if (m) return parseInt(m[0], 10);
+    }
+    if (typeof sc === 'number') return sc;
+    return 2;
+}
+
+export function getActiveScenario() {
+    const scNum = getActiveScenarioNumber();
+    if (DATA && Array.isArray(DATA.scenarios)) {
+        const found = DATA.scenarios.find(s => s.scenario === scNum);
+        if (found) return found;
+    }
+    return {
+        id: "7-2026-2027-D1-Y1-S2",
+        grade: 7,
+        scenario: 2,
+        question_count: 7,
+        allocation: DATA?.scenario?.allocation || [
+            { outcome_id: 'FB.7.1.1', count: 2 },
+            { outcome_id: 'FB.7.1.3', count: 1 },
+            { outcome_id: 'FB.7.1.5', count: 1 },
+            { outcome_id: 'FB.7.2.1', count: 3 }
+        ]
+    };
+}
+
+export function syncScenarioData() {
+    if (!DATA) return;
+    const scenario = getActiveScenario();
+    const activeOutcomes = new Set(scenario.allocation.map(a => a.outcome_id));
+
+    const allC = DATA.allCards || DATA.cards || [];
+    const allQ = DATA.allQuestions || DATA.questions || [];
+
+    const outcomeOrder = { 'FB.7.1.1': 1, 'FB.7.1.3': 2, 'FB.7.1.4': 3, 'FB.7.1.5': 4, 'FB.7.2.1': 5, 'FB.7.2.2': 6 };
+    CARDS = allC
+        .filter(c => activeOutcomes.has(c.outcome_id))
+        .sort((a, b) => ((outcomeOrder[a.outcome_id] || 99) - (outcomeOrder[b.outcome_id] || 99)) || ((a.sequence || 0) - (b.sequence || 0)));
+
+    QUESTIONS = allQ.filter(q => activeOutcomes.has(q.outcome_id));
+    DATA.scenario = scenario;
+    profiles = DATA.selection_policy?.scenario_profiles || {};
+}
+
 // --- VERİ YÜKLEME ---
 function applyLoadedData(revision, incoming) {
     const base = CONTENT_PATHS[revision];
@@ -546,9 +596,8 @@ function applyLoadedData(revision, incoming) {
         contentScene.classList.remove('content-v2', 'content-v3');
         contentScene.classList.add('content-v6');
     }
-    CARDS = DATA.cards || [];
-    QUESTIONS = DATA.questions || [];
-    profiles = DATA.selection_policy?.scenario_profiles || {};
+
+    syncScenarioData();
 
     // Eski kayıtları sürümlü uyarlama: 5'in katı (10, 15, 20) standardına bir kez taşı
     if (state.attempt && (state.attempt.contentRevision || '1') === revision && Array.isArray(state.attempt.ids)) {
@@ -559,7 +608,7 @@ function applyLoadedData(revision, incoming) {
             Object.values(state.attempt.questionPoints).some(p => !SCORING_POLICY.allowedPoints.includes(p)));
 
         if (needsMigration) {
-            const qs = state.attempt.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
+            const qs = state.attempt.ids.map(id => (DATA.allQuestions || QUESTIONS).find(q => q.id === id)).filter(Boolean);
             if (qs.length === state.attempt.ids.length) {
                 try {
                     state.attempt.questionPoints = calculateQuestionPoints(qs, SCORING_POLICY.targetTotal);
@@ -591,18 +640,48 @@ async function loadData(revision = CONTENT_REVISION, showError = true) {
         const base = CONTENT_PATHS[targetRev];
         if (!base) throw new Error(`Bilinmeyen içerik sürümü: ${targetRev}`);
         if (!dataVersions.has(targetRev)) {
-            dataVersions.set(targetRev, fetch(base + 'pilot_7_senaryo2.json').then(async res => {
+            dataVersions.set(targetRev, (async () => {
+                const res = await fetch(base + 'pilot_7_senaryo2.json');
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
+
+                // Onaylı V6 havuzu korunur
+                data.v6Cards = [...(data.cards || [])];
+                data.v6Questions = [...(data.questions || [])];
+
                 try {
                     const credits = await fetch(base + 'GORSEL_KAYNAKLARI.json');
                     if (credits.ok) {
                         data.visualCredits = await credits.json();
                     }
                 } catch (_) {}
+
+                try {
+                    const ekRes = await fetch(base + 'ek_icerik.json');
+                    if (ekRes.ok) {
+                        data.ekContent = await ekRes.json();
+                    }
+                } catch (_) {}
+
+                try {
+                    const senRes = await fetch(base + 'senaryo_kayitlari.json');
+                    if (senRes.ok) {
+                        data.scenarios = await senRes.json();
+                    }
+                } catch (_) {}
+
+                // Kart ve soru havuzlarını birleştir (V6 kart ve soruları değiştirilmez)
+                const ekCards = data.ekContent?.cards || [];
+                const ekQuestions = data.ekContent?.questions || [];
+                const ekOutcomes = data.ekContent?.outcomes || [];
+
+                data.allCards = [...data.v6Cards, ...ekCards];
+                data.allQuestions = [...data.v6Questions, ...ekQuestions];
+                data.allOutcomes = [...(data.outcomes || []), ...ekOutcomes];
+
                 resolvedDataCache.set(targetRev, data);
                 return data;
-            }));
+            })());
         }
         const incoming = await dataVersions.get(targetRev);
         resolvedDataCache.set(targetRev, incoming);
@@ -775,7 +854,7 @@ function restoreExamRoute(route) {
     if (['practice', 'eval', 'summary'].includes(step) && loadedRevision !== attemptRev && resolvedDataCache.has(attemptRev)) {
         applyLoadedData(attemptRev, resolvedDataCache.get(attemptRev));
     }
-    const usableAttempt = a && a.ids.length === 7 && a.ids.every(id => QUESTIONS.some(q => q.id === id));
+    const usableAttempt = a && Array.isArray(a.ids) && a.ids.length >= 6 && a.ids.length <= 9 && a.ids.every(id => (DATA?.allQuestions || QUESTIONS).some(q => q.id === id));
     if (['practice', 'eval', 'summary'].includes(step) && !usableAttempt) step = 'choice';
     if (step !== 'scope') state.hasSelectedScope = true;
     if (a && step === 'practice' && (a.finished || a.status !== 'in_progress')) step = a.finished ? 'summary' : 'eval';
@@ -797,12 +876,55 @@ function restoreExamRoute(route) {
     goToStep(step === 'setup' ? 'practice' : step, { restore: true });
 }
 
+function updateScopeAccordion() {
+    const summaryEl = $('exam-scope-content-summary');
+    if (!summaryEl) return;
+    const scenario = getActiveScenario();
+    const outcomeNames = {
+        'FB.7.1.1': 'Uzay Araştırmaları',
+        'FB.7.1.3': 'Uzay Kirliliği',
+        'FB.7.1.4': 'Yıldızların Yaşamı',
+        'FB.7.1.5': 'Yıldızlar, Galaksiler ve Evren',
+        'FB.7.2.1': 'Fiziksel Anlamda İş',
+        'FB.7.2.2': 'Kinetik ve Potansiyel Enerji'
+    };
+
+    const itemsHtml = scenario.allocation.map(alloc => {
+        const name = outcomeNames[alloc.outcome_id] || alloc.outcome_id;
+        return `<li><strong>${esc(name)}:</strong> ${alloc.count} soru</li>`;
+    }).join('');
+
+    const codesHtml = scenario.allocation.map(alloc => `${alloc.outcome_id} (${alloc.count} soru)`).join(', ');
+
+    summaryEl.innerHTML = `
+        <ul class="exam-outcome-distribution-list">
+            ${itemsHtml}
+        </ul>
+        <p class="exam-body-note">Toplam ${scenario.question_count} açık uçlu soru içerir.</p>
+        <details class="exam-sub-details" style="margin-top: 8px;">
+            <summary style="font-size: 0.82rem; color: #94a3b8; cursor: pointer;">Öğrenme çıktılarını gör</summary>
+            <div style="font-size: 0.8rem; color: #94a3b8; padding: 6px 0;">
+                ${codesHtml}
+            </div>
+        </details>
+    `;
+
+    const scopeBadge = $('exam-scope-badge');
+    if (scopeBadge) {
+        scopeBadge.textContent = `7. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${scenario.scenario}`;
+    }
+}
+
 function bindScopeContinue() {
     const btnContinue = $('btn-scope-continue');
     if (!btnContinue) return;
     btnContinue.onclick = async (e) => {
         if (e) e.preventDefault();
         try {
+            const selectScenario = $('exam-select-scenario');
+            if (selectScenario) {
+                state.selectedScenario = selectScenario.value;
+            }
             if (!DATA || loadedRevision !== CONTENT_REVISION) {
                 const origHtml = btnContinue.innerHTML;
                 btnContinue.disabled = true;
@@ -815,6 +937,7 @@ function bindScopeContinue() {
                     return;
                 }
             }
+            syncScenarioData();
             state.hasSelectedScope = true;
             saveState();
             goToStep('choice');
@@ -832,7 +955,20 @@ function renderScope() {
     if (loadedRevision !== CONTENT_REVISION && resolvedDataCache.has(CONTENT_REVISION)) {
         applyLoadedData(CONTENT_REVISION, resolvedDataCache.get(CONTENT_REVISION));
     }
+    syncScenarioData();
     bindScopeContinue();
+    updateScopeAccordion();
+
+    const selectScenario = $('exam-select-scenario');
+    if (selectScenario) {
+        selectScenario.value = String(getActiveScenarioNumber());
+        selectScenario.onchange = () => {
+            state.selectedScenario = selectScenario.value;
+            saveState();
+            syncScenarioData();
+            updateScopeAccordion();
+        };
+    }
 }
 
 // 2. AŞAMA: HAZIRLIK TERCİHİ
@@ -897,18 +1033,22 @@ function renderChoice() {
         };
     }
 
-    // Dinamik konu ve soru sayaçları (Yeni başlangıçlar her zaman güncel V6 içeriğini baz alır)
-    const activeData = resolvedDataCache.get(CONTENT_REVISION) || DATA;
+    // Dinamik konu ve soru sayaçları ve senaryo rozeti
+    const scenario = getActiveScenario();
+    const scNum = scenario.scenario;
+    const choiceScopePill = document.querySelector('.exam-choice-scope-pill');
+    if (choiceScopePill) {
+        choiceScopePill.innerHTML = `<i class="fas fa-check-circle"></i> 7. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${scNum}`;
+    }
+
     const studyCountEl = $('choice-study-count');
-    if (studyCountEl && activeData) {
-        const topicCount = activeData.outcomes ? activeData.outcomes.length : 4;
-        const cardCount = activeData.cards ? activeData.cards.length : 34;
-        studyCountEl.innerHTML = `<i class="fas fa-clone"></i> ${topicCount} konu · ${cardCount} bilgi kartı`;
+    if (studyCountEl) {
+        studyCountEl.innerHTML = `<i class="fas fa-clone"></i> ${scenario.allocation.length} konu · ${CARDS.length} bilgi kartı`;
     }
 
     const practiceCountEl = $('choice-practice-count');
-    if (practiceCountEl && activeData) {
-        practiceCountEl.innerHTML = `<i class="fas fa-pen-alt"></i> 7 soruluk prova`;
+    if (practiceCountEl) {
+        practiceCountEl.innerHTML = `<i class="fas fa-pen-alt"></i> ${scenario.question_count} soruluk prova`;
     }
 
     // Kaldığın Çalışmalar Bölümü (Tek Kompakt Kart & Kaydı Kaldır)
@@ -922,7 +1062,7 @@ function renderChoice() {
 
     const a = state.attempt;
     const isAttemptFinished = !!(a && (a.status === 'completed' || a.finished));
-    const hasUnfinishedAttempt = !!(a && Array.isArray(a.ids) && a.ids.length === 7 && !isAttemptFinished);
+    const hasUnfinishedAttempt = !!(a && Array.isArray(a.ids) && a.ids.length >= 6 && a.ids.length <= 9 && !isAttemptFinished);
 
     const anySaved = hasUnfinishedStudy || hasUnfinishedAttempt;
 
@@ -983,10 +1123,10 @@ function renderChoice() {
                 const clampedIdx = Math.min(Math.max(0, s.cardIdx), totalCards - 1);
                 const cardObj = sData?.cards?.[clampedIdx] || null;
                 const cardTitle = s.cardTitle || cardObj?.title || '';
-                const outcomeId = s.outcomeId || cardObj?.outcome_id || 'Senaryo 2';
+                const outcomeId = s.outcomeId || cardObj?.outcome_id || `Senaryo ${scNum}`;
 
                 if (iconEl) iconEl.innerHTML = '<i class="fas fa-book-open"></i>';
-                if (eyebrowEl) eyebrowEl.textContent = '7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2 · Konu Çalışması';
+                if (eyebrowEl) eyebrowEl.textContent = `7. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${s.scenarioNumber || scNum} · Konu Çalışması`;
                 if (titleEl) titleEl.textContent = 'Devam Eden Konu Çalışması';
                 if (descEl) {
                     descEl.textContent = cardTitle
@@ -1032,7 +1172,7 @@ function renderChoice() {
                 const modeText = a.solveMode === 'kagitta' ? 'Kâğıtta' : 'Ekranda';
 
                 if (iconEl) iconEl.innerHTML = '<i class="fas fa-file-signature"></i>';
-                if (eyebrowEl) eyebrowEl.textContent = '7. Sınıf · 1. Dönem 1. Yazılı · Senaryo 2 · Yazılı Provası';
+                if (eyebrowEl) eyebrowEl.textContent = `7. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${a.scenarioNumber || scNum} · Yazılı Provası`;
 
                 const isEvaluating = (a.status === 'evaluating' || evalCount > 0 || a.evalQuestionIndex > 0);
                 const targetStep = isEvaluating ? 'eval' : 'practice';
@@ -1045,8 +1185,8 @@ function renderChoice() {
                 }
                 if (badgeEl) {
                     badgeEl.innerHTML = isEvaluating
-                        ? `<i class="fas fa-balance-scale"></i> ${evalCount} / 7 Soru Değerlendirildi`
-                        : `<i class="fas fa-tasks"></i> ${answeredCount} / 7 Soru Yanıtlandı`;
+                        ? `<i class="fas fa-balance-scale"></i> ${evalCount} / ${a.ids.length} Soru Değerlendirildi`
+                        : `<i class="fas fa-tasks"></i> ${answeredCount} / ${a.ids.length} Soru Yanıtlandı`;
                 }
                 if (metaTagEl) metaTagEl.innerHTML = `<i class="fas fa-sliders-h"></i> ${esc(profileText)} · ${esc(modeText)}`;
                 if (btnResumeLabel) btnResumeLabel.textContent = 'Devam Et';
@@ -1121,7 +1261,7 @@ function renderChoice() {
             const aRev = a.contentRevision || '1';
             const answeredCount = a.ids.filter(qid => (a.answers[qid] || '').trim().length > 0).length;
             const attemptBadgeEl = $('saved-attempt-badge');
-            if (attemptBadgeEl) attemptBadgeEl.textContent = `${answeredCount} / 7 Yanıtlandı`;
+            if (attemptBadgeEl) attemptBadgeEl.textContent = `${answeredCount} / ${a.ids.length} Yanıtlandı`;
             const attemptVersionNoteEl = $('saved-attempt-version-note');
             if (attemptVersionNoteEl) {
                 attemptVersionNoteEl.classList.toggle('is-hidden', aRev === CONTENT_REVISION);
@@ -1185,6 +1325,7 @@ function renderStudy(cardIndex) {
                 cardId: c.id,
                 cardTitle: c.title,
                 outcomeId: c.outcome_id,
+                scenarioNumber: getActiveScenarioNumber(),
                 contentRevision: currentRev,
                 visitedCards: nextVisited,
                 updatedAt: Date.now()
@@ -1289,22 +1430,27 @@ function renderStudy(cardIndex) {
                 </div>
             `;
         } else {
-            // Genel Konu Çalışma Modu: Senaryonun 4 Öğrenme Çıktısı ("Çalışma Planın")
+            // Genel Konu Çalışma Modu: Senaryonun Öğrenme Çıktıları ("Çalışma Planın")
+            const activeScenario = getActiveScenario();
+            const activeOutcomeIds = new Set(activeScenario.allocation.map(a => a.outcome_id));
+            const allOutcomes = DATA.allOutcomes || DATA.outcomes || [];
+            const scenarioOutcomes = allOutcomes.filter(o => activeOutcomeIds.has(o.id));
+
             cardnav.innerHTML = `
                 <div class="study-plan-header">
                     <h4><i class="fas fa-tasks"></i> Çalışma Planın</h4>
-                    <span class="study-plan-badge">4 Konu</span>
+                    <span class="study-plan-badge">${scenarioOutcomes.length} Konu</span>
                 </div>
 
                 <div class="study-mobile-outcome-picker">
                     <label class="exam-cardnav-label" for="exam-outcome-select"><i class="fas fa-book-reader"></i> Konu Seç:</label>
                     <select id="exam-outcome-select" class="exam-select">
-                        ${DATA.outcomes.map(o => `<option value="${esc(o.id)}" ${o.id === c.outcome_id ? 'selected' : ''}>${esc(o.id)}: ${esc(o.short_title || o.title)}</option>`).join('')}
+                        ${scenarioOutcomes.map(o => `<option value="${esc(o.id)}" ${o.id === c.outcome_id ? 'selected' : ''}>${esc(o.id)}: ${esc(o.short_title || o.title)}</option>`).join('')}
                     </select>
                 </div>
 
                 <div class="study-plan-outcomes-list">
-                    ${DATA.outcomes.map(o => {
+                    ${scenarioOutcomes.map(o => {
                         const isOutcomeActive = (o.id === c.outcome_id);
                         const outcomeCards = CARDS.filter(x => x.outcome_id === o.id);
                         return `
@@ -1365,7 +1511,7 @@ function renderStudy(cardIndex) {
     const cardPanel = $('exam-card-article');
     if (cardPanel) {
         const visualAssetPath = c.visual?.asset ? (ASSET_BASE + c.visual.asset) : '';
-        const outcome = DATA.outcomes ? DATA.outcomes.find(o => o.id === c.outcome_id) : null;
+        const outcome = (DATA.allOutcomes || DATA.outcomes || []).find(o => o.id === c.outcome_id);
         const outcomeCards = CARDS.filter(x => x.outcome_id === c.outcome_id);
         const idxInOutcome = outcomeCards.findIndex(x => x.id === c.id);
         const cardNumInOutcome = idxInOutcome !== -1 ? (idxInOutcome + 1) : 1;
@@ -1621,6 +1767,26 @@ function renderPractice() {
         if (setupBox) setupBox.style.display = 'block';
         if (activeBox) activeBox.style.display = 'none';
 
+        const setupScenario = getActiveScenario();
+        const setupScNum = setupScenario.scenario;
+        const setupHeading = $('exam-practice-setup-heading');
+        if (setupHeading) {
+            setupHeading.textContent = `${setupScenario.question_count} Soruluk Provanı Hazırla`;
+        }
+        const outcomeNamesMap = {
+            'FB.7.1.1': 'Uzay araştırmaları',
+            'FB.7.1.3': 'Uzay kirliliği',
+            'FB.7.1.4': 'Yıldızların yaşamı',
+            'FB.7.1.5': 'Evren',
+            'FB.7.2.1': 'Fiziksel iş',
+            'FB.7.2.2': 'Enerji'
+        };
+        const allocDescText = setupScenario.allocation.map(a => `${outcomeNamesMap[a.outcome_id] || a.outcome_id} (${a.count})`).join(', ');
+        const setupDescEl = $('exam-practice-setup-description');
+        if (setupDescEl) {
+            setupDescEl.textContent = `Senaryo ${setupScNum} dağılımı: ${allocDescText} olmak üzere toplam ${setupScenario.question_count} açık uçlu sorudur. Zorluk düzeyini ve çözüm modunu seçerek başlayabilirsin.`;
+        }
+
         const btnBackChoice = setupBox ? setupBox.querySelector('#btn-practice-setup-back') : $('btn-practice-back-choice');
         if (btnBackChoice) {
             btnBackChoice.onclick = () => {
@@ -1705,7 +1871,7 @@ function renderPractice() {
         return;
     }
     const questions = a.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
-    if (questions.length !== 7) {
+    if (questions.length !== a.ids.length || questions.length === 0) {
         // Hata durumunda güvenli sıfırlama
         state.attempt = null;
         saveState();
@@ -1722,7 +1888,7 @@ function renderPractice() {
 
     let activeIdx = typeof a.activeQuestionIndex === 'number' ? a.activeQuestionIndex : 0;
     if (activeIdx < 0) activeIdx = 0;
-    if (activeIdx > 6) activeIdx = 6;
+    if (activeIdx >= questions.length) activeIdx = questions.length - 1;
     a.activeQuestionIndex = activeIdx;
 
     // Üst Bar Geri Dön Butonu: Mevcut soru metnini güvenle saklar ve hazırlık tercihine döner
@@ -1741,7 +1907,7 @@ function renderPractice() {
     // Üst Bar Durum Bilgileri
     const currInd = $('practice-current-indicator');
     if (currInd) {
-        currInd.textContent = (a.solveMode === 'kagitta') ? 'Kâğıtta Çözüm' : `Soru ${activeIdx + 1} / 7`;
+        currInd.textContent = (a.solveMode === 'kagitta') ? 'Kâğıtta Çözüm' : `Soru ${activeIdx + 1} / ${questions.length}`;
     }
 
     const modeInd = $('practice-mode-indicator');
@@ -1774,6 +1940,18 @@ function renderPractice() {
                 e.stopPropagation();
                 const willOpen = dropdownQPicker.classList.contains('is-hidden');
                 if (willOpen) {
+                    const scNum = a.scenarioNumber || getActiveScenarioNumber();
+                    const scObj = getActiveScenario();
+                    const outcomeNames = {
+                        'FB.7.1.1': 'Uzay Araştırmaları',
+                        'FB.7.1.3': 'Uzay Kirliliği',
+                        'FB.7.1.4': 'Yıldızların Yaşamı',
+                        'FB.7.1.5': 'Evren',
+                        'FB.7.2.1': 'Fiziksel İş',
+                        'FB.7.2.2': 'Enerji'
+                    };
+                    const scAllocText = scObj.allocation.map(al => `${outcomeNames[al.outcome_id] || al.outcome_id} (${al.count} Soru)`).join(', ');
+
                     dropdownQPicker.innerHTML = `
                         <div class="q-picker-list">
                             ${questions.map((qu, i) => {
@@ -1800,9 +1978,9 @@ function renderPractice() {
                             }).join('')}
                         </div>
                         <details class="q-picker-scenario-details">
-                            <summary><i class="fas fa-info-circle"></i> Senaryo 2 Dağılımı</summary>
+                            <summary><i class="fas fa-info-circle"></i> Senaryo ${scNum} Dağılımı</summary>
                             <div class="q-picker-scenario-body">
-                                <p>Uzay Araştırmaları (2 Soru), Uzay Kirliliği (1 Soru), Evren (1 Soru), Fiziksel İş (3 Soru) — Toplam 100 Puan</p>
+                                <p>${scAllocText} — Toplam 100 Puan</p>
                             </div>
                         </details>
                     `;
@@ -1855,7 +2033,7 @@ function renderPractice() {
                 <div class="paper-mode-active-card">
                     <div class="paper-mode-icon"><i class="fas fa-file-alt"></i></div>
                     <h3>Soru Kâğıdın Hazır!</h3>
-                    <p>7 açık uçlu sorudan oluşan provan kâğıt üzerinde çözülmek üzere hazırlandı. Soruları kâğıt üzerinde çözdükten sonra cevaplarını kontrol etmek için aşağıdaki butona tıkla.</p>
+                    <p>${questions.length} açık uçlu sorudan oluşan provan kâğıt üzerinde çözülmek üzere hazırlandı. Soruları kâğıt üzerinde çözdükten sonra cevaplarını kontrol etmek için aşağıdaki butona tıkla.</p>
                     <div class="paper-mode-actions">
                         <button type="button" class="exam-btn-primary" id="btn-paper-to-eval">
                             <i class="fas fa-check-circle"></i> <span>Çözdüm, Cevaplarımı Kontrol Et</span>
@@ -1922,12 +2100,14 @@ function renderPractice() {
         const visual = questionVisualHtml(q);
 
         const t = q.table;
+        const tHeaders = t ? (t.headers || t.columns || []) : [];
+        const tRows = t ? (t.rows || []) : [];
         const table = t ? `
             <div class="exam-tablewrap">
                 <table class="exam-table">
-                    <caption>${esc(t.caption)}</caption>
-                    <thead><tr>${t.headers.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>
-                    <tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
+                    ${t.caption ? `<caption>${esc(t.caption)}</caption>` : ''}
+                    <thead><tr>${tHeaders.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>
+                    <tbody>${tRows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
                 </table>
             </div>
         ` : '';
@@ -1937,7 +2117,7 @@ function renderPractice() {
         qContainer.innerHTML = `
             <article class="exam-question-item practice-card">
                 <div class="exam-qmeta">
-                    <span>SORU ${activeIdx + 1} / 7</span> · 
+                    <span>SORU ${activeIdx + 1} / ${questions.length}</span> · 
                     <span>${esc(q.outcome_id)}</span> · 
                     <span>${names[q.difficulty] || ''}</span>
                     <span class="q-points-badge">${qPoints} Puan</span>
@@ -1993,7 +2173,7 @@ function renderPractice() {
     const btnFinish = $('btn-practice-finish');
 
     if (btnNext && btnFinish) {
-        if (activeIdx < 6) {
+        if (activeIdx < questions.length - 1) {
             btnNext.style.display = 'inline-flex';
             btnFinish.style.display = 'none';
             btnNext.onclick = () => {
@@ -2045,7 +2225,7 @@ function updateAnsweredCountText(questions) {
             answeredCountEl.textContent = 'Kâğıtta Çözüm İçin Hazır';
         } else {
             const answeredCount = questions.filter(q => (state.attempt.answers[q.id] || '').trim().length > 0).length;
-            answeredCountEl.textContent = `${answeredCount} / 7 Yanıtlandı`;
+            answeredCountEl.textContent = `${answeredCount} / ${questions.length} Yanıtlandı`;
         }
     }
 }
@@ -2089,7 +2269,10 @@ async function startNewPractice() {
             criteriaMap[q.id] = distributeCriteriaPoints(q.rubric || [], qPt).map(c => ({...c, contentRevision: CONTENT_REVISION, rubricRevision: CONTENT_REVISION}));
         });
 
+        const curScenario = getActiveScenario();
         state.attempt = {
+            scenarioNumber: curScenario.scenario,
+            scenarioId: curScenario.id,
             contentRevision: CONTENT_REVISION,
             rubricRevision: CONTENT_REVISION,
             routeKey: crypto.randomUUID(),
@@ -2161,7 +2344,7 @@ function renderEval() {
         return;
     }
     const questions = a.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
-    if (questions.length !== 7) {
+    if (questions.length !== a.ids.length || questions.length === 0) {
         goToStep('practice');
         return;
     }
@@ -2176,7 +2359,7 @@ function renderEval() {
 
     let evalIdx = typeof a.evalQuestionIndex === 'number' ? a.evalQuestionIndex : 0;
     if (evalIdx < 0) evalIdx = 0;
-    if (evalIdx > 6) evalIdx = 6;
+    if (evalIdx >= questions.length) evalIdx = questions.length - 1;
     a.evalQuestionIndex = evalIdx;
 
     // Hazırlık Ekranına Dön Butonu: İlerlemeyi saklar ve hazırlık tercihine döner
@@ -2238,12 +2421,14 @@ function renderEval() {
         const visual = questionVisualHtml(q);
 
         const t = q.table;
+        const tHeaders = t ? (t.headers || t.columns || []) : [];
+        const tRows = t ? (t.rows || []) : [];
         const table = t ? `
             <div class="exam-tablewrap">
                 <table class="exam-table">
-                    <caption>${esc(t.caption)}</caption>
-                    <thead><tr>${t.headers.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>
-                    <tbody>${t.rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
+                    ${t.caption ? `<caption>${esc(t.caption)}</caption>` : ''}
+                    <thead><tr>${tHeaders.map(h => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>
+                    <tbody>${tRows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
                 </table>
             </div>
         ` : '';
@@ -2253,7 +2438,7 @@ function renderEval() {
         qContainer.innerHTML = `
             <article class="exam-question-item eval-card">
                 <div class="exam-qmeta">
-                    <span>SORU ${evalIdx + 1} / 7</span> · 
+                    <span>SORU ${evalIdx + 1} / ${questions.length}</span> · 
                     <span>${esc(q.outcome_id)}</span> · 
                     <span>${names[q.difficulty] || ''}</span>
                     <span class="q-points-badge">${qPoints} Puan</span>
@@ -2356,7 +2541,7 @@ function renderEval() {
     // İlerleme Metni
     const evaluatedCount = questions.filter(qu => !!(a.evaluatedQuestions && a.evaluatedQuestions[qu.id])).length;
     const progressEl = $('eval-progress-text');
-    if (progressEl) progressEl.textContent = `${evaluatedCount} / 7 Değerlendirildi`;
+    if (progressEl) progressEl.textContent = `${evaluatedCount} / ${questions.length} Değerlendirildi`;
 
     // Alt Gezinme Butonları (Önceki / Değerlendirmeyi Kaydet ve İlerle / Çalışma Özetim)
     const btnPrev = $('btn-eval-prev-q');
@@ -2375,7 +2560,7 @@ function renderEval() {
     const btnToSummary = $('btn-eval-to-summary');
 
     if (btnNext && btnToSummary) {
-        if (evalIdx < 6) {
+        if (evalIdx < questions.length - 1) {
             btnNext.style.display = 'inline-flex';
             btnNext.innerHTML = '<span>Değerlendirmeyi Kaydet ve İlerle</span> <i class="fas fa-arrow-right"></i>';
             btnToSummary.style.display = 'none';
@@ -2448,7 +2633,7 @@ function renderSummary() {
         return;
     }
     const questions = a.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
-    if (questions.length !== 7) {
+    if (questions.length !== a.ids.length || questions.length === 0) {
         goToStep('scope');
         return;
     }
@@ -2545,7 +2730,8 @@ function renderSummary() {
 
     const scoreSubEl = $('summary-score-sub');
     if (scoreSubEl) {
-        let msg = '7. Sınıf · 1. Dönem 1. Yazılı (MEB Senaryo 2)';
+        const scNum = a.scenarioNumber || getActiveScenarioNumber();
+        let msg = `7. Sınıf · 1. Dönem 1. Yazılı (MEB Senaryo ${scNum})`;
         if (sortedMissedCards.length === 0 || totalScore === 100) {
             msg = 'Tebrikler! Bu provada tüm bilimsel ölçütleri karşıladığını belirttin.';
         } else if (totalScore >= 80) {
@@ -2565,15 +2751,16 @@ function renderSummary() {
     const yapamadimEl = $('summary-yapamadim-count');
     if (yapamadimEl) yapamadimEl.textContent = zeroCount;
 
-    // Konu Bazlı Başarı Analizi (Senaryo 2 Kazanımları)
+    // Konu Bazlı Başarı Analizi
     const goodListEl = $('summary-good-topics-list');
     const needsReviewListEl = $('summary-needs-review-list');
+    const allOutcomes = DATA.allOutcomes || DATA.outcomes || [];
 
-    if (goodListEl && needsReviewListEl && DATA.outcomes) {
+    if (goodListEl && needsReviewListEl && allOutcomes.length > 0) {
         goodListEl.innerHTML = '';
         needsReviewListEl.innerHTML = '';
 
-        DATA.outcomes.forEach(outcome => {
+        allOutcomes.forEach(outcome => {
             const outcomeQs = questions.filter(q => q.outcome_id === outcome.id);
             if (outcomeQs.length === 0) return;
 
@@ -2842,6 +3029,7 @@ function imageToDataUrl(src, maxWidth = 480, maxHeight = 360) {
 async function generateExamPdfBlob(questions, attempt) {
     const assetBase = ASSET_BASE;
     const pdfMake = await loadPdfMake();
+    const scNum = attempt.scenarioNumber || getActiveScenarioNumber();
     const pointsMap = attempt.questionPoints || calculateQuestionPoints(questions, SCORING_POLICY.targetTotal);
 
     let logoObj = null;
@@ -2897,7 +3085,7 @@ async function generateExamPdfBlob(questions, attempt) {
     headerCols.push({
         stack: [
             { text: 'FenUp X — Fen Bilimleri Yazılı Provası', fontSize: 13, bold: true, color: '#0f172a' },
-            { text: '7. Sınıf 1. Dönem 1. Yazılı Provası (MEB Senaryo 2)', fontSize: 9.5, color: '#475569', margin: [0, 2, 0, 0] }
+            { text: `7. Sınıf 1. Dönem 1. Yazılı Provası (MEB Senaryo ${scNum})`, fontSize: 9.5, color: '#475569', margin: [0, 2, 0, 0] }
         ]
     });
 
@@ -2936,7 +3124,7 @@ async function generateExamPdfBlob(questions, attempt) {
 
     // 3. Kısa Yönerge (Ayrı kapak sayfası olmadan Soru 1 hemen ardından başlar)
     docContent.push({
-        text: 'Yönerge: Bu sınav MEB Senaryo 2 öğrenme çıktısı dağılımına uygun 7 açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.',
+        text: `Yönerge: Bu sınav MEB Senaryo ${scNum} öğrenme çıktısı dağılımına uygun ${questions.length} açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.`,
         fontSize: 7.6,
         italics: true,
         color: '#64748b',
@@ -2969,13 +3157,15 @@ async function generateExamPdfBlob(questions, attempt) {
 
         // Varsa Tablo
         if (q.table) {
+            const tHeaders = q.table.headers || q.table.columns || [];
+            const tRows = q.table.rows || [];
             qStack.push({
                 table: {
                     headerRows: 1,
-                    widths: q.table.headers.map(() => '*'),
+                    widths: tHeaders.map(() => '*'),
                     body: [
-                        q.table.headers.map(h => ({ text: h, fontSize: 8.5, bold: true, alignment: 'center', fillColor: '#f1f5f9' })),
-                        ...q.table.rows.map(r => r.map(c => ({ text: c, fontSize: 8.5, alignment: 'center' })))
+                        tHeaders.map(h => ({ text: h, fontSize: 8.5, bold: true, alignment: 'center', fillColor: '#f1f5f9' })),
+                        ...tRows.map(r => r.map(c => ({ text: c, fontSize: 8.5, alignment: 'center' })))
                     ]
                 },
                 layout: {
@@ -3126,6 +3316,7 @@ async function downloadExamPdf(btnDownload = null) {
 function openPrintPreview(triggerEl = null) {
     if (!state.attempt) return;
     const qs = state.attempt.ids.map(id => QUESTIONS.find(q => q.id === id)).filter(Boolean);
+    const scNum = state.attempt.scenarioNumber || getActiveScenarioNumber();
     const printEl = $('exam-print-sheet');
     const modalEl = $('exam-print-preview-modal');
     if (!printEl || !modalEl) return;
@@ -3147,7 +3338,7 @@ function openPrintPreview(triggerEl = null) {
                 <img src="fenupx-logo.png" alt="FenUp X Logo" class="print-logo" width="44" height="44">
                 <div class="print-title-group">
                     <h1 class="print-school-title">FenUp X — Fen Bilimleri Yazılı Provası</h1>
-                    <h2 class="print-sub-title">7. Sınıf 1. Dönem 1. Yazılı Provası (MEB Senaryo 2)</h2>
+                    <h2 class="print-sub-title">7. Sınıf 1. Dönem 1. Yazılı Provası (MEB Senaryo ${scNum})</h2>
                 </div>
             </div>
             <div class="print-student-info-grid">
@@ -3159,18 +3350,20 @@ function openPrintPreview(triggerEl = null) {
             </div>
         </div>
         <div class="print-instructions">
-            <strong>Yönerge:</strong> Bu sınav MEB Senaryo 2 öğrenme çıktısı dağılımına uygun 7 açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.
+            <strong>Yönerge:</strong> Bu sınav MEB Senaryo ${scNum} öğrenme çıktısı dağılımına uygun ${qs.length} açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.
         </div>
         <div class="print-questions-flow">
             ${qs.map((q, i) => {
                 const qPoints = state.attempt.questionPoints?.[q.id] || 15;
                 const visual = questionVisualHtml(q, { forPrint: true });
 
+                const tHeaders = q.table ? (q.table.headers || q.table.columns || []) : [];
+                const tRows = q.table ? (q.table.rows || []) : [];
                 const table = q.table ? `
                     <table class="print-table">
-                        <caption>${esc(q.table.caption)}</caption>
-                        <thead><tr>${q.table.headers.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>
-                        <tbody>${q.table.rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
+                        ${q.table.caption ? `<caption>${esc(q.table.caption)}</caption>` : ''}
+                        <thead><tr>${tHeaders.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>
+                        <tbody>${tRows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
                     </table>
                 ` : '';
 
@@ -3317,11 +3510,13 @@ function displayAdminQuestion(q, container) {
         </div>
     ` : '';
 
+    const tHeaders = q.table ? (q.table.headers || q.table.columns || []) : [];
+    const tRows = q.table ? (q.table.rows || []) : [];
     const table = q.table ? `
         <table class="exam-table" style="margin: 12px 0;">
-            <caption>${esc(q.table.caption)}</caption>
-            <thead><tr>${q.table.headers.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>
-            <tbody>${q.table.rows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
+            ${q.table.caption ? `<caption>${esc(q.table.caption)}</caption>` : ''}
+            <thead><tr>${tHeaders.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead>
+            <tbody>${tRows.map(r => `<tr>${r.map(c => `<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody>
         </table>
     ` : '';
 
@@ -3642,16 +3837,58 @@ export function getQuestionHistoryStats(q, history) {
     return { count: totalCount, last: maxLast };
 }
 
-export function selectQuestions(profileName, history, run = 0) {
-    const conf = profiles[profileName];
-    if (!conf) throw new Error('Geçersiz profil: ' + profileName);
+export function getScenarioQuota(scenario, profileName, run = 0) {
+    if (scenario.scenario === 2 || scenario.scenario === 5) {
+        const conf = profiles[profileName];
+        if (conf) {
+            return conf.cycles ? conf.cycles[run % conf.cycles.length] : conf.allocation;
+        }
+    }
+    const quota = {};
+    const allocs = scenario.allocation;
+    const oneCountOutcomes = allocs.filter(a => a.count === 1).map(a => a.outcome_id);
+    const hardPickIdx = run % Math.max(1, oneCountOutcomes.length);
+    const medPickIdx = (run + 1) % Math.max(1, oneCountOutcomes.length);
 
-    const quota = conf.cycles ? conf.cycles[run % conf.cycles.length] : conf.allocation;
+    for (const a of allocs) {
+        const oid = a.outcome_id;
+        quota[oid] = { easy: 0, medium: 0, hard: 0 };
+        if (profileName === 'temel') {
+            if (a.count === 1) quota[oid].easy = 1;
+            else if (a.count === 2) quota[oid].easy = 2;
+            else if (a.count === 3) { quota[oid].easy = 2; quota[oid].medium = 1; }
+        } else if (profileName === 'zorlayici') {
+            if (a.count === 1) quota[oid].hard = 1;
+            else if (a.count === 2) { quota[oid].medium = 1; quota[oid].hard = 1; }
+            else if (a.count === 3) { quota[oid].easy = 1; quota[oid].medium = 1; quota[oid].hard = 1; }
+        } else {
+            // dengeli
+            if (a.count === 1) {
+                if (oneCountOutcomes[hardPickIdx] === oid) quota[oid].hard = 1;
+                else if (oneCountOutcomes[medPickIdx] === oid && oneCountOutcomes.length > 1) quota[oid].medium = 1;
+                else quota[oid].easy = 1;
+            } else if (a.count === 2) {
+                quota[oid].easy = 1;
+                quota[oid].medium = 1;
+            } else if (a.count === 3) {
+                quota[oid].easy = 1;
+                quota[oid].medium = 1;
+                quota[oid].hard = 1;
+            }
+        }
+    }
+    return quota;
+}
+
+export function selectQuestions(profileName, history, run = 0) {
+    const scenario = getActiveScenario();
+    const targetCount = scenario.question_count;
+    const quota = getScenarioQuota(scenario, profileName, run);
     const maxExistingLast = Object.values(history || {}).reduce((max, item) => Math.max(max, Number(item?.last) || 0), 0);
     const now = Math.max(Date.now(), maxExistingLast + 1);
 
     const slots = [];
-    for (const allocation of DATA.scenario.allocation) {
+    for (const allocation of scenario.allocation) {
         for (const diff of ['easy', 'medium', 'hard']) {
             const countNeeded = quota[allocation.outcome_id]?.[diff] || 0;
             if (countNeeded <= 0) continue;
@@ -3698,7 +3935,7 @@ export function selectQuestions(profileName, history, run = 0) {
         if (curRepeats + minRemRepeats[index] === bestRepeats && curTotalCount + minRemCount[index] > bestTotalCount) return;
 
         if (index === numSlots) {
-            if (current.length !== 7) return;
+            if (current.length !== targetCount) return;
             const isBetter =
                 curRepeats < bestRepeats ||
                 (curRepeats === bestRepeats && curTotalCount < bestTotalCount) ||
@@ -3752,10 +3989,11 @@ export function selectQuestions(profileName, history, run = 0) {
         [result[i], result[j]] = [result[j], result[i]];
     }
 
+    const conf = profiles[profileName];
     return {
         questions: result,
         repeats,
-        cycle: conf.cycles ? (run % conf.cycles.length) : null
+        cycle: conf?.cycles ? (run % conf.cycles.length) : null
     };
 }
 

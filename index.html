@@ -10,10 +10,10 @@
     <!-- İkonlar ve Favicon -->
     <meta name="apple-mobile-web-app-title" content="FenUp X">
     <meta name="application-name" content="FenUp X">
-    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128 256x256" href="/favicon.ico?v=2026103001">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026103001">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026103001">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026103001">
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128 256x256" href="/favicon.ico?v=2026103002">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026103002">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026103002">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026103002">
     
     <!-- Open Graph & Sosyal Paylaşım -->
     <meta property="og:type" content="website">
@@ -40,8 +40,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2026103001">
-    <link rel="stylesheet" href="exam.css?v=2026103001">
+    <link rel="stylesheet" href="style.css?v=2026103002">
+    <link rel="stylesheet" href="exam.css?v=2026103002">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -4065,7 +4065,11 @@
                     <div class="exam-scope-field">
                         <label class="exam-scope-label" for="exam-select-scenario">Senaryo</label>
                         <select id="exam-select-scenario" class="exam-select">
-                            <option value="senaryo2" selected>Senaryo 2 · 7 soru</option>
+                            <option value="1">Senaryo 1 · 9 soru</option>
+                            <option value="2" selected>Senaryo 2 · 7 soru (MEB Örnek)</option>
+                            <option value="3">Senaryo 3 · 8 soru</option>
+                            <option value="4">Senaryo 4 · 6 soru</option>
+                            <option value="5">Senaryo 5 · 7 soru</option>
                         </select>
                     </div>
                 </div>
@@ -4079,9 +4083,9 @@
                 </details>
 
                 <!-- Yardım Bağlantısı 2: Senaryonun İçeriğini Gör (İLK AÇILIŞTA KAPALI) -->
-                <details class="exam-scope-accordion">
+                <details class="exam-scope-accordion" id="exam-scope-accordion-details">
                     <summary><i class="fas fa-list-check"></i> Senaryonun içeriğini gör</summary>
-                    <div class="exam-accordion-body">
+                    <div class="exam-accordion-body" id="exam-scope-content-summary">
                         <ul class="exam-outcome-distribution-list">
                             <li><strong>Uzay Araştırmaları:</strong> 2 soru</li>
                             <li><strong>Uzay Kirliliği:</strong> 1 soru</li>
@@ -4238,8 +4242,8 @@
             <!-- Prova Başlatma / Kurulum Kutusu -->
             <div id="practice-setup-box" class="exam-panel">
                 <div class="exam-card-eyebrow">Yazılı Provası Ayarları</div>
-                <h3 class="exam-section-heading">7 Soruluk Provanı Hazırla</h3>
-                <p class="exam-body-p">Senaryo 2 dağılımı: Uzay araştırmaları (2), uzay kirliliği (1), evren (1), fiziksel iş (3) olmak üzere toplam 7 açık uçlu sorudur. Zorluk düzeyini ve çözüm modunu seçerek başlayabilirsin.</p>
+                <h3 class="exam-section-heading" id="exam-practice-setup-heading">7 Soruluk Provanı Hazırla</h3>
+                <p class="exam-body-p" id="exam-practice-setup-description">Senaryo 2 dağılımı: Uzay araştırmaları (2), uzay kirliliği (1), evren (1), fiziksel iş (3) olmak üzere toplam 7 açık uçlu sorudur. Zorluk düzeyini ve çözüm modunu seçerek başlayabilirsin.</p>
 
                 <!-- Zorluk Düzey Profilleri (Tekil Seçimli / Radio Benzeri) -->
                 <div class="exam-profile-select-group" role="radiogroup" aria-label="Zorluk düzeyi">
@@ -4651,8 +4655,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
-    <script type="module" src="exam-engine.js?v=2026103001"></script>
-    <script type="module" src="lab-engine.js?v=2026103001"></script>
-    <script type="module" src="script.js?v=2026103001"></script>
+    <script type="module" src="exam-engine.js?v=2026103002"></script>
+    <script type="module" src="lab-engine.js?v=2026103002"></script>
+    <script type="module" src="script.js?v=2026103002"></script>
 </body>
 </html>
