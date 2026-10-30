@@ -10,10 +10,10 @@
     <!-- İkonlar ve Favicon -->
     <meta name="apple-mobile-web-app-title" content="FenUp X">
     <meta name="application-name" content="FenUp X">
-    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128 256x256" href="/favicon.ico?v=2026102912">
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026102912">
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026102912">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026102912">
+    <link rel="icon" type="image/x-icon" sizes="16x16 32x32 48x48 64x64 128x128 256x256" href="/favicon.ico?v=2026103001">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=2026103001">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=2026103001">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2026103001">
     
     <!-- Open Graph & Sosyal Paylaşım -->
     <meta property="og:type" content="website">
@@ -40,8 +40,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2026102912">
-    <link rel="stylesheet" href="exam.css?v=2026102912">
+    <link rel="stylesheet" href="style.css?v=2026103001">
+    <link rel="stylesheet" href="exam.css?v=2026103001">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -694,10 +694,10 @@
                     <!-- Canvas Altı Responsive Metrik Şeridi (Deney 5.9 - Isı İletkenliği ve Yalıtım Simülatörü) -->
                     <div id="metrics-bar-5-9" class="lab-canvas-metrics-bar is-hidden">
                         <div class="metrics-pill" style="color: #f87171;"><i class="fas fa-fire"></i> İspirto Ocağı: <strong id="mbar-59-burner">Sönük</strong></div>
-                        <div class="metrics-pill" style="color: #f97316;"><i class="fas fa-circle"></i> Bakır: <strong id="mbar-59-copper">20°C</strong></div>
-                        <div class="metrics-pill" style="color: #cbd5e1;"><i class="fas fa-circle"></i> Alüminyum: <strong id="mbar-59-aluminum">20°C</strong></div>
-                        <div class="metrics-pill" style="color: #94a3b8;"><i class="fas fa-circle"></i> Demir: <strong id="mbar-59-iron">20°C</strong></div>
-                        <div class="metrics-pill status" id="mbar-59-status">🔥 Isı metallerde iletim yoluyla yayılır; iletkenlik sıralaması: Bakır > Alüminyum > Demir</div>
+                        <div class="metrics-pill" style="color: #cbd5e1;"><i class="fas fa-circle"></i> Metal Kaşık: <strong id="mbar-59-copper">20°C</strong></div>
+                        <div class="metrics-pill" style="color: #b45309;"><i class="fas fa-circle"></i> Tahta Kaşık: <strong id="mbar-59-aluminum">20°C</strong></div>
+                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-circle"></i> Plastik Kaşık: <strong id="mbar-59-iron">20°C</strong></div>
+                        <div class="metrics-pill status" id="mbar-59-status">🥄 Metal kaşık ısıyı iyi iletir (İletken); tahta ve plastik kaşıklar ısı akışını yavaşlatır (Yalıtkan)</div>
                     </div>
 
                     <!-- Canvas Altı Responsive Metrik Şeridi (Deney 5.10 - Devrede Ampul Parlaklığı Değişkenleri) -->
@@ -792,7 +792,7 @@
                                 <input type="range" id="lab-energy-mass-range" min="1" max="5" value="2" step="0.5">
                             </div>
                             <div class="lab-angle-slider-wrap">
-                                <label for="lab-energy-angle-range">Bırakma Yüksekliği: <span id="lab-energy-angle-display">45°</span></label>
+                                <label for="lab-energy-angle-range">Bırakma Açısı (θ): <span id="lab-energy-angle-display">45°</span></label>
                                 <input type="range" id="lab-energy-angle-range" min="15" max="60" value="45" step="5">
                             </div>
                         </div>
@@ -1059,6 +1059,7 @@
                                 <button class="lab-toggle-btn" id="btn-grav-heat" title="İspirto Ocağında Küreyi Isıt"><i class="fas fa-fire" style="color: #f97316;"></i> 2. Küreyi Isıt</button>
                                 <button class="lab-toggle-btn" id="btn-grav-pass-hot" title="Sıcak Küreyi Halkadan Geçirmeyi Dene"><i class="fas fa-times-circle" style="color: #ef4444;"></i> 3. Geçirmeyi Dene (Sıcak)</button>
                                 <button class="lab-toggle-btn" id="btn-grav-quench" title="Soğuk Suya Daldırarak Büz"><i class="fas fa-snowflake" style="color: #38bdf8;"></i> 4. Suya Daldır (Soğut)</button>
+                                <button class="lab-toggle-btn" id="btn-grav-pass-quenched" title="Soğutulmuş Küreyi Halkadan Tekrar Geçirmeyi Dene"><i class="fas fa-check-circle" style="color: #10b981;"></i> 5. Yeniden Dene (Soğuk)</button>
                             </div>
                             <div class="lab-toggle-btn-group">
                                 <button class="lab-toggle-btn" id="btn-grav-reset" title="Düzeneği Sıfırla"><i class="fas fa-redo"></i> Sıfırla</button>
@@ -1070,16 +1071,22 @@
                     <div id="quick-controls-6-9" class="lab-canvas-quick-controls is-hidden">
                         <div class="lab-quick-lens-row">
                             <div class="lab-toggle-btn-group">
-                                <button class="lab-toggle-btn active" id="btn-cond-mat-copper" title="Bakır Tel Bağla (İletken)"><i class="fas fa-bolt" style="color: #f59e0b;"></i> Bakır Tel</button>
-                                <button class="lab-toggle-btn" id="btn-cond-mat-iron" title="Demir Çivi Bağla (İletken)"><i class="fas fa-cube" style="color: #94a3b8;"></i> Demir Çivi</button>
-                                <button class="lab-toggle-btn" id="btn-cond-mat-graphite" title="Kurşun Kalem Ucu / Grafit (İletken)"><i class="fas fa-pencil-alt" style="color: #cbd5e1;"></i> Grafit Uç</button>
-                                <button class="lab-toggle-btn" id="btn-cond-mat-wood" title="Tahta Çubuk Bağla (Yalıtkan)"><i class="fas fa-tree" style="color: #b45309;"></i> Tahta</button>
-                                <button class="lab-toggle-btn" id="btn-cond-mat-plastic" title="Plastik Silgi Bağla (Yalıtkan)"><i class="fas fa-eraser" style="color: #ef4444;"></i> Silgi</button>
+                                <button class="lab-toggle-btn" id="btn-cond-toggle-switch" title="Devre Anahtarını Aç / Kapat"><i class="fas fa-toggle-off" id="icon-cond-switch"></i> <span id="label-cond-switch">Anahtarı Kapat</span></button>
                             </div>
                             <div class="lab-toggle-btn-group">
-                                <button class="lab-toggle-btn" id="btn-cond-mat-saltwater" title="Tuzlu Su Beheri (İletken)"><i class="fas fa-tint" style="color: #38bdf8;"></i> Tuzlu Su</button>
-                                <button class="lab-toggle-btn" id="btn-cond-mat-purewater" title="Saf Su Beheri (Yalıtkan)"><i class="fas fa-tint" style="color: #93c5fd;"></i> Saf Su</button>
-                                <button class="lab-toggle-btn" id="btn-cond-reset" title="Uçları Boşa Çıkar"><i class="fas fa-redo"></i> Boşa Çıkar</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-copper" title="Bakır Tel"><i class="fas fa-bolt" style="color: #f59e0b;"></i> Bakır Tel</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-iron" title="Demir Çivi"><i class="fas fa-cube" style="color: #94a3b8;"></i> Demir Çivi</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-graphite" title="Grafit Uç"><i class="fas fa-pencil-alt" style="color: #cbd5e1;"></i> Grafit Uç</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-wood" title="Kuru Tahta"><i class="fas fa-tree" style="color: #b45309;"></i> Tahta</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-plastic" title="Plastik Cetvel"><i class="fas fa-ruler" style="color: #3b82f6;"></i> Plastik</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-eraser" title="Silgi"><i class="fas fa-eraser" style="color: #ef4444;"></i> Silgi</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn" id="btn-cond-mat-saltwater" title="Tuzlu Su"><i class="fas fa-tint" style="color: #38bdf8;"></i> Tuzlu Su</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-lemonwater" title="Limonlu Su"><i class="fas fa-lemon" style="color: #facc15;"></i> Limonlu Su</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-sugarwater" title="Şekerli Su"><i class="fas fa-cube" style="color: #bae6fd;"></i> Şekerli Su</button>
+                                <button class="lab-toggle-btn" id="btn-cond-mat-purewater" title="Saf Su"><i class="fas fa-tint" style="color: #93c5fd;"></i> Saf Su</button>
+                                <button class="lab-toggle-btn active" id="btn-cond-reset" title="Uçları Boşa Çıkar"><i class="fas fa-unlink"></i> Boş Uçlar</button>
                             </div>
                         </div>
                     </div>
@@ -1092,8 +1099,9 @@
                                 <button class="lab-toggle-btn" id="btn-res-mode-rheostat" title="Reosta ile Ayarlı Direnç"><i class="fas fa-sliders-h"></i> 2. Reosta Modu</button>
                             </div>
                             <div class="lab-toggle-btn-group" id="group-res-wire-presets">
-                                <button class="lab-toggle-btn active" id="btn-res-wire-short-thick" title="Kısa ve Kalın Tel (En Düşük Direnç, Parlak)">⚡ Kısa & Kalın</button>
-                                <button class="lab-toggle-btn" id="btn-res-wire-long-thin" title="Uzun ve İnce Tel (En Yüksek Direnç, Sönük)">🕯️ Uzun & İnce</button>
+                                <button class="lab-toggle-btn active" id="btn-res-compare-len" title="Boy Karşılaştırması (10 cm vs 40 cm)">1. Boy Etkisi</button>
+                                <button class="lab-toggle-btn" id="btn-res-compare-thick" title="Kesit Karşılaştırması (İnce S vs Kalın 2S)">2. Kesit Etkisi</button>
+                                <button class="lab-toggle-btn" id="btn-res-compare-mat" title="Cins Karşılaştırması (Bakır vs Nikrom)">3. Cins Etkisi</button>
                             </div>
                             <div class="lab-toggle-btn-group">
                                 <button class="lab-toggle-btn" id="btn-res-reset" title="Devreyi Sıfırla"><i class="fas fa-redo"></i> Sıfırla</button>
@@ -1233,8 +1241,8 @@
                     <div id="quick-controls-5-9" class="lab-canvas-quick-controls is-hidden">
                         <div class="lab-quick-lens-row">
                             <div class="lab-toggle-btn-group">
-                                <button class="lab-toggle-btn active" id="btn-heat-mode-metals" title="Metallerde Isı İletim Deneyi (Balmumu ve Bilyeler)">🧪 1. Metallerde İletim</button>
-                                <button class="lab-toggle-btn" id="btn-heat-mode-insulation" title="Binalarda Isı Yalıtım Malzemeleri Testi">🏠 2. Yalıtım Modeli</button>
+                                <button class="lab-toggle-btn active" id="btn-heat-mode-metals" title="İletken ve Yalıtkan Madde Deneyi"><i class="fas fa-utensils"></i> 1. İletken ve Yalıtkanlar</button>
+                                <button class="lab-toggle-btn" id="btn-heat-mode-insulation" title="Binalarda Isı Yalıtım Modeli Testi"><i class="fas fa-home"></i> 2. Yalıtım Modeli</button>
                             </div>
                             <div class="lab-toggle-btn-group">
                                 <button class="lab-toggle-btn" id="btn-heat-toggle-burner" title="İspirto Ocağını Aç / Kapat"><i class="fas fa-fire"></i> <span id="label-heat-burner">Ocağı Yak</span></button>
@@ -2633,6 +2641,7 @@
                                             <button class="lab-select-pill" id="pill-grav-heat">2. Alevde Isıt</button>
                                             <button class="lab-select-pill" id="pill-grav-pass-hot">3. Sıcakken Dene</button>
                                             <button class="lab-select-pill" id="pill-grav-quench">4. Soğuk Suda Soğut</button>
+                                            <button class="lab-select-pill" id="pill-grav-pass-quenched">5. Yeniden Dene (Soğuk)</button>
                                         </div>
                                     </div>
                                 </div>
@@ -2683,27 +2692,34 @@
                             </div>
 
                             <div class="lab-panel-box" style="margin-top: 12px;">
-                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Test Edilecek Maddeyi Seç</h4>
+                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Devre ve Madde Seçimi</h4>
                                 <div class="lab-lens-controls-box">
+                                    <div class="lab-field-group" style="margin-bottom: 8px;">
+                                        <label class="lab-field-label">Devre Anahtarı:</label>
+                                        <button class="lab-select-pill" id="pill-cond-switch" style="width: 100%;">Anahtarı Kapat</button>
+                                    </div>
                                     <div class="lab-field-group">
                                         <label class="lab-field-label">Katı Maddeler:</label>
                                         <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px;">
-                                            <button class="lab-select-pill active" id="pill-cond-copper">⚡ Bakır Tel</button>
-                                            <button class="lab-select-pill" id="pill-cond-iron">🔩 Demir Çivi</button>
-                                            <button class="lab-select-pill" id="pill-cond-graphite">✏️ Grafit Uç</button>
-                                            <button class="lab-select-pill" id="pill-cond-wood">🪵 Tahta</button>
-                                            <button class="lab-select-pill" id="pill-cond-plastic">🧴 Plastik</button>
-                                            <button class="lab-select-pill" id="pill-cond-eraser">🧽 Silgi</button>
+                                            <button class="lab-select-pill" id="pill-cond-copper">Bakır Tel</button>
+                                            <button class="lab-select-pill" id="pill-cond-iron">Demir Çivi</button>
+                                            <button class="lab-select-pill" id="pill-cond-graphite">Grafit Uç</button>
+                                            <button class="lab-select-pill" id="pill-cond-wood">Kuru Tahta</button>
+                                            <button class="lab-select-pill" id="pill-cond-plastic">Plastik Cetvel</button>
+                                            <button class="lab-select-pill" id="pill-cond-eraser">Silgi</button>
                                         </div>
                                     </div>
                                     <div class="lab-field-group" style="margin-top: 8px;">
                                         <label class="lab-field-label">Sıvı Çözeltiler:</label>
                                         <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-                                            <button class="lab-select-pill" id="pill-cond-saltwater">🧂 Tuzlu Su (İletken)</button>
-                                            <button class="lab-select-pill" id="pill-cond-sugarwater">🍬 Şekerli Su (Yalıtkan)</button>
-                                            <button class="lab-select-pill" id="pill-cond-lemonwater">🍋 Limonlu Su (İletken)</button>
-                                            <button class="lab-select-pill" id="pill-cond-purewater">💧 Saf Su (Yalıtkan)</button>
+                                            <button class="lab-select-pill" id="pill-cond-saltwater">Tuzlu Su</button>
+                                            <button class="lab-select-pill" id="pill-cond-lemonwater">Limonlu Su</button>
+                                            <button class="lab-select-pill" id="pill-cond-sugarwater">Şekerli Su</button>
+                                            <button class="lab-select-pill" id="pill-cond-purewater">Saf Su</button>
                                         </div>
+                                    </div>
+                                    <div class="lab-field-group" style="margin-top: 8px;">
+                                        <button class="lab-select-pill active" id="pill-cond-empty" style="width: 100%;">Boş Uçlar (Açık Devre)</button>
                                     </div>
                                 </div>
                             </div>
@@ -3197,43 +3213,43 @@
                             <div class="lab-panel-box">
                                 <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
                                 <div class="lab-vars-list">
-                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Metal Çubuk Cinsi (Bakır, Alüminyum, Demir) / Yalıtım Malzemesi</div>
-                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Isı İletim Hızı (Balmumunun Erime Süresi / Isı Kaybı Oranı)</div>
-                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Çubuk Boyutları, Balmumu Miktarı, İspirto Alev Gücü</div>
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Madde Cinsi (Metal, Tahta, Plastik Kaşık) / Yalıtım Malzemesi</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Isı İletim Durumu (Balmumunun Erimesi ve Bilyenin Düşmesi) / Isı Korunumu</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Kaşık Boyutları, Balmumu Miktarı, İspirto Alev Gücü</div>
                                 </div>
                             </div>
 
                             <!-- Dinamik Pedagojik Çıkarım Kartı -->
                             <div class="lab-pedagogical-card is-work" id="heat-pedagogical-box">
-                                <div class="pedagogical-icon" id="heat-pedagogical-icon"><i class="fas fa-fire"></i></div>
+                                <div class="pedagogical-icon" id="heat-pedagogical-icon"><i class="fas fa-utensils"></i></div>
                                 <div class="pedagogical-content">
-                                    <strong id="heat-pedagogical-title">🔥 Metallerde Isı İletim Hızı</strong>
-                                    <p id="heat-pedagogical-text">Tüm metaller ısıyı iletir fakat iletkenlik hızları farklıdır. Bakır en hızlı, demir ise aralarında en yavaş iletendir.</p>
+                                    <strong id="heat-pedagogical-title">İletken ve Yalıtkan Maddeler</strong>
+                                    <p id="heat-pedagogical-text">Metal kaşık ısıyı iyi ileterek (ısı iletkeni) balmumunu hızla eritir ve bilyeyi düşürür. Tahta ve plastik kaşıklar ise ısı iletimini geciktirerek (ısı yalıtkanı) bilyenin düşmesini önler.</p>
                                 </div>
                             </div>
 
                             <div class="lab-panel-box" style="margin-top: 12px;">
                                 <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Deney Modu ve Ocak Kontrolleri</h4>
                                 <div class="lab-pills-row" style="margin-bottom: 10px;">
-                                    <button class="lab-mini-pill-btn active" id="pill-heat-mode-metals">🧪 1. Metallerde İletim</button>
-                                    <button class="lab-mini-pill-btn" id="pill-heat-mode-insulation">🏠 2. Yalıtım Modeli</button>
+                                    <button class="lab-mini-pill-btn active" id="pill-heat-mode-metals">1. İletken ve Yalıtkanlar</button>
+                                    <button class="lab-mini-pill-btn" id="pill-heat-mode-insulation">2. Yalıtım Modeli</button>
                                 </div>
                                 <div class="lab-pills-row" style="margin-bottom: 12px;">
-                                    <button class="lab-mini-pill-btn" id="pill-heat-burner-on">🔥 Ocağı Yak</button>
-                                    <button class="lab-mini-pill-btn active" id="pill-heat-burner-off">❄️ Ocağı Söndür</button>
+                                    <button class="lab-mini-pill-btn" id="pill-heat-burner-on">Ocağı Yak</button>
+                                    <button class="lab-mini-pill-btn active" id="pill-heat-burner-off">Ocağı Söndür</button>
                                 </div>
                                 <div class="lab-stats-row">
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Bakır Çubuk</span>
-                                        <strong class="chip-val" id="metric-59-copper" style="color: #f97316;">20°C</strong>
+                                        <span class="chip-label">Metal Kaşık</span>
+                                        <strong class="chip-val" id="metric-59-copper" style="color: #cbd5e1;">20°C</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Alüminyum Çubuk</span>
-                                        <strong class="chip-val" id="metric-59-aluminum" style="color: #cbd5e1;">20°C</strong>
+                                        <span class="chip-label">Tahta Kaşık</span>
+                                        <strong class="chip-val" id="metric-59-aluminum" style="color: #b45309;">20°C</strong>
                                     </div>
                                     <div class="lab-stat-chip">
-                                        <span class="chip-label">Demir Çubuk</span>
-                                        <strong class="chip-val" id="metric-59-iron" style="color: #94a3b8;">20°C</strong>
+                                        <span class="chip-label">Plastik Kaşık</span>
+                                        <strong class="chip-val" id="metric-59-iron" style="color: #38bdf8;">20°C</strong>
                                     </div>
                                     <div class="lab-stat-chip">
                                         <span class="chip-label">İspirto Ocağı</span>
@@ -3727,25 +3743,25 @@
                             <div class="lab-guide-text">
                                 <div class="guide-item">
                                     <strong>1. Çimlenme Nedir?</strong>
-                                    <p>Tohumun içindeki embriyonun uygun çevre koşullarında uyku (dormansi) halinden çıkarak ana bitkiye benzeyen genç bir bitkiyi (fideyi) oluşturmak üzere gelişmesine <strong>çimlenme</strong> denir.</p>
+                                    <p>Tohumun içindeki embriyonun uygun çevre koşullarında gelişerek ana bitkiye benzeyen genç bir bitkiyi (fideyi) oluşturmasına <strong>çimlenme</strong> denir.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>2. Çimlenme İçin Gerekli Şartlar (S.O.S Kuralı):</strong>
-                                    <p>Bir tohumun çimlenebilmesi için 3 temel faktörün aynı anda bulunması şarttır:<br>
-                                    • <strong>S (Su / Nem):</strong> Tohum kabuğunun yumuşamasını ve enzimlerin aktifleşmesini sağlar.<br>
-                                    • <strong>O (Oksijen / Hava):</strong> Embriyonun hücresel solunum yaparak büyüme enerjisi üretmesi için gereklidir.<br>
-                                    • <strong>S (Uygun Sıcaklık):</strong> Enzimlerin çalışabilmesi için genellikle 15°C–25°C arası idealdir. Donma noktasında (0°C) veya aşırı sıcakta çimlenme durur.</p>
+                                    <p>Bir tohumun çimlenebilmesi için temel çevre koşullarının (su/nem, oksijen ve uygun sıcaklık) sağlanması gerekir. Ders kitabındaki etkinlikte hava/oksijen ortamda sabit tutulmuştur.<br>
+                                    • <strong>Su / Nem:</strong> Tohum kabuğunun yumuşamasını ve tohumun uyanmasını sağlar.<br>
+                                    • <strong>Oksijen:</strong> Embriyonun solunum yaparak büyüme enerjisi üretmesi için ortamda hazır bulunur.<br>
+                                    • <strong>Uygun Sıcaklık:</strong> Canlılık faaliyetlerinin yürütülebilmesi için genellikle 15°C–25°C arası idealdir. Donma noktasında (0°C) çimlenme durur.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>3. Pedagojik İnceleme: Çimlenmede Işığın Rolü:</strong>
-                                    <p>Bu fasulye tohumu modelinde çimlenme karanlık ortamda da gerçekleşir (S.O.S: Su, Oksijen, Uygun Sıcaklık). Tohumlar toprak altında karanlıkta çimlenirken çeneklerindeki (endosperm) hazır besin deposunu tüketir. Ancak doğadaki bazı bitki tohumları (örneğin marul, tütün ve bazı kır çiçekleri) çimlenmek için ışık uyarısına ihtiyaç duyar. Çimlenme sonrasında fidenin klorofil sentezleyip fotosentezle büyümesi ve sağlıklı gelişmesi için ise ışık kesinlikle şarttır.</p>
+                                    <p>Bu fasulye tohumu modelinde çimlenme karanlık ortamda da gerçekleşir. Tohumlar toprak altında karanlıkta çimlenirken çeneklerdeki hazır besin deposunu tüketir. Çimlenme tamamlandıktan sonra fidenin yeşil yapraklarıyla fotosentez yapıp büyüyebilmesi için ışık gereklidir.</p>
                                 </div>
                                 <div class="guide-item">
                                     <strong>4. Çimlenme Sürecinin Aşamaları:</strong>
                                     <p>1. Tohum su emerek şişer.<br>
-                                    2. Tohum kabuğu (testa) çatlar.<br>
-                                    3. İlk olarak aşağıya doğru ilk kökçük (radikula) uzanır.<br>
-                                    4. Ardından yukarıya doğru ilk gövde ve sürgün (hipokotil) yükselerek yeşil filizi oluşturur.</p>
+                                    2. Tohum kabuğu çatlar.<br>
+                                    3. İlk olarak aşağıya doğru kök uzanır.<br>
+                                    4. Ardından yukarıya doğru gövde yükselerek ilk yaprakları oluşturur.</p>
                                 </div>
                             </div>
                         </div>
@@ -4635,8 +4651,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
-    <script type="module" src="exam-engine.js?v=2026102912"></script>
-    <script type="module" src="lab-engine.js?v=2026102912"></script>
-    <script type="module" src="script.js?v=2026102912"></script>
+    <script type="module" src="exam-engine.js?v=2026103001"></script>
+    <script type="module" src="lab-engine.js?v=2026103001"></script>
+    <script type="module" src="script.js?v=2026103001"></script>
 </body>
 </html>

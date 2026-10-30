@@ -885,7 +885,7 @@ let labCurriculumMapCache = null;
 async function loadLabCurriculumMap() {
     if (labCurriculumMapCache) return labCurriculumMapCache;
     try {
-        const res = await fetch('data/lab/lab-curriculum-map.json?v=2026102912');
+        const res = await fetch('data/lab/lab-curriculum-map.json?v=2026103001');
         if (!res.ok) return null;
         const data = await res.json();
         const normalized = {};
@@ -2256,9 +2256,10 @@ function setupEclipseControlsDOM() {
         btnAlign.addEventListener('click', () => {
             const ec = labState.eclipse;
             ec.orbitAngle = 0.0;
+            ec.isPlaying = false; // Öğrencinin tam hizayı sabit inceleyebilmesi için duraklatılır
             updateEclipseDOMControls();
             updateEclipseMetricsDOM();
-            showLabToast("🎯 Güneş, Dünya ve Ay tam aynı doğrultuya getirildi!");
+            showLabToast("🎯 Güneş, Dünya ve Ay tam aynı hizaya getirildi (İnceleme için duraklatıldı)!");
         });
     }
 
@@ -2315,8 +2316,9 @@ function updateEclipsePhysics() {
 function updateEclipseMetricsDOM() {
     const ec = labState.eclipse;
     const isSolar = (ec.mode === "solar");
-    const isTotal = isSolar ? (Math.abs(ec.orbitAngle) <= 5.5) : (Math.abs(ec.orbitAngle) <= 2.3);
-    const isPartial = !isTotal && (isSolar ? (Math.abs(ec.orbitAngle) <= 16.0) : (Math.abs(ec.orbitAngle) <= 10.7));
+    // Tam tutulma: Ay diski Güneş fotosferini tamamen örttüğünde oluşur
+    const isTotal = isSolar ? (Math.abs(ec.orbitAngle) <= 1.2) : (Math.abs(ec.orbitAngle) <= 2.0);
+    const isPartial = !isTotal && (isSolar ? (Math.abs(ec.orbitAngle) <= 16.0) : (Math.abs(ec.orbitAngle) <= 11.0));
 
     // Canvas Altı Responsive Metrik Şeridi (#metrics-bar-6-1)
     const mbMode = document.getElementById('mbar-61-mode');
@@ -2905,41 +2907,59 @@ function drawEclipseSkyViewfinder(ctx, ec, isSolar, isAligned) {
         ctx.arc(vx, vy, sunDiskR, 0, Math.PI * 2);
         ctx.fill();
 
-        // Ay Diskinin Güneş Önünden Geçişi (Y ekseninde kayma)
-        const moonOffsetY = (ec.orbitAngle / 28) * (sunDiskR * 2.2);
+        // Ay Diskinin Güneş Önünden Geçişi ve Örtülme Geometrisi
+        const isTotalityNow = (Math.abs(ec.orbitAngle) <= 1.2);
+        const moonOffsetY = isTotalityNow ? 0 : (ec.orbitAngle / 28) * (sunDiskR * 2.2);
         const moonDiskX = vx;
         const moonDiskY = vy + moonOffsetY;
-        const moonDiskR = 19.5;
+        const moonDiskR = isTotalityNow ? 20.0 : 19.5; // Tam tutulmada Ay diski fotosferi tamamen örter
 
-        // Ay Silüeti
+        // TAM TUTULMA ÖZEL EFEKTİ: Dış Korona Tacı (Ay diskinin arkasından ışıyan beyaz/mavi taç)
+        if (isTotalityNow) {
+            ctx.save();
+            // Korona Dış Halesi
+            const coronaGrad = ctx.createRadialGradient(vx, vy, sunDiskR - 2, vx, vy, sunDiskR + 14);
+            coronaGrad.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+            coronaGrad.addColorStop(0.35, "rgba(186, 230, 253, 0.65)");
+            coronaGrad.addColorStop(0.7, "rgba(56, 189, 248, 0.25)");
+            coronaGrad.addColorStop(1, "rgba(2, 6, 23, 0)");
+            ctx.fillStyle = coronaGrad;
+            ctx.beginPath();
+            ctx.arc(vx, vy, sunDiskR + 14, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Korona İnce İplikçikleri (Rays)
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 12; i++) {
+                const ang = (i / 12) * Math.PI * 2;
+                ctx.beginPath();
+                ctx.moveTo(vx + Math.cos(ang) * (sunDiskR + 1), vy + Math.sin(ang) * (sunDiskR + 1));
+                ctx.lineTo(vx + Math.cos(ang) * (sunDiskR + 8 + (i % 3) * 3), vy + Math.sin(ang) * (sunDiskR + 8 + (i % 3) * 3));
+                ctx.stroke();
+            }
+
+            // Elmas Yüzük (Yalnızca tam tutulmaya giriş/çıkış sınırında belirir)
+            if (Math.abs(ec.orbitAngle) >= 0.7) {
+                const ringAngle = -Math.PI / 4;
+                const rx = vx + Math.cos(ringAngle) * (sunDiskR + 1);
+                const ry = vy + Math.sin(ringAngle) * (sunDiskR + 1);
+                ctx.fillStyle = "#ffffff";
+                ctx.shadowColor = "#ffffff";
+                ctx.shadowBlur = 16;
+                ctx.beginPath();
+                ctx.arc(rx, ry, 3.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+            ctx.restore();
+        }
+
+        // Ay Silüeti (Güneş fotosferini örter)
         ctx.fillStyle = "#020617";
         ctx.beginPath();
         ctx.arc(moonDiskX, moonDiskY, moonDiskR, 0, Math.PI * 2);
         ctx.fill();
-
-        // TAM TUTULMA ÖZEL EFEKTİ: Parlak Korona Tacı ve Elmas Yüzük Pırıltısı
-        if (isAligned) {
-            ctx.save();
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.85)";
-            ctx.shadowColor = "#38bdf8";
-            ctx.shadowBlur = 14;
-            ctx.lineWidth = 2.5;
-            ctx.beginPath();
-            ctx.arc(vx, vy, sunDiskR + 1.5, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Elmas Yüzük (Diamond Ring Effect)
-            const ringAngle = -Math.PI / 4;
-            const rx = vx + Math.cos(ringAngle) * (sunDiskR + 1);
-            const ry = vy + Math.sin(ringAngle) * (sunDiskR + 1);
-            ctx.fillStyle = "#ffffff";
-            ctx.shadowColor = "#ffffff";
-            ctx.shadowBlur = 16;
-            ctx.beginPath();
-            ctx.arc(rx, ry, 3.5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
     } else {
         // Ay Tutulmasında Gece Gökyüzü Görünümü
         ctx.fillStyle = "#02040a";
@@ -5804,14 +5824,19 @@ function updateHeatMetricsDOM() {
             mbCopper.textContent = c.ballDropped ? `🥇 Düştü (${fmt(c.dropTime, 1)} s)` : `${fmt(c.temp, 0)}°C`;
         }
         if (mbAl) {
-            mbAl.textContent = al.ballDropped ? `Düştü` : `Erimedi (Yalıtkan)`;
+            mbAl.textContent = al.ballDropped ? `Düştü` : (ht.isHeating ? `Düşmedi (Yavaş İletir)` : `${fmt(al.temp, 0)}°C`);
         }
         if (mbIron) {
-            mbIron.textContent = fe.ballDropped ? `Düştü` : `Erimedi (Yalıtkan)`;
+            mbIron.textContent = fe.ballDropped ? `Düştü` : (ht.isHeating ? `Düşmedi (Yavaş İletir)` : `${fmt(fe.temp, 0)}°C`);
         }
         if (mbStatus) {
-            mbStatus.textContent = "🥄 Metal ısıyı iyi iletir (İletken); tahta ve plastik kaşık ısıyı iletmez (Yalıtkan)";
-            mbStatus.style.color = "#facc15";
+            if (!ht.isHeating && c.temp === 20 && !c.ballDropped) {
+                mbStatus.textContent = "Hazır: İspirto ocağını yakarak kaşıkların ısı iletimini test edin";
+                mbStatus.style.color = "#94a3b8";
+            } else {
+                mbStatus.textContent = "🥄 Metal kaşık ısıyı iyi iletir (İletken); tahta ve plastik ısı akışını yavaşlatır (Yalıtkan)";
+                mbStatus.style.color = "#facc15";
+            }
         }
 
         if (pCop) {
@@ -5820,12 +5845,12 @@ function updateHeatMetricsDOM() {
             if (lbl) lbl.textContent = "Metal Kaşık (İletken)";
         }
         if (pAl) {
-            pAl.textContent = al.ballDropped ? `Düştü` : `Erimedi (Yalıtkan)`;
+            pAl.textContent = al.ballDropped ? `Düştü` : (ht.isHeating ? `Düşmedi (Yalıtkan)` : `${fmt(al.temp, 0)}°C`);
             const lbl = pAl.previousElementSibling;
             if (lbl) lbl.textContent = "Tahta Kaşık (Yalıtkan)";
         }
         if (pFe) {
-            pFe.textContent = fe.ballDropped ? `Düştü` : `Erimedi (Yalıtkan)`;
+            pFe.textContent = fe.ballDropped ? `Düştü` : (ht.isHeating ? `Düşmedi (Yalıtkan)` : `${fmt(fe.temp, 0)}°C`);
             const lbl = pFe.previousElementSibling;
             if (lbl) lbl.textContent = "Plastik Kaşık (Yalıtkan)";
         }
@@ -5837,8 +5862,8 @@ function updateHeatMetricsDOM() {
 
         if (pTitle && pText && pIcon) {
             pIcon.innerHTML = '<i class="fas fa-utensils" style="color: #f59e0b;"></i>';
-            pTitle.textContent = "🥄 İletken ve Yalıtkan Maddeler (Balmumu Testi)";
-            pText.textContent = "Metaller ısıyı iyi ileten iletken maddelerdir; metal kaşık ısıyı hızla ileterek ucundaki balmumunu eritir ve bilyeyi düşürür. Tahta ve plastik ise ısıyı iyi iletmeyen yalıtkan maddelerdir; bu nedenle yemek pişirirken ellerimizin yanmaması için tahta kaşık ve tencerelerde plastik kulplar tercih edilir.";
+            pTitle.textContent = "İletken ve Yalıtkan Maddeler (Balmumu Testi)";
+            pText.textContent = "Metaller ısıyı iyi ileten iletken maddelerdir; metal kaşık ısıyı hızla ileterek ucundaki balmumunu eritir ve bilyeyi düşürür. Tahta ve plastik ise ısıyı iyi iletmeyen yalıtkan maddelerdir; bu nedenle yemek pişirirken ellerimizin yanmaması için tahta kaşık ve tencerelerde plastik kulplar tercih edilir. Yalıtkan maddeler ısı iletimini tamamen sıfırlamaz; ısı akış hızını yavaşlatır.";
         }
     }
 }
@@ -6994,7 +7019,7 @@ function drawAbsorptionSimulation() {
 
 function initExpansionState() {
     const ex = labState.expansion;
-    ex.step = "cold_pass";
+    ex.step = "ready"; // Başlangıçta henüz denenmedi durumu
     ex.sphereTemp = 20.0;
     ex.sphereRadius = 25.5; // Soğukken halkanın (29.0) içinden rahat geçer
     ex.ringRadius = 29.0;
@@ -7003,7 +7028,7 @@ function initExpansionState() {
     ex.targetY = 140;
     ex.isHeating = false;
     ex.isQuenching = false;
-    ex.isPassingThrough = true;
+    ex.isPassingThrough = false;
     ex.flameParticles = [];
     ex.steamParticles = [];
 
@@ -7019,17 +7044,22 @@ function resetExpansionExperiment() {
 function setExpansionStep(stepName) {
     const ex = labState.expansion;
     ex.step = stepName;
+    const passes = (ex.sphereRadius <= ex.ringRadius);
 
     if (stepName === "cold_pass") {
-        ex.sphereTemp = 20.0;
-        ex.sphereRadius = 25.5;
         ex.sphereX = 400;
         ex.sphereY = 140;
-        ex.targetY = 320; // Halkanın altından geçer
         ex.isHeating = false;
         ex.isQuenching = false;
-        ex.isPassingThrough = true;
-        showLabToast("1. Aşama: Soğuk küre halkadan kolayca geçer.");
+        if (passes) {
+            ex.targetY = 320; // Halkanın altından geçer
+            ex.isPassingThrough = true;
+            showLabToast("1. Aşama: Oda sıcaklığındaki soğuk küre halkadan kolayca geçti.");
+        } else {
+            ex.targetY = 208; // Takılır
+            ex.isPassingThrough = false;
+            showLabToast("Küre sıcak olduğu için halkaya takıldı!");
+        }
     } else if (stepName === "heating") {
         ex.sphereX = 180; // İspirto ocağının üstü
         ex.sphereY = 240;
@@ -7040,11 +7070,17 @@ function setExpansionStep(stepName) {
     } else if (stepName === "hot_try") {
         ex.sphereX = 400;
         ex.sphereY = 140;
-        ex.targetY = 208; // Halkanın üstüne küt diye takılır (halka Y: 230)
         ex.isHeating = false;
         ex.isQuenching = false;
-        ex.isPassingThrough = false;
-        showLabToast("3. Aşama: Sıcak küre genleştiği için halkadan GEÇEMEZ (Takıldı!).");
+        if (!passes) {
+            ex.targetY = 208; // Halkanın üstüne takılır (halka Y: 230)
+            ex.isPassingThrough = false;
+            showLabToast("3. Aşama: Sıcak küre genleştiği için halkadan GEÇEMEZ (Takıldı!).");
+        } else {
+            ex.targetY = 320;
+            ex.isPassingThrough = true;
+            showLabToast("Küre henüz yeterince genleşmediği için geçti.");
+        }
     } else if (stepName === "quenching") {
         ex.sphereX = 620; // Soğuk su beherinin içi
         ex.sphereY = 260;
@@ -7052,6 +7088,20 @@ function setExpansionStep(stepName) {
         ex.isHeating = false;
         ex.isQuenching = true;
         showLabToast("4. Aşama: Küre soğuk suya daldırıldı (Büzülüyor!).");
+    } else if (stepName === "quenched_pass") {
+        ex.sphereX = 400;
+        ex.sphereY = 140;
+        ex.isHeating = false;
+        ex.isQuenching = false;
+        if (passes) {
+            ex.targetY = 320; // Halkanın altından geçer
+            ex.isPassingThrough = true;
+            showLabToast("5. Aşama: Soğutulan küre büzüldü ve halkadan tekrar geçti!");
+        } else {
+            ex.targetY = 208;
+            ex.isPassingThrough = false;
+            showLabToast("Küre henüz yeterince soğumadığı için halkaya takıldı!");
+        }
     }
 
     updateExpansionDOMControls();
@@ -7067,7 +7117,8 @@ function updateExpansionPhysics() {
     // Isıtma Fiziği
     if (ex.isHeating) {
         if (ex.sphereTemp < 250.0) {
-            ex.sphereTemp += 1.8;
+            ex.sphereTemp += 4.0;
+            if (ex.sphereTemp > 250.0) ex.sphereTemp = 250.0;
             ex.sphereRadius = 25.5 + ((ex.sphereTemp - 20) / 230) * 7.0; // 25.5 -> 32.5 px
         }
         // Alev Parçacıkları Üret
@@ -7128,18 +7179,20 @@ function updateExpansionPhysics() {
 function updateExpansionDOMControls() {
     const ex = labState.expansion;
 
-    const steps = ["cold_pass", "heating", "hot_try", "quenching"];
+    const steps = ["cold_pass", "heating", "hot_try", "quenching", "quenched_pass"];
     const quickIds = {
         cold_pass: "btn-grav-pass-cold",
         heating: "btn-grav-heat",
         hot_try: "btn-grav-pass-hot",
-        quenching: "btn-grav-quench"
+        quenching: "btn-grav-quench",
+        quenched_pass: "btn-grav-pass-quenched"
     };
     const pillIds = {
         cold_pass: "pill-grav-pass-cold",
         heating: "pill-grav-heat",
         hot_try: "pill-grav-pass-hot",
-        quenching: "pill-grav-quench"
+        quenching: "pill-grav-quench",
+        quenched_pass: "pill-grav-pass-quenched"
     };
 
     steps.forEach(s => {
@@ -7167,18 +7220,38 @@ function updateExpansionMetricsDOM() {
     if (elVol) elVol.textContent = isHot ? "Büyük (Genleşti)" : (ex.step === "quenching" ? "Küçük (Büzüldü)" : "Normal Boyut (Oda Sıcaklığı)");
 
     if (elStatus) {
-        if (ex.step === "heating") {
+        if (ex.step === "ready") {
+            elStatus.textContent = "Hazır: Küre oda sıcaklığında (Denemek için '1. Geçir'e tıklayın)";
+            elStatus.style.borderColor = "#94a3b8";
+            elStatus.style.color = "#94a3b8";
+        } else if (ex.step === "heating") {
             elStatus.textContent = "🔥 İspirto Ocağında Isıtılıyor (Genleşme Gerçekleşiyor)";
             elStatus.style.borderColor = "#f97316";
             elStatus.style.color = "#f97316";
         } else if (ex.step === "hot_try") {
-            elStatus.textContent = "⛔ Sıcak Küre Genleştiği İçin Halkaya Takıldı (Geçemez!)";
-            elStatus.style.borderColor = "#ef4444";
-            elStatus.style.color = "#ef4444";
+            if (!passes) {
+                elStatus.textContent = "⛔ Sıcak Küre Genleştiği İçin Halkaya Takıldı (Geçemez!)";
+                elStatus.style.borderColor = "#ef4444";
+                elStatus.style.color = "#ef4444";
+            } else {
+                elStatus.textContent = "✅ Küre henüz genleşmediği için geçti";
+                elStatus.style.borderColor = "#10b981";
+                elStatus.style.color = "#10b981";
+            }
         } else if (ex.step === "quenching") {
             elStatus.textContent = "❄️ Soğuk Suya Daldırıldı (Büzülüyor)";
             elStatus.style.borderColor = "#38bdf8";
             elStatus.style.color = "#38bdf8";
+        } else if (ex.step === "quenched_pass") {
+            if (passes) {
+                elStatus.textContent = "✅ Soğutulan Küre Büzüldü ve Halkadan Tekrar Geçti";
+                elStatus.style.borderColor = "#10b981";
+                elStatus.style.color = "#10b981";
+            } else {
+                elStatus.textContent = "⛔ Küre Henüz Yeterince Soğumadı (Takıldı)";
+                elStatus.style.borderColor = "#ef4444";
+                elStatus.style.color = "#ef4444";
+            }
         } else {
             elStatus.textContent = "✅ Soğuk Küre Halkadan Kolayca Geçti";
             elStatus.style.borderColor = "#10b981";
@@ -7196,8 +7269,13 @@ function updateExpansionMetricsDOM() {
     if (mVol) mVol.textContent = isHot ? "Büyük (Genleşti)" : (ex.step === "quenching" ? "Küçük (Büzüldü)" : "Normal Boyut (Oda Sıcaklığı)");
     if (mRing) mRing.textContent = "Sabit Çap";
     if (mPass) {
-        mPass.textContent = passes ? "Geçer ✅" : "Takılır ⛔";
-        mPass.style.color = passes ? "#4ade80" : "#f87171";
+        if (ex.step === "ready") {
+            mPass.textContent = "Henüz Denenmedi ⚪";
+            mPass.style.color = "#94a3b8";
+        } else {
+            mPass.textContent = passes ? "Geçer ✅" : "Takılır ⛔";
+            mPass.style.color = passes ? "#4ade80" : "#f87171";
+        }
     }
 }
 
@@ -7206,19 +7284,23 @@ function setupExpansionControlsDOM() {
     const bHeat = document.getElementById('btn-grav-heat');
     const bHot = document.getElementById('btn-grav-pass-hot');
     const bQuench = document.getElementById('btn-grav-quench');
+    const bQuenchedPass = document.getElementById('btn-grav-pass-quenched');
     if (bCold) bCold.addEventListener('click', () => setExpansionStep("cold_pass"));
     if (bHeat) bHeat.addEventListener('click', () => setExpansionStep("heating"));
     if (bHot) bHot.addEventListener('click', () => setExpansionStep("hot_try"));
     if (bQuench) bQuench.addEventListener('click', () => setExpansionStep("quenching"));
+    if (bQuenchedPass) bQuenchedPass.addEventListener('click', () => setExpansionStep("quenched_pass"));
 
     const pCold = document.getElementById('pill-grav-pass-cold');
     const pHeat = document.getElementById('pill-grav-heat');
     const pHot = document.getElementById('pill-grav-pass-hot');
     const pQuench = document.getElementById('pill-grav-quench');
+    const pQuenchedPass = document.getElementById('pill-grav-pass-quenched');
     if (pCold) pCold.addEventListener('click', () => setExpansionStep("cold_pass"));
     if (pHeat) pHeat.addEventListener('click', () => setExpansionStep("heating"));
     if (pHot) pHot.addEventListener('click', () => setExpansionStep("hot_try"));
     if (pQuench) pQuench.addEventListener('click', () => setExpansionStep("quenching"));
+    if (pQuenchedPass) pQuenchedPass.addEventListener('click', () => setExpansionStep("quenched_pass"));
 
     const btnReset = document.getElementById('btn-grav-reset');
     if (btnReset) btnReset.addEventListener('click', resetExpansionExperiment);
@@ -7432,7 +7514,7 @@ function drawExpansionSimulation() {
 // ============================================================================
 
 const CONDUCTIVITY_MATERIALS = {
-    empty:      { name: "Boş Uçlar (Açık Devre)",type: "Açık Devre (Hava)",   isConductive: false, brightness: 0.0, color: "transparent", isLiquid: false },
+    empty:      { name: "Boş Uçlar",        type: "Açık Devre (Boşluk)",   isConductive: false, brightness: 0.0, color: "transparent", isLiquid: false },
     copper:     { name: "Bakır Tel",        type: "Katı İletken",        isConductive: true,  brightness: 1.0,  color: "#f97316", isLiquid: false },
     iron:       { name: "Demir Çivi",       type: "Katı İletken",        isConductive: true,  brightness: 0.9,  color: "#94a3b8", isLiquid: false },
     graphite:   { name: "Grafit Uç",        type: "Katı Ametal İletken", isConductive: true,  brightness: 0.75, color: "#334155", isLiquid: false },
@@ -7447,13 +7529,14 @@ const CONDUCTIVITY_MATERIALS = {
 
 function initConductivityState() {
     const cd = labState.conductivity;
-    cd.selectedMaterial = "copper";
-    cd.isConductive = true;
-    cd.bulbBrightness = 1.0;
+    cd.switchClosed = false; // Başlangıçta anahtar AÇIK
+    cd.selectedMaterial = "empty"; // Başlangıçta test uçları BOŞ
+    cd.isConductive = false;
+    cd.bulbBrightness = 0.0;
     cd.electronParticles = [];
     cd.ionParticles = [];
 
-    // Devre Kablosu Yolunda Başlangıç Elektronları
+    // Devre Kablosu Yolunda Elektronlar
     for (let i = 0; i < 24; i++) {
         cd.electronParticles.push({
             progress: i / 24,
@@ -7467,7 +7550,19 @@ function initConductivityState() {
 
 function resetConductivityExperiment() {
     initConductivityState();
-    showLabToast("İletkenlik test cihazı başlangıç konumuna alındı!");
+    showLabToast("İletkenlik test cihazı başlangıç durumuna (Anahtar Açık, Uçlar Boş) alındı!");
+}
+
+function toggleConductivitySwitch() {
+    const cd = labState.conductivity;
+    cd.switchClosed = !cd.switchClosed;
+    const info = CONDUCTIVITY_MATERIALS[cd.selectedMaterial] || CONDUCTIVITY_MATERIALS.empty;
+    cd.isConductive = cd.switchClosed && info.isConductive;
+    cd.bulbBrightness = cd.isConductive ? info.brightness : 0.0;
+
+    updateConductivityDOMControls();
+    updateConductivityMetricsDOM();
+    showLabToast(cd.switchClosed ? "⚡ Devre anahtarı kapatıldı!" : "Devre anahtarı açıldı (Akım kesildi).");
 }
 
 function selectConductivityMaterial(matKey) {
@@ -7476,17 +7571,26 @@ function selectConductivityMaterial(matKey) {
     if (!info) return;
 
     cd.selectedMaterial = matKey;
-    cd.isConductive = info.isConductive;
-    cd.bulbBrightness = info.brightness;
+    cd.isConductive = cd.switchClosed && info.isConductive;
+    cd.bulbBrightness = cd.isConductive ? info.brightness : 0.0;
 
     updateConductivityDOMControls();
     updateConductivityMetricsDOM();
-    showLabToast(info.isConductive ? `💡 ${info.name} bağlandı: İletken! Ampul yanıyor.` : `❌ ${info.name} bağlandı: Yalıtkan! Ampul yanmıyor.`);
+
+    if (!cd.switchClosed) {
+        showLabToast(`${info.name} test uçlarına bağlandı. Akım durumunu görmek için anahtarı kapatın.`);
+    } else {
+        if (matKey === "empty") {
+            showLabToast("⚡ Test uçları boş: Devre açık, ampul söndü.");
+        } else {
+            showLabToast(info.isConductive ? `💡 ${info.name} bağlandı: İletken! Ampul yanıyor.` : `❌ ${info.name} bağlandı: Yalıtkan! Ampul yanmıyor.`);
+        }
+    }
 }
 
 function updateConductivityPhysics() {
     const cd = labState.conductivity;
-    if (cd.isConductive) {
+    if (cd.switchClosed && cd.isConductive) {
         cd.electronParticles.forEach(p => {
             p.progress += p.speed;
             if (p.progress > 1.0) p.progress -= 1.0;
@@ -7498,24 +7602,46 @@ function updateConductivityDOMControls() {
     const cd = labState.conductivity;
     const sel = cd.selectedMaterial;
 
+    // Anahtar Butonu & Pill
+    const btnSwitch = document.getElementById('btn-cond-toggle-switch');
+    const labelSwitch = document.getElementById('label-cond-switch');
+    const iconSwitch = document.getElementById('icon-cond-switch');
+    const pillSwitch = document.getElementById('pill-cond-switch');
+
+    if (btnSwitch) btnSwitch.classList.toggle('active', cd.switchClosed);
+    if (labelSwitch) labelSwitch.textContent = cd.switchClosed ? "Anahtarı Aç" : "Anahtarı Kapat";
+    if (iconSwitch) {
+        iconSwitch.className = cd.switchClosed ? "fas fa-toggle-on" : "fas fa-toggle-off";
+        iconSwitch.style.color = cd.switchClosed ? "#10b981" : "#94a3b8";
+    }
+    if (pillSwitch) {
+        pillSwitch.classList.toggle('active', cd.switchClosed);
+        pillSwitch.textContent = cd.switchClosed ? "Anahtarı Aç (Devre Kapalı)" : "Anahtarı Kapat (Devre Açık)";
+    }
+
     // Hızlı Butonlar
-    const btnIds = ["copper", "iron", "graphite", "wood", "plastic", "saltwater", "purewater"];
-    btnIds.forEach(id => {
+    const allMats = ["copper", "iron", "graphite", "wood", "plastic", "eraser", "saltwater", "lemonwater", "sugarwater", "purewater"];
+    allMats.forEach(id => {
         const b = document.getElementById(`btn-cond-mat-${id}`);
         if (b) b.classList.toggle('active', sel === id);
     });
 
+    const bReset = document.getElementById('btn-cond-reset');
+    if (bReset) bReset.classList.toggle('active', sel === "empty");
+
     // Sağ Panel Butonları
-    const pillIds = ["copper", "iron", "graphite", "wood", "plastic", "eraser", "saltwater", "sugarwater", "lemonwater", "purewater"];
-    pillIds.forEach(id => {
+    allMats.forEach(id => {
         const p = document.getElementById(`pill-cond-${id}`);
         if (p) p.classList.toggle('active', sel === id);
     });
+    const pEmpty = document.getElementById('pill-cond-empty');
+    if (pEmpty) pEmpty.classList.toggle('active', sel === "empty");
 }
 
 function updateConductivityMetricsDOM() {
     const cd = labState.conductivity;
-    const info = CONDUCTIVITY_MATERIALS[cd.selectedMaterial] || CONDUCTIVITY_MATERIALS.copper;
+    const info = CONDUCTIVITY_MATERIALS[cd.selectedMaterial] || CONDUCTIVITY_MATERIALS.empty;
+    const isEmpty = (cd.selectedMaterial === "empty");
 
     // Canvas Altı Metrik Şeridi
     const mMat = document.getElementById('mbar-69-material');
@@ -7526,17 +7652,30 @@ function updateConductivityMetricsDOM() {
     if (mMat) mMat.textContent = info.name;
     if (mType) mType.textContent = info.type;
     if (mCond) {
-        mCond.textContent = info.isConductive ? "İletken Madde" : "Yalıtkan Madde";
-        mCond.style.color = info.isConductive ? "#10b981" : "#ef4444";
+        if (isEmpty) {
+            mCond.textContent = "Açık Devre";
+            mCond.style.color = "#94a3b8";
+        } else {
+            mCond.textContent = info.isConductive ? "İletken Madde" : "Yalıtkan Madde";
+            mCond.style.color = info.isConductive ? "#10b981" : "#ef4444";
+        }
     }
 
     if (mStatus) {
-        if (info.isConductive) {
-            mStatus.textContent = `💡 Devre Tamamlandı: ${info.name} Akımı İletir (Ampul Yanıyor)`;
+        if (!cd.switchClosed) {
+            mStatus.textContent = "⚠️ Devre Anahtarı Açık: Akım geçişi sağlanamadığı için ampul yanmaz.";
+            mStatus.style.borderColor = "#f59e0b";
+            mStatus.style.color = "#f59e0b";
+        } else if (isEmpty) {
+            mStatus.textContent = "Açık Devre: Test uçları arasında iletken köprü bulunmadığı için ampul yanmaz.";
+            mStatus.style.borderColor = "#94a3b8";
+            mStatus.style.color = "#94a3b8";
+        } else if (info.isConductive) {
+            mStatus.textContent = `💡 Devre Tamamlandı: ${info.name} akımı iletir (Ampul Yanıyor)`;
             mStatus.style.borderColor = "#10b981";
             mStatus.style.color = "#10b981";
         } else {
-            mStatus.textContent = `❌ Devre Açık Kaldı: ${info.name} Akımı İletmez (Yalıtkan)`;
+            mStatus.textContent = `❌ Devre Açık Kaldı: ${info.name} akımı iletmez (Yalıtkan)`;
             mStatus.style.borderColor = "#ef4444";
             mStatus.style.color = "#ef4444";
         }
@@ -7551,34 +7690,50 @@ function updateConductivityMetricsDOM() {
     if (pMat) pMat.textContent = info.name;
     if (pType) pType.textContent = info.type;
     if (pCond) {
-        pCond.textContent = info.isConductive ? "İletken" : "Yalıtkan";
-        pCond.style.color = info.isConductive ? "#10b981" : "#ef4444";
+        if (isEmpty) {
+            pCond.textContent = "Açık Uçlar";
+            pCond.style.color = "#94a3b8";
+        } else {
+            pCond.textContent = info.isConductive ? "İletken" : "Yalıtkan";
+            pCond.style.color = info.isConductive ? "#10b981" : "#ef4444";
+        }
     }
     if (pBulb) {
-        pBulb.textContent = info.isConductive ? "Işık Veriyor 💡" : "Sönük (0) ❌";
-        pBulb.style.color = info.isConductive ? "#facc15" : "#94a3b8";
+        if (!cd.switchClosed) {
+            pBulb.textContent = "Sönük (Anahtar Açık) ❌";
+            pBulb.style.color = "#94a3b8";
+        } else if (isEmpty) {
+            pBulb.textContent = "Sönük (Uçlar Boş) ❌";
+            pBulb.style.color = "#94a3b8";
+        } else {
+            pBulb.textContent = info.isConductive ? "Işık Veriyor 💡" : "Sönük (0) ❌";
+            pBulb.style.color = info.isConductive ? "#facc15" : "#94a3b8";
+        }
     }
 
     // Dinamik Pedagojik Kutu
     const pTitle = document.getElementById('cond-pedagogical-title');
     const pText = document.getElementById('cond-pedagogical-text');
     if (pTitle && pText) {
-        if (info.isLiquid) {
-            pTitle.textContent = info.isConductive ? `🧂 ${info.name}: Sıvı İletken Çözelti` : `💧 ${info.name}: Sıvı Yalıtkan Çözelti`;
+        if (isEmpty) {
+            pTitle.textContent = "Açık Devre: Test Uçları Boş";
+            pText.textContent = "Test uçları arasında iletken bir köprü veya bağlantı bulunmadığı için devre yolu tamamlanmaz ve ampul ışık vermez.";
+        } else if (info.isLiquid) {
+            pTitle.textContent = info.isConductive ? `Sıvı İletken Çözelti (${info.name})` : `Sıvı Yalıtkan Çözelti (${info.name})`;
             pText.textContent = info.isConductive
-                ? `${info.name} suda iyonlarına ayrışır (serbest + ve - yüklü iyonlar). Bu serbest iyonlar sayesinde elektrik akımı iletilir ve ampul ışık verir!`
-                : `${info.name} suda iyonlarına ayrışmaz, moleküler olarak çözünür. Ortamda serbest yük taşıyıcı iyon bulunmadığı için elektrik akımını iletmez (Yalıtkandır).`;
+                ? `${info.name} suda iyonlarına ayrışır (serbest + ve - yüklü iyonlar). Bu serbest iyonlar sayesinde elektrotlar arasında akım iletilir ve devre kapalıyken ampul ışık verir.`
+                : `${info.name} suda iyonlarına ayrışmaz, moleküler olarak çözünür. Ortamda serbest yük taşıyıcı iyon bulunmadığı için basit devrede elektrik akımını iletmez (Yalıtkandır).`;
         } else {
-            pTitle.textContent = info.isConductive ? `⚡ ${info.name}: Katı İletken Madde` : `🪵 ${info.name}: Katı Yalıtkan Madde`;
+            pTitle.textContent = info.isConductive ? `Katı İletken Madde (${info.name})` : `Katı Yalıtkan Madde (${info.name})`;
             pText.textContent = info.isConductive
-                ? `${info.name} yapısındaki serbest elektronlar sayesinde elektrik akımını iletir. Katı iletkenlerde elektrik enerjisi elektron hareketiyle taşınır!`
+                ? `${info.name} yapısındaki serbest elektronlar sayesinde elektrik akımını iletir. Katı iletkenlerde elektrik enerjisi elektron hareketiyle taşınır ve devre tamamlanır.`
                 : `${info.name} atomlarında elektronlar sıkı bağlıdır ve serbestçe hareket edemez. Devre uçları arasında akım geçişi sağlanamaz ve ampul yanmaz.`;
         }
     }
 }
 
 function setupConductivityControlsDOM() {
-    const list = ["copper", "iron", "graphite", "wood", "plastic", "eraser", "saltwater", "sugarwater", "lemonwater", "purewater", "empty"];
+    const list = ["copper", "iron", "graphite", "wood", "plastic", "eraser", "saltwater", "sugarwater", "lemonwater", "purewater"];
     list.forEach(id => {
         const b = document.getElementById(`btn-cond-mat-${id}`);
         const p = document.getElementById(`pill-cond-${id}`);
@@ -7586,13 +7741,17 @@ function setupConductivityControlsDOM() {
         if (p) p.addEventListener('click', () => selectConductivityMaterial(id));
     });
 
+    const bSwitch = document.getElementById('btn-cond-toggle-switch');
+    if (bSwitch) bSwitch.addEventListener('click', toggleConductivitySwitch);
+
+    const pSwitch = document.getElementById('pill-cond-switch');
+    if (pSwitch) pSwitch.addEventListener('click', toggleConductivitySwitch);
+
     const bReset = document.getElementById('btn-cond-reset');
-    if (bReset) {
-        bReset.addEventListener('click', () => {
-            selectConductivityMaterial('empty');
-            showLabToast("⚡ Test uçları boşa çıkarıldı: Devre açık, ampul söndü.");
-        });
-    }
+    if (bReset) bReset.addEventListener('click', () => selectConductivityMaterial('empty'));
+
+    const pEmpty = document.getElementById('pill-cond-empty');
+    if (pEmpty) pEmpty.addEventListener('click', () => selectConductivityMaterial('empty'));
 
     const btnRec = document.getElementById('btn-record-data-6-9');
     if (btnRec) btnRec.addEventListener('click', recordMeasurement);
@@ -7604,7 +7763,8 @@ function drawConductivitySimulation() {
     const w = 800;
     const h = 500;
     const cd = labState.conductivity;
-    const info = CONDUCTIVITY_MATERIALS[cd.selectedMaterial] || CONDUCTIVITY_MATERIALS.copper;
+    const info = CONDUCTIVITY_MATERIALS[cd.selectedMaterial] || CONDUCTIVITY_MATERIALS.empty;
+    const isEmpty = (cd.selectedMaterial === "empty");
 
     ctx.save();
     ctx.clearRect(0, 0, w, h);
@@ -7642,7 +7802,7 @@ function drawConductivitySimulation() {
     ctx.stroke();
 
     // 2 Adet AA Pil (Mavi/Kırmızı gövde)
-    [-1, 1].forEach((dir, i) => {
+    [-1, 1].forEach((dir) => {
         const bx = px + dir * 28;
         ctx.fillStyle = "#2563eb";
         ctx.fillRect(bx - 20, py - 14, 40, 28);
@@ -7652,8 +7812,60 @@ function drawConductivitySimulation() {
         ctx.fillRect(bx + 20, py - 6, 4, 12);
     });
 
-    // 2. Akkor Ampul ve Duy (Sağ Üst: x: 620, y: 100)
-    const bx = 620;
+    // 2. Devre Anahtarı (Üst Ortada: x: 390, y: 100)
+    const swX = 390;
+    const swY = 100;
+
+    // Anahtar Tabanı (İzolatör)
+    ctx.fillStyle = "#1e293b";
+    ctx.beginPath();
+    ctx.roundRect(swX - 40, swY - 14, 80, 28, 4);
+    ctx.fill();
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Anahtar Sabit Pirinç Klemensleri
+    ctx.fillStyle = "#d97706";
+    ctx.beginPath();
+    ctx.arc(swX - 25, swY, 5, 0, Math.PI * 2);
+    ctx.arc(swX + 25, swY, 5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Bıçaklı Anahtar Kolu
+    ctx.save();
+    ctx.lineWidth = 4;
+    ctx.lineCap = "round";
+    ctx.strokeStyle = "#f59e0b";
+    if (cd.switchClosed) {
+        // Kapalı: Düz bağlanır
+        ctx.beginPath();
+        ctx.moveTo(swX - 25, swY);
+        ctx.lineTo(swX + 25, swY);
+        ctx.stroke();
+
+        // Plastik yalıtkan tutamak
+        ctx.fillStyle = "#ef4444";
+        ctx.beginPath();
+        ctx.arc(swX, swY, 5, 0, Math.PI * 2);
+        ctx.fill();
+    } else {
+        // Açık: 35 derece yukarı kalkık
+        ctx.beginPath();
+        ctx.moveTo(swX - 25, swY);
+        ctx.lineTo(swX + 18, swY - 26);
+        ctx.stroke();
+
+        // Tutamak
+        ctx.fillStyle = "#ef4444";
+        ctx.beginPath();
+        ctx.arc(swX + 18, swY - 26, 5, 0, Math.PI * 2);
+        ctx.fill();
+    }
+    ctx.restore();
+
+    // 3. Akkor Ampul ve Duy (Sağ Üst: x: 600, y: 100)
+    const bx = 600;
     const by = 100;
 
     // Duy Tabanı
@@ -7662,8 +7874,8 @@ function drawConductivitySimulation() {
     ctx.fillStyle = "#64748b";
     ctx.fillRect(bx - 18, by + 2, 36, 8); // Vidalı soket
 
-    // Ampul Yanma Halesi (İletken ise)
-    if (cd.isConductive) {
+    // Ampul Yanma Halesi (Devre kapalı ve iletkense)
+    if (cd.switchClosed && cd.isConductive) {
         const glowR = 100 * cd.bulbBrightness;
         const bGlow = ctx.createRadialGradient(bx, by - 20, 8, bx, by - 20, glowR);
         bGlow.addColorStop(0, "rgba(254, 240, 138, 0.95)");
@@ -7678,14 +7890,14 @@ function drawConductivitySimulation() {
     // Cam Ampul Küresi
     ctx.beginPath();
     ctx.arc(bx, by - 20, 26, 0, Math.PI * 2);
-    ctx.fillStyle = cd.isConductive ? "rgba(254, 240, 138, 0.85)" : "rgba(255, 255, 255, 0.12)";
+    ctx.fillStyle = (cd.switchClosed && cd.isConductive) ? "rgba(254, 240, 138, 0.85)" : "rgba(255, 255, 255, 0.12)";
     ctx.fill();
     ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
     ctx.lineWidth = 1.5;
     ctx.stroke();
 
     // Akkor Filament
-    ctx.strokeStyle = cd.isConductive ? "#f97316" : "#64748b";
+    ctx.strokeStyle = (cd.switchClosed && cd.isConductive) ? "#f97316" : "#64748b";
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(bx - 6, by - 10);
@@ -7694,54 +7906,73 @@ function drawConductivitySimulation() {
     ctx.lineTo(bx + 6, by - 10);
     ctx.stroke();
 
-    // 3. Devre Kabloları (Pil -> Kıskaç 1, Ampul -> Kıskaç 2, Pil -> Ampul)
-    // Üst Hat (Pil Artı Kutuuptan Ampule)
-    ctx.strokeStyle = "#ef4444"; // Kırmızı kablo
+    // 4. Devre Kabloları (Pil -> Anahtar -> Ampul -> Sağ Kıskaç -> Sol Kıskaç -> Pil)
+    const clip1X = 310;
+    const clip1Y = 310;
+    const clip2X = 490;
+    const clip2Y = 310;
+
+    // Üst Hat 1 (Pil (+) -> Anahtar Sol Klemens)
+    ctx.strokeStyle = "#ef4444";
     ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.moveTo(px + 60, py);
-    ctx.lineTo(bx - 25, py + 18);
+    ctx.lineTo(swX - 25, swY);
     ctx.stroke();
 
-    // Sol Hat (Pil Eksi Kutuptan Sol Kıskaca: x: 300, y: 310)
-    const clip1X = 310;
-    const clip1Y = 310;
+    // Üst Hat 2 (Anahtar Sağ Klemens -> Ampul Girişi)
+    ctx.beginPath();
+    ctx.moveTo(swX + 25, swY);
+    ctx.lineTo(bx - 25, by + 18);
+    ctx.stroke();
+
+    // Sağ Hat (Ampul Çıkışı -> Sağ Kıskaç)
+    ctx.strokeStyle = "#10b981"; // Yeşil kablo
+    ctx.beginPath();
+    ctx.moveTo(bx + 25, by + 18);
+    ctx.quadraticCurveTo(bx + 55, 250, clip2X + 25, clip2Y);
+    ctx.stroke();
+
+    // Sol Hat (Pil (-) -> Sol Kıskaç)
     ctx.strokeStyle = "#3b82f6"; // Mavi kablo
     ctx.beginPath();
     ctx.moveTo(px - 60, py);
-    ctx.quadraticCurveTo(px - 80, 260, clip1X - 35, clip1Y);
+    ctx.quadraticCurveTo(px - 75, 250, clip1X - 25, clip1Y);
     ctx.stroke();
 
-    // Sağ Hat (Ampulden Sağ Kıskaca: x: 490, y: 310)
-    const clip2X = 490;
-    const clip2Y = 310;
-    ctx.strokeStyle = "#10b981"; // Yeşil kablo
-    ctx.beginPath();
-    ctx.moveTo(bx + 25, py + 18);
-    ctx.quadraticCurveTo(bx + 60, 260, clip2X + 35, clip2Y);
-    ctx.stroke();
-
-    // Elektron Akışı Parçacıkları (İletkense)
-    if (cd.isConductive) {
+    // Elektron Akışı Parçacıkları (Yalnızca devre kapalı ve iletkense, kablo yollarını tam izler)
+    if (cd.switchClosed && cd.isConductive) {
         cd.electronParticles.forEach(p => {
-            // Basit döngüsel devre koordinatı
             let ex = 0;
             let ey = 0;
             const prog = p.progress;
-            if (prog < 0.35) {
-                // Üst hat
-                ex = (px + 60) + (prog / 0.35) * (bx - 25 - (px + 60));
-                ey = py;
-            } else if (prog < 0.65) {
-                // Sağ iniş
-                const sub = (prog - 0.35) / 0.3;
-                ex = (bx + 25) + sub * (clip2X - (bx + 25));
-                ey = (py + 18) + sub * (clip2Y - (py + 18));
+
+            if (prog < 0.22) {
+                // Üst Hat 1 & 2: (px+60, py) -> (bx-25, by+18)
+                const s = prog / 0.22;
+                ex = (px + 60) + s * ((bx - 25) - (px + 60));
+                ey = py + s * 18;
+            } else if (prog < 0.48) {
+                // Sağ iniş: Ampul -> Sağ Kıskaç (clip2X, clip2Y)
+                const s = (prog - 0.22) / 0.26;
+                const p0x = bx + 25, p0y = by + 18;
+                const cpx = bx + 55, cpy = 250;
+                const p1x = clip2X, p1y = clip2Y;
+                ex = (1 - s) * (1 - s) * p0x + 2 * (1 - s) * s * cpx + s * s * p1x;
+                ey = (1 - s) * (1 - s) * p0y + 2 * (1 - s) * s * cpy + s * s * p1y;
+            } else if (prog < 0.72) {
+                // Test Madde Köprüsü: Sağ Kıskaç -> Sol Kıskaç
+                const s = (prog - 0.48) / 0.24;
+                ex = clip2X - s * (clip2X - clip1X);
+                ey = clip1Y;
             } else {
-                // Sol dönüş
-                const sub = (prog - 0.65) / 0.35;
-                ex = clip1X - sub * (clip1X - (px - 60));
-                ey = clip1Y - sub * (clip1Y - py);
+                // Sol çıkış: Sol Kıskaç -> Pil (-)
+                const s = (prog - 0.72) / 0.28;
+                const p0x = clip1X, p0y = clip1Y;
+                const cpx = px - 75, cpy = 250;
+                const p1x = px - 60, p1y = py;
+                ex = (1 - s) * (1 - s) * p0x + 2 * (1 - s) * s * cpx + s * s * p1x;
+                ey = (1 - s) * (1 - s) * p0y + 2 * (1 - s) * s * cpy + s * s * p1y;
             }
 
             ctx.fillStyle = "#38bdf8";
@@ -7751,7 +7982,7 @@ function drawConductivitySimulation() {
         });
     }
 
-    // 4. Krokodil Kıskaçlar (Timsah Ağızları: clip1X, clip2X)
+    // 5. Krokodil Kıskaçlar (clip1X, clip2X)
     [clip1X, clip2X].forEach((cx, idx) => {
         const isLeft = (idx === 0);
         ctx.save();
@@ -7774,120 +8005,122 @@ function drawConductivitySimulation() {
         ctx.restore();
     });
 
-    // 5. TEST EDİLEN MADDE (Katı veya Sıvı Beher)
-    if (info.isLiquid) {
-        // Sıvı Beheri (Ortada: x: 400, y: 310)
-        const bx = 400;
-        const by = 350;
+    // 6. TEST EDİLEN MADDE (Katı Numune veya Sıvı Beher)
+    if (!isEmpty) {
+        if (info.isLiquid) {
+            // Sıvı Beheri (Ortada: x: 400, y: 350)
+            const bx = 400;
+            const by = 350;
 
-        // Cam Beher
-        ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
-        ctx.beginPath();
-        ctx.roundRect(bx - 45, by - 70, 90, 70, [0, 0, 8, 8]);
-        ctx.fill();
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-
-        // Sıvı Çözelti
-        ctx.fillStyle = info.color;
-        ctx.beginPath();
-        ctx.roundRect(bx - 43, by - 55, 86, 55, [0, 0, 6, 6]);
-        ctx.fill();
-
-        // Kıskaçlardan Sıvıya Daldırılan İki Elektrot
-        ctx.strokeStyle = "#cbd5e1";
-        ctx.lineWidth = 3.5;
-        ctx.beginPath();
-        ctx.moveTo(clip1X, clip1Y);
-        ctx.lineTo(bx - 20, clip1Y);
-        ctx.lineTo(bx - 20, by - 15);
-        ctx.stroke();
-
-        ctx.beginPath();
-        ctx.moveTo(clip2X, clip1Y);
-        ctx.lineTo(bx + 20, clip1Y);
-        ctx.lineTo(bx + 20, by - 15);
-        ctx.stroke();
-
-        // İyon Parıltıları (İletkense)
-        if (info.isConductive) {
-            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            // Cam Beher
+            ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
             ctx.beginPath();
-            ctx.arc(bx - 12, by - 35, 3, 0, Math.PI * 2);
-            ctx.arc(bx + 10, by - 25, 2.5, 0, Math.PI * 2);
-            ctx.arc(bx, by - 40, 2, 0, Math.PI * 2);
+            ctx.roundRect(bx - 45, by - 70, 90, 70, [0, 0, 8, 8]);
             ctx.fill();
-        }
-    } else {
-        // Katı Madde (İki krokodil kıskaç arasına kenetlenmiş)
-        const sx = clip1X;
-        const ex = clip2X;
-        const my = clip1Y;
-
-        ctx.save();
-        if (cd.selectedMaterial === "copper") {
-            // Bakır Tel
-            ctx.strokeStyle = "#f97316";
-            ctx.lineWidth = 5;
-            ctx.beginPath();
-            ctx.moveTo(sx, my);
-            ctx.lineTo(ex, my);
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+            ctx.lineWidth = 2;
             ctx.stroke();
-        } else if (cd.selectedMaterial === "iron") {
-            // Demir Çivi (Başlıklı sivri çivi)
-            ctx.fillStyle = "#94a3b8";
+
+            // Sıvı Çözelti
+            ctx.fillStyle = info.color;
             ctx.beginPath();
-            ctx.moveTo(sx + 5, my - 7);
-            ctx.lineTo(sx + 5, my + 7);
-            ctx.lineTo(sx + 15, my + 3);
-            ctx.lineTo(ex - 8, my + 3);
-            ctx.lineTo(ex, my);
-            ctx.lineTo(ex - 8, my - 3);
-            ctx.lineTo(sx + 15, my - 3);
-            ctx.closePath();
+            ctx.roundRect(bx - 43, by - 55, 86, 55, [0, 0, 6, 6]);
             ctx.fill();
+
+            // Kıskaçlardan Sıvıya Daldırılan İki Elektrot (Birbirine ASLA temas etmez)
             ctx.strokeStyle = "#cbd5e1";
-            ctx.lineWidth = 1;
-            ctx.stroke();
-        } else if (cd.selectedMaterial === "graphite") {
-            // Grafit Kurşun Kalem Ucu
-            ctx.fillStyle = "#334155";
+            ctx.lineWidth = 3.5;
             ctx.beginPath();
-            ctx.roundRect(sx, my - 4, ex - sx, 8, 3);
-            ctx.fill();
-            ctx.strokeStyle = "#64748b";
-            ctx.lineWidth = 1;
+            ctx.moveTo(clip1X, clip1Y);
+            ctx.lineTo(bx - 20, clip1Y);
+            ctx.lineTo(bx - 20, by - 15);
             ctx.stroke();
-        } else if (cd.selectedMaterial === "wood") {
-            // Ahşap Çubuk
-            ctx.fillStyle = "#b45309";
+
             ctx.beginPath();
-            ctx.roundRect(sx, my - 6, ex - sx, 12, 3);
-            ctx.fill();
-            ctx.strokeStyle = "#78350f";
-            ctx.lineWidth = 1.2;
+            ctx.moveTo(clip2X, clip1Y);
+            ctx.lineTo(bx + 20, clip1Y);
+            ctx.lineTo(bx + 20, by - 15);
             ctx.stroke();
-        } else if (cd.selectedMaterial === "plastic") {
-            // Plastik Cetvel
-            ctx.fillStyle = "rgba(59, 130, 246, 0.75)";
-            ctx.beginPath();
-            ctx.roundRect(sx, my - 7, ex - sx, 14, 2);
-            ctx.fill();
-            ctx.strokeStyle = "#2563eb";
-            ctx.lineWidth = 1.2;
-            ctx.stroke();
-        } else if (cd.selectedMaterial === "eraser") {
-            // Silgi
-            ctx.fillStyle = "#f43f5e";
-            ctx.beginPath();
-            ctx.roundRect(sx, my - 9, ex - sx, 18, 4);
-            ctx.fill();
-            ctx.strokeStyle = "#be123c";
-            ctx.lineWidth = 1.2;
-            ctx.stroke();
+
+            // Sıvı İçinde İyon İletim Pırıltısı (Eğer devre kapalı ve sıvı iletkense)
+            if (cd.switchClosed && info.conductive) {
+                ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+                ctx.beginPath();
+                ctx.arc(bx - 12, by - 35, 3, 0, Math.PI * 2);
+                ctx.arc(bx + 10, by - 25, 2.5, 0, Math.PI * 2);
+                ctx.arc(bx, by - 40, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        } else {
+            // Katı Madde (İki krokodil kıskaç arasına kenetlenmiş)
+            const sx = clip1X;
+            const ex = clip2X;
+            const my = clip1Y;
+
+            ctx.save();
+            if (cd.selectedMaterial === "copper") {
+                // Bakır Tel
+                ctx.strokeStyle = "#f97316";
+                ctx.lineWidth = 5;
+                ctx.beginPath();
+                ctx.moveTo(sx, my);
+                ctx.lineTo(ex, my);
+                ctx.stroke();
+            } else if (cd.selectedMaterial === "iron") {
+                // Demir Çivi (Başlıklı sivri çivi)
+                ctx.fillStyle = "#94a3b8";
+                ctx.beginPath();
+                ctx.moveTo(sx + 5, my - 7);
+                ctx.lineTo(sx + 5, my + 7);
+                ctx.lineTo(sx + 15, my + 3);
+                ctx.lineTo(ex - 8, my + 3);
+                ctx.lineTo(ex, my);
+                ctx.lineTo(ex - 8, my - 3);
+                ctx.lineTo(sx + 15, my - 3);
+                ctx.closePath();
+                ctx.fill();
+                ctx.strokeStyle = "#cbd5e1";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            } else if (cd.selectedMaterial === "graphite") {
+                // Grafit Kurşun Kalem Ucu
+                ctx.fillStyle = "#334155";
+                ctx.beginPath();
+                ctx.roundRect(sx, my - 4, ex - sx, 8, 3);
+                ctx.fill();
+                ctx.strokeStyle = "#64748b";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            } else if (cd.selectedMaterial === "wood") {
+                // Ahşap Çubuk
+                ctx.fillStyle = "#b45309";
+                ctx.beginPath();
+                ctx.roundRect(sx, my - 6, ex - sx, 12, 3);
+                ctx.fill();
+                ctx.strokeStyle = "#78350f";
+                ctx.lineWidth = 1.2;
+                ctx.stroke();
+            } else if (cd.selectedMaterial === "plastic") {
+                // Plastik Cetvel
+                ctx.fillStyle = "rgba(59, 130, 246, 0.75)";
+                ctx.beginPath();
+                ctx.roundRect(sx, my - 7, ex - sx, 14, 2);
+                ctx.fill();
+                ctx.strokeStyle = "#2563eb";
+                ctx.lineWidth = 1.2;
+                ctx.stroke();
+            } else if (cd.selectedMaterial === "eraser") {
+                // Silgi
+                ctx.fillStyle = "#f43f5e";
+                ctx.beginPath();
+                ctx.roundRect(sx, my - 9, ex - sx, 18, 4);
+                ctx.fill();
+                ctx.strokeStyle = "#be123c";
+                ctx.lineWidth = 1.2;
+                ctx.stroke();
+            }
+            ctx.restore();
         }
-        ctx.restore();
     }
 
     ctx.restore();
@@ -8062,6 +8295,13 @@ function updateResistanceDOMControls() {
     if (sliderLen) sliderLen.value = res.wireLength;
     if (lblLen) lblLen.textContent = `${res.wireLength} cm`;
 
+    const bCompLen = document.getElementById('btn-res-compare-len');
+    const bCompThick = document.getElementById('btn-res-compare-thick');
+    const bCompMat = document.getElementById('btn-res-compare-mat');
+    if (bCompLen) bCompLen.classList.toggle('active', isWire && (res.wireLength === 10 || res.wireLength === 40));
+    if (bCompThick) bCompThick.classList.toggle('active', isWire && res.wireThickness === "thin");
+    if (bCompMat) bCompMat.classList.toggle('active', isWire && res.wireMaterial === "nichrome");
+
     const pThin = document.getElementById('pill-res-thick-thin');
     const pThick = document.getElementById('pill-res-thick-thick');
     if (pThin) pThin.classList.toggle('active', res.wireThickness === "thin");
@@ -8162,31 +8402,50 @@ function setupResistanceControlsDOM() {
     if (pillWire) pillWire.addEventListener('click', () => setResistanceMode("wire"));
     if (pillRheo) pillRheo.addEventListener('click', () => setResistanceMode("rheostat"));
 
-    // Hızlı Preset Butonları
-    const bShortThick = document.getElementById('btn-res-wire-short-thick');
-    const bLongThin = document.getElementById('btn-res-wire-long-thin');
-    if (bShortThick) {
-        bShortThick.addEventListener('click', () => {
+    // Tek Faktör Karşılaştırma Butonları (MEB 6. Sınıf FB.6.6.2)
+    const bCompLen = document.getElementById('btn-res-compare-len');
+    const bCompThick = document.getElementById('btn-res-compare-thick');
+    const bCompMat = document.getElementById('btn-res-compare-mat');
+
+    if (bCompLen) {
+        bCompLen.addEventListener('click', () => {
             setResistanceMode("wire");
-            labState.resistance.wireLength = 10;
+            // Sabit: Kalın (2S), Bakır. Değişen: Boy (10 cm <-> 40 cm)
             labState.resistance.wireThickness = "thick";
             labState.resistance.wireMaterial = "copper";
+            labState.resistance.wireLength = (labState.resistance.wireLength === 10) ? 40 : 10;
             recalculateResistancePhysics();
             updateResistanceDOMControls();
             updateResistanceMetricsDOM();
-            showLabToast("⚡ En Düşük Direnç Preset: Kısa, Kalın, Bakır Tel (Aşırı Parlak!)");
+            showLabToast(`Boy Karşılaştırması: Tel boyu ${labState.resistance.wireLength} cm yapıldı.`);
         });
     }
-    if (bLongThin) {
-        bLongThin.addEventListener('click', () => {
+
+    if (bCompThick) {
+        bCompThick.addEventListener('click', () => {
             setResistanceMode("wire");
-            labState.resistance.wireLength = 40;
-            labState.resistance.wireThickness = "thin";
-            labState.resistance.wireMaterial = "nichrome";
+            // Sabit: 20 cm, Bakır. Değişen: Kesit (İnce S <-> Kalın 2S)
+            labState.resistance.wireLength = 20;
+            labState.resistance.wireMaterial = "copper";
+            labState.resistance.wireThickness = (labState.resistance.wireThickness === "thin") ? "thick" : "thin";
             recalculateResistancePhysics();
             updateResistanceDOMControls();
             updateResistanceMetricsDOM();
-            showLabToast("🕯️ En Yüksek Direnç Preset: Uzun, İnce, Nikel-Krom Tel (Çok Sönük!)");
+            showLabToast(`Kesit Karşılaştırması: Tel kesiti ${labState.resistance.wireThickness === "thin" ? "İnce (S)" : "Kalın (2S)"} yapıldı.`);
+        });
+    }
+
+    if (bCompMat) {
+        bCompMat.addEventListener('click', () => {
+            setResistanceMode("wire");
+            // Sabit: 20 cm, Kalın (2S). Değişen: Cins (Bakır <-> Nikel-Krom)
+            labState.resistance.wireLength = 20;
+            labState.resistance.wireThickness = "thick";
+            labState.resistance.wireMaterial = (labState.resistance.wireMaterial === "copper") ? "nichrome" : "copper";
+            recalculateResistancePhysics();
+            updateResistanceDOMControls();
+            updateResistanceMetricsDOM();
+            showLabToast(`Cins Karşılaştırması: Tel cinsi ${labState.resistance.wireMaterial === "copper" ? "Bakır" : "Nikel-Krom"} yapıldı.`);
         });
     }
 
@@ -15126,18 +15385,37 @@ function groundElectroscope() {
         });
     }
 
-    es.scope.totalNet = 0;
-    es.scope.knobNet = 0;
-    es.scope.leavesNet = 0;
-    es.scope.targetAngle = 0;
-    es.scope.initialMode = "neutral";
+    if (es.rod.action === "approach" && es.rod.charge !== 0) {
+        // Yakında yüklü çubuk varken topraklama:
+        // Çubuk topuzda zıt yükleri tutar; yapraklardaki yükler topraklanarak yapraklar kapanır (α = 0°).
+        if (es.rod.charge > 0) {
+            es.scope.knobNet = -3;
+            es.scope.leavesNet = 0;
+            es.scope.totalNet = -3;
+            es.scope.targetAngle = 0;
+            showLabToast("⚡ Topraklama: Pozitif çubuk topuzda negatif yükleri tuttu, yapraklar nötrlenerek kapandı.");
+        } else {
+            es.scope.knobNet = 3;
+            es.scope.leavesNet = 0;
+            es.scope.totalNet = 3;
+            es.scope.targetAngle = 0;
+            showLabToast("⚡ Topraklama: Negatif çubuk elektronları toprağa itti, yapraklar nötrlenerek kapandı.");
+        }
+    } else {
+        // Çubuk uzaktayken veya nötrken topraklama: Elektroskop tamamen nötrlenir
+        es.scope.totalNet = 0;
+        es.scope.knobNet = 0;
+        es.scope.leavesNet = 0;
+        es.scope.targetAngle = 0;
+        es.scope.initialMode = "neutral";
 
-    ['pill-scope-init-neutral', 'pill-scope-init-pos', 'pill-scope-init-neg'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.toggle('active', id === 'pill-scope-init-neutral');
-    });
+        ['pill-scope-init-neutral', 'pill-scope-init-pos', 'pill-scope-init-neg'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.toggle('active', id === 'pill-scope-init-neutral');
+        });
 
-    showLabToast("⚡ Elektroskop topraklandı ve tamamen nötrlendi!");
+        showLabToast("⚡ Elektroskop topraklandı ve tamamen nötrlendi!");
+    }
 }
 
 function resetElectroscopeExperiment() {
@@ -15239,9 +15517,14 @@ function updateElectroscopePhysics() {
 
     // 3. Elektrostatik Yük Durumu Hesaplama
     if (es.grounding.isActive) {
-        es.scope.knobNet = 0;
-        es.scope.leavesNet = 0;
-        es.scope.targetAngle = 0;
+        if (es.rod.action === "approach" && es.rod.charge !== 0) {
+            es.scope.leavesNet = 0;
+            es.scope.targetAngle = 0;
+        } else {
+            es.scope.knobNet = 0;
+            es.scope.leavesNet = 0;
+            es.scope.targetAngle = 0;
+        }
     } else if (es.rod.action === "touch") {
         // Dokunma ile yük paylaşımı (Sadece elektron transferi!)
         if (es.rod.charge > 0) {
