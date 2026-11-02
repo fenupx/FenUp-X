@@ -41,12 +41,12 @@
     <circle cx="80" cy="90" r="42" fill="#f43f5e" opacity="0.3"/>
     <circle cx="80" cy="90" r="28" fill="#e11d48" stroke="#ffe4e6" stroke-width="2.5"/>
     <circle cx="80" cy="90" r="14" fill="#ffffff"/>
-    <!-- Füzyon ışıma okları -->
+    <!-- Işıma okları -->
     <line x1="80" y1="35" x2="80" y2="15" stroke="#fbbf24" stroke-width="2"/>
     <line x1="80" y1="145" x2="80" y2="165" stroke="#fbbf24" stroke-width="2"/>
     <line x1="25" y1="90" x2="5" y2="90" stroke="#fbbf24" stroke-width="2"/>
     <line x1="135" y1="90" x2="155" y2="90" stroke="#fbbf24" stroke-width="2"/>
     <text x="80" y="190" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">3. Kararlı Yıldız</text>
-    <text x="80" y="210" fill="#94a3b8" font-size="12" text-anchor="middle" font-family="system-ui, sans-serif">Nükleer füzyon başlar</text>
+    <text x="80" y="210" fill="#94a3b8" font-size="12" text-anchor="middle" font-family="system-ui, sans-serif">Işık ve ısı yaymaya başlar</text>
   </g>
 </svg>

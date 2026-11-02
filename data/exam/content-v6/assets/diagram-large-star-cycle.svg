@@ -34,7 +34,7 @@
   <!-- Son 1: Nötron Yıldızı -->
   <g transform="translate(545, 25)">
     <circle cx="45" cy="40" r="14" fill="#0284c7" stroke="#ffffff" stroke-width="2"/>
-    <text x="45" y="75" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">Nötron Yıldızı (Pulsar)</text>
+    <text x="45" y="75" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">Nötron Yıldızı</text>
     <text x="45" y="92" fill="#94a3b8" font-size="11" text-anchor="middle">Kalan kütle orta-büyük</text>
   </g>
 

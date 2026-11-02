@@ -416,4 +416,47 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(typography.btnMinHeight).toBe('56px');
     });
 
+    test('V7.2 %100 Ders Kitabı Dil Uyumu (ağır elementler, pulsar, nükleer füzyon temizliği ve 3D şema uyumu)', async () => {
+        const ekPath = path.resolve('data/exam/content-v6/ek_icerik.json');
+        const ekData = JSON.parse(fs.readFileSync(ekPath, 'utf8'));
+
+        expect(ekData.version).toBe('7.2.0');
+
+        // FB714-V7-K07: "ağır elementler" çıkarıldı; "yeni yıldız ve gök cisimlerine hammadde olacak gaz ve tozlar"
+        const k07Body = ekData.cards['FB714-V7-K07'].body.join(' ');
+        expect(k07Body).not.toContain('ağır element');
+        expect(k07Body).toContain('yeni yıldızların ve gök cisimlerinin hammaddesi');
+
+        // FB714-V7-K08: "Pulsar" çıkarıldı; sadece "Nötron Yıldızı"
+        const k08Body = ekData.cards['FB714-V7-K08'].body.join(' ');
+        expect(k08Body).not.toContain('Pulsar');
+        expect(k08Body).not.toContain('pulsar');
+        expect(k08Body).toContain('Nötron Yıldızı');
+
+        // FB714-V7-E01: "nükleer füzyon" çıkarıldı; "çekirdek tepkimeleri" ve "ısı-ışık"
+        const e01Prompt = ekData.questions['FB714-V7-E01'].prompt;
+        expect(e01Prompt).not.toContain('nükleer');
+        expect(e01Prompt).not.toContain('füzyon');
+        expect(e01Prompt).toContain('çekirdek tepkimeleri');
+        const e01Rubric = ekData.questions['FB714-V7-E01'].rubric.criteria.map(c => c.description).join(' ');
+        expect(e01Rubric).not.toContain('nükleer');
+        expect(e01Rubric).not.toContain('füzyon');
+        expect(e01Rubric.toLowerCase()).toContain('çekirdek tepkimeleri');
+
+        // FB714-V7-M04: 3D şema ile tam uyumlu prompt (50, 450 ve 1200 ışık yılı)
+        const m04Prompt = ekData.questions['FB714-V7-M04'].prompt;
+        expect(m04Prompt).toContain('50, 450 ve 1200 ışık yılı');
+
+        // SVG diyagram metinleri
+        const nebulaSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-nebula-collapse.svg'), 'utf8');
+        expect(nebulaSvg).not.toContain('Nükleer füzyon');
+        expect(nebulaSvg).not.toContain('nükleer füzyon');
+        expect(nebulaSvg).toContain('Işık ve ısı yaymaya başlar');
+
+        const starCycleSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-large-star-cycle.svg'), 'utf8');
+        expect(starCycleSvg).not.toContain('Pulsar');
+        expect(starCycleSvg).not.toContain('pulsar');
+        expect(starCycleSvg).toContain('Nötron Yıldızı');
+    });
+
 });

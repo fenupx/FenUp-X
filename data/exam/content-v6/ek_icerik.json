@@ -1,7 +1,7 @@
 {
-  "version": "7.1.0",
+  "version": "7.2.0",
   "generated_at": "2026-11-02",
-  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek Öğrenme Çıktıları (FB.7.1.4 ve FB.7.2.2) V7.1 Sadeleştirilmiş Kartlar",
+  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek Öğrenme Çıktıları (FB.7.1.4 ve FB.7.2.2) V7.2 %100 Ders Kitabı Dil Uyumu",
   "outcomes": [
     {
       "id": "FB.7.1.4",
@@ -230,7 +230,7 @@
       "eyebrow": "EVRENİN EN ŞİDDETLİ PATLAMASI",
       "body": [
         "Kırmızı süperdevin çekirdeği aniden içine çöker ve Süpernova adı verilen muazzam bir patlama gerçekleşir.",
-        "Bu patlamayla uzaya demir, altın, gümüş gibi ağır elementler saçılır."
+        "Bu patlamayla uzaya savrulan gaz ve tozlar, ileride yeni yıldızların ve gök cisimlerinin hammaddesi olur."
       ],
       "visual": {
         "kind": "image",
@@ -246,12 +246,12 @@
       "eyebrow": "BÜYÜK KÜTLE SONU",
       "body": [
         "Süpernova sonrası kalan çekirdeğin kütlesine göre iki son oluşur:",
-        "Kütle orta-büyükse Nötron Yıldızı (Pulsar); kütle aşırı büyükse ışığın dahi kaçamadığı Kara Delik meydana gelir."
+        "Kütle orta-büyükse Nötron Yıldızı; kütle aşırı büyükse ışığın dahi kaçamadığı Kara Delik meydana gelir."
       ],
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-large-star-cycle.svg",
-        "alt": "Nötron yıldızı ve kara delik çatallanması"
+        "alt": "Nötron yıldızı ve kara delik alternatif son evreleri"
       }
     },
     "FB714-V7-K09": {
@@ -517,7 +517,7 @@
       "difficulty": "KOLAY",
       "points": 10,
       "title": "Bulutsudan Yıldız Doğumu",
-      "prompt": "Verilen şemada uzaydaki gaz ve toz bulutunun (bulutsu) sıkışarak yeni bir yıldız oluşturma aşamaları gösterilmiştir. Şemaya göre gaz ve toz bulutunun kendi içine çökmesini sağlayan temel kuvveti ve merkezde nükleer füzyon başlamadan önceki ara evrenin (2. aşama) adını yazınız.",
+      "prompt": "Verilen şemada uzaydaki gaz ve toz bulutunun (bulutsu) sıkışarak yeni bir yıldız oluşturma aşamaları gösterilmiştir. Şemaya göre gaz ve toz bulutunun kendi içine çökmesini sağlayan temel kuvveti ve merkezde ısı-ışık üreten çekirdek tepkimeleri başlamadan önceki ara evrenin (2. aşama) adını yazınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-nebula-collapse.svg",
@@ -530,7 +530,7 @@
             "points": 5
           },
           {
-            "description": "Füzyon başlamadan önceki 2. aşamanın 'Ön Yıldız' (Protostar) olduğunu doğru adlandırır.",
+            "description": "Çekirdek tepkimeleri başlamadan önceki 2. aşamanın 'Ön Yıldız' (Protostar) olduğunu doğru adlandırır.",
             "points": 5
           }
         ],
@@ -761,7 +761,7 @@
       "difficulty": "ORTA",
       "points": 15,
       "title": "Takımyıldızların Üç Boyutlu Doğası",
-      "prompt": "Şemada Büyükayı takımyıldızının gökyüzündeki görünümü ve Kutup Yıldızı ile hizalanması verilmiştir. Gökyüzünde birbirine çok yakın bir küme gibi görünen bu yıldızların uzaydaki gerçek fiziksel konumları ve aralarındaki kütle çekimsel bağ hakkında ne söylenebilir? Açıklayınız.",
+      "prompt": "Şemada Dünya'dan bakıldığında gökyüzünde yan yana bir arada görünen A, B ve C yıldızlarının Dünya'ya gerçek uzaklıkları (50, 450 ve 1200 ışık yılı) modellenmiştir. Bu şemaya göre gökyüzünde bir arada görünen takımyıldız üyelerinin uzaydaki gerçek fiziksel konumları ve aralarında kütle çekimsel bir bağ olup olmadığı hakkında ne söylenebilir? Açıklayınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-star-depth-3d.svg",
