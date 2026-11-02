@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 240" width="100%" height="100%">
+  <rect width="100%" height="100%" fill="none"/>
+  <!-- Aşama 1: Gaz ve Toz Bulutu -->
+  <g transform="translate(20, 20)">
+    <circle cx="80" cy="90" r="70" fill="#2a2e39" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4,4"/>
+    <circle cx="60" cy="80" r="25" fill="#38bdf8" opacity="0.3"/>
+    <circle cx="100" cy="100" r="30" fill="#818cf8" opacity="0.3"/>
+    <circle cx="85" cy="70" r="18" fill="#f43f5e" opacity="0.3"/>
+    <!-- İçeriye yönelen çekim okları -->
+    <path d="M 20 90 L 50 90" stroke="#f8fafc" stroke-width="2" marker-end="url(#arrow)"/>
+    <path d="M 140 90 L 110 90" stroke="#f8fafc" stroke-width="2"/>
+    <path d="M 80 30 L 80 55" stroke="#f8fafc" stroke-width="2"/>
+    <path d="M 80 150 L 80 125" stroke="#f8fafc" stroke-width="2"/>
+    <text x="80" y="185" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">1. Bulutsu (Nebula)</text>
+    <text x="80" y="205" fill="#94a3b8" font-size="12" text-anchor="middle" font-family="system-ui, sans-serif">Kütle çekimsel sıkışma</text>
+  </g>
+
+  <!-- Ok 1 -> 2 -->
+  <path d="M 200 110 L 250 110" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="250,105 260,110 250,115" fill="#38bdf8"/>
+
+  <!-- Aşama 2: Ön Yıldız -->
+  <g transform="translate(260, 20)">
+    <circle cx="60" cy="90" r="45" fill="#fbbf24" opacity="0.2"/>
+    <circle cx="60" cy="90" r="30" fill="#f59e0b" stroke="#fef08a" stroke-width="2"/>
+    <circle cx="60" cy="90" r="15" fill="#ffffff"/>
+    <text x="60" y="185" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">2. Ön Yıldız (Protostar)</text>
+    <text x="60" y="205" fill="#94a3b8" font-size="12" text-anchor="middle" font-family="system-ui, sans-serif">Sıcaklık ve basınç artışı</text>
+  </g>
+
+  <!-- Ok 2 -> 3 -->
+  <path d="M 390 110 L 440 110" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="440,105 450,110 440,115" fill="#38bdf8"/>
+
+  <!-- Aşama 3: Genç Yıldız (Füzyon) -->
+  <g transform="translate(440, 20)">
+    <circle cx="70" cy="90" r="40" fill="#f43f5e" opacity="0.25"/>
+    <circle cx="70" cy="90" r="26" fill="#e11d48" stroke="#ffe4e6" stroke-width="2"/>
+    <circle cx="70" cy="90" r="12" fill="#ffffff"/>
+    <!-- Işıma çizgileri -->
+    <line x1="70" y1="35" x2="70" y2="20" stroke="#fbbf24" stroke-width="2"/>
+    <line x1="70" y1="145" x2="70" y2="160" stroke="#fbbf24" stroke-width="2"/>
+    <line x1="15" y1="90" x2="0" y2="90" stroke="#fbbf24" stroke-width="2"/>
+    <line x1="125" y1="90" x2="140" y2="90" stroke="#fbbf24" stroke-width="2"/>
+    <text x="70" y="185" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">3. Kararlı Yıldız</text>
+    <text x="70" y="205" fill="#94a3b8" font-size="12" text-anchor="middle" font-family="system-ui, sans-serif">Nükleer füzyon başlar</text>
+  </g>
+</svg>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 650 260" width="100%" height="100%">
+  <rect width="100%" height="100%" fill="none"/>
+  <!-- Büyük Kütleli Yıldız Yaşam Döngüsü ve Çatallanma -->
+  <!-- 1. Büyük Yıldız -->
+  <g transform="translate(20, 60)">
+    <circle cx="45" cy="50" r="30" fill="#3b82f6" stroke="#93c5fd" stroke-width="2"/>
+    <text x="45" y="105" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Büyük Kütleli</text>
+    <text x="45" y="122" fill="#94a3b8" font-size="12" text-anchor="middle" font-family="system-ui, sans-serif">Yıldız (Mavi/Beyaz)</text>
+  </g>
+  <path d="M 105 110 L 145 110" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="145,106 153,110 145,114" fill="#38bdf8"/>
+
+  <!-- 2. Kırmızı Süperdev -->
+  <g transform="translate(160, 40)">
+    <circle cx="55" cy="70" r="50" fill="#b91c1c" stroke="#f87171" stroke-width="2"/>
+    <text x="55" y="142" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kırmızı Süperdev</text>
+  </g>
+  <path d="M 275 110 L 315 110" stroke="#38bdf8" stroke-width="2"/>
+  <polygon points="315,106 323,110 315,114" fill="#38bdf8"/>
+
+  <!-- 3. Süpernova Patlaması -->
+  <g transform="translate(330, 45)">
+    <!-- Patlama şematik yıldızı -->
+    <path d="M 50 15 L 60 45 L 90 40 L 70 65 L 95 85 L 65 90 L 60 120 L 40 95 L 15 110 L 30 80 L 5 60 L 35 50 Z" fill="#fbbf24" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="50" cy="65" r="16" fill="#ef4444"/>
+    <text x="50" y="142" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Süpernova</text>
+    <text x="50" y="159" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="system-ui, sans-serif">Şiddetli Patlama</text>
+  </g>
+
+  <!-- Çatallanma Okları -->
+  <path d="M 435 95 L 485 55" stroke="#f59e0b" stroke-width="2"/>
+  <polygon points="485,50 493,52 489,60" fill="#f59e0b"/>
+
+  <path d="M 435 125 L 485 165" stroke="#a855f7" stroke-width="2"/>
+  <polygon points="489,160 493,168 485,170" fill="#a855f7"/>
+
+  <!-- Çıkış 1: Nötron Yıldızı -->
+  <g transform="translate(500, 15)">
+    <circle cx="45" cy="40" r="12" fill="#38bdf8" stroke="#ffffff" stroke-width="2"/>
+    <text x="45" y="70" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Nötron Yıldızı (Pulsar)</text>
+    <text x="45" y="87" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="system-ui, sans-serif">Çok yüksek yoğunluk</text>
+  </g>
+
+  <!-- Çıkış 2: Kara Delik -->
+  <g transform="translate(500, 130)">
+    <circle cx="45" cy="40" r="18" fill="#000000" stroke="#e2e8f0" stroke-width="2"/>
+    <circle cx="45" cy="40" r="28" fill="none" stroke="#a855f7" stroke-width="2" stroke-dasharray="4,3"/>
+    <text x="45" y="82" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kara Delik</text>
+    <text x="45" y="99" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="system-ui, sans-serif">Işık dahi kaçamaz</text>
+  </g>
+</svg>

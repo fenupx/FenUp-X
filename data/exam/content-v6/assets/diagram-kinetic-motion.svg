@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 180" width="100%" height="100%">
+  <rect width="100%" height="100%" fill="none"/>
+  <!-- Deniz / Yol çizgisi -->
+  <line x1="20" y1="130" x2="580" y2="130" stroke="#64748b" stroke-width="2"/>
+  
+  <!-- Römorkör / Araç -->
+  <g transform="translate(150, 40)">
+    <path d="M 0 70 L 140 70 L 160 50 L 20 50 Z" fill="#334155" stroke="#94a3b8" stroke-width="2"/>
+    <rect x="30" y="25" width="60" height="25" fill="#1e293b" stroke="#94a3b8" stroke-width="2"/>
+    <rect x="75" y="10" width="10" height="15" fill="#e2e8f0"/>
+    <!-- Sürat Vektörü Oku -->
+    <line x1="170" y1="50" x2="260" y2="50" stroke="#38bdf8" stroke-width="4"/>
+    <polygon points="260,44 275,50 260,56" fill="#38bdf8"/>
+    <text x="220" y="35" fill="#38bdf8" font-size="15" font-weight="bold" font-family="system-ui, sans-serif">v = 10 m/s</text>
+    <text x="70" y="65" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">m = 5000 kg</text>
+  </g>
+
+  <text x="300" y="160" fill="#f8fafc" font-size="14" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kinetik Enerji: Cisim hareket hâlindedir (Kütle ve Sürat birlikte belirler)</text>
+</svg>

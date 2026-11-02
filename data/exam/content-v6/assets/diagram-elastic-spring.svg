@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200" width="100%" height="100%">
+  <rect width="100%" height="100%" fill="none"/>
+  <!-- Esneklik Potansiyel Enerjisi: Yay ve Top -->
+  <!-- Duvar -->
+  <line x1="50" y1="30" x2="50" y2="150" stroke="#e2e8f0" stroke-width="6"/>
+  
+  <!-- Serbest Yay -->
+  <g transform="translate(50, 40)">
+    <path d="M 0 30 Q 15 15, 30 30 T 60 30 T 90 30 T 120 30 T 150 30 L 170 30" fill="none" stroke="#94a3b8" stroke-width="3"/>
+    <circle cx="185" cy="30" r="15" fill="#3b82f6"/>
+    <text x="220" y="35" fill="#94a3b8" font-size="13" font-family="system-ui, sans-serif">Serbest Hâl (Depolanan Enerji = 0)</text>
+  </g>
+
+  <!-- Sıkıştırılmış Yay -->
+  <g transform="translate(50, 110)">
+    <path d="M 0 30 Q 8 15, 16 30 T 32 30 T 48 30 T 64 30 T 80 30 L 95 30" fill="none" stroke="#f43f5e" stroke-width="4"/>
+    <circle cx="110" cy="30" r="15" fill="#ef4444"/>
+    <!-- Sıkışma Oku Δx -->
+    <line x1="170" y1="30" x2="110" y2="30" stroke="#fde047" stroke-width="2"/>
+    <text x="135" y="15" fill="#fde047" font-size="13" font-weight="bold">Δx = 5 cm</text>
+    <text x="160" y="35" fill="#f43f5e" font-size="13" font-weight="bold" font-family="system-ui, sans-serif">Sıkışmış Yay (Esneklik Potansiyel Depolandı)</text>
+  </g>
+</svg>

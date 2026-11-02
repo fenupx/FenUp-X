@@ -536,6 +536,21 @@ function formatScore(score) {
     return Number.isInteger(score) ? String(score) : score.toFixed(1);
 }
 
+export function formatScenarioTitle(scenario) {
+    if (!scenario) return "";
+    if (typeof scenario === 'string' || typeof scenario === 'number') {
+        const m = String(scenario).match(/Senaryo\s*\d+/i);
+        if (m) return m[0];
+        const num = String(scenario).match(/\d+/);
+        return num ? `Senaryo ${num[0]}` : String(scenario);
+    }
+    const raw = scenario.title || scenario.short_title || scenario.name || '';
+    const match = raw.match(/Senaryo\s*\d+/i);
+    if (match) return match[0];
+    if (scenario.scenario) return `Senaryo ${scenario.scenario}`;
+    return raw || 'Senaryo';
+}
+
 export function getActiveScenarioNumber() {
     let sc = state.selectedScenario;
     if (typeof sc === 'string') {
@@ -666,18 +681,89 @@ async function loadData(revision = CONTENT_REVISION, showError = true) {
                 try {
                     const senRes = await fetch(base + 'senaryo_kayitlari.json');
                     if (senRes.ok) {
-                        data.scenarios = await senRes.json();
+                        const senJson = await senRes.json();
+                        const rawScenarios = Array.isArray(senJson) ? senJson : (senJson.scenarios || []);
+                        data.scenarios = rawScenarios.map(s => {
+                            const scNum = s.scenario || parseInt((s.code || s.title || "").replace(/\D+/g, ''), 10) || 1;
+                            const title = `Senaryo ${scNum}`;
+                            return {
+                                ...s,
+                                scenario: scNum,
+                                question_count: s.question_count || s.total_questions || (Array.isArray(s.distribution) ? s.distribution.reduce((acc, x) => acc + (x.count || 0), 0) : 7),
+                                allocation: s.allocation || s.distribution || [],
+                                title,
+                                short_title: title
+                            };
+                        });
                     }
                 } catch (_) {}
 
                 // Kart ve soru havuzlarını birleştir (V6 kart ve soruları değiştirilmez)
-                const ekCards = data.ekContent?.cards || [];
-                const ekQuestions = data.ekContent?.questions || [];
-                const ekOutcomes = data.ekContent?.outcomes || [];
+                const rawEkCards = data.ekContent?.cards;
+                const ekCardsList = Array.isArray(rawEkCards) ? rawEkCards : (rawEkCards ? Object.values(rawEkCards) : []);
+                const ekCards = ekCardsList.map(c => {
+                    let seq = c.sequence;
+                    if (typeof seq !== 'number') {
+                        const m = (c.id || '').match(/K(\d+)/i);
+                        seq = m ? parseInt(m[1], 10) : 0;
+                    }
+                    return {
+                        ...c,
+                        sequence: seq
+                    };
+                });
+
+                const rawEkQuestions = data.ekContent?.questions;
+                const ekQuestionsList = Array.isArray(rawEkQuestions) ? rawEkQuestions : (rawEkQuestions ? Object.values(rawEkQuestions) : []);
+                const diffMap = {
+                    'KOLAY': 'easy',
+                    'ORTA': 'medium',
+                    'ZOR': 'hard',
+                    'easy': 'easy',
+                    'medium': 'medium',
+                    'hard': 'hard'
+                };
+                const ekQuestions = ekQuestionsList.map(q => {
+                    const diff = diffMap[q.difficulty] || q.difficulty?.toLowerCase() || 'medium';
+                    const stem = q.stem || q.prompt || '';
+                    let rubricArr = [];
+                    if (Array.isArray(q.rubric)) {
+                        rubricArr = q.rubric;
+                    } else if (q.rubric && Array.isArray(q.rubric.criteria)) {
+                        rubricArr = q.rubric.criteria.map((c, idx) => ({
+                            id: c.id || `${q.id}-R${idx + 1}`,
+                            text: c.text || c.description || '',
+                            points: c.points || 5,
+                            weight: c.weight || c.points || 5,
+                            return_card_ids: c.return_card_ids || (q.outcome_id === 'FB.7.1.4' ? ['FB714-V7-K00'] : ['FB722-V7-K00']),
+                            scoring: c.scoring || {
+                                full: c.text || c.description || '',
+                                zero: 'Cevapta bu ölçüt karşılanmıyor.',
+                                equivalent_wording_accepted: true,
+                                unasked_details_are_not_required: true
+                            },
+                            content_revision: '7.0.0'
+                        }));
+                    }
+                    const sampleAnswer = q.sample_answer || (typeof q.rubric === 'object' && q.rubric.full_credit ? q.rubric.full_credit : '');
+                    return {
+                        ...q,
+                        stem,
+                        difficulty: diff,
+                        rubric: rubricArr,
+                        sample_answer: sampleAnswer,
+                        max_points: q.max_points || q.points || 10,
+                        content_revision: '7.0.0'
+                    };
+                });
+
+                const rawEkOutcomes = data.ekContent?.outcomes || [];
+                const existingOutcomeIds = new Set((data.outcomes || []).map(o => o.id));
+                const uniqueEkOutcomes = rawEkOutcomes.filter(o => !existingOutcomeIds.has(o.id));
 
                 data.allCards = [...data.v6Cards, ...ekCards];
                 data.allQuestions = [...data.v6Questions, ...ekQuestions];
-                data.allOutcomes = [...(data.outcomes || []), ...ekOutcomes];
+                data.allOutcomes = [...(data.outcomes || []), ...uniqueEkOutcomes];
 
                 resolvedDataCache.set(targetRev, data);
                 return data;
@@ -1531,7 +1617,7 @@ function renderStudy(cardIndex) {
                     ${outcome ? `
                         <details class="study-outcome-expandable">
                             <summary><i class="fas fa-info-circle"></i> Öğrenme Çıktısı: <span>${esc(outcome.short_title || outcome.id)}</span> <span class="study-outcome-expand-hint">(Detay)</span></summary>
-                            <p class="study-outcome-full-desc">${esc(outcome.title)}${c.book_section ? `<br>Kitap başlığı: ${esc(c.book_section)}` : ''}</p>
+                            <p class="study-outcome-full-desc">${esc(outcome.title)}${c.book_section ? `<br>Kitap başlığı: ${esc(c.book_section)}` : (outcome.book_ref ? `<br>MEB Ders Kitabı: ${esc(outcome.book_ref)}` : '')}</p>
                         </details>
                     ` : ''}
                     ${visualCreditHtml(c.visual)}
@@ -1539,6 +1625,7 @@ function renderStudy(cardIndex) {
                         ${c.misconception ? `<p class="exam-warning"><strong>⚠️ Karıştırma:</strong> ${esc(c.misconception)}</p>` : ''}</details>` : ''}
                 </div>
 
+                ${c.eyebrow ? `<div class="exam-card-eyebrow" style="font-size:0.8rem; font-weight:700; color:#38bdf8; text-transform:uppercase; letter-spacing:0.06em; margin: 4px 0 2px;">${esc(c.eyebrow)}</div>` : ''}
                 <h2 class="exam-card-title">${esc(c.title)}</h2>
 
                 <div class="exam-contentgrid ${!c.visual && !c.table ? 'exam-text-only' : ''}">
@@ -2731,7 +2818,7 @@ function renderSummary() {
     const scoreSubEl = $('summary-score-sub');
     if (scoreSubEl) {
         const scNum = a.scenarioNumber || getActiveScenarioNumber();
-        let msg = `7. Sınıf · 1. Dönem 1. Yazılı (MEB Senaryo ${scNum})`;
+        let msg = `7. Sınıf · 1. Dönem 1. Yazılı (${formatScenarioTitle(scNum)})`;
         if (sortedMissedCards.length === 0 || totalScore === 100) {
             msg = 'Tebrikler! Bu provada tüm bilimsel ölçütleri karşıladığını belirttin.';
         } else if (totalScore >= 80) {
@@ -3085,7 +3172,7 @@ async function generateExamPdfBlob(questions, attempt) {
     headerCols.push({
         stack: [
             { text: 'FenUp X — Fen Bilimleri Yazılı Provası', fontSize: 13, bold: true, color: '#0f172a' },
-            { text: `7. Sınıf 1. Dönem 1. Yazılı Provası (MEB Senaryo ${scNum})`, fontSize: 9.5, color: '#475569', margin: [0, 2, 0, 0] }
+            { text: `7. Sınıf 1. Dönem 1. Yazılı Provası (${formatScenarioTitle(scNum)})`, fontSize: 9.5, color: '#475569', margin: [0, 2, 0, 0] }
         ]
     });
 
@@ -3124,7 +3211,7 @@ async function generateExamPdfBlob(questions, attempt) {
 
     // 3. Kısa Yönerge (Ayrı kapak sayfası olmadan Soru 1 hemen ardından başlar)
     docContent.push({
-        text: `Yönerge: Bu sınav MEB Senaryo ${scNum} öğrenme çıktısı dağılımına uygun ${questions.length} açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.`,
+        text: `Yönerge: Bu sınav ${formatScenarioTitle(scNum)} öğrenme çıktısı dağılımına uygun ${questions.length} açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.`,
         fontSize: 7.6,
         italics: true,
         color: '#64748b',
@@ -3291,7 +3378,8 @@ async function downloadExamPdf(btnDownload = null) {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'FenUpX_7Sinif_1Donem_1Yazili_Senaryo2.pdf';
+        const scNum = state.attempt?.scenarioNumber || getActiveScenarioNumber();
+        a.download = `FenUpX_7Sinif_1Donem_1Yazili_Senaryo${scNum}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -3338,7 +3426,7 @@ function openPrintPreview(triggerEl = null) {
                 <img src="fenupx-logo.png" alt="FenUp X Logo" class="print-logo" width="44" height="44">
                 <div class="print-title-group">
                     <h1 class="print-school-title">FenUp X — Fen Bilimleri Yazılı Provası</h1>
-                    <h2 class="print-sub-title">7. Sınıf 1. Dönem 1. Yazılı Provası (MEB Senaryo ${scNum})</h2>
+                    <h2 class="print-sub-title">7. Sınıf 1. Dönem 1. Yazılı Provası (${formatScenarioTitle(scNum)})</h2>
                 </div>
             </div>
             <div class="print-student-info-grid">
@@ -3350,7 +3438,7 @@ function openPrintPreview(triggerEl = null) {
             </div>
         </div>
         <div class="print-instructions">
-            <strong>Yönerge:</strong> Bu sınav MEB Senaryo ${scNum} öğrenme çıktısı dağılımına uygun ${qs.length} açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.
+            <strong>Yönerge:</strong> Bu sınav ${formatScenarioTitle(scNum)} öğrenme çıktısı dağılımına uygun ${qs.length} açık uçlu sorudan oluşmaktadır. Soru puanları soru köklerinin sonunda parantez içinde belirtilmiş olup sınav toplam 100 puandır. Cevaplarınızı ve fen bilimsel gerekçelerinizi soruların altındaki çizgili alanlara açıkça yazınız. Başarılar dileriz.
         </div>
         <div class="print-questions-flow">
             ${qs.map((q, i) => {
@@ -4193,7 +4281,16 @@ if (typeof window !== 'undefined') {
         exitStudyFullscreen,
         selectQuestions,
         getQuestionHistoryStats,
-        questionVisualHtml
+        questionVisualHtml,
+        getState: () => state,
+        setScenario: (sc) => {
+            state.selectedScenario = sc;
+            syncScenarioData();
+            saveState();
+        },
+        getCards: () => CARDS,
+        getQuestions: () => QUESTIONS,
+        syncScenarioData
     };
 }
 
