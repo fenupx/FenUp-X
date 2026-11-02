@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 260" width="100%" height="100%">
+  <rect width="100%" height="100%" fill="none"/>
+
+  <!-- Üst: Yavaş (40 km/h) -->
+  <g transform="translate(40, 35)">
+    <line x1="0" y1="70" x2="600" y2="70" stroke="#475569" stroke-width="2"/>
+    <rect x="20" y="25" width="80" height="30" rx="4" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
+    <rect x="40" y="8" width="45" height="20" rx="3" fill="#0369a1" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="38" cy="55" r="9" fill="#0f172a" stroke="#cbd5e1" stroke-width="1.5"/>
+    <circle cx="82" cy="55" r="9" fill="#0f172a" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="60" y="-2" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Özdeş Otomobil</text>
+    <line x1="110" y1="40" x2="145" y2="40" stroke="#10b981" stroke-width="3"/>
+    <polygon points="145,36 155,40 145,44" fill="#10b981"/>
+    <text x="135" y="28" fill="#10b981" font-size="12" font-weight="bold" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">40 km/h (Yavaş)</text>
+    <rect x="220" y="25" width="22" height="45" fill="#d97706" stroke="#fbbf24" stroke-width="1.5"/>
+    <line x1="242" y1="45" x2="295" y2="45" stroke="#94a3b8" stroke-dasharray="3,3"/>
+    <rect x="295" y="25" width="22" height="45" fill="#d97706" opacity="0.4" stroke="#fbbf24"/>
+    <text x="330" y="48" fill="#f8fafc" font-size="12" font-weight="bold" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Kısa İtme Mesafesi</text>
+    <text x="330" y="65" fill="#94a3b8" font-size="11" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Daha Az Kinetik Enerji</text>
+  </g>
+
+  <!-- Alt: Hızlı (90 km/h) -->
+  <g transform="translate(40, 145)">
+    <line x1="0" y1="70" x2="600" y2="70" stroke="#475569" stroke-width="2"/>
+    <rect x="20" y="25" width="80" height="30" rx="4" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
+    <rect x="40" y="8" width="45" height="20" rx="3" fill="#0369a1" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="38" cy="55" r="9" fill="#0f172a" stroke="#cbd5e1" stroke-width="1.5"/>
+    <circle cx="82" cy="55" r="9" fill="#0f172a" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="60" y="-2" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Özdeş Otomobil</text>
+    <line x1="110" y1="40" x2="190" y2="40" stroke="#f43f5e" stroke-width="3.5"/>
+    <polygon points="190,35 202,40 190,45" fill="#f43f5e"/>
+    <text x="155" y="28" fill="#f43f5e" font-size="12" font-weight="bold" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">90 km/h (Hızlı)</text>
+    <rect x="220" y="25" width="22" height="45" fill="#d97706" stroke="#fbbf24" stroke-width="1.5"/>
+    <line x1="242" y1="45" x2="440" y2="45" stroke="#f43f5e" stroke-dasharray="3,3" stroke-width="2"/>
+    <rect x="440" y="25" width="22" height="45" fill="#d97706" opacity="0.4" stroke="#fbbf24"/>
+    <text x="475" y="44" fill="#f43f5e" font-size="12" font-weight="bold" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Uzun İtme Mesafesi</text>
+    <text x="475" y="60" fill="#fca5a5" font-size="11" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Daha Fazla Kinetik Enerji</text>
+  </g>
+
+  <rect x="100" y="235" width="480" height="22" rx="11" fill="#0f172a" stroke="#334155"/>
+  <text x="340" y="250" fill="#38bdf8" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Sonuç: Kütleleri eşitken sürati fazla olan aracın kinetik enerjisi daha büyüktür.</text>
+</svg>

@@ -219,12 +219,13 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(cardFB714.k01.visual).toBe('assets/orion.jpg');
         expect(cardFB714.k02.visual).toBe('assets/diagram-nebula-collapse.svg');
 
-        // FB.7.2.2 giriş kartını kontrol et (V7.3 Master K00 organizasyon, K01 içerik)
+        // FB.7.2.2 giriş kartını kontrol et (V7.4 Master K00 organizasyon, K01/K06 içerik ve enerji şemaları)
         const cardFB722 = await page.evaluate(() => {
             const engine = window.FenUpExam;
             const cards = engine.getCards();
             const k00 = cards.find(c => c.id === 'FB722-V7-K00');
             const k01 = cards.find(c => c.id === 'FB722-V7-K01');
+            const k06 = cards.find(c => c.id === 'FB722-V7-K06');
             return {
                 k00: k00 ? {
                     id: k00.id,
@@ -237,6 +238,11 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
                     id: k01.id,
                     bodyLength: k01.body?.length,
                     visual: k01.visual?.asset
+                } : null,
+                k06: k06 ? {
+                    id: k06.id,
+                    bodyLength: k06.body?.length,
+                    visual: k06.visual?.asset
                 } : null
             };
         });
@@ -248,6 +254,7 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(cardFB722.k00.visual).toBeNull();
         expect(cardFB722.k01.bodyLength).toBeGreaterThan(0);
         expect(cardFB722.k01.visual).toBe('assets/diagram-motion-vs-rest.svg');
+        expect(cardFB722.k06.visual).toBe('assets/diagram-mass-potential-effect.svg');
 
         // UI'da render edilmiş K00 organizasyon kartını açıp kontrol et
         const targetIdx = await page.evaluate(() => {
@@ -446,11 +453,27 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(typography.btnMinHeight).toBe('56px');
     });
 
-    test('V7.3 Master Müfredat ve Ders Kitabı Dil Uyumu (ağır elementler, pulsar, nükleer füzyon temizliği ve 3D şema uyumu)', async () => {
+    test('V7.4 Master Formülsüz Müfredat, 2 Paragraflık Kartlar ve Tüm Enerji Şemaları Uyumu', async () => {
         const ekPath = path.resolve('data/exam/content-v6/ek_icerik.json');
         const ekData = JSON.parse(fs.readFileSync(ekPath, 'utf8'));
 
-        expect(ekData.version).toBe('7.3.0');
+        expect(ekData.version).toBe('7.4.0');
+
+        // K01-K08 kartlarının istisnasız 2 kısa paragraftan oluştuğunu doğrula
+        for (const cid of Object.keys(ekData.cards)) {
+            if (cid.endsWith('K00')) continue;
+            expect(ekData.cards[cid].body).toHaveLength(2);
+        }
+
+        // FB.7.2.2 tüm enerji şemalarının doğrulanması
+        expect(ekData.cards['FB722-V7-K01'].visual?.asset).toBe('assets/diagram-motion-vs-rest.svg');
+        expect(ekData.cards['FB722-V7-K02'].visual?.asset).toBe('assets/diagram-speed-kinetic-effect.svg');
+        expect(ekData.cards['FB722-V7-K03'].visual?.asset).toBe('assets/diagram-mass-kinetic-effect.svg');
+        expect(ekData.cards['FB722-V7-K04'].visual?.asset).toBe('assets/swing.jpg');
+        expect(ekData.cards['FB722-V7-K05'].visual?.asset).toBe('assets/diagram-height-effect.svg');
+        expect(ekData.cards['FB722-V7-K06'].visual?.asset).toBe('assets/diagram-mass-potential-effect.svg');
+        expect(ekData.cards['FB722-V7-K07'].visual?.asset).toBe('assets/diagram-elastic-spring.svg');
+        expect(ekData.cards['FB722-V7-K08'].visual?.asset).toBe('assets/diagram-roller-coaster.svg');
 
         // FB714-V7-K03 ve K04: "ağır elementler" ve "pulsar" çıkarıldı; "nötron yıldızı veya kara delik"
         const k03Body = ekData.cards['FB714-V7-K03'].body.join(' ');
@@ -461,7 +484,8 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         const k04Body = ekData.cards['FB714-V7-K04'].body.join(' ');
         expect(k04Body).not.toContain('Pulsar');
         expect(k04Body).not.toContain('pulsar');
-        expect(k04Body).toContain('nötron yıldızı veya kara delik');
+        expect(k04Body).toContain('nötron yıldızı');
+        expect(k04Body).toContain('kara deli');
 
         // FB714-V7-K08: Kutup Yıldızı ve Büyükayı 5 kat mesafe
         const k08Body = ekData.cards['FB714-V7-K08'].body.join(' ');
@@ -481,7 +505,12 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         const m04Stem = ekData.questions['FB714-V7-M04'].stem;
         expect(m04Stem).toContain('50, 450 ve 1200 ışık yılı');
 
-        // SVG diyagram metinleri
+        // FB722-V7-E04 ve M02 formülsüz somut dil kontrolü
+        const e04Stem = ekData.questions['FB722-V7-E04'].stem;
+        expect(e04Stem).toContain('1 kg kütleli hafif bilye');
+        expect(e04Stem).toContain('5 kg kütleli ağır gülle');
+
+        // SVG diyagram metinleri ve şeffaflık
         const nebulaSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-nebula-collapse.svg'), 'utf8');
         expect(nebulaSvg).not.toContain('Nükleer füzyon');
         expect(nebulaSvg).not.toContain('nükleer füzyon');
@@ -492,12 +521,32 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(starCycleSvg).not.toContain('pulsar');
         expect(starCycleSvg).toContain('Nötron Yıldızı');
 
-        // Kutup Yıldızı şeması (Merak, Dubhe, 5 Kat Mesafe, Polaris)
+        // Kutup Yıldızı şeması (Merak, Dubhe, dikey hat ve 5 Kat adım çentikleri)
         const constelSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-constellations.svg'), 'utf8');
         expect(constelSvg).toContain('Merak');
         expect(constelSvg).toContain('Dubhe');
-        expect(constelSvg).toContain('5 Kat Mesafe');
+        expect(constelSvg).toContain('5. Kat');
         expect(constelSvg).toContain('Kutup Yıldızı (Polaris)');
+
+        // Yeni enerji SVG'lerinin metin ve kurgu kontrolü
+        const massPotSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-mass-potential-effect.svg'), 'utf8');
+        expect(massPotSvg).toContain('Hafif Bilye (1 kg)');
+        expect(massPotSvg).toContain('Ağır Gülle (5 kg)');
+        expect(massPotSvg).toContain('Derin Çukur');
+
+        const heightSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-height-effect.svg'), 'utf8');
+        expect(heightSvg).toContain('1 Metre');
+        expect(heightSvg).toContain('2 Metre');
+
+        const speedKinSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-speed-kinetic-effect.svg'), 'utf8');
+        expect(speedKinSvg).toContain('40 km/h (Yavaş)');
+        expect(speedKinSvg).toContain('90 km/h (Hızlı)');
+        expect(speedKinSvg).toContain('Uzun İtme Mesafesi');
+
+        const massKinSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-mass-kinetic-effect.svg'), 'utf8');
+        expect(massKinSvg).toContain('Hafif Otomobil (1000 kg)');
+        expect(massKinSvg).toContain('Ağır Kamyon (5000 kg)');
+        expect(massKinSvg).toContain('Takoz Çok İtildi');
     });
 
     test('Senaryo 3 seçildiğinde kart sıralaması OUTCOME_ORDER uyumlu olmalı ve Kutup Yıldızı şeması render edilmeli', async ({ page }) => {

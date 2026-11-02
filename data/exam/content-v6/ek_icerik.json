@@ -1,7 +1,7 @@
 {
-  "version": "7.3.0",
+  "version": "7.4.0",
   "generated_at": "2026-11-02",
-  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek İçerik V7.3 Tam V6 Mimarisi Eşitliği",
+  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek İçerik V7.4 Tam MEB Kitap Görsel ve Dil Eşitliği",
   "outcomes": [
     {
       "id": "FB.7.1.4",
@@ -96,12 +96,12 @@
       "title": "Yıldızların Yaşamı",
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [
-        "Bulutsu (Nebula) ve yıldızların oluşumu",
-        "Küçük kütleli yıldızların yaşam döngüsü",
-        "Büyük kütleli yıldızların yaşam döngüsü",
+        "Bulutsudan yıldız oluşumu",
+        "Küçük kütleli yıldızların yaşamı",
+        "Büyük kütleli yıldızların yaşamı",
         "Güneş’in yaşam döngüsü",
-        "Yıldızların renkleri ve yüzey sıcaklıkları",
-        "Işık yılı kavramı",
+        "Yıldız renkleri ve sıcaklıkları",
+        "Işık yılı uzaklık birimi",
         "Takımyıldızlar ve Kutup Yıldızı"
       ],
       "body": [],
@@ -115,8 +115,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Uzayda bulunan devasa gaz ve toz bulutlarına bulutsu (nebula) denir.",
-        "Yıldızların doğum yeridir. Orion, Atbaşı ve Kelebek bilinen bulutsu örnekleridir."
+        "Uzaydaki devasa gaz ve toz bulutlarına bulutsu (nebula) denir.",
+        "Bulutsular yıldızların doğum yeridir; Orion ve Atbaşı bilinen örnekleridir."
       ],
       "visual": {
         "kind": "image",
@@ -134,8 +134,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Bulutsudaki gaz ve toz parçacıkları kütle çekiminin etkisiyle bir araya gelerek sıkışır.",
-        "Sıkışma sonucu sıcaklık ve basınç artar; merkezde çekirdek tepkimeleri başlayınca ısı ve ışık yayan bir yıldız doğar."
+        "Bulutsudaki gaz ve tozlar kütle çekimiyle sıkışarak yoğunlaşır.",
+        "Sıcaklık ve basınç yeterince yükseldiğinde çekirdek tepkimeleri başlar ve yeni bir yıldız doğar."
       ],
       "visual": {
         "kind": "image",
@@ -153,9 +153,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Başlangıç kütlesi Güneş kadar veya Güneş'ten küçük olan yıldızlar bu yolu izler.",
-        "Yıldız yakıtı azaldıkça genişleyip kırmızı deve dönüşür.",
-        "Dış gaz katmanlarını uzaya savurarak gezegenimsi bulutsu oluşturur; merkezde kalan kor çekirdek ise beyaz cüce olarak soğur."
+        "Başlangıç kütlesi Güneş kadar veya daha az olan yıldızlar önce kırmızı deve dönüşür.",
+        "Dış katmanlarını gezegenimsi bulutsu olarak uzaya savurur; merkezde kalan kor çekirdek ise beyaz cüce olur."
       ],
       "visual": {
         "kind": "image",
@@ -173,9 +172,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Başlangıç kütlesi Güneş'ten kat kat büyük olan yıldızlar önce kırmızı süperdeve dönüşür.",
-        "Ömrünün sonunda süpernova adı verilen şiddetli bir patlama geçirir.",
-        "Patlamadan sonra kalan çekirdeğin kütlesine göre nötron yıldızı veya kara delik meydana gelir."
+        "Başlangıç kütlesi Güneş'ten çok büyük olan yıldızlar kırmızı süperdeve dönüşür.",
+        "Ömrünün sonunda süpernova patlaması geçirerek kütlesine göre nötron yıldızına veya kara deliğe evrilir."
       ],
       "visual": {
         "kind": "image",
@@ -193,9 +191,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Güneş, orta/küçük kütleli sarı bir yıldızdır.",
-        "Yaklaşık 5 milyar yıl sonra kırmızı dev evresine girecek ve ömrünü beyaz cüce olarak tamamlayacaktır.",
-        "Güneş'in kütlesi süpernova patlaması geçirmek veya kara deliğe dönüşmek için yeterli değildir."
+        "Güneş orta/küçük kütleli sarı bir yıldızdır.",
+        "Yaklaşık 5 milyar yıl sonra kırmızı dev evresine girecek ve ömrünü beyaz cüce olarak tamamlayacaktır."
       ],
       "visual": {
         "kind": "image",
@@ -213,9 +210,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Yıldızların yaydığı ışığın rengi, yüzey sıcaklıklarının bir göstergesidir.",
-        "Mavi ve beyaz yıldızlar en sıcak, sarı yıldızlar orta sıcaklıkta, kırmızı yıldızlar ise en soğuktur.",
-        "Günlük hayatta kırmızı sıcak algılansa da gök biliminde tam tersidir."
+        "Yıldızın yaydığı ışığın rengi, yüzey sıcaklığını gösterir.",
+        "Mavi ve beyaz yıldızlar en sıcak, sarı yıldızlar orta sıcaklıkta, kırmızı yıldızlar ise en soğuktur."
       ],
       "visual": {
         "kind": "image",
@@ -234,8 +230,7 @@
       "topics": [],
       "body": [
         "Işık yılı bir zaman birimi değil, devasa bir uzaklık birimidir.",
-        "Işığın boşlukta bir yılda aldığı mesafedir (yaklaşık 9.5 trilyon kilometre).",
-        "Bir yıldıza baktığımızda onun ışığının bize ulaştığı süredeki geçmiş hâlini görürüz."
+        "Işığın boşlukta bir yılda aldığı mesafedir (yaklaşık 9.5 trilyon kilometre)."
       ],
       "visual": {
         "kind": "image",
@@ -253,9 +248,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Dünya'dan bakıldığında gökyüzünde bir aradaymış gibi görünen yıldız gruplarına takımyıldız denir (Büyükayı, Küçükayı, Avcı).",
-        "Kutup Yıldızı, Küçükayı'nın kuyruk ucundadır ve daima kuzey yönünü gösterir.",
-        "Büyükayı'nın cezve ucundaki iki yıldız (Merak ve Dubhe) arasındaki mesafe 5 kat uzatıldığında Kutup Yıldızı bulunur."
+        "Gökyüzünde bir aradaymış gibi görünen yıldız gruplarına takımyıldız denir (Büyükayı, Küçükayı, Avcı).",
+        "Büyükayı kepçesinin dış kenarındaki iki yıldız arası 5 kat uzatıldığında daima kuzeyi gösteren Kutup Yıldızı bulunur."
       ],
       "visual": {
         "kind": "image",
@@ -272,12 +266,12 @@
       "title": "Kinetik ve Potansiyel Enerji",
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [
-        "Kinetik enerji nedir?",
+        "Kinetik enerji kavramı",
         "Süratin kinetik enerjiye etkisi",
         "Kütlenin kinetik enerjiye etkisi",
-        "Çekim potansiyel enerjisi nedir?",
-        "Yüksekliğin çekim potansiyeline etkisi",
-        "Kütlenin çekim potansiyeline etkisi",
+        "Çekim potansiyel enerjisi kavramı",
+        "Yüksekliğin potansiyel enerjiye etkisi",
+        "Kütlenin potansiyel enerjiye etkisi",
         "Esneklik potansiyel enerjisi",
         "Enerji dönüşümü ve korunumu"
       ],
@@ -293,8 +287,7 @@
       "topics": [],
       "body": [
         "Hareket hâlindeki tüm cisimlerin sahip olduğu enerjiye kinetik enerji denir.",
-        "Koşan bir atlet, uçan bir kuş ve seyreden bir tekne kinetik enerjiye sahiptir.",
-        "Durmakta olan cisimlerin sürati sıfır olduğu için kinetik enerjisi kesinlikle sıfırdır."
+        "Koşan bir atlet ve uçan bir kuş kinetik enerjiye sahiptir; duran cisimlerin kinetik enerjisi sıfırdır."
       ],
       "visual": {
         "kind": "image",
@@ -312,15 +305,14 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Kütleleri eşit iki hareketliden sürati daha fazla olanın kinetik enerjisi daha büyüktür.",
-        "Sürati fazla olan bir aracın durma (fren) mesafesi daha uzundur.",
-        "Örneğin aynı otomobil 90 km/saat süratle giderken, 50 km/saat sürate göre daha fazla kinetik enerji taşır."
+        "Kütleleri eşit cisimlerden sürati daha fazla olanın kinetik enerjisi daha büyüktür.",
+        "Örneğin aynı otomobil 90 km/saat süratle giderken, 40 km/saat sürate göre takozu çok daha uzağa iter ve fren mesafesi uzar."
       ],
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-kinetic-experiment.svg",
-        "alt": "Sürat ve kütlenin kinetik enerjiye etkisini gösteren kontrollü deney şeması",
-        "caption": "Kontrollü Deney Düzeneği",
+        "asset": "assets/diagram-speed-kinetic-effect.svg",
+        "alt": "Farklı süratlerdeki özdeş araçların kinetik enerjisi",
+        "caption": "Süratin Kinetik Enerjiye Etkisi",
         "fit": "contain"
       }
     },
@@ -332,11 +324,16 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Süratleri eşit iki hareketliden kütlesi daha fazla olanın kinetik enerjisi daha büyüktür.",
-        "Aynı süratle ilerleyen yüklü bir kamyonun kinetik enerjisi, binek bir otomobilden kat kat fazladır.",
-        "Bu nedenle aynı süratteki ağır araçları durdurmak daha zordur."
+        "Süratleri eşit hareketlilerden kütlesi daha fazla olanın kinetik enerjisi daha büyüktür.",
+        "Aynı süratle ilerleyen ağır bir kamyon, hafif bir otomobilden çok daha fazla enerji taşır ve durdurulması zordur."
       ],
-      "visual": null
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-mass-kinetic-effect.svg",
+        "alt": "Aynı süratteki ağır ve hafif araçların kinetik enerji karşılaştırması",
+        "caption": "Kütlenin Kinetik Enerjiye Etkisi",
+        "fit": "contain"
+      }
     },
     "FB722-V7-K04": {
       "id": "FB722-V7-K04",
@@ -347,8 +344,7 @@
       "topics": [],
       "body": [
         "Cisimlerin bulundukları konumdan (yerden yüksekliklerinden) dolayı depoladıkları enerjiye çekim potansiyel enerjisi denir.",
-        "Baraj gölünde biriken su, daldaki elma ve masadaki kitap çekim potansiyel enerjisine sahiptir.",
-        "Yer seviyesindeki bir cismin çekim potansiyel enerjisi sıfır kabul edilir."
+        "Daldaki elma ve barajda biriken su potansiyel enerji depolar; yer seviyesindeki bir cismin potansiyel enerjisi sıfırdır."
       ],
       "visual": {
         "kind": "image",
@@ -366,14 +362,14 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Kütleleri eşit cisimlerden yerden daha yüksekte bulunanın çekim potansiyel enerjisi daha büyüktür.",
-        "Kum havuzuna daha yüksekten bırakılan bir bilye, kuma daha derin batarak çukur açar."
+        "Kütleleri eşit cisimlerden yerden daha yüksekte olanın çekim potansiyel enerjisi daha büyüktür.",
+        "Özdeş bilyelerden 2 metre yüksekten bırakılan, 1 metreden bırakılana göre kumda daha derin bir çukur oluşturur."
       ],
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-potential-experiment.svg",
-        "alt": "Farklı yükseklik ve kütlelerin kum havuzundaki çukur derinliği deneyi",
-        "caption": "Kum Havuzu Deney Düzenekleri",
+        "asset": "assets/diagram-height-effect.svg",
+        "alt": "Farklı yüksekliklerden bırakılan özdeş bilyelerin kumdaki iz derinliği",
+        "caption": "Yüksekliğin Potansiyel Enerjiye Etkisi",
         "fit": "contain"
       }
     },
@@ -385,10 +381,16 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Aynı yükseklikte bulunan cisimlerden kütlesi (ağırlığı) daha büyük olanın çekim potansiyel enerjisi daha fazladır.",
-        "Aynı yükseklikten kum havuzuna bırakılan ağır bir gülle, hafif bir bilyeye göre daha derin çukur oluşturur."
+        "Aynı yükseklikte bulunan cisimlerden kütlesi daha büyük olanın çekim potansiyel enerjisi daha fazladır.",
+        "Aynı yükseklikten kuma bırakılan 5 kg ağır gülle, 1 kg hafif bilyeye göre çok daha derin çukur açar."
       ],
-      "visual": null
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-mass-potential-effect.svg",
+        "alt": "Eşit yükseklikteki ağır ve hafif cisimlerin kumdaki iz derinliği",
+        "caption": "Kütlenin Potansiyel Enerjiye Etkisi",
+        "fit": "contain"
+      }
     },
     "FB722-V7-K07": {
       "id": "FB722-V7-K07",
@@ -399,8 +401,7 @@
       "topics": [],
       "body": [
         "Esnek cisimlerin sıkıştırılması veya gerilmesi sonucunda depoladıkları enerjiye esneklik potansiyel enerjisi denir.",
-        "Sıkışmış bir yay, gerilmiş bir paket lastiği veya ok yayı esneklik potansiyel enerjisi depolar.",
-        "Sıkışma miktarı arttıkça ve yayın kalınlığı/sertliği arttıkça depolanan enerji artar."
+        "Sıkışmış yay veya gerilmiş ok yayında depolanan enerji; sıkışma miktarı ve yay sertliği arttıkça artar."
       ],
       "visual": {
         "kind": "image",
@@ -418,9 +419,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Bir cisim aynı anda hem kinetik hem potansiyel enerjiye sahip olabilir (örneğin uçmakta olan bir kuş).",
-        "Sürtünmelerin ihmal edildiği ortamlarda potansiyel ve kinetik enerji birbirine dönüşür ancak toplam mekanik enerji korunur.",
-        "Hız treni en tepede maksimum potansiyel enerjiye sahiptir; aşağı indikçe bu enerji kinetik enerjiye dönüşerek en alt noktada maksimum sürate ulaşır."
+        "Sürtünmesiz ortamlarda potansiyel ve kinetik enerji birbirine dönüşür ancak toplam mekanik enerji korunur.",
+        "Hız treni en tepede maksimum potansiyel enerjiye sahipken, aşağı indikçe kinetik enerjiye dönüşerek en dipte en büyük sürate ulaşır."
       ],
       "visual": {
         "kind": "image",
@@ -972,12 +972,12 @@
       "id": "FB722-V7-E01",
       "outcome_id": "FB.7.2.2",
       "difficulty": "easy",
-      "title": "Liman römorkörünün enerjisi",
-      "stem": "Şemada kütlesi 5000 kg olan bir liman römorkörünün sabit süratle ilerlediği gösterilmektedir. Bu teknenin sahip olduğu mekanik enerji türünü ve bu enerjinin büyüklüğünü belirleyen iki temel fiziksel değişkeni yazınız.",
+      "title": "Hareketli aracın enerjisi",
+      "stem": "Şemada 1000 kg kütleli bir otomobilin yolda süratle ilerlediği gösterilmektedir. Bu aracın sahip olduğu mekanik enerji türünü ve bu enerjinin büyüklüğünü belirleyen iki temel fiziksel değişkeni yazınız.",
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-kinetic-motion.svg",
-        "alt": "Süratle ilerleyen römorkör teknesi şeması",
+        "asset": "assets/diagram-motion-vs-rest.svg",
+        "alt": "Hareketli araç şeması",
         "fit": "contain"
       },
       "rubric": [
@@ -1116,24 +1116,24 @@
       "outcome_id": "FB.7.2.2",
       "difficulty": "easy",
       "title": "Aynı yükseklikte farklı kütleler",
-      "stem": "Şemadaki kum havuzunun üzerinde, aynı yükseklikte tutulan 2 kg kütleli metal küre ile 5 kg kütleli metal küre bulunmaktadır. Bu iki kürenin çekim potansiyel enerjilerini karşılaştırarak hangisinin daha fazla enerji depoladığını gerekçesiyle yazınız.",
+      "stem": "Şemadaki kum havuzunun üzerinde, aynı yükseklikte tutulan 1 kg kütleli hafif bilye ile 5 kg kütleli ağır gülle serbest bırakılıyor. Bu iki cismin çekim potansiyel enerjilerini ve kum havuzunda oluşturacakları izlerin derinliğini karşılaştırınız.",
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-potential-experiment.svg",
-        "alt": "Kum havuzu deney şeması",
+        "asset": "assets/diagram-mass-potential-effect.svg",
+        "alt": "Kum havuzu kütle etkisi deney şeması",
         "fit": "contain"
       },
       "rubric": [
         {
           "id": "FB722-V7-E04-R1",
-          "text": "5 kg kütleli kürenin çekim potansiyel enerjisinin daha büyük olduğunu belirtir.",
+          "text": "5 kg kütleli güllenin çekim potansiyel enerjisinin daha büyük olduğunu belirtir.",
           "points": 5,
           "weight": 5,
           "return_card_ids": [
             "FB722-V7-K06"
           ],
           "scoring": {
-            "full": "5 kg kütleli kürenin enerjisinin büyük olduğunu belirtir.",
+            "full": "5 kg kütleli güllenin enerjisinin büyük olduğunu belirtir.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
@@ -1142,14 +1142,14 @@
         },
         {
           "id": "FB722-V7-E04-R2",
-          "text": "Yükseklikler eşitken kütlesi (ağırlığı) büyük olan cismin daha fazla potansiyel enerji depoladığını açıklar.",
+          "text": "Yükseklikler eşitken kütlesi büyük olan cismin enerjisi fazla olduğundan kuma daha derin batacağını açıklar.",
           "points": 5,
           "weight": 5,
           "return_card_ids": [
             "FB722-V7-K06"
           ],
           "scoring": {
-            "full": "Yükseklik eşitken kütlesi büyük olanın enerjisi fazladır.",
+            "full": "Kütlesi büyük olanın kuma daha derin batacağını açıklar.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
@@ -1268,25 +1268,25 @@
       "id": "FB722-V7-M01",
       "outcome_id": "FB.7.2.2",
       "difficulty": "medium",
-      "title": "Kamyon ve otomobilin fren mesafesi",
-      "stem": "Aynı yolda eşit süratle seyreden 15 tonluk bir kamyon ile 1.5 tonluk bir otomobil aniden frene basıyor.\n1) Hangi aracın frene basmadan hemen önce daha fazla kinetik enerjiye sahip olduğunu gerekçesiyle açıklayınız.\n2) Süratleri eşit olmasına rağmen kamyonun durma (fren) mesafesinin otomobilden çok daha uzun olmasını kinetik enerji-kütle ilişkisiyle açıklayınız.",
+      "title": "Kamyon ve otomobilin kinetik enerjisi",
+      "stem": "Şemadaki yolda eşit süratle (60 km/h) seyreden 5000 kg kütleli yüklü kamyon ile 1000 kg kütleli otomobil yoldaki tahta takozlara çarpmaktadır.\n1) Hangi aracın takozu daha uzağa ittiğini ve kinetik enerjisinin daha büyük olduğunu gerekçesiyle açıklayınız.\n2) Süratleri eşit olmasına rağmen kamyonu durdurmanın otomobilden çok daha zor olmasını kütle-kinetik enerji ilişkisiyle gerekçelendiriniz.",
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-kinetic-experiment.svg",
-        "alt": "Kontrollü kinetik enerji deneyi",
+        "asset": "assets/diagram-mass-kinetic-effect.svg",
+        "alt": "Kamyon ve otomobil kinetik enerji deneyi",
         "fit": "contain"
       },
       "rubric": [
         {
           "id": "FB722-V7-M01-R1",
-          "text": "Süratler eşitken kütlesi büyük olan kamyonun kinetik enerjisinin çok daha büyük olduğunu belirtir.",
+          "text": "Süratler eşitken kütlesi büyük olan kamyonun kinetik enerjisinin çok daha büyük olduğunu ve takozu daha uzağa iteceğini belirtir.",
           "points": 7,
           "weight": 7,
           "return_card_ids": [
             "FB722-V7-K03"
           ],
           "scoring": {
-            "full": "Kamyonun kütlesi büyük olduğu için kinetik enerjisi fazladır.",
+            "full": "Kamyonun kütlesi büyük olduğu için enerjisi fazladır ve takozu daha çok iter.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
@@ -1295,7 +1295,7 @@
         },
         {
           "id": "FB722-V7-M01-R2",
-          "text": "Daha büyük kinetik enerjiyi sıfırlamak için sürtünmenin daha uzun mesafede etki etmesi gerektiğini, bu yüzden kamyonun fren mesafesinin uzun olduğunu açıklar.",
+          "text": "Daha büyük kinetik enerjiyi sıfırlamak için gereken fren kuvveti ve mesafesinin daha fazla olduğunu, bu yüzden kamyonu durdurmanın zor olduğunu açıklar.",
           "points": 8,
           "weight": 8,
           "return_card_ids": [
@@ -1303,7 +1303,7 @@
             "FB722-V7-K03"
           ],
           "scoring": {
-            "full": "Enerji büyük olduğu için fren mesafesi uzundur.",
+            "full": "Enerji büyük olduğu için durdurulması daha zordur.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
@@ -1317,11 +1317,11 @@
       "outcome_id": "FB.7.2.2",
       "difficulty": "medium",
       "title": "Kum havuzu deney düzenekleri",
-      "stem": "Şemadaki kum havuzu deneyinde:\n• 1. Düzenek: m kütleli küre, 2 kat yükseklikte\n• 2. Düzenek: 2m kütleli küre, 2 kat yükseklikte\n• 3. Düzenek: m kütleli küre, 1 kat yükseklikte\nBir öğrenci çekim potansiyel enerjisine:\na) 'Kütlenin etkisini' araştırmak için hangi iki düzeneği seçmelidir?\nb) 'Yüksekliğin etkisini' araştırmak için hangi iki düzeneği seçmelidir?\nSeçimlerinizi kontrollü deney kurallarına göre gerekçelendiriniz.",
+      "stem": "Şemadaki kum havuzu deneyinde:\n• 1. Düzenek: 1 kg bilye, 2 metre yükseklikte\n• 2. Düzenek: 2 kg bilye, 2 metre yükseklikte\n• 3. Düzenek: 1 kg bilye, 1 metre yükseklikte\nBir öğrenci çekim potansiyel enerjisine:\na) 'Kütlenin etkisini' araştırmak için hangi iki düzeneği seçmelidir?\nb) 'Yüksekliğin etkisini' araştırmak için hangi iki düzeneği seçmelidir?\nSeçimlerinizi kontrollü deney kurallarına göre gerekçelendiriniz.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-potential-experiment.svg",
-        "alt": "Kum havuzu deney düzenekleri",
+        "alt": "Kum havuzu kontrollü deney düzenekleri",
         "fit": "contain"
       },
       "rubric": [

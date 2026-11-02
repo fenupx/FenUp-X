@@ -1,40 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 250" width="100%" height="100%">
   <rect width="100%" height="100%" fill="none"/>
-  <!-- 1. Düzenek (Baz): m, v -> Kumda batma/durma mesafesi x -->
-  <g transform="translate(30, 20)">
-    <rect x="0" y="10" width="65" height="32" rx="4" fill="#3b82f6"/>
-    <text x="32" y="31" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">m, v</text>
-    <line x1="75" y1="26" x2="105" y2="26" stroke="#38bdf8" stroke-width="2.5"/>
-    <polygon points="105,23 111,26 105,29" fill="#38bdf8"/>
-    <!-- Kum zemin izi x -->
-    <rect x="130" y="18" width="55" height="16" fill="#eab308" opacity="0.6"/>
-    <text x="157" y="31" fill="#000000" font-size="11" font-weight="bold" text-anchor="middle">İz: x</text>
-    <text x="210" y="31" fill="#f8fafc" font-size="13">1. Düzenek (Kütle: m, Sürat: v)</text>
+
+  <!-- 1. Düzenek: 1000 kg, 50 km/h -->
+  <g transform="translate(40, 25)">
+    <line x1="0" y1="45" x2="580" y2="45" stroke="#475569" stroke-width="2"/>
+    <rect x="10" y="18" width="55" height="22" rx="3" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="24" cy="40" r="6" fill="#0f172a" stroke="#cbd5e1"/>
+    <circle cx="52" cy="40" r="6" fill="#0f172a" stroke="#cbd5e1"/>
+    <text x="75" y="32" fill="#10b981" font-size="11" font-weight="bold">50 km/h</text>
+    <!-- Takoz İtme -->
+    <rect x="160" y="15" width="16" height="30" fill="#d97706" stroke="#fbbf24"/>
+    <line x1="176" y1="30" x2="230" y2="30" stroke="#94a3b8" stroke-dasharray="3,3"/>
+    <rect x="230" y="15" width="16" height="30" fill="#d97706" opacity="0.4"/>
+    <text x="270" y="33" fill="#f8fafc" font-size="12" font-weight="bold">1. Düzenek: 1000 kg Otomobil, 50 km/h</text>
   </g>
 
-  <!-- 2. Düzenek: Kütle 2 Kat (2m, v) -> İz: 2x (Kütle Etkisi) -->
-  <g transform="translate(30, 80)">
-    <rect x="0" y="8" width="80" height="36" rx="4" fill="#ef4444"/>
-    <text x="40" y="31" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">2m, v</text>
-    <line x1="90" y1="26" x2="120" y2="26" stroke="#ef4444" stroke-width="2.5"/>
-    <polygon points="120,23 126,26 120,29" fill="#ef4444"/>
-    <!-- Kum zemin izi 2x -->
-    <rect x="145" y="18" width="110" height="16" fill="#eab308" opacity="0.6"/>
-    <text x="200" y="31" fill="#000000" font-size="11" font-weight="bold" text-anchor="middle">İz: 2x (Kütle 2 kat)</text>
-    <text x="280" y="31" fill="#f8fafc" font-size="13">2. Düzenek (Kütle: 2m, Sürat: v)</text>
+  <!-- 2. Düzenek: 2000 kg, 50 km/h (Kütle Etkisi) -->
+  <g transform="translate(40, 95)">
+    <line x1="0" y1="45" x2="580" y2="45" stroke="#475569" stroke-width="2"/>
+    <rect x="5" y="10" width="65" height="30" rx="3" fill="#b91c1c" stroke="#ef4444" stroke-width="1.5"/>
+    <circle cx="22" cy="40" r="7" fill="#0f172a" stroke="#cbd5e1"/>
+    <circle cx="55" cy="40" r="7" fill="#0f172a" stroke="#cbd5e1"/>
+    <text x="80" y="32" fill="#10b981" font-size="11" font-weight="bold">50 km/h</text>
+    <!-- Takoz İtme -->
+    <rect x="160" y="15" width="16" height="30" fill="#d97706" stroke="#fbbf24"/>
+    <line x1="176" y1="30" x2="310" y2="30" stroke="#ef4444" stroke-dasharray="3,3"/>
+    <rect x="310" y="15" width="16" height="30" fill="#d97706" opacity="0.4"/>
+    <text x="350" y="33" fill="#ef4444" font-size="12" font-weight="bold">2. Düzenek: 2000 kg Kamyonet, 50 km/h</text>
   </g>
 
-  <!-- 3. Düzenek: Sürat 2 Kat (m, 2v) -> İz: 4x (Sürat Etkisi) -->
-  <g transform="translate(30, 140)">
-    <rect x="0" y="10" width="65" height="32" rx="4" fill="#10b981"/>
-    <text x="32" y="31" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">m, 2v</text>
-    <line x1="75" y1="26" x2="135" y2="26" stroke="#10b981" stroke-width="3"/>
-    <polygon points="135,22 143,26 135,30" fill="#10b981"/>
-    <!-- Kum zemin izi 4x -->
-    <rect x="160" y="18" width="170" height="16" fill="#eab308" opacity="0.6"/>
-    <text x="245" y="31" fill="#000000" font-size="11" font-weight="bold" text-anchor="middle">İz: 4x (Sürat 2 kat)</text>
-    <text x="350" y="31" fill="#f8fafc" font-size="13">3. Düzenek (Kütle: m, Sürat: 2v)</text>
+  <!-- 3. Düzenek: 1000 kg, 100 km/h (Sürat Etkisi) -->
+  <g transform="translate(40, 165)">
+    <line x1="0" y1="45" x2="580" y2="45" stroke="#475569" stroke-width="2"/>
+    <rect x="10" y="18" width="55" height="22" rx="3" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="24" cy="40" r="6" fill="#0f172a" stroke="#cbd5e1"/>
+    <circle cx="52" cy="40" r="6" fill="#0f172a" stroke="#cbd5e1"/>
+    <text x="75" y="32" fill="#f43f5e" font-size="11" font-weight="bold">100 km/h</text>
+    <!-- Takoz İtme -->
+    <rect x="160" y="15" width="16" height="30" fill="#d97706" stroke="#fbbf24"/>
+    <line x1="176" y1="30" x2="420" y2="30" stroke="#f43f5e" stroke-dasharray="3,3"/>
+    <rect x="420" y="15" width="16" height="30" fill="#d97706" opacity="0.4"/>
+    <text x="450" y="33" fill="#f43f5e" font-size="12" font-weight="bold">3. Düzenek: 1000 kg, 100 km/h (En Uzak)</text>
   </g>
-
-  <text x="330" y="225" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">Kontrollü Deney: Kütle için (1 ve 2); Sürat için (1 ve 3) karşılaştırılır.</text>
 </svg>

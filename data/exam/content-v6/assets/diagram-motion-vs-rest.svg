@@ -1,32 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 200" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" width="100%" height="100%">
   <rect width="100%" height="100%" fill="none"/>
   <!-- Yol Zemin -->
-  <line x1="20" y1="150" x2="600" y2="150" stroke="#64748b" stroke-width="3"/>
+  <line x1="20" y1="140" x2="620" y2="140" stroke="#64748b" stroke-width="3"/>
 
-  <!-- 1. Duran Araç (v = 0) -->
-  <g transform="translate(60, 60)">
+  <!-- 1. Duran Araç -->
+  <g transform="translate(80, 50)">
     <rect x="0" y="40" width="110" height="35" rx="5" fill="#475569" stroke="#94a3b8" stroke-width="2"/>
     <rect x="25" y="15" width="60" height="25" rx="3" fill="#334155" stroke="#94a3b8" stroke-width="2"/>
     <circle cx="25" cy="75" r="12" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
     <circle cx="85" cy="75" r="12" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
-    <text x="55" y="115" fill="#ef4444" font-size="14" font-weight="bold" text-anchor="middle">v = 0 (Durgun)</text>
-    <text x="55" y="133" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">Kinetik Enerji = 0</text>
+    <text x="55" y="-5" fill="#ef4444" font-size="14" font-weight="bold" text-anchor="middle">Park Hâlindeki Araç</text>
+    <text x="55" y="115" fill="#94a3b8" font-size="13" font-weight="bold" text-anchor="middle">Sürati Yok (Hareketsiz)</text>
+    <text x="55" y="133" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">Kinetik Enerji = Sıfır</text>
   </g>
 
   <!-- Ayırıcı Çizgi -->
-  <line x1="300" y1="30" x2="300" y2="160" stroke="#475569" stroke-dasharray="4,4"/>
+  <line x1="320" y1="20" x2="320" y2="180" stroke="#475569" stroke-dasharray="4,4"/>
 
-  <!-- 2. Hareket Eden Araç (v > 0) -->
-  <g transform="translate(360, 60)">
+  <!-- 2. Hareket Eden Araç -->
+  <g transform="translate(390, 50)">
     <rect x="0" y="40" width="110" height="35" rx="5" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
     <rect x="25" y="15" width="60" height="25" rx="3" fill="#0369a1" stroke="#38bdf8" stroke-width="2"/>
     <circle cx="25" cy="75" r="12" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
     <circle cx="85" cy="75" r="12" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
     <!-- Sürat Oku -->
-    <line x1="120" y1="55" x2="190" y2="55" stroke="#10b981" stroke-width="4"/>
-    <polygon points="190,49 202,55 190,61" fill="#10b981"/>
-    <text x="160" y="42" fill="#10b981" font-size="14" font-weight="bold">v = 20 m/s</text>
-    <text x="55" y="115" fill="#10b981" font-size="14" font-weight="bold" text-anchor="middle">Hareketli</text>
-    <text x="55" y="133" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">Kinetik Enerji > 0</text>
+    <line x1="120" y1="55" x2="185" y2="55" stroke="#10b981" stroke-width="4"/>
+    <polygon points="185,49 197,55 185,61" fill="#10b981"/>
+    <text x="55" y="-5" fill="#10b981" font-size="14" font-weight="bold" text-anchor="middle">Yolda İlerleyen Araç</text>
+    <text x="55" y="115" fill="#10b981" font-size="13" font-weight="bold" text-anchor="middle">Süratli (Hareket Hâlinde)</text>
+    <text x="55" y="133" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">Kinetik Enerjisi Vardır</text>
   </g>
 </svg>
