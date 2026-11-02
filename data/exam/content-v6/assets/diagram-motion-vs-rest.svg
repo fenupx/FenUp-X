@@ -1,37 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 210" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 200" width="100%" height="100%">
   <rect width="100%" height="100%" fill="none"/>
-  <line x1="20" y1="140" x2="620" y2="140" stroke="#64748b" stroke-width="3"/>
-  <line x1="320" y1="20" x2="320" y2="180" stroke="#475569" stroke-dasharray="4,4"/>
+  <line x1="30" y1="135" x2="310" y2="135" stroke="#64748b" stroke-width="3"/>
+  <line x1="370" y1="135" x2="650" y2="135" stroke="#64748b" stroke-width="3"/>
 
-  <!-- Duran Araç -->
-  <g transform="translate(100, 50)">
-    <rect x="0" y="40" width="100" height="32" rx="4" fill="#475569" stroke="#94a3b8" stroke-width="1.5"/>
-    <circle cx="22" cy="72" r="10" fill="#0f172a" stroke="#cbd5e1"/>
-    <circle cx="78" cy="72" r="10" fill="#0f172a" stroke="#cbd5e1"/>
-  </g>
-  <g>
-    <rect x="90" y="45" width="120" height="24" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
-    <text x="150" y="60" fill="#ef4444" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Duran Otomobil</text>
-  </g>
-  <g>
-    <rect x="90" y="150" width="120" height="24" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
-    <text x="150" y="165" fill="#94a3b8" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kinetik Enerji = 0</text>
+  <!-- Sol: Duran Otomobil -->
+  <g transform="translate(105, 80)">
+    <rect x="0" y="18" width="110" height="26" rx="5" fill="#64748b"/>
+    <polygon points="20,18 35,2 75,2 90,18" fill="#94a3b8"/>
+    <circle cx="25" cy="45" r="10" fill="#334155" stroke="#cbd5e1" stroke-width="2"/>
+    <circle cx="85" cy="45" r="10" fill="#334155" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="55" y="-14" fill="#64748b" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Duran Otomobil (Hareketsiz)</text>
+    <text x="55" y="82" fill="#64748b" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kinetik Enerji = 0</text>
   </g>
 
-  <!-- Hareketli Araç -->
-  <g transform="translate(420, 50)">
-    <rect x="0" y="40" width="100" height="32" rx="4" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/>
-    <circle cx="22" cy="72" r="10" fill="#0f172a" stroke="#cbd5e1"/>
-    <circle cx="78" cy="72" r="10" fill="#0f172a" stroke="#cbd5e1"/>
-    <line x1="110" y1="55" x2="160" y2="55" stroke="#10b981" stroke-width="3"/>
-    <polygon points="160,50 170,55 160,60" fill="#10b981"/>
-  </g>
-  <g>
-    <rect x="410" y="45" width="130" height="24" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
-    <text x="475" y="60" fill="#10b981" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Hareketli Otomobil</text>
-  </g>
-  <g>
-    <rect x="410" y="150" width="130" height="24" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
-    <text x="475" y="165" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kinetik Enerjisi Var</text>
+  <!-- Sağ: Hareketli Otomobil -->
+  <g transform="translate(435, 80)">
+    <rect x="0" y="18" width="110" height="26" rx="5" fill="#0284c7"/>
+    <polygon points="20,18 35,2 75,2 90,18" fill="#38bdf8"/>
+    <circle cx="25" cy="45" r="10" fill="#334155" stroke="#cbd5e1" stroke-width="2"/>
+    <circle cx="85" cy="45" r="10" fill="#334155" stroke="#cbd5e1" stroke-width="2"/>
+    <line x1="120" y1="28" x2="165" y2="28" stroke="#059669" stroke-width="3.5"/>
+    <polygon points="165,23 177,28 165,33" fill="#059669"/>
+    <text x="55" y="-14" fill="#0284c7" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Hareketli Otomobil</text>
+    <text x="55" y="82" fill="#059669" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kinetik Enerjiye Sahiptir</text>
   </g>
 </svg>

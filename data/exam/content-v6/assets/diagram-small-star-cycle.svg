@@ -4,7 +4,7 @@
   <g transform="translate(10, 30)">
     <circle cx="45" cy="55" r="30" fill="#334155" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,3"/>
     <circle cx="45" cy="55" r="14" fill="#38bdf8" opacity="0.4"/>
-    <text x="45" y="115" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">Bulutsu</text>
+    <text x="45" y="115" fill="#0284c7" font-size="13" font-weight="bold" text-anchor="middle">Bulutsu</text>
   </g>
   <line x1="95" y1="85" x2="135" y2="85" stroke="#38bdf8" stroke-width="2"/>
   <polygon points="135,81 143,85 135,89" fill="#38bdf8"/>
@@ -12,7 +12,7 @@
   <!-- 2. Küçük Kütleli Yıldız -->
   <g transform="translate(145, 30)">
     <circle cx="45" cy="55" r="22" fill="#eab308" stroke="#fef08a" stroke-width="2"/>
-    <text x="45" y="115" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">Küçük Yıldız</text>
+    <text x="45" y="115" fill="#0284c7" font-size="13" font-weight="bold" text-anchor="middle">Küçük Yıldız</text>
     <text x="45" y="132" fill="#94a3b8" font-size="11" text-anchor="middle">(Örn: Güneş)</text>
   </g>
   <line x1="230" y1="85" x2="270" y2="85" stroke="#38bdf8" stroke-width="2"/>
@@ -21,7 +21,7 @@
   <!-- 3. Kırmızı Dev -->
   <g transform="translate(280, 20)">
     <circle cx="55" cy="65" r="42" fill="#dc2626" stroke="#fca5a5" stroke-width="2"/>
-    <text x="55" y="130" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">Kırmızı Dev</text>
+    <text x="55" y="130" fill="#0284c7" font-size="13" font-weight="bold" text-anchor="middle">Kırmızı Dev</text>
     <text x="55" y="147" fill="#94a3b8" font-size="11" text-anchor="middle">Genişler, soğur</text>
   </g>
   <line x1="390" y1="85" x2="430" y2="85" stroke="#38bdf8" stroke-width="2"/>
@@ -32,8 +32,8 @@
     <circle cx="55" cy="65" r="40" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-dasharray="5,3"/>
     <circle cx="55" cy="65" r="22" fill="none" stroke="#c084fc" stroke-width="2"/>
     <circle cx="55" cy="65" r="8" fill="#ffffff"/>
-    <text x="55" y="130" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">Gezegenimsi</text>
-    <text x="55" y="147" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">Bulutsu</text>
+    <text x="55" y="130" fill="#0284c7" font-size="13" font-weight="bold" text-anchor="middle">Gezegenimsi</text>
+    <text x="55" y="147" fill="#0284c7" font-size="13" font-weight="bold" text-anchor="middle">Bulutsu</text>
     <text x="55" y="164" fill="#94a3b8" font-size="11" text-anchor="middle">Dış gaz saçılır</text>
   </g>
   <line x1="550" y1="85" x2="590" y2="85" stroke="#38bdf8" stroke-width="2"/>
@@ -42,7 +42,7 @@
   <!-- 5. Beyaz Cüce -->
   <g transform="translate(605, 30)">
     <circle cx="45" cy="55" r="11" fill="#ffffff" stroke="#38bdf8" stroke-width="2"/>
-    <text x="45" y="115" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">Beyaz Cüce</text>
+    <text x="45" y="115" fill="#0284c7" font-size="13" font-weight="bold" text-anchor="middle">Beyaz Cüce</text>
     <text x="45" y="132" fill="#94a3b8" font-size="11" text-anchor="middle">Sıcak kor çekirdek</text>
   </g>
 </svg>

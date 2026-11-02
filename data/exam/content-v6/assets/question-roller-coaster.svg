@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 240" width="100%" height="100%">
+  <rect width="100%" height="100%" fill="none"/>
+  <line x1="30" y1="190" x2="670" y2="190" stroke="#64748b" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <text x="640" y="210" fill="#64748b" font-size="11" font-weight="bold" text-anchor="end" font-family="system-ui, sans-serif">Zemin Seviyesi</text>
+
+  <path d="M 40,50 C 140,50 180,190 280,190 C 380,190 420,105 500,105 C 560,105 600,180 650,190" fill="none" stroke="#64748b" stroke-width="4"/>
+
+  <g transform="translate(60, 50)">
+    <circle cx="0" cy="0" r="15" fill="#dc2626" stroke="#ffffff" stroke-width="2.5"/>
+    <text x="0" y="5" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">A</text>
+    <text x="10" y="-22" fill="#dc2626" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">A Noktası (Tepe)</text>
+    <line x1="0" y1="16" x2="0" y2="140" stroke="#dc2626" stroke-dasharray="3,3" stroke-width="1.2"/>
+  </g>
+
+  <g transform="translate(280, 190)">
+    <circle cx="0" cy="0" r="15" fill="#059669" stroke="#ffffff" stroke-width="2.5"/>
+    <text x="0" y="5" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">B</text>
+    <text x="0" y="28" fill="#059669" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">B Noktası (Zemin)</text>
+  </g>
+
+  <g transform="translate(500, 105)">
+    <circle cx="0" cy="0" r="15" fill="#0284c7" stroke="#ffffff" stroke-width="2.5"/>
+    <text x="0" y="5" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">C</text>
+    <text x="0" y="-22" fill="#0284c7" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">C Noktası (2. Tepe)</text>
+    <line x1="0" y1="16" x2="0" y2="85" stroke="#0284c7" stroke-dasharray="3,3" stroke-width="1.2"/>
+  </g>
+</svg>

@@ -453,11 +453,63 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(typography.btnMinHeight).toBe('56px');
     });
 
-    test('V7.7 Master Formülsüz Müfredat, Soru-Şema Senkronizasyonu ve İpucusuz Şemalar Uyumu', async () => {
+    test('V7.8 Master Formülsüz Müfredat, 24 Soru Görsel Ayrımı (question-*.svg) ve İpucusuz Şemalar Uyumu', async () => {
         const ekPath = path.resolve('data/exam/content-v6/ek_icerik.json');
         const ekData = JSON.parse(fs.readFileSync(ekPath, 'utf8'));
 
-        expect(ekData.version).toBe('7.7.0');
+        expect(ekData.version).toBe('7.8.0');
+
+        // 24 Sorunun Eksiksiz Görsel Matrisi Doğrulaması (14 visual: null, 8 question-*.svg, 2 fotoğraf)
+        const expectedNull = [
+            'FB714-V7-E02', 'FB714-V7-E04', 'FB714-V7-E06', 'FB714-V7-M01',
+            'FB714-V7-M02', 'FB714-V7-M03', 'FB714-V7-M04', 'FB714-V7-H01',
+            'FB714-V7-H02', 'FB722-V7-E01', 'FB722-V7-E02', 'FB722-V7-E06',
+            'FB722-V7-M04', 'FB722-V7-H01'
+        ];
+        const expectedVisual = {
+            'FB714-V7-E01': 'assets/question-nebula-collapse.svg',
+            'FB714-V7-E03': 'assets/sun.jpg',
+            'FB714-V7-E05': 'assets/question-star-colors.svg',
+            'FB722-V7-E03': 'assets/swing.jpg',
+            'FB722-V7-E04': 'assets/question-mass-potential.svg',
+            'FB722-V7-E05': 'assets/question-elastic-spring.svg',
+            'FB722-V7-M01': 'assets/question-mass-kinetic.svg',
+            'FB722-V7-M02': 'assets/question-potential-experiment.svg',
+            'FB722-V7-M03': 'assets/question-spring-thickness.svg',
+            'FB722-V7-H02': 'assets/question-roller-coaster.svg'
+        };
+
+        for (const qid of expectedNull) {
+            expect(ekData.questions[qid], `Soru bulunamadı: ${qid}`).toBeDefined();
+            expect(ekData.questions[qid].visual, `${qid} visual null olmalı`).toBeNull();
+        }
+
+        for (const [qid, assetPath] of Object.entries(expectedVisual)) {
+            expect(ekData.questions[qid], `Soru bulunamadı: ${qid}`).toBeDefined();
+            expect(ekData.questions[qid].visual?.asset, `${qid} görseli eşleşmedi`).toBe(assetPath);
+            const fullAssetPath = path.resolve('data/exam/content-v6', assetPath);
+            expect(fs.existsSync(fullAssetPath), `Varlık dosyası bulunamadı: ${assetPath}`).toBe(true);
+        }
+
+        // Tüm question-*.svg dosyalarının PDF kontrast ve sıfır ipucu standardı
+        const questionSvgFiles = [
+            'question-nebula-collapse.svg',
+            'question-star-colors.svg',
+            'question-mass-potential.svg',
+            'question-elastic-spring.svg',
+            'question-mass-kinetic.svg',
+            'question-potential-experiment.svg',
+            'question-spring-thickness.svg',
+            'question-roller-coaster.svg'
+        ];
+
+        for (const svgFile of questionSvgFiles) {
+            const svgContent = fs.readFileSync(path.resolve('data/exam/content-v6/assets', svgFile), 'utf8');
+            // PDF'de siyah leke yapan fill="#0f172a" hap kutusu olmamalı
+            expect(svgContent, `${svgFile} dosyasında fill="#0f172a" bulunmamalı`).not.toContain('fill="#0f172a"');
+            // Kapsam dışı terimler olmamalı
+            expect(svgContent).not.toMatch(/pulsar|füzyon|fuzyon|merak|dubhe/i);
+        }
 
         // K01-K08 kartlarının istisnasız 2 kısa paragraftan oluştuğunu doğrula
         for (const cid of Object.keys(ekData.cards)) {
@@ -513,10 +565,12 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(e01Rubric).not.toContain('nükleer');
         expect(e01Rubric).not.toContain('füzyon');
 
-        // FB714-V7-M04: Yatay kozmik cetvel şemasıyla tam uyumlu stem ve rubrik (Proxima Centauri 4,2 ışık yılı ve Kutup Yıldızı ~430 ışık yılı)
+        // FB714-V7-M04: Bağımsızlaştırılmış metin ve rubrik (Proxima Centauri yaklaşık 4,2 ışık yılı ve Kutup Yıldızı yaklaşık 430 ışık yılı)
         const m04Stem = ekData.questions['FB714-V7-M04'].stem;
-        expect(m04Stem).toContain('Proxima Centauri (yaklaşık 4,2 ışık yılı)');
-        expect(m04Stem).toContain('Kutup Yıldızı\'nın (~430 ışık yılı)');
+        expect(m04Stem).toContain('Proxima Centauri');
+        expect(m04Stem).toContain('yaklaşık 4,2 ışık yılı');
+        expect(m04Stem).toContain('Kutup Yıldızı');
+        expect(m04Stem).toContain('yaklaşık 430 ışık yılı');
         expect(m04Stem).toContain('gökyüzüne bakmak evrenin geçmişine bakmaktır');
 
         const m04Rubric = ekData.questions['FB714-V7-M04'].rubric.map(r => r.text).join(' ');
@@ -544,12 +598,12 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(starCycleSvg).not.toContain('pulsar');
         expect(starCycleSvg).toContain('Nötron Yıldızı');
 
-        // Kutup Yıldızı şeması (Merak ve Dubhe kaldırılmış, dikey 5 Kat Mesafe ve Kutup Yıldızı)
+        // Kutup Yıldızı şeması (Merak ve Dubhe kaldırılmış, dikey 5 Kat Uzaklık ve Kutup Yıldızı)
         const constelSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-constellations.svg'), 'utf8');
         expect(constelSvg).not.toContain('Merak');
         expect(constelSvg).not.toContain('Dubhe');
-        expect(constelSvg).toContain('5 Kat Mesafe');
-        expect(constelSvg).toContain('Kutup Yıldızı (Polaris)');
+        expect(constelSvg).toContain('5 Kat Uzaklık');
+        expect(constelSvg).toContain('Kutup Yıldızı (Kuzey)');
         expect(constelSvg).toContain('Büyükayı');
         expect(constelSvg).toContain('Küçükayı');
 
@@ -557,11 +611,11 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         const starColorsSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-star-colors.svg'), 'utf8');
         expect(starColorsSvg).not.toContain('°C');
         expect(starColorsSvg).not.toContain('Celsius');
-        expect(starColorsSvg).toContain('Mavi / Beyaz');
-        expect(starColorsSvg).toContain('En Sıcak Yıldızlar');
-        expect(starColorsSvg).toContain('Sarı (Güneş)');
-        expect(starColorsSvg).toContain('Kırmızı');
-        expect(starColorsSvg).toContain('En Soğuk Yıldızlar');
+        expect(starColorsSvg).toContain('Mavi Yıldız (X)');
+        expect(starColorsSvg).toContain('En Sıcak');
+        expect(starColorsSvg).toContain('Sarı Yıldız (Y - Güneş)');
+        expect(starColorsSvg).toContain('Kırmızı Yıldız (Z)');
+        expect(starColorsSvg).toContain('En Soğuk');
 
         // Basitleştirilmiş Işık Yılı cetveli
         const starDepthSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-star-depth-3d.svg'), 'utf8');
@@ -582,8 +636,8 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         // İpucu içermeyen yay kalınlığı şeması kontrolü
         const springThickSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-spring-thickness.svg'), 'utf8');
         expect(springThickSvg).not.toContain('Kalın yay bilyeyi daha uzağa fırlatır');
-        expect(springThickSvg).toContain('İnce Yay (10 cm sıkıştırıldı)');
-        expect(springThickSvg).toContain('Kalın Yay (10 cm sıkıştırıldı)');
+        expect(springThickSvg).toContain('İnce Telden Yay (10 cm sıkıştırıldı)');
+        expect(springThickSvg).toContain('Kalın Telden Yay (10 cm sıkıştırıldı)');
 
         // Yeni enerji SVG'lerinin metin ve kurgu kontrolü
         const massPotSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-mass-potential-effect.svg'), 'utf8');
@@ -610,11 +664,14 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
 
         // Hız treni A, B, C rozetleri
         const rollerSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-roller-coaster.svg'), 'utf8');
-        expect(rollerSvg).toContain('A (Tepe)');
-        expect(rollerSvg).toContain('Potansiyel En Fazla');
-        expect(rollerSvg).toContain('B (Dip)');
-        expect(rollerSvg).toContain('Kinetik En Fazla');
-        expect(rollerSvg).toContain('C (Tepe)');
+        expect(rollerSvg).toContain('A (Tepe: Potansiyel En Fazla)');
+        expect(rollerSvg).toContain('B (Dip: Kinetik En Fazla)');
+        expect(rollerSvg).toContain('C (2. Tepe: Enerji Dönüşümü)');
+
+        const qRollerSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/question-roller-coaster.svg'), 'utf8');
+        expect(qRollerSvg).toContain('A Noktası (Tepe)');
+        expect(qRollerSvg).toContain('B Noktası (Zemin)');
+        expect(qRollerSvg).toContain('C Noktası (2. Tepe)');
     });
 
     test('Senaryo 3 seçildiğinde kart sıralaması OUTCOME_ORDER uyumlu olmalı ve Kutup Yıldızı şeması render edilmeli', async ({ page }) => {

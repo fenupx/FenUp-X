@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 240" width="100%" height="100%">
+  <rect width="100%" height="100%" fill="none"/>
+  <line x1="30" y1="180" x2="670" y2="180" stroke="#64748b" stroke-width="2.5"/>
+  <rect x="40" y="180" width="620" height="28" fill="#eab308" opacity="0.22" rx="4"/>
+  <text x="95" y="199" fill="#d97706" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kum Havuzu</text>
+
+  <!-- 1. Düzenek: 1 kg, 2 Metre -->
+  <g transform="translate(140, 35)">
+    <text x="0" y="-12" fill="#0284c7" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">1 kg Bilye</text>
+    <circle cx="0" cy="12" r="14" fill="#0284c7" stroke="#ffffff" stroke-width="2"/>
+    <line x1="0" y1="27" x2="0" y2="145" stroke="#64748b" stroke-dasharray="4,4" stroke-width="1.5"/>
+    <text x="38" y="85" fill="#0284c7" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">2 Metre</text>
+    <text x="0" y="190" fill="#0284c7" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">1. Düzenek</text>
+  </g>
+
+  <!-- 2. Düzenek: 2 kg, 2 Metre -->
+  <g transform="translate(350, 35)">
+    <text x="0" y="-12" fill="#dc2626" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">2 kg Bilye</text>
+    <circle cx="0" cy="12" r="21" fill="#dc2626" stroke="#ffffff" stroke-width="2.5"/>
+    <line x1="0" y1="34" x2="0" y2="145" stroke="#64748b" stroke-dasharray="4,4" stroke-width="1.5"/>
+    <text x="45" y="85" fill="#dc2626" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">2 Metre</text>
+    <text x="0" y="190" fill="#dc2626" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">2. Düzenek</text>
+  </g>
+
+  <!-- 3. Düzenek: 1 kg, 1 Metre -->
+  <g transform="translate(550, 35)">
+    <text x="0" y="52" fill="#059669" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">1 kg Bilye</text>
+    <circle cx="0" cy="75" r="14" fill="#059669" stroke="#ffffff" stroke-width="2"/>
+    <line x1="0" y1="90" x2="0" y2="145" stroke="#64748b" stroke-dasharray="4,4" stroke-width="1.5"/>
+    <text x="38" y="118" fill="#059669" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">1 Metre</text>
+    <text x="0" y="190" fill="#059669" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">3. Düzenek</text>
+  </g>
+</svg>

@@ -1,40 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 200" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 180" width="100%" height="100%">
   <rect width="100%" height="100%" fill="none"/>
 
-  <!-- 1. Mavi / Beyaz Yıldız (En Sıcak) -->
-  <g transform="translate(130, 80)">
-    <circle cx="0" cy="0" r="38" fill="#0284c7" stroke="#ffffff" stroke-width="3"/>
-    <circle cx="0" cy="0" r="46" fill="none" stroke="#38bdf8" stroke-width="1.5" opacity="0.6"/>
-    <rect x="-65" y="55" width="130" height="26" rx="13" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
-    <text x="0" y="72" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Mavi / Beyaz</text>
-    <rect x="-60" y="86" width="120" height="22" rx="11" fill="#0f172a" stroke="#334155"/>
-    <text x="0" y="101" fill="#f8fafc" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">En Sıcak Yıldızlar</text>
+  <!-- Sıcaklık Değişim Oku (Kırmızıdan Maviye) -->
+  <g transform="translate(110, 25)">
+    <line x1="450" y1="0" x2="15" y2="0" stroke="#38bdf8" stroke-width="2.5"/>
+    <polygon points="15,-5 0,0 15,5" fill="#38bdf8"/>
+    <text x="230" y="-8" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Yüzey Sıcaklığı Artış Yönü</text>
   </g>
 
-  <!-- 2. Sarı Yıldız (Güneş - Orta Sıcaklık) -->
-  <g transform="translate(340, 80)">
-    <circle cx="0" cy="0" r="32" fill="#eab308" stroke="#fef08a" stroke-width="2.5"/>
-    <circle cx="0" cy="0" r="38" fill="none" stroke="#fef08a" stroke-width="1.5" opacity="0.5"/>
-    <rect x="-55" y="55" width="110" height="26" rx="13" fill="#0f172a" stroke="#eab308" stroke-width="1.5"/>
-    <text x="0" y="72" fill="#eab308" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Sarı (Güneş)</text>
-    <rect x="-60" y="86" width="120" height="22" rx="11" fill="#0f172a" stroke="#334155"/>
-    <text x="0" y="101" fill="#f8fafc" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Orta Sıcaklıkta</text>
+  <!-- 1. Mavi / Beyaz Yıldız (X) -->
+  <g transform="translate(130, 95)">
+    <circle cx="0" cy="0" r="32" fill="#0284c7" stroke="#ffffff" stroke-width="2.5"/>
+    <circle cx="0" cy="0" r="40" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="3,3"/>
+    <text x="0" y="55" fill="#38bdf8" font-size="14" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Mavi Yıldız (X)</text>
+    <text x="0" y="72" fill="#94a3b8" font-size="12" text-anchor="middle" font-family="system-ui, sans-serif">En Sıcak</text>
   </g>
 
-  <!-- 3. Kırmızı Yıldız (En Soğuk) -->
-  <g transform="translate(550, 80)">
-    <circle cx="0" cy="0" r="26" fill="#dc2626" stroke="#fca5a5" stroke-width="2.5"/>
-    <rect x="-55" y="55" width="110" height="26" rx="13" fill="#0f172a" stroke="#ef4444" stroke-width="1.5"/>
-    <text x="0" y="72" fill="#ef4444" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kırmızı</text>
-    <rect x="-60" y="86" width="120" height="22" rx="11" fill="#0f172a" stroke="#334155"/>
-    <text x="0" y="101" fill="#f8fafc" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">En Soğuk Yıldızlar</text>
+  <!-- 2. Sarı Yıldız (Y - Güneş) -->
+  <g transform="translate(340, 95)">
+    <circle cx="0" cy="0" r="28" fill="#eab308" stroke="#ffffff" stroke-width="2"/>
+    <circle cx="0" cy="0" r="35" fill="none" stroke="#fde047" stroke-width="1.5" stroke-dasharray="3,3"/>
+    <text x="0" y="55" fill="#fbbf24" font-size="14" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Sarı Yıldız (Y - Güneş)</text>
+    <text x="0" y="72" fill="#94a3b8" font-size="12" text-anchor="middle" font-family="system-ui, sans-serif">Orta Sıcaklık</text>
   </g>
 
-  <!-- Sıcaklık Artış Yönü Oku (Kırmızıdan Maviye) -->
-  <g transform="translate(120, 18)">
-    <line x1="440" y1="0" x2="10" y2="0" stroke="#38bdf8" stroke-width="2.5"/>
-    <polygon points="10,-5 0,0 10,5" fill="#38bdf8"/>
-    <rect x="140" y="-12" width="160" height="24" rx="12" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
-    <text x="220" y="4" fill="#38bdf8" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Sıcaklık Artış Yönü</text>
+  <!-- 3. Kırmızı Yıldız (Z) -->
+  <g transform="translate(550, 95)">
+    <circle cx="0" cy="0" r="24" fill="#dc2626" stroke="#ffffff" stroke-width="2"/>
+    <text x="0" y="55" fill="#ef4444" font-size="14" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kırmızı Yıldız (Z)</text>
+    <text x="0" y="72" fill="#94a3b8" font-size="12" text-anchor="middle" font-family="system-ui, sans-serif">En Soğuk</text>
   </g>
 </svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 170" width="100%" height="100%">
+  <rect width="100%" height="100%" fill="none"/>
+  <g transform="translate(130, 75)">
+    <circle cx="0" cy="0" r="32" fill="#0284c7" stroke="#38bdf8" stroke-width="2.5"/>
+    <text x="0" y="6" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">X</text>
+    <text x="0" y="58" fill="#0284c7" font-size="14" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">X Yıldızı (Mavi)</text>
+  </g>
+  <g transform="translate(340, 75)">
+    <circle cx="0" cy="0" r="28" fill="#eab308" stroke="#d97706" stroke-width="2.5"/>
+    <text x="0" y="6" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Y</text>
+    <text x="0" y="58" fill="#d97706" font-size="14" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Y Yıldızı (Sarı)</text>
+  </g>
+  <g transform="translate(550, 75)">
+    <circle cx="0" cy="0" r="24" fill="#dc2626" stroke="#b91c1c" stroke-width="2.5"/>
+    <text x="0" y="6" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Z</text>
+    <text x="0" y="58" fill="#dc2626" font-size="14" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Z Yıldızı (Kırmızı)</text>
+  </g>
+</svg>

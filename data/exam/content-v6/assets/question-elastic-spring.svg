@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 200" width="100%" height="100%">
+  <rect width="100%" height="100%" fill="none"/>
+  <line x1="50" y1="20" x2="50" y2="180" stroke="#64748b" stroke-width="6"/>
+  <line x1="50" y1="180" x2="620" y2="180" stroke="#64748b" stroke-width="2"/>
+
+  <g transform="translate(50, 30)">
+    <path d="M 0 30 Q 15 15, 30 30 T 60 30 T 90 30 T 120 30 T 150 30 T 180 30 L 195 30" fill="none" stroke="#64748b" stroke-width="3"/>
+    <circle cx="210" cy="30" r="14" fill="#0284c7" stroke="#ffffff" stroke-width="1.5"/>
+    <text x="240" y="35" fill="#475569" font-size="13" font-weight="bold" font-family="system-ui, sans-serif">1. Denge Hâli (Serbest Yay ve Top)</text>
+  </g>
+
+  <g transform="translate(50, 110)">
+    <path d="M 0 30 Q 8 15, 16 30 T 32 30 T 48 30 T 64 30 T 80 30 T 96 30 L 108 30" fill="none" stroke="#dc2626" stroke-width="4"/>
+    <circle cx="122" cy="30" r="14" fill="#dc2626" stroke="#ffffff" stroke-width="1.5"/>
+    <line x1="210" y1="10" x2="122" y2="10" stroke="#d97706" stroke-width="2"/>
+    <polygon points="122,7 114,10 122,13" fill="#d97706"/>
+    <text x="165" y="4" fill="#d97706" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Sıkışma (5 cm)</text>
+    <text x="240" y="35" fill="#dc2626" font-size="13" font-weight="bold" font-family="system-ui, sans-serif">2. Sıkıştırılmış Yay (Önünde Top)</text>
+  </g>
+</svg>

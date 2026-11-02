@@ -1,7 +1,7 @@
 {
-  "version": "7.7.0",
+  "version": "7.8.0",
   "generated_at": "2026-11-02",
-  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek İçerik V7.7 Tam Soru ve Görsel Eşitliği",
+  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek İçerik V7.8 Soru-Görsel Standardı ve PDF Baskı Uyumu",
   "outcomes": [
     {
       "id": "FB.7.1.4",
@@ -440,9 +440,10 @@
       "stem": "Verilen şemada uzaydaki gaz ve toz bulutunun (bulutsu) sıkışarak yeni bir yıldız oluşturma aşamaları gösterilmiştir. Şemaya göre gaz ve toz bulutunun kendi içine çökmesini sağlayan temel kuvveti ve merkezde ısı ve ışık üreten çekirdek tepkimeleri başlamadan önceki ara evrenin adını yazınız.",
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-nebula-collapse.svg",
+        "asset": "assets/question-nebula-collapse.svg",
         "alt": "Bulutsudan yıldıza geçiş aşamaları şeması",
-        "fit": "contain"
+        "fit": "contain",
+        "print_background": "white"
       },
       "rubric": [
         {
@@ -486,12 +487,7 @@
       "difficulty": "easy",
       "title": "İki yaşam yolu",
       "stem": "Yıldızlar oluştuktan sonra iki farklı yaşam döngüsü yolundan birini takip eder. Bir yıldızın 'Küçük Kütleli Yıldız Yolu'nu mu yoksa 'Büyük Kütleli Yıldız Yolu'nu mu izleyeceğini belirleyen temel özelliğin ne olduğunu yazınız.",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-small-star-cycle.svg",
-        "alt": "Küçük ve büyük kütleli yıldızların yaşam yolları",
-        "fit": "contain"
-      },
+      "visual": null,
       "rubric": [
         {
           "id": "FB714-V7-E02-R1",
@@ -522,7 +518,8 @@
         "kind": "image",
         "asset": "assets/sun.jpg",
         "alt": "Güneş fotoğrafı",
-        "fit": "contain"
+        "fit": "contain",
+        "print_background": "white"
       },
       "rubric": [
         {
@@ -564,13 +561,8 @@
       "outcome_id": "FB.7.1.4",
       "difficulty": "easy",
       "title": "Gezegenimsi bulutsu",
-      "stem": "Şemada gösterilen 'Gezegenimsi Bulutsu' kavramının adında 'gezegen' kelimesi geçmektedir. Bu yapının Güneş sistemindeki gezegenlerle bir ilişkisi olup olmadığını ve nasıl oluştuğunu açıklayınız.",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-small-star-cycle.svg",
-        "alt": "Gezegenimsi bulutsu şeması",
-        "fit": "contain"
-      },
+      "stem": "Gök biliminde kullanılan 'Gezegenimsi Bulutsu' kavramının adında 'gezegen' kelimesi geçmektedir. Bu yapının Güneş sistemindeki gezegenlerle bir ilişkisi olup olmadığını ve nasıl oluştuğunu açıklayınız.",
+      "visual": null,
       "rubric": [
         {
           "id": "FB714-V7-E04-R1",
@@ -614,9 +606,10 @@
       "stem": "Şemadaki renk skalasını inceleyen bir gök bilimci gökyüzünde Mavi renkli X yıldızı, Sarı renkli Y yıldızı ve Kırmızı renkli Z yıldızını gözlemliyor. Bu yıldızları yüzey sıcaklıklarına göre en sıcaktan en soğuğa doğru sıralayınız.",
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-star-colors.svg",
+        "asset": "assets/question-star-colors.svg",
         "alt": "Yıldız renk ve sıcaklık skalası",
-        "fit": "contain"
+        "fit": "contain",
+        "print_background": "white"
       },
       "rubric": [
         {
@@ -643,12 +636,7 @@
       "difficulty": "easy",
       "title": "Kutup Yıldızı ve zaman",
       "stem": "Dünya'dan yaklaşık 430 ışık yılı uzaklıkta bulunan Kutup Yıldızı'nı bu gece teleskobuyla gözlemleyen bir öğrenci, yıldızın aslında hangi zamandaki görüntüsünü görmektedir? Gerekçesiyle açıklayınız.",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-constellations.svg",
-        "alt": "Kutup Yıldızı tespit şeması",
-        "fit": "contain"
-      },
+      "visual": null,
       "rubric": [
         {
           "id": "FB714-V7-E06-R1",
@@ -689,13 +677,8 @@
       "outcome_id": "FB.7.1.4",
       "difficulty": "medium",
       "title": "İki yıldızın yaşam sonu",
-      "stem": "Verilen şemada A yıldızı ömrünün sonunda Beyaz Cüce'ye, B yıldızı ise Süpernova patlaması geçirerek Nötron Yıldızı'na dönüşmektedir. Bu iki yıldızın:\n1) Başlangıç kütlelerini karşılaştırınız.\n2) Hangisinin yaşam döngüsünde şiddetli bir patlama (süpernova) gerçekleştiğini ve nedenini açıklayınız.",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-large-star-cycle.svg",
-        "alt": "Yıldız son evreleri",
-        "fit": "contain"
-      },
+      "stem": "Uzayda gözlemlenen iki yıldızdan A yıldızı ömrünün sonunda Beyaz Cüce'ye, B yıldızı ise Süpernova patlaması geçirerek Nötron Yıldızı'na dönüşmektedir. Bu iki yıldızın:\n1) Başlangıç kütlelerini karşılaştırınız.\n2) Hangisinin yaşam döngüsünde şiddetli bir patlama (süpernova) gerçekleştiğini ve nedenini açıklayınız.",
+      "visual": null,
       "rubric": [
         {
           "id": "FB714-V7-M01-R1",
@@ -737,13 +720,8 @@
       "outcome_id": "FB.7.1.4",
       "difficulty": "medium",
       "title": "Mavi dev ve kırmızı cüce",
-      "stem": "Şemadaki renk ve sıcaklık grafiğine göre, yüzey rengi Mavi olan X yıldızı ile yüzey rengi Kırmızı olan Y yıldızı karşılaştırılıyor. Bu iki yıldızın yüzey sıcaklıklarını, ışıma enerjilerini ve yakıtlarını tüketme (yaşam süresi) hızlarını karşılaştırarak yorumlayınız.",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-star-colors.svg",
-        "alt": "Yıldız renkleri ve sıcaklık",
-        "fit": "contain"
-      },
+      "stem": "Gökyüzünde yüzey rengi Mavi olarak gözlenen X yıldızı ile yüzey rengi Kırmızı olarak gözlenen Y yıldızı karşılaştırılıyor. Bu iki yıldızın yüzey sıcaklıklarını, ışıma enerjilerini ve yakıtlarını tüketme (yaşam süresi) hızlarını karşılaştırarak yorumlayınız.",
+      "visual": null,
       "rubric": [
         {
           "id": "FB714-V7-M02-R1",
@@ -786,12 +764,7 @@
       "difficulty": "medium",
       "title": "Işık yılı kavramı",
       "stem": "Bir fen projesinde sunum yapan bir öğrenci 'Güneş'e en yakın yıldız olan Proxima Centauri bize 4.2 ışık yılı uzaklıktadır; demek ki ışık yılı evrendeki en uzun zaman birimidir' ifadesini kullanmıştır. Bu öğrencinin cümlesindeki kavram yanılgısını tespit ediniz ve ışık yılının gerçek bilimsel tanımını yaparak düzeltiniz.",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-star-depth-3d.svg",
-        "alt": "Işık yılı mesafe modeli",
-        "fit": "contain"
-      },
+      "visual": null,
       "rubric": [
         {
           "id": "FB714-V7-M03-R1",
@@ -832,13 +805,8 @@
       "outcome_id": "FB.7.1.4",
       "difficulty": "medium",
       "title": "Kozmik mesafeler ve ışık yılı",
-      "stem": "Şemada Güneş Sistemi'ne en yakın yıldız olan Proxima Centauri (yaklaşık 4,2 ışık yılı) ile Kutup Yıldızı'nın (~430 ışık yılı) Dünya'ya olan mesafeleri modellenmiştir. Bu şemayı inceleyen bir araştırmacının gökyüzünde gördüğü bu iki yıldıza ait görüntüler ve 'gökyüzüne bakmak evrenin geçmişine bakmaktır' ifadesi hakkında ne söylenebilir? Işığın yayılma süresiyle ilişkilendirerek açıklayınız.",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-star-depth-3d.svg",
-        "alt": "Takımyıldızların uzay derinliği modeli",
-        "fit": "contain"
-      },
+      "stem": "Güneş Sistemi'ne en yakın yıldız olan Proxima Centauri Dünya'dan yaklaşık 4,2 ışık yılı, Kutup Yıldızı ise yaklaşık 430 ışık yılı uzaklıktadır. Bu iki yıldızı teleskopla gözlemleyen bir araştırmacının gördüğü görüntüler ve 'gökyüzüne bakmak evrenin geçmişine bakmaktır' ifadesi hakkında ne söylenebilir? Işığın yayılma süresiyle ilişkilendirerek açıklayınız.",
+      "visual": null,
       "rubric": [
         {
           "id": "FB714-V7-M04-R1",
@@ -879,13 +847,8 @@
       "outcome_id": "FB.7.1.4",
       "difficulty": "hard",
       "title": "Süpernova ve kara delik eşiği",
-      "stem": "Büyük kütleli yıldızların yaşamlarının sonunda geçirdikleri süpernova patlaması şemada gösterilmiştir. Ancak süpernova patlaması geçiren tüm yıldızlar kara deliğe dönüşmez; bir kısmı nötron yıldızı olur.\n1) Süpernova sonrasında bir yıldızın nötron yıldızına mı yoksa kara deliğe mi dönüşeceğini belirleyen temel bilimsel kriter nedir?\n2) Kara deliklerin çekim gücünün ışığın dahi kaçamayacağı kadar devasa olmasının sebebini çekirdek kütlesi ve hacimsel sıkışma açısından gerekçelendiriniz.",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-large-star-cycle.svg",
-        "alt": "Süpernova sonrası nötron yıldızı ve kara delik çatallanması",
-        "fit": "contain"
-      },
+      "stem": "Büyük kütleli yıldızlar yaşamlarının sonunda şiddetli bir süpernova patlaması geçirir. Ancak süpernova patlaması geçiren tüm yıldızlar kara deliğe dönüşmez; bir kısmı nötron yıldızı olur.\n1) Süpernova sonrasında bir yıldızın nötron yıldızına mı yoksa kara deliğe mi dönüşeceğini belirleyen temel bilimsel kriter nedir?\n2) Kara deliklerin çekim gücünün ışığın dahi kaçamayacağı kadar devasa olmasının sebebini çekirdek kütlesi ve hacimsel sıkışma açısından gerekçelendiriniz.",
+      "visual": null,
       "rubric": [
         {
           "id": "FB714-V7-H01-R1",
@@ -927,12 +890,7 @@
       "difficulty": "hard",
       "title": "Kozmik zaman ve derin uzay",
       "stem": "Güneş Sistemi'ne en yakın yıldız olan Proxima Centauri 4.2 ışık yılı uzaklıktadır. Bize en yakın sarmal gökada olan Andromeda Gökadası ise yaklaşık 2.5 milyon ışık yılı uzaklıktadır. Teleskopla bu iki gök cismine bakan bir araştırmacı için:\n1) Gözlemlediği anda her iki cismin evrenin hangi zaman dilimlerindeki hallerini gördüğünü açıklayınız.\n2) 'Gökyüzüne bakmak, evrenin geçmişine bakmaktır' bilimsel ilkesini ışığın yayılma süresi ve ışık yılı birimiyle ilişkilendirerek gerekçeli açıklayınız.",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-star-depth-3d.svg",
-        "alt": "Kozmik uzaklıklar ve ışık yılı modeli",
-        "fit": "contain"
-      },
+      "visual": null,
       "rubric": [
         {
           "id": "FB714-V7-H02-R1",
@@ -973,13 +931,8 @@
       "outcome_id": "FB.7.2.2",
       "difficulty": "easy",
       "title": "Hareketli aracın enerjisi",
-      "stem": "Şemada 1000 kg kütleli bir otomobilin yolda süratle ilerlediği gösterilmektedir. Bu aracın sahip olduğu mekanik enerji türünü ve bu enerjinin büyüklüğünü belirleyen iki temel fiziksel değişkeni yazınız.",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-motion-vs-rest.svg",
-        "alt": "Hareketli araç şeması",
-        "fit": "contain"
-      },
+      "stem": "Yatay bir yolda belirli bir süratle ilerlemekte olan bir otomobilin sahip olduğu mekanik enerji türünü ve bu enerjinin büyüklüğünü belirleyen iki temel fiziksel değişkeni yazınız.",
+      "visual": null,
       "rubric": [
         {
           "id": "FB722-V7-E01-R1",
@@ -1023,12 +976,7 @@
       "difficulty": "easy",
       "title": "Duran cismin enerjisi",
       "stem": "Yatay bir otopark zemininde park hâlinde durmakta olan bir otomobilin kinetik enerjisini ve yer seviyesine göre çekim potansiyel enerjisini gerekçesiyle değerlendiriniz.",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-motion-vs-rest.svg",
-        "alt": "Duran araç ve hareketli araç karşılaştırma şeması",
-        "fit": "contain"
-      },
+      "visual": null,
       "rubric": [
         {
           "id": "FB722-V7-E02-R1",
@@ -1074,7 +1022,8 @@
         "kind": "image",
         "asset": "assets/swing.jpg",
         "alt": "Salıncak oturağı fotoğrafı",
-        "fit": "contain"
+        "fit": "contain",
+        "print_background": "white"
       },
       "rubric": [
         {
@@ -1119,9 +1068,10 @@
       "stem": "Şemadaki kum havuzunun üzerinde, aynı yükseklikte tutulan 1 kg kütleli hafif bilye ile 5 kg kütleli ağır gülle serbest bırakılıyor. Bu iki cismin çekim potansiyel enerjilerini ve kum havuzunda oluşturacakları izlerin derinliğini karşılaştırınız.",
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-mass-potential-effect.svg",
-        "alt": "Kum havuzu kütle etkisi deney şeması",
-        "fit": "contain"
+        "asset": "assets/question-mass-potential.svg",
+        "alt": "Kum havuzu üzerinde aynı yükseklikte tutulan 1 kg ve 5 kg kütleli cisimler",
+        "fit": "contain",
+        "print_background": "white"
       },
       "rubric": [
         {
@@ -1166,9 +1116,10 @@
       "stem": "Şemada bir sarmal yayın önüne top konulmuş ve yay geriye doğru sıkıştırılmıştır. Bu durumda:\n1) Sıkışmış yayda depolanan enerji türünü yazınız.\n2) Yay serbest bırakıldığında yaydaki enerjinin topa hangi enerji türü olarak aktarılacağını belirtiniz.",
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-elastic-spring.svg",
-        "alt": "Sıkıştırılmış yay şeması",
-        "fit": "contain"
+        "asset": "assets/question-elastic-spring.svg",
+        "alt": "Sıkıştırılmış sarmal yay ve önündeki top",
+        "fit": "contain",
+        "print_background": "white"
       },
       "rubric": [
         {
@@ -1268,25 +1219,26 @@
       "id": "FB722-V7-M01",
       "outcome_id": "FB.7.2.2",
       "difficulty": "medium",
-      "title": "Kamyon ve otomobilin kinetik enerjisi",
+      "title": "Hafif ve ağır bilyenin kinetik enerjisi",
       "stem": "Şemadaki kontrollü deney düzeneğinde aynı yükseklikteki rampadan serbest bırakılan hafif bilye ile ağır bilye yatay düzlemdeki özdeş tahta takozlara çarpmaktadır.\n1) Hangi bilyenin takozu daha uzağa ittiğini ve kinetik enerjisinin daha büyük olduğunu gerekçesiyle açıklayınız.\n2) Süratleri eşit olmasına rağmen ağır bilyenin takozu daha uzağa itmesini kütle-kinetik enerji ilişkisiyle açıklayınız.",
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-mass-kinetic-effect.svg",
-        "alt": "Kamyon ve otomobil kinetik enerji deneyi",
-        "fit": "contain"
+        "asset": "assets/question-mass-kinetic.svg",
+        "alt": "Özdeş rampalardan serbest bırakılan hafif ve ağır bilyeler ile tahta takozlar",
+        "fit": "contain",
+        "print_background": "white"
       },
       "rubric": [
         {
           "id": "FB722-V7-M01-R1",
-          "text": "Süratler eşitken kütlesi büyük olan kamyonun kinetik enerjisinin çok daha büyük olduğunu ve takozu daha uzağa iteceğini belirtir.",
+          "text": "Ağır bilyenin (2m) kinetik enerjisinin daha büyük olduğunu ve tahta takozu daha uzağa iteceğini belirtir.",
           "points": 7,
           "weight": 7,
           "return_card_ids": [
             "FB722-V7-K03"
           ],
           "scoring": {
-            "full": "Kamyonun kütlesi büyük olduğu için enerjisi fazladır ve takozu daha çok iter.",
+            "full": "Ağır bilyenin kinetik enerjisi daha büyüktür ve takozu daha uzağa iter.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
@@ -1295,15 +1247,14 @@
         },
         {
           "id": "FB722-V7-M01-R2",
-          "text": "Daha büyük kinetik enerjiyi sıfırlamak için gereken fren kuvveti ve mesafesinin daha fazla olduğunu, bu yüzden kamyonu durdurmanın zor olduğunu açıklar.",
+          "text": "Süratler eşitken kütlesi büyük olan cismin kinetik enerjisinin de daha büyük olduğunu (kütle ile doğru orantılı olduğunu) açıklar.",
           "points": 8,
           "weight": 8,
           "return_card_ids": [
-            "FB722-V7-K02",
             "FB722-V7-K03"
           ],
           "scoring": {
-            "full": "Enerji büyük olduğu için durdurulması daha zordur.",
+            "full": "Süratler eşitken kütle arttıkça kinetik enerjinin arttığını açıklar.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
@@ -1320,9 +1271,10 @@
       "stem": "Şemadaki kum havuzu deneyinde:\n• 1. Düzenek: 1 kg bilye, 2 metre yükseklikte\n• 2. Düzenek: 2 kg bilye, 2 metre yükseklikte\n• 3. Düzenek: 1 kg bilye, 1 metre yükseklikte\nBir öğrenci çekim potansiyel enerjisine:\na) 'Kütlenin etkisini' araştırmak için hangi iki düzeneği seçmelidir?\nb) 'Yüksekliğin etkisini' araştırmak için hangi iki düzeneği seçmelidir?\nSeçimlerinizi kontrollü deney kurallarına göre gerekçelendiriniz.",
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-potential-experiment.svg",
+        "asset": "assets/question-potential-experiment.svg",
         "alt": "Kum havuzu kontrollü deney düzenekleri",
-        "fit": "contain"
+        "fit": "contain",
+        "print_background": "white"
       },
       "rubric": [
         {
@@ -1367,9 +1319,10 @@
       "stem": "Özdeş iki kutunun içine biri ince telden, diğeri kalın telden yapılmış iki sarmal yay yerleştirilmiştir. Her iki yay da cetvelle eşit miktarda (10 cm) sıkıştırılarak önlerine özdeş bilyeler konuluyor. Yaylar serbest bırakıldığında:\n1) Hangi yayın önündeki bilyenin daha uzağa fırlayacağını gerekçesiyle açıklayınız.\n2) Bu deneydeki bağımsız değişkeni ve bağımlı değişkeni yazınız.",
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-spring-thickness.svg",
-        "alt": "Farklı kalınlıktaki yaylar deneyi",
-        "fit": "contain"
+        "asset": "assets/question-spring-thickness.svg",
+        "alt": "İnce ve kalın yayların eşit sıkıştırıldığı deney düzenekleri",
+        "fit": "contain",
+        "print_background": "white"
       },
       "rubric": [
         {
@@ -1412,12 +1365,7 @@
       "difficulty": "medium",
       "title": "Uçan kuşun mekanik enerjisi",
       "stem": "Yerden 30 metre yükseklikte sabit süratle uçmakta olan bir göçmen kuşun mekanik enerjisini analiz ediniz. Bu kuşun aynı anda sahip olduğu enerji türlerini ve bu enerjilerin kuşun hangi fiziksel durumlarından kaynaklandığını gerekçelendiriniz.",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-roller-coaster.svg",
-        "alt": "Enerji dönüşümü modeli",
-        "fit": "contain"
-      },
+      "visual": null,
       "rubric": [
         {
           "id": "FB722-V7-M04-R1",
@@ -1460,12 +1408,7 @@
       "difficulty": "hard",
       "title": "Okçunun yayı ve enerji dönüşümü",
       "stem": "Bir okçu antrenmanda yayı önce 10 cm gererek oku fırlatıyor, ikinci denemesinde ise yayı esneklik sınırını aşmadan 20 cm gererek aynı oku fırlatıyor.\n1) İkinci atışta yayda depolanan esneklik potansiyel enerjisindeki değişimi ve okun çıkış süratini birinci atışla karşılaştırınız.\n2) Yayın gerilmesinden okun hedefe saplanmasına kadar geçen süreçteki enerji dönüşüm zincirini aşamalarıyla yazınız.",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-elastic-spring.svg",
-        "alt": "Yay ve enerji dönüşümü şeması",
-        "fit": "contain"
-      },
+      "visual": null,
       "rubric": [
         {
           "id": "FB722-V7-H01-R1",
@@ -1510,9 +1453,10 @@
       "stem": "Şemadaki sürtünmesiz hız treni rayında, tren A noktasından (en tepe) ilk hızsız harekete başlamaktadır. Tren B noktasından (yer seviyesi, en alt çukur) geçerek C noktasına (ikinci tepe, A'dan daha alçak) tırmanmaktadır.\n1) A, B ve C noktalarındaki kinetik enerji ve çekim potansiyel enerjilerini büyükten küçüğe karşılaştırınız.\n2) Trenin B noktasında neden maksimum sürate ulaştığını ve C noktasındaki süratinin B noktasından neden daha küçük olduğunu mekanik enerjinin korunumu kanununa göre gerekçelendiriniz.",
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-roller-coaster.svg",
-        "alt": "Hız treni ray profili",
-        "fit": "contain"
+        "asset": "assets/question-roller-coaster.svg",
+        "alt": "Sürtünmesiz hız treni ray profili ve A, B, C noktaları",
+        "fit": "contain",
+        "print_background": "white"
       },
       "rubric": [
         {
