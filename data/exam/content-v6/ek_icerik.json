@@ -1,7 +1,7 @@
 {
-  "version": "7.4.0",
+  "version": "7.5.0",
   "generated_at": "2026-11-02",
-  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek İçerik V7.4 Tam MEB Kitap Görsel ve Dil Eşitliği",
+  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek İçerik V7.5 Kusursuz Görsel ve Dil Eşitlemesi",
   "outcomes": [
     {
       "id": "FB.7.1.4",
@@ -96,12 +96,12 @@
       "title": "Yıldızların Yaşamı",
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [
-        "Bulutsudan yıldız oluşumu",
-        "Küçük kütleli yıldızların yaşamı",
-        "Büyük kütleli yıldızların yaşamı",
-        "Güneş’in yaşam döngüsü",
-        "Yıldız renkleri ve sıcaklıkları",
-        "Işık yılı uzaklık birimi",
+        "Bulutsu ve yıldızların oluşumu",
+        "Küçük kütleli yıldızların yaşam döngüsü",
+        "Büyük kütleli yıldızların yaşam döngüsü",
+        "Güneş’in yaşam döngüsü ve geleceği",
+        "Yıldızların renkleri ve yüzey sıcaklıkları",
+        "Işık yılı kavramı ve evrenin geçmişi",
         "Takımyıldızlar ve Kutup Yıldızı"
       ],
       "body": [],
@@ -116,7 +116,7 @@
       "topics": [],
       "body": [
         "Uzaydaki devasa gaz ve toz bulutlarına bulutsu (nebula) denir.",
-        "Bulutsular yıldızların doğum yeridir; Orion ve Atbaşı bilinen örnekleridir."
+        "Bulutsular yıldızların doğum yeridir; Orion, Atbaşı ve Kelebek bilinen bulutsu örnekleridir."
       ],
       "visual": {
         "kind": "image",
@@ -134,8 +134,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Bulutsudaki gaz ve tozlar kütle çekimiyle sıkışarak yoğunlaşır.",
-        "Sıcaklık ve basınç yeterince yükseldiğinde çekirdek tepkimeleri başlar ve yeni bir yıldız doğar."
+        "Bulutsudaki gaz ve toz parçacıkları kütle çekiminin etkisiyle bir araya gelerek sıkışır.",
+        "Sıcaklık ve basınç arttıkça çekirdek tepkimeleri başlar; çevreye ısı ve ışık yayan bir yıldız doğar."
       ],
       "visual": {
         "kind": "image",
@@ -153,8 +153,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Başlangıç kütlesi Güneş kadar veya daha az olan yıldızlar önce kırmızı deve dönüşür.",
-        "Dış katmanlarını gezegenimsi bulutsu olarak uzaya savurur; merkezde kalan kor çekirdek ise beyaz cüce olur."
+        "Başlangıç kütlesi Güneş kadar veya daha az olan yıldızlar ömrünün sonuna doğru kırmızı deve dönüşür.",
+        "Dış gaz katmanlarını gezegenimsi bulutsu olarak uzaya savurur; merkezde kalan kor çekirdek ise beyaz cüceye dönüşür."
       ],
       "visual": {
         "kind": "image",
@@ -172,8 +172,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Başlangıç kütlesi Güneş'ten çok büyük olan yıldızlar kırmızı süperdeve dönüşür.",
-        "Ömrünün sonunda süpernova patlaması geçirerek kütlesine göre nötron yıldızına veya kara deliğe evrilir."
+        "Başlangıç kütlesi Güneş'ten çok daha büyük olan yıldızlar kırmızı süperdeve dönüşür.",
+        "Ömrünün sonunda süpernova patlaması geçirir; patlamadan sonra geriye nötron yıldızı veya kara delik kalır."
       ],
       "visual": {
         "kind": "image",
@@ -191,8 +191,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Güneş orta/küçük kütleli sarı bir yıldızdır.",
-        "Yaklaşık 5 milyar yıl sonra kırmızı dev evresine girecek ve ömrünü beyaz cüce olarak tamamlayacaktır."
+        "Güneş, orta/küçük kütleli sarı bir yıldızdır.",
+        "Yaklaşık 5 milyar yıl sonra kırmızı dev evresine girecek ve ömrünü bir beyaz cüce olarak tamamlayacaktır."
       ],
       "visual": {
         "kind": "image",
@@ -210,8 +210,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Yıldızın yaydığı ışığın rengi, yüzey sıcaklığını gösterir.",
-        "Mavi ve beyaz yıldızlar en sıcak, sarı yıldızlar orta sıcaklıkta, kırmızı yıldızlar ise en soğuktur."
+        "Yıldızların yaydığı ışığın rengi, yüzey sıcaklıklarının bir göstergesidir.",
+        "Mavi ve beyaz yıldızlar en sıcak, sarı yıldızlar orta sıcaklıkta, kırmızı yıldızlar ise en soğuk yıldızlardır."
       ],
       "visual": {
         "kind": "image",
@@ -229,8 +229,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Işık yılı bir zaman birimi değil, devasa bir uzaklık birimidir.",
-        "Işığın boşlukta bir yılda aldığı mesafedir (yaklaşık 9.5 trilyon kilometre)."
+        "Işık yılı bir zaman birimi değil, devasa gök cisimleri arasındaki uzaklığı ölçen bir mesafe birimidir.",
+        "Işığın boşlukta bir yılda aldığı yoldur (yaklaşık 9,5 trilyon km). Güneş'e en yakın yıldız Proxima Centauri 4,2 ışık yılı uzaktadır."
       ],
       "visual": {
         "kind": "image",
@@ -248,8 +248,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Gökyüzünde bir aradaymış gibi görünen yıldız gruplarına takımyıldız denir (Büyükayı, Küçükayı, Avcı).",
-        "Büyükayı kepçesinin dış kenarındaki iki yıldız arası 5 kat uzatıldığında daima kuzeyi gösteren Kutup Yıldızı bulunur."
+        "Dünya'dan bakıldığında gökyüzünde bir aradaymış gibi görünen yıldız gruplarına takımyıldız denir (Büyükayı, Küçükayı, Avcı).",
+        "Büyükayı'nın cezve ucundaki iki yıldız (Merak ve Dubhe) arası 5 kat uzatıldığında Küçükayı'nın kuyruk ucundaki Kutup Yıldızı bulunur."
       ],
       "visual": {
         "kind": "image",
@@ -286,8 +286,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Hareket hâlindeki tüm cisimlerin sahip olduğu enerjiye kinetik enerji denir.",
-        "Koşan bir atlet ve uçan bir kuş kinetik enerjiye sahiptir; duran cisimlerin kinetik enerjisi sıfırdır."
+        "Hareket hâlindeki cisimlerin sahip olduğu enerjiye kinetik enerji denir.",
+        "Koşan bir atlet ve uçan bir kuş kinetik enerji taşır; durmakta olan cisimlerin kinetik enerjisi sıfırdır."
       ],
       "visual": {
         "kind": "image",
@@ -306,7 +306,7 @@
       "topics": [],
       "body": [
         "Kütleleri eşit cisimlerden sürati daha fazla olanın kinetik enerjisi daha büyüktür.",
-        "Örneğin aynı otomobil 90 km/saat süratle giderken, 40 km/saat sürate göre takozu çok daha uzağa iter ve fren mesafesi uzar."
+        "Aynı otomobil 90 km/saat süratle giderken, 40 km/saat sürate göre önündeki engeli çok daha uzağa iter ve fren mesafesi uzar."
       ],
       "visual": {
         "kind": "image",
@@ -324,8 +324,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Süratleri eşit hareketlilerden kütlesi daha fazla olanın kinetik enerjisi daha büyüktür.",
-        "Aynı süratle ilerleyen ağır bir kamyon, hafif bir otomobilden çok daha fazla enerji taşır ve durdurulması zordur."
+        "Süratleri eşit hareketlilerden kütlesi daha büyük olanın kinetik enerjisi daha büyüktür.",
+        "Aynı süratle ilerleyen ağır bir kamyon, hafif bir otomobile göre çok daha fazla enerji taşır ve durdurulması daha zordur."
       ],
       "visual": {
         "kind": "image",
@@ -344,7 +344,7 @@
       "topics": [],
       "body": [
         "Cisimlerin bulundukları konumdan (yerden yüksekliklerinden) dolayı depoladıkları enerjiye çekim potansiyel enerjisi denir.",
-        "Daldaki elma ve barajda biriken su potansiyel enerji depolar; yer seviyesindeki bir cismin potansiyel enerjisi sıfırdır."
+        "Daldaki elma ve barajda biriken su potansiyel enerjiye sahiptir; yer seviyesindeki bir cismin çekim potansiyel enerjisi sıfırdır."
       ],
       "visual": {
         "kind": "image",
@@ -362,8 +362,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Kütleleri eşit cisimlerden yerden daha yüksekte olanın çekim potansiyel enerjisi daha büyüktür.",
-        "Özdeş bilyelerden 2 metre yüksekten bırakılan, 1 metreden bırakılana göre kumda daha derin bir çukur oluşturur."
+        "Kütleleri eşit cisimlerden yerden daha yüksekte bulunanın çekim potansiyel enerjisi daha büyüktür.",
+        "Özdeş bilyelerden 2 metre yüksekten bırakılan, 1 metreden bırakılana göre kum havuzunda çok daha derin bir çukur açar."
       ],
       "visual": {
         "kind": "image",
@@ -382,7 +382,7 @@
       "topics": [],
       "body": [
         "Aynı yükseklikte bulunan cisimlerden kütlesi daha büyük olanın çekim potansiyel enerjisi daha fazladır.",
-        "Aynı yükseklikten kuma bırakılan 5 kg ağır gülle, 1 kg hafif bilyeye göre çok daha derin çukur açar."
+        "Eşit yükseklikten kum havuzuna bırakılan 5 kg ağır gülle, 1 kg hafif bilyeye göre kuma çok daha derin batar."
       ],
       "visual": {
         "kind": "image",
@@ -401,7 +401,7 @@
       "topics": [],
       "body": [
         "Esnek cisimlerin sıkıştırılması veya gerilmesi sonucunda depoladıkları enerjiye esneklik potansiyel enerjisi denir.",
-        "Sıkışmış yay veya gerilmiş ok yayında depolanan enerji; sıkışma miktarı ve yay sertliği arttıkça artar."
+        "Sıkışmış bir yay veya gerilmiş ok yayında depolanan enerji; yayın sıkışma miktarı ve telin kalınlığı arttıkça artar."
       ],
       "visual": {
         "kind": "image",
@@ -420,7 +420,7 @@
       "topics": [],
       "body": [
         "Sürtünmesiz ortamlarda potansiyel ve kinetik enerji birbirine dönüşür ancak toplam mekanik enerji korunur.",
-        "Hız treni en tepede maksimum potansiyel enerjiye sahipken, aşağı indikçe kinetik enerjiye dönüşerek en dipte en büyük sürate ulaşır."
+        "Hız treni en tepede maksimum potansiyel enerjiye sahiptir; aşağı indikçe bu enerji kinetik enerjiye dönüşerek dipte en büyük sürate ulaşır."
       ],
       "visual": {
         "kind": "image",

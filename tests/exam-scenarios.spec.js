@@ -453,11 +453,11 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(typography.btnMinHeight).toBe('56px');
     });
 
-    test('V7.4 Master Formülsüz Müfredat, 2 Paragraflık Kartlar ve Tüm Enerji Şemaları Uyumu', async () => {
+    test('V7.5 Master Formülsüz Müfredat, 2 Paragraflık Kartlar ve Tüm Enerji Şemaları Uyumu', async () => {
         const ekPath = path.resolve('data/exam/content-v6/ek_icerik.json');
         const ekData = JSON.parse(fs.readFileSync(ekPath, 'utf8'));
 
-        expect(ekData.version).toBe('7.4.0');
+        expect(ekData.version).toBe('7.5.0');
 
         // K01-K08 kartlarının istisnasız 2 kısa paragraftan oluştuğunu doğrula
         for (const cid of Object.keys(ekData.cards)) {
@@ -525,13 +525,22 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         const constelSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-constellations.svg'), 'utf8');
         expect(constelSvg).toContain('Merak');
         expect(constelSvg).toContain('Dubhe');
-        expect(constelSvg).toContain('5. Kat');
+        expect(constelSvg).toContain('5 Kat Uzaklık');
         expect(constelSvg).toContain('Kutup Yıldızı (Polaris)');
+        expect(constelSvg).toContain('Küçükayı');
+
+        // Basitleştirilmiş Işık Yılı cetveli
+        const starDepthSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-star-depth-3d.svg'), 'utf8');
+        expect(starDepthSvg).toContain('Güneş ve Dünya');
+        expect(starDepthSvg).toContain('Proxima Centauri');
+        expect(starDepthSvg).toContain('4,2 Işık Yılı');
+        expect(starDepthSvg).toContain('Kutup Yıldızı');
+        expect(starDepthSvg).toContain('~430 Işık Yılı');
 
         // Yeni enerji SVG'lerinin metin ve kurgu kontrolü
         const massPotSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-mass-potential-effect.svg'), 'utf8');
-        expect(massPotSvg).toContain('Hafif Bilye (1 kg)');
-        expect(massPotSvg).toContain('Ağır Gülle (5 kg)');
+        expect(massPotSvg).toContain('1 kg Bilye');
+        expect(massPotSvg).toContain('5 kg Gülle');
         expect(massPotSvg).toContain('Derin Çukur');
 
         const heightSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-height-effect.svg'), 'utf8');
@@ -539,14 +548,14 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(heightSvg).toContain('2 Metre');
 
         const speedKinSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-speed-kinetic-effect.svg'), 'utf8');
-        expect(speedKinSvg).toContain('40 km/h (Yavaş)');
-        expect(speedKinSvg).toContain('90 km/h (Hızlı)');
-        expect(speedKinSvg).toContain('Uzun İtme Mesafesi');
+        expect(speedKinSvg).toContain('40 km/saat');
+        expect(speedKinSvg).toContain('90 km/saat');
+        expect(speedKinSvg).toContain('Takoz 1 m İtildi');
 
         const massKinSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-mass-kinetic-effect.svg'), 'utf8');
-        expect(massKinSvg).toContain('Hafif Otomobil (1000 kg)');
-        expect(massKinSvg).toContain('Ağır Kamyon (5000 kg)');
-        expect(massKinSvg).toContain('Takoz Çok İtildi');
+        expect(massKinSvg).toContain('1000 kg Otomobil');
+        expect(massKinSvg).toContain('5000 kg Kamyon');
+        expect(massKinSvg).toContain('Takoz 1 m İtildi');
     });
 
     test('Senaryo 3 seçildiğinde kart sıralaması OUTCOME_ORDER uyumlu olmalı ve Kutup Yıldızı şeması render edilmeli', async ({ page }) => {

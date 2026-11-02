@@ -1,35 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 260" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 230" width="100%" height="100%">
   <rect width="100%" height="100%" fill="none"/>
-  <line x1="30" y1="190" x2="650" y2="190" stroke="#64748b" stroke-width="2"/>
-  <rect x="40" y="190" width="600" height="35" fill="#eab308" opacity="0.25" rx="4"/>
-  <text x="55" y="212" fill="#fbbf24" font-size="13" font-weight="bold" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Kum Havuzu Zemin Seviyesi</text>
-
-  <!-- 1 Metre -->
-  <g transform="translate(160, 110)">
-    <circle cx="30" cy="0" r="16" fill="#38bdf8" stroke="#ffffff" stroke-width="2"/>
-    <text x="30" y="-22" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Özdeş Bilye (1 kg)</text>
-    <line x1="-30" y1="0" x2="90" y2="0" stroke="#64748b" stroke-dasharray="4,4"/>
-    <text x="-40" y="5" fill="#94a3b8" font-size="12" text-anchor="end" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">1 Metre</text>
-    <line x1="30" y1="18" x2="30" y2="80" stroke="#94a3b8" stroke-dasharray="4,4"/>
-    <polygon points="30,80 26,70 34,70" fill="#94a3b8"/>
-    <ellipse cx="30" cy="80" rx="15" ry="6" fill="#ca8a04" stroke="#eab308" stroke-width="1.5"/>
-    <text x="30" y="105" fill="#f8fafc" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Sığ Çukur</text>
-    <text x="30" y="122" fill="#94a3b8" font-size="11" text-anchor="middle" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Daha Az Potansiyel Enerji</text>
+  <line x1="40" y1="170" x2="640" y2="170" stroke="#64748b" stroke-width="2"/>
+  <rect x="50" y="170" width="580" height="30" fill="#eab308" opacity="0.25" rx="3"/>
+  <g>
+    <rect x="55" y="175" width="90" height="22" rx="11" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <text x="100" y="189" fill="#fbbf24" font-size="10" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kum Havuzu</text>
   </g>
 
-  <!-- 2 Metre -->
+  <!-- 1 Metre Bilye -->
+  <g transform="translate(200, 105)">
+    <circle cx="0" cy="0" r="15" fill="#38bdf8" stroke="#ffffff" stroke-width="2"/>
+    <line x1="0" y1="16" x2="0" y2="65" stroke="#94a3b8" stroke-dasharray="3,3"/>
+    <ellipse cx="0" cy="65" rx="14" ry="6" fill="#ca8a04"/>
+  </g>
+  <g>
+    <rect x="155" y="70" width="90" height="24" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <text x="200" y="85" fill="#f8fafc" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">1 Metre</text>
+  </g>
+  <g>
+    <rect x="155" y="135" width="90" height="22" rx="11" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <text x="200" y="149" fill="#94a3b8" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Sığ Çukur</text>
+  </g>
+
+  <!-- 2 Metre Bilye -->
   <g transform="translate(480, 45)">
-    <circle cx="30" cy="0" r="16" fill="#38bdf8" stroke="#ffffff" stroke-width="2"/>
-    <text x="30" y="-22" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Özdeş Bilye (1 kg)</text>
-    <line x1="-30" y1="0" x2="90" y2="0" stroke="#38bdf8" stroke-dasharray="4,4"/>
-    <text x="-40" y="5" fill="#38bdf8" font-size="12" font-weight="bold" text-anchor="end" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">2 Metre</text>
-    <line x1="30" y1="18" x2="30" y2="145" stroke="#94a3b8" stroke-dasharray="4,4"/>
-    <polygon points="30,145 26,135 34,135" fill="#94a3b8"/>
-    <ellipse cx="30" cy="145" rx="26" ry="14" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
-    <text x="30" y="172" fill="#38bdf8" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Derin Çukur</text>
-    <text x="30" y="188" fill="#bae6fd" font-size="11" text-anchor="middle" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Daha Fazla Potansiyel Enerji</text>
+    <circle cx="0" cy="0" r="15" fill="#38bdf8" stroke="#ffffff" stroke-width="2"/>
+    <line x1="0" y1="16" x2="0" y2="125" stroke="#94a3b8" stroke-dasharray="3,3"/>
+    <ellipse cx="0" cy="125" rx="25" ry="13" fill="#0284c7"/>
   </g>
-
-  <rect x="100" y="232" width="480" height="24" rx="12" fill="#0f172a" stroke="#334155"/>
-  <text x="340" y="248" fill="#38bdf8" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif" paint-order="stroke fill" stroke="#0b0f19" stroke-width="2.5px">Sonuç: Kütleler eşitken daha yüksekten bırakılan cisim kuma daha derin batar.</text>
+  <g>
+    <rect x="435" y="10" width="90" height="24" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <text x="480" y="25" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">2 Metre</text>
+  </g>
+  <g>
+    <rect x="435" y="135" width="90" height="22" rx="11" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="480" y="149" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Derin Çukur</text>
+  </g>
 </svg>

@@ -1,33 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 210" width="100%" height="100%">
   <rect width="100%" height="100%" fill="none"/>
-  <!-- Yol Zemin -->
   <line x1="20" y1="140" x2="620" y2="140" stroke="#64748b" stroke-width="3"/>
-
-  <!-- 1. Duran Araç -->
-  <g transform="translate(80, 50)">
-    <rect x="0" y="40" width="110" height="35" rx="5" fill="#475569" stroke="#94a3b8" stroke-width="2"/>
-    <rect x="25" y="15" width="60" height="25" rx="3" fill="#334155" stroke="#94a3b8" stroke-width="2"/>
-    <circle cx="25" cy="75" r="12" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
-    <circle cx="85" cy="75" r="12" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
-    <text x="55" y="-5" fill="#ef4444" font-size="14" font-weight="bold" text-anchor="middle">Park Hâlindeki Araç</text>
-    <text x="55" y="115" fill="#94a3b8" font-size="13" font-weight="bold" text-anchor="middle">Sürati Yok (Hareketsiz)</text>
-    <text x="55" y="133" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">Kinetik Enerji = Sıfır</text>
-  </g>
-
-  <!-- Ayırıcı Çizgi -->
   <line x1="320" y1="20" x2="320" y2="180" stroke="#475569" stroke-dasharray="4,4"/>
 
-  <!-- 2. Hareket Eden Araç -->
-  <g transform="translate(390, 50)">
-    <rect x="0" y="40" width="110" height="35" rx="5" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
-    <rect x="25" y="15" width="60" height="25" rx="3" fill="#0369a1" stroke="#38bdf8" stroke-width="2"/>
-    <circle cx="25" cy="75" r="12" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
-    <circle cx="85" cy="75" r="12" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
-    <!-- Sürat Oku -->
-    <line x1="120" y1="55" x2="185" y2="55" stroke="#10b981" stroke-width="4"/>
-    <polygon points="185,49 197,55 185,61" fill="#10b981"/>
-    <text x="55" y="-5" fill="#10b981" font-size="14" font-weight="bold" text-anchor="middle">Yolda İlerleyen Araç</text>
-    <text x="55" y="115" fill="#10b981" font-size="13" font-weight="bold" text-anchor="middle">Süratli (Hareket Hâlinde)</text>
-    <text x="55" y="133" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">Kinetik Enerjisi Vardır</text>
+  <!-- Duran Araç -->
+  <g transform="translate(100, 50)">
+    <rect x="0" y="40" width="100" height="32" rx="4" fill="#475569" stroke="#94a3b8" stroke-width="1.5"/>
+    <circle cx="22" cy="72" r="10" fill="#0f172a" stroke="#cbd5e1"/>
+    <circle cx="78" cy="72" r="10" fill="#0f172a" stroke="#cbd5e1"/>
+  </g>
+  <g>
+    <rect x="90" y="45" width="120" height="24" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <text x="150" y="60" fill="#ef4444" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Duran Otomobil</text>
+  </g>
+  <g>
+    <rect x="90" y="150" width="120" height="24" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <text x="150" y="165" fill="#94a3b8" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kinetik Enerji = 0</text>
+  </g>
+
+  <!-- Hareketli Araç -->
+  <g transform="translate(420, 50)">
+    <rect x="0" y="40" width="100" height="32" rx="4" fill="#0284c7" stroke="#38bdf8" stroke-width="1.5"/>
+    <circle cx="22" cy="72" r="10" fill="#0f172a" stroke="#cbd5e1"/>
+    <circle cx="78" cy="72" r="10" fill="#0f172a" stroke="#cbd5e1"/>
+    <line x1="110" y1="55" x2="160" y2="55" stroke="#10b981" stroke-width="3"/>
+    <polygon points="160,50 170,55 160,60" fill="#10b981"/>
+  </g>
+  <g>
+    <rect x="410" y="45" width="130" height="24" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <text x="475" y="60" fill="#10b981" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Hareketli Otomobil</text>
+  </g>
+  <g>
+    <rect x="410" y="150" width="130" height="24" rx="12" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+    <text x="475" y="165" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kinetik Enerjisi Var</text>
   </g>
 </svg>
