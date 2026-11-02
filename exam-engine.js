@@ -3594,7 +3594,7 @@ export function renderAdminQuestionReview() {
 
     if (!DATA || !(DATA.allQuestions || DATA.questions)) {
         container.innerHTML = '<p style="color:#aaa;"><i class="fas fa-spinner fa-spin"></i> Soru havuzu yükleniyor...</p>';
-        ensureDataLoaded('6').then(() => {
+        loadData('6').then(() => {
             renderAdminQuestionReview();
         }).catch(() => {
             container.innerHTML = '<p style="color:#f87171;">Soru havuzu yüklenirken hata oluştu.</p>';
