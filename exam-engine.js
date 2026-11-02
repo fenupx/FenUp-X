@@ -688,14 +688,14 @@ async function loadData(revision = CONTENT_REVISION, showError = true) {
                 } catch (_) {}
 
                 try {
-                    const ekRes = await fetch(base + 'ek_icerik.json');
+                    const ekRes = await fetch(base + 'ek_icerik.json?v=2026110203');
                     if (ekRes.ok) {
                         data.ekContent = await ekRes.json();
                     }
                 } catch (_) {}
 
                 try {
-                    const senRes = await fetch(base + 'senaryo_kayitlari.json');
+                    const senRes = await fetch(base + 'senaryo_kayitlari.json?v=2026110203');
                     if (senRes.ok) {
                         const senJson = await senRes.json();
                         const rawScenarios = Array.isArray(senJson) ? senJson : (senJson.scenarios || []);
