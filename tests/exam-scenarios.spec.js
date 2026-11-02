@@ -32,7 +32,7 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
 
         const ekCards = Array.isArray(ek.cards) ? ek.cards : Object.values(ek.cards);
         const allCards = [...v6.cards, ...ekCards];
-        expect(allCards.length).toBe(58); // 34 (V6) + 24 (V7.1)
+        expect(allCards.length).toBe(52); // 34 (V6) + 18 (V7.3 Master)
 
         // Senaryo 3'te FB.7.1.5 kazanımı yoktur
         const sc3 = scenarios.find(s => (s.scenario === 3 || s.code === 'S3'));
@@ -182,47 +182,74 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         const cardCount = await cardButtons.count();
         expect(cardCount).toBeGreaterThan(0);
 
-        // FB.7.1.4 giriş kartını kontrol et
+        // FB.7.1.4 giriş kartını kontrol et (V7.3 Master K00 organizasyon, K01/K02 içerik)
         const cardFB714 = await page.evaluate(() => {
             const engine = window.FenUpExam;
             const cards = engine.getCards();
             const k00 = cards.find(c => c.id === 'FB714-V7-K00');
-            return k00 ? {
-                id: k00.id,
-                bodyLength: k00.body?.length,
-                conceptChain: k00.concept_chain,
-                topicsLength: k00.topics?.length,
-                visual: k00.visual?.asset
-            } : null;
+            const k01 = cards.find(c => c.id === 'FB714-V7-K01');
+            const k02 = cards.find(c => c.id === 'FB714-V7-K02');
+            return {
+                k00: k00 ? {
+                    id: k00.id,
+                    eyebrow: k00.eyebrow,
+                    bodyLength: k00.body?.length,
+                    topicsLength: k00.topics?.length,
+                    visual: k00.visual
+                } : null,
+                k01: k01 ? {
+                    id: k01.id,
+                    bodyLength: k01.body?.length,
+                    visual: k01.visual?.asset
+                } : null,
+                k02: k02 ? {
+                    id: k02.id,
+                    bodyLength: k02.body?.length,
+                    visual: k02.visual?.asset
+                } : null
+            };
         });
 
-        expect(cardFB714).not.toBeNull();
-        expect(cardFB714.bodyLength).toBeGreaterThan(0);
-        expect(cardFB714.conceptChain.length).toBeGreaterThan(0);
-        expect(cardFB714.topicsLength).toBeGreaterThan(0);
-        expect(cardFB714.visual).toBe('assets/diagram-nebula-collapse.svg');
+        expect(cardFB714.k00).not.toBeNull();
+        expect(cardFB714.k00.eyebrow).toBe('ÖĞRENME ÇIKTISI · KONU ÖZETİ');
+        expect(cardFB714.k00.bodyLength).toBe(0);
+        expect(cardFB714.k00.topicsLength).toBeGreaterThan(0);
+        expect(cardFB714.k00.visual).toBeNull();
+        expect(cardFB714.k01.bodyLength).toBeGreaterThan(0);
+        expect(cardFB714.k01.visual).toBe('assets/orion.jpg');
+        expect(cardFB714.k02.visual).toBe('assets/diagram-nebula-collapse.svg');
 
-        // FB.7.2.2 giriş kartını kontrol et
+        // FB.7.2.2 giriş kartını kontrol et (V7.3 Master K00 organizasyon, K01 içerik)
         const cardFB722 = await page.evaluate(() => {
             const engine = window.FenUpExam;
             const cards = engine.getCards();
             const k00 = cards.find(c => c.id === 'FB722-V7-K00');
-            return k00 ? {
-                id: k00.id,
-                bodyLength: k00.body?.length,
-                conceptChain: k00.concept_chain,
-                topicsLength: k00.topics?.length,
-                visual: k00.visual?.asset
-            } : null;
+            const k01 = cards.find(c => c.id === 'FB722-V7-K01');
+            return {
+                k00: k00 ? {
+                    id: k00.id,
+                    eyebrow: k00.eyebrow,
+                    bodyLength: k00.body?.length,
+                    topicsLength: k00.topics?.length,
+                    visual: k00.visual
+                } : null,
+                k01: k01 ? {
+                    id: k01.id,
+                    bodyLength: k01.body?.length,
+                    visual: k01.visual?.asset
+                } : null
+            };
         });
 
-        expect(cardFB722).not.toBeNull();
-        expect(cardFB722.bodyLength).toBeGreaterThan(0);
-        expect(cardFB722.conceptChain.length).toBeGreaterThan(0);
-        expect(cardFB722.topicsLength).toBeGreaterThan(0);
-        expect(cardFB722.visual).toBe('assets/diagram-roller-coaster.svg');
+        expect(cardFB722.k00).not.toBeNull();
+        expect(cardFB722.k00.eyebrow).toBe('ÖĞRENME ÇIKTISI · KONU ÖZETİ');
+        expect(cardFB722.k00.bodyLength).toBe(0);
+        expect(cardFB722.k00.topicsLength).toBeGreaterThan(0);
+        expect(cardFB722.k00.visual).toBeNull();
+        expect(cardFB722.k01.bodyLength).toBeGreaterThan(0);
+        expect(cardFB722.k01.visual).toBe('assets/diagram-motion-vs-rest.svg');
 
-        // UI'da render edilmiş K00 kartını açıp kontrol et
+        // UI'da render edilmiş K00 organizasyon kartını açıp kontrol et
         const targetIdx = await page.evaluate(() => {
             const cards = window.FenUpExam.getCards();
             return cards.findIndex(c => c.id === 'FB714-V7-K00');
@@ -231,17 +258,20 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
 
         await page.evaluate(idx => window.FenUpExam.renderStudy(idx), targetIdx);
 
-        // Body paragrafları görünür olmalı (V7.1 bite-sized 1-2 paragraf)
-        const bodyParagraphs = page.locator('#exam-card-article .study-text-column p.exam-body-p');
-        expect(await bodyParagraphs.count()).toBeGreaterThanOrEqual(2);
-
-        // Kavram zinciri görünür olmalı
-        const chainItems = page.locator('#exam-card-article .chain b');
-        expect(await chainItems.count()).toBeGreaterThanOrEqual(3);
-
-        // Topics listesi görünür olmalı
+        // K00 organizasyon kartıdır: topics listesi görünür olmalı
         const topicsList = page.locator('#exam-card-article ul.topics li');
         expect(await topicsList.count()).toBeGreaterThanOrEqual(3);
+
+        // K02 kartına geçip görsel ve paragrafları doğrula
+        const k02Idx = await page.evaluate(() => {
+            const cards = window.FenUpExam.getCards();
+            return cards.findIndex(c => c.id === 'FB714-V7-K02');
+        });
+        await page.evaluate(idx => window.FenUpExam.renderStudy(idx), k02Idx);
+
+        // Body paragrafları görünür olmalı (V7.3 bite-sized 1-2 net paragraf)
+        const bodyParagraphs = page.locator('#exam-card-article .study-text-column p.exam-body-p');
+        expect(await bodyParagraphs.count()).toBeGreaterThanOrEqual(1);
 
         // SVG görseli görünür olmalı
         const visualImg = page.locator('#exam-visual img');
@@ -377,10 +407,10 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         await page.click('#btn-choice-go-study');
         await expect(page.locator('#exam-view-study')).toBeVisible();
 
-        // FB714-V7-K00 kartına geç (başlık, body ve görsel SVG içerir)
+        // FB714-V7-K02 kartına geç (başlık, body ve görsel SVG içerir)
         const targetIdx = await page.evaluate(() => {
             const cards = window.FenUpExam.getCards();
-            return cards.findIndex(c => c.id === 'FB714-V7-K00');
+            return cards.findIndex(c => c.id === 'FB714-V7-K02');
         });
         expect(targetIdx).toBeGreaterThanOrEqual(0);
 
@@ -416,36 +446,40 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(typography.btnMinHeight).toBe('56px');
     });
 
-    test('V7.2 %100 Ders Kitabı Dil Uyumu (ağır elementler, pulsar, nükleer füzyon temizliği ve 3D şema uyumu)', async () => {
+    test('V7.3 Master Müfredat ve Ders Kitabı Dil Uyumu (ağır elementler, pulsar, nükleer füzyon temizliği ve 3D şema uyumu)', async () => {
         const ekPath = path.resolve('data/exam/content-v6/ek_icerik.json');
         const ekData = JSON.parse(fs.readFileSync(ekPath, 'utf8'));
 
-        expect(ekData.version).toBe('7.2.0');
+        expect(ekData.version).toBe('7.3.0');
 
-        // FB714-V7-K07: "ağır elementler" çıkarıldı; "yeni yıldız ve gök cisimlerine hammadde olacak gaz ve tozlar"
-        const k07Body = ekData.cards['FB714-V7-K07'].body.join(' ');
-        expect(k07Body).not.toContain('ağır element');
-        expect(k07Body).toContain('yeni yıldızların ve gök cisimlerinin hammaddesi');
+        // FB714-V7-K03 ve K04: "ağır elementler" ve "pulsar" çıkarıldı; "nötron yıldızı veya kara delik"
+        const k03Body = ekData.cards['FB714-V7-K03'].body.join(' ');
+        expect(k03Body).not.toContain('ağır element');
+        expect(k03Body).toContain('gezegenimsi bulutsu');
+        expect(k03Body).toContain('beyaz cüce');
 
-        // FB714-V7-K08: "Pulsar" çıkarıldı; sadece "Nötron Yıldızı"
+        const k04Body = ekData.cards['FB714-V7-K04'].body.join(' ');
+        expect(k04Body).not.toContain('Pulsar');
+        expect(k04Body).not.toContain('pulsar');
+        expect(k04Body).toContain('nötron yıldızı veya kara delik');
+
+        // FB714-V7-K08: Kutup Yıldızı ve Büyükayı 5 kat mesafe
         const k08Body = ekData.cards['FB714-V7-K08'].body.join(' ');
-        expect(k08Body).not.toContain('Pulsar');
-        expect(k08Body).not.toContain('pulsar');
-        expect(k08Body).toContain('Nötron Yıldızı');
+        expect(k08Body).toContain('Kutup Yıldızı');
+        expect(k08Body).toContain('5 kat');
 
-        // FB714-V7-E01: "nükleer füzyon" çıkarıldı; "çekirdek tepkimeleri" ve "ısı-ışık"
-        const e01Prompt = ekData.questions['FB714-V7-E01'].prompt;
-        expect(e01Prompt).not.toContain('nükleer');
-        expect(e01Prompt).not.toContain('füzyon');
-        expect(e01Prompt).toContain('çekirdek tepkimeleri');
-        const e01Rubric = ekData.questions['FB714-V7-E01'].rubric.criteria.map(c => c.description).join(' ');
+        // FB714-V7-E01: "nükleer füzyon" çıkarıldı; "çekirdek tepkimeleri" ve "ısı ve ışık"
+        const e01Stem = ekData.questions['FB714-V7-E01'].stem;
+        expect(e01Stem).not.toContain('nükleer');
+        expect(e01Stem).not.toContain('füzyon');
+        expect(e01Stem).toContain('çekirdek tepkimeleri');
+        const e01Rubric = ekData.questions['FB714-V7-E01'].rubric.map(r => r.text).join(' ');
         expect(e01Rubric).not.toContain('nükleer');
         expect(e01Rubric).not.toContain('füzyon');
-        expect(e01Rubric.toLowerCase()).toContain('çekirdek tepkimeleri');
 
-        // FB714-V7-M04: 3D şema ile tam uyumlu prompt (50, 450 ve 1200 ışık yılı)
-        const m04Prompt = ekData.questions['FB714-V7-M04'].prompt;
-        expect(m04Prompt).toContain('50, 450 ve 1200 ışık yılı');
+        // FB714-V7-M04: 3D şema ile tam uyumlu stem (50, 450 ve 1200 ışık yılı)
+        const m04Stem = ekData.questions['FB714-V7-M04'].stem;
+        expect(m04Stem).toContain('50, 450 ve 1200 ışık yılı');
 
         // SVG diyagram metinleri
         const nebulaSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-nebula-collapse.svg'), 'utf8');
@@ -457,6 +491,56 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(starCycleSvg).not.toContain('Pulsar');
         expect(starCycleSvg).not.toContain('pulsar');
         expect(starCycleSvg).toContain('Nötron Yıldızı');
+
+        // Kutup Yıldızı şeması (Merak, Dubhe, 5 Kat Mesafe, Polaris)
+        const constelSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-constellations.svg'), 'utf8');
+        expect(constelSvg).toContain('Merak');
+        expect(constelSvg).toContain('Dubhe');
+        expect(constelSvg).toContain('5 Kat Mesafe');
+        expect(constelSvg).toContain('Kutup Yıldızı (Polaris)');
+    });
+
+    test('Senaryo 3 seçildiğinde kart sıralaması OUTCOME_ORDER uyumlu olmalı ve Kutup Yıldızı şeması render edilmeli', async ({ page }) => {
+        await page.goto('/index.html');
+        await page.click('#btn-yazili-modulu');
+        await page.evaluate(() => window.FenUpExam.goToStep('scope'));
+        await page.selectOption('#exam-select-scenario', '3');
+        await page.click('#btn-scope-continue');
+        await page.click('#btn-choice-go-study');
+        await expect(page.locator('#exam-view-study')).toBeVisible();
+
+        // Kart sıralamasını doğrula
+        const outcomeSequence = await page.evaluate(() => {
+            const cards = window.FenUpExam.getCards();
+            const order = [];
+            for (const c of cards) {
+                if (!order.includes(c.outcome_id)) order.push(c.outcome_id);
+            }
+            return order;
+        });
+
+        // Senaryo 3 kazanımları: FB.7.1.1, FB.7.1.3, FB.7.1.4, FB.7.2.1, FB.7.2.2
+        expect(outcomeSequence).toEqual([
+            'FB.7.1.1',
+            'FB.7.1.3',
+            'FB.7.1.4',
+            'FB.7.2.1',
+            'FB.7.2.2'
+        ]);
+
+        // Kutup Yıldızı kartına git (FB714-V7-K08)
+        const k08Idx = await page.evaluate(() => {
+            const cards = window.FenUpExam.getCards();
+            return cards.findIndex(c => c.id === 'FB714-V7-K08');
+        });
+        expect(k08Idx).toBeGreaterThanOrEqual(0);
+
+        await page.evaluate(idx => window.FenUpExam.renderStudy(idx), k08Idx);
+        await page.waitForTimeout(200);
+
+        const visualImg = page.locator('#exam-visual img');
+        await expect(visualImg).toBeVisible();
+        await expect(visualImg).toHaveAttribute('src', /assets\/diagram-constellations\.svg/);
     });
 
 });

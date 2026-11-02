@@ -1,13 +1,13 @@
 {
-  "version": "7.2.0",
+  "version": "7.3.0",
   "generated_at": "2026-11-02",
-  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek Öğrenme Çıktıları (FB.7.1.4 ve FB.7.2.2) V7.2 %100 Ders Kitabı Dil Uyumu",
+  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek İçerik V7.3 Tam V6 Mimarisi Eşitliği",
   "outcomes": [
     {
       "id": "FB.7.1.4",
       "grade": 7,
       "unit_id": "7-U01",
-      "unit_title": "Güneş Sistemi ve Ötesi",
+      "unit_title": "Uzay Çağı",
       "title": "Yıldızların yaşam döngüsünü, bulutsudan başlayarak geçirdiği evreleri ve gök cisimlerini açıklar.",
       "short_title": "Yıldızların Yaşamı",
       "intro_card_id": "FB714-V7-K00",
@@ -20,10 +20,7 @@
         "FB714-V7-K05",
         "FB714-V7-K06",
         "FB714-V7-K07",
-        "FB714-V7-K08",
-        "FB714-V7-K09",
-        "FB714-V7-K10",
-        "FB714-V7-K11"
+        "FB714-V7-K08"
       ],
       "question_ids": [
         "FB714-V7-E01",
@@ -52,7 +49,7 @@
       "id": "FB.7.2.2",
       "grade": 7,
       "unit_id": "7-U02",
-      "unit_title": "Kuvvet ve Enerji",
+      "unit_title": "Kuvvet ve Enerjiyi Keşfedelim",
       "title": "Enerji çeşitlerinden kinetik ve potansiyel enerjiyi ilişkilendirir ve birbirine dönüşümünü açıklar.",
       "short_title": "Kinetik ve Potansiyel Enerji",
       "intro_card_id": "FB722-V7-K00",
@@ -65,10 +62,7 @@
         "FB722-V7-K05",
         "FB722-V7-K06",
         "FB722-V7-K07",
-        "FB722-V7-K08",
-        "FB722-V7-K09",
-        "FB722-V7-K10",
-        "FB722-V7-K11"
+        "FB722-V7-K08"
       ],
       "question_ids": [
         "FB722-V7-E01",
@@ -100,207 +94,175 @@
       "outcome_id": "FB.7.1.4",
       "sequence": 0,
       "title": "Yıldızların Yaşamı",
-      "eyebrow": "1. ÜNİTE · GÖK CİSİMLERİ · DERS KİTABI S. 35-44",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [
-        "Bulutsu (Doğum)",
-        "Yıldızın Yaşamı",
-        "Güneş'in Geleceği",
-        "Sıcaklık ve Renk",
-        "Işık Yılı",
-        "Takımyıldızlar"
+        "Bulutsu (Nebula) ve yıldızların oluşumu",
+        "Küçük kütleli yıldızların yaşam döngüsü",
+        "Büyük kütleli yıldızların yaşam döngüsü",
+        "Güneş’in yaşam döngüsü",
+        "Yıldızların renkleri ve yüzey sıcaklıkları",
+        "Işık yılı kavramı",
+        "Takımyıldızlar ve Kutup Yıldızı"
       ],
-      "concept_chain": [
-        "Bulutsu",
-        "Ön Yıldız",
-        "Yıldız",
-        "Dev / Süperdev",
-        "Son Evre"
-      ],
-      "body": [
-        "Yıldızlar bulutsularda doğar, yaşar ve ömrünü tamamlar.",
-        "Bir yıldızın ne kadar yaşayacağını ve nasıl öleceğini belirleyen tek temel etken başlangıç kütlesidir."
-      ],
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-nebula-collapse.svg",
-        "alt": "Yıldızların yaşamı kavram şeması"
-      }
+      "body": [],
+      "visual": null
     },
     "FB714-V7-K01": {
       "id": "FB714-V7-K01",
       "outcome_id": "FB.7.1.4",
       "sequence": 1,
-      "title": "Bulutsu (Nebula) Nedir?",
-      "eyebrow": "YILDIZLARIN DOĞUM ODALARI",
+      "title": "Bulutsu (Nebula) nedir?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Bulutsu, uzaydaki devasa gaz ve toz bulutlarıdır.",
-        "Yıldızların doğum yeridir. Örnek: Orion (parlak/salma), Atbaşı (karanlık) ve Kelebek bulutsuları."
+        "Uzayda bulunan devasa gaz ve toz bulutlarına bulutsu (nebula) denir.",
+        "Yıldızların doğum yeridir. Orion, Atbaşı ve Kelebek bilinen bulutsu örnekleridir."
       ],
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-nebula-collapse.svg",
-        "alt": "Bulutsu gaz ve toz bulutu şeması"
+        "asset": "assets/orion.jpg",
+        "alt": "Hubble teleskobunun Orion Bulutsusu gözlemi.",
+        "caption": "Orion Bulutsusu",
+        "fit": "contain"
       }
     },
     "FB714-V7-K02": {
       "id": "FB714-V7-K02",
       "outcome_id": "FB.7.1.4",
       "sequence": 2,
-      "title": "Yıldız Nasıl Doğar?",
-      "eyebrow": "KÜTLE ÇEKİMİ VE ÖN YILDIZ",
+      "title": "Yıldız nasıl oluşur?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Kütle çekim kuvveti gaz ve tozu bir merkeze toplar ve sıkıştırır.",
-        "Sıcaklık ve basınç artarak Ön Yıldız (Protostar) oluşur; merkezde çekirdek tepkimesi başlayınca yeni bir yıldız parlar."
+        "Bulutsudaki gaz ve toz parçacıkları kütle çekiminin etkisiyle bir araya gelerek sıkışır.",
+        "Sıkışma sonucu sıcaklık ve basınç artar; merkezde çekirdek tepkimeleri başlayınca ısı ve ışık yayan bir yıldız doğar."
       ],
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-nebula-collapse.svg",
-        "alt": "Ön yıldız ve kararlı yıldız oluşumu şeması"
+        "alt": "Bulutsudan yıldıza geçiş aşamaları şeması",
+        "caption": "Yıldızın Doğumu",
+        "fit": "contain"
       }
     },
     "FB714-V7-K03": {
       "id": "FB714-V7-K03",
       "outcome_id": "FB.7.1.4",
       "sequence": 3,
-      "title": "İki Yaşam Yolu (Kütle Kuralı)",
-      "eyebrow": "BAŞLANGIÇ KÜTLESİ KURALI",
+      "title": "Küçük kütleli yıldızların yaşamı",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Yıldızların yaşamı başlangıç kütlesine göre iki farklı yola ayrılır:",
-        "Güneş kütlesine yakın olanlar Küçük Kütleli, Güneş'ten kat kat büyük olanlar Büyük Kütleli yolu izler."
+        "Başlangıç kütlesi Güneş kadar veya Güneş'ten küçük olan yıldızlar bu yolu izler.",
+        "Yıldız yakıtı azaldıkça genişleyip kırmızı deve dönüşür.",
+        "Dış gaz katmanlarını uzaya savurarak gezegenimsi bulutsu oluşturur; merkezde kalan kor çekirdek ise beyaz cüce olarak soğur."
       ],
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-small-star-cycle.svg",
-        "alt": "Yıldız yaşam yolu çatallanması şeması"
+        "alt": "Küçük kütleli yıldızların yaşam döngüsü şeması",
+        "caption": "Küçük Kütleli Yıldız Yolu",
+        "fit": "contain"
       }
     },
     "FB714-V7-K04": {
       "id": "FB714-V7-K04",
       "outcome_id": "FB.7.1.4",
       "sequence": 4,
-      "title": "Küçük Kütleli Yıldız: Kırmızı Dev",
-      "eyebrow": "KÜÇÜK VE ORTA KÜTLE",
+      "title": "Büyük kütleli yıldızların yaşamı",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Yakıtı azalan küçük kütleli yıldızın dış katmanları akıl almaz derecede genişler.",
-        "Genişleyen yüzey soğur, kırmızı renge bürünür ve Kırmızı Dev evresine geçer."
+        "Başlangıç kütlesi Güneş'ten kat kat büyük olan yıldızlar önce kırmızı süperdeve dönüşür.",
+        "Ömrünün sonunda süpernova adı verilen şiddetli bir patlama geçirir.",
+        "Patlamadan sonra kalan çekirdeğin kütlesine göre nötron yıldızı veya kara delik meydana gelir."
       ],
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-small-star-cycle.svg",
-        "alt": "Kırmızı dev evresi şeması"
+        "asset": "assets/diagram-large-star-cycle.svg",
+        "alt": "Büyük kütleli yıldızların yaşam döngüsü şeması",
+        "caption": "Büyük Kütleli Yıldız Yolu",
+        "fit": "contain"
       }
     },
     "FB714-V7-K05": {
       "id": "FB714-V7-K05",
       "outcome_id": "FB.7.1.4",
       "sequence": 5,
-      "title": "Gezegenimsi Bulutsu ve Beyaz Cüce",
-      "eyebrow": "KÜÇÜK KÜTLE SON EVRESİ",
+      "title": "Güneş’in geleceği",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Kırmızı dev dış gaz katmanlarını uzaya savurarak Gezegenimsi Bulutsu kabuğu oluşturur (Gezegenlerle ilgisi yoktur!).",
-        "Merkezde kalan kor çekirdek ise Beyaz Cüce olarak milyarlarca yıl ışımasını sürdürür."
+        "Güneş, orta/küçük kütleli sarı bir yıldızdır.",
+        "Yaklaşık 5 milyar yıl sonra kırmızı dev evresine girecek ve ömrünü beyaz cüce olarak tamamlayacaktır.",
+        "Güneş'in kütlesi süpernova patlaması geçirmek veya kara deliğe dönüşmek için yeterli değildir."
       ],
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-small-star-cycle.svg",
-        "alt": "Gezegenimsi bulutsu ve beyaz cüce şeması"
+        "asset": "assets/sun.jpg",
+        "alt": "Güneş gözlemi.",
+        "caption": "Güneş",
+        "fit": "contain"
       }
     },
     "FB714-V7-K06": {
       "id": "FB714-V7-K06",
       "outcome_id": "FB.7.1.4",
       "sequence": 6,
-      "title": "Büyük Kütleli Yıldız ve Kırmızı Süperdev",
-      "eyebrow": "BÜYÜK KÜTLE",
+      "title": "Yıldızların renkleri ve sıcaklıkları",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Güneş'ten kat kat büyük dev yıldızlar yakıtını çok hızlı tüketir.",
-        "Genişleyerek Kırmızı Süperdev evresine ulaşır ve ömrünün sonuna yaklaşır."
+        "Yıldızların yaydığı ışığın rengi, yüzey sıcaklıklarının bir göstergesidir.",
+        "Mavi ve beyaz yıldızlar en sıcak, sarı yıldızlar orta sıcaklıkta, kırmızı yıldızlar ise en soğuktur.",
+        "Günlük hayatta kırmızı sıcak algılansa da gök biliminde tam tersidir."
       ],
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-large-star-cycle.svg",
-        "alt": "Büyük kütleli yıldız ve kırmızı süperdev şeması"
+        "asset": "assets/diagram-star-colors.svg",
+        "alt": "Yıldızların renk ve yüzey sıcaklığı karşılaştırması",
+        "caption": "Renk ve Sıcaklık Skalası",
+        "fit": "contain"
       }
     },
     "FB714-V7-K07": {
       "id": "FB714-V7-K07",
       "outcome_id": "FB.7.1.4",
       "sequence": 7,
-      "title": "Süpernova Patlaması",
-      "eyebrow": "EVRENİN EN ŞİDDETLİ PATLAMASI",
+      "title": "Işık yılı nedir?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Kırmızı süperdevin çekirdeği aniden içine çöker ve Süpernova adı verilen muazzam bir patlama gerçekleşir.",
-        "Bu patlamayla uzaya savrulan gaz ve tozlar, ileride yeni yıldızların ve gök cisimlerinin hammaddesi olur."
+        "Işık yılı bir zaman birimi değil, devasa bir uzaklık birimidir.",
+        "Işığın boşlukta bir yılda aldığı mesafedir (yaklaşık 9.5 trilyon kilometre).",
+        "Bir yıldıza baktığımızda onun ışığının bize ulaştığı süredeki geçmiş hâlini görürüz."
       ],
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-large-star-cycle.svg",
-        "alt": "Süpernova patlaması şeması"
+        "asset": "assets/diagram-star-depth-3d.svg",
+        "alt": "Kozmik uzaklıklar ve ışık yılı modeli",
+        "caption": "Uzayda Işık Yılı Mesafeleri",
+        "fit": "contain"
       }
     },
     "FB714-V7-K08": {
       "id": "FB714-V7-K08",
       "outcome_id": "FB.7.1.4",
       "sequence": 8,
-      "title": "Nötron Yıldızı veya Kara Delik",
-      "eyebrow": "BÜYÜK KÜTLE SONU",
+      "title": "Takımyıldızlar ve Kutup Yıldızı",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Süpernova sonrası kalan çekirdeğin kütlesine göre iki son oluşur:",
-        "Kütle orta-büyükse Nötron Yıldızı; kütle aşırı büyükse ışığın dahi kaçamadığı Kara Delik meydana gelir."
-      ],
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-large-star-cycle.svg",
-        "alt": "Nötron yıldızı ve kara delik alternatif son evreleri"
-      }
-    },
-    "FB714-V7-K09": {
-      "id": "FB714-V7-K09",
-      "outcome_id": "FB.7.1.4",
-      "sequence": 9,
-      "title": "Güneş'in Kaderi",
-      "eyebrow": "GÜNEŞ'İN GELECEĞİ",
-      "body": [
-        "Güneş sarı renkli, orta/küçük kütleli kararlı bir yıldızdır.",
-        "5 milyar yıl sonra Kırmızı Dev ve ardından Beyaz Cüce olacaktır. Kütlesi yetersiz olduğu için ASLA süpernova veya kara delik olamaz."
-      ],
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-small-star-cycle.svg",
-        "alt": "Güneş'in geleceği ve aşamaları şeması"
-      }
-    },
-    "FB714-V7-K10": {
-      "id": "FB714-V7-K10",
-      "outcome_id": "FB.7.1.4",
-      "sequence": 10,
-      "title": "Yıldızların Renkleri ve Sıcaklıkları",
-      "eyebrow": "RENK - SICAKLIK İLİŞKİSİ",
-      "body": [
-        "Yıldızın rengi yüzey sıcaklığını gösterir: Mavi/Beyaz en sıcak (>10.000 °C), Sarı orta sıcak (~6.000 °C, Güneş), Kırmızı en soğuktur (~3.000 °C).",
-        "Musluk Yanılgısı: Günlük hayatta kırmızı sıcak sanılır; ancak yıldızlarda kırmızı en soğuk renktir!"
-      ],
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-star-colors.svg",
-        "alt": "Yıldız renkleri ve sıcaklık karşılaştırması"
-      }
-    },
-    "FB714-V7-K11": {
-      "id": "FB714-V7-K11",
-      "outcome_id": "FB.7.1.4",
-      "sequence": 11,
-      "title": "Işık Yılı ve Takımyıldızlar",
-      "eyebrow": "KOZMİK UZAKLIKLAR VE GÖZLEM",
-      "body": [
-        "Işık yılı bir zaman birimi DEĞİL, uzaklık birimidir (ışığın 1 yılda aldığı yol: ~9.5 trilyon km).",
-        "Takımyıldızlar Dünya'dan bir arada görünen yıldızlardır (Büyükayı, Avcı).",
-        "Büyükayı cezve ucundaki 2 yıldız arası 5 kat uzatılınca Kutup Yıldızı (Polaris - kuzey) bulunur."
+        "Dünya'dan bakıldığında gökyüzünde bir aradaymış gibi görünen yıldız gruplarına takımyıldız denir (Büyükayı, Küçükayı, Avcı).",
+        "Kutup Yıldızı, Küçükayı'nın kuyruk ucundadır ve daima kuzey yönünü gösterir.",
+        "Büyükayı'nın cezve ucundaki iki yıldız (Merak ve Dubhe) arasındaki mesafe 5 kat uzatıldığında Kutup Yıldızı bulunur."
       ],
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-constellations.svg",
-        "alt": "Kutup Yıldızı'nı bulma ve takımyıldız rehberi"
+        "alt": "Büyükayı ve Küçükayı ile Kutup Yıldızı'nı bulma rehberi",
+        "caption": "Kutup Yıldızı'nı Bulma",
+        "fit": "contain"
       }
     },
     "FB722-V7-K00": {
@@ -308,205 +270,164 @@
       "outcome_id": "FB.7.2.2",
       "sequence": 0,
       "title": "Kinetik ve Potansiyel Enerji",
-      "eyebrow": "2. ÜNİTE · KUVVET VE ENERJİ · DERS KİTABI S. 65-75",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [
-        "Kinetik Enerji",
-        "Sürat ve Kütle",
-        "Çekim Potansiyel",
-        "Yükseklik ve Kütle",
-        "Esneklik Potansiyel",
-        "Mekanik Korunum"
+        "Kinetik enerji nedir?",
+        "Süratin kinetik enerjiye etkisi",
+        "Kütlenin kinetik enerjiye etkisi",
+        "Çekim potansiyel enerjisi nedir?",
+        "Yüksekliğin çekim potansiyeline etkisi",
+        "Kütlenin çekim potansiyeline etkisi",
+        "Esneklik potansiyel enerjisi",
+        "Enerji dönüşümü ve korunumu"
       ],
-      "concept_chain": [
-        "Mekanik Enerji",
-        "Kinetik (Hareket)",
-        "Çekim Potansiyel (Konum)",
-        "Esneklik Potansiyel"
-      ],
-      "body": [
-        "Enerji en temel tanımıyla iş yapabilme yeteneğidir.",
-        "Hareket eden cisimler kinetik enerjiye; konumu veya esnekliği sayesinde enerji depolayan cisimler ise potansiyel enerjiye sahiptir."
-      ],
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-roller-coaster.svg",
-        "alt": "Kinetik ve potansiyel enerji şeması"
-      }
+      "body": [],
+      "visual": null
     },
     "FB722-V7-K01": {
       "id": "FB722-V7-K01",
       "outcome_id": "FB.7.2.2",
       "sequence": 1,
-      "title": "Kinetik Enerji: Hareketin Enerjisi",
-      "eyebrow": "HAREKET EDEN CİSİMLER",
+      "title": "Kinetik enerji nedir?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Hareket hâlindeki tüm cisimler kinetik enerji taşır.",
-        "Koşan bir sporcu, uçan bir kuş ve denizde ilerleyen bir tekne kinetik enerjiye sahiptir."
+        "Hareket hâlindeki tüm cisimlerin sahip olduğu enerjiye kinetik enerji denir.",
+        "Koşan bir atlet, uçan bir kuş ve seyreden bir tekne kinetik enerjiye sahiptir.",
+        "Durmakta olan cisimlerin sürati sıfır olduğu için kinetik enerjisi kesinlikle sıfırdır."
       ],
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-kinetic-motion.svg",
-        "alt": "Sürat vektörlü römorkör teknesi kinetik enerjisi"
+        "asset": "assets/diagram-motion-vs-rest.svg",
+        "alt": "Duran araç ve hareketli araç kinetik enerji karşılaştırması",
+        "caption": "Hareket ve Kinetik Enerji",
+        "fit": "contain"
       }
     },
     "FB722-V7-K02": {
       "id": "FB722-V7-K02",
       "outcome_id": "FB.7.2.2",
       "sequence": 2,
-      "title": "Duran Cisimde Kinetik Enerji Yoktur",
-      "eyebrow": "HAREKETSİZLİK DURUMU",
+      "title": "Süratin kinetik enerjiye etkisi",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Bir cisim duruyorsa sürati sıfırdır (v = 0).",
-        "Bu nedenle durmakta olan cisimlerin kinetik enerjisi KESİNLİKLE SIFIRDIR."
+        "Kütleleri eşit iki hareketliden sürati daha fazla olanın kinetik enerjisi daha büyüktür.",
+        "Sürati fazla olan bir aracın durma (fren) mesafesi daha uzundur.",
+        "Örneğin aynı otomobil 90 km/saat süratle giderken, 50 km/saat sürate göre daha fazla kinetik enerji taşır."
       ],
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-kinetic-motion.svg",
-        "alt": "Duran araçta kinetik enerjinin sıfır olması"
+        "asset": "assets/diagram-kinetic-experiment.svg",
+        "alt": "Sürat ve kütlenin kinetik enerjiye etkisini gösteren kontrollü deney şeması",
+        "caption": "Kontrollü Deney Düzeneği",
+        "fit": "contain"
       }
     },
     "FB722-V7-K03": {
       "id": "FB722-V7-K03",
       "outcome_id": "FB.7.2.2",
       "sequence": 3,
-      "title": "Kinetik Enerji: Süratin Etkisi",
-      "eyebrow": "SÜRAT - ENERJİ İLİŞKİSİ",
+      "title": "Kütlenin kinetik enerjiye etkisi",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Kütleleri eşit iki araçtan sürati büyük olanın kinetik enerjisi daha fazladır.",
-        "Örn: 90 km/h ile giden otomobil, 50 km/h ile giden aynı otomobilden daha çok enerji taşır ve fren mesafesi daha uzundur."
+        "Süratleri eşit iki hareketliden kütlesi daha fazla olanın kinetik enerjisi daha büyüktür.",
+        "Aynı süratle ilerleyen yüklü bir kamyonun kinetik enerjisi, binek bir otomobilden kat kat fazladır.",
+        "Bu nedenle aynı süratteki ağır araçları durdurmak daha zordur."
       ],
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-kinetic-experiment.svg",
-        "alt": "Sürat arttıkça fren mesafesinin uzaması deneyi"
-      }
+      "visual": null
     },
     "FB722-V7-K04": {
       "id": "FB722-V7-K04",
       "outcome_id": "FB.7.2.2",
       "sequence": 4,
-      "title": "Kinetik Enerji: Kütlenin Etkisi",
-      "eyebrow": "KÜTLE - ENERJİ İLİŞKİSİ",
+      "title": "Çekim potansiyel enerjisi nedir?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Süratleri eşit iki araçtan kütlesi büyük olanın kinetik enerjisi daha büyüktür.",
-        "Aynı süratteki yüklü bir kamyon, binek bir otomobilden kat kat fazla kinetik enerji taşır."
+        "Cisimlerin bulundukları konumdan (yerden yüksekliklerinden) dolayı depoladıkları enerjiye çekim potansiyel enerjisi denir.",
+        "Baraj gölünde biriken su, daldaki elma ve masadaki kitap çekim potansiyel enerjisine sahiptir.",
+        "Yer seviyesindeki bir cismin çekim potansiyel enerjisi sıfır kabul edilir."
       ],
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-kinetic-experiment.svg",
-        "alt": "Kütle arttıkça kinetik enerjinin artması deneyi"
+        "asset": "assets/swing.jpg",
+        "alt": "Havada asılı duran salıncak oturağı.",
+        "caption": "Yüksekte Depolanan Enerji",
+        "fit": "contain"
       }
     },
     "FB722-V7-K05": {
       "id": "FB722-V7-K05",
       "outcome_id": "FB.7.2.2",
       "sequence": 5,
-      "title": "Çekim Potansiyel Enerjisi Nedir?",
-      "eyebrow": "YÜKSEKTE DEPOLANAN ENERJİ",
+      "title": "Yüksekliğin çekim potansiyeline etkisi",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Cisimlerin yerden yüksekliklerinden (konumlarından) dolayı yer çekimine karşı depoladıkları enerjiye çekim potansiyel enerjisi denir.",
-        "Örnek: Barajdaki su, daldaki elma, rafta duran kitap."
+        "Kütleleri eşit cisimlerden yerden daha yüksekte bulunanın çekim potansiyel enerjisi daha büyüktür.",
+        "Kum havuzuna daha yüksekten bırakılan bir bilye, kuma daha derin batarak çukur açar."
       ],
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-potential-experiment.svg",
-        "alt": "Yerden yükseklikte konum enerjisi depolayan cisimler"
+        "alt": "Farklı yükseklik ve kütlelerin kum havuzundaki çukur derinliği deneyi",
+        "caption": "Kum Havuzu Deney Düzenekleri",
+        "fit": "contain"
       }
     },
     "FB722-V7-K06": {
       "id": "FB722-V7-K06",
       "outcome_id": "FB.7.2.2",
       "sequence": 6,
-      "title": "Çekim Potansiyeli: Yüksekliğin Etkisi",
-      "eyebrow": "YÜKSEKLİK DEĞİŞKENİ",
+      "title": "Kütlenin çekim potansiyeline etkisi",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Kütleleri eşit cisimlerden daha yüksekte olanın çekim potansiyel enerjisi daha fazladır.",
-        "Kum havuzuna 2h'den bırakılan bilye, h'den bırakılana göre kuma daha derin batar."
+        "Aynı yükseklikte bulunan cisimlerden kütlesi (ağırlığı) daha büyük olanın çekim potansiyel enerjisi daha fazladır.",
+        "Aynı yükseklikten kum havuzuna bırakılan ağır bir gülle, hafif bir bilyeye göre daha derin çukur oluşturur."
       ],
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-potential-experiment.svg",
-        "alt": "Yükseklik arttıkça kuma batma derinliği deneyi"
-      }
+      "visual": null
     },
     "FB722-V7-K07": {
       "id": "FB722-V7-K07",
       "outcome_id": "FB.7.2.2",
       "sequence": 7,
-      "title": "Çekim Potansiyeli: Kütlenin Etkisi",
-      "eyebrow": "KÜTLE VE AĞIRLIK DEĞİŞKENİ",
+      "title": "Esneklik potansiyel enerjisi",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Aynı yükseklikteki cisimlerden kütlesi (ağırlığı) büyük olanın çekim potansiyel enerjisi daha büyüktür.",
-        "Aynı h yüksekliğinden bırakılan 5 kg'lık gülle, 2 kg'lık güllaye göre kumda daha derin çukur açar."
+        "Esnek cisimlerin sıkıştırılması veya gerilmesi sonucunda depoladıkları enerjiye esneklik potansiyel enerjisi denir.",
+        "Sıkışmış bir yay, gerilmiş bir paket lastiği veya ok yayı esneklik potansiyel enerjisi depolar.",
+        "Sıkışma miktarı arttıkça ve yayın kalınlığı/sertliği arttıkça depolanan enerji artar."
       ],
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-potential-experiment.svg",
-        "alt": "Kütle arttıkça çekim potansiyel enerjisi artışı"
+        "asset": "assets/diagram-elastic-spring.svg",
+        "alt": "Sıkıştırılmış sarmal yayda esneklik potansiyel enerjisi depolanması",
+        "caption": "Esnek Yay",
+        "fit": "contain"
       }
     },
     "FB722-V7-K08": {
       "id": "FB722-V7-K08",
       "outcome_id": "FB.7.2.2",
       "sequence": 8,
-      "title": "Esneklik Potansiyel Enerjisi",
-      "eyebrow": "YAYLAR VE LASTİKLER",
+      "title": "Enerji dönüşümü ve korunumu",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
       "body": [
-        "Esnek cisimler (yay, lastik, trambolin, ok yayı) sıkıştırıldığında veya gerildiğinde esneklik potansiyel enerjisi depolar.",
-        "Kuvvet ortadan kalktığında depolanan enerji serbest kalarak cismi fırlatır."
-      ],
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-elastic-spring.svg",
-        "alt": "Sıkıştırılan yayda enerji depolanması"
-      }
-    },
-    "FB722-V7-K09": {
-      "id": "FB722-V7-K09",
-      "outcome_id": "FB.7.2.2",
-      "sequence": 9,
-      "title": "Esnekliği Etkileyen Faktörler",
-      "eyebrow": "SIKIŞMA VE YAY SERTLİĞİ",
-      "body": [
-        "1) Sıkışma/Gerilme: Yay ne kadar çok sıkıştırılırsa o kadar çok enerji depolar.",
-        "2) Yayın Cinsi/Kalınlığı: Kalın ve sert yay, aynı sıkışmada ince yaya göre daha fazla enerji depolar."
-      ],
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-elastic-spring.svg",
-        "alt": "Yay kalınlığı ve sıkışma miktarı değişkenleri"
-      }
-    },
-    "FB722-V7-K10": {
-      "id": "FB722-V7-K10",
-      "outcome_id": "FB.7.2.2",
-      "sequence": 10,
-      "title": "İki Enerji Türü Bir Arada",
-      "eyebrow": "BİRLİKTE BULUNMA",
-      "body": [
-        "Bir cisim aynı anda hem kinetik hem potansiyel enerjiye sahip olabilir!",
-        "Örnek: Havada 50 metre irtifada 100 km/h ile uçan bir kuş hem çekim potansiyel hem de kinetik enerji taşır."
+        "Bir cisim aynı anda hem kinetik hem potansiyel enerjiye sahip olabilir (örneğin uçmakta olan bir kuş).",
+        "Sürtünmelerin ihmal edildiği ortamlarda potansiyel ve kinetik enerji birbirine dönüşür ancak toplam mekanik enerji korunur.",
+        "Hız treni en tepede maksimum potansiyel enerjiye sahiptir; aşağı indikçe bu enerji kinetik enerjiye dönüşerek en alt noktada maksimum sürate ulaşır."
       ],
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-roller-coaster.svg",
-        "alt": "Hem kinetik hem potansiyel enerji taşıyan hareketliler"
-      }
-    },
-    "FB722-V7-K11": {
-      "id": "FB722-V7-K11",
-      "outcome_id": "FB.7.2.2",
-      "sequence": 11,
-      "title": "Enerji Dönüşümü ve Korunumu",
-      "eyebrow": "MEKANİK KORUNUM",
-      "body": [
-        "Enerji yoktan var edilemez, yok olamaz; yalnızca bir türden diğerine dönüşür.",
-        "Hız treni (roller coaster) zirvede maksimum potansiyele sahiptir; aşağı indikçe potansiyel kinetiğe dönüşür ve en alt çukurda sürat maksimuma ulaşır."
-      ],
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-roller-coaster.svg",
-        "alt": "Hız treninde potansiyel ve kinetik enerjinin dönüşümü"
+        "alt": "Hız treni ray profilinde mekanik enerjinin dönüşümü ve korunumu",
+        "caption": "Enerji Dönüşümü",
+        "fit": "contain"
       }
     }
   },
@@ -514,670 +435,1119 @@
     "FB714-V7-E01": {
       "id": "FB714-V7-E01",
       "outcome_id": "FB.7.1.4",
-      "difficulty": "KOLAY",
-      "points": 10,
-      "title": "Bulutsudan Yıldız Doğumu",
-      "prompt": "Verilen şemada uzaydaki gaz ve toz bulutunun (bulutsu) sıkışarak yeni bir yıldız oluşturma aşamaları gösterilmiştir. Şemaya göre gaz ve toz bulutunun kendi içine çökmesini sağlayan temel kuvveti ve merkezde ısı-ışık üreten çekirdek tepkimeleri başlamadan önceki ara evrenin (2. aşama) adını yazınız.",
+      "difficulty": "easy",
+      "title": "Bulutsudan yıldız doğumu",
+      "stem": "Verilen şemada uzaydaki gaz ve toz bulutunun (bulutsu) sıkışarak yeni bir yıldız oluşturma aşamaları gösterilmiştir. Şemaya göre gaz ve toz bulutunun kendi içine çökmesini sağlayan temel kuvveti ve merkezde ısı ve ışık üreten çekirdek tepkimeleri başlamadan önceki ara evrenin adını yazınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-nebula-collapse.svg",
-        "alt": "Bulutsudan yıldıza geçiş aşamaları şeması"
+        "alt": "Bulutsudan yıldıza geçiş aşamaları şeması",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Kendi içine çökmeyi sağlayan temel kuvvetin kütle çekim kuvveti olduğunu belirtir.",
-            "points": 5
+      "rubric": [
+        {
+          "id": "FB714-V7-E01-R1",
+          "text": "Kendi içine çökmeyi sağlayan temel kuvvetin kütle çekim kuvveti olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB714-V7-K01",
+            "FB714-V7-K02"
+          ],
+          "scoring": {
+            "full": "Kütle çekim kuvvetini belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Çekirdek tepkimeleri başlamadan önceki 2. aşamanın 'Ön Yıldız' (Protostar) olduğunu doğru adlandırır.",
-            "points": 5
-          }
-        ],
-        "full_credit": "Kütle çekim kuvveti ve Ön yıldız (Protostar) ifadelerini eksiksiz belirtir (10 Puan).",
-        "partial_credit": "Yalnızca kütle çekimini veya yalnızca ön yıldız adını belirtir (5 Puan).",
-        "no_credit": "Yanlış veya ilgisiz açıklama (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB714-V7-E01-R2",
+          "text": "Tepkimeler başlamadan önceki ara evrenin Ön Yıldız (Protostar) olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB714-V7-K02"
+          ],
+          "scoring": {
+            "full": "Ön Yıldız (Protostar) adını yazar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB714-V7-E02": {
       "id": "FB714-V7-E02",
       "outcome_id": "FB.7.1.4",
-      "difficulty": "KOLAY",
-      "points": 10,
-      "title": "İki Yaşam Yolu Çatallanması",
-      "prompt": "Yıldızlar oluştuktan sonra iki farklı yaşam döngüsü yolundan birini takip eder. Bir yıldızın 'Küçük Kütleli Yıldız Yolu'nu mu yoksa 'Büyük Kütleli Yıldız Yolu'nu mu izleyeceğini belirleyen temel özelliğin ne olduğunu yazınız.",
+      "difficulty": "easy",
+      "title": "İki yaşam yolu",
+      "stem": "Yıldızlar oluştuktan sonra iki farklı yaşam döngüsü yolundan birini takip eder. Bir yıldızın 'Küçük Kütleli Yıldız Yolu'nu mu yoksa 'Büyük Kütleli Yıldız Yolu'nu mu izleyeceğini belirleyen temel özelliğin ne olduğunu yazınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-small-star-cycle.svg",
-        "alt": "Yıldız yaşam yolu çatallanması kütle şeması"
+        "alt": "Küçük ve büyük kütleli yıldızların yaşam yolları",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Yıldızın izleyeceği yaşam yolunu belirleyen temel faktörün 'yıldızın başlangıç kütlesi' olduğunu açıkça belirtir.",
-            "points": 10
-          }
-        ],
-        "full_credit": "Yıldızın başlangıçtaki kütlesi olduğunu açıkça yazar (10 Puan).",
-        "partial_credit": "Sadece 'büyüklüğü' veya 'ağırlığı' deyip kütle kavramını eksik açıklar (5 Puan).",
-        "no_credit": "Sıcaklık, uzaklık veya renk gibi ilgisiz etkenler yazar (0 Puan)."
-      }
+      "rubric": [
+        {
+          "id": "FB714-V7-E02-R1",
+          "text": "Yıldızın izleyeceği yaşam yolunu belirleyen temel faktörün yıldızın başlangıç kütlesi olduğunu açıkça belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB714-V7-K03",
+            "FB714-V7-K04"
+          ],
+          "scoring": {
+            "full": "Yıldızın başlangıç kütlesi olduğunu belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB714-V7-E03": {
       "id": "FB714-V7-E03",
       "outcome_id": "FB.7.1.4",
-      "difficulty": "KOLAY",
-      "points": 10,
-      "title": "Güneş'in Gelecekteki Evreleri",
-      "prompt": "Güneş'imiz sarı renkli, orta/küçük kütleli bir yıldızdır. Güneş'in yaklaşık 5 milyar yıl sonra ömrünün sonlarına doğru geçireceği iki ardışık evrenin adını sırasıyla yazınız.",
+      "difficulty": "easy",
+      "title": "Güneş'in geleceği",
+      "stem": "Güneş sarı renkli, orta/küçük kütleli bir yıldızdır. Güneş'in yaklaşık 5 milyar yıl sonra ömrünün sonlarına doğru geçireceği iki ardışık evrenin adını sırasıyla yazınız.",
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-small-star-cycle.svg",
-        "alt": "Güneş'in geleceği ve geçireceği evreler şeması"
+        "asset": "assets/sun.jpg",
+        "alt": "Güneş fotoğrafı",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "İlk olarak 'Kırmızı Dev' evresine geçeceğini yazar.",
-            "points": 5
+      "rubric": [
+        {
+          "id": "FB714-V7-E03-R1",
+          "text": "Güneş'in önce Kırmızı Dev evresine geçeceğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB714-V7-K05"
+          ],
+          "scoring": {
+            "full": "Kırmızı Dev evresini belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Son evrede 'Gezegenimsi Bulutsu' oluşturup 'Beyaz Cüce'ye dönüşeceğini yazar.",
-            "points": 5
-          }
-        ],
-        "full_credit": "Kırmızı dev ve ardından beyaz cüce (veya gezegenimsi bulutsu) evrelerini doğru sırayla yazar (10 Puan).",
-        "partial_credit": "Evrelerden yalnızca birini doğru yazar (5 Puan).",
-        "no_credit": "Süpernova veya kara delik gibi yanlış evreler yazar (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB714-V7-E03-R2",
+          "text": "Son evrede Beyaz Cüce'ye (veya gezegenimsi bulutsu ardından beyaz cüceye) dönüşeceğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB714-V7-K05"
+          ],
+          "scoring": {
+            "full": "Beyaz Cüce evresini belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB714-V7-E04": {
       "id": "FB714-V7-E04",
       "outcome_id": "FB.7.1.4",
-      "difficulty": "KOLAY",
-      "points": 10,
-      "title": "Gezegenimsi Bulutsu Yanılgısı",
-      "prompt": "Şemada gösterilen 'Gezegenimsi Bulutsu' kavramının adında 'gezegen' kelimesi geçmektedir. Bu yapının Güneş sistemindeki gezegenlerle bir ilişkisi olup olmadığını ve nasıl oluştuğunu açıklayınız.",
+      "difficulty": "easy",
+      "title": "Gezegenimsi bulutsu",
+      "stem": "Şemada gösterilen 'Gezegenimsi Bulutsu' kavramının adında 'gezegen' kelimesi geçmektedir. Bu yapının Güneş sistemindeki gezegenlerle bir ilişkisi olup olmadığını ve nasıl oluştuğunu açıklayınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-small-star-cycle.svg",
-        "alt": "Gezegenimsi bulutsu ve beyaz cüce şeması"
+        "alt": "Gezegenimsi bulutsu şeması",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Gezegenlerle hiçbir ilgisi veya benzerliği olmadığını açıkça belirtir.",
-            "points": 5
+      "rubric": [
+        {
+          "id": "FB714-V7-E04-R1",
+          "text": "Gezegenlerle hiçbir ilgisi veya benzerliği olmadığını açıkça belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB714-V7-K03"
+          ],
+          "scoring": {
+            "full": "Gezegenlerle ilgisi olmadığını belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Kırmızı devin dış gaz katmanlarını uzaya savurmasıyla oluşan gaz kabuğu olduğunu açıklar.",
-            "points": 5
-          }
-        ],
-        "full_credit": "Gezegenlerle ilgisi olmadığını ve ölen yıldızın dış gaz katmanlarının saçılması olduğunu açıklar (10 Puan).",
-        "partial_credit": "Gezegenlerle ilgisi olmadığını söyler fakat oluşum nedenini açıklayamaz (5 Puan).",
-        "no_credit": "Gezegenlerin birleşmesiyle oluştuğunu iddia eden yanlış açıklama (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB714-V7-E04-R2",
+          "text": "Kırmızı devin dış gaz katmanlarını uzaya savurmasıyla oluşan gaz kabuğu olduğunu açıklar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB714-V7-K03"
+          ],
+          "scoring": {
+            "full": "Dış gaz katmanlarının uzaya savrulması olduğunu açıklar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB714-V7-E05": {
       "id": "FB714-V7-E05",
       "outcome_id": "FB.7.1.4",
-      "difficulty": "KOLAY",
-      "points": 10,
-      "title": "Yıldız Sıcaklık ve Renk İlişkisi",
-      "prompt": "Şemadaki renk skalasını inceleyen bir gök bilimci gökyüzünde Mavi renkli X yıldızı, Sarı renkli Y yıldızı ve Kırmızı renkli Z yıldızını gözlemliyor. Bu yıldızları yüzey sıcaklıklarına göre en sıcaktan en soğuğa doğru sıralayınız.",
+      "difficulty": "easy",
+      "title": "Yıldız renkleri ve sıcaklık",
+      "stem": "Şemadaki renk skalasını inceleyen bir gök bilimci gökyüzünde Mavi renkli X yıldızı, Sarı renkli Y yıldızı ve Kırmızı renkli Z yıldızını gözlemliyor. Bu yıldızları yüzey sıcaklıklarına göre en sıcaktan en soğuğa doğru sıralayınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-star-colors.svg",
-        "alt": "Yıldız renkleri ve sıcaklık skalası şeması"
+        "alt": "Yıldız renk ve sıcaklık skalası",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Doğru sıralamayı X > Y > Z (Mavi > Sarı > Kırmızı) şeklinde yapar.",
-            "points": 10
-          }
-        ],
-        "full_credit": "X > Y > Z (Mavi en sıcak, Sarı orta, Kırmızı en soğuk) sıralamasını eksiksiz yapar (10 Puan).",
-        "partial_credit": "Mavinin en sıcak olduğunu bilir ancak sarı ve kırmızıyı karıştırır (5 Puan).",
-        "no_credit": "Ters sıralama (Z > Y > X) veya ilgisiz eşleştirme (0 Puan)."
-      }
+      "rubric": [
+        {
+          "id": "FB714-V7-E05-R1",
+          "text": "Doğru sıralamayı X > Y > Z (Mavi > Sarı > Kırmızı) şeklinde yapar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB714-V7-K06"
+          ],
+          "scoring": {
+            "full": "X > Y > Z (Mavi en sıcak, Sarı orta, Kırmızı en soğuk) sıralar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB714-V7-E06": {
       "id": "FB714-V7-E06",
       "outcome_id": "FB.7.1.4",
-      "difficulty": "KOLAY",
-      "points": 10,
-      "title": "Kutup Yıldızı'nın Işığı ve Zaman",
-      "prompt": "Dünya'dan yaklaşık 430 ışık yılı uzaklıkta bulunan Kutup Yıldızı'nı bu gece teleskobuyla gözlemleyen bir öğrenci, yıldızın aslında hangi zamandaki görüntüsünü görmektedir? Gerekçesiyle açıklayınız.",
+      "difficulty": "easy",
+      "title": "Kutup Yıldızı ve zaman",
+      "stem": "Dünya'dan yaklaşık 430 ışık yılı uzaklıkta bulunan Kutup Yıldızı'nı bu gece teleskobuyla gözlemleyen bir öğrenci, yıldızın aslında hangi zamandaki görüntüsünü görmektedir? Gerekçesiyle açıklayınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-constellations.svg",
-        "alt": "Kutup Yıldızı ve 430 ışık yılı mesafesi şeması"
+        "alt": "Kutup Yıldızı tespit şeması",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Kutup Yıldızı'nın 430 yıl önceki görüntüsünün görüldüğünü belirtir.",
-            "points": 5
+      "rubric": [
+        {
+          "id": "FB714-V7-E06-R1",
+          "text": "Kutup Yıldızı'nın 430 yıl önceki görüntüsünün görüldüğünü belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB714-V7-K07"
+          ],
+          "scoring": {
+            "full": "430 yıl önceki görüntüsü olduğunu belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Yıldızdan çıkan ışığın Dünya'ya ulaşmasının 430 yıl sürdüğünü gerekçe olarak açıklar.",
-            "points": 5
-          }
-        ],
-        "full_credit": "430 yıl önceki halini gördüğünü ve ışığın bize 430 yılda ulaştığını açıklar (10 Puan).",
-        "partial_credit": "Yalnızca 'geçmişini görür' der ancak 430 yıl ifadesini kullanmaz (5 Puan).",
-        "no_credit": "Şu anki anlık halini gördüğünü iddia eden yanlış yanıt (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB714-V7-E06-R2",
+          "text": "Yıldızdan çıkan ışığın Dünya'ya ulaşmasının 430 yıl sürdüğünü gerekçe olarak açıklar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB714-V7-K07"
+          ],
+          "scoring": {
+            "full": "Işığın ulaşma süresini gerekçe gösterir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB714-V7-M01": {
       "id": "FB714-V7-M01",
       "outcome_id": "FB.7.1.4",
-      "difficulty": "ORTA",
-      "points": 15,
-      "title": "İki Yıldızın Yaşam Sonu Karşılaştırması",
-      "prompt": "Verilen şemada A yıldızı ömrünün sonunda Beyaz Cüce'ye, B yıldızı ise Süpernova patlaması geçirerek Nötron Yıldızı'na dönüşmektedir. Bu iki yıldızın:\n1) Başlangıç kütlelerini karşılaştırınız.\n2) Hangisinin yaşam döngüsünde şiddetli bir patlama (süpernova) gerçekleştiğini ve nedenini açıklayınız.",
+      "difficulty": "medium",
+      "title": "İki yıldızın yaşam sonu",
+      "stem": "Verilen şemada A yıldızı ömrünün sonunda Beyaz Cüce'ye, B yıldızı ise Süpernova patlaması geçirerek Nötron Yıldızı'na dönüşmektedir. Bu iki yıldızın:\n1) Başlangıç kütlelerini karşılaştırınız.\n2) Hangisinin yaşam döngüsünde şiddetli bir patlama (süpernova) gerçekleştiğini ve nedenini açıklayınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-large-star-cycle.svg",
-        "alt": "Küçük ve büyük kütleli yıldızların son evreleri karşılaştırma şeması"
+        "alt": "Yıldız son evreleri",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "B yıldızının başlangıç kütlesinin A yıldızından çok daha büyük olduğunu belirtir.",
-            "points": 7
+      "rubric": [
+        {
+          "id": "FB714-V7-M01-R1",
+          "text": "B yıldızının başlangıç kütlesinin A yıldızından çok daha büyük olduğunu belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB714-V7-K03",
+            "FB714-V7-K04"
+          ],
+          "scoring": {
+            "full": "B yıldızının kütlesinin daha büyük olduğunu belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Şiddetli süpernova patlamasının B yıldızında gerçekleştiğini, çünkü büyük kütleli yıldızların çekirdeğinin yakıt tükenince kendi içine çöküp patladığını açıklar.",
-            "points": 8
-          }
-        ],
-        "full_credit": "Başlangıç kütlelerini doğru karşılaştırır ve süpernova patlamasının büyük kütleli B yıldızında gerçekleştiğini bilimsel olarak gerekçelendirir (15 Puan).",
-        "partial_credit": "Yalnızca kütleleri karşılaştırır veya süpernova nedenini eksik açıklar (7-8 Puan).",
-        "no_credit": "Hatalı kütle eşleştirmesi veya ilgisiz açıklama (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB714-V7-M01-R2",
+          "text": "Süpernova patlamasının büyük kütleli B yıldızında gerçekleştiğini ve yakıtı biten çekirdeğin çökmesiyle patladığını açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB714-V7-K04"
+          ],
+          "scoring": {
+            "full": "Büyük kütleli yıldızda çekirdek çökmesiyle süpernova olduğunu açıklar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB714-V7-M02": {
       "id": "FB714-V7-M02",
       "outcome_id": "FB.7.1.4",
-      "difficulty": "ORTA",
-      "points": 15,
-      "title": "Mavi Dev vs Kırmızı Cüce Analizi",
-      "prompt": "Şemadaki renk ve sıcaklık grafiğine göre, yüzey rengi Mavi olan X yıldızı ile yüzey rengi Kırmızı olan Y yıldızı karşılaştırılıyor. Bu iki yıldızın yüzey sıcaklıklarını, ışıma enerjilerini ve yakıtlarını tüketme (yaşam süresi) hızlarını karşılaştırarak yorumlayınız.",
+      "difficulty": "medium",
+      "title": "Mavi dev ve kırmızı cüce",
+      "stem": "Şemadaki renk ve sıcaklık grafiğine göre, yüzey rengi Mavi olan X yıldızı ile yüzey rengi Kırmızı olan Y yıldızı karşılaştırılıyor. Bu iki yıldızın yüzey sıcaklıklarını, ışıma enerjilerini ve yakıtlarını tüketme (yaşam süresi) hızlarını karşılaştırarak yorumlayınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-star-colors.svg",
-        "alt": "Mavi ve kırmızı yıldızların sıcaklık ve ömür karşılaştırması"
+        "alt": "Yıldız renkleri ve sıcaklık",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Mavi X yıldızının yüzey sıcaklığının ve ışıma enerjisinin Kırmızı Y yıldızından çok daha yüksek olduğunu belirtir.",
-            "points": 7
+      "rubric": [
+        {
+          "id": "FB714-V7-M02-R1",
+          "text": "Mavi X yıldızının yüzey sıcaklığının ve ışıma enerjisinin Kırmızı Y yıldızından çok daha yüksek olduğunu belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB714-V7-K06"
+          ],
+          "scoring": {
+            "full": "Mavi yıldızın sıcaklık ve ışımasının yüksek olduğunu belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Mavi yıldızların yakıtlarını çok daha hızlı tüketerek ömürlerinin daha kısa olduğunu, kırmızı yıldızların ise yakıtlarını yavaş tüketip çok uzun ömürlü olduğunu açıklar.",
-            "points": 8
-          }
-        ],
-        "full_credit": "Sıcaklık, ışıma gücü ve yaşam süresi (yakıt tüketim hızı) ilişkisini eksiksiz gerekçelendirir (15 Puan).",
-        "partial_credit": "Yalnızca sıcaklıkları karşılaştırır fakat yaşam süresi/yakıt tüketimine değinmez (7 Puan).",
-        "no_credit": "Kırmızı yıldızın daha sıcak olduğunu iddia eden yanlış yanıt (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB714-V7-M02-R2",
+          "text": "Mavi yıldızların yakıtlarını çok daha hızlı tüketerek ömürlerinin daha kısa olduğunu, kırmızı yıldızların yakıtlarını yavaş tüketip uzun ömürlü olduğunu açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB714-V7-K04",
+            "FB714-V7-K06"
+          ],
+          "scoring": {
+            "full": "Mavi yıldızın yakıtını hızlı tüketip kısa ömürlü olduğunu açıklar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB714-V7-M03": {
       "id": "FB714-V7-M03",
       "outcome_id": "FB.7.1.4",
-      "difficulty": "ORTA",
-      "points": 15,
-      "title": "Işık Yılı Kavramının Düzeltilmesi",
-      "prompt": "Bir fen projesinde sunum yapan bir öğrenci 'Güneş'e en yakın yıldız olan Proxima Centauri bize 4.2 ışık yılı uzaklıktadır; demek ki ışık yılı evrendeki en uzun zaman birimidir' ifadesini kullanmıştır. Bu öğrencinin cümlesindeki kavram yanılgısını tespit ediniz ve ışık yılının gerçek bilimsel tanımını yaparak düzeltiniz.",
+      "difficulty": "medium",
+      "title": "Işık yılı kavramı",
+      "stem": "Bir fen projesinde sunum yapan bir öğrenci 'Güneş'e en yakın yıldız olan Proxima Centauri bize 4.2 ışık yılı uzaklıktadır; demek ki ışık yılı evrendeki en uzun zaman birimidir' ifadesini kullanmıştır. Bu öğrencinin cümlesindeki kavram yanılgısını tespit ediniz ve ışık yılının gerçek bilimsel tanımını yaparak düzeltiniz.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-star-depth-3d.svg",
-        "alt": "Işık yılı uzaklık ve kozmik mesafe modeli"
+        "alt": "Işık yılı mesafe modeli",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Işık yılının zaman birimi değil, UZAKLIK (mesafe) birimi olduğunu açıkça vurgulayarak öğrencinin hatasını belirtir.",
-            "points": 8
+      "rubric": [
+        {
+          "id": "FB714-V7-M03-R1",
+          "text": "Işık yılının zaman birimi değil, UZAKLIK (mesafe) birimi olduğunu açıkça vurgulayarak hatayı belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB714-V7-K07"
+          ],
+          "scoring": {
+            "full": "Zaman değil uzaklık birimi olduğunu belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Işık yılının 'ışığın boşlukta 1 yılda aldığı mesafe' (yaklaşık 9.46 trilyon km) olduğunu doğru tanımlar.",
-            "points": 7
-          }
-        ],
-        "full_credit": "Kavram yanılgısını (zaman değil uzaklık) net tespit eder ve ışık yılının doğru tanımını eksiksiz yapar (15 Puan).",
-        "partial_credit": "Uzaklık birimi olduğunu söyler ancak tanımını eksik yapar (8 Puan).",
-        "no_credit": "Öğrencinin ifadesinin doğru olduğunu savunan yanıt (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB714-V7-M03-R2",
+          "text": "Işık yılının 'ışığın boşlukta 1 yılda aldığı mesafe' (yaklaşık 9.5 trilyon km) olduğunu doğru tanımlar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB714-V7-K07"
+          ],
+          "scoring": {
+            "full": "Işığın 1 yılda aldığı yol olduğunu tanımlar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB714-V7-M04": {
       "id": "FB714-V7-M04",
       "outcome_id": "FB.7.1.4",
-      "difficulty": "ORTA",
-      "points": 15,
-      "title": "Takımyıldızların Üç Boyutlu Doğası",
-      "prompt": "Şemada Dünya'dan bakıldığında gökyüzünde yan yana bir arada görünen A, B ve C yıldızlarının Dünya'ya gerçek uzaklıkları (50, 450 ve 1200 ışık yılı) modellenmiştir. Bu şemaya göre gökyüzünde bir arada görünen takımyıldız üyelerinin uzaydaki gerçek fiziksel konumları ve aralarında kütle çekimsel bir bağ olup olmadığı hakkında ne söylenebilir? Açıklayınız.",
+      "difficulty": "medium",
+      "title": "Takımyıldız derinliği",
+      "stem": "Şemada Dünya'dan bakıldığında gökyüzünde yan yana bir arada görünen A, B ve C yıldızlarının Dünya'ya gerçek uzaklıkları (50, 450 ve 1200 ışık yılı) modellenmiştir. Bu şemaya göre gökyüzünde bir arada görünen takımyıldız üyelerinin uzaydaki gerçek fiziksel konumları ve aralarında kütle çekimsel bir bağ olup olmadığı hakkında ne söylenebilir? Açıklayınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-star-depth-3d.svg",
-        "alt": "Takımyıldızların 3 boyutlu uzay derinliği şeması"
+        "alt": "Takımyıldızların uzay derinliği modeli",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Takımyıldızdaki yıldızların uzayda gerçekte yan yana olmadığını, Dünya'ya uzaklıklarının birbirinden tamamen farklı olduğunu belirtir.",
-            "points": 8
+      "rubric": [
+        {
+          "id": "FB714-V7-M04-R1",
+          "text": "Takımyıldızdaki yıldızların uzayda gerçekte yan yana olmadığını, Dünya'ya uzaklıklarının birbirinden tamamen farklı olduğunu belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB714-V7-K08"
+          ],
+          "scoring": {
+            "full": "Gerçekte yan yana olmadıklarını ve uzaklıkların farklı olduğunu belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Aralarında doğrudan fiziksel bir kütle çekimsel bağ bulunmadığını, yalnızca Dünya'dan bakıldığında aynı doğrultuda görüldüklerini açıklar.",
-            "points": 7
-          }
-        ],
-        "full_credit": "Derinlik farkını (uzaklıkların farklılığını) ve kütle çekimsel bağ olmadığını net biçimde gerekçelendirir (15 Puan).",
-        "partial_credit": "Yalnızca birbirine uzak olduklarını söyler fakat doğrultu/çekim bağı detayını vermez (7-8 Puan).",
-        "no_credit": "Yıldızların birbirine bağlı ve gerçekte yan yana olduğunu iddia eden yanıt (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB714-V7-M04-R2",
+          "text": "Aralarında doğrudan fiziksel bir kütle çekimsel bağ bulunmadığını, yalnızca Dünya'dan bakıldığında aynı doğrultuda görüldüklerini açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB714-V7-K08"
+          ],
+          "scoring": {
+            "full": "Aralarında kütle çekimsel bağ olmadığını, aynı doğrultuda göründüklerini açıklar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB714-V7-H01": {
       "id": "FB714-V7-H01",
       "outcome_id": "FB.7.1.4",
-      "difficulty": "ZOR",
-      "points": 20,
-      "title": "Süpernova Sonrası Çatallanma ve Kara Delik Eşiği",
-      "prompt": "Büyük kütleli yıldızların yaşamlarının sonunda geçirdikleri süpernova patlaması şemada gösterilmiştir. Ancak süpernova patlaması geçiren tüm yıldızlar kara deliğe dönüşmez; bir kısmı nötron yıldızı olur.\n1) Süpernova sonrasında bir yıldızın nötron yıldızına mı yoksa kara deliğe mi dönüşeceğini belirleyen temel bilimsel kriter nedir?\n2) Kara deliklerin çekim gücünün ışığın dahi kaçamayacağı kadar devasa olmasının sebebini çekirdek kütlesi ve hacimsel sıkışma açısından gerekçelendiriniz.",
+      "difficulty": "hard",
+      "title": "Süpernova ve kara delik eşiği",
+      "stem": "Büyük kütleli yıldızların yaşamlarının sonunda geçirdikleri süpernova patlaması şemada gösterilmiştir. Ancak süpernova patlaması geçiren tüm yıldızlar kara deliğe dönüşmez; bir kısmı nötron yıldızı olur.\n1) Süpernova sonrasında bir yıldızın nötron yıldızına mı yoksa kara deliğe mi dönüşeceğini belirleyen temel bilimsel kriter nedir?\n2) Kara deliklerin çekim gücünün ışığın dahi kaçamayacağı kadar devasa olmasının sebebini çekirdek kütlesi ve hacimsel sıkışma açısından gerekçelendiriniz.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-large-star-cycle.svg",
-        "alt": "Süpernova sonrası nötron yıldızı ve kara delik çatallanması"
+        "alt": "Süpernova sonrası nötron yıldızı ve kara delik çatallanması",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Temel kriterin süpernova patlamasından sonra geriye kalan çekirdeğin kütlesi olduğunu açıkça belirtir.",
-            "points": 10
+      "rubric": [
+        {
+          "id": "FB714-V7-H01-R1",
+          "text": "Temel kriterin süpernova patlamasından sonra geriye kalan çekirdeğin kütlesi olduğunu açıkça belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB714-V7-K04"
+          ],
+          "scoring": {
+            "full": "Kalan çekirdek kütlesi olduğunu belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Kara delik oluşumunda devasa çekirdek kütlesinin aşırı küçük bir hacme sıkışarak muazzam bir kütle çekim alanı oluşturduğunu açıklar.",
-            "points": 10
-          }
-        ],
-        "full_credit": "Kalan çekirdek kütlesi eşiğini ve aşırı kütlenin küçük hacme sıkışmasıyla ışığı dahi büken çekim alanını eksiksiz açıklar (20 Puan).",
-        "partial_credit": "Yalnızca kalan kütle kriterini yazar veya çekim gücünü kütle-hacim sıkışmasıyla tam bağdaştıramaz (10 Puan).",
-        "no_credit": "Rastgele veya yıldızın rengine bağlı olduğunu iddia eden yanlış yanıt (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB714-V7-H01-R2",
+          "text": "Kara delik oluşumunda devasa çekirdek kütlesinin aşırı küçük bir hacme sıkışarak muazzam bir kütle çekim alanı oluşturduğunu açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB714-V7-K04"
+          ],
+          "scoring": {
+            "full": "Aşırı kütlenin küçük hacme sıkışmasıyla çekim alanının oluştuğunu açıklar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB714-V7-H02": {
       "id": "FB714-V7-H02",
       "outcome_id": "FB.7.1.4",
-      "difficulty": "ZOR",
-      "points": 20,
-      "title": "Kozmik Zaman Yolculuğu ve Derin Uzay",
-      "prompt": "Güneş Sistemi'ne en yakın yıldız olan Proxima Centauri 4.2 ışık yılı uzaklıktadır. Bize en yakın sarmal gökada olan Andromeda Gökadası ise yaklaşık 2.5 milyon ışık yılı uzaklıktadır. Teleskopla bu iki gök cismine bakan bir araştırmacı için:\n1) Gözlemlediği anda her iki cismin evrenin hangi zaman dilimlerindeki hallerini gördüğünü açıklayınız.\n2) 'Gökyüzüne bakmak, evrenin geçmişine bakmaktır' bilimsel ilkesini ışığın sonlu yayılma sürati ve ışık yılı birimiyle ilişkilendirerek çok basamaklı bir gerekçeyle sentezleyiniz.",
+      "difficulty": "hard",
+      "title": "Kozmik zaman ve derin uzay",
+      "stem": "Güneş Sistemi'ne en yakın yıldız olan Proxima Centauri 4.2 ışık yılı uzaklıktadır. Bize en yakın sarmal gökada olan Andromeda Gökadası ise yaklaşık 2.5 milyon ışık yılı uzaklıktadır. Teleskopla bu iki gök cismine bakan bir araştırmacı için:\n1) Gözlemlediği anda her iki cismin evrenin hangi zaman dilimlerindeki hallerini gördüğünü açıklayınız.\n2) 'Gökyüzüne bakmak, evrenin geçmişine bakmaktır' bilimsel ilkesini ışığın yayılma süresi ve ışık yılı birimiyle ilişkilendirerek gerekçeli açıklayınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-star-depth-3d.svg",
-        "alt": "Kozmik mesafeler ve geçmişi görmek şeması"
+        "alt": "Kozmik uzaklıklar ve ışık yılı modeli",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Proxima Centauri'nin 4.2 yıl önceki, Andromeda'nın ise 2.5 milyon yıl önceki halinin gözlemlendiğini net olarak belirtir.",
-            "points": 10
+      "rubric": [
+        {
+          "id": "FB714-V7-H02-R1",
+          "text": "Proxima Centauri'nin 4.2 yıl önceki, Andromeda'nın ise 2.5 milyon yıl önceki halinin gözlemlendiğini net olarak belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB714-V7-K07"
+          ],
+          "scoring": {
+            "full": "4.2 yıl önceki ve 2.5 milyon yıl önceki halleri olduğunu belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Işığın saniyede 300.000 km gibi sonlu bir süratle yayıldığını, devasa mesafeleri katetmesinin zaman aldığını ve bu yüzden gözümüze ulaşan ışığın geçmişten gelen bir bilgi taşıdığını gerekçelendirir.",
-            "points": 10
-          }
-        ],
-        "full_credit": "Her iki cismin geçmiş zaman karşılıklarını doğru yazar ve ışığın sonlu süratiyle geçmişe bakma ilkesini sentezler (20 Puan).",
-        "partial_credit": "Cisimlerin geçmiş sürelerini doğru verir fakat ışığın sürati ve bilgi iletimi sentezini eksik bırakır (10 Puan).",
-        "no_credit": "Görüntülerin anlık olduğunu iddia eden veya ışık yılını zaman birimi kabul eden yanıt (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB714-V7-H02-R2",
+          "text": "Işığın boşlukta yayılmasının zaman aldığını, devasa mesafeleri aşması gerektiği için gözümüze ulaşan ışığın geçmişten gelen bir bilgi taşıdığını gerekçelendirir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB714-V7-K07"
+          ],
+          "scoring": {
+            "full": "Işığın yayılmasının zaman alması ve geçmişten gelmesiyle gerekçelendirir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB722-V7-E01": {
       "id": "FB722-V7-E01",
       "outcome_id": "FB.7.2.2",
-      "difficulty": "KOLAY",
-      "points": 10,
-      "title": "Liman Römorkörünün Kinetik Enerjisi",
-      "prompt": "Şemada kütlesi m = 5000 kg olan bir liman römorkörünün v = 10 m/s sabit süratle ilerlediği gösterilmektedir. Bu teknenin sahip olduğu mekanik enerji türünü ve bu enerjinin büyüklüğünü belirleyen iki temel fiziksel değişkeni yazınız.",
+      "difficulty": "easy",
+      "title": "Liman römorkörünün enerjisi",
+      "stem": "Şemada kütlesi 5000 kg olan bir liman römorkörünün sabit süratle ilerlediği gösterilmektedir. Bu teknenin sahip olduğu mekanik enerji türünü ve bu enerjinin büyüklüğünü belirleyen iki temel fiziksel değişkeni yazınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-kinetic-motion.svg",
-        "alt": "v = 10 m/s süratle ilerleyen römorkör teknesi şeması"
+        "alt": "Süratle ilerleyen römorkör teknesi şeması",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Enerji türünün 'Kinetik Enerji' (hareket enerjisi) olduğunu doğru belirtir.",
-            "points": 5
+      "rubric": [
+        {
+          "id": "FB722-V7-E01-R1",
+          "text": "Enerji türünün Kinetik Enerji (hareket enerjisi) olduğunu doğru belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB722-V7-K01"
+          ],
+          "scoring": {
+            "full": "Kinetik enerji olduğunu belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Bağlı olduğu iki değişkenin 'Cismin Kütlesi' ve 'Cismin Sürati' olduğunu yazar.",
-            "points": 5
-          }
-        ],
-        "full_credit": "Kinetik enerji olduğunu ve kütle ile sürate bağlı olduğunu eksiksiz belirtir (10 Puan).",
-        "partial_credit": "Yalnızca kinetik enerji der veya değişkenlerden sadece birini yazar (5 Puan).",
-        "no_credit": "Potansiyel enerji veya ilgisiz değişkenler (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB722-V7-E01-R2",
+          "text": "Bağlı olduğu iki değişkenin cismin kütlesi ve cismin sürati olduğunu yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB722-V7-K01",
+            "FB722-V7-K02",
+            "FB722-V7-K03"
+          ],
+          "scoring": {
+            "full": "Kütle ve sürat olduğunu yazar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB722-V7-E02": {
       "id": "FB722-V7-E02",
       "outcome_id": "FB.7.2.2",
-      "difficulty": "KOLAY",
-      "points": 10,
-      "title": "Duran Cismin Mekanik Enerjisi",
-      "prompt": "Yatay bir otopark zemininde park hâlinde durmakta olan bir otomobilin kinetik enerjisini ve yer seviyesine göre çekim potansiyel enerjisini gerekçesiyle değerlendiriniz.",
+      "difficulty": "easy",
+      "title": "Duran cismin enerjisi",
+      "stem": "Yatay bir otopark zemininde park hâlinde durmakta olan bir otomobilin kinetik enerjisini ve yer seviyesine göre çekim potansiyel enerjisini gerekçesiyle değerlendiriniz.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-motion-vs-rest.svg",
-        "alt": "Duran araçta kinetik enerjinin sıfır olması şeması"
+        "alt": "Duran araç ve hareketli araç karşılaştırma şeması",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Araç durduğu için (sürati sıfır olduğu için) kinetik enerjisinin 0 (sıfır) olduğunu açıklar.",
-            "points": 5
+      "rubric": [
+        {
+          "id": "FB722-V7-E02-R1",
+          "text": "Araç durduğu için (sürati sıfır olduğu için) kinetik enerjisinin sıfır olduğunu açıklar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB722-V7-K01"
+          ],
+          "scoring": {
+            "full": "Sürati sıfır olduğu için kinetik enerjisi sıfırdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Araç yer seviyesinde olduğu için (yüksekliği h = 0 olduğu için) çekim potansiyel enerjisinin de 0 (sıfır) olduğunu açıklar.",
-            "points": 5
-          }
-        ],
-        "full_credit": "Hem kinetik enerjinin sıfır (hareketsiz) hem çekim potansiyelinin sıfır (yer seviyesinde) olduğunu gerekçeleriyle açıklar (10 Puan).",
-        "partial_credit": "Kinetik enerjinin sıfır olduğunu söyler fakat potansiyel enerjiyi açıklayamaz (5 Puan).",
-        "no_credit": "Hatalı veya ilgisiz açıklama (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB722-V7-E02-R2",
+          "text": "Araç yer seviyesinde olduğu için (yüksekliği sıfır olduğu için) çekim potansiyel enerjisinin sıfır olduğunu açıklar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB722-V7-K04"
+          ],
+          "scoring": {
+            "full": "Yer seviyesinde olduğu için çekim potansiyel enerjisi sıfırdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB722-V7-E03": {
       "id": "FB722-V7-E03",
       "outcome_id": "FB.7.2.2",
-      "difficulty": "KOLAY",
-      "points": 10,
-      "title": "Havada Asılı Duran Salıncak",
-      "prompt": "Bir çocuk oyun parkındaki salıncak oturağını yerden 2 metre yukarıya doğru çekip hareketsiz tutmaktadır. Bu oturağın sahip olduğu enerji türünü ve bu enerjinin depolanma nedenini yazınız.",
+      "difficulty": "easy",
+      "title": "Havada asılı salıncak",
+      "stem": "Bir çocuk oyun parkındaki salıncak oturağını yerden 2 metre yukarıya doğru çekip hareketsiz tutmaktadır. Bu oturağın sahip olduğu enerji türünü ve bu enerjinin depolanma nedenini yazınız.",
       "visual": {
         "kind": "image",
-        "asset": "assets/diagram-potential-experiment.svg",
-        "alt": "Yerden yükseklikte konumlandırılan cismin potansiyel enerjisi"
+        "asset": "assets/swing.jpg",
+        "alt": "Salıncak oturağı fotoğrafı",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Enerji türünün 'Çekim Potansiyel Enerjisi' olduğunu doğru belirtir.",
-            "points": 5
+      "rubric": [
+        {
+          "id": "FB722-V7-E03-R1",
+          "text": "Enerji türünün Çekim Potansiyel Enerjisi olduğunu doğru belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB722-V7-K04"
+          ],
+          "scoring": {
+            "full": "Çekim potansiyel enerjisi olduğunu belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Yerden yüksekte bulunduğu (konumundan dolayı yer çekimine karşı iş yapıldığı) için depolandığını açıklar.",
-            "points": 5
-          }
-        ],
-        "full_credit": "Çekim potansiyel enerjisi olduğunu ve yerden yükseklikte depolandığını açıklar (10 Puan).",
-        "partial_credit": "Yalnızca potansiyel enerji der fakat nedenini açıklayamaz (5 Puan).",
-        "no_credit": "Kinetik enerji olduğunu iddia eden yanlış yanıt (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB722-V7-E03-R2",
+          "text": "Yerden yüksekte bulunduğu (konumundan dolayı yer çekimine karşı depolandığı) için olduğunu açıklar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB722-V7-K04"
+          ],
+          "scoring": {
+            "full": "Yerden yüksekte bulunduğu için depolandığını açıklar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB722-V7-E04": {
       "id": "FB722-V7-E04",
       "outcome_id": "FB.7.2.2",
-      "difficulty": "KOLAY",
-      "points": 10,
-      "title": "Aynı Yükseklikteki Farklı Kütleler",
-      "prompt": "Şemadaki kum havuzunun üzerinde, aynı h yüksekliğinde tutulan 2 kg'lık metal küre ile 5 kg'lık metal küre bulunmaktadır. Bu iki kürenin çekim potansiyel enerjilerini karşılaştırarak hangisinin daha fazla enerji depoladığını gerekçesiyle yazınız.",
+      "difficulty": "easy",
+      "title": "Aynı yükseklikte farklı kütleler",
+      "stem": "Şemadaki kum havuzunun üzerinde, aynı yükseklikte tutulan 2 kg kütleli metal küre ile 5 kg kütleli metal küre bulunmaktadır. Bu iki kürenin çekim potansiyel enerjilerini karşılaştırarak hangisinin daha fazla enerji depoladığını gerekçesiyle yazınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-potential-experiment.svg",
-        "alt": "Aynı yükseklikten kum havuzuna bırakılan farklı kütleli küreler"
+        "alt": "Kum havuzu deney şeması",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "5 kg'lık kürenin çekim potansiyel enerjisinin daha büyük olduğunu belirtir.",
-            "points": 5
+      "rubric": [
+        {
+          "id": "FB722-V7-E04-R1",
+          "text": "5 kg kütleli kürenin çekim potansiyel enerjisinin daha büyük olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB722-V7-K06"
+          ],
+          "scoring": {
+            "full": "5 kg kütleli kürenin enerjisinin büyük olduğunu belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Yükseklikler eşitken kütlesi (ağırlığı) büyük olan cismin daha fazla potansiyel enerji depoladığını açıklar.",
-            "points": 5
-          }
-        ],
-        "full_credit": "5 kg'lık kürenin enerjisinin büyük olduğunu ve kütle-potansiyel enerji doğru orantısını açıklar (10 Puan).",
-        "partial_credit": "5 kg'lık küreyi seçer fakat gerekçeyi eksik açıklar (5 Puan).",
-        "no_credit": "Eşit olduklarını veya 2 kg'lığın daha çok enerji depoladığını söyleyen yanıt (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB722-V7-E04-R2",
+          "text": "Yükseklikler eşitken kütlesi (ağırlığı) büyük olan cismin daha fazla potansiyel enerji depoladığını açıklar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB722-V7-K06"
+          ],
+          "scoring": {
+            "full": "Yükseklik eşitken kütlesi büyük olanın enerjisi fazladır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB722-V7-E05": {
       "id": "FB722-V7-E05",
       "outcome_id": "FB.7.2.2",
-      "difficulty": "KOLAY",
-      "points": 10,
-      "title": "Sıkıştırılan Sarmal Yay",
-      "prompt": "Şemada bir sarmal yayın önüne top konulmuş ve yay Δx = 5 cm geriye doğru sıkıştırılmıştır. Bu durumda:\n1) Sıkışmış yayda depolanan enerji türünü yazınız.\n2) Yay serbest bırakıldığında yaydaki enerjinin topa hangi enerji türü olarak aktarılacağını belirtiniz.",
+      "difficulty": "easy",
+      "title": "Sıkıştırılan sarmal yay",
+      "stem": "Şemada bir sarmal yayın önüne top konulmuş ve yay geriye doğru sıkıştırılmıştır. Bu durumda:\n1) Sıkışmış yayda depolanan enerji türünü yazınız.\n2) Yay serbest bırakıldığında yaydaki enerjinin topa hangi enerji türü olarak aktarılacağını belirtiniz.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-elastic-spring.svg",
-        "alt": "Sıkıştırılmış sarmal yay ve fırlatılacak top şeması"
+        "alt": "Sıkıştırılmış yay şeması",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Sıkışmış yayda depolanan enerjinin 'Esneklik Potansiyel Enerjisi' olduğunu yazar.",
-            "points": 5
+      "rubric": [
+        {
+          "id": "FB722-V7-E05-R1",
+          "text": "Sıkışmış yayda depolanan enerjinin Esneklik Potansiyel Enerjisi olduğunu yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB722-V7-K07"
+          ],
+          "scoring": {
+            "full": "Esneklik potansiyel enerjisi olduğunu yazar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Yay serbest kaldığında topa 'Kinetik Enerji' (hareket enerjisi) aktarılacağını belirtir.",
-            "points": 5
-          }
-        ],
-        "full_credit": "Esneklik potansiyel enerjisi ve ardından kinetik enerjiye dönüşümünü eksiksiz yazar (10 Puan).",
-        "partial_credit": "Yalnızca bir enerji türünü doğru yazar (5 Puan).",
-        "no_credit": "İlgisiz veya hatalı enerji türleri (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB722-V7-E05-R2",
+          "text": "Yay serbest kaldığında topa Kinetik Enerji (hareket enerjisi) aktarılacağını belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB722-V7-K01",
+            "FB722-V7-K07"
+          ],
+          "scoring": {
+            "full": "Kinetik enerjiye dönüşeceğini yazar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB722-V7-E06": {
       "id": "FB722-V7-E06",
       "outcome_id": "FB.7.2.2",
-      "difficulty": "KOLAY",
-      "points": 10,
-      "title": "Günlük Hayatta Enerji Eşleştirmesi",
-      "prompt": "Aşağıdaki üç duruma karşılık gelen temel mekanik enerji türlerini (Kinetik Enerji, Çekim Potansiyel Enerjisi, Esneklik Potansiyel Enerjisi) eşleştiriniz:\n1) Gerilmiş bir ok yayı\n2) Pistte hızla koşan bir atlet\n3) Baraj gölünde yüksekte biriken durgun su",
-      "visual": {
-        "kind": "image",
-        "asset": "assets/diagram-elastic-spring.svg",
-        "alt": "Esnek yay ve mekanik enerji çeşitleri modeli"
-      },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "1: Esneklik Potansiyel Enerjisi eşleştirmesini yapar.",
-            "points": 3
+      "difficulty": "easy",
+      "title": "Günlük hayatta enerji türleri",
+      "stem": "Aşağıdaki üç duruma karşılık gelen temel mekanik enerji türlerini (Kinetik Enerji, Çekim Potansiyel Enerjisi, Esneklik Potansiyel Enerjisi) eşleştiriniz:\n1) Gerilmiş bir ok yayı\n2) Pistte hızla koşan bir atlet\n3) Baraj gölünde yüksekte biriken durgun su",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB722-V7-E06-R1",
+          "text": "1: Esneklik Potansiyel Enerjisi eşleştirmesini yapar.",
+          "points": 3,
+          "weight": 3,
+          "return_card_ids": [
+            "FB722-V7-K07"
+          ],
+          "scoring": {
+            "full": "1: Esneklik potansiyeli.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "2: Kinetik Enerji eşleştirmesini yapar.",
-            "points": 4
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB722-V7-E06-R2",
+          "text": "2: Kinetik Enerji eşleştirmesini yapar.",
+          "points": 4,
+          "weight": 4,
+          "return_card_ids": [
+            "FB722-V7-K01"
+          ],
+          "scoring": {
+            "full": "2: Kinetik enerji.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "3: Çekim Potansiyel Enerjisi eşleştirmesini yapar.",
-            "points": 3
-          }
-        ],
-        "full_credit": "Her üç eşleştirmeyi de eksiksiz ve doğru yapar (10 Puan).",
-        "partial_credit": "İki eşleştirmeyi doğru yapar (7 Puan) veya bir eşleştirmeyi doğru yapar (3-4 Puan).",
-        "no_credit": "Tümü yanlış eşleştirme (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB722-V7-E06-R3",
+          "text": "3: Çekim Potansiyel Enerjisi eşleştirmesini yapar.",
+          "points": 3,
+          "weight": 3,
+          "return_card_ids": [
+            "FB722-V7-K04"
+          ],
+          "scoring": {
+            "full": "3: Çekim potansiyeli.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB722-V7-M01": {
       "id": "FB722-V7-M01",
       "outcome_id": "FB.7.2.2",
-      "difficulty": "ORTA",
-      "points": 15,
-      "title": "Kamyon ve Otomobilin Fren Mesafesi",
-      "prompt": "Aynı otoyolda 90 km/h eşit süratle seyreden 15 tonluk bir kamyon ile 1.5 tonluk bir otomobil aniden frene basıyor.\n1) Hangi aracın frene basmadan hemen önce daha fazla kinetik enerjiye sahip olduğunu gerekçesiyle açıklayınız.\n2) Süratleri eşit olmasına rağmen kamyonun durma (fren) mesafesinin otomobilden çok daha uzun olmasını kinetik enerji-kütle ilişkisiyle açıklayınız.",
+      "difficulty": "medium",
+      "title": "Kamyon ve otomobilin fren mesafesi",
+      "stem": "Aynı yolda eşit süratle seyreden 15 tonluk bir kamyon ile 1.5 tonluk bir otomobil aniden frene basıyor.\n1) Hangi aracın frene basmadan hemen önce daha fazla kinetik enerjiye sahip olduğunu gerekçesiyle açıklayınız.\n2) Süratleri eşit olmasına rağmen kamyonun durma (fren) mesafesinin otomobilden çok daha uzun olmasını kinetik enerji-kütle ilişkisiyle açıklayınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-kinetic-experiment.svg",
-        "alt": "Eşit süratteki farklı kütleli araçların fren mesafesi deneyi"
+        "alt": "Kontrollü kinetik enerji deneyi",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Süratler eşitken kütlesi büyük olan kamyonun kinetik enerjisinin çok daha büyük olduğunu belirtir.",
-            "points": 7
+      "rubric": [
+        {
+          "id": "FB722-V7-M01-R1",
+          "text": "Süratler eşitken kütlesi büyük olan kamyonun kinetik enerjisinin çok daha büyük olduğunu belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB722-V7-K03"
+          ],
+          "scoring": {
+            "full": "Kamyonun kütlesi büyük olduğu için kinetik enerjisi fazladır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Daha büyük kinetik enerjiyi sıfırlamak için sürtünme kuvvetinin daha uzun mesafede iş yapması gerektiğini, bu yüzden kamyonun fren mesafesinin uzun olduğunu açıklar.",
-            "points": 8
-          }
-        ],
-        "full_credit": "Kamyonun kinetik enerjisinin büyüklüğünü kütleyle bağlar ve fren mesafesinin uzunluğunu enerji büyüklüğüyle bilimsel olarak açıklar (15 Puan).",
-        "partial_credit": "Kamyonun enerjisinin büyük olduğunu söyler fakat fren mesafesi gerekçesini eksik açıklar (7 Puan).",
-        "no_credit": "Otomobilin daha çok kinetik enerji taşıdığını iddia eden yanıt (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB722-V7-M01-R2",
+          "text": "Daha büyük kinetik enerjiyi sıfırlamak için sürtünmenin daha uzun mesafede etki etmesi gerektiğini, bu yüzden kamyonun fren mesafesinin uzun olduğunu açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB722-V7-K02",
+            "FB722-V7-K03"
+          ],
+          "scoring": {
+            "full": "Enerji büyük olduğu için fren mesafesi uzundur.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB722-V7-M02": {
       "id": "FB722-V7-M02",
       "outcome_id": "FB.7.2.2",
-      "difficulty": "ORTA",
-      "points": 15,
-      "title": "Kontrollü Deney: Kum Havuzunda Değişkenler",
-      "prompt": "Şemadaki kum havuzu deneyinde:\n• 1. Düzenek: m kütleli küre, 2h yüksekliğinde\n• 2. Düzenek: 2m kütleli küre, 2h yüksekliğinde\n• 3. Düzenek: m kütleli küre, h yüksekliğinde\nBir öğrenci çekim potansiyel enerjisine:\na) 'Kütlenin etkisini' araştırmak için hangi iki düzeneği seçmelidir?\nb) 'Yüksekliğin etkisini' araştırmak için hangi iki düzeneği seçmelidir?\nSeçimlerinizi kontrollü deney kurallarına (bağımsız ve sabit tutulan değişkenler) göre gerekçelendiriniz.",
+      "difficulty": "medium",
+      "title": "Kum havuzu deney düzenekleri",
+      "stem": "Şemadaki kum havuzu deneyinde:\n• 1. Düzenek: m kütleli küre, 2 kat yükseklikte\n• 2. Düzenek: 2m kütleli küre, 2 kat yükseklikte\n• 3. Düzenek: m kütleli küre, 1 kat yükseklikte\nBir öğrenci çekim potansiyel enerjisine:\na) 'Kütlenin etkisini' araştırmak için hangi iki düzeneği seçmelidir?\nb) 'Yüksekliğin etkisini' araştırmak için hangi iki düzeneği seçmelidir?\nSeçimlerinizi kontrollü deney kurallarına göre gerekçelendiriniz.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-potential-experiment.svg",
-        "alt": "Kum havuzu kontrollü çekim potansiyel deneyi"
+        "alt": "Kum havuzu deney düzenekleri",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Kütlenin etkisi için 1 ve 2 numaralı düzenekleri seçer (Yükseklik 2h sabit, kütleler farklı).",
-            "points": 7
+      "rubric": [
+        {
+          "id": "FB722-V7-M02-R1",
+          "text": "Kütlenin etkisi için 1 ve 2 numaralı düzenekleri seçer (Yükseklikler eşit, kütleler farklı).",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB722-V7-K06"
+          ],
+          "scoring": {
+            "full": "1 ve 2 numaralı düzenekleri seçer ve yüksekliğin sabit olduğunu açıklar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Yüksekliğin etkisi için 1 ve 3 numaralı düzenekleri seçer (Kütle m sabit, yükseklikler 2h ve h farklı).",
-            "points": 8
-          }
-        ],
-        "full_credit": "Her iki düzenek çiftini doğru seçer ve sabit tutulan/bağımsız değişkenleri bilimsel olarak gerekçelendirir (15 Puan).",
-        "partial_credit": "Yalnızca bir düzenek seçimini ve gerekçesini doğru yapar (7-8 Puan).",
-        "no_credit": "Rastgele veya yanlış düzenek eşleştirmeleri (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB722-V7-M02-R2",
+          "text": "Yüksekliğin etkisi için 1 ve 3 numaralı düzenekleri seçer (Kütleler eşit, yükseklikler farklı).",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB722-V7-K05"
+          ],
+          "scoring": {
+            "full": "1 ve 3 numaralı düzenekleri seçer ve kütlenin sabit olduğunu açıklar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB722-V7-M03": {
       "id": "FB722-V7-M03",
       "outcome_id": "FB.7.2.2",
-      "difficulty": "ORTA",
-      "points": 15,
-      "title": "Farklı Kalınlıktaki Yayların Enerjisi",
-      "prompt": "Özdeş iki kutunun içine biri ince çelik telden, diğeri kalın çelik telden yapılmış iki sarmal yay yerleştirilmiştir. Her iki yay da cetvelle eşit miktarda (10 cm) sıkıştırılarak önlerine özdeş bilyeler konuluyor. Yaylar aynı anda serbest bırakıldığında:\n1) Hangi yayın önündeki bilyenin daha uzağa fırlayacağını gerekçesiyle açıklayınız.\n2) Bu deneydeki bağımsız, bağımlı ve sabit tutulan değişkenleri yazınız.",
+      "difficulty": "medium",
+      "title": "Farklı kalınlıktaki yaylar",
+      "stem": "Özdeş iki kutunun içine biri ince telden, diğeri kalın telden yapılmış iki sarmal yay yerleştirilmiştir. Her iki yay da cetvelle eşit miktarda (10 cm) sıkıştırılarak önlerine özdeş bilyeler konuluyor. Yaylar serbest bırakıldığında:\n1) Hangi yayın önündeki bilyenin daha uzağa fırlayacağını gerekçesiyle açıklayınız.\n2) Bu deneydeki bağımsız değişkeni ve bağımlı değişkeni yazınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-spring-thickness.svg",
-        "alt": "Farklı kalınlıktaki yayların esneklik enerjisi ve bilye menzili"
+        "alt": "Farklı kalınlıktaki yaylar deneyi",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Kalın yayın daha sert olması sebebiyle aynı sıkışmada daha fazla esneklik potansiyel enerjisi depolayacağını ve bilyeyi daha uzağa fırlatacağını belirtir.",
-            "points": 8
+      "rubric": [
+        {
+          "id": "FB722-V7-M03-R1",
+          "text": "Kalın yayın daha sert olması sebebiyle aynı sıkışmada daha fazla esneklik potansiyel enerjisi depolayacağını ve bilyeyi daha uzağa fırlatacağını belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB722-V7-K07"
+          ],
+          "scoring": {
+            "full": "Kalın yayın daha çok enerji depolayıp daha uzağa fırlatacağını açıklar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Bağımsız değişken: Yayın kalınlığı/cinsi; Bağımlı değişken: Bilyenin fırlama mesafesi / enerjisi; Sabit tutulan: Sıkışma miktarı ve bilye kütlesi.",
-            "points": 7
-          }
-        ],
-        "full_credit": "Kalın yayın bilyeyi daha uzağa fırlatacağını gerekçelendirir ve değişkenleri eksiksiz sınıflandırır (15 Puan).",
-        "partial_credit": "Kalın yayı doğru açıklar fakat değişkenleri eksik veya hatalı yazar (8 Puan).",
-        "no_credit": "İnce yayın daha çok enerji depoladığını iddia eden yanıt (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB722-V7-M03-R2",
+          "text": "Bağımsız değişkenin yayın kalınlığı/cinsi; bağımlı değişkenin bilyenin fırlama mesafesi (enerji) olduğunu belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB722-V7-K07"
+          ],
+          "scoring": {
+            "full": "Bağımsız ve bağımlı değişkenleri doğru yazar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB722-V7-M04": {
       "id": "FB722-V7-M04",
       "outcome_id": "FB.7.2.2",
-      "difficulty": "ORTA",
-      "points": 15,
-      "title": "Uçmakta Olan Kuşun Mekanik Enerjisi",
-      "prompt": "Yerden 30 metre yükseklikte 15 m/s sabit süratle uçmakta olan bir göçmen kuşun mekanik enerjisini analiz ediniz. Bu kuşun aynı anda sahip olduğu enerji türlerini ve bu enerjilerin kuşun hangi fiziksel durumlarından kaynaklandığını gerekçelendiriniz.",
+      "difficulty": "medium",
+      "title": "Uçan kuşun mekanik enerjisi",
+      "stem": "Yerden 30 metre yükseklikte sabit süratle uçmakta olan bir göçmen kuşun mekanik enerjisini analiz ediniz. Bu kuşun aynı anda sahip olduğu enerji türlerini ve bu enerjilerin kuşun hangi fiziksel durumlarından kaynaklandığını gerekçelendiriniz.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-roller-coaster.svg",
-        "alt": "Yükseklik ve sürate sahip hareketlilerde enerji dağılımı"
+        "alt": "Enerji dönüşümü modeli",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "15 m/s süratle hareket ettiği için Kinetik Enerjiye sahip olduğunu açıklar.",
-            "points": 7
+      "rubric": [
+        {
+          "id": "FB722-V7-M04-R1",
+          "text": "Süratle hareket ettiği için Kinetik Enerjiye sahip olduğunu açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB722-V7-K01"
+          ],
+          "scoring": {
+            "full": "Hareketinden dolayı kinetik enerjisi olduğunu belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Yerden 30 m yükseklikte bulunduğu için Çekim Potansiyel Enerjisine sahip olduğunu açıklar; toplam mekanik enerjinin ikisinin toplamı olduğunu belirtir.",
-            "points": 8
-          }
-        ],
-        "full_credit": "Hem kinetik enerjiyi (süratten dolayı) hem çekim potansiyel enerjisini (yükseklikten dolayı) gerekçeleriyle açıklar (15 Puan).",
-        "partial_credit": "Yalnızca bir enerji türünü gerekçelendirir (7 Puan).",
-        "no_credit": "Sadece tek bir enerjinin var olabileceğini savunan yanıt (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB722-V7-M04-R2",
+          "text": "Yerden yüksekte bulunduğu için Çekim Potansiyel Enerjisine sahip olduğunu açıklar; toplam mekanik enerjinin ikisinin toplamı olduğunu belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB722-V7-K04",
+            "FB722-V7-K08"
+          ],
+          "scoring": {
+            "full": "Yüksekliğinden dolayı potansiyel enerjisi olduğunu belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB722-V7-H01": {
       "id": "FB722-V7-H01",
       "outcome_id": "FB.7.2.2",
-      "difficulty": "ZOR",
-      "points": 20,
-      "title": "Okçunun Yayı ve Enerji Dönüşümü",
-      "prompt": "Bir milli okçu antrenmanda yayı önce 10 cm gererek oku fırlatıyor, ikinci denemesinde ise yayı esneklik sınırını aşmadan 20 cm gererek aynı oku fırlatıyor.\n1) İkinci atışta yayda depolanan esneklik potansiyel enerjisindeki değişimi ve okun yaydan çıkış süratini birinci atışla karşılaştırınız.\n2) Yayın gerilmesinden okun hedefe saplanmasına kadar geçen süreçteki enerji dönüşüm zincirini (Esneklik Potansiyel ➔ ... ➔ ...) aşamalarıyla yazınız.",
+      "difficulty": "hard",
+      "title": "Okçunun yayı ve enerji dönüşümü",
+      "stem": "Bir okçu antrenmanda yayı önce 10 cm gererek oku fırlatıyor, ikinci denemesinde ise yayı esneklik sınırını aşmadan 20 cm gererek aynı oku fırlatıyor.\n1) İkinci atışta yayda depolanan esneklik potansiyel enerjisindeki değişimi ve okun çıkış süratini birinci atışla karşılaştırınız.\n2) Yayın gerilmesinden okun hedefe saplanmasına kadar geçen süreçteki enerji dönüşüm zincirini aşamalarıyla yazınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-elastic-spring.svg",
-        "alt": "Gerilen ok yayında esneklik potansiyeli ve kinetik enerji dönüşümü"
+        "alt": "Yay ve enerji dönüşümü şeması",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Yayın gerilme miktarı arttıkça depolanan esneklik potansiyel enerjisinin katlanarak artacağını ve okun çıkış süratinin çok daha yüksek olacağını açıklar.",
-            "points": 10
+      "rubric": [
+        {
+          "id": "FB722-V7-H01-R1",
+          "text": "Yayın gerilme miktarı arttıkça depolanan esneklik potansiyel enerjisinin artacağını ve okun çıkış süratinin çok daha yüksek olacağını açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB722-V7-K07"
+          ],
+          "scoring": {
+            "full": "Gerilme arttıkça enerjinin ve çıkış süratinin arttığını belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "Enerji dönüşüm zincirini: 'Yaydaki Esneklik Potansiyel Enerjisi ➔ Okun Kinetik Enerjisi ➔ Hedefe çarpınca Isı ve Ses Enerjisi' şeklinde eksiksiz yazar.",
-            "points": 10
-          }
-        ],
-        "full_credit": "Enerji artışını ve çıkış süratini gerekçelendirir, dönüşüm zincirini eksiksiz şematize eder (20 Puan).",
-        "partial_credit": "Enerjinin arttığını söyler fakat dönüşüm zincirindeki aşamaları eksik yazar (10 Puan).",
-        "no_credit": "Gerilme miktarının enerjiyi etkilemediğini iddia eden yanlış yanıt (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB722-V7-H01-R2",
+          "text": "Enerji dönüşüm zincirini: 'Yaydaki Esneklik Potansiyel Enerjisi -> Okun Kinetik Enerjisi -> Çarpınca Isı ve Ses Enerjisi' şeklinde eksiksiz yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB722-V7-K07",
+            "FB722-V7-K08"
+          ],
+          "scoring": {
+            "full": "Dönüşüm zincirini doğru aşamalarla yazar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     },
     "FB722-V7-H02": {
       "id": "FB722-V7-H02",
       "outcome_id": "FB.7.2.2",
-      "difficulty": "ZOR",
-      "points": 20,
-      "title": "Hız Treni (Roller Coaster) ve Mekanik Korunum",
-      "prompt": "Şemadaki sürtünmesiz hız treni rayında, tren A noktasından (en tepe, h1 yüksekliği) ilk hızsız harekete başlamaktadır. Tren B noktasından (yer seviyesi, en alt çukur) geçerek C noktasına (ikinci tepe, h2 yüksekliği, h2 < h1) tırmanmaktadır.\n1) A, B ve C noktalarındaki kinetik enerji ve çekim potansiyel enerjilerini büyükten küçüğe karşılaştırınız.\n2) Trenin B noktasında neden maksimum sürate ulaştığını ve C noktasındaki süratinin B noktasından neden daha küçük olduğunu mekanik enerjinin korunumu kanununa göre gerekçelendiriniz.",
+      "difficulty": "hard",
+      "title": "Hız treni ve mekanik korunum",
+      "stem": "Şemadaki sürtünmesiz hız treni rayında, tren A noktasından (en tepe) ilk hızsız harekete başlamaktadır. Tren B noktasından (yer seviyesi, en alt çukur) geçerek C noktasına (ikinci tepe, A'dan daha alçak) tırmanmaktadır.\n1) A, B ve C noktalarındaki kinetik enerji ve çekim potansiyel enerjilerini büyükten küçüğe karşılaştırınız.\n2) Trenin B noktasında neden maksimum sürate ulaştığını ve C noktasındaki süratinin B noktasından neden daha küçük olduğunu mekanik enerjinin korunumu kanununa göre gerekçelendiriniz.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-roller-coaster.svg",
-        "alt": "Hız treni ray profilinde A, B ve C noktaları enerji dönüşümü"
+        "alt": "Hız treni ray profili",
+        "fit": "contain"
       },
-      "rubric": {
-        "criteria": [
-          {
-            "description": "Potansiyel Enerji sıralaması: A > C > B (B'de sıfır); Kinetik Enerji sıralaması: B > C > A (A'da sıfır) olduğunu doğru karşılaştırır.",
-            "points": 10
+      "rubric": [
+        {
+          "id": "FB722-V7-H02-R1",
+          "text": "Potansiyel Enerji sıralaması: A > C > B (B'de sıfır); Kinetik Enerji sıralaması: B > C > A (A'da sıfır) olduğunu doğru karşılaştırır.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB722-V7-K08"
+          ],
+          "scoring": {
+            "full": "A, B ve C noktalarındaki enerji sıralamalarını doğru yapar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
           },
-          {
-            "description": "A'daki potansiyel enerjinin tamamının B'de kinetiğe dönüştüğünü, bu yüzden B'de süratin maksimum olduğunu; C'ye tırmanırken kinetik enerjinin bir kısmının tekrar potansiyele dönüşmesi sebebiyle süratin azaldığını mekanik korunumla açıklar.",
-            "points": 10
-          }
-        ],
-        "full_credit": "A, B ve C noktalarındaki enerji sıralamalarını tam yapar ve mekanik korunumu (potansiyel-kinetik dönüşümü) eksiksiz gerekçelendirir (20 Puan).",
-        "partial_credit": "Sıralamaları doğru yapar fakat B ve C arasındaki dönüşüm gerekçesini eksik açıklar (10 Puan).",
-        "no_credit": "Ters sıralama veya sürtünmesiz ortamda enerjinin yok olduğunu iddia eden yanıt (0 Puan)."
-      }
+          "content_revision": "6.0.0"
+        },
+        {
+          "id": "FB722-V7-H02-R2",
+          "text": "A'daki potansiyelin B'de tamamen kinetiğe dönüşerek sürati maksimum yaptığını, C'ye çıkarken kinetiğin bir kısmının tekrar potansiyele dönüştüğünü açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB722-V7-K08"
+          ],
+          "scoring": {
+            "full": "Potansiyel-kinetik dönüşümünü ve sürat değişimini açıklar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.0"
+        }
+      ]
     }
   }
 }
