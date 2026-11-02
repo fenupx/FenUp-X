@@ -300,7 +300,7 @@ export function questionVisualHtml(q, options = {}) {
                 <div class="${galleryClass}">
                     ${v.items.map(it => `
                         <figure>
-                            <img class="${imgClass}" src="${esc(ASSET_BASE + it.asset + '?v=7.6.0')}" alt="${esc(it.alt || it.label || '')}">
+                            <img class="${imgClass}" src="${esc(ASSET_BASE + it.asset + '?v=7.7.0')}" alt="${esc(it.alt || it.label || '')}">
                             <figcaption>${esc(it.label || '')}</figcaption>
                         </figure>
                     `).join('')}
@@ -314,7 +314,7 @@ export function questionVisualHtml(q, options = {}) {
         return `
             <div class="${boxClass}">
                 <figure class="${v.theme === 'dark' ? 'diagram dark-theme' : ''}">
-                    <img class="${imgClass}" src="${esc(ASSET_BASE + v.asset + '?v=7.6.0')}" alt="${esc(v.alt || '')}">
+                    <img class="${imgClass}" src="${esc(ASSET_BASE + v.asset + '?v=7.7.0')}" alt="${esc(v.alt || '')}">
                     ${v.caption ? `<figcaption class="exam-caption">${esc(v.caption)}</figcaption>` : ''}
                 </figure>
                 ${!isPrint ? visualCreditHtml(v) : ''}
@@ -688,14 +688,14 @@ async function loadData(revision = CONTENT_REVISION, showError = true) {
                 } catch (_) {}
 
                 try {
-                    const ekRes = await fetch(base + 'ek_icerik.json?v=7.6.0');
+                    const ekRes = await fetch(base + 'ek_icerik.json?v=7.7.0');
                     if (ekRes.ok) {
                         data.ekContent = await ekRes.json();
                     }
                 } catch (_) {}
 
                 try {
-                    const senRes = await fetch(base + 'senaryo_kayitlari.json?v=7.6.0');
+                    const senRes = await fetch(base + 'senaryo_kayitlari.json?v=7.7.0');
                     if (senRes.ok) {
                         const senJson = await senRes.json();
                         const rawScenarios = Array.isArray(senJson) ? senJson : (senJson.scenarios || []);
@@ -1618,7 +1618,7 @@ function renderStudy(cardIndex) {
     // Sağ Panel (Aktif Konu Kartı - Profesyonel Eğitim Portalı Görünümü)
     const cardPanel = $('exam-card-article');
     if (cardPanel) {
-        const visualAssetPath = c.visual?.asset ? (ASSET_BASE + c.visual.asset + '?v=7.6.0') : '';
+        const visualAssetPath = c.visual?.asset ? (ASSET_BASE + c.visual.asset + '?v=7.7.0') : '';
         const outcome = (DATA.allOutcomes || DATA.outcomes || []).find(o => o.id === c.outcome_id);
         const outcomeCards = CARDS.filter(x => x.outcome_id === c.outcome_id);
         const idxInOutcome = outcomeCards.findIndex(x => x.id === c.id);
@@ -3654,7 +3654,7 @@ export function renderAdminQuestionReview() {
 function displayAdminQuestion(q, container) {
     const visual = q.visual?.asset ? `
         <div style="margin: 12px 0; text-align:center;">
-            <img src="${esc(ASSET_BASE + q.visual.asset + '?v=7.6.0')}" alt="${esc(q.visual.alt || '')}" style="max-width:100%; max-height:240px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+            <img src="${esc(ASSET_BASE + q.visual.asset + '?v=7.7.0')}" alt="${esc(q.visual.alt || '')}" style="max-width:100%; max-height:240px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
         </div>
     ` : '';
 

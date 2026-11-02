@@ -1,7 +1,7 @@
 {
-  "version": "7.6.0",
+  "version": "7.7.0",
   "generated_at": "2026-11-02",
-  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek İçerik V7.6 Tam MEB Müfredat Dili ve Çakışmasız Görsel Standardı",
+  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek İçerik V7.7 Tam Soru ve Görsel Eşitliği",
   "outcomes": [
     {
       "id": "FB.7.1.4",
@@ -831,8 +831,8 @@
       "id": "FB714-V7-M04",
       "outcome_id": "FB.7.1.4",
       "difficulty": "medium",
-      "title": "Takımyıldız derinliği",
-      "stem": "Şemada Dünya'dan bakıldığında gökyüzünde yan yana bir arada görünen A, B ve C yıldızlarının Dünya'ya gerçek uzaklıkları (50, 450 ve 1200 ışık yılı) modellenmiştir. Bu şemaya göre gökyüzünde bir arada görünen takımyıldız üyelerinin uzaydaki gerçek fiziksel konumları ve aralarında kütle çekimsel bir bağ olup olmadığı hakkında ne söylenebilir? Açıklayınız.",
+      "title": "Kozmik mesafeler ve ışık yılı",
+      "stem": "Şemada Güneş Sistemi'ne en yakın yıldız olan Proxima Centauri (yaklaşık 4,2 ışık yılı) ile Kutup Yıldızı'nın (~430 ışık yılı) Dünya'ya olan mesafeleri modellenmiştir. Bu şemayı inceleyen bir araştırmacının gökyüzünde gördüğü bu iki yıldıza ait görüntüler ve 'gökyüzüne bakmak evrenin geçmişine bakmaktır' ifadesi hakkında ne söylenebilir? Işığın yayılma süresiyle ilişkilendirerek açıklayınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-star-depth-3d.svg",
@@ -842,14 +842,14 @@
       "rubric": [
         {
           "id": "FB714-V7-M04-R1",
-          "text": "Takımyıldızdaki yıldızların uzayda gerçekte yan yana olmadığını, Dünya'ya uzaklıklarının birbirinden tamamen farklı olduğunu belirtir.",
+          "text": "Proxima Centauri'nin 4,2 yıl önceki, Kutup Yıldızı'nın ise 430 yıl önceki halinin görüldüğünü belirtir.",
           "points": 8,
           "weight": 8,
           "return_card_ids": [
-            "FB714-V7-K08"
+            "FB714-V7-K07"
           ],
           "scoring": {
-            "full": "Gerçekte yan yana olmadıklarını ve uzaklıkların farklı olduğunu belirtir.",
+            "full": "4,2 yıl önceki ve 430 yıl önceki halleri olduğunu belirtir.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
@@ -858,14 +858,14 @@
         },
         {
           "id": "FB714-V7-M04-R2",
-          "text": "Aralarında doğrudan fiziksel bir kütle çekimsel bağ bulunmadığını, yalnızca Dünya'dan bakıldığında aynı doğrultuda görüldüklerini açıklar.",
+          "text": "Işığın boşlukta yayılmasının zaman aldığını, bu yüzden uzaktaki gök cisimlerinin geçmişteki görüntüsünü gördüğümüzü açıklar.",
           "points": 7,
           "weight": 7,
           "return_card_ids": [
-            "FB714-V7-K08"
+            "FB714-V7-K07"
           ],
           "scoring": {
-            "full": "Aralarında kütle çekimsel bağ olmadığını, aynı doğrultuda göründüklerini açıklar.",
+            "full": "Işığın yayılma süresinden dolayı geçmişe bakıldığını açıklar.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true

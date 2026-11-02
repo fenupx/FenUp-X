@@ -1,25 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 220" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 200" width="100%" height="100%">
   <rect width="100%" height="100%" fill="none"/>
   <!-- Sol Duvar -->
-  <line x1="40" y1="20" x2="40" y2="190" stroke="#cbd5e1" stroke-width="6"/>
+  <line x1="40" y1="20" x2="40" y2="180" stroke="#cbd5e1" stroke-width="6"/>
 
-  <!-- 1. İnce Yay (Eşit 10 cm sıkışma -> Bilye x kadar fırlar) -->
-  <g transform="translate(40, 30)">
+  <!-- 1. İnce Yay (Eşit 10 cm sıkışma) -->
+  <g transform="translate(40, 25)">
     <path d="M 0 35 Q 10 20, 20 35 T 40 35 T 60 35 T 80 35 L 95 35" fill="none" stroke="#38bdf8" stroke-width="2"/>
-    <circle cx="110" cy="35" r="14" fill="#38bdf8"/>
+    <circle cx="110" cy="35" r="14" fill="#38bdf8" stroke="#ffffff" stroke-width="1.5"/>
     <line x1="135" y1="35" x2="210" y2="35" stroke="#38bdf8" stroke-width="2" stroke-dasharray="3,3"/>
     <polygon points="210,31 218,35 210,39" fill="#38bdf8"/>
-    <text x="235" y="39" fill="#38bdf8" font-size="13" font-weight="bold">İnce Yay (10 cm sıkışma ➔ Fırlama: d)</text>
+    <rect x="230" y="22" width="220" height="26" rx="13" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="340" y="39" fill="#38bdf8" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">İnce Yay (10 cm sıkıştırıldı)</text>
   </g>
 
-  <!-- 2. Kalın Yay (Eşit 10 cm sıkışma -> Bilye 2x kadar fırlar) -->
-  <g transform="translate(40, 115)">
+  <!-- 2. Kalın Yay (Eşit 10 cm sıkışma) -->
+  <g transform="translate(40, 110)">
     <path d="M 0 35 Q 10 18, 20 35 T 40 35 T 60 35 T 80 35 L 95 35" fill="none" stroke="#ef4444" stroke-width="5"/>
-    <circle cx="110" cy="35" r="14" fill="#ef4444"/>
+    <circle cx="110" cy="35" r="14" fill="#ef4444" stroke="#ffffff" stroke-width="1.5"/>
     <line x1="135" y1="35" x2="310" y2="35" stroke="#ef4444" stroke-width="3" stroke-dasharray="3,3"/>
     <polygon points="310,30 322,35 310,40" fill="#ef4444"/>
-    <text x="335" y="39" fill="#ef4444" font-size="13" font-weight="bold">Kalın Yay (10 cm sıkışma ➔ Fırlama: 2d - Daha Uzağa)</text>
+    <rect x="230" y="22" width="220" height="26" rx="13" fill="#0f172a" stroke="#ef4444" stroke-width="1.5"/>
+    <text x="340" y="39" fill="#ef4444" font-size="12" font-weight="bold" text-anchor="middle" font-family="system-ui, sans-serif">Kalın Yay (10 cm sıkıştırıldı)</text>
   </g>
-
-  <text x="340" y="195" fill="#f8fafc" font-size="13" font-weight="bold" text-anchor="middle">Sonuç: Kalın yay daha serttir, aynı sıkışmada daha fazla esneklik enerjisi depolar.</text>
 </svg>

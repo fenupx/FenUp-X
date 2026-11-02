@@ -453,11 +453,11 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(typography.btnMinHeight).toBe('56px');
     });
 
-    test('V7.6 Master Formülsüz Müfredat, 2 Paragraflık Kartlar ve Rampa/Takoz Laboratuvar Şemaları Uyumu', async () => {
+    test('V7.7 Master Formülsüz Müfredat, Soru-Şema Senkronizasyonu ve İpucusuz Şemalar Uyumu', async () => {
         const ekPath = path.resolve('data/exam/content-v6/ek_icerik.json');
         const ekData = JSON.parse(fs.readFileSync(ekPath, 'utf8'));
 
-        expect(ekData.version).toBe('7.6.0');
+        expect(ekData.version).toBe('7.7.0');
 
         // K01-K08 kartlarının istisnasız 2 kısa paragraftan oluştuğunu doğrula
         for (const cid of Object.keys(ekData.cards)) {
@@ -513,9 +513,15 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(e01Rubric).not.toContain('nükleer');
         expect(e01Rubric).not.toContain('füzyon');
 
-        // FB714-V7-M04: 3D şema ile tam uyumlu stem (50, 450 ve 1200 ışık yılı)
+        // FB714-V7-M04: Yatay kozmik cetvel şemasıyla tam uyumlu stem ve rubrik (Proxima Centauri 4,2 ışık yılı ve Kutup Yıldızı ~430 ışık yılı)
         const m04Stem = ekData.questions['FB714-V7-M04'].stem;
-        expect(m04Stem).toContain('50, 450 ve 1200 ışık yılı');
+        expect(m04Stem).toContain('Proxima Centauri (yaklaşık 4,2 ışık yılı)');
+        expect(m04Stem).toContain('Kutup Yıldızı\'nın (~430 ışık yılı)');
+        expect(m04Stem).toContain('gökyüzüne bakmak evrenin geçmişine bakmaktır');
+
+        const m04Rubric = ekData.questions['FB714-V7-M04'].rubric.map(r => r.text).join(' ');
+        expect(m04Rubric).toContain('Proxima Centauri\'nin 4,2 yıl önceki');
+        expect(m04Rubric).toContain('Kutup Yıldızı\'nın ise 430 yıl önceki');
 
         // FB722-V7-E04 ve M02 formülsüz somut dil kontrolü
         const e04Stem = ekData.questions['FB722-V7-E04'].stem;
@@ -564,6 +570,20 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(starDepthSvg).toContain('4,2 Işık Yılı');
         expect(starDepthSvg).toContain('Kutup Yıldızı');
         expect(starDepthSvg).toContain('~430 Işık Yılı');
+
+        // İpucu (Spoiler) içermeyen potansiyel deney şeması kontrolü
+        const potExpSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-potential-experiment.svg'), 'utf8');
+        expect(potExpSvg).not.toContain('(En Derin)');
+        expect(potExpSvg).not.toContain('(En Sığ)');
+        expect(potExpSvg).toContain('1. Düzenek');
+        expect(potExpSvg).toContain('2. Düzenek');
+        expect(potExpSvg).toContain('3. Düzenek');
+
+        // İpucu içermeyen yay kalınlığı şeması kontrolü
+        const springThickSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-spring-thickness.svg'), 'utf8');
+        expect(springThickSvg).not.toContain('Kalın yay bilyeyi daha uzağa fırlatır');
+        expect(springThickSvg).toContain('İnce Yay (10 cm sıkıştırıldı)');
+        expect(springThickSvg).toContain('Kalın Yay (10 cm sıkıştırıldı)');
 
         // Yeni enerji SVG'lerinin metin ve kurgu kontrolü
         const massPotSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-mass-potential-effect.svg'), 'utf8');
