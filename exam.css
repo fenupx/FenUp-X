@@ -4798,6 +4798,57 @@ body:has(#scene-yazili.study-active) .cookie-banner {
 #scene-yazili.content-v6 .exam-contentgrid.exam-text-only { grid-template-columns: minmax(0,1fr) !important; }
 
 /* ==========================================================================
+   AKILLI TAHTA VE BÜYÜK EKRAN (1920x1080+ / ETAP) ERGONOMİSİ
+   ========================================================================== */
+@media (min-width: 1400px), (min-width: 1200px) and (min-height: 850px) {
+  .study-card-title, .exam-card-title {
+    font-size: 2.2rem !important; /* ~35px */
+    line-height: 1.25 !important;
+  }
+  .study-meta-left, .exam-card-eyebrow {
+    font-size: 1.15rem !important;
+    letter-spacing: 0.08em !important;
+  }
+  .study-card-body p, .exam-card-body p, .study-topics-list li, .exam-body-p, .topics li {
+    font-size: 1.4rem !important; /* ~22px */
+    line-height: 1.65 !important;
+  }
+  .study-card-visual, .exam-card-visual, .exam-visualbox, #scene-yazili.content-v6 .exam-visualbox {
+    min-height: 320px !important;
+    max-height: 480px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .study-card-visual svg, .study-card-visual img,
+  .exam-card-visual svg, .exam-card-visual img,
+  .exam-visualbox svg, .exam-visualbox img,
+  #scene-yazili.content-v6 .exam-visualbox img,
+  #scene-yazili.content-v6 .exam-visualbox svg {
+    max-height: 440px !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+    width: auto !important;
+    min-width: 65% !important;
+  }
+  .study-nav-btn, .exam-nav-btn, .exam-primary-btn,
+  .exam-btn-primary, .exam-btn-secondary, .exam-cardnav-btn {
+    min-height: 56px !important;
+    min-width: 56px !important;
+    font-size: 1.2rem !important;
+    padding: 12px 24px !important;
+  }
+  .concept-chain-item, .study-topic-chip, .chain b {
+    font-size: 1.1rem !important;
+    padding: 8px 16px !important;
+  }
+  .question-stem, .exam-question-prompt, .exam-question-stem {
+    font-size: 1.45rem !important;
+    line-height: 1.6 !important;
+  }
+}
+
+/* ==========================================================================
    KESİN GİZLEME SÖZLEŞMESİ: is-hidden EKLENDİĞİNDE SAHNE KESİNLİKLE YER KAPLAMAZ
    ========================================================================== */
 #scene-yazili.is-hidden,

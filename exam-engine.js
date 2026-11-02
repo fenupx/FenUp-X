@@ -18,6 +18,10 @@ const STORAGE_KEY = 'fenupx_exam_pilot_v1';
 
 const names = { easy: 'Kolay', medium: 'Orta', hard: 'Zor' };
 
+export const OUTCOME_ORDER = [
+    "FB.7.1.1", "FB.7.1.3", "FB.7.1.4", "FB.7.1.5", "FB.7.2.1", "FB.7.2.2"
+];
+
 let DATA = null;
 let CARDS = [];
 let QUESTIONS = [];
@@ -584,15 +588,27 @@ export function getActiveScenario() {
 export function syncScenarioData() {
     if (!DATA) return;
     const scenario = getActiveScenario();
+    if (scenario && Array.isArray(scenario.allocation)) {
+        scenario.allocation.sort((a, b) => {
+            const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
+            const oB = OUTCOME_ORDER.indexOf(b.outcome_id);
+            return (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
+        });
+    }
     const activeOutcomes = new Set(scenario.allocation.map(a => a.outcome_id));
 
     const allC = DATA.allCards || DATA.cards || [];
     const allQ = DATA.allQuestions || DATA.questions || [];
 
-    const outcomeOrder = { 'FB.7.1.1': 1, 'FB.7.1.3': 2, 'FB.7.1.4': 3, 'FB.7.1.5': 4, 'FB.7.2.1': 5, 'FB.7.2.2': 6 };
     CARDS = allC
         .filter(c => activeOutcomes.has(c.outcome_id))
-        .sort((a, b) => ((outcomeOrder[a.outcome_id] || 99) - (outcomeOrder[b.outcome_id] || 99)) || ((a.sequence || 0) - (b.sequence || 0)));
+        .sort((a, b) => {
+            const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
+            const oB = OUTCOME_ORDER.indexOf(b.outcome_id);
+            const diff = (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
+            if (diff !== 0) return diff;
+            return (a.sequence || 0) - (b.sequence || 0);
+        });
 
     QUESTIONS = allQ.filter(q => activeOutcomes.has(q.outcome_id));
     DATA.scenario = scenario;
@@ -1520,7 +1536,13 @@ function renderStudy(cardIndex) {
             const activeScenario = getActiveScenario();
             const activeOutcomeIds = new Set(activeScenario.allocation.map(a => a.outcome_id));
             const allOutcomes = DATA.allOutcomes || DATA.outcomes || [];
-            const scenarioOutcomes = allOutcomes.filter(o => activeOutcomeIds.has(o.id));
+            const scenarioOutcomes = allOutcomes
+                .filter(o => activeOutcomeIds.has(o.id))
+                .sort((a, b) => {
+                    const oA = OUTCOME_ORDER.indexOf(a.id);
+                    const oB = OUTCOME_ORDER.indexOf(b.id);
+                    return (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
+                });
 
             cardnav.innerHTML = `
                 <div class="study-plan-header">
@@ -3563,29 +3585,67 @@ function closePrintPreview() {
     }
 }
 
-// --- YÖNETİCİ PANELİ: 48 SORULUK SORU HAVUZU İNCELEME (Admin Only) ---
+// --- YÖNETİCİ PANELİ: 72 SORULUK SORU HAVUZU İNCELEME (Admin Only) ---
 export function renderAdminQuestionReview() {
     const bankSelect = $('admin-bank-select');
     const container = $('admin-review-container');
+    const tabBtn = $('btn-admin-tab-questions');
     if (!bankSelect || !container) return;
 
-    if (QUESTIONS.length === 0) {
+    if (!DATA || !(DATA.allQuestions || DATA.questions)) {
+        container.innerHTML = '<p style="color:#aaa;"><i class="fas fa-spinner fa-spin"></i> Soru havuzu yükleniyor...</p>';
+        ensureDataLoaded('6').then(() => {
+            renderAdminQuestionReview();
+        }).catch(() => {
+            container.innerHTML = '<p style="color:#f87171;">Soru havuzu yüklenirken hata oluştu.</p>';
+        });
+        return;
+    }
+
+    const allQuestions = (DATA && (DATA.allQuestions || DATA.questions)) || QUESTIONS || [];
+
+    if (tabBtn) {
+        tabBtn.innerHTML = `<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (${allQuestions.length} Soru)`;
+    }
+    const descP = $('admin-questions-desc');
+    if (descP) {
+        descP.textContent = `7. Sınıf ${allQuestions.length} soruluk soru havuzu, rubrikleri ve öğretmen inceleme durumları.`;
+    }
+
+    if (allQuestions.length === 0) {
         container.innerHTML = '<p style="color:#aaa;">Soru havuzu yükleniyor veya boş.</p>';
         return;
     }
 
-    if (bankSelect.children.length === 0) {
-        bankSelect.innerHTML = QUESTIONS.map((q, idx) => `
+    const diffWeight = { 'easy': 1, 'medium': 2, 'hard': 3 };
+    const sortedQuestions = [...allQuestions].sort((a, b) => {
+        const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
+        const oB = OUTCOME_ORDER.indexOf(b.outcome_id);
+        const diffO = (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
+        if (diffO !== 0) return diffO;
+        const dA = diffWeight[a.difficulty] || 2;
+        const dB = diffWeight[b.difficulty] || 2;
+        if (dA !== dB) return dA - dB;
+        return (a.id || '').localeCompare(b.id || '');
+    });
+
+    if (bankSelect.children.length !== sortedQuestions.length) {
+        const prevVal = bankSelect.value;
+        bankSelect.innerHTML = sortedQuestions.map((q, idx) => `
             <option value="${esc(q.id)}">${idx + 1}. [${esc(q.outcome_id)}] ${esc(q.id)} · ${names[q.difficulty] || ''} · ${esc(q.title)}</option>
         `).join('');
 
+        if (prevVal && sortedQuestions.some(item => item.id === prevVal)) {
+            bankSelect.value = prevVal;
+        }
+
         bankSelect.onchange = () => {
-            const q = QUESTIONS.find(item => item.id === bankSelect.value);
+            const q = sortedQuestions.find(item => item.id === bankSelect.value);
             if (q) displayAdminQuestion(q, container);
         };
     }
 
-    const selectedQ = QUESTIONS.find(item => item.id === bankSelect.value) || QUESTIONS[0];
+    const selectedQ = sortedQuestions.find(item => item.id === bankSelect.value) || sortedQuestions[0];
     if (selectedQ) {
         displayAdminQuestion(selectedQ, container);
     }
@@ -4290,6 +4350,8 @@ if (typeof window !== 'undefined') {
         },
         getCards: () => CARDS,
         getQuestions: () => QUESTIONS,
+        getAllQuestions: () => (DATA?.allQuestions || DATA?.questions || QUESTIONS),
+        OUTCOME_ORDER,
         syncScenarioData
     };
 }

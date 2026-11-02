@@ -32,7 +32,7 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
 
         const ekCards = Array.isArray(ek.cards) ? ek.cards : Object.values(ek.cards);
         const allCards = [...v6.cards, ...ekCards];
-        expect(allCards.length).toBe(50); // 34 + 16
+        expect(allCards.length).toBe(58); // 34 (V6) + 24 (V7.1)
 
         // Senaryo 3'te FB.7.1.5 kazanımı yoktur
         const sc3 = scenarios.find(s => (s.scenario === 3 || s.code === 'S3'));
@@ -231,9 +231,9 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
 
         await page.evaluate(idx => window.FenUpExam.renderStudy(idx), targetIdx);
 
-        // Body paragrafları görünür olmalı
+        // Body paragrafları görünür olmalı (V7.1 bite-sized 1-2 paragraf)
         const bodyParagraphs = page.locator('#exam-card-article .study-text-column p.exam-body-p');
-        expect(await bodyParagraphs.count()).toBeGreaterThanOrEqual(3);
+        expect(await bodyParagraphs.count()).toBeGreaterThanOrEqual(2);
 
         // Kavram zinciri görünür olmalı
         const chainItems = page.locator('#exam-card-article .chain b');
@@ -300,6 +300,120 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
             const expected = { 1: 9, 2: 7, 3: 8, 4: 6, 5: 7 }[r.scenario];
             expect(r.count).toBe(expected);
         }
+    });
+
+    test('Senaryo 3 kart akışı MEB 1. Kitap müfredat sırasına (FB.7.1.1 -> FB.7.1.3 -> FB.7.1.4 -> FB.7.2.1 -> FB.7.2.2) tam uymalı', async ({ page }) => {
+        await page.goto('/index.html');
+        await page.click('#btn-yazili-modulu');
+        await page.evaluate(() => window.FenUpExam.goToStep('scope'));
+
+        // Senaryo 3 seç
+        await page.selectOption('#exam-select-scenario', '3');
+        await page.click('#btn-scope-continue');
+        await page.click('#btn-choice-go-study');
+        await expect(page.locator('#exam-view-study')).toBeVisible();
+
+        const cardOutcomes = await page.evaluate(() => {
+            const cards = window.FenUpExam.getCards();
+            return cards.map(c => c.outcome_id);
+        });
+
+        // Benzersiz kazanım sırasını çıkar
+        const distinctOutcomes = [];
+        for (const o of cardOutcomes) {
+            if (!distinctOutcomes.includes(o)) distinctOutcomes.push(o);
+        }
+
+        expect(distinctOutcomes).toEqual([
+            'FB.7.1.1',
+            'FB.7.1.3',
+            'FB.7.1.4',
+            'FB.7.2.1',
+            'FB.7.2.2'
+        ]);
+
+        // FB.7.1.4 kartlarının konumu FB.7.1.3'ten sonra ve FB.7.2.1'den önce olmalı
+        const last713Index = cardOutcomes.lastIndexOf('FB.7.1.3');
+        const first714Index = cardOutcomes.indexOf('FB.7.1.4');
+        const last714Index = cardOutcomes.lastIndexOf('FB.7.1.4');
+        const first721Index = cardOutcomes.indexOf('FB.7.2.1');
+
+        expect(first714Index).toBeGreaterThan(last713Index);
+        expect(first721Index).toBeGreaterThan(last714Index);
+    });
+
+    test('Öğretmen Yönetim Paneli 72 soruluk tam havuzu OUTCOME_ORDER sırasıyla göstermeli', async ({ page }) => {
+        await page.goto('/index.html');
+        await page.click('#btn-yazili-modulu');
+
+        // Admin panelini render et
+        await page.evaluate(() => {
+            if (window.FenUpExam && window.FenUpExam.renderAdminQuestionReview) {
+                window.FenUpExam.renderAdminQuestionReview();
+            }
+        });
+
+        const tabBtnText = await page.textContent('#btn-admin-tab-questions');
+        expect(tabBtnText).toContain('72 Soru');
+
+        const optionCount = await page.$$eval('#admin-bank-select option', opts => opts.length);
+        expect(optionCount).toBe(72);
+
+        // İlk ve son soruların OUTCOME_ORDER uyumu
+        const firstOptText = await page.$eval('#admin-bank-select option:first-child', el => el.textContent);
+        const lastOptText = await page.$eval('#admin-bank-select option:last-child', el => el.textContent);
+
+        expect(firstOptText).toContain('FB.7.1.1');
+        expect(lastOptText).toContain('FB.7.2.2');
+    });
+
+    test('Akıllı Tahta (Pardus ETAP / 1920x1080) büyük ekran tipografisi ve responsive ölçekleme doğrulanmalı', async ({ page }) => {
+        await page.setViewportSize({ width: 1920, height: 1080 });
+        await page.goto('/index.html');
+        await page.click('#btn-yazili-modulu');
+        await page.evaluate(() => window.FenUpExam.goToStep('scope'));
+        await page.selectOption('#exam-select-scenario', '1');
+        await page.click('#btn-scope-continue');
+        await page.click('#btn-choice-go-study');
+        await expect(page.locator('#exam-view-study')).toBeVisible();
+
+        // FB714-V7-K00 kartına geç (başlık, body ve görsel SVG içerir)
+        const targetIdx = await page.evaluate(() => {
+            const cards = window.FenUpExam.getCards();
+            return cards.findIndex(c => c.id === 'FB714-V7-K00');
+        });
+        expect(targetIdx).toBeGreaterThanOrEqual(0);
+
+        await page.evaluate(idx => window.FenUpExam.renderStudy(idx), targetIdx);
+        await page.waitForTimeout(200);
+
+        const typography = await page.evaluate(() => {
+            const title = document.querySelector('.exam-card-title');
+            const p = document.querySelector('#exam-card-article .exam-body-p') || document.querySelector('#exam-card-article .topics li');
+            const visualImg = document.querySelector('#exam-visual img');
+            const nextBtn = document.querySelector('#exam-card-next');
+
+            return {
+                titleFontSize: title ? window.getComputedStyle(title).fontSize : null,
+                pFontSize: p ? window.getComputedStyle(p).fontSize : null,
+                imgMaxHeight: visualImg ? window.getComputedStyle(visualImg).maxHeight : null,
+                btnMinHeight: nextBtn ? window.getComputedStyle(nextBtn).minHeight : null
+            };
+        });
+
+        // 2.2rem genelde 35.2px civarıdır, en az 30px olmalıdır
+        const titlePx = parseFloat(typography.titleFontSize);
+        expect(titlePx).toBeGreaterThanOrEqual(30);
+
+        // 1.4rem genelde 22.4px civarıdır, en az 20px olmalıdır
+        const pPx = parseFloat(typography.pFontSize);
+        expect(pPx).toBeGreaterThanOrEqual(20);
+
+        // SVG / görsel max-height 440px olmalıdır
+        expect(typography.imgMaxHeight).toBe('440px');
+
+        // Buton min-height 56px olmalıdır
+        expect(typography.btnMinHeight).toBe('56px');
     });
 
 });
