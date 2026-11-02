@@ -1,7 +1,7 @@
 {
-  "version": "7.5.0",
+  "version": "7.6.0",
   "generated_at": "2026-11-02",
-  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek İçerik V7.5 Kusursuz Görsel ve Dil Eşitlemesi",
+  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek İçerik V7.6 Tam MEB Müfredat Dili ve Çakışmasız Görsel Standardı",
   "outcomes": [
     {
       "id": "FB.7.1.4",
@@ -249,7 +249,7 @@
       "topics": [],
       "body": [
         "Dünya'dan bakıldığında gökyüzünde bir aradaymış gibi görünen yıldız gruplarına takımyıldız denir (Büyükayı, Küçükayı, Avcı).",
-        "Büyükayı'nın cezve ucundaki iki yıldız (Merak ve Dubhe) arası 5 kat uzatıldığında Küçükayı'nın kuyruk ucundaki Kutup Yıldızı bulunur."
+        "Büyükayı'nın kepçe ucundaki iki yıldız arası mesafe 5 kat uzatıldığında Küçükayı'nın kuyruk ucundaki Kutup Yıldızı bulunur."
       ],
       "visual": {
         "kind": "image",
@@ -306,12 +306,12 @@
       "topics": [],
       "body": [
         "Kütleleri eşit cisimlerden sürati daha fazla olanın kinetik enerjisi daha büyüktür.",
-        "Aynı otomobil 90 km/saat süratle giderken, 40 km/saat sürate göre önündeki engeli çok daha uzağa iter ve fren mesafesi uzar."
+        "Rampadan daha yüksekten bırakılıp hızlanan bir bilye, yavaş inen bilyeye göre önündeki takoza çarparak onu çok daha uzağa iter."
       ],
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-speed-kinetic-effect.svg",
-        "alt": "Farklı süratlerdeki özdeş araçların kinetik enerjisi",
+        "alt": "Farklı süratlerdeki özdeş bilyelerin takozu itme mesafesi deneyi",
         "caption": "Süratin Kinetik Enerjiye Etkisi",
         "fit": "contain"
       }
@@ -325,12 +325,12 @@
       "topics": [],
       "body": [
         "Süratleri eşit hareketlilerden kütlesi daha büyük olanın kinetik enerjisi daha büyüktür.",
-        "Aynı süratle ilerleyen ağır bir kamyon, hafif bir otomobile göre çok daha fazla enerji taşır ve durdurulması daha zordur."
+        "Aynı rampadan aynı süratle inen bilyelerden kütlesi büyük olan ağır bilye, hafif bilyeye göre takoza çarparak onu çok daha uzağa iter."
       ],
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-mass-kinetic-effect.svg",
-        "alt": "Aynı süratteki ağır ve hafif araçların kinetik enerji karşılaştırması",
+        "alt": "Aynı süratteki ağır ve hafif bilyelerin takozu itme mesafesi deneyi",
         "caption": "Kütlenin Kinetik Enerjiye Etkisi",
         "fit": "contain"
       }
@@ -1269,7 +1269,7 @@
       "outcome_id": "FB.7.2.2",
       "difficulty": "medium",
       "title": "Kamyon ve otomobilin kinetik enerjisi",
-      "stem": "Şemadaki yolda eşit süratle (60 km/h) seyreden 5000 kg kütleli yüklü kamyon ile 1000 kg kütleli otomobil yoldaki tahta takozlara çarpmaktadır.\n1) Hangi aracın takozu daha uzağa ittiğini ve kinetik enerjisinin daha büyük olduğunu gerekçesiyle açıklayınız.\n2) Süratleri eşit olmasına rağmen kamyonu durdurmanın otomobilden çok daha zor olmasını kütle-kinetik enerji ilişkisiyle gerekçelendiriniz.",
+      "stem": "Şemadaki kontrollü deney düzeneğinde aynı yükseklikteki rampadan serbest bırakılan hafif bilye ile ağır bilye yatay düzlemdeki özdeş tahta takozlara çarpmaktadır.\n1) Hangi bilyenin takozu daha uzağa ittiğini ve kinetik enerjisinin daha büyük olduğunu gerekçesiyle açıklayınız.\n2) Süratleri eşit olmasına rağmen ağır bilyenin takozu daha uzağa itmesini kütle-kinetik enerji ilişkisiyle açıklayınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-mass-kinetic-effect.svg",

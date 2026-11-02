@@ -453,11 +453,11 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(typography.btnMinHeight).toBe('56px');
     });
 
-    test('V7.5 Master Formülsüz Müfredat, 2 Paragraflık Kartlar ve Tüm Enerji Şemaları Uyumu', async () => {
+    test('V7.6 Master Formülsüz Müfredat, 2 Paragraflık Kartlar ve Rampa/Takoz Laboratuvar Şemaları Uyumu', async () => {
         const ekPath = path.resolve('data/exam/content-v6/ek_icerik.json');
         const ekData = JSON.parse(fs.readFileSync(ekPath, 'utf8'));
 
-        expect(ekData.version).toBe('7.5.0');
+        expect(ekData.version).toBe('7.6.0');
 
         // K01-K08 kartlarının istisnasız 2 kısa paragraftan oluştuğunu doğrula
         for (const cid of Object.keys(ekData.cards)) {
@@ -487,10 +487,22 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(k04Body).toContain('nötron yıldızı');
         expect(k04Body).toContain('kara deli');
 
-        // FB714-V7-K08: Kutup Yıldızı ve Büyükayı 5 kat mesafe
+        // FB714-V7-K08: Kutup Yıldızı ve Büyükayı 5 kat mesafe; Merak ve Dubhe isimleri kaldırıldı
         const k08Body = ekData.cards['FB714-V7-K08'].body.join(' ');
+        expect(k08Body).not.toContain('Merak');
+        expect(k08Body).not.toContain('Dubhe');
         expect(k08Body).toContain('Kutup Yıldızı');
         expect(k08Body).toContain('5 kat');
+
+        // FB722-V7-K02 ve K03: MEB ders kitabı rampa-bilye-takoz laboratuvar kurgusu
+        const k02Body = ekData.cards['FB722-V7-K02'].body.join(' ');
+        expect(k02Body).toContain('Rampadan');
+        expect(k02Body).toContain('takoz');
+
+        const fb722K03Body = ekData.cards['FB722-V7-K03'].body.join(' ');
+        expect(fb722K03Body).toContain('rampadan');
+        expect(fb722K03Body).toContain('ağır bilye');
+        expect(fb722K03Body).toContain('takoz');
 
         // FB714-V7-E01: "nükleer füzyon" çıkarıldı; "çekirdek tepkimeleri" ve "ısı ve ışık"
         const e01Stem = ekData.questions['FB714-V7-E01'].stem;
@@ -510,6 +522,11 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(e04Stem).toContain('1 kg kütleli hafif bilye');
         expect(e04Stem).toContain('5 kg kütleli ağır gülle');
 
+        // FB722-V7-M01: rampa ve takoz kontrollü deney kurgusu
+        const m01Stem = ekData.questions['FB722-V7-M01'].stem;
+        expect(m01Stem).toContain('rampadan serbest bırakılan hafif bilye ile ağır bilye');
+        expect(m01Stem).toContain('tahta takozlara');
+
         // SVG diyagram metinleri ve şeffaflık
         const nebulaSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-nebula-collapse.svg'), 'utf8');
         expect(nebulaSvg).not.toContain('Nükleer füzyon');
@@ -521,13 +538,24 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(starCycleSvg).not.toContain('pulsar');
         expect(starCycleSvg).toContain('Nötron Yıldızı');
 
-        // Kutup Yıldızı şeması (Merak, Dubhe, dikey hat ve 5 Kat adım çentikleri)
+        // Kutup Yıldızı şeması (Merak ve Dubhe kaldırılmış, dikey 5 Kat Mesafe ve Kutup Yıldızı)
         const constelSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-constellations.svg'), 'utf8');
-        expect(constelSvg).toContain('Merak');
-        expect(constelSvg).toContain('Dubhe');
-        expect(constelSvg).toContain('5 Kat Uzaklık');
+        expect(constelSvg).not.toContain('Merak');
+        expect(constelSvg).not.toContain('Dubhe');
+        expect(constelSvg).toContain('5 Kat Mesafe');
         expect(constelSvg).toContain('Kutup Yıldızı (Polaris)');
+        expect(constelSvg).toContain('Büyükayı');
         expect(constelSvg).toContain('Küçükayı');
+
+        // Yıldız renkleri (Derece sayıları silinmiş, MEB sade renk/sıcaklık skalası)
+        const starColorsSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-star-colors.svg'), 'utf8');
+        expect(starColorsSvg).not.toContain('°C');
+        expect(starColorsSvg).not.toContain('Celsius');
+        expect(starColorsSvg).toContain('Mavi / Beyaz');
+        expect(starColorsSvg).toContain('En Sıcak Yıldızlar');
+        expect(starColorsSvg).toContain('Sarı (Güneş)');
+        expect(starColorsSvg).toContain('Kırmızı');
+        expect(starColorsSvg).toContain('En Soğuk Yıldızlar');
 
         // Basitleştirilmiş Işık Yılı cetveli
         const starDepthSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-star-depth-3d.svg'), 'utf8');
@@ -547,15 +575,26 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(heightSvg).toContain('1 Metre');
         expect(heightSvg).toContain('2 Metre');
 
+        // Rampa ve takoz kinetik deney şemaları
         const speedKinSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-speed-kinetic-effect.svg'), 'utf8');
-        expect(speedKinSvg).toContain('40 km/saat');
-        expect(speedKinSvg).toContain('90 km/saat');
-        expect(speedKinSvg).toContain('Takoz 1 m İtildi');
+        expect(speedKinSvg).toContain('Daha Az Süratli');
+        expect(speedKinSvg).toContain('Daha Süratli');
+        expect(speedKinSvg).toContain('Takoz Az İtildi');
+        expect(speedKinSvg).toContain('Takoz Çok İtildi');
 
         const massKinSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-mass-kinetic-effect.svg'), 'utf8');
-        expect(massKinSvg).toContain('1000 kg Otomobil');
-        expect(massKinSvg).toContain('5000 kg Kamyon');
-        expect(massKinSvg).toContain('Takoz 1 m İtildi');
+        expect(massKinSvg).toContain('Hafif Bilye');
+        expect(massKinSvg).toContain('Ağır Bilye');
+        expect(massKinSvg).toContain('Takoz Az İtildi');
+        expect(massKinSvg).toContain('Takoz Çok İtildi');
+
+        // Hız treni A, B, C rozetleri
+        const rollerSvg = fs.readFileSync(path.resolve('data/exam/content-v6/assets/diagram-roller-coaster.svg'), 'utf8');
+        expect(rollerSvg).toContain('A (Tepe)');
+        expect(rollerSvg).toContain('Potansiyel En Fazla');
+        expect(rollerSvg).toContain('B (Dip)');
+        expect(rollerSvg).toContain('Kinetik En Fazla');
+        expect(rollerSvg).toContain('C (Tepe)');
     });
 
     test('Senaryo 3 seçildiğinde kart sıralaması OUTCOME_ORDER uyumlu olmalı ve Kutup Yıldızı şeması render edilmeli', async ({ page }) => {
