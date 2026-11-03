@@ -238,7 +238,7 @@ export const labState = {
     currentUnitFilter: "all",
     activeExperimentId: null,
 
-    // Deney 7.1 Fizik Durumu (Fiziksel Anlamda İş: W = F · Δx)
+    // Deney 7.1 Fizik Durumu (Fiziksel Anlamda İş ve Enerji)
     work: {
         expMode: "single",      // "single" | "force" (Mod 1) | "dist" (Mod 2)
         scenario: "horizontal", // "horizontal" | "lift" | "carry" | "wall"
@@ -1554,7 +1554,7 @@ export function openExperimentWorkspace(expId) {
     if (mbar68) mbar68.classList.toggle('is-hidden', !is68);
     if (mbar69) mbar69.classList.toggle('is-hidden', !is69);
     if (mbar610) mbar610.classList.toggle('is-hidden', !is610);
-    if (mbar71) mbar71.classList.toggle('is-hidden', !is71);
+    if (mbar71) mbar71.classList.toggle('is-hidden', !is71 || (labState.work && labState.work.expMode !== 'single'));
     if (mbar72) mbar72.classList.toggle('is-hidden', !is72);
     if (mbar73) mbar73.classList.toggle('is-hidden', !is73);
     if (mbar74) mbar74.classList.toggle('is-hidden', !is74);
@@ -8812,7 +8812,7 @@ function drawResistanceSimulation() {
     ctx.restore();
 }
 
-// --- 6.4. DENEY 7.1: FİZİKSEL ANLAMDA İŞ (W = F · Δx) MOTORU ---
+// --- 6.4. DENEY 7.1: FİZİKSEL ANLAMDA İŞ MOTORU ---
 
 function setupWorkControlsDOM() {
     // 1. Senaryo Butonları (Hızlı Bar & Sağ Panel)
@@ -9052,7 +9052,7 @@ function setWorkMode(mode) {
 
         if (labelIndepVal) labelIndepVal.textContent = "Uygulanan Kuvvet ve Alınan Yol";
         if (labelCtrlVal) labelCtrlVal.textContent = "Cisim Kütlesi (10 kg), Yer Çekimi";
-        if (labelDepVal) labelDepVal.textContent = "Yapılan Fiziksel İş (Joule) ve İş Durumu";
+        if (labelDepVal) labelDepVal.textContent = "Yapılan Fiziksel İş ve İş Durumu";
 
         resetWorkMotion();
         calculateWorkPhysics();
@@ -9074,8 +9074,8 @@ function setWorkMode(mode) {
         if (barCtrl) barCtrl.textContent = "Alınan Yol (x) ve Cisim Kütlesi (10 kg)";
         if (barDep) barDep.textContent = "Yapılan Fiziksel İş (W)";
         if (labelIndepVal) labelIndepVal.textContent = "Uygulanan Kuvvet (F₁ ≠ F₂)";
-        if (labelCtrlVal) labelCtrlVal.textContent = "Alınan Yol (x₁ = x₂) ve Cisim Kütlesi (10 kg)";
-        if (labelDepVal) labelDepVal.textContent = "Yapılan Fiziksel İş (W = F · Δx)";
+        if (labelCtrlVal) labelCtrlVal.textContent = "Alınan Yol ve Cisim Kütlesi (10 kg)";
+        if (labelDepVal) labelDepVal.textContent = "Yapılan Fiziksel İş (W)";
 
         const sDist = document.getElementById('slider-dual-m1-dist');
         const sF1 = document.getElementById('slider-dual-f1');
@@ -9113,8 +9113,8 @@ function setWorkMode(mode) {
         if (barCtrl) barCtrl.textContent = "Uygulanan Kuvvet (F) ve Cisim Kütlesi (10 kg)";
         if (barDep) barDep.textContent = "Yapılan Fiziksel İş (W)";
         if (labelIndepVal) labelIndepVal.textContent = "Alınan Yol (x₁ ≠ x₂)";
-        if (labelCtrlVal) labelCtrlVal.textContent = "Uygulanan Kuvvet (F₁ = F₂) ve Cisim Kütlesi (10 kg)";
-        if (labelDepVal) labelDepVal.textContent = "Yapılan Fiziksel İş (W = F · Δx)";
+        if (labelCtrlVal) labelCtrlVal.textContent = "Uygulanan Kuvvet ve Cisim Kütlesi (10 kg)";
+        if (labelDepVal) labelDepVal.textContent = "Yapılan Fiziksel İş (W)";
 
         const sForce = document.getElementById('slider-dual-m2-force');
         const sX1 = document.getElementById('slider-dual-x1');
@@ -9203,35 +9203,35 @@ function updateDualPedagogicalCard(state) {
         if (state === "ready") {
             box.className = "lab-pedagogical-card";
             if (icon) icon.innerHTML = '<i class="fas fa-play-circle" style="color: #38bdf8;"></i>';
-            title.textContent = "🏁 Mod 1 Deneyine Hazır (Yol Eşit, Kuvvetler Farklı)";
-            text.textContent = `Alınan yol sabit tutulurken (x₁ = x₂ = ${work.dual.t1.distance.toFixed(1)} m), 1. düzeneğe ${work.dual.t1.force.toFixed(0)} N, 2. düzeneğe ${work.dual.t2.force.toFixed(0)} N kuvvet uygulanacaktır. Hareketi başlatarak kuvvet büyüklüğünün yapılan işe etkisini gözlemleyiniz.`;
+            title.textContent = "🏁 Mod 1: Kuvvetin İşe Etkisi (Yol Eşit, Kuvvetler Farklı)";
+            text.textContent = `Alınan yol eşit tutulurken (${work.dual.t1.distance.toFixed(1)} m), 1. düzeneğe ${work.dual.t1.force.toFixed(0)} N, 2. düzeneğe ${work.dual.t2.force.toFixed(0)} N kuvvet uygulanacaktır. Hareketi başlatıp kuvvet büyüklüğünün yapılan işe etkisini gözlemleyiniz.`;
         } else if (state === "running") {
             box.className = "lab-pedagogical-card is-work";
             if (icon) icon.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: #38bdf8;"></i>';
-            title.textContent = "⏳ Eş Zamanlı Hareket (İş Hesaplanıyor...)";
-            text.textContent = `Her iki sandık aynı anda hareket ediyor. Kuvveti büyük olan 2. düzenekte iş sayacının daha hızlı arttığına dikkat ediniz!`;
+            title.textContent = "⏳ Eş Zamanlı Hareket Devam Ediyor";
+            text.textContent = `Her iki sandık aynı anda hareket ediyor. Uygulanan kuvveti büyük olan 2. düzenekte yapılan fiziksel işin daha fazla olduğunu gözlemleyiniz.`;
         } else if (state === "finished") {
             box.className = "lab-pedagogical-card is-work";
             if (icon) icon.innerHTML = '<i class="fas fa-check-circle" style="color: #10b981;"></i>';
             title.textContent = "✅ Mod 1 Deney Sonucu: Kuvvet Arttıkça Yapılan İş Artar!";
-            text.textContent = "Sonuç: Alınan yol sabit tutulduğunda, uygulanan kuvvet arttıkça yapılan fiziksel iş artar (Doğru orantı).";
+            text.textContent = "Sonuç: Alınan yol aynıyken, uygulanan kuvvet ne kadar fazlaysa yapılan fiziksel iş de o kadar fazla olur.";
         }
     } else if (mode === "dist") {
         if (state === "ready") {
             box.className = "lab-pedagogical-card";
             if (icon) icon.innerHTML = '<i class="fas fa-play-circle" style="color: #38bdf8;"></i>';
-            title.textContent = "🏁 Mod 2 Deneyine Hazır (Kuvvet Eşit, Yollar Farklı)";
-            text.textContent = `Uygulanan kuvvet eşit tutulurken (F₁ = F₂ = ${work.dual.t1.force.toFixed(0)} N), 1. düzenek ${work.dual.t1.distance.toFixed(1)} m, 2. düzenek ${work.dual.t2.distance.toFixed(1)} m yol alacaktır. Hareketi başlatarak alınan yolun yapılan işe etkisini gözlemleyiniz.`;
+            title.textContent = "🏁 Mod 2: Alınan Yolun İşe Etkisi (Kuvvet Eşit, Yollar Farklı)";
+            text.textContent = `Uygulanan kuvvet eşit tutulurken (${work.dual.t1.force.toFixed(0)} N), 1. düzenek ${work.dual.t1.distance.toFixed(1)} m, 2. düzenek ${work.dual.t2.distance.toFixed(1)} m yol alacaktır. Hareketi başlatıp alınan yolun yapılan işe etkisini gözlemleyiniz.`;
         } else if (state === "running") {
             box.className = "lab-pedagogical-card is-work";
             if (icon) icon.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: #38bdf8;"></i>';
-            title.textContent = "⏳ Eş Zamanlı Hareket (İş Hesaplanıyor...)";
-            text.textContent = `Her iki sandık eşit kuvvetle çekilmektedir. 1. düzenek hedefe daha erken ulaşacak, 2. düzenek daha uzun yol aldığı için daha çok iş üretecektir!`;
+            title.textContent = "⏳ Eş Zamanlı Hareket Devam Ediyor";
+            text.textContent = `Her iki sandık eşit kuvvetle çekilmektedir. Daha fazla yol alan 2. düzenekte yapılan fiziksel işin daha fazla olduğunu gözlemleyiniz.`;
         } else if (state === "finished") {
             box.className = "lab-pedagogical-card is-work";
             if (icon) icon.innerHTML = '<i class="fas fa-check-circle" style="color: #10b981;"></i>';
             title.textContent = "✅ Mod 2 Deney Sonucu: Alınan Yol Arttıkça Yapılan İş Artar!";
-            text.textContent = "Sonuç: Uygulanan kuvvet sabit tutulduğunda, alınan yol arttıkça yapılan fiziksel iş artar (Doğru orantı).";
+            text.textContent = "Sonuç: Uygulanan kuvvet aynıyken, cismin aldığı yol ne kadar fazlaysa yapılan fiziksel iş de o kadar fazla olur.";
         }
     }
 }
@@ -9252,23 +9252,40 @@ function updateDualMetricsPanel() {
 
     if (elF1) elF1.textContent = `${dual.t1.force.toFixed(0)} N`;
     if (elX1) elX1.textContent = `${dual.t1.currentDist.toFixed(1)} / ${dual.t1.distance.toFixed(1)} m`;
-    if (elW1) elW1.textContent = `${dual.t1.joule.toFixed(1)} J`;
 
     if (elF2) elF2.textContent = `${dual.t2.force.toFixed(0)} N`;
     if (elX2) elX2.textContent = `${dual.t2.currentDist.toFixed(1)} / ${dual.t2.distance.toFixed(1)} m`;
-    if (elW2) elW2.textContent = `${dual.t2.joule.toFixed(1)} J`;
+
+    if (elW1) {
+        if (dual.completed) {
+            elW1.textContent = "Daha Az İş";
+        } else if (dual.isPlaying) {
+            elW1.textContent = "Hareket Ediyor";
+        } else {
+            elW1.textContent = "Bekliyor";
+        }
+    }
+    if (elW2) {
+        if (dual.completed) {
+            elW2.textContent = "Daha Fazla İş";
+        } else if (dual.isPlaying) {
+            elW2.textContent = "Hareket Ediyor";
+        } else {
+            elW2.textContent = "Bekliyor";
+        }
+    }
 
     if (textComp) {
         if (dual.completed) {
             if (mode === "force") {
-                textComp.textContent = `W₂ (${dual.t2.joule.toFixed(0)} J) > W₁ (${dual.t1.joule.toFixed(0)} J): Alınan yol eşit tutulduğunda kuvvet arttıkça yapılan iş doğru orantılı artar.`;
+                textComp.textContent = "Sonuç: Alınan yol aynıyken, uygulanan kuvvet ne kadar fazlaysa yapılan fiziksel iş de o kadar fazla olur.";
             } else {
-                textComp.textContent = `W₂ (${dual.t2.joule.toFixed(0)} J) > W₁ (${dual.t1.joule.toFixed(0)} J): Uygulanan kuvvet eşit tutulduğunda alınan yol arttıkça yapılan iş doğru orantılı artar.`;
+                textComp.textContent = "Sonuç: Uygulanan kuvvet aynıyken, cismin aldığı yol ne kadar fazlaysa yapılan fiziksel iş de o kadar fazla olur.";
             }
         } else if (dual.isPlaying) {
-            textComp.textContent = `Hareket devam ediyor: W₁ = ${dual.t1.joule.toFixed(1)} J | W₂ = ${dual.t2.joule.toFixed(1)} J`;
+            textComp.textContent = "Kutular hareket ediyor; uygulanan kuvvet ve alınan yola göre yapılan işleri karşılaştırın.";
         } else {
-            textComp.textContent = `Simülasyonu başlatarak iki düzeneğin iş miktarlarını (W = F · Δx) karşılaştırın.`;
+            textComp.textContent = "Simülasyonu başlatarak iki düzeneğin iş miktarlarını karşılaştırın.";
         }
     }
 }
@@ -9998,41 +10015,6 @@ function drawDualTrack(ctx, trackNum, t, groundY, isAmber) {
     ctx.textBaseline = 'bottom';
     ctx.fillText(`F${trackNum} = ${t.force.toFixed(0)} N`, hookX + arrowLen / 2, dynY - 7);
 
-    // F. Sandık Üstü Canlı İş Sayacı & Tamamlandı Rozeti
-    const badgeY = crateY - 24;
-    const curW = t.joule;
-    if (t.isFinished) {
-        const bWidth = 160;
-        ctx.fillStyle = 'rgba(16, 185, 129, 0.95)';
-        ctx.strokeStyle = '#34d399';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.roundRect(crateX + crateW / 2 - bWidth / 2, badgeY, bWidth, 22, 11);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.font = 'bold 11px system-ui, -apple-system, sans-serif';
-        ctx.fillStyle = '#0f172a';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(`✓ Tamamlanan İş: ${curW.toFixed(0)} J`, crateX + crateW / 2, badgeY + 11);
-    } else {
-        const bWidth = 130;
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
-        ctx.strokeStyle = primaryColor;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.roundRect(crateX + crateW / 2 - bWidth / 2, badgeY, bWidth, 20, 10);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.font = 'bold 11px system-ui, -apple-system, sans-serif';
-        ctx.fillStyle = primaryColor;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(`W${trackNum} = ${curW.toFixed(1)} J (${t.currentDist.toFixed(1)} m)`, crateX + crateW / 2, badgeY + 10);
-    }
-
     ctx.restore();
 }
 
@@ -10062,13 +10044,13 @@ function drawDualComparisonBanner(ctx, work) {
 
         if (mode === "force") {
             ctx.fillText(
-                `🎯 SONUÇ: Alınan yol sabitken (4.0 m), kuvvet arttıkça yapılan iş artar! [W₂ (${dual.t2.joule.toFixed(0)} J) > W₁ (${dual.t1.joule.toFixed(0)} J)]`,
+                '🎯 Sonuç: Alınan yol aynıyken, uygulanan kuvvet ne kadar fazlaysa yapılan fiziksel iş de o kadar fazla olur.',
                 400,
                 cardY + cardH / 2
             );
         } else {
             ctx.fillText(
-                `🎯 SONUÇ: Uygulanan kuvvet sabitken (${dual.t1.force} N), alınan yol arttıkça yapılan iş artar! [W₂ (${dual.t2.joule.toFixed(0)} J) > W₁ (${dual.t1.joule.toFixed(0)} J)]`,
+                '🎯 Sonuç: Uygulanan kuvvet aynıyken, cismin aldığı yol ne kadar fazlaysa yapılan fiziksel iş de o kadar fazla olur.',
                 400,
                 cardY + cardH / 2
             );
@@ -10088,7 +10070,7 @@ function drawDualComparisonBanner(ctx, work) {
         ctx.textBaseline = 'middle';
         if (dual.isPlaying) {
             ctx.fillStyle = '#38bdf8';
-            ctx.fillText('⏳ Kutular eş zamanlı hareket ediyor... Alınan yol boyunca iş sayaçlarını (W = F · Δx) karşılaştırınız.', 400, cardY + cardH / 2);
+            ctx.fillText('⏳ Kutular eş zamanlı hareket ediyor... Alınan yol boyunca yapılan işleri karşılaştırınız.', 400, cardY + cardH / 2);
         } else {
             ctx.fillText('💡 "Hareketi Başlat" butonuna basarak her iki düzeneği aynı anda başlatıp yapılan işleri karşılaştırınız.', 400, cardY + cardH / 2);
         }
@@ -10133,10 +10115,10 @@ function drawWorkDualSimulation(ctx, work) {
     ctx.textAlign = 'right';
     if (mode === "force") {
         ctx.fillStyle = '#38bdf8';
-        ctx.fillText(`Sabit Yol (x₁ = x₂ = ${dual.t1.distance.toFixed(1)} m)  |  Farklı Kuvvetler (F₁ = ${dual.t1.force} N, F₂ = ${dual.t2.force} N)`, 745, bannerY + bannerH / 2);
+        ctx.fillText(`Sabit Yol: ${dual.t1.distance.toFixed(1)} m  |  Farklı Kuvvetler: F₁ = ${dual.t1.force.toFixed(0)} N, F₂ = ${dual.t2.force.toFixed(0)} N`, 745, bannerY + bannerH / 2);
     } else {
         ctx.fillStyle = '#f59e0b';
-        ctx.fillText(`Sabit Kuvvet (F₁ = F₂ = ${dual.t1.force} N)  |  Farklı Yollar (x₁ = ${dual.t1.distance.toFixed(1)} m, x₂ = ${dual.t2.distance.toFixed(1)} m)`, 745, bannerY + bannerH / 2);
+        ctx.fillText(`Sabit Kuvvet: ${dual.t1.force.toFixed(0)} N  |  Farklı Yollar: x₁ = ${dual.t1.distance.toFixed(1)} m, x₂ = ${dual.t2.distance.toFixed(1)} m`, 745, bannerY + bannerH / 2);
     }
     ctx.restore();
 

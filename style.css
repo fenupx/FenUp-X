@@ -2899,7 +2899,6 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     }
     /* Izgaralar zorunlu tek kolon */
     .lab-cards-grid,
-    .avatar-grid,
     .duel-answers,
     .difficulty-cards,
     .class-grid,
@@ -2907,6 +2906,9 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     .mode-cards-grid,
     .lab-stats-grid {
         grid-template-columns: 1fr !important;
+    }
+    .avatar-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
     }
     /* Metrikler ve buton grupları alt alta esnek sarım */
     .lab-canvas-metrics-bar,
@@ -3716,3 +3718,62 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
         width: 100%;
     }
 }
+
+/* ============================================================================
+   V8.3: YÖNETİM PANELİ (ADMİN) SAYAÇLARI VE 16 BİLİM KÂŞİFİ AVATARLARI
+   ============================================================================ */
+.admin-stats-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.admin-stat-card {
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.admin-stat-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(56, 189, 248, 0.5);
+}
+.admin-online-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.15);
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-left: 6px;
+    font-weight: 600;
+}
+.admin-grade-btn.active {
+    background: rgba(56, 189, 248, 0.25) !important;
+    border-color: #38bdf8 !important;
+    color: #38bdf8 !important;
+}
+.admin-grade-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+.avatar-item {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+    padding: 3px;
+    background: rgba(15, 23, 42, 0.6);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+.avatar-item:hover {
+    transform: scale(1.12);
+    border-color: rgba(56, 189, 248, 0.6);
+}
+.avatar-item.selected {
+    border-color: #00d2ff !important;
+    background: rgba(0, 210, 255, 0.2) !important;
+    box-shadow: 0 0 16px rgba(0, 210, 255, 0.7) !important;
+    transform: scale(1.14);
+}
+

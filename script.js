@@ -119,54 +119,102 @@ styleEnjektor.innerHTML = `
 document.head.appendChild(styleEnjektor);
 
 const kozmikAvatarlar = [
-    {id: 'k1', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Efe&baseColor=f9c9b6&hair=mrT&facialHairProbability=0'},
-    {id: 'k2', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Ali&baseColor=f9c9b6&hair=dougFunny&glassesProbability=100'},
-    {id: 'k3', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Can&baseColor=f9c9b6&hair=dannyPhantom'},
-    {id: 'k4', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Mert&baseColor=f9c9b6&hair=fonze'},
-    {id: 'k5', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Burak&baseColor=f9c9b6&hair=mrT&glassesProbability=100'},
-    {id: 'k6', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Emre&baseColor=f9c9b6&hair=dannyPhantom&glassesProbability=100'},
-    {id: 'k7', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Ayse&baseColor=f9c9b6&hair=pigtails'},
-    {id: 'k8', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Zeynep&baseColor=f9c9b6&hair=curly'},
-    {id: 'k9', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Elif&baseColor=f9c9b6&hair=pixie&glassesProbability=100'},
-    {id: 'k10', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Derya&baseColor=f9c9b6&hair=pigtails&glassesProbability=100'},
-    {id: 'k11', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Ece&baseColor=f9c9b6&hair=curly&glassesProbability=100'},
-    {id: 'k12', url: 'https://api.dicebear.com/7.x/micah/svg?seed=Naz&baseColor=f9c9b6&hair=pixie'},
-    {id: 'h1', url: 'https://cdn-icons-png.flaticon.com/512/1056/1056044.png'}, 
-    {id: 'h2', url: 'https://cdn-icons-png.flaticon.com/512/1056/1056012.png'},
-    {id: 'h3', url: 'https://cdn-icons-png.flaticon.com/512/1056/1056014.png'},
-    {id: 'h4', url: 'https://cdn-icons-png.flaticon.com/512/1056/1056003.png'},
-    {id: 'h5', url: 'https://cdn-icons-png.flaticon.com/512/1056/1056016.png'},
-    {id: 'h6', url: 'https://cdn-icons-png.flaticon.com/512/1056/1056038.png'},
-    {id: 'a1', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nico&hair=eyepatch'},
-    {id: 'a2', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Luna&hair=longHairMiaWallace&accessories=sunglasses'},
-    {id: 'a3', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Stella&hair=longHairStraightStrand'},
-    {id: 'a4', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Leo&hair=shortHairSides&accessories=prescription02'},
-    {id: 'a5', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Nova&hair=longHairCurly'},
-    {id: 'a6', url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Orion&hair=shortHairFrizzle'},
-    {id: 'b1', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Mars&colors=blue'},
-    {id: 'b2', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Jupiter&colors=red'},
-    {id: 'b3', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Saturn&colors=purple'},
-    {id: 'b4', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Venus&colors=yellow'},
-    {id: 'b5', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Neptune&colors=green'},
-    {id: 'b6', url: 'https://api.dicebear.com/7.x/bottts/svg?seed=Pluto&colors=orange'},
-    {id: 'b7', url: 'https://cdn-icons-png.flaticon.com/512/4712/4712010.png'}, 
-    {id: 'b8', url: 'https://cdn-icons-png.flaticon.com/512/4712/4712109.png'}, 
-    {id: 'b9', url: 'https://cdn-icons-png.flaticon.com/512/4711/4711986.png'}, 
-    {id: 'b10', url: 'https://cdn-icons-png.flaticon.com/512/4712/4712038.png'},
-    {id: 'b11', url: 'https://cdn-icons-png.flaticon.com/512/4712/4712061.png'},
-    {id: 'b12', url: 'https://cdn-icons-png.flaticon.com/512/4712/4712005.png'},
-    {id: 'u1', url: 'https://cdn-icons-png.flaticon.com/512/2026/2026462.png'}, 
-    {id: 'u2', url: 'https://cdn-icons-png.flaticon.com/512/9431/9431189.png'}, 
-    {id: 'u3', url: 'https://cdn-icons-png.flaticon.com/512/3590/3590214.png'}, 
-    {id: 'u4', url: 'https://cdn-icons-png.flaticon.com/512/1043/1043424.png'}, 
-    {id: 'u5', url: 'https://cdn-icons-png.flaticon.com/512/2534/2534041.png'}, 
-    {id: 'u6', url: 'https://cdn-icons-png.flaticon.com/512/2534/2534064.png'}, 
-    {id: 'u7', url: 'https://cdn-icons-png.flaticon.com/512/2698/2698194.png'}, 
-    {id: 'u8', url: 'https://cdn-icons-png.flaticon.com/512/3409/3409565.png'},
-    {id: 'u9', url: 'https://cdn-icons-png.flaticon.com/512/2026/2026514.png'},
-    {id: 'u10', url: 'https://cdn-icons-png.flaticon.com/512/2026/2026510.png'},
-    {id: 'u11', url: 'https://cdn-icons-png.flaticon.com/512/2026/2026500.png'},
-    {id: 'u12', url: 'https://cdn-icons-png.flaticon.com/512/2026/2026487.png'}
+    {
+        id: 'b1',
+        name: 'Modern Kasklı Astronot',
+        category: 'Astronomi',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b1%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230f172a%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230284c7%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b1%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2226%22%20fill%3D%22%23f8fafc%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%3Crect%20x%3D%2238%22%20y%3D%2272%22%20width%3D%2224%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%23cbd5e1%22/%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2250%22%20rx%3D%2218%22%20ry%3D%2213%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%222%22/%3E%3Cpath%20d%3D%22M39%2044%20Q48%2039%2057%2042%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2228%22%20y1%3D%2236%22%20x2%3D%2220%22%20y2%3D%2228%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2219%22%20cy%3D%2227%22%20r%3D%222.5%22%20fill%3D%22%2338bdf8%22/%3E%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%221.5%22%20fill%3D%22%23facc15%22/%3E%3Ccircle%20cx%3D%2278%22%20cy%3D%2224%22%20r%3D%221.5%22%20fill%3D%22%23facc15%22/%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2268%22%20r%3D%221%22%20fill%3D%22%23fff%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b2',
+        name: 'Teleskop Gözlemcisi',
+        category: 'Astronomi',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b2%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%231e1b4b%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%234338ca%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b2%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cpath%20d%3D%22M70%2018%20A12%2012%200%201%200%2076%2038%20A10%2010%200%200%201%2070%2018%20Z%22%20fill%3D%22%23fde047%22/%3E%3Cpath%20d%3D%22M26%2024%20L27%2028%20L31%2029%20L27%2030%20L26%2034%20L25%2030%20L21%2029%20L25%2028%20Z%22%20fill%3D%22%2338bdf8%22/%3E%3Cpath%20d%3D%22M30%2065%20L68%2032%20L74%2038%20L36%2071%20Z%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%230ea5e9%22%20stroke-width%3D%221.5%22/%3E%3Crect%20x%3D%2266%22%20y%3D%2230%22%20width%3D%2210%22%20height%3D%2210%22%20rx%3D%222%22%20fill%3D%22%230284c7%22%20transform%3D%22rotate%28-40%2071%2035%29%22/%3E%3Cline%20x1%3D%2242%22%20y1%3D%2262%22%20x2%3D%2226%22%20y2%3D%2286%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2242%22%20y1%3D%2262%22%20x2%3D%2258%22%20y2%3D%2286%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2242%22%20y1%3D%2262%22%20x2%3D%2242%22%20y2%3D%2284%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b3',
+        name: 'Uzay Araştırmacısı',
+        category: 'Astronomi',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b3%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%232e1065%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2306b6d4%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b3%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2265%22%20rx%3D%2238%22%20ry%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.2%29%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22/%3E%3Crect%20x%3D%2242%22%20y%3D%2242%22%20width%3D%2216%22%20height%3D%2216%22%20rx%3D%223%22%20fill%3D%22%23f1f5f9%22%20stroke%3D%22%2306b6d4%22%20stroke-width%3D%221.5%22/%3E%3Crect%20x%3D%2218%22%20y%3D%2245%22%20width%3D%2220%22%20height%3D%2210%22%20rx%3D%221%22%20fill%3D%22%230284c7%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221%22/%3E%3Cline%20x1%3D%2228%22%20y1%3D%2245%22%20x2%3D%2228%22%20y2%3D%2255%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221%22/%3E%3Crect%20x%3D%2262%22%20y%3D%2245%22%20width%3D%2220%22%20height%3D%2210%22%20rx%3D%221%22%20fill%3D%22%230284c7%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221%22/%3E%3Cline%20x1%3D%2272%22%20y1%3D%2245%22%20x2%3D%2272%22%20y2%3D%2255%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221%22/%3E%3Cpath%20d%3D%22M50%2042%20L50%2028%20M44%2028%20A8%208%200%200%201%2056%2028%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%222%22%20fill%3D%22none%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2222%22%20r%3D%222%22%20fill%3D%22%23facc15%22/%3E%3Cpath%20d%3D%22M42%2016%20A14%2014%200%200%201%2058%2016%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%222%202%22%20fill%3D%22none%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b4',
+        name: 'Gezegen Kâşifi',
+        category: 'Astronomi',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b4%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23042f2e%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230d9488%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b4%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2222%22%20fill%3D%22%23f59e0b%22/%3E%3Cpath%20d%3D%22M30%2046%20Q50%2054%2070%2046%22%20stroke%3D%22%23d97706%22%20stroke-width%3D%223%22%20fill%3D%22none%22/%3E%3Cpath%20d%3D%22M32%2054%20Q50%2062%2068%2054%22%20stroke%3D%22%23b45309%22%20stroke-width%3D%222.5%22%20fill%3D%22none%22/%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2250%22%20rx%3D%2242%22%20ry%3D%2214%22%20fill%3D%22none%22%20stroke%3D%22%23fef08a%22%20stroke-width%3D%223.5%22%20transform%3D%22rotate%28-20%2050%2050%29%22/%3E%3Ccircle%20cx%3D%2276%22%20cy%3D%2234%22%20r%3D%223.5%22%20fill%3D%22%2338bdf8%22/%3E%3Cline%20x1%3D%2276%22%20y1%3D%2234%22%20x2%3D%2280%22%20y2%3D%2230%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.5%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b5',
+        name: 'Mikroskop Başında Biyolog',
+        category: 'Laboratuvar & Yaşam',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b5%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23064e3b%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23059669%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b5%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Crect%20x%3D%2244%22%20y%3D%2222%22%20width%3D%2210%22%20height%3D%2220%22%20rx%3D%222%22%20fill%3D%22%23e2e8f0%22%20transform%3D%22rotate%2815%2049%2032%29%22/%3E%3Cpolygon%20points%3D%2250%2C42%2042%2C48%2056%2C48%22%20fill%3D%22%2394a3b8%22/%3E%3Cpath%20d%3D%22M54%2030%20Q70%2040%2064%2064%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Crect%20x%3D%2230%22%20y%3D%2258%22%20width%3D%2228%22%20height%3D%225%22%20rx%3D%221.5%22%20fill%3D%22%2338bdf8%22/%3E%3Crect%20x%3D%2226%22%20y%3D%2274%22%20width%3D%2246%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%23e2e8f0%22/%3E%3Crect%20x%3D%2252%22%20y%3D%2262%22%20width%3D%228%22%20height%3D%2214%22%20fill%3D%22%2394a3b8%22/%3E%3Cpath%20d%3D%22M72%2034%20Q80%2040%2072%2046%20T72%2058%22%20fill%3D%22none%22%20stroke%3D%22%2334d399%22%20stroke-width%3D%222%22/%3E%3Cpath%20d%3D%22M80%2034%20Q72%2040%2080%2046%20T80%2058%22%20fill%3D%22none%22%20stroke%3D%22%236ee7b7%22%20stroke-width%3D%222%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b6',
+        name: 'Deney Tüplü Kimyager',
+        category: 'Laboratuvar & Yaşam',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b6%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23083344%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230891b2%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b6%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cpolygon%20points%3D%2234%2C74%2064%2C74%2054%2C44%2044%2C44%22%20fill%3D%22rgba%28255%2C255%2C255%2C0.2%29%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%222%22/%3E%3Crect%20x%3D%2245%22%20y%3D%2238%22%20width%3D%228%22%20height%3D%227%22%20rx%3D%221%22%20fill%3D%22%23e2e8f0%22/%3E%3Cpolygon%20points%3D%2237%2C72%2061%2C72%2056%2C56%2042%2C56%22%20fill%3D%22%2310b981%22/%3E%3Ccircle%20cx%3D%2248%22%20cy%3D%2262%22%20r%3D%222.5%22%20fill%3D%22%23a7f3d0%22/%3E%3Ccircle%20cx%3D%2253%22%20cy%3D%2258%22%20r%3D%221.5%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%2249%22%20cy%3D%2248%22%20r%3D%222%22%20fill%3D%22%236ee7b7%22/%3E%3Ccircle%20cx%3D%2251%22%20cy%3D%2232%22%20r%3D%222.5%22%20fill%3D%22%2334d399%22/%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2230%22%20r%3D%223%22%20fill%3D%22%23facc15%22/%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2238%22%20r%3D%223%22%20fill%3D%22%23facc15%22/%3E%3Cline%20x1%3D%2270%22%20y1%3D%2230%22%20x2%3D%2280%22%20y2%3D%2238%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%221.5%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b7',
+        name: 'Doğa Araştırmacısı',
+        category: 'Laboratuvar & Yaşam',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b7%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%2314532d%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2316a34a%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b7%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2246%22%20cy%3D%2248%22%20r%3D%2224%22%20fill%3D%22%230284c7%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221.5%22/%3E%3Cpath%20d%3D%22M36%2040%20Q44%2034%2048%2042%20Q52%2046%2044%2054%20Q36%2050%2036%2040%20Z%22%20fill%3D%22%2322c55e%22/%3E%3Cpath%20d%3D%22M52%2050%20Q60%2046%2064%2054%20Q58%2064%2050%2060%20Z%22%20fill%3D%22%2322c55e%22/%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%2240%22%20r%3D%2214%22%20fill%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke%3D%22%23fbbf24%22%20stroke-width%3D%223%22/%3E%3Cline%20x1%3D%2274%22%20y1%3D%2250%22%20x2%3D%2286%22%20y2%3D%2264%22%20stroke%3D%22%23b45309%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M60%2040%20Q64%2034%2070%2038%20Q68%2046%2060%2040%20Z%22%20fill%3D%22%2384cc16%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b8',
+        name: 'Botanik Kâşifi',
+        category: 'Laboratuvar & Yaşam',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b8%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23022c22%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2315803d%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b8%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cpath%20d%3D%22M34%2054%20L38%2076%20L62%2076%20L66%2054%20Z%22%20fill%3D%22rgba%28255%2C255%2C255%2C0.2%29%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%222%22/%3E%3Cpath%20d%3D%22M37%2066%20L38%2075%20L62%2075%20L63%2066%20Z%22%20fill%3D%22%2378350f%22/%3E%3Cpath%20d%3D%22M50%2068%20Q50%2048%2048%2038%22%20fill%3D%22none%22%20stroke%3D%22%2322c55e%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M49%2046%20Q38%2042%2042%2034%20Q50%2038%2049%2046%20Z%22%20fill%3D%22%234ade80%22/%3E%3Cpath%20d%3D%22M49%2042%20Q60%2036%2056%2028%20Q48%2032%2049%2042%20Z%22%20fill%3D%22%2386efac%22/%3E%3Ccircle%20cx%3D%2226%22%20cy%3D%2226%22%20r%3D%226%22%20fill%3D%22%23facc15%22/%3E%3Cline%20x1%3D%2226%22%20y1%3D%2216%22%20x2%3D%2226%22%20y2%3D%2212%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2216%22%20y1%3D%2226%22%20x2%3D%2212%22%20y2%3D%2226%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b9',
+        name: 'Robotik Araştırmacısı',
+        category: 'Fizik & Teknoloji',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b9%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230f172a%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231e293b%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b9%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Crect%20x%3D%2232%22%20y%3D%2232%22%20width%3D%2236%22%20height%3D%2234%22%20rx%3D%228%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2250%22%20y1%3D%2232%22%20x2%3D%2250%22%20y2%3D%2220%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2218%22%20r%3D%223.5%22%20fill%3D%22%23ef4444%22/%3E%3Crect%20x%3D%2227%22%20y%3D%2244%22%20width%3D%225%22%20height%3D%2210%22%20rx%3D%222%22%20fill%3D%22%2338bdf8%22/%3E%3Crect%20x%3D%2268%22%20y%3D%2244%22%20width%3D%225%22%20height%3D%2210%22%20rx%3D%222%22%20fill%3D%22%2338bdf8%22/%3E%3Ccircle%20cx%3D%2243%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%230284c7%22/%3E%3Ccircle%20cx%3D%2243%22%20cy%3D%2246%22%20r%3D%222%22%20fill%3D%22%2338bdf8%22/%3E%3Ccircle%20cx%3D%2257%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%230284c7%22/%3E%3Ccircle%20cx%3D%2257%22%20cy%3D%2246%22%20r%3D%222%22%20fill%3D%22%2338bdf8%22/%3E%3Cpath%20d%3D%22M42%2057%20Q50%2062%2058%2057%22%20fill%3D%22none%22%20stroke%3D%22%230ea5e9%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22/%3E%3Crect%20x%3D%2244%22%20y%3D%2267%22%20width%3D%2212%22%20height%3D%227%22%20fill%3D%22%2364748b%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b10',
+        name: 'Roket Mühendisi',
+        category: 'Fizik & Teknoloji',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b10%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23450a0a%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23c2410c%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b10%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cpath%20d%3D%22M50%2018%20Q62%2034%2060%2056%20L40%2056%20Q38%2034%2050%2018%20Z%22%20fill%3D%22%23f8fafc%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%221.5%22/%3E%3Cpath%20d%3D%22M50%2018%20Q55%2026%2057%2032%20L43%2032%20Q45%2026%2050%2018%20Z%22%20fill%3D%22%23ef4444%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2240%22%20r%3D%225%22%20fill%3D%22%230284c7%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221.5%22/%3E%3Cpolygon%20points%3D%2240%2C50%2030%2C62%2040%2C60%22%20fill%3D%22%23ef4444%22/%3E%3Cpolygon%20points%3D%2260%2C50%2070%2C62%2060%2C60%22%20fill%3D%22%23ef4444%22/%3E%3Cpolygon%20points%3D%2243%2C56%2050%2C78%2047%2C56%22%20fill%3D%22%23facc15%22/%3E%3Cpolygon%20points%3D%2247%2C56%2050%2C84%2053%2C56%22%20fill%3D%22%23f97316%22/%3E%3Cpolygon%20points%3D%2253%2C56%2050%2C78%2057%2C56%22%20fill%3D%22%23facc15%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b11',
+        name: 'Elektronik Kâşifi',
+        category: 'Fizik & Teknoloji',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b11%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%2318181b%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%233f3f46%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b11%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Crect%20x%3D%2235%22%20y%3D%2235%22%20width%3D%2230%22%20height%3D%2230%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2322c55e%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2240%22%20y1%3D%2228%22%20x2%3D%2240%22%20y2%3D%2235%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2250%22%20y1%3D%2228%22%20x2%3D%2250%22%20y2%3D%2235%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2260%22%20y1%3D%2228%22%20x2%3D%2260%22%20y2%3D%2235%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2240%22%20y1%3D%2265%22%20x2%3D%2240%22%20y2%3D%2272%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2250%22%20y1%3D%2265%22%20x2%3D%2250%22%20y2%3D%2272%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2260%22%20y1%3D%2265%22%20x2%3D%2260%22%20y2%3D%2272%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2228%22%20y1%3D%2242%22%20x2%3D%2235%22%20y2%3D%2242%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2228%22%20y1%3D%2258%22%20x2%3D%2235%22%20y2%3D%2258%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2265%22%20y1%3D%2242%22%20x2%3D%2272%22%20y2%3D%2242%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2265%22%20y1%3D%2258%22%20x2%3D%2272%22%20y2%3D%2258%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%224%22%20fill%3D%22%2322c55e%22/%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2250%22%20rx%3D%229%22%20ry%3D%223.5%22%20fill%3D%22none%22%20stroke%3D%22%234ade80%22%20stroke-width%3D%221%22%20transform%3D%22rotate%2830%2050%2050%29%22/%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2250%22%20rx%3D%229%22%20ry%3D%223.5%22%20fill%3D%22none%22%20stroke%3D%22%234ade80%22%20stroke-width%3D%221%22%20transform%3D%22rotate%28-30%2050%2050%29%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b12',
+        name: 'Enerji Araştırmacısı',
+        category: 'Fizik & Teknoloji',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b12%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%232e1065%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%237c3aed%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b12%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2248%22%20r%3D%2225%22%20fill%3D%22rgba%28124%2C58%2C237%2C0.3%29%22%20stroke%3D%22%23c084fc%22%20stroke-width%3D%222%22/%3E%3Cpolygon%20points%3D%2253%2C28%2042%2C46%2049%2C46%2046%2C68%2059%2C48%2051%2C48%22%20fill%3D%22%23facc15%22%20stroke%3D%22%23eab308%22%20stroke-width%3D%221%22/%3E%3Cpath%20d%3D%22M30%2048%20Q50%2032%2070%2048%22%20fill%3D%22none%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%222%202%22/%3E%3Cpath%20d%3D%22M30%2048%20Q50%2064%2070%2048%22%20fill%3D%22none%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%222%202%22/%3E%3Cpath%20d%3D%22M42%2073%20L58%2073%20L62%2082%20L38%2082%20Z%22%20fill%3D%22%2364748b%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b13',
+        name: 'Gözlüklü Genç Araştırmacı',
+        category: 'Akademik',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b13%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%231e293b%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23334155%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b13%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2246%22%20r%3D%2220%22%20fill%3D%22%23fcd34d%22/%3E%3Cpath%20d%3D%22M32%2040%20Q50%2024%2068%2040%20Q62%2026%2050%2026%20Q38%2026%2032%2040%20Z%22%20fill%3D%22%2378350f%22/%3E%3Ccircle%20cx%3D%2243%22%20cy%3D%2245%22%20r%3D%226%22%20fill%3D%22none%22%20stroke%3D%22%230f172a%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2257%22%20cy%3D%2245%22%20r%3D%226%22%20fill%3D%22none%22%20stroke%3D%22%230f172a%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2249%22%20y1%3D%2245%22%20x2%3D%2251%22%20y2%3D%2245%22%20stroke%3D%22%230f172a%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2237%22%20y1%3D%2245%22%20x2%3D%2233%22%20y2%3D%2244%22%20stroke%3D%22%230f172a%22%20stroke-width%3D%221.5%22/%3E%3Cline%20x1%3D%2263%22%20y1%3D%2245%22%20x2%3D%2267%22%20y2%3D%2244%22%20stroke%3D%22%230f172a%22%20stroke-width%3D%221.5%22/%3E%3Cpath%20d%3D%22M46%2054%20Q50%2057%2054%2054%22%20fill%3D%22none%22%20stroke%3D%22%23b45309%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M34%2076%20L44%2064%20L50%2068%20L56%2064%20L66%2076%20Z%22%20fill%3D%22%23f8fafc%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b14',
+        name: 'Meraklı Öğrenci',
+        category: 'Akademik',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b14%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23172554%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231d4ed8%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b14%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2248%22%20r%3D%2219%22%20fill%3D%22%23fed7aa%22/%3E%3Cpath%20d%3D%22M34%2044%20Q50%2030%2066%2044%20L68%2042%20Q50%2024%2032%2042%20Z%22%20fill%3D%22%232563eb%22/%3E%3Crect%20x%3D%2264%22%20y%3D%2242%22%20width%3D%228%22%20height%3D%223%22%20rx%3D%221.5%22%20fill%3D%22%231d4ed8%22/%3E%3Ccircle%20cx%3D%2244%22%20cy%3D%2248%22%20r%3D%222%22%20fill%3D%22%231e293b%22/%3E%3Ccircle%20cx%3D%2256%22%20cy%3D%2248%22%20r%3D%222%22%20fill%3D%22%231e293b%22/%3E%3Cpath%20d%3D%22M46%2056%20Q50%2061%2054%2056%22%20fill%3D%22none%22%20stroke%3D%22%23c2410c%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M74%2024%20L75%2027%20L78%2028%20L75%2029%20L74%2032%20L73%2029%20L70%2028%20L73%2027%20Z%22%20fill%3D%22%23facc15%22/%3E%3Cpath%20d%3D%22M32%2078%20L42%2066%20L58%2066%20L68%2078%20Z%22%20fill%3D%22%23f97316%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b15',
+        name: 'Fen Öğretmeni / Danışman',
+        category: 'Akademik',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b15%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23312e81%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%234f46e5%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b15%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cpolygon%20points%3D%2250%2C22%2074%2C32%2050%2C40%2026%2C32%22%20fill%3D%22%230f172a%22/%3E%3Cpolygon%20points%3D%2246%2C39%2050%2C40%2054%2C39%2052%2C48%2048%2C48%22%20fill%3D%22%231e293b%22/%3E%3Cline%20x1%3D%2250%22%20y1%3D%2231%22%20x2%3D%2268%22%20y2%3D%2244%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22/%3E%3Ccircle%20cx%3D%2268%22%20cy%3D%2245%22%20r%3D%222%22%20fill%3D%22%23f59e0b%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2252%22%20r%3D%2216%22%20fill%3D%22%23fed7aa%22/%3E%3Crect%20x%3D%2240%22%20y%3D%2249%22%20width%3D%227%22%20height%3D%225%22%20rx%3D%221.5%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.5%22/%3E%3Crect%20x%3D%2253%22%20y%3D%2249%22%20width%3D%227%22%20height%3D%225%22%20rx%3D%221.5%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.5%22/%3E%3Cline%20x1%3D%2247%22%20y1%3D%2251%22%20x2%3D%2253%22%20y2%3D%2251%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.5%22/%3E%3Cpath%20d%3D%22M46%2060%20Q50%2064%2054%2060%22%20fill%3D%22none%22%20stroke%3D%22%239a3412%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M36%2078%20L46%2066%20L54%2066%20L64%2078%20Z%22%20fill%3D%22%231e293b%22/%3E%3Cpolygon%20points%3D%2249%2C66%2051%2C66%2052%2C74%2050%2C77%2048%2C74%22%20fill%3D%22%23f59e0b%22/%3E%3C/svg%3E'
+    },
+    {
+        id: 'b16',
+        name: 'Bilim Rehberi',
+        category: 'Akademik',
+        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b16%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230c4a6e%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230284c7%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b16%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cpolygon%20points%3D%2250%2C18%2053%2C28%2064%2C30%2055%2C36%2058%2C46%2050%2C40%2042%2C46%2045%2C36%2036%2C30%2047%2C28%22%20fill%3D%22%23fde047%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2258%22%20r%3D%2218%22%20fill%3D%22rgba%2815%2C23%2C42%2C0.8%29%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%222%22/%3E%3Cpolygon%20points%3D%2250%2C44%2054%2C58%2050%2C55%2046%2C58%22%20fill%3D%22%23ef4444%22/%3E%3Cpolygon%20points%3D%2250%2C72%2054%2C58%2050%2C61%2046%2C58%22%20fill%3D%22%2394a3b8%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2243%22%20r%3D%221.5%22%20fill%3D%22%23fde047%22/%3E%3Ccircle%20cx%3D%2265%22%20cy%3D%2258%22%20r%3D%221.5%22%20fill%3D%22%2338bdf8%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2273%22%20r%3D%221.5%22%20fill%3D%22%2338bdf8%22/%3E%3Ccircle%20cx%3D%2235%22%20cy%3D%2258%22%20r%3D%221.5%22%20fill%3D%22%2338bdf8%22/%3E%3C/svg%3E'
+    }
 ];
 
 function isimSor(prefill, callback) {
@@ -2081,146 +2129,96 @@ const btnCloseModal = document.getElementById('btn-close-modal');
 
 const policies = {
     kvkk: {
-        title: "Gizlilik Politikası (KVKK)",
-        content: `<p>FenUp X olarak kişisel verilerinizin güvenliğine büyük önem veriyoruz. 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca, sitemizi ziyaretiniz sırasında elde edilen veriler aşağıda belirtilen şartlarda işlenmektedir.</p>
-        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">1. Toplanan Veriler</h3>
-        <p>Şu aşamada sitemiz doğrudan kişisel veri (ad, soyad, TC kimlik numarası vb.) toplamamaktadır. Yarışma modülünde girilen "Kaptan Adı" veya "Grup İsmi" gibi bilgiler yalnızca o oturum (session) için tarayıcınızın belleğinde tutulur ve veritabanımıza kaydedilmez.</p>
-        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">2. Verilerin Kullanım Amacı</h3>
-        <p>Sitemizin genel trafiğini ve kullanım alışkanlıklarını anlamak amacıyla toplanan anonim analitik veriler (sayfa görüntülenme sayısı vb.), platformun performansını ölçmek ve eğitim içeriklerimizi geliştirmek amacıyla kullanılır.</p>
-        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">3. Üçüncü Taraflarla Paylaşım</h3>
-        <p>Toplanan hiçbir veri; reklam, pazarlama veya başka bir amaçla üçüncü kurum, kuruluş veya şahıslarla paylaşılmamaktadır.</p>`
+        title: "Gizlilik Politikası ve KVKK Aydınlatma Metni",
+        content: `<p>FenUp X Ekibi olarak, 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") ve evrensel veri koruma ilkeleri doğrultusunda ziyaretçilerimizin ve öğrencilerimizin kişisel verilerinin güvenliğine en üst düzeyde önem veriyoruz.</p>
+        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">1. Öğrenci ve Çocuk Mahremiyeti</h3>
+        <p>Platformumuz 18 yaş altı ortaokul öğrencilerinin kullanımı için tasarlandığından çocuk mahremiyeti temel kırmızı çizgimizdir. Platformumuz <strong>minimum veri toplama</strong> prensibini benimser:</p>
+        <ul style="margin-left: 20px;">
+            <li style="margin-bottom: 8px;">Platformu kullanırken T.C. kimlik numarası, telefon numarası veya açık adres gibi hassas veriler KESİNLİKLE talep edilmez.</li>
+            <li style="margin-bottom: 8px;">Yazılı sınav provasında çözülen sorular, verilen cevaplar ve puan ilerlemeleri yalnızca öğrencinin kendi tarayıcısında (yerel depolama - <code>localStorage</code>) saklanır; merkezi bir sunucuya veya dış ortama aktarılmaz.</li>
+        </ul>
+        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">2. Veri Paylaşımı ve Ticari Yasak</h3>
+        <p>Öğrencilere, velilere veya öğretmenlere ait hiçbir bilgi; reklam, tanıtım, pazarlama veya ticari amaçla üçüncü kişi, kurum veya kuruluşlarla ASLA paylaşılmaz, satılmaz veya devredilmez.</p>
+        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">3. Veri Güvenliği ve Kalıcı Sıfırlama Hakkı</h3>
+        <p>Sitemiz tüm veri iletimini modern SSL/TLS şifreleme protokolleri ile güvence altına alır. Kullanıcılarımız diledikleri an "Kaydı Kaldır" veya "İlerlemeyi Sıfırla" butonuyla tarayıcılarında saklanan tüm sınav verilerini tek tıkla kalıcı olarak silebilirler.</p>`
     },
     terms: {
-        title: "Kullanım Koşulları",
-        content: `<p>FenUp X eğitim platformuna hoş geldiniz. Sitemizi kullanarak aşağıda belirtilen koşulları kabul etmiş sayılırsınız:</p>
-        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">1. Fikri Mülkiyet ve Telif Hakları</h3>
-        <p>Sitede yer alan tüm yazılım kodları, görsel tasarımlar, oyun mekanikleri ve özgün soru havuzu FenUp X platformuna ve kurucusuna aittir. İçerikler izinsiz olarak kopyalanamaz, başka bir web sitesinde yayınlanamaz ve ticari amaçla kullanılamaz.</p>
-        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">2. Eğitim Amaçlı Kullanım</h3>
-        <p>Sitemiz; okullarda, akıllı tahtalarda ve bireysel cihazlarda eğitim ve pekiştirme amaçlı olarak ücretsiz kullanılmak üzere tasarlanmıştır.</p>
-        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">3. Sorumluluk Reddi</h3>
-        <p>Oyun modüllerimiz üzerinden elde edilen puanlar, sıralamalar veya sonuçlar hiçbir şekilde resmi bir eğitim değerlendirme niteliği taşımaz. Uygulamanın amacı öğrencilerin fen bilimlerine olan ilgisini artırmak ve öğrenmeyi eğlenceli hale getirmektir.</p>`
+        title: "Kullanım Koşulları ve Eğitsel Standartlar",
+        content: `<p>FenUp X eğitim platformuna hoş geldiniz. Sitemizi kullanarak aşağıda belirtilen kullanım koşullarını kabul etmiş sayılırsınız:</p>
+        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">1. Eğitsel ve Adil Kullanım</h3>
+        <p>FenUp X platformunda yer alan özgün açık uçlu sorular, analitik değerlendirme rubrikleri, kavram şemaları, konu özet kartları ve sanal laboratuvar bileşenleri; öğrencilerin bireysel hazırlıklarında ve öğretmenlerin sınıf içi eğitsel faaliyetlerinde tamamen <strong>ücretsiz ve serbestçe</strong> kullanılabilir.</p>
+        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">2. Fikri Mülkiyet ve Telif Hakları</h3>
+        <p>Platformun yazılım mimarisi, özgün grafik ve SVG şemaları, vektörel çizimleri, soru bankası içeriği ve FenUp X marka unsurları FenUp X Ekibi'ne aittir. İçeriklerin ticari bir ürün haline getirilmesi, izinsiz satılması veya kâr amaçlı çoğaltılması yasaktır.</p>
+        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">3. Sorumluluk Reddi ve Resmî Sınav Açıklaması</h3>
+        <p>FenUp X'te sunulan sorular, MEB ders kitaplarına, kazanımlara ve il zümre konu-soru dağılım tablolarına titizlikle uygun olarak üretilmiş hazırlık ve prova materyalleridir. Millî Eğitim Bakanlığı'nın doğrudan resmî sınav soruları değildir ve sınavda birebir aynı soruların çıkacağı taahhüt edilmez.</p>`
     },
     cookies: {
-        title: "Çerez Politikası",
-        content: `<p>FenUp X, sizlere daha iyi bir kullanıcı deneyimi sunabilmek ve platformumuzu geliştirebilmek amacıyla çerez (cookie) teknolojilerinden faydalanır.</p>
-        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">1. Çerez Nedir?</h3>
-        <p>Çerezler, bir web sitesini ziyaret ettiğinizde tarayıcınız aracılığıyla bilgisayarınıza veya mobil cihazınıza kaydedilen küçük boyutlu metin dosyalarıdır.</p>
-        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">2. Hangi Çerezleri Kullanıyoruz?</h3>
+        title: "Çerez (Cookie) Politikası",
+        content: `<p>FenUp X, web sitemizin kesintisiz, hızlı ve güvenli çalışabilmesi, eğitsel tercihlerin hatırlanması ve platform performansının anonim olarak ölçülebilmesi amacıyla sınırlı çerezler kullanmaktadır.</p>
+        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">1. Kullanılan Çerez Türleri ve Amaçları</h3>
         <ul style="margin-left: 20px;">
-            <li style="margin-bottom: 10px;"><strong>Zorunlu Çerezler:</strong> Sitenin temel fonksiyonlarının eksiksiz çalışması için gereklidir. Örneğin, bu politika onay çubuğunu kapatıp kapatmadığınızın bilgisi tarayıcınızda bu sayede tutulur.</li>
-            <li style="margin-bottom: 10px;"><strong>Analitik Çerezler:</strong> Ziyaretçi sayılarını ve site kullanım istatistiklerini anlamamıza yardımcı olur.</li>
+            <li style="margin-bottom: 8px;"><strong>Zorunlu ve İşlevsel Çerezler:</strong> Yazılı provasında kaldığınız soruyu hatırlamak, konu kartlarındaki çalışma ilerlemenizi kaydetmek ve tercih ettiğiniz görünüm ayarlarını korumak için kullanılır (tarayıcı yerel depolaması - <code>localStorage</code>). Bu çerezler olmadan eğitim süreçleri kesintiye uğrar.</li>
+            <li style="margin-bottom: 8px;"><strong>Analitik Çerezler (Google Analytics 4):</strong> Platformun hangi bölümlerinin daha çok kullanıldığını, senaryolar arası dağılımı ve teknik sayfa performansını anonim olarak ölçümlemek amacıyla Google Analytics 4 (<code>G-HW3RN9415Z</code>) kullanılır. Bu çerezler kimlik tespiti yapmaz, IP adreslerini anonimleştirir ve kişisel veri içermez.</li>
         </ul>
-        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">3. Çerez Yönetimi</h3>
-        <p>İnternet tarayıcınızın ayarlar bölümünden çerezleri silebilir veya kullanımını engelleyebilirsiniz; ancak bu durumda sitenin bazı özellikleri (örneğin karanlık mod tercihi veya kura çekimi verileri) düzgün çalışmayabilir.</p>`
+        <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">2. Çerez Yönetimi ve Devre Dışı Bırakma</h3>
+        <p>Kullanıcılar tarayıcı ayarlarından (Chrome, Firefox, Safari, Edge vb.) çerezleri diledikleri zaman silebilir, engelleyebilir veya sınırlandırabilirler. Çerezlerin tamamen devre dışı bırakılması durumunda sınavda kaldığınız soru gibi bazı işlevsel kolaylıklar her sayfa yenilemesinde baştan başlayabilir.</p>`
     }
 };
 
-function openModal(policyKey) {
-    const sq = document.getElementById('scene-quiz');
-    const stq = document.getElementById('scene-tournament-quiz');
-    if(isGlobalPaused === false && ((sq && !sq.classList.contains('is-hidden')) || (stq && !stq.classList.contains('is-hidden')))) {
-        toggleMasterPause(); 
-    }
-    
-    // V8.1: Eğer modern #legal-modal mevcutsa sekmeli yapıyı aç
-    if (document.getElementById('legal-modal')) {
-        openLegalModal(policyKey);
-        return;
-    }
-
-    if(modalTitle && policies[policyKey]) modalTitle.textContent = policies[policyKey].title;
-    if(modalBody && policies[policyKey]) modalBody.innerHTML = policies[policyKey].content;
-    showModal(policyModal);
-}
-
-if(btnCloseModal) btnCloseModal.onclick = () => { hideModal(policyModal); };
-
-if(policyModal) {
-    policyModal.onclick = (e) => { 
-        if (e.target === policyModal) hideModal(policyModal); 
-    };
-}
-
-// ============================================================================
-// V8.1: KURUMSAL & YASAL BİLGİLENDİRME MODAL VE SEKMELERİ (ABOUT / PRIVACY / COOKIES / TERMS)
-// ============================================================================
-const legalModal = document.getElementById('legal-modal');
-const btnCloseLegalModal = document.getElementById('btn-close-legal-modal');
-
-export function switchLegalTab(tabKey) {
-    if (!legalModal) return;
-    const tabMap = {
-        about: 'about',
-        hakkimizda: 'about',
-        privacy: 'privacy',
-        kvkk: 'privacy',
-        cookies: 'cookies',
-        cerez: 'cookies',
-        terms: 'terms',
-        kosullar: 'terms'
-    };
-    const targetKey = tabMap[tabKey] || 'about';
-
-    legalModal.querySelectorAll('.legal-tab-btn').forEach(btn => {
-        const isMatch = btn.getAttribute('data-tab') === targetKey;
-        btn.classList.toggle('is-active', isMatch);
-        btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
-    });
-
-    legalModal.querySelectorAll('.legal-tab-pane').forEach(pane => {
-        const isMatch = pane.id === `legal-tab-${targetKey}`;
-        pane.classList.toggle('is-active', isMatch);
-        pane.classList.toggle('is-hidden', !isMatch);
-        pane.style.display = isMatch ? 'block' : 'none';
-    });
-
-    const bodyEl = document.getElementById('legal-content-body');
-    if (bodyEl) bodyEl.scrollTop = 0;
-}
-
-export function openLegalModal(tabKey = 'about') {
-    if (!legalModal) return;
+export function openModal(policyKey) {
     const sq = document.getElementById('scene-quiz');
     const stq = document.getElementById('scene-tournament-quiz');
     if (isGlobalPaused === false && ((sq && !sq.classList.contains('is-hidden')) || (stq && !stq.classList.contains('is-hidden')))) {
-        toggleMasterPause();
+        toggleMasterPause(); 
     }
-    legalModal.classList.remove('is-hidden');
-    legalModal.classList.add('is-open');
-    legalModal.style.display = 'flex';
-    legalModal.setAttribute('aria-hidden', 'false');
-    switchLegalTab(tabKey);
+    
+    if (policyKey === 'about' || policyKey === 'hakkimizda') {
+        showScene('scene-hakkimizda');
+        return;
+    }
+
+    const keyMap = {
+        privacy: 'kvkk',
+        kvkk: 'kvkk',
+        terms: 'terms',
+        kosullar: 'terms',
+        cookies: 'cookies',
+        cerez: 'cookies'
+    };
+    const resolvedKey = keyMap[policyKey] || policyKey;
+
+    if (modalTitle && policies[resolvedKey]) modalTitle.textContent = policies[resolvedKey].title;
+    if (modalBody && policies[resolvedKey]) modalBody.innerHTML = policies[resolvedKey].content;
+    showModal(policyModal);
+}
+
+export function openLegalModal(tabKey = 'about') {
+    openModal(tabKey);
 }
 
 export function closeLegalModal() {
-    if (!legalModal) return;
-    legalModal.classList.add('is-hidden');
-    legalModal.classList.remove('is-open');
-    legalModal.style.display = 'none';
-    legalModal.setAttribute('aria-hidden', 'true');
+    hideModal(policyModal);
+}
+
+export function switchLegalTab(tabKey) {
+    openModal(tabKey);
 }
 
 if (typeof window !== 'undefined') {
+    window.openModal = openModal;
     window.openLegalModal = openLegalModal;
     window.closeLegalModal = closeLegalModal;
     window.switchLegalTab = switchLegalTab;
 }
 
-if (btnCloseLegalModal) {
-    btnCloseLegalModal.onclick = () => closeLegalModal();
+if (btnCloseModal) {
+    btnCloseModal.onclick = () => { hideModal(policyModal); };
 }
 
-if (legalModal) {
-    legalModal.onclick = (e) => {
-        if (e.target === legalModal) closeLegalModal();
+if (policyModal) {
+    policyModal.onclick = (e) => { 
+        if (e.target === policyModal) hideModal(policyModal); 
     };
-    legalModal.querySelectorAll('.legal-tab-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const tab = btn.getAttribute('data-tab');
-            switchLegalTab(tab);
-        });
-    });
 }
 
 const btnFooterInfo = document.getElementById('btn-footer-info');
@@ -2253,47 +2251,37 @@ if (btnFooterInfo && footerInfoDropdown) {
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-        if (legalModal && !legalModal.classList.contains('is-hidden')) {
-            closeLegalModal();
+        if (policyModal && !policyModal.classList.contains('is-hidden')) {
+            hideModal(policyModal);
         }
     }
 });
 
 // Footer ve genel kurumsal bağlantılar
-document.querySelectorAll('.btn-legal-open').forEach(btn => {
-    btn.onclick = (e) => {
-        if (e) e.stopPropagation();
-        if (profileDropdown) profileDropdown.classList.add('is-hidden');
-        closeFooterInfoDropdown();
-        const tab = btn.getAttribute('data-legal') || 'about';
-        openLegalModal(tab);
-    };
-});
-
 document.querySelectorAll('.btn-kvkk-open').forEach(btn => btn.onclick = (e) => {
-    if(e) e.stopPropagation();
-    if(profileDropdown) profileDropdown.classList.add('is-hidden');
+    if (e) e.stopPropagation();
+    if (profileDropdown) profileDropdown.classList.add('is-hidden');
     closeFooterInfoDropdown();
-    openLegalModal('privacy');
+    openModal('kvkk');
 });
 document.querySelectorAll('.btn-terms-open').forEach(btn => btn.onclick = (e) => {
-    if(e) e.stopPropagation();
-    if(profileDropdown) profileDropdown.classList.add('is-hidden');
+    if (e) e.stopPropagation();
+    if (profileDropdown) profileDropdown.classList.add('is-hidden');
     closeFooterInfoDropdown();
-    openLegalModal('terms');
+    openModal('terms');
 });
 document.querySelectorAll('.btn-cookies-open').forEach(btn => btn.onclick = (e) => {
-    if(e) e.stopPropagation();
-    if(profileDropdown) profileDropdown.classList.add('is-hidden');
+    if (e) e.stopPropagation();
+    if (profileDropdown) profileDropdown.classList.add('is-hidden');
     closeFooterInfoDropdown();
-    openLegalModal('cookies');
+    openModal('cookies');
 });
 
 const cookiePolicyLink = document.getElementById('cookie-policy-link');
-if(cookiePolicyLink) {
+if (cookiePolicyLink) {
     cookiePolicyLink.onclick = (e) => { 
         e.preventDefault(); 
-        openLegalModal('cookies'); 
+        openModal('cookies'); 
     };
 }
 
@@ -2568,12 +2556,34 @@ const avatarContainer = document.getElementById('avatar-selector');
 if(avatarContainer) {
     kozmikAvatarlar.forEach(av => {
         const img = document.createElement('img');
-        img.src = av.url; img.className = "avatar-item"; img.dataset.url = av.url;
+        img.src = av.url; 
+        img.className = "avatar-item"; 
+        img.dataset.url = av.url;
+        img.alt = av.name || "Bilim Kâşifi";
+        img.title = `${av.name} (${av.category})`;
         img.onclick = () => {
             document.querySelectorAll('.avatar-item').forEach(i => i.classList.remove('selected'));
             img.classList.add('selected');
-            const pca = document.getElementById('p-current-avatar'); if(pca) pca.src = av.url;
-            const asc = document.getElementById('avatar-selector-container'); if(asc) asc.classList.add('is-hidden'); 
+            const pca = document.getElementById('p-current-avatar'); 
+            if(pca) pca.src = av.url;
+            const asc = document.getElementById('avatar-selector-container'); 
+            if(asc) asc.classList.add('is-hidden'); 
+
+            // V8.3: Sağ üstteki kullanıcı profil avatarı anında güncellensin ve localStorage'a kaydedilsin
+            try {
+                localStorage.setItem('fenupx_user_avatar', av.url);
+            } catch (_) {}
+
+            const headerAvatar = document.querySelector('.profile-img-header');
+            if (headerAvatar) {
+                headerAvatar.src = av.url;
+            }
+
+            if (auth && auth.currentUser) {
+                try {
+                    updateDoc(doc(db, "users", auth.currentUser.uid), { avatar: av.url }).catch(() => {});
+                } catch (_) {}
+            }
         };
         avatarContainer.appendChild(img);
     });
@@ -3200,6 +3210,44 @@ if(adminModal) adminModal.onclick = (e) => { if (e.target === adminModal) hideMo
 
 if(adminSearchInput) adminSearchInput.oninput = (e) => { renderAdminUsers(e.target.value); };
 
+function updateAdminUserMetrics() {
+    const totalUsers = allAdminUsers.length;
+    let students = 0;
+    let teachers = 0;
+    let onlineCount = 0;
+    const now = Date.now();
+    const fifteenMins = 15 * 60 * 1000;
+
+    allAdminUsers.forEach(u => {
+        const isTeacher = u.role === 'teacher' || u.role === 'ogretmen';
+        if (isTeacher) teachers++;
+        else students++;
+
+        let lastTime = 0;
+        if (u.lastActive && typeof u.lastActive.toMillis === 'function') lastTime = u.lastActive.toMillis();
+        else if (u.lastActive && typeof u.lastActive === 'number') lastTime = u.lastActive;
+        else if (u.lastSeen && typeof u.lastSeen.toMillis === 'function') lastTime = u.lastSeen.toMillis();
+        else if (u.lastSeen && typeof u.lastSeen === 'number') lastTime = u.lastSeen;
+        else if (u.updatedAt && typeof u.updatedAt.toMillis === 'function') lastTime = u.updatedAt.toMillis();
+        else if (u.createdAt && typeof u.createdAt.toMillis === 'function') lastTime = u.createdAt.toMillis();
+        else if (u.createdAt instanceof Date) lastTime = u.createdAt.getTime();
+
+        if (lastTime > 0 && (now - lastTime) <= fifteenMins) {
+            u._isOnline = true;
+            onlineCount++;
+        } else {
+            u._isOnline = false;
+        }
+    });
+
+    const elTotal = document.getElementById('admin-stat-total-users');
+    const elRoles = document.getElementById('admin-stat-roles');
+    const elOnline = document.getElementById('admin-stat-online');
+    if (elTotal) elTotal.textContent = totalUsers;
+    if (elRoles) elRoles.textContent = `${students} Öğrenci · ${teachers} Öğretmen`;
+    if (elOnline) elOnline.textContent = `${onlineCount} Çevrimiçi`;
+}
+
 async function loadAdminUsers() {
     if(adminUserList) adminUserList.innerHTML = '<p style="text-align:center; color:#aaa; margin-top:20px;">Kullanıcılar yükleniyor...</p>';
     try {
@@ -3214,6 +3262,7 @@ async function loadAdminUsers() {
         });
         
         allAdminUsers.sort((a, b) => (b.totalScore || 0) - (a.totalScore || 0));
+        updateAdminUserMetrics();
         renderAdminUsers();
     } catch(e) {
         if(adminUserList) adminUserList.innerHTML = '<p style="color:#ef4444; text-align:center;">Kullanıcılar yüklenirken bir hata oluştu.</p>';
@@ -3237,13 +3286,17 @@ function renderAdminUsers(filterText = '') {
 
     filtered.forEach(u => {
         const isBanned = u.isBanned === true;
+        const isOnline = u._isOnline === true;
+        const onlineBadge = isOnline 
+            ? `<span class="admin-online-badge"><span style="color:#10b981; font-size:0.6rem;">●</span> Çevrimiçi</span>` 
+            : '';
         const row = document.createElement('div');
         row.className = `admin-user-row ${isBanned ? 'banned' : ''}`;
         row.innerHTML = `
             <div class="admin-user-info">
-                <img src="${u.avatar || kozmikAvatarlar[0].url}" class="admin-user-avatar">
+                <img src="${u.avatar || kozmikAvatarlar[0].url}" class="admin-user-avatar" alt="${u.nickname || 'Avatar'}">
                 <div class="admin-user-details">
-                    <h4>${u.nickname || 'İsimsiz Kaptan'}</h4>
+                    <h4>${u.nickname || 'İsimsiz Kaptan'}${onlineBadge}</h4>
                     <p>${u.name || ''} ${u.surname || ''} | ${u.email || ''}</p>
                 </div>
             </div>

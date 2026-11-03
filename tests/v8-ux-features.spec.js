@@ -168,45 +168,57 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await page.addInitScript(() => localStorage.setItem('fenupx_cookie_consent', 'accepted'));
         await page.goto('/');
 
-        const legalModal = page.locator('#legal-modal');
-        await expect(legalModal).toBeHidden();
+        // 1. Üst Menüdeki #btn-hakkimizda orijinal scene-hakkimizda sahnesini açmalı
+        const btnHakkimizda = page.locator('#btn-hakkimizda');
+        await expect(btnHakkimizda).toBeVisible();
+        await btnHakkimizda.click();
+
+        const sceneAbout = page.locator('#scene-hakkimizda');
+        await expect(sceneAbout).toBeVisible();
+        await expect(sceneAbout).toContainText('Bilimde Seviye Atlat: FenUp X');
+
+        // Ana sayfaya geri dön
+        await sceneAbout.locator('.btn-back-home').click();
+        await expect(sceneAbout).toBeHidden();
+
+        // 2. Orijinal #policy-modal pencereleri
+        const policyModal = page.locator('#policy-modal');
+        await expect(policyModal).toBeHidden();
 
         // Footer'daki "Gizlilik Politikası" butonuna tıkla
-        const btnPrivacy = page.locator('.btn-legal-open[data-legal="privacy"]').first();
+        const btnPrivacy = page.locator('#main-footer .btn-kvkk-open');
         await btnPrivacy.click();
 
-        // Modal açılmalı ve "Gizlilik & KVKK" sekmesi aktif olmalı
-        await expect(legalModal).toBeVisible();
-        await expect(page.locator('#legal-tab-privacy')).toBeVisible();
-        await expect(page.locator('#legal-tab-about')).toBeHidden();
-
-        // "Hakkımızda" sekmesine geçiş
-        await page.locator('.legal-tab-btn[data-tab="about"]').click();
-        await expect(page.locator('#legal-tab-about')).toBeVisible();
-        await expect(page.locator('#legal-tab-about')).toContainText('Bilimde Seviye Atlat: FenUp X');
-        await expect(page.locator('#legal-tab-privacy')).toBeHidden();
-
-        // "Çerez Politikası" sekmesine geçiş
-        await page.locator('.legal-tab-btn[data-tab="cookies"]').click();
-        await expect(page.locator('#legal-tab-cookies')).toBeVisible();
-        await expect(page.locator('#legal-tab-cookies')).toContainText('G-HW3RN9415Z');
-
-        // "Kullanım Koşulları" sekmesine geçiş
-        await page.locator('.legal-tab-btn[data-tab="terms"]').click();
-        await expect(page.locator('#legal-tab-terms')).toBeVisible();
+        // Modal açılmalı ve Gizlilik metni görüntülenmeli
+        await expect(policyModal).toBeVisible();
+        await expect(page.locator('#modal-title')).toContainText('Gizlilik Politikası');
+        await expect(page.locator('#modal-body')).toContainText('KVKK');
 
         // Kapatma butonu ile kapatma
-        await page.locator('#btn-close-legal-modal').click();
-        await expect(legalModal).toBeHidden();
+        await page.locator('#btn-close-modal').click();
+        await expect(policyModal).toBeHidden();
 
-        // Tekrar aç ve ESC tuşuyla kapatmayı test et
-        await page.evaluate(() => window.openLegalModal('about'));
-        await expect(legalModal).toBeVisible();
+        // Çerez Politikası butonuna tıkla
+        const btnCookies = page.locator('#main-footer .btn-cookies-open');
+        await btnCookies.click();
+        await expect(policyModal).toBeVisible();
+        await expect(page.locator('#modal-title')).toContainText('Çerez');
+        await expect(page.locator('#modal-body')).toContainText('G-HW3RN9415Z');
+
+        // ESC tuşuyla kapatmayı test et
         await page.keyboard.press('Escape');
-        await expect(legalModal).toBeHidden();
+        await expect(policyModal).toBeHidden();
+
+        // Kullanım Koşulları butonuna tıkla
+        const btnTerms = page.locator('#main-footer .btn-terms-open');
+        await btnTerms.click();
+        await expect(policyModal).toBeVisible();
+        await expect(page.locator('#modal-title')).toContainText('Kullanım Koşulları');
+        await page.keyboard.press('Escape');
+        await expect(policyModal).toBeHidden();
     });
 
-    test('7. V8.2: 7. Sınıf Sanal Laboratuvarı Çift Düzenekli İş Deneyi (Mod 1 Kuvvetin İşe Etkisi & Mod 2 Yolun İşe Etkisi)', async ({ page }) => {
+    test('7. V8.2 & V8.3: 7. Sınıf Sanal Laboratuvarı Çift Düzenekli İş Deneyi (Mod 1 Kuvvetin İşe Etkisi & Mod 2 Yolun İşe Etkisi MEB Formülsüz Standart)', async ({ page }) => {
         await page.addInitScript(() => localStorage.setItem('fenupx_cookie_consent', 'accepted'));
         await page.goto('/');
 
@@ -256,9 +268,9 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
             return dual && dual.t1.isFinished && dual.t2.isFinished;
         }, { timeout: 15000 });
 
-        // Mod 1 Sonuç Cümlesini Doğrula
+        // Mod 1 MEB Formülsüz Sonuç Cümlesini Doğrula
         const pedText = page.locator('#work-pedagogical-text');
-        await expect(pedText).toContainText('Sonuç: Alınan yol sabit tutulduğunda, uygulanan kuvvet arttıkça yapılan fiziksel iş artar (Doğru orantı).');
+        await expect(pedText).toContainText('Sonuç: Alınan yol aynıyken, uygulanan kuvvet ne kadar fazlaysa yapılan fiziksel iş de o kadar fazla olur.');
 
         // 3. Mod 2: Alınan Yolun İşe Etkisi (Kuvvet Sabit) Moduna Geç
         await btnDist.click();
@@ -279,8 +291,8 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
             return dual && dual.t1.isFinished && dual.t2.isFinished;
         }, { timeout: 15000 });
 
-        // Mod 2 Sonuç Cümlesini Doğrula
-        await expect(pedText).toContainText('Sonuç: Uygulanan kuvvet sabit tutulduğunda, alınan yol arttıkça yapılan fiziksel iş artar (Doğru orantı).');
+        // Mod 2 MEB Formülsüz Sonuç Cümlesini Doğrula
+        await expect(pedText).toContainText('Sonuç: Uygulanan kuvvet aynıyken, cismin aldığı yol ne kadar fazlaysa yapılan fiziksel iş de o kadar fazla olur.');
 
         // 4. Tekli İnceleme Moduna Geri Dön
         await btnSingle.click();
@@ -288,5 +300,33 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await expect(page.locator('#controls-work-single')).toBeVisible();
         await expect(page.locator('#controls-work-dual')).toBeHidden();
         await expect(page.locator('#dual-work-variables-bar')).toBeHidden();
+    });
+
+    test('8. V8.3: Yönetim Paneli Sayaçları, Soru Filtresi ve 16 Bilim Kâşifi Avatarı', async ({ page }) => {
+        await page.addInitScript(() => localStorage.setItem('fenupx_cookie_consent', 'accepted'));
+        await page.goto('/');
+
+        // 1. Yönetim Paneli Sayaçlarını ve Filtrelerini Kontrol Et
+        const statTotal = page.locator('#admin-stat-total-users');
+        const statRoles = page.locator('#admin-stat-roles');
+        const statOnline = page.locator('#admin-stat-online');
+        await expect(statTotal).toBeAttached();
+        await expect(statRoles).toBeAttached();
+        await expect(statOnline).toBeAttached();
+
+        const gradeFilters = page.locator('#admin-grade-filters');
+        const outcomeFilter = page.locator('#admin-filter-outcome');
+        await expect(gradeFilters).toBeAttached();
+        await expect(outcomeFilter).toBeAttached();
+
+        // 2. 16 Bilim Kâşifi Avatarı Entegrasyonunu Doğrula
+        const avatarItems = page.locator('#avatar-selector .avatar-item');
+        await expect(avatarItems).toHaveCount(16);
+
+        // Birinci avatarı tıkla ve localStorage kaydını doğrula
+        await avatarItems.nth(0).dispatchEvent('click');
+        const savedAvatar = await page.evaluate(() => localStorage.getItem('fenupx_user_avatar'));
+        expect(savedAvatar).toBeTruthy();
+        expect(savedAvatar).toContain('data:image/svg+xml');
     });
 });

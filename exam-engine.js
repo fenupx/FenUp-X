@@ -3893,9 +3893,14 @@ function closePrintPreview() {
     }
 }
 
-// --- YÖNETİCİ PANELİ: 72 SORULUK SORU HAVUZU İNCELEME (Admin Only) ---
+// --- YÖNETİCİ PANELİ: SORU HAVUZU VE İKİ KADEMELİ HİYERARŞİK İNCELEME (Admin Only) ---
+let currentAdminGrade = 'all';
+let currentAdminOutcome = 'all';
+
 export function renderAdminQuestionReview() {
     const bankSelect = $('admin-bank-select');
+    const outcomeFilter = $('admin-filter-outcome');
+    const gradeButtons = document.querySelectorAll('#admin-grade-filters .admin-grade-btn');
     const container = $('admin-review-container');
     const tabBtn = $('btn-admin-tab-questions');
     if (!bankSelect || !container) return;
@@ -3917,7 +3922,7 @@ export function renderAdminQuestionReview() {
     }
     const descP = $('admin-questions-desc');
     if (descP) {
-        descP.textContent = `7. Sınıf ${allQuestions.length} soruluk soru havuzu, rubrikleri ve öğretmen inceleme durumları.`;
+        descP.textContent = `MEB Türkiye Yüzyılı Maarif Modeli ${allQuestions.length} soruluk soru havuzu, rubrikleri ve öğretmen inceleme durumları.`;
     }
 
     if (allQuestions.length === 0) {
@@ -3925,8 +3930,69 @@ export function renderAdminQuestionReview() {
         return;
     }
 
+    // 1. Kademe: Sınıf Filtresi Butonlarını Dinle
+    if (gradeButtons && gradeButtons.length > 0) {
+        gradeButtons.forEach(btn => {
+            if (!btn.dataset.bound) {
+                btn.dataset.bound = 'true';
+                btn.onclick = () => {
+                    gradeButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentAdminGrade = btn.getAttribute('data-grade') || 'all';
+                    currentAdminOutcome = 'all';
+                    renderAdminQuestionReview();
+                };
+            }
+        });
+    }
+
+    // Sınıfa göre filtrele (Varsayılan olarak mevcut sorular 7. Sınıfa aittir)
+    let questionsByGrade = allQuestions.filter(q => {
+        if (currentAdminGrade === 'all') return true;
+        const qGrade = q.grade ? String(q.grade) : (q.outcome_id?.startsWith('FB.5.') ? '5' : q.outcome_id?.startsWith('FB.6.') ? '6' : q.outcome_id?.startsWith('FB.7.') ? '7' : q.outcome_id?.startsWith('FB.8.') ? '8' : '7');
+        return qGrade === currentAdminGrade;
+    });
+
+    // 2. Kademe: Kazanım Filtresi Seçeneklerini Doldur
+    if (outcomeFilter) {
+        const outcomes = Array.from(new Set(questionsByGrade.map(q => q.outcome_id).filter(Boolean)));
+        const prevOutcome = currentAdminOutcome;
+        outcomeFilter.innerHTML = `<option value="all">Tüm Kazanımlar (${questionsByGrade.length} Soru)</option>` + 
+            outcomes.map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join('');
+        
+        if (outcomes.includes(prevOutcome)) {
+            outcomeFilter.value = prevOutcome;
+        } else {
+            outcomeFilter.value = 'all';
+            currentAdminOutcome = 'all';
+        }
+
+        if (!outcomeFilter.dataset.bound) {
+            outcomeFilter.dataset.bound = 'true';
+            outcomeFilter.onchange = () => {
+                currentAdminOutcome = outcomeFilter.value;
+                renderFilteredQuestions(questionsByGrade, bankSelect, container);
+            };
+        }
+    }
+
+    renderFilteredQuestions(questionsByGrade, bankSelect, container);
+}
+
+function renderFilteredQuestions(questionsByGrade, bankSelect, container) {
+    let finalQuestions = questionsByGrade;
+    if (currentAdminOutcome !== 'all') {
+        finalQuestions = questionsByGrade.filter(q => q.outcome_id === currentAdminOutcome);
+    }
+
+    if (finalQuestions.length === 0) {
+        bankSelect.innerHTML = '<option value="">Bu filtrede soru bulunamadı</option>';
+        container.innerHTML = '<div style="text-align:center; padding:30px; color:#94a3b8;"><i class="fas fa-search" style="font-size:2rem; margin-bottom:10px; color:#f59e0b;"></i><p>Seçilen sınıf ve kazanım filtresine uygun soru bulunamadı.</p></div>';
+        return;
+    }
+
     const diffWeight = { 'easy': 1, 'medium': 2, 'hard': 3 };
-    const sortedQuestions = [...allQuestions].sort((a, b) => {
+    const sortedQuestions = [...finalQuestions].sort((a, b) => {
         const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
         const oB = OUTCOME_ORDER.indexOf(b.outcome_id);
         const diffO = (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
@@ -3937,21 +4003,22 @@ export function renderAdminQuestionReview() {
         return (a.id || '').localeCompare(b.id || '');
     });
 
-    if (bankSelect.children.length !== sortedQuestions.length) {
-        const prevVal = bankSelect.value;
-        bankSelect.innerHTML = sortedQuestions.map((q, idx) => `
-            <option value="${esc(q.id)}">${idx + 1}. [${esc(q.outcome_id)}] ${esc(q.id)} · ${names[q.difficulty] || ''} · ${esc(q.title)}</option>
-        `).join('');
+    // Soruları OUTCOME_ORDER ve zorluk sırasına göre seçiciye doldur
+    const selectHtml = sortedQuestions.map((q, idx) => {
+        return `<option value="${esc(q.id)}">${idx + 1}. [${esc(q.outcome_id)}] ${esc(q.id)} · ${names[q.difficulty] || ''} · ${esc(q.title)}</option>`;
+    }).join('');
 
-        if (prevVal && sortedQuestions.some(item => item.id === prevVal)) {
-            bankSelect.value = prevVal;
-        }
+    const prevVal = bankSelect.value;
+    bankSelect.innerHTML = selectHtml;
 
-        bankSelect.onchange = () => {
-            const q = sortedQuestions.find(item => item.id === bankSelect.value);
-            if (q) displayAdminQuestion(q, container);
-        };
+    if (prevVal && sortedQuestions.some(item => item.id === prevVal)) {
+        bankSelect.value = prevVal;
     }
+
+    bankSelect.onchange = () => {
+        const q = sortedQuestions.find(item => item.id === bankSelect.value);
+        if (q) displayAdminQuestion(q, container);
+    };
 
     const selectedQ = sortedQuestions.find(item => item.id === bankSelect.value) || sortedQuestions[0];
     if (selectedQ) {
