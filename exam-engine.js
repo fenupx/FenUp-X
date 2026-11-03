@@ -1612,6 +1612,23 @@ function renderStudy(cardIndex) {
         });
     }
 
+    // V8.9.0: Günlük seri takibi ve Uzay Çağı kartları (Galileo Rozeti)
+    if (typeof window.checkAndUpdateStreak === 'function') {
+        window.checkAndUpdateStreak();
+    }
+    if (c && c.outcome_id && c.outcome_id.startsWith('FB.7.1')) {
+        try {
+            let viewedCards = JSON.parse(localStorage.getItem('fenupx_viewed_space_cards') || '[]');
+            if (!viewedCards.includes(c.id)) {
+                viewedCards.push(c.id);
+                localStorage.setItem('fenupx_viewed_space_cards', JSON.stringify(viewedCards));
+            }
+            if (viewedCards.length >= 6 && typeof window.unlockBadge === 'function') {
+                window.unlockBadge('badge_galileo');
+            }
+        } catch (_) {}
+    }
+
     const isReviewMode = (state.studyMode === 'review' && Array.isArray(state.reviewCardIds) && state.reviewCardIds.length > 0);
 
     if (isReviewMode) {
@@ -2507,6 +2524,9 @@ function renderPractice() {
                 a.answers[q.id] = textarea.value;
                 saveState();
                 updateAnsweredCountText(questions);
+                if (typeof window.checkAndUpdateStreak === 'function') {
+                    window.checkAndUpdateStreak();
+                }
                 // Nav strip rengini canlı güncelle
                 const navBtn = navStrip ? navStrip.querySelector(`[data-nav-q="${activeIdx}"]`) : null;
                 if (navBtn) {
@@ -2980,6 +3000,14 @@ function renderEval() {
 
                     saveState();
 
+                    // V8.9: Küçük Newton ve Uzay Mühendisi Rozet Kontrolü
+                    if (q.outcome_id === 'FB.7.2.1' || q.outcome_id === 'FB.7.2.2') {
+                        if (typeof window.unlockBadge === 'function') window.unlockBadge('badge_newton');
+                    }
+                    if (q.outcome_id === 'FB.7.1.2') {
+                        if (typeof window.unlockBadge === 'function') window.unlockBadge('badge_modelci');
+                    }
+
                     trackFenUpEvent('soru_degerlendirildi', {
                         question_id: q.id,
                         score: qPoints,
@@ -3127,6 +3155,14 @@ function renderEval() {
                     }
 
                     saveState();
+
+                    // V8.9: Küçük Newton ve Uzay Mühendisi Rozet Kontrolü
+                    if (q.outcome_id === 'FB.7.2.1' || q.outcome_id === 'FB.7.2.2') {
+                        if (typeof window.unlockBadge === 'function') window.unlockBadge('badge_newton');
+                    }
+                    if (q.outcome_id === 'FB.7.1.2') {
+                        if (typeof window.unlockBadge === 'function') window.unlockBadge('badge_modelci');
+                    }
 
                     trackFenUpEvent('soru_degerlendirildi', {
                         question_id: q.id,
@@ -3290,6 +3326,30 @@ function renderSummary() {
 
     a.score = totalScore;
     saveState();
+
+    // V8.9.0: Yazılı Ustası Rozeti ve Karne Özeti Kaydı
+    if (typeof window.unlockBadge === 'function') {
+        window.unlockBadge('badge_prova_ustasi');
+        if (totalScore >= 100) {
+            window.unlockBadge('badge_newton');
+        }
+        if (totalScore >= 500) {
+            window.unlockBadge('badge_fenup_efsanesi');
+        }
+    }
+    try {
+        const missingOutcomesList = questions
+            .filter(q => (getQuestionScore(q.id, a) < (a.questionPoints?.[q.id] || 15)))
+            .map(q => `${q.outcome_id}: ${q.title}`);
+        const summaryData = {
+            score: totalScore,
+            maxScore: 100,
+            percent: totalScore,
+            missingOutcomes: missingOutcomesList,
+            date: new Date().toLocaleDateString('tr-TR')
+        };
+        localStorage.setItem('fenupx_last_exam_summary', JSON.stringify(summaryData));
+    } catch (_) {}
 
     // Eksik Ölçütler ve Kart Eşleştirmesi (Hedefli Tekrar)
     const missedCardMap = {};
@@ -5137,8 +5197,248 @@ if (typeof window !== 'undefined') {
         getQuestions: () => QUESTIONS,
         getAllQuestions: () => (DATA?.allQuestions || DATA?.questions || QUESTIONS),
         OUTCOME_ORDER,
-        syncScenarioData
+        syncScenarioData,
+        initScratchpad,
+        toggleScratchpad
     };
+}
+
+// ==========================================================================
+// V8.9.0: AKILLI TAHTA (ETAP) ÇİZİM VE KARALAMA TAHTASI MODÜLÜ
+// ==========================================================================
+
+let scratchpadState = {
+    isOpen: false,
+    color: '#2d3436',
+    size: 2,
+    isEraser: false,
+    isDrawing: false,
+    lastX: 0,
+    lastY: 0
+};
+
+export function toggleScratchpad(forceOpen) {
+    const container = $('scratchpad-container');
+    const btnToggle = $('btn-toggle-scratchpad');
+    if (!container) return;
+
+    const shouldOpen = (typeof forceOpen === 'boolean') 
+        ? forceOpen 
+        : (container.style.display === 'none' || container.classList.contains('is-hidden'));
+
+    if (shouldOpen) {
+        container.style.display = 'block';
+        container.classList.remove('is-hidden');
+        if (btnToggle) btnToggle.classList.add('active');
+        scratchpadState.isOpen = true;
+        resizeScratchpadCanvas();
+    } else {
+        container.style.display = 'none';
+        container.classList.add('is-hidden');
+        if (btnToggle) btnToggle.classList.remove('active');
+        scratchpadState.isOpen = false;
+    }
+}
+
+if (typeof window !== 'undefined') {
+    window.toggleScratchpad = toggleScratchpad;
+}
+
+function resizeScratchpadCanvas() {
+    const canvas = $('scratchpad-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const wrapper = canvas.parentElement;
+    const newWidth = (wrapper && wrapper.clientWidth) ? wrapper.clientWidth : 800;
+    const newHeight = 400;
+
+    let tempCanvas = null;
+    if (canvas.width > 0 && canvas.height > 0) {
+        tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        const tCtx = tempCanvas.getContext('2d');
+        if (tCtx) tCtx.drawImage(canvas, 0, 0);
+    }
+
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (tempCanvas) {
+        ctx.drawImage(tempCanvas, 0, 0);
+    }
+}
+
+export function initScratchpad() {
+    const btnToggle = $('btn-toggle-scratchpad');
+    const container = $('scratchpad-container');
+    const canvas = $('scratchpad-canvas');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    if (btnToggle) {
+        btnToggle.onclick = (e) => {
+            e.preventDefault();
+            toggleScratchpad();
+        };
+    }
+
+    function getPointerPos(evt) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / (rect.width || 1);
+        const scaleY = canvas.height / (rect.height || 1);
+        const clientX = (evt.clientX !== undefined) 
+            ? evt.clientX 
+            : (evt.touches && evt.touches[0] ? evt.touches[0].clientX : 0);
+        const clientY = (evt.clientY !== undefined) 
+            ? evt.clientY 
+            : (evt.touches && evt.touches[0] ? evt.touches[0].clientY : 0);
+        return [
+            (clientX - rect.left) * scaleX,
+            (clientY - rect.top) * scaleY
+        ];
+    }
+
+    function startDrawing(x, y) {
+        scratchpadState.isDrawing = true;
+        scratchpadState.lastX = x;
+        scratchpadState.lastY = y;
+        drawStroke(x, y);
+    }
+
+    function drawStroke(x, y) {
+        if (!scratchpadState.isDrawing) return;
+        ctx.beginPath();
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        if (scratchpadState.isEraser) {
+            ctx.strokeStyle = '#f8fafc';
+            ctx.lineWidth = 26;
+        } else {
+            ctx.strokeStyle = scratchpadState.color;
+            ctx.lineWidth = scratchpadState.size;
+        }
+
+        ctx.moveTo(scratchpadState.lastX, scratchpadState.lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+
+        scratchpadState.lastX = x;
+        scratchpadState.lastY = y;
+    }
+
+    function stopDrawing() {
+        scratchpadState.isDrawing = false;
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+        const [x, y] = getPointerPos(e);
+        startDrawing(x, y);
+    });
+    canvas.addEventListener('mousemove', (e) => {
+        const [x, y] = getPointerPos(e);
+        drawStroke(x, y);
+    });
+    window.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing);
+
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        if (e.touches && e.touches.length > 0) {
+            const [x, y] = getPointerPos(e);
+            startDrawing(x, y);
+        }
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        if (e.touches && e.touches.length > 0) {
+            const [x, y] = getPointerPos(e);
+            drawStroke(x, y);
+        }
+    }, { passive: false });
+
+    canvas.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        stopDrawing();
+    }, { passive: false });
+
+    canvas.addEventListener('touchcancel', (e) => {
+        e.preventDefault();
+        stopDrawing();
+    }, { passive: false });
+
+    if (container) {
+        const colorBtns = container.querySelectorAll('.scratchpad-color-btn');
+        colorBtns.forEach(btn => {
+            btn.onclick = () => {
+                colorBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                scratchpadState.color = btn.dataset.color || '#2d3436';
+                scratchpadState.isEraser = false;
+                const eraserBtn = $('scratchpad-btn-eraser');
+                if (eraserBtn) eraserBtn.classList.remove('active');
+            };
+        });
+
+        const sizeBtns = container.querySelectorAll('.scratchpad-size-btn');
+        sizeBtns.forEach(btn => {
+            btn.onclick = () => {
+                sizeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                scratchpadState.size = Number(btn.dataset.size) || 2;
+            };
+        });
+
+        const eraserBtn = $('scratchpad-btn-eraser');
+        if (eraserBtn) {
+            eraserBtn.onclick = () => {
+                scratchpadState.isEraser = !scratchpadState.isEraser;
+                eraserBtn.classList.toggle('active', scratchpadState.isEraser);
+                if (scratchpadState.isEraser) {
+                    colorBtns.forEach(b => b.classList.remove('active'));
+                } else {
+                    const activeColorBtn = container.querySelector(`.scratchpad-color-btn[data-color="${scratchpadState.color}"]`);
+                    if (activeColorBtn) activeColorBtn.classList.add('active');
+                }
+            };
+        }
+
+        const clearBtn = $('scratchpad-btn-clear');
+        if (clearBtn) {
+            clearBtn.onclick = () => {
+                ctx.fillStyle = '#f8fafc';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            };
+        }
+
+        const closeBtn = $('scratchpad-btn-close');
+        if (closeBtn) {
+            closeBtn.onclick = () => {
+                toggleScratchpad(false);
+            };
+        }
+    }
+
+    window.addEventListener('resize', () => {
+        if (scratchpadState.isOpen) {
+            resizeScratchpadCanvas();
+        }
+    });
+
+    resizeScratchpadCanvas();
+}
+
+if (typeof window !== 'undefined') {
+    window.initScratchpad = initScratchpad;
 }
 
 // Global Lightbox Dinleyicileri (V8.0)
@@ -5192,6 +5492,7 @@ if (typeof document !== 'undefined') {
     const initEngine = () => {
         bindScopeContinue();
         loadData();
+        initScratchpad();
     };
 
     if (document.readyState === 'loading') {

@@ -57,8 +57,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@500;600;700&family=Kalam:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8.8.0">
-    <link rel="stylesheet" href="exam.css?v=8.8.0">
+    <link rel="stylesheet" href="style.css?v=8.9.0">
+    <link rel="stylesheet" href="exam.css?v=8.9.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -76,6 +76,7 @@
             <button id="btn-iletisim" class="text-btn">İletişim</button>
             
             <div id="user-profile-area" class="user-profile-container">
+                <div id="header-streak-badge" class="header-streak-badge" title="Günlük Çalışma Serisi">🔥 <span id="header-streak-count">1</span> Gün</div>
                 <button id="btn-uyelik" class="text-btn outline-btn">Giriş Yap / Üye Ol</button>
                 <div id="profile-dropdown" class="dropdown-menu is-hidden">
                     <div class="dropdown-header">
@@ -4446,6 +4447,7 @@
                     <div class="practice-question-nav-strip" id="practice-question-nav-strip" aria-label="Sorular arası geçiş"></div>
 
                     <div class="practice-top-actions">
+                        <button type="button" id="btn-toggle-scratchpad" class="btn-scratchpad" title="Akıllı Tahta Karalama Alanı">✏️ Karalama Tahtası</button>
                         <button type="button" id="btn-practice-preview-print" class="exam-btn-secondary btn-print-trigger" title="Soru kâğıdını A4 düzeninde önizle veya PDF olarak kaydet">
                             <i class="fas fa-print"></i> <span>Soru Kâğıdı</span>
                         </button>
@@ -4453,6 +4455,33 @@
 
                     <!-- Kompakt Soru Seçici Açılır Paneli (Mobil & Hızlı Seçim) -->
                     <div id="practice-q-picker-dropdown" class="practice-q-picker-dropdown is-hidden" aria-label="Soru Listesi"></div>
+                </div>
+
+                <!-- Akıllı Tahta (ETAP) Çizim & Karalama Canvas Modülü -->
+                <div id="scratchpad-container" class="scratchpad-container is-hidden" style="display: none;">
+                    <div class="scratchpad-toolbar">
+                        <div class="scratchpad-tool-group">
+                            <span class="scratchpad-group-title"><i class="fas fa-palette"></i> Renk:</span>
+                            <button type="button" class="scratchpad-color-btn active" data-color="#2d3436" style="background:#2d3436;" title="Siyah"></button>
+                            <button type="button" class="scratchpad-color-btn" data-color="#e74c3c" style="background:#e74c3c;" title="Kırmızı"></button>
+                            <button type="button" class="scratchpad-color-btn" data-color="#0984e3" style="background:#0984e3;" title="Mavi"></button>
+                            <button type="button" class="scratchpad-color-btn highlighter-btn" data-color="rgba(253, 203, 110, 0.6)" style="background:#fdcb6e;" title="Floresan Sarı Fosforlu"></button>
+                        </div>
+                        <div class="scratchpad-tool-group">
+                            <span class="scratchpad-group-title"><i class="fas fa-pen"></i> Kalınlık:</span>
+                            <button type="button" class="scratchpad-size-btn active" data-size="2" title="İnce (2px)">İnce</button>
+                            <button type="button" class="scratchpad-size-btn" data-size="4" title="Orta (4px)">Orta</button>
+                            <button type="button" class="scratchpad-size-btn" data-size="10" title="Kalın Fosforlu (10px)">Kalın</button>
+                        </div>
+                        <div class="scratchpad-tool-group actions-group">
+                            <button type="button" id="scratchpad-btn-eraser" class="scratchpad-action-btn" title="Silgi Modu">🧽 Silgi</button>
+                            <button type="button" id="scratchpad-btn-clear" class="scratchpad-action-btn" title="Tuvali Temizle">🗑️ Temizle</button>
+                            <button type="button" id="scratchpad-btn-close" class="scratchpad-action-btn close-btn-action" title="Karalama Tahtasını Kapat">✖️ Kapat</button>
+                        </div>
+                    </div>
+                    <div class="scratchpad-canvas-wrapper">
+                        <canvas id="scratchpad-canvas" height="400"></canvas>
+                    </div>
                 </div>
 
                 <!-- Tek Soru Konteyneri -->
@@ -4849,10 +4878,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
     <script>
-        window.__FENUPX_CONTENT_V6_VERSION__ = '8.8.0';
+        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.0';
     </script>
-    <script type="module" src="exam-engine.js?v=8.8.0"></script>
-    <script type="module" src="lab-engine.js?v=8.8.0"></script>
-    <script type="module" src="script.js?v=8.8.0"></script>
+    <script type="module" src="exam-engine.js?v=8.9.0"></script>
+    <script type="module" src="lab-engine.js?v=8.9.0"></script>
+    <script type="module" src="script.js?v=8.9.0"></script>
 </body>
 </html>

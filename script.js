@@ -2167,6 +2167,15 @@ document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = function()
             if(scDisplay) scDisplay.textContent = quizState.score;
 
             setTimeout(() => { 
+                if (quizState.index >= 8) {
+                    unlockBadge('badge_karadelik');
+                }
+                if (quizState.score >= 500) {
+                    unlockBadge('badge_fenup_efsanesi');
+                }
+                if (typeof checkAndUpdateStreak === 'function') {
+                    checkAndUpdateStreak();
+                }
                 quizState.index++; quizState.riskAcceptedForCurrent = false; 
                 if(quizState.index < 10) renderIndividual(); else finishIndividual("TEBRİKLER ŞAMPİYON!"); 
             }, 2500); 
@@ -3264,19 +3273,413 @@ if (togglePassConfirmBtn) {
     togglePassConfirmBtn.addEventListener('click', handleToggleConfirm);
 }
 
+// ==========================================================================
+// V8.9.0: GÜNLÜK SERİ (🔥 STREAK) MOTORU VE 10 KOZMİK BAŞARI ROZETİ
+// ==========================================================================
+
+function getStreakData() {
+    try {
+        const raw = localStorage.getItem('fenupx_streak_data');
+        if (raw) {
+            const data = JSON.parse(raw);
+            if (data && typeof data.count === 'number') {
+                return data;
+            }
+        }
+    } catch (_) {}
+    return { count: 1, lastDate: null };
+}
+
+function getTodayDateStr() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+}
+
+export function checkAndUpdateStreak() {
+    try {
+        const today = getTodayDateStr();
+        const stored = getStreakData();
+        let count = stored.count || 1;
+        const lastDate = stored.lastDate;
+
+        if (!lastDate) {
+            count = 1;
+        } else if (lastDate === today) {
+            // Bugün zaten kayıt yapıldıysa: Seri korunur.
+        } else {
+            const dToday = new Date(today + "T00:00:00");
+            const dLast = new Date(lastDate + "T00:00:00");
+            const diffTime = dToday.getTime() - dLast.getTime();
+            const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 1) {
+                // Dün kayıt yapılmışsa: Seri +1 artırılır
+                count++;
+            } else if (diffDays > 1) {
+                // 1 günden daha eski ise: Seri 1'e sıfırlanır
+                count = 1;
+            }
+        }
+
+        const updated = { count, lastDate: today };
+        localStorage.setItem('fenupx_streak_data', JSON.stringify(updated));
+        updateStreakUI(count);
+
+        // Rozet kontrolleri
+        if (count >= 3) unlockBadge('badge_ates_serisi');
+        if (count >= 7) unlockBadge('badge_super_seri');
+
+        return updated;
+    } catch (e) {
+        console.warn('Streak güncelleme hatası:', e);
+        return { count: 1, lastDate: getTodayDateStr() };
+    }
+}
+
+export function updateStreakUI(count) {
+    if (typeof count !== 'number') {
+        const data = getStreakData();
+        count = data.count || 1;
+    }
+    const headerStreakCount = document.getElementById('header-streak-count');
+    if (headerStreakCount) {
+        headerStreakCount.textContent = count.toString();
+    }
+    const profileStreakCount = document.getElementById('profile-streak-count');
+    if (profileStreakCount) {
+        profileStreakCount.textContent = count.toString();
+    }
+}
+
+// 10 Adet Kozmik Başarı Rozeti Tanımı
+export const KOZMIK_ROZETLER = [
+    {
+        id: 'badge_ilk_adim',
+        title: 'İlk Kâşif',
+        icon: '🌟',
+        desc: 'Sitede ilk kez bir profil oluşturup avatar seçene.',
+        condition: 'Profil oluşturup avatar seç'
+    },
+    {
+        id: 'badge_newton',
+        title: 'Küçük Newton',
+        icon: '🍎',
+        desc: 'Kuvvet, İş ve Enerji ünitesinde tam puanlık soru çözene.',
+        condition: 'Kuvvet ve Enerji sorularında tam puan al'
+    },
+    {
+        id: 'badge_galileo',
+        title: "Galileo'nun Çırağı",
+        icon: '🔭',
+        desc: 'Uzay Çağı ünitesindeki 6 çalışma kartını inceleyene.',
+        condition: 'Uzay Çağı ünitesindeki 6 kartı incele'
+    },
+    {
+        id: 'badge_modelci',
+        title: 'Uzay Mühendisi',
+        icon: '🛰️',
+        desc: 'FB.7.1.2 Uzay gözlem araçları modelleme sorularından tam puan alana.',
+        condition: 'FB.7.1.2 modelleme sorularında tam puan al'
+    },
+    {
+        id: 'badge_laboratuvar',
+        title: 'Sanal Simyacı',
+        icon: '🧪',
+        desc: 'Sanal laboratuvarda en az 3 deney yapıp gözlem defterine kaydedene.',
+        condition: 'Laboratuvarda 3 deney gözlemi kaydet'
+    },
+    {
+        id: 'badge_karadelik',
+        title: 'Kara Delik Avcısı',
+        icon: '🕳️',
+        desc: 'Şampiyonlar Ligi yarışmasında Kara Delik riskini başarıyla geçene.',
+        condition: 'Şampiyonlar Ligi Kara Delik aşamasını başarıyla geç'
+    },
+    {
+        id: 'badge_prova_ustasi',
+        title: 'Yazılı Ustası',
+        icon: '📝',
+        desc: 'İlk OYSS yazılı provasını tamamlayana.',
+        condition: 'İlk OYSS yazılı provasını tamamla'
+    },
+    {
+        id: 'badge_ates_serisi',
+        title: 'Kozmik Kıvılcım',
+        icon: '🔥',
+        desc: '3 günlük seri (streak) yakalayana.',
+        condition: '3 günlük çalışma serisi yakala'
+    },
+    {
+        id: 'badge_super_seri',
+        title: 'Sönmeyen Yıldız',
+        icon: '⚡',
+        desc: '7 günlük seri (streak) yakalayana.',
+        condition: '7 günlük çalışma serisi yakala'
+    },
+    {
+        id: 'badge_fenup_efsanesi',
+        title: 'FenUp Şampiyonu',
+        icon: '🏆',
+        desc: '500 toplam kâşif puanına ulaşana.',
+        condition: '500 toplam kâşif puanına ulaş'
+    }
+];
+
+export function getEarnedBadges() {
+    try {
+        const raw = localStorage.getItem('fenupx_badges');
+        if (raw) {
+            const arr = JSON.parse(raw);
+            if (Array.isArray(arr)) return arr;
+        }
+    } catch (_) {}
+    return [];
+}
+
+export function unlockBadge(badgeId) {
+    try {
+        const earned = getEarnedBadges();
+        if (!earned.includes(badgeId)) {
+            earned.push(badgeId);
+            localStorage.setItem('fenupx_badges', JSON.stringify(earned));
+            renderBadgesShowcase();
+            const badge = KOZMIK_ROZETLER.find(b => b.id === badgeId);
+            if (badge) {
+                showBadgeEarnedToast(badge);
+            }
+        }
+    } catch (e) {
+        console.warn('Rozet kazanma hatası:', e);
+    }
+}
+
+function showBadgeEarnedToast(badge) {
+    let toast = document.getElementById('fenupx-badge-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'fenupx-badge-toast';
+        toast.className = 'fenupx-badge-toast';
+        document.body.appendChild(toast);
+    }
+    toast.innerHTML = `
+        <div class="badge-toast-content">
+            <span class="badge-toast-icon">${badge.icon}</span>
+            <div class="badge-toast-text">
+                <strong class="badge-toast-title">Kozmik Rozet Kazanıldı!</strong>
+                <span class="badge-toast-desc">${badge.title} · ${badge.condition}</span>
+            </div>
+            <span class="badge-toast-sparkle">✨</span>
+        </div>
+    `;
+    toast.classList.add('show');
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 4000);
+}
+
+export function evaluateBadges() {
+    try {
+        const cachedAv = localStorage.getItem('fenupx_user_avatar');
+        if (cachedAv || (auth && auth.currentUser)) {
+            unlockBadge('badge_ilk_adim');
+        }
+
+        const streak = getStreakData();
+        if (streak.count >= 3) unlockBadge('badge_ates_serisi');
+        if (streak.count >= 7) unlockBadge('badge_super_seri');
+
+        const labCount = parseInt(localStorage.getItem('fenupx_lab_obs_count') || '0', 10);
+        if (labCount >= 3) unlockBadge('badge_laboratuvar');
+
+        let viewedSpaceCards = [];
+        try {
+            const rawCards = localStorage.getItem('fenupx_viewed_space_cards');
+            if (rawCards) viewedSpaceCards = JSON.parse(rawCards);
+        } catch (_) {}
+        if (viewedSpaceCards.length >= 6) unlockBadge('badge_galileo');
+
+        try {
+            const examStateRaw = localStorage.getItem('fenupx_exam_pilot_v1');
+            if (examStateRaw) {
+                const es = JSON.parse(examStateRaw);
+                if (es && es.attempt && (es.attempt.finished || es.attempt.scores)) {
+                    unlockBadge('badge_prova_ustasi');
+                }
+            }
+        } catch (_) {}
+    } catch (e) {
+        console.warn('evaluateBadges hatası:', e);
+    }
+}
+
+export function renderBadgesShowcase() {
+    const grid = document.getElementById('cosmic-badges-grid');
+    if (!grid) return;
+    const earnedList = getEarnedBadges();
+    const counter = document.getElementById('profile-badge-counter');
+    if (counter) {
+        counter.textContent = `${earnedList.length} / ${KOZMIK_ROZETLER.length} Kazanıldı`;
+    }
+
+    grid.innerHTML = KOZMIK_ROZETLER.map(badge => {
+        const isEarned = earnedList.includes(badge.id);
+        return `
+            <div class="cosmic-badge-item ${isEarned ? 'earned' : 'locked'}" data-badge-id="${badge.id}" tabindex="0" role="button" aria-label="${badge.title}">
+                <div class="badge-icon-wrap">
+                    <span class="badge-emoji">${badge.icon}</span>
+                    ${!isEarned ? '<span class="badge-mini-lock"><i class="fas fa-lock"></i></span>' : '<span class="badge-sparkle">✨</span>'}
+                </div>
+                <div class="badge-item-title">${badge.title}</div>
+                <div class="badge-tooltip">
+                    <strong>${badge.icon} ${badge.title}</strong>
+                    <div>${badge.desc}</div>
+                    <span class="badge-condition">${isEarned ? '✅ Kazanıldı!' : '🔒 Şart: ' + badge.condition}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    const levelBadge = document.getElementById('profile-level-badge');
+    if (levelBadge) {
+        const count = earnedList.length;
+        let lvl = 1;
+        let lvlName = 'Çırak Kâşif';
+        if (count >= 9) { lvl = 4; lvlName = 'Kozmik Üstat'; }
+        else if (count >= 6) { lvl = 3; lvlName = 'Kıdemli Kâşif'; }
+        else if (count >= 3) { lvl = 2; lvlName = 'Uzay Kâşifi'; }
+        levelBadge.textContent = `Seviye ${lvl} · ${lvlName}`;
+    }
+}
+
+export function renderKarneSummary() {
+    try {
+        let lastSummary = null;
+        try {
+            const raw = localStorage.getItem('fenupx_last_exam_summary');
+            if (raw) lastSummary = JSON.parse(raw);
+        } catch (_) {}
+
+        if (!lastSummary) {
+            try {
+                const examStateRaw = localStorage.getItem('fenupx_exam_pilot_v1');
+                if (examStateRaw) {
+                    const es = JSON.parse(examStateRaw);
+                    if (es && es.attempt && es.attempt.scores) {
+                        const qIds = es.attempt.ids || [];
+                        let sc = 0;
+                        let maxSc = 0;
+                        qIds.forEach(qid => {
+                            const pts = es.attempt.questionPoints?.[qid] || 14;
+                            sc += (es.attempt.scores[qid] || 0);
+                            maxSc += pts;
+                        });
+                        lastSummary = {
+                            score: sc,
+                            maxScore: maxSc || 100,
+                            percent: Math.round((sc / (maxSc || 100)) * 100),
+                            missingOutcomes: [],
+                            date: 'Son Prova'
+                        };
+                    }
+                }
+            } catch (_) {}
+        }
+
+        const scoreEl = document.getElementById('karne-last-score');
+        const dateEl = document.getElementById('karne-last-date');
+        if (scoreEl) {
+            if (lastSummary) {
+                scoreEl.innerHTML = `${lastSummary.score} <small>/ ${lastSummary.maxScore || 100} Puan</small>`;
+                if (dateEl) dateEl.textContent = `Tamamlanma: ${lastSummary.date || 'Son Prova'}`;
+            } else {
+                scoreEl.textContent = '— / 100';
+                if (dateEl) dateEl.textContent = 'Henüz prova çözülmedi';
+            }
+        }
+
+        let viewedSpaceCards = [];
+        try {
+            const rawCards = localStorage.getItem('fenupx_viewed_space_cards');
+            if (rawCards) viewedSpaceCards = JSON.parse(rawCards);
+        } catch (_) {}
+        const spaceCount = Math.min(viewedSpaceCards.length, 6);
+        const spacePercent = Math.round((spaceCount / 6) * 100);
+        const progSpace = document.getElementById('karne-prog-space');
+        const subSpace = document.getElementById('karne-sub-space');
+        if (progSpace) progSpace.style.width = `${spacePercent}%`;
+        if (subSpace) subSpace.textContent = `İnceleme: ${spaceCount}/6 Kart (${spacePercent}%)`;
+
+        const earned = getEarnedBadges();
+        const hasNewton = earned.includes('badge_newton');
+        const progForce = document.getElementById('karne-prog-force');
+        const subForce = document.getElementById('karne-sub-force');
+        if (progForce) progForce.style.width = hasNewton ? '100%' : (lastSummary ? '50%' : '20%');
+        if (subForce) subForce.textContent = hasNewton ? 'Tam Puanla Pekiştirildi! 🍎' : (lastSummary ? 'Kısmi Pekiştirildi' : 'Başlangıç Düzeyi');
+
+        const outcomeDetails = document.getElementById('karne-outcome-details');
+        if (outcomeDetails) {
+            if (lastSummary && Array.isArray(lastSummary.missingOutcomes) && lastSummary.missingOutcomes.length > 0) {
+                outcomeDetails.innerHTML = `
+                    <div style="font-weight: 700; color: #f59e0b; margin-bottom: 6px;"><i class="fas fa-exclamation-circle"></i> Tekrar Edilmesi Önerilen Kazanımlar:</div>
+                    <ul style="margin: 0; padding-left: 18px;">
+                        ${lastSummary.missingOutcomes.map(o => `<li>${o}</li>`).join('')}
+                    </ul>
+                `;
+            } else if (lastSummary && lastSummary.score >= 80) {
+                outcomeDetails.innerHTML = `<div class="karne-outcome-item"><i class="fas fa-check-circle" style="color: #22c55e;"></i> <span>Harika! Yazılı provasında tüm kazanımları başarıyla tamamladın. 🎯</span></div>`;
+            } else {
+                outcomeDetails.innerHTML = `<div class="karne-outcome-item"><i class="fas fa-info-circle" style="color: var(--neon-blue);"></i> <span>Yazılı provasını tamamladığında eksik kaldığın kazanımlar ve çalışma önerilerin burada listelenecek.</span></div>`;
+            }
+        }
+    } catch (e) {
+        console.warn('Karne özeti render hatası:', e);
+    }
+}
+
+// Global dışa aktarmalar
+window.checkAndUpdateStreak = checkAndUpdateStreak;
+window.getStreakData = getStreakData;
+window.updateStreakUI = updateStreakUI;
+window.KOZMIK_ROZETLER = KOZMIK_ROZETLER;
+window.getEarnedBadges = getEarnedBadges;
+window.unlockBadge = unlockBadge;
+window.evaluateBadges = evaluateBadges;
+window.renderBadgesShowcase = renderBadgesShowcase;
+window.renderKarneSummary = renderKarneSummary;
+
 const profileModal = document.createElement('div');
 profileModal.id = "profile-modal";
 profileModal.className = "modal-overlay is-hidden";
 profileModal.innerHTML = `
-    <div class="modal-content glass-panel" style="max-width: 540px; width: 92%; padding: 30px;">
-        <button id="close-profile" class="close-btn"><i class="fas fa-times"></i></button>
-        
-        <div id="p-avatar-display" style="margin-bottom:15px; display:flex; flex-direction:column; align-items:center;">
-            <img id="p-current-avatar" src="${kozmikAvatarlar[0].url}" style="width:100px; height:100px; border-radius:50%; border:3px solid #00d2ff; padding:5px; margin-bottom:10px; background: rgba(255,255,255,0.1);">
-            <button id="btn-open-avatar-selector" class="f-btn f-btn-ikinci" style="font-size:0.9rem; padding:8px 15px;">Avatarımı Değiştir</button>
+    <div class="modal-content glass-panel" style="max-width: 620px; width: 92%; padding: 24px;">
+        <button id="close-profile" class="close-btn" aria-label="Kapat"><i class="fas fa-times"></i></button>
+
+        <!-- 1. ÜST KISIM (Kullanıcı Kartı, 80x80 Avatar, Gradyan Seviye Halkası, Seri Rozeti) -->
+        <div class="profile-hero-card">
+            <div class="profile-level-ring-container">
+                <div class="profile-level-ring">
+                    <img id="p-current-avatar" src="${kozmikAvatarlar[0].url}" alt="Öğrenci Avatarı" class="profile-hero-img">
+                </div>
+                <span class="profile-level-badge" id="profile-level-badge">Seviye 1</span>
+            </div>
+            <div class="profile-hero-meta">
+                <h3 id="profile-display-fullname" class="profile-hero-name">Kâşif Öğrenci</h3>
+                <div class="profile-hero-sub">
+                    <span id="profile-display-role-tag" class="profile-role-badge">⭐ Fen Kâşifi</span>
+                    <span class="profile-streak-badge">🔥 <span id="profile-streak-count">1</span> Günlük Seri</span>
+                </div>
+                <button id="btn-open-avatar-selector" class="f-btn f-btn-ikinci" style="font-size:0.8rem; padding:5px 12px; margin-top:6px;">
+                    <i class="fas fa-user-astronaut"></i> Avatarımı Değiştir
+                </button>
+            </div>
         </div>
-        
-        <div id="avatar-selector-container" class="is-hidden" style="border: 1px solid rgba(0, 210, 255, 0.3); border-radius:15px; background: rgba(0,0,0,0.5); margin-bottom:20px; padding: 10px;">
+
+        <!-- Avatar Seçici Paneli (32 Karakter, Kategori Sekmeleri - TESTLER İÇİN KORUNMALI) -->
+        <div id="avatar-selector-container" class="is-hidden" style="border: 1px solid rgba(0, 210, 255, 0.3); border-radius:15px; background: rgba(0,0,0,0.5); margin-bottom:15px; padding: 10px;">
             <div class="avatar-tabs" id="avatar-category-tabs">
                 <button type="button" class="avatar-tab-btn active" data-category="all">Tümü (32)</button>
                 <button type="button" class="avatar-tab-btn" data-category="robotlar">🤖 Robotlar (8)</button>
@@ -3287,49 +3690,97 @@ profileModal.innerHTML = `
             <div class="avatar-grid" id="avatar-selector"></div>
         </div>
 
-        <div id="email-verify-box" class="email-verify-box is-hidden">
-            <p class="email-verify-text">E-posta adresiniz henüz doğrulanmadı. Puanlarınızın liderlik tablosuna kaydedilmesi için e-postanızı doğrulayın.</p>
-            <p id="email-verify-feedback" class="email-verify-feedback is-hidden"></p>
-            <div class="email-verify-actions">
-                <button type="button" id="btn-resend-verification" class="f-btn f-btn-ikinci">Doğrulama E-postası Gönder</button>
-                <button type="button" id="btn-check-verification" class="f-btn f-btn-ana">Doğruladım, Kontrol Et</button>
+        <!-- 2. ORTA KISIM: 10 ADET KOZMİK BAŞARI ROZETİ VİTRİNİ (5x2 IZGARA) -->
+        <div class="profile-badges-section">
+            <div class="profile-section-title-bar">
+                <h4><i class="fas fa-medal"></i> Kozmik Başarı Rozetleri</h4>
+                <span class="profile-badge-counter" id="profile-badge-counter">0 / 10 Kazanıldı</span>
+            </div>
+            <div class="cosmic-badges-grid" id="cosmic-badges-grid">
+                <!-- 10 Rozet Dinamik Render Edilir -->
             </div>
         </div>
 
-        <div class="auth-name-row">
-            <div class="auth-field-group" style="width:50%; margin-bottom:0;">
-                <label for="p-name" class="auth-label">Adın</label>
-                <input type="text" id="p-name" class="fenupx-input" placeholder="Ad" style="margin-bottom:0; width:100%;">
+        <!-- 3. ALT KISIM: KAZANIM DURUMU & ÇALIŞMA KARNESİ -->
+        <div class="profile-karne-section">
+            <div class="profile-section-title-bar">
+                <h4><i class="fas fa-graduation-cap"></i> 7. Sınıf Eksik Kazanım Karnesi</h4>
+                <span class="profile-karne-badge" id="profile-karne-status">Güncel Durum</span>
             </div>
-            <div class="auth-field-group" style="width:50%; margin-bottom:0;">
-                <label for="p-surname" class="auth-label">Soyadın</label>
-                <input type="text" id="p-surname" class="fenupx-input" placeholder="Soyad" style="margin-bottom:0; width:100%;">
+            <div class="profile-karne-grid">
+                <div class="karne-stat-card">
+                    <span class="stat-label">Son Yazılı Provası</span>
+                    <span class="stat-val" id="karne-last-score">— / 100</span>
+                    <small class="stat-sub" id="karne-last-date">Henüz prova çözülmedi</small>
+                </div>
+                <div class="karne-stat-card">
+                    <span class="stat-label">Güneş Sistemi & Uzay</span>
+                    <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-space" style="width: 0%;"></div></div>
+                    <small class="stat-sub" id="karne-sub-space">İnceleme: 0/6 Kart</small>
+                </div>
+                <div class="karne-stat-card">
+                    <span class="stat-label">Kuvvet, İş ve Enerji</span>
+                    <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-force" style="width: 0%;"></div></div>
+                    <small class="stat-sub" id="karne-sub-force">Kazanım: Başlangıç</small>
+                </div>
             </div>
-        </div>
-        <div class="auth-field-group">
-            <label for="p-nickname" class="auth-label">Yarışmacı Adın</label>
-            <div class="info-container" style="margin-bottom:0;">
-                <input type="text" id="p-nickname" class="fenupx-input" placeholder="Yarışmacı Adın" style="width:100%; margin-bottom:0; padding-right:45px;">
-                <i class="fas fa-info-circle info-icon"></i>
-                <span class="tooltiptext"><i class="fas fa-exclamation-triangle" style="margin-right:5px;"></i> Kırıcı veya argo isim kullanan hesaplar tablodan kalıcı olarak silinir.</span>
-            </div>
-        </div>
-        
-        <button id="btn-save-profile" class="f-btn f-btn-ana" style="width:100%; margin-top:5px;">GÜNCELLE</button>
-        <button id="btn-delete-account" class="f-btn btn-danger" style="width:100%; margin-top:15px; padding: 12px; font-size:1rem;">Hesabımı Kalıcı Olarak Sil</button>
-        <div id="delete-account-confirm-box" class="delete-confirm-box is-hidden">
-            <p class="delete-confirm-warning">Dikkat: Hesabınızı sildiğinizde yarışmacı profiliniz, tüm sınıf/sezon puanlarınız ve Şampiyonlar Ligi liderlik tablosu kayıtlarınız kalıcı olarak silinecektir. Bu işlem geri alınamaz.</p>
-            <div id="delete-password-group" class="delete-reauth-group is-hidden">
-                <label for="delete-confirm-password" class="delete-confirm-label">İşlemi onaylamak için şifreniz</label>
-                <input type="password" id="delete-confirm-password" class="fenupx-input auth-input" placeholder="Şifrenizi girin">
-            </div>
-            <p id="delete-google-note" class="delete-google-info is-hidden">Devam ettiğinizde güvenlik için Google hesabınızla yeniden doğrulama yapılacaktır.</p>
-            <p id="delete-error-msg" class="delete-error-text is-hidden"></p>
-            <div class="delete-confirm-actions">
-                <button type="button" id="btn-cancel-delete" class="f-btn f-btn-ikinci">Vazgeç</button>
-                <button type="button" id="btn-confirm-delete-final" class="f-btn btn-danger-solid">Hesabımı Kalıcı Olarak Sil</button>
+            <div class="karne-outcome-details" id="karne-outcome-details">
+                <div class="karne-outcome-item">
+                    <i class="fas fa-info-circle" style="color: var(--neon-blue);"></i> 
+                    <span>Kazanım eksiklerini tamamlamak için yazılı provasında öz değerlendirme yapabilirsin.</span>
+                </div>
             </div>
         </div>
+
+        <!-- Profil Bilgileri & Hesap Yönetimi (Akordiyon / Daraltılabilir Şık Bölüm) -->
+        <details class="profile-settings-details">
+            <summary class="profile-settings-summary"><i class="fas fa-cog"></i> Hesap ve Kimlik Bilgilerini Düzenle</summary>
+            <div class="profile-settings-content">
+                <div id="email-verify-box" class="email-verify-box is-hidden">
+                    <p class="email-verify-text">E-posta adresiniz henüz doğrulanmadı. Puanlarınızın liderlik tablosuna kaydedilmesi için e-postanızı doğrulayın.</p>
+                    <p id="email-verify-feedback" class="email-verify-feedback is-hidden"></p>
+                    <div class="email-verify-actions">
+                        <button type="button" id="btn-resend-verification" class="f-btn f-btn-ikinci">Doğrulama E-postası Gönder</button>
+                        <button type="button" id="btn-check-verification" class="f-btn f-btn-ana">Doğruladım, Kontrol Et</button>
+                    </div>
+                </div>
+
+                <div class="auth-name-row">
+                    <div class="auth-field-group" style="width:50%; margin-bottom:0;">
+                        <label for="p-name" class="auth-label">Adın</label>
+                        <input type="text" id="p-name" class="fenupx-input" placeholder="Ad" style="margin-bottom:0; width:100%;">
+                    </div>
+                    <div class="auth-field-group" style="width:50%; margin-bottom:0;">
+                        <label for="p-surname" class="auth-label">Soyadın</label>
+                        <input type="text" id="p-surname" class="fenupx-input" placeholder="Soyad" style="margin-bottom:0; width:100%;">
+                    </div>
+                </div>
+                <div class="auth-field-group">
+                    <label for="p-nickname" class="auth-label">Yarışmacı Adın</label>
+                    <div class="info-container" style="margin-bottom:0;">
+                        <input type="text" id="p-nickname" class="fenupx-input" placeholder="Yarışmacı Adın" style="width:100%; margin-bottom:0; padding-right:45px;">
+                        <i class="fas fa-info-circle info-icon"></i>
+                        <span class="tooltiptext"><i class="fas fa-exclamation-triangle" style="margin-right:5px;"></i> Kırıcı veya argo isim kullanan hesaplar tablodan kalıcı olarak silinir.</span>
+                    </div>
+                </div>
+                
+                <button id="btn-save-profile" class="f-btn f-btn-ana" style="width:100%; margin-top:5px;">GÜNCELLE</button>
+                <button id="btn-delete-account" class="f-btn btn-danger" style="width:100%; margin-top:15px; padding: 12px; font-size:1rem;">Hesabımı Kalıcı Olarak Sil</button>
+                <div id="delete-account-confirm-box" class="delete-confirm-box is-hidden">
+                    <p class="delete-confirm-warning">Dikkat: Hesabınızı sildiğinizde yarışmacı profiliniz, tüm sınıf/sezon puanlarınız ve Şampiyonlar Ligi liderlik tablosu kayıtlarınız kalıcı olarak silinecektir. Bu işlem geri alınamaz.</p>
+                    <div id="delete-password-group" class="delete-reauth-group is-hidden">
+                        <label for="delete-confirm-password" class="delete-confirm-label">İşlemi onaylamak için şifreniz</label>
+                        <input type="password" id="delete-confirm-password" class="fenupx-input auth-input" placeholder="Şifrenizi girin">
+                    </div>
+                    <p id="delete-google-note" class="delete-google-info is-hidden">Devam ettiğinizde güvenlik için Google hesabınızla yeniden doğrulama yapılacaktır.</p>
+                    <p id="delete-error-msg" class="delete-error-text is-hidden"></p>
+                    <div class="delete-confirm-actions">
+                        <button type="button" id="btn-cancel-delete" class="f-btn f-btn-ikinci">Vazgeç</button>
+                        <button type="button" id="btn-confirm-delete-final" class="f-btn btn-danger-solid">Hesabımı Kalıcı Olarak Sil</button>
+                    </div>
+                </div>
+            </div>
+        </details>
     </div>
 `;
 document.body.appendChild(profileModal);
@@ -3365,6 +3816,10 @@ if(avatarContainer) {
             try {
                 localStorage.setItem('fenupx_user_avatar', av.url);
             } catch (_) {}
+
+            // V8.9: Avatar seçimi İlk Kâşif rozetini ve günlük seriyi tetikler
+            unlockBadge('badge_ilk_adim');
+            checkAndUpdateStreak();
 
             const headerAvatar = document.querySelector('.profile-img-header');
             if (headerAvatar) {
@@ -3443,6 +3898,17 @@ onAuthStateChanged(auth, async (user) => {
             document.querySelectorAll('.avatar-item').forEach(i => i.classList.remove('selected'));
             const aItem = document.querySelector(`.avatar-item[data-url="${userAvatar}"]`);
             if(aItem) aItem.classList.add('selected');
+
+            // V8.9: Profil hero kartı bilgilerini güncelle
+            const profHeroName = document.getElementById('profile-display-fullname');
+            if (profHeroName) profHeroName.textContent = fullAd;
+            const profHeroRole = document.getElementById('profile-display-role-tag');
+            if (profHeroRole) profHeroRole.textContent = userData.role === 'admin' ? '👑 Sistem Yöneticisi' : '⭐ Fen Kâşifi · 7. Sınıf';
+
+            evaluateBadges();
+            updateStreakUI();
+            renderBadgesShowcase();
+            renderKarneSummary();
 
             const lbg = document.getElementById('lb-guest-promo'); if(lbg) lbg.classList.add('is-hidden');
             const lbu = document.getElementById('lb-user-rank'); if(lbu) lbu.classList.remove('is-hidden');
@@ -3708,6 +4174,25 @@ if (btnOpenProfile) {
         resetDeleteAccountBox();
         updateEmailVerifyBox(auth.currentUser);
         if(profileDropdown) profileDropdown.classList.add('is-hidden');
+        evaluateBadges();
+        updateStreakUI();
+        renderBadgesShowcase();
+        renderKarneSummary();
+        showModal(profileModal);
+    };
+}
+
+const headerStreakBadge = document.getElementById('header-streak-badge');
+if (headerStreakBadge) {
+    headerStreakBadge.onclick = (e) => {
+        e.stopPropagation();
+        resetDeleteAccountBox();
+        updateEmailVerifyBox(auth.currentUser);
+        if(profileDropdown) profileDropdown.classList.add('is-hidden');
+        evaluateBadges();
+        updateStreakUI();
+        renderBadgesShowcase();
+        renderKarneSummary();
         showModal(profileModal);
     };
 }
@@ -3719,6 +4204,10 @@ document.querySelectorAll('.dropdown-item').forEach(item => {
             resetDeleteAccountBox();
             updateEmailVerifyBox(auth.currentUser);
             if(profileDropdown) profileDropdown.classList.add('is-hidden');
+            evaluateBadges();
+            updateStreakUI();
+            renderBadgesShowcase();
+            renderKarneSummary();
             showModal(profileModal);
         };
     }
@@ -3767,6 +4256,10 @@ if(btnSaveProf) {
         }
         
         try {
+            unlockBadge('badge_ilk_adim');
+            checkAndUpdateStreak();
+            const profHeroName = document.getElementById('profile-display-fullname');
+            if (profHeroName && name) profHeroName.textContent = `${name} ${surname}`;
             await updateDoc(doc(db, "users", user.uid), { name, surname, nickname, avatar });
             alert("Profilin başarıyla güncellendi kaptan!");
             location.reload();
@@ -4504,3 +4997,11 @@ if(btnSubmitReport) {
         }
     };
 }
+
+// V8.9.0: İlk yüklemede Günlük Seri ve Rozetleri Senkronize Et
+try {
+    updateStreakUI();
+    evaluateBadges();
+    renderBadgesShowcase();
+    renderKarneSummary();
+} catch (_) {}

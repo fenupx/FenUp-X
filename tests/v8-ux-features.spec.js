@@ -511,4 +511,121 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
             return state.attempt.questionStatuses?.[q2Id] === 'full' && state.attempt.evalQuestionIndex === 2;
         });
     });
+
+    test('10. V8.9.0: Günlük Seri, 10 Kozmik Rozet Vitrini, Öğrenci Karnesi ve Akıllı Tahta Karalama Tahtası', async ({ page }) => {
+        await page.goto('/');
+
+        // 1. Header Günlük Seri Göstergesi
+        const headerStreak = page.locator('#header-streak-badge');
+        await expect(headerStreak).toBeVisible();
+        await expect(page.locator('#header-streak-count')).toContainText(/\d+/);
+
+        // 2. Profil Modalını Aç ve Bileşenleri Doğrula
+        await page.evaluate(() => {
+            const modal = document.getElementById('profile-modal');
+            if (modal) {
+                modal.classList.remove('is-hidden');
+                modal.classList.add('is-open', 'active');
+                modal.style.display = 'flex';
+                if (typeof window.evaluateBadges === 'function') window.evaluateBadges();
+                if (typeof window.renderBadgesShowcase === 'function') window.renderBadgesShowcase();
+                if (typeof window.renderKarneSummary === 'function') window.renderKarneSummary();
+            }
+        });
+
+        const profileModal = page.locator('#profile-modal');
+        await expect(profileModal).toBeVisible();
+
+        // Seviye Halkası ve Avatar
+        const levelRing = profileModal.locator('.profile-level-ring');
+        await expect(levelRing).toBeVisible();
+        await expect(profileModal.locator('#p-current-avatar')).toBeVisible();
+        await expect(profileModal.locator('#profile-level-badge')).toBeVisible();
+
+        // 10 Kozmik Başarı Rozeti Vitrini (5x2 Grid)
+        const badges = profileModal.locator('#cosmic-badges-grid .cosmic-badge-item');
+        await expect(badges).toHaveCount(10);
+
+        // Rozet araç ipuçları ve başlıkları
+        const firstBadge = badges.first();
+        await expect(firstBadge.locator('.badge-item-title')).toBeVisible();
+        await expect(firstBadge.locator('.badge-tooltip')).toBeAttached();
+
+        // 7. Sınıf Eksik Kazanım Karnesi
+        const karneSection = profileModal.locator('.profile-karne-section');
+        await expect(karneSection).toBeVisible();
+        await expect(profileModal.locator('#karne-last-score')).toBeVisible();
+        await expect(profileModal.locator('#karne-prog-space')).toBeVisible();
+
+        // Profil modalını kapat
+        const closeProfileBtn = profileModal.locator('#close-profile');
+        if (await closeProfileBtn.count() > 0) {
+            await closeProfileBtn.click();
+        } else {
+            await page.evaluate(() => {
+                const modal = document.getElementById('profile-modal');
+                if (modal) {
+                    modal.classList.add('is-hidden');
+                    modal.classList.remove('is-open', 'active');
+                    modal.style.display = 'none';
+                }
+            });
+        }
+        await expect(profileModal).toBeHidden();
+
+        // Yazılı provası soru ekranına geç
+        await page.locator('#btn-yazili-modulu').click();
+        await page.locator('#btn-scope-continue').click();
+        await page.locator('#btn-choice-go-practice').click();
+        await page.locator('#exam-start-practice').click();
+        await expect(page.locator('#practice-active-box')).toBeVisible();
+
+        // 3. Akıllı Tahta (ETAP) Karalama Tahtası Doğrulaması
+        const btnToggleScratchpad = page.locator('#btn-toggle-scratchpad');
+        await expect(btnToggleScratchpad).toBeVisible();
+
+        const scratchpadContainer = page.locator('#scratchpad-container');
+        await expect(scratchpadContainer).toBeAttached();
+
+        // Karalama tahtasını aç (butona tıklayarak)
+        await btnToggleScratchpad.click();
+
+        await expect(scratchpadContainer).toBeVisible();
+        const canvas = scratchpadContainer.locator('#scratchpad-canvas');
+        await expect(canvas).toBeVisible();
+
+        // Renk ve Araç Çubuğu Kontrolleri
+        const colorBtns = scratchpadContainer.locator('.scratchpad-color-btn');
+        await expect(colorBtns).toHaveCount(4);
+
+        const sizeBtns = scratchpadContainer.locator('.scratchpad-size-btn');
+        await expect(sizeBtns).toHaveCount(3);
+
+        const eraserBtn = scratchpadContainer.locator('#scratchpad-btn-eraser');
+        await expect(eraserBtn).toBeVisible();
+        await eraserBtn.click();
+        await expect(eraserBtn).toHaveClass(/active/);
+
+        const clearBtn = scratchpadContainer.locator('#scratchpad-btn-clear');
+        await expect(clearBtn).toBeVisible();
+
+        const closeBtn = scratchpadContainer.locator('#scratchpad-btn-close');
+        await expect(closeBtn).toBeVisible();
+        await closeBtn.click();
+        await expect(scratchpadContainer).toBeHidden();
+
+        // 4. Günlük Seri ve Rozet Fonksiyonlarının Doğrulanması
+        const streakResult = await page.evaluate(() => {
+            const res = window.checkAndUpdateStreak();
+            window.unlockBadge('badge_newton');
+            return {
+                streak: res,
+                earned: window.getEarnedBadges(),
+                hasNewton: window.getEarnedBadges().includes('badge_newton')
+            };
+        });
+
+        expect(streakResult.streak.count).toBeGreaterThanOrEqual(1);
+        expect(streakResult.hasNewton).toBe(true);
+    });
 });

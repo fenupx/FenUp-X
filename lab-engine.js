@@ -22746,6 +22746,18 @@ function recordMeasurement() {
     }
 
     renderMeasurementTable();
+
+    // V8.9.0: Günlük seri güncelleme ve Sanal Simyacı rozeti
+    try {
+        if (typeof window.checkAndUpdateStreak === 'function') {
+            window.checkAndUpdateStreak();
+        }
+        let labObsCount = parseInt(localStorage.getItem('fenupx_lab_obs_count') || '0', 10) + 1;
+        localStorage.setItem('fenupx_lab_obs_count', labObsCount.toString());
+        if (labObsCount >= 3 && typeof window.unlockBadge === 'function') {
+            window.unlockBadge('badge_laboratuvar');
+        }
+    } catch (_) {}
 }
 
 function renderMeasurementTable() {
