@@ -2701,7 +2701,12 @@ function renderEval() {
     if (qContainer && q) {
         a.questionStatuses = a.questionStatuses || {};
         const qStatus = a.questionStatuses[q.id] || null;
-        const isZeroSelected = (qStatus === 'zero' || qStatus === 'empty' || qStatus === 'incorrect');
+        const isEvaluated = !!(a.evaluatedQuestions && a.evaluatedQuestions[q.id]);
+        const isFullSelected = (qStatus === 'full' || (isEvaluated && currentQScore === qPoints && criteria.length > 0 && selectedIds.length === criteria.length));
+        const isZeroSelected = (qStatus === 'zero' || qStatus === 'empty' || qStatus === 'incorrect' || (isEvaluated && currentQScore === 0 && selectedIds.length === 0));
+        const isPartialSelected = (qStatus === 'partial' || (!isFullSelected && !isZeroSelected && currentQScore > 0));
+        const isPartialOpen = isPartialSelected;
+
         const visual = questionVisualHtml(q);
 
         const t = q.table;
@@ -2743,49 +2748,86 @@ function renderEval() {
                         ${studentAns
                             ? esc(studentAns)
                             : (a.solveMode === 'kagitta'
-                                ? '<div class="eval-paper-hint"><i class="fas fa-file-alt"></i> Bu provayı kâğıt üzerinde çözdün. Kâğıttaki çözümünü aşağıdaki bilimsel ölçütlerle karşılaştırarak kendini değerlendir.</div>'
-                                : '<em>(Bu soru için ekrana yazılı cevap girilmedi. Kendi çözümünü aşağıdaki bilimsel ölçütlerle karşılaştırabilirsin.)</em>')}
+                                ? '<div class="eval-paper-hint"><i class="fas fa-file-alt"></i> Bu provayı kâğıt üzerinde çözdün. Kâğıttaki çözümünü aşağıdaki örnek tam puanlık cevap ve ölçütlerle karşılaştırarak kendini değerlendir.</div>'
+                                : '<em>(Bu soru için ekrana yazılı cevap girilmedi. Kendi çözümünü aşağıdaki örnek tam puanlık cevap ve ölçütlerle karşılaştırabilirsin.)</em>')}
                     </div>
                 </div>
 
-                <!-- 2. Örnek Bilimsel Açıklama ve Eşdeğerlik Notu -->
+                <!-- 2. Örnek Tam Puanlık Cevap Kutusu (Mavi/Yeşil vurgulu & Kalın kilit fen kavramları) -->
                 <div class="eval-sample-answer-box">
-                    <h4><i class="fas fa-check-circle" style="color: #2dd4bf;"></i> 2. Örnek Bilimsel Açıklama:</h4>
-                    <p class="sample-answer-text">${esc(q.sample_answer)}</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <h4 style="margin: 0;"><i class="fas fa-check-circle" style="color: #10b981;"></i> 2. Örnek Tam Puanlık Cevap:</h4>
+                        <span class="q-points-badge" style="background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #34d399;">${qPoints} Puan</span>
+                    </div>
+                    <p class="sample-answer-text">${formatSampleAnswerWithHighlights(q.sample_answer)}</p>
                     <div class="eval-alt-note">
-                        <i class="fas fa-info-circle"></i> Aynı bilimsel anlamı veren farklı ifadeler kabul edilir.
+                        <i class="fas fa-info-circle"></i> ${esc(q.accepted_alternatives || 'Aynı bilimsel anlamı veren farklı ifadeler kabul edilir.')}
                     </div>
                 </div>
 
-                <!-- 3. “Cevabında hangileri var?” Ölçüt Listesi & Hızlı Durum Butonları -->
-                <div class="eval-criteria-section">
-                    <div class="eval-criteria-header">
-                        <div>
-                            <h4><i class="fas fa-tasks" style="color: #38bdf8;"></i> 3. Cevabında hangileri var?</h4>
-                            <span class="eval-criteria-sub">Kendi cevabında yer alan bilimsel unsurları işaretle veya hızlı durum seç:</span>
+                <!-- 3. Çocuk Dostu 3 Büyük Buton & "Kısmen Yaptım" Alt Seçim Paneli -->
+                <div class="eval-decision-section">
+                    <div class="eval-decision-header">
+                        <h4><i class="fas fa-balance-scale" style="color: #38bdf8;"></i> 3. Kendi Cevabını Değerlendir:</h4>
+                        <p class="eval-decision-sub">Örnek cevabı incele ve kendi yanıtına en uygun seçeneği belirle:</p>
+                    </div>
+                    <div class="eval-main-decision-buttons" role="group" aria-label="Cevap değerlendirme seçenekleri">
+                        <button type="button" id="btn-eval-full" class="eval-choice-btn btn-eval-full ${isFullSelected ? 'active' : ''}" title="Cevabın örnek açıklamayı tam karşılıyorsa">
+                            <div class="choice-btn-icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="choice-btn-content">
+                                <span class="choice-btn-title">Tam Doğru Yaptım</span>
+                                <span class="choice-btn-points">${qPoints} Puan</span>
+                            </div>
+                        </button>
+                        <button type="button" id="btn-eval-partial" class="eval-choice-btn btn-eval-partial ${isPartialSelected ? 'active' : ''}" title="Cevabın örnek açıklamanın bir kısmını karşılıyorsa" aria-expanded="${isPartialOpen ? 'true' : 'false'}">
+                            <div class="choice-btn-icon"><i class="fas fa-adjust"></i></div>
+                            <div class="choice-btn-content">
+                                <span class="choice-btn-title">Kısmen Yaptım</span>
+                                <span class="choice-btn-points">Ölçütleri Seç</span>
+                            </div>
+                        </button>
+                        <button type="button" id="btn-eval-zero" class="eval-choice-btn btn-eval-zero ${isZeroSelected ? 'active' : ''}" title="Soruyu yapamadıysan veya boş bıraktıysan">
+                            <div class="choice-btn-icon"><i class="fas fa-times-circle"></i></div>
+                            <div class="choice-btn-content">
+                                <span class="choice-btn-title">Yapamadım / Boş Bıraktım</span>
+                                <span class="choice-btn-points">0 Puan</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- "Kısmen Yaptım" Alt Seçim Paneli (Akordiyon / Mini Panel) -->
+                    <div id="eval-partial-breakdown" class="eval-partial-breakdown" style="${isPartialOpen ? 'display: block;' : 'display: none;'}">
+                        <div class="partial-breakdown-header">
+                            <i class="fas fa-clipboard-check"></i>
+                            <h5>Hangi kısımları doğru yazdın?</h5>
+                            <span class="partial-breakdown-hint">Cevabında yer alan maddeleri işaretle:</span>
                         </div>
-                        <div class="eval-quick-status-actions">
-                            <button type="button" id="btn-eval-zero" class="btn-eval-zero btn-eval-empty ${isZeroSelected ? 'active' : ''}" title="Soruyu yapamadıysan veya boş bıraktıysan tıkla">
-                                <i class="fas fa-times-circle"></i> Yapamadım / Boş Bıraktım (0 Puan)
+                        <div class="eval-criteria-list" role="group" aria-label="Kısmi puan kriterleri">
+                            ${criteria.map(c => {
+                                const isChecked = selectedIds.includes(c.id);
+                                return `
+                                    <label class="exam-criterion-item ${isChecked ? 'checked' : ''}" for="crit-${esc(c.id)}">
+                                        <input type="checkbox" id="crit-${esc(c.id)}" class="exam-criterion-checkbox" data-criterion-id="${esc(c.id)}" ${isChecked ? 'checked' : ''} ${state.reviewingEval ? 'disabled' : ''}>
+                                        <div class="criterion-custom-box" aria-hidden="true">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <div class="criterion-body">
+                                            <span class="criterion-text">${esc(c.text)}</span>
+                                        </div>
+                                        <span class="criterion-point-badge">+${c.points} Puan</span>
+                                    </label>
+                                `;
+                            }).join('')}
+                        </div>
+                        <div class="partial-breakdown-footer">
+                            <div class="partial-live-sum">
+                                <span>Seçilen Toplam:</span>
+                                <strong id="partial-calc-score">${currentQScore} Puan</strong>
+                            </div>
+                            <button type="button" id="btn-confirm-partial" class="btn-confirm-partial" ${state.reviewingEval ? 'disabled' : ''}>
+                                <i class="fas fa-check"></i> <span>Puanı Onayla ve Devam Et</span>
                             </button>
                         </div>
-                    </div>
-                    <div class="eval-criteria-list" role="group" aria-label="Bilimsel başarı ölçütleri">
-                        ${criteria.map(c => {
-                            const isChecked = selectedIds.includes(c.id);
-                            return `
-                                <label class="exam-criterion-item ${isChecked ? 'checked' : ''}" for="crit-${esc(c.id)}">
-                                    <input type="checkbox" id="crit-${esc(c.id)}" class="exam-criterion-checkbox" data-criterion-id="${esc(c.id)}" ${isChecked ? 'checked' : ''} ${state.reviewingEval ? 'disabled' : ''}>
-                                    <div class="criterion-custom-box" aria-hidden="true">
-                                        <i class="fas fa-check"></i>
-                                    </div>
-                                    <div class="criterion-body">
-                                        <span class="criterion-text">${esc(c.text)}</span>
-                                    </div>
-                                    <span class="criterion-point-badge">+${c.points} Puan</span>
-                                </label>
-                            `;
-                        }).join('')}
                     </div>
                 </div>
 
@@ -2793,14 +2835,18 @@ function renderEval() {
                 <div class="eval-score-live-box">
                     <div class="live-score-info">
                         <span class="live-score-label">Bu Sorudan Alınan Puan:</span>
-                        <span class="live-score-val" id="eval-current-q-score">${currentQScore} <small>/ ${qPoints} Puan</small></span>
+                        <span class="live-score-val" id="eval-current-q-score">${isZeroSelected ? 0 : (isFullSelected ? qPoints : currentQScore)} <small>/ ${qPoints} Puan</small></span>
                     </div>
                     <div class="live-eval-status">
                         ${isZeroSelected
                             ? '<span class="status-badge empty"><i class="fas fa-times-circle"></i> Yapamadım / Boş Bırakıldı (0 Puan)</span>'
-                            : (isEvaluated
-                                ? '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Değerlendirme Kaydedildi</span>'
-                                : '<span class="status-badge pending"><i class="fas fa-pencil-alt"></i> Kayıt Bekliyor</span>')}
+                            : (isFullSelected
+                                ? '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Tam Doğru Kaydedildi</span>'
+                                : (isPartialSelected
+                                    ? `<span class="status-badge saved" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border-color: rgba(245, 158, 11, 0.35);"><i class="fas fa-adjust"></i> Kısmi Puan (${currentQScore} Puan)</span>`
+                                    : (isEvaluated
+                                        ? '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Değerlendirme Kaydedildi</span>'
+                                        : '<span class="status-badge pending"><i class="fas fa-pencil-alt"></i> Kayıt Bekliyor</span>')))}
                     </div>
                 </div>
             </article>
@@ -2808,51 +2854,107 @@ function renderEval() {
 
         // Buton ve Checkbox olayları (İnceleme modunda salt okunur)
         if (!state.reviewingEval) {
+            const btnFull = qContainer.querySelector('#btn-eval-full');
             const btnZero = qContainer.querySelector('#btn-eval-zero, .btn-eval-zero');
+            const btnPartial = qContainer.querySelector('#btn-eval-partial, .btn-eval-partial');
+            const breakdownEl = qContainer.querySelector('#eval-partial-breakdown');
+            const btnConfirmPartial = qContainer.querySelector('#btn-confirm-partial');
 
+            // 1. TAM DOĞRU YAPTIM
+            if (btnFull) {
+                btnFull.onclick = () => {
+                    a.questionStatuses = a.questionStatuses || {};
+                    a.questionStatuses[q.id] = 'full';
+                    a.selectedCriteria = a.selectedCriteria || {};
+                    a.selectedCriteria[q.id] = criteria.map(c => c.id);
+                    a.evaluatedQuestions = a.evaluatedQuestions || {};
+                    a.evaluatedQuestions[q.id] = true;
+
+                    btnFull.classList.add('active');
+                    btnZero?.classList.remove('active');
+                    btnPartial?.classList.remove('active');
+                    if (breakdownEl) breakdownEl.style.display = 'none';
+
+                    qContainer.querySelectorAll('.exam-criterion-checkbox').forEach(cb => {
+                        cb.checked = true;
+                        cb.closest('.exam-criterion-item')?.classList.add('checked');
+                    });
+
+                    const scoreValEl = $('eval-current-q-score');
+                    if (scoreValEl) scoreValEl.innerHTML = `${qPoints} <small>/ ${qPoints} Puan</small>`;
+                    const liveStatusEl = qContainer.querySelector('.live-eval-status');
+                    if (liveStatusEl) {
+                        liveStatusEl.innerHTML = '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Tam Doğru Kaydedildi</span>';
+                    }
+
+                    const navBtn = navStrip?.querySelector(`[data-eval-q="${evalIdx}"]`);
+                    if (navBtn) navBtn.classList.add('eval-completed');
+
+                    const currentEvaluated = questions.filter(qu => !!(a.evaluatedQuestions && a.evaluatedQuestions[qu.id])).length;
+                    const prgEl = $('eval-progress-text');
+                    if (prgEl) prgEl.textContent = `${currentEvaluated} / ${questions.length} Değerlendirildi`;
+
+                    saveState();
+
+                    trackFenUpEvent('soru_degerlendirildi', {
+                        question_id: q.id,
+                        score: qPoints,
+                        status: 'tam'
+                    });
+
+                    if (evalIdx < questions.length - 1) {
+                        setTimeout(() => {
+                            if (a.evalQuestionIndex === evalIdx && a.questionStatuses[q.id] === 'full') {
+                                a.evalQuestionIndex = evalIdx + 1;
+                                saveState();
+                                renderEval();
+                            }
+                        }, 300);
+                    }
+                };
+            }
+
+            // 2. YAPAMADIM / BOŞ BIRAKTIM (0 PUAN)
             const handleZeroStatus = () => {
                 a.questionStatuses = a.questionStatuses || {};
                 a.questionStatuses[q.id] = 'zero';
+                a.selectedCriteria = a.selectedCriteria || {};
                 a.selectedCriteria[q.id] = [];
+                a.evaluatedQuestions = a.evaluatedQuestions || {};
                 a.evaluatedQuestions[q.id] = true;
 
-                // Tüm checkboxları temizle
+                btnZero?.classList.add('active');
+                btnFull?.classList.remove('active');
+                btnPartial?.classList.remove('active');
+                if (breakdownEl) breakdownEl.style.display = 'none';
+
                 qContainer.querySelectorAll('.exam-criterion-checkbox').forEach(cb => {
                     cb.checked = false;
                     cb.closest('.exam-criterion-item')?.classList.remove('checked');
                 });
 
-                // Buton aktifliğini güncelle
-                if (btnZero) btnZero.classList.add('active');
-
-                // Canlı puanı ve durum rozetini güncelle
                 const scoreValEl = $('eval-current-q-score');
                 if (scoreValEl) scoreValEl.innerHTML = `0 <small>/ ${qPoints} Puan</small>`;
-
                 const liveStatusEl = qContainer.querySelector('.live-eval-status');
                 if (liveStatusEl) {
                     liveStatusEl.innerHTML = '<span class="status-badge empty"><i class="fas fa-times-circle"></i> Yapamadım / Boş Bırakıldı (0 Puan)</span>';
                 }
 
-                // Nav strip rozetini tamamlandı yap
                 const navBtn = navStrip?.querySelector(`[data-eval-q="${evalIdx}"]`);
                 if (navBtn) navBtn.classList.add('eval-completed');
 
-                // Progress text
                 const currentEvaluated = questions.filter(qu => !!(a.evaluatedQuestions && a.evaluatedQuestions[qu.id])).length;
                 const prgEl = $('eval-progress-text');
                 if (prgEl) prgEl.textContent = `${currentEvaluated} / ${questions.length} Değerlendirildi`;
 
                 saveState();
 
-                // GA4: soru_degerlendirildi (Hızlı Durum)
                 trackFenUpEvent('soru_degerlendirildi', {
                     question_id: q.id,
                     score: 0,
                     status: 'yapamadim_bos'
                 });
 
-                // Yumuşak geçiş: Eğer sonraki soru varsa 300ms sonra ilerle
                 if (evalIdx < questions.length - 1) {
                     setTimeout(() => {
                         if (a.evalQuestionIndex === evalIdx && a.questionStatuses[q.id] === 'zero') {
@@ -2866,12 +2968,32 @@ function renderEval() {
 
             if (btnZero) btnZero.onclick = handleZeroStatus;
 
+            // 3. KISMEN YAPTIM
+            if (btnPartial) {
+                btnPartial.onclick = () => {
+                    btnPartial.classList.add('active');
+                    btnFull?.classList.remove('active');
+                    btnZero?.classList.remove('active');
+
+                    if (breakdownEl) {
+                        breakdownEl.style.display = 'block';
+                        breakdownEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+
+                    a.questionStatuses = a.questionStatuses || {};
+                    a.questionStatuses[q.id] = 'partial';
+                    saveState();
+                };
+            }
+
+            // Kriter Checkboxları
             qContainer.querySelectorAll('.exam-criterion-checkbox').forEach(cb => {
                 cb.onchange = () => {
-                    // Kriter işaretlendiğinde sıfır puan durumunu temizle
                     a.questionStatuses = a.questionStatuses || {};
-                    a.questionStatuses[q.id] = null;
-                    if (btnZero) btnZero.classList.remove('active');
+                    a.questionStatuses[q.id] = 'partial';
+                    btnPartial?.classList.add('active');
+                    btnFull?.classList.remove('active');
+                    btnZero?.classList.remove('active');
 
                     const cId = cb.dataset.criterionId;
                     const currentSel = a.selectedCriteria[q.id] || [];
@@ -2888,24 +3010,57 @@ function renderEval() {
                     const newScore = criteria.filter(c => currentSel.includes(c.id)).reduce((s, c) => s + c.points, 0);
                     const scoreValEl = $('eval-current-q-score');
                     if (scoreValEl) scoreValEl.innerHTML = `${newScore} <small>/ ${qPoints} Puan</small>`;
+                    const partialSumEl = $('partial-calc-score');
+                    if (partialSumEl) partialSumEl.textContent = `${newScore} Puan`;
 
+                    saveState();
+                };
+            });
+
+            // 4. PUANI ONAYLA VE DEVAM ET
+            if (btnConfirmPartial) {
+                btnConfirmPartial.onclick = () => {
+                    const currentSel = a.selectedCriteria[q.id] || [];
+                    const newScore = criteria.filter(c => currentSel.includes(c.id)).reduce((s, c) => s + c.points, 0);
+
+                    a.evaluatedQuestions = a.evaluatedQuestions || {};
                     a.evaluatedQuestions[q.id] = true;
+                    a.questionStatuses = a.questionStatuses || {};
+                    if (newScore === qPoints) a.questionStatuses[q.id] = 'full';
+                    else if (newScore > 0) a.questionStatuses[q.id] = 'partial';
+                    else a.questionStatuses[q.id] = 'zero';
+
+                    const navBtn = navStrip?.querySelector(`[data-eval-q="${evalIdx}"]`);
+                    if (navBtn) navBtn.classList.add('eval-completed');
+
+                    const currentEvaluated = questions.filter(qu => !!(a.evaluatedQuestions && a.evaluatedQuestions[qu.id])).length;
+                    const prgEl = $('eval-progress-text');
+                    if (prgEl) prgEl.textContent = `${currentEvaluated} / ${questions.length} Değerlendirildi`;
+
                     const liveStatusEl = qContainer.querySelector('.live-eval-status');
                     if (liveStatusEl) {
-                        liveStatusEl.innerHTML = '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Değerlendirme Kaydedildi</span>';
+                        liveStatusEl.innerHTML = `<span class="status-badge saved"><i class="fas fa-check-circle"></i> ${newScore} Puan Kaydedildi</span>`;
                     }
 
                     saveState();
 
-                    // GA4: soru_degerlendirildi (Kriter Seçimi)
-                    const evalStatus = newScore === qPoints ? 'tam' : (newScore > 0 ? 'kismi' : 'yanlis');
                     trackFenUpEvent('soru_degerlendirildi', {
                         question_id: q.id,
                         score: newScore,
-                        status: evalStatus
+                        status: a.questionStatuses[q.id]
                     });
+
+                    if (evalIdx < questions.length - 1) {
+                        setTimeout(() => {
+                            a.evalQuestionIndex = evalIdx + 1;
+                            saveState();
+                            renderEval();
+                        }, 300);
+                    } else {
+                        renderEval();
+                    }
                 };
-            });
+            }
         }
     }
 
@@ -3058,6 +3213,24 @@ function renderSummary() {
         questions.forEach(q => {
             const criteria = a.criteriaMap?.[q.id] || [];
             const selIds = a.selectedCriteria?.[q.id] || [];
+            const qScore = getQuestionScore(q.id, a);
+            const isZero = (qScore === 0 || a.questionStatuses?.[q.id] === 'zero' || a.questionStatuses?.[q.id] === 'empty' || a.questionStatuses?.[q.id] === 'incorrect');
+
+            // Sıfır puan veya boş bırakılan sorular için soruyla ilişkili tüm kartları ekle
+            if (isZero && Array.isArray(q.return_card_ids)) {
+                q.return_card_ids.forEach(cid => {
+                    const card = CARDS.find(cardItem => cardItem.id === cid);
+                    if (!card) return;
+                    if (!missedCardMap[cid]) {
+                        missedCardMap[cid] = {
+                            card,
+                            criteriaTexts: []
+                        };
+                    }
+                });
+            }
+
+            // Kısmen yapılan veya eksik kalan kriterlerin çalışma kartlarını ekle
             criteria.forEach(c => {
                 if (!selIds.includes(c.id)) {
                     (c.return_card_ids || []).forEach(cid => {
@@ -3351,7 +3524,50 @@ function renderSummary() {
 
 // --- YAZDIRMA VE KÂĞITTA ÇÖZÜM FORMATI (Print / PDF Sheet Preview & Vector PDF Download) ---
 let lastPrintTriggerElement = null;
+let currentPrintMode = 'blank'; // 'blank' | 'answers'
 let pdfMakePromise = null;
+
+/**
+ * V8.5: Fen kilit kavramlarını kalın (<strong>) vurgulayan ve güvenli kaçış sağlayan yardımcı fonksiyon
+ */
+export function formatSampleAnswerWithHighlights(rawText) {
+    if (!rawText) return '';
+    let text = esc(rawText);
+    const keyTerms = [
+        'bilimsel inceleme', 'uzaya taşır', 'uzay çalışmaları', 'araştırma merkezi', 'gözlemler',
+        'astronotların', 'astronot', 'haberleşme', 'yayın', 'iletişim', 'yer gözlem', 'yeryüzü görüntüleme',
+        'afet alanı', 'ışık yılı', 'mesafe birimi', 'zaman birimi', 'bulutsu', 'nebula',
+        'yıldız', 'kara delik', 'kütle', 'ağırlık', 'değişmeyen madde', 'yer çekimi kuvveti',
+        'yer çekimi', 'dinamometre', 'eşit kollu terazi', 'kinetik enerji', 'potansiyel enerji',
+        'çekim potansiyel enerjisi', 'çekim potansiyel', 'esneklik potansiyel enerjisi', 'esneklik potansiyel',
+        'fiziksel anlamda iş', 'fiziksel iş', 'kuvvet', 'alınan yol', 'aynı doğrultuda', 'enerji aktarımı',
+        'sürat', 'yükseklik', 'sürtünme kuvveti', 'sürtünme', 'hava direnci', 'su direnci', 'ısı enerjisi',
+        'sonda', 'roket', 'uzay istasyonu', 'teleskop', 'Hubble', 'TÜRKSAT 6A', 'İMECE', 'ışık kirliliği',
+        'gözlemevi', 'rasathane', 'uzay kirliliği', 'insan yapımı', 'enkaz', 'gök taşı', 'doğal kökenli',
+        'uydu parçası', 'yapay uydu', 'uydu', 'doğal uydu', 'büyük kütleli', 'küçük kütleli', 'süpernova',
+        'nötron yıldızı', 'beyaz cüce', 'siyah cüce', 'galaksi', 'samanyolu', 'elips', 'sarmal', 'düzensiz',
+        'evren', 'uzay', 'hücre', 'çekirdek', 'sitoplazma', 'hücre zarı', 'mitokondri', 'kloroplast',
+        'ribozom', 'koful', 'golgi', 'lizozom', 'sentrozom', 'endoplazmik retikulum',
+        'çarpışma riski', 'çarpışma', 'yörünge', 'görev sonu', 'atmosfer', 'uzaklaştırma', 'yakalama',
+        'manevra', 'robot kol', 'hasar riski', 'Güneş Sistemi', 'Güneş', 'Dünya', 'Ay', 'değişken',
+        'bağımsız değişken', 'bağımlı değişken', 'kontrol edilen değişken', 'sabit değişken', 'iş yapar', 'iş'
+    ];
+    keyTerms.sort((a, b) => b.length - a.length);
+
+    const tokens = [];
+    keyTerms.forEach(term => {
+        const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+        text = text.replace(regex, (match) => {
+            const token = `___KEYTERM_${tokens.length}___`;
+            tokens.push(`<strong>${match}</strong>`);
+            return token;
+        });
+    });
+    tokens.forEach((tokenHtml, idx) => {
+        text = text.replace(`___KEYTERM_${idx}___`, tokenHtml);
+    });
+    return text;
+}
 
 function loadPdfMake() {
     if (typeof window !== 'undefined' && window.pdfMake && window.pdfMake.vfs) {
@@ -3420,11 +3636,12 @@ function imageToDataUrl(src, maxWidth = 480, maxHeight = 360) {
     });
 }
 
-async function generateExamPdfBlob(questions, attempt) {
+async function generateExamPdfBlob(questions, attempt, mode = 'blank') {
     const assetBase = ASSET_BASE;
     const pdfMake = await loadPdfMake();
     const scNum = attempt.scenarioNumber || getActiveScenarioNumber();
     const pointsMap = attempt.questionPoints || calculateQuestionPoints(questions, SCORING_POLICY.targetTotal);
+    const isAnswers = (mode === 'answers');
 
     let logoObj = null;
     try {
@@ -3478,8 +3695,8 @@ async function generateExamPdfBlob(questions, attempt) {
     }
     headerCols.push({
         stack: [
-            { text: 'FenUp X — Fen Bilimleri Yazılı Provası', fontSize: 13, bold: true, color: '#0f172a' },
-            { text: `7. Sınıf 1. Dönem 1. Yazılı Provası (${formatScenarioTitle(scNum)})`, fontSize: 9.5, color: '#475569', margin: [0, 2, 0, 0] }
+            { text: isAnswers ? 'FenUp X — Örnek Cevap Anahtarı & Çözüm Rehberi' : 'FenUp X — Fen Bilimleri Yazılı Provası', fontSize: 13, bold: true, color: '#0f172a' },
+            { text: isAnswers ? `7. Sınıf 1. Dönem 1. Yazılı Örnek Cevap Anahtarı (${formatScenarioTitle(scNum)})` : `7. Sınıf 1. Dönem 1. Yazılı Provası (${formatScenarioTitle(scNum)})`, fontSize: 9.5, color: '#475569', margin: [0, 2, 0, 0] }
         ]
     });
 
@@ -3531,12 +3748,12 @@ async function generateExamPdfBlob(questions, attempt) {
         const lineCount = qPoints >= 20 ? 7 : (qPoints >= 15 ? 5 : 4);
         const qStack = [];
 
-        // Soru Başlığı: Sade "Soru 1", "Soru 2" (öğrenci kâğıdında teknik kazanım/çıktı kodu YER ALMAZ)
+        // Soru Başlığı:
         qStack.push({
-            text: `Soru ${i + 1}`,
+            text: isAnswers ? `Soru ${i + 1}  [${qPoints} Puan]` : `Soru ${i + 1}`,
             fontSize: 10,
             bold: true,
-            color: '#0f172a',
+            color: isAnswers ? '#dc2626' : '#0f172a',
             margin: [0, 0, 0, 2]
         });
 
@@ -3597,6 +3814,40 @@ async function generateExamPdfBlob(questions, attempt) {
                     margin: [0, 2, 0, 4]
                 });
             }
+        }
+
+        // V8.5: Cevap Anahtarı modunda kırmızı çözüm kutusu
+        if (isAnswers) {
+            const answerStack = [
+                { text: `✍️ Örnek Çözüm & Anahtar Kavramlar [${qPoints} Puan]:`, bold: true, fontSize: 8.5, color: '#b91c1c' },
+                { text: q.sample_answer || '', fontSize: 9.2, color: '#dc2626', italics: true, margin: [0, 2, 0, 2] }
+            ];
+            if (q.accepted_alternatives) {
+                answerStack.push({ text: `Kabul Edilen Eşdeğer İfadeler: ${q.accepted_alternatives}`, fontSize: 7.6, color: '#991b1b', italics: true });
+            }
+            qStack.push({
+                table: {
+                    widths: ['*'],
+                    body: [
+                        [
+                            {
+                                stack: answerStack,
+                                fillColor: '#fef2f2',
+                                borderColor: ['#dc2626', '#fecaca', '#fecaca', '#fecaca'],
+                                border: [true, false, false, false],
+                                margin: [4, 4, 4, 4]
+                            }
+                        ]
+                    ]
+                },
+                layout: {
+                    hLineWidth: () => 0.5,
+                    vLineWidth: (colIdx) => (colIdx === 0 ? 2 : 0.5),
+                    hLineColor: () => '#fecaca',
+                    vLineColor: (colIdx) => (colIdx === 0 ? '#dc2626' : '#fecaca')
+                },
+                margin: [0, 2, 0, 6]
+            });
         }
 
         // Çizgili Cevap Alanı
@@ -3681,12 +3932,14 @@ async function downloadExamPdf(btnDownload = null) {
     }
 
     try {
-        const blob = await generateExamPdfBlob(qs, state.attempt);
+        const isAnswers = (currentPrintMode === 'answers');
+        const blob = await generateExamPdfBlob(qs, state.attempt, currentPrintMode);
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
         const scNum = state.attempt?.scenarioNumber || getActiveScenarioNumber();
-        a.download = `FenUpX_7Sinif_1Donem_1Yazili_Senaryo${scNum}.pdf`;
+        const suffix = isAnswers ? '_CevapAnahtari' : '';
+        a.download = `FenUpX_7Sinif_1Donem_1Yazili_Senaryo${scNum}${suffix}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -3781,11 +4034,17 @@ function openPrintPreview(triggerEl = null) {
                     <div class="print-question-block">
                         <div class="print-q-header">
                             <span class="print-q-num">Soru ${i + 1}</span>
+                            <span class="print-q-points-bracket">[${qPoints} Puan]</span>
                         </div>
                         <div class="print-q-body">
                             <p class="print-q-stem">${esc(q.stem)} <strong>(${qPoints} puan)</strong></p>
                             ${table}
                             ${visual}
+                        </div>
+                        <div class="exam-print-handwritten-answer">
+                            <div class="handwritten-title"><i class="fas fa-pen-nib"></i> ✍️ Öğretmen Çözümü & Anahtar Kavramlar [${qPoints} Puan]:</div>
+                            <p class="handwritten-text">${formatSampleAnswerWithHighlights(q.sample_answer)}</p>
+                            ${q.accepted_alternatives ? `<div class="handwritten-alternatives"><strong>Kabul Edilen Eşdeğer İfadeler:</strong> ${esc(q.accepted_alternatives)}</div>` : ''}
                         </div>
                         <div class="print-answer-lines-container">
                             <span class="print-lines-label">Cevabınız ve Fen Bilimsel Gerekçeniz:</span>
@@ -3810,6 +4069,54 @@ function openPrintPreview(triggerEl = null) {
 
     // Arka plan kaydırma kilidi
     document.body.classList.add('exam-modal-open');
+
+    // V8.5: Baskı Önizleme Mod Değiştirici (Soru Kâğıdı vs Cevap Anahtarı)
+    const btnModeBlank = $('btn-print-mode-blank');
+    const btnModeAnswers = $('btn-print-mode-answers');
+
+    const updatePrintModeUI = () => {
+        const isAnswers = (currentPrintMode === 'answers');
+        if (btnModeBlank) btnModeBlank.classList.toggle('active', !isAnswers);
+        if (btnModeAnswers) btnModeAnswers.classList.toggle('active', isAnswers);
+        if (printEl) printEl.classList.toggle('is-answers-mode', isAnswers);
+
+        const schoolTitle = printEl.querySelector('.print-school-title');
+        const subTitle = printEl.querySelector('.print-sub-title');
+        const modalSub = $('print-modal-subtitle') || modalEl.querySelector('.print-preview-title-group p');
+
+        if (isAnswers) {
+            if (schoolTitle) schoolTitle.textContent = 'FenUp X — Örnek Cevap Anahtarı & Çözüm Rehberi';
+            if (subTitle) subTitle.textContent = `7. Sınıf 1. Dönem 1. Yazılı Cevap Anahtarı (${formatScenarioTitle(scNum)})`;
+            if (modalSub) modalSub.textContent = `Örnek Cevap Anahtarı & Çözüm Rehberi — Senaryo ${scNum} standartlarında ${qs.length} açık uçlu soru. Toplam 100 puandır.`;
+        } else {
+            if (schoolTitle) schoolTitle.textContent = 'FenUp X — Fen Bilimleri Yazılı Provası';
+            if (subTitle) subTitle.textContent = `7. Sınıf 1. Dönem 1. Yazılı Provası (${formatScenarioTitle(scNum)})`;
+            if (modalSub) modalSub.textContent = `Senaryo ${scNum} standartlarında ${qs.length} açık uçlu soru. Toplam 100 puandır.`;
+        }
+    };
+
+    if (btnModeBlank) {
+        btnModeBlank.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            currentPrintMode = 'blank';
+            updatePrintModeUI();
+        };
+    }
+
+    if (btnModeAnswers) {
+        btnModeAnswers.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            currentPrintMode = 'answers';
+            updatePrintModeUI();
+            trackFenUpEvent('pdf_cevap_anahtari_goruntulendi', {
+                senaryo: `senaryo-${scNum}`
+            });
+        };
+    }
+
+    updatePrintModeUI();
 
     // PDF İndir butonu
     const btnDownloadPdf = $('btn-print-preview-download-pdf');
@@ -4709,6 +5016,8 @@ if (typeof window !== 'undefined') {
         selectQuestions,
         getQuestionHistoryStats,
         questionVisualHtml,
+        formatSampleAnswerWithHighlights,
+        getPrintMode: () => currentPrintMode,
         getState: () => state,
         setScenario: (sc) => {
             state.selectedScenario = sc;

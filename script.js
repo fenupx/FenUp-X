@@ -1,5 +1,5 @@
 /**
- * FenUp X — V8.4: Sanal Laboratuvar Bilimsel İvmelenme Fiziği ve Formülsüz MEB Standartları
+ * FenUp X — V8.5: Kırmızı El Yazılı Cevap Anahtarı PDF ve Adil Puanlamalı Çocuk Dostu Değerlendirme
  * Mod 1: "Kuvvetin İşe Etkisi (Yol Sabit)" - Bağımsız Değişken: Uygulanan Kuvvet, Kontrol Değişkeni: Alınan Yol ve Kütle
  * Mod 2: "Alınan Yolun İşe Etkisi (Kuvvet Sabit)" - Bağımsız Değişken: Alınan Yol, Kontrol Değişkeni: Uygulanan Kuvvet ve Kütle
  * Bağımlı Değişken: Yapılan Fiziksel İş

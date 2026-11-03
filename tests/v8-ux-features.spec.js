@@ -340,4 +340,110 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         expect(savedAvatar).toBeTruthy();
         expect(savedAvatar).toContain('data:image/svg+xml');
     });
+
+    test('9. V8.5: Kırmızı El Yazılı Cevap Anahtarı PDF Modu ve 3 Seviyeli Çocuk Dostu Değerlendirme', async ({ page }) => {
+        await openChoice(page);
+
+        // Yazılı provasını başlat
+        await page.locator('#btn-choice-go-practice').click();
+        await page.locator('#exam-start-practice').click();
+        await expect(page.locator('#practice-active-box')).toBeVisible();
+
+        // 1. Baskı Önizlemesini Aç (PDF Önizleme Modalı)
+        await page.locator('#btn-practice-preview-print').click();
+        const printModal = page.locator('#exam-print-preview-modal');
+        await expect(printModal).toBeVisible();
+
+        // Varsayılan mod: "Soru Kâğıdı" aktif olmalı
+        const btnModeBlank = page.locator('#btn-print-mode-blank');
+        const btnModeAnswers = page.locator('#btn-print-mode-answers');
+        await expect(btnModeBlank).toBeVisible();
+        await expect(btnModeAnswers).toBeVisible();
+        await expect(btnModeBlank).toHaveClass(/active/);
+        await expect(btnModeAnswers).not.toHaveClass(/active/);
+
+        // "Cevap Anahtarı" moduna geç
+        await btnModeAnswers.click();
+        await expect(btnModeAnswers).toHaveClass(/active/);
+        await expect(btnModeBlank).not.toHaveClass(/active/);
+        await expect(page.locator('#exam-print-sheet')).toHaveClass(/is-answers-mode/);
+
+        // Kırmızı el yazısı cevap kutuları görünür olmalı ve örnek çözüm içermeli
+        const handwrittenBox = page.locator('.exam-print-handwritten-answer').first();
+        await expect(handwrittenBox).toBeVisible();
+        await expect(handwrittenBox).toContainText('Öğretmen Çözümü & Anahtar Kavramlar');
+
+        // Puan baremi görünür olmalı
+        const pointBracket = page.locator('.print-q-points-bracket').first();
+        await expect(pointBracket).toBeVisible();
+        await expect(pointBracket).toContainText('Puan');
+
+        // Tekrar "Soru Kâğıdı" moduna dön
+        await btnModeBlank.click();
+        await expect(btnModeBlank).toHaveClass(/active/);
+        await expect(page.locator('#exam-print-sheet')).not.toHaveClass(/is-answers-mode/);
+        await expect(handwrittenBox).toBeHidden();
+
+        // Modalı kapat
+        await page.locator('#btn-print-preview-close').click();
+        await expect(printModal).toBeHidden();
+
+        // 2. Provayı tamamlayıp Değerlendirme Ekranına Geç
+        for (let i = 0; i < 6; i++) {
+            await page.locator('#btn-practice-next-q').click();
+        }
+        await page.locator('#btn-practice-finish').click();
+        await expect(page.locator('#exam-view-eval')).toBeVisible();
+
+        // 3 Büyük Buton Görünür Olmalı
+        const btnFull = page.locator('#btn-eval-full');
+        const btnPartial = page.locator('#btn-eval-partial');
+        const btnZero = page.locator('#btn-eval-zero');
+        await expect(btnFull).toBeVisible();
+        await expect(btnPartial).toBeVisible();
+        await expect(btnZero).toBeVisible();
+
+        // Örnek Tam Puanlık Cevap Kutusu kilit fen kavramlarını kalın (strong) içermeli
+        const sampleBox = page.locator('.eval-sample-answer-box');
+        await expect(sampleBox).toBeVisible();
+        const strongCount = await sampleBox.locator('strong').count();
+        expect(strongCount).toBeGreaterThanOrEqual(1);
+
+        // "Kısmen Yaptım" butonuna tıkla -> alt akordiyon paneli açılmalı
+        await btnPartial.click();
+        const breakdown = page.locator('#eval-partial-breakdown');
+        await expect(breakdown).toBeVisible();
+        await expect(breakdown.locator('h5')).toContainText('Hangi kısımları doğru yazdın?');
+
+        // Ölçütler ve +X Puan rozetleri listelenmeli
+        const criterionItems = breakdown.locator('.exam-criterion-item');
+        const count = await criterionItems.count();
+        expect(count).toBeGreaterThanOrEqual(2);
+
+        // Birinci kriteri işaretle
+        await criterionItems.first().click();
+        const partialScoreText = await page.locator('#partial-calc-score').textContent();
+        expect(partialScoreText).toMatch(/\d+ Puan/);
+
+        // "Puanı Onayla ve Devam Et" butonuna tıkla
+        await page.locator('#btn-confirm-partial').click();
+
+        // 1. Soru kısmi puan olarak kaydedilmeli ve 2. soruya akıcı şekilde geçmeli
+        await page.waitForFunction(() => {
+            const state = window.FenUpExam.getState();
+            const q1Id = state.attempt.ids[0];
+            return state.attempt.questionStatuses?.[q1Id] === 'partial' && state.attempt.evalQuestionIndex === 1;
+        });
+
+        // 2. Soruda "Tam Doğru Yaptım" tıkla
+        await expect(page.locator('#eval-single-question-container .exam-qmeta')).toContainText('SORU 2');
+        await page.locator('#btn-eval-full').click();
+
+        // 2. Soru tam doğru kaydedilmeli ve 3. soruya geçmeli
+        await page.waitForFunction(() => {
+            const state = window.FenUpExam.getState();
+            const q2Id = state.attempt.ids[1];
+            return state.attempt.questionStatuses?.[q2Id] === 'full' && state.attempt.evalQuestionIndex === 2;
+        });
+    });
 });
