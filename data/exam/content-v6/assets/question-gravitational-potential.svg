@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 195" width="100%" height="100%">
+  <rect width="100%" height="100%" fill="none"/>
+
+  <!-- Zemin Çizgisi -->
+  <line x1="40" y1="150" x2="640" y2="150" stroke="#64748b" stroke-width="2.5"/>
+  <rect x="40" y="150" width="600" height="24" fill="#94a3b8" opacity="0.18" rx="2"/>
+  <text x="50" y="166" fill="#64748b" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, sans-serif">Zemin Seviyesi</text>
+
+  <!-- Kitaplık Raf Sistemi (Sol-Orta Kısım) -->
+  <g transform="translate(230, 25)">
+    <!-- Kitaplık Yan Direkleri -->
+    <line x1="-90" y1="125" x2="-90" y2="25" stroke="#64748b" stroke-width="3"/>
+    <line x1="90" y1="125" x2="90" y2="25" stroke="#64748b" stroke-width="3"/>
+
+    <!-- Üst Raf Plakası -->
+    <rect x="-100" y="55" width="200" height="8" rx="2" fill="#0284c7"/>
+    <text x="110" y="62" fill="#0284c7" font-size="12" font-weight="bold" font-family="system-ui, -apple-system, sans-serif">Üst Raf</text>
+
+    <!-- K Kitabı (Üst Rafta) -->
+    <g transform="translate(-20, 15)">
+      <rect x="0" y="0" width="40" height="40" rx="3" fill="#0284c7" stroke="#ffffff" stroke-width="2"/>
+      <line x1="6" y1="6" x2="6" y2="34" stroke="#bae6fd" stroke-width="2.5"/>
+      <text x="20" y="25" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif">K</text>
+    </g>
+    <text x="0" y="6" fill="#0284c7" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif">K Kitabı</text>
+
+    <!-- Yükseklik Boyutu Oku (h) -->
+    <line x1="-60" y1="63" x2="-60" y2="125" stroke="#0284c7" stroke-width="2" stroke-dasharray="4,4"/>
+    <polygon points="-60,63 -64,71 -56,71" fill="#0284c7"/>
+    <polygon points="-60,125 -64,117 -56,117" fill="#0284c7"/>
+    <text x="-72" y="98" fill="#0284c7" font-size="13" font-weight="bold" text-anchor="end" font-family="system-ui, -apple-system, sans-serif">h</text>
+  </g>
+
+  <!-- L Kitabı (Zeminde, Sağ Kısım) -->
+  <g transform="translate(480, 110)">
+    <!-- L Kitabı -->
+    <rect x="-20" y="0" width="40" height="40" rx="3" fill="#dc2626" stroke="#ffffff" stroke-width="2"/>
+    <line x1="-14" y1="6" x2="-14" y2="34" stroke="#fecaca" stroke-width="2.5"/>
+    <text x="0" y="25" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif">L</text>
+    <text x="0" y="-8" fill="#dc2626" font-size="13" font-weight="bold" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif">L Kitabı</text>
+  </g>
+
+  <!-- Özdeş Kitaplar Notu (Sıfır ipucu) -->
+  <rect x="230" y="152" width="220" height="20" rx="3" fill="#475569" opacity="0.1"/>
+  <text x="340" y="166" fill="#475569" font-size="11" font-weight="bold" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif">Özdeş K ve L Kitapları</text>
+</svg>

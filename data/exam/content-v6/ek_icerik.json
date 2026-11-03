@@ -1,7 +1,7 @@
 {
-  "version": "7.8.0",
+  "version": "7.9.0",
   "generated_at": "2026-11-02",
-  "description": "FenUp X 7. Sınıf Yazılıya Hazırlık Modülü - Ek İçerik V7.8 Soru-Görsel Standardı ve PDF Baskı Uyumu",
+  "description": "7. Sınıf Fen Bilimleri 1. Dönem 1. Yazılıya Hazırlık V7.9 Kitap-Yıllık Plan Eşitliği ve Kompakt Görsel Matrisi",
   "outcomes": [
     {
       "id": "FB.7.1.4",
@@ -134,8 +134,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Bulutsudaki gaz ve toz parçacıkları kütle çekiminin etkisiyle bir araya gelerek sıkışır.",
-        "Sıcaklık ve basınç arttıkça çekirdek tepkimeleri başlar; çevreye ısı ve ışık yayan bir yıldız doğar."
+        "Bulutsudaki gaz ve toz parçacıkları kütle çekiminin etkisiyle bir araya gelerek sıkışır ve ısınarak önce önyıldız oluşturur.",
+        "Sıcaklık ve basınç arttıkça çekirdek tepkimeleri başlar; çevreye ısı ve ışık yayan bir yıldız doğar. Buradaki 'yaşam' ifadesi biyolojik bir canlılık anlamına gelmez; doğma, değişme ve enerjisini tüketme sürecini ifade eder."
       ],
       "visual": {
         "kind": "image",
@@ -172,7 +172,7 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Başlangıç kütlesi Güneş'ten çok daha büyük olan yıldızlar kırmızı süperdeve dönüşür.",
+        "Başlangıç kütlesi Güneş'ten çok daha büyük olan yıldızlar kırmızı süperdeve dönüşür. Büyük kütleli yıldızlar yakıtlarını çok daha hızlı tükettikleri için yaşam süreleri küçük kütleli yıldızlara göre daha kısadır.",
         "Ömrünün sonunda süpernova patlaması geçirir; patlamadan sonra geriye nötron yıldızı veya kara delik kalır."
       ],
       "visual": {
@@ -210,8 +210,8 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Yıldızların yaydığı ışığın rengi, yüzey sıcaklıklarının bir göstergesidir.",
-        "Mavi ve beyaz yıldızlar en sıcak, sarı yıldızlar orta sıcaklıkta, kırmızı yıldızlar ise en soğuk yıldızlardır."
+        "Yıldızların yaydığı ışığın rengi, yüzey sıcaklıklarının bir göstergesidir. Mavi ve beyaz yıldızlar en sıcak, sarı yıldızlar orta sıcaklıkta, kırmızı yıldızlar ise en soğuk yıldızlardır.",
+        "Yıldızın rengi yalnızca yüzey sıcaklığını gösterir; tek başına yıldızın yaşını veya ömrünün hangi evresinde olduğunu göstermez."
       ],
       "visual": {
         "kind": "image",
@@ -248,7 +248,7 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Dünya'dan bakıldığında gökyüzünde bir aradaymış gibi görünen yıldız gruplarına takımyıldız denir (Büyükayı, Küçükayı, Avcı).",
+        "Dünya'dan bakıldığında gökyüzünde bir aradaymış gibi görünen yıldız gruplarına takımyıldız denir (Büyükayı, Küçükayı, Avcı, Kraliçe). Aynı takımyıldızdaki yıldızlar uzayda gerçekte birbirine yakın olmak zorunda değildir; yalnızca Dünya'dan bakış doğrultusunda yan yana görünürler.",
         "Büyükayı'nın kepçe ucundaki iki yıldız arası mesafe 5 kat uzatıldığında Küçükayı'nın kuyruk ucundaki Kutup Yıldızı bulunur."
       ],
       "visual": {
@@ -286,7 +286,7 @@
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Hareket hâlindeki cisimlerin sahip olduğu enerjiye kinetik enerji denir.",
+        "Enerji, iş yapabilme yeteneğidir ve uluslararası birimi joule'dür (J). Hareket hâlindeki cisimlerin sahip olduğu enerjiye kinetik enerji denir.",
         "Koşan bir atlet ve uçan bir kuş kinetik enerji taşır; durmakta olan cisimlerin kinetik enerjisi sıfırdır."
       ],
       "visual": {
@@ -344,13 +344,13 @@
       "topics": [],
       "body": [
         "Cisimlerin bulundukları konumdan (yerden yüksekliklerinden) dolayı depoladıkları enerjiye çekim potansiyel enerjisi denir.",
-        "Daldaki elma ve barajda biriken su potansiyel enerjiye sahiptir; yer seviyesindeki bir cismin çekim potansiyel enerjisi sıfırdır."
+        "Yüksek raftaki kitap veya daldaki elma duruyor olsa bile çekim potansiyel enerjisine sahiptir. 'Cisim duruyorsa enerjisi yoktur' düşüncesi bir kavram yanılgısıdır; yer seviyesindeki bir cismin çekim potansiyel enerjisi ise sıfır kabul edilir."
       ],
       "visual": {
         "kind": "image",
-        "asset": "assets/swing.jpg",
-        "alt": "Havada asılı duran salıncak oturağı.",
-        "caption": "Yüksekte Depolanan Enerji",
+        "asset": "assets/diagram-gravitational-potential.svg",
+        "alt": "Yüksek raftaki kitap, daldaki elma ve yerdeki top çekim potansiyel enerjisi şeması",
+        "caption": "Konumdan Dolayı Depolanan Enerji",
         "fit": "contain"
       }
     },
@@ -415,18 +415,18 @@
       "id": "FB722-V7-K08",
       "outcome_id": "FB.7.2.2",
       "sequence": 8,
-      "title": "Enerji dönüşümü ve korunumu",
+      "title": "Kinetik ve potansiyel enerjiyi karşılaştırma",
       "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
       "topics": [],
       "body": [
-        "Sürtünmesiz ortamlarda potansiyel ve kinetik enerji birbirine dönüşür ancak toplam mekanik enerji korunur.",
-        "Hız treni en tepede maksimum potansiyel enerjiye sahiptir; aşağı indikçe bu enerji kinetik enerjiye dönüşerek dipte en büyük sürate ulaşır."
+        "Benzerlikler: Hem kinetik hem de potansiyel enerji birer mekanik enerji türüdür, cisimlerin iş yapabilme yeteneğini ifade eder ve her ikisinin de uluslararası birimi joule'dür (J).",
+        "Farklılıklar: Kinetik enerji cisimlerin hareketinden (sürat ve kütle) kaynaklanırken; potansiyel enerji cisimlerin konumundan (yükseklik) veya esneklik durumundan (sıkışma/gerilme) kaynaklanan depolanmış enerjidir."
       ],
       "visual": {
         "kind": "image",
         "asset": "assets/diagram-roller-coaster.svg",
-        "alt": "Hız treni ray profilinde mekanik enerjinin dönüşümü ve korunumu",
-        "caption": "Enerji Dönüşümü",
+        "alt": "Ray üzerindeki vagonun farklı konumlardaki kinetik ve potansiyel enerjisi",
+        "caption": "Kinetik ve Potansiyel Enerji",
         "fit": "contain"
       }
     }
@@ -1016,47 +1016,47 @@
       "id": "FB722-V7-E03",
       "outcome_id": "FB.7.2.2",
       "difficulty": "easy",
-      "title": "Havada asılı salıncak",
-      "stem": "Bir çocuk oyun parkındaki salıncak oturağını yerden 2 metre yukarıya doğru çekip hareketsiz tutmaktadır. Bu oturağın sahip olduğu enerji türünü ve bu enerjinin depolanma nedenini yazınız.",
+      "title": "Yüksek raftaki ve yerdeki kitap",
+      "stem": "Şemada özdeş K ve L kitaplarından K kitabı üst rafta durmakta, L kitabı ise zemin seviyesinde bulunmaktadır. K ve L kitaplarının çekim potansiyel enerjilerini karşılaştırınız ve depolanan enerjinin nedenini açıklayınız.",
       "visual": {
         "kind": "image",
-        "asset": "assets/swing.jpg",
-        "alt": "Salıncak oturağı fotoğrafı",
+        "asset": "assets/question-gravitational-potential.svg",
+        "alt": "Üst raftaki K kitabı ve zemindeki L kitabı şeması",
         "fit": "contain",
         "print_background": "white"
       },
       "rubric": [
         {
           "id": "FB722-V7-E03-R1",
-          "text": "Enerji türünün Çekim Potansiyel Enerjisi olduğunu doğru belirtir.",
+          "text": "K kitabının yerden yüksekte bulunduğu için çekim potansiyel enerjisine sahip olduğunu, L kitabının ise zemin seviyesinde (yüksekliği sıfır) olduğu için çekim potansiyel enerjisinin sıfır kabul edildiğini doğru belirtir.",
           "points": 5,
           "weight": 5,
           "return_card_ids": [
             "FB722-V7-K04"
           ],
           "scoring": {
-            "full": "Çekim potansiyel enerjisi olduğunu belirtir.",
+            "full": "K kitabının çekim potansiyel enerjisine sahip olduğunu, L kitabının ise zemin seviyesinde sıfır olduğunu belirtir.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
           },
-          "content_revision": "6.0.0"
+          "content_revision": "7.9.0"
         },
         {
           "id": "FB722-V7-E03-R2",
-          "text": "Yerden yüksekte bulunduğu (konumundan dolayı yer çekimine karşı depolandığı) için olduğunu açıklar.",
+          "text": "Cisimlerin konumlarından (yerden yüksekliklerinden) dolayı yer çekimine karşı depoladıkları enerjiye çekim potansiyel enerjisi dendiğini açıklar.",
           "points": 5,
           "weight": 5,
           "return_card_ids": [
             "FB722-V7-K04"
           ],
           "scoring": {
-            "full": "Yerden yüksekte bulunduğu için depolandığını açıklar.",
+            "full": "Konumundan (yerden yüksekliğinden) dolayı enerji depolandığını açıklar.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
           },
-          "content_revision": "6.0.0"
+          "content_revision": "7.9.0"
         }
       ]
     },
@@ -1113,7 +1113,7 @@
       "outcome_id": "FB.7.2.2",
       "difficulty": "easy",
       "title": "Sıkıştırılan sarmal yay",
-      "stem": "Şemada bir sarmal yayın önüne top konulmuş ve yay geriye doğru sıkıştırılmıştır. Bu durumda:\n1) Sıkışmış yayda depolanan enerji türünü yazınız.\n2) Yay serbest bırakıldığında yaydaki enerjinin topa hangi enerji türü olarak aktarılacağını belirtiniz.",
+      "stem": "Şemada bir sarmal yayın önüne top konulmuş ve yay geriye doğru sıkıştırılmıştır.\n1) Sıkışan yayda depolanan potansiyel enerjinin türünü ve uluslararası enerji birimini (Joule / J) yazınız.\n2) Yayın sıkışma miktarı artırıldığında yayda depolanan enerjinin nasıl değişeceğini açıklayınız.",
       "visual": {
         "kind": "image",
         "asset": "assets/question-elastic-spring.svg",
@@ -1124,36 +1124,35 @@
       "rubric": [
         {
           "id": "FB722-V7-E05-R1",
-          "text": "Sıkışmış yayda depolanan enerjinin Esneklik Potansiyel Enerjisi olduğunu yazar.",
+          "text": "Sıkışmış yayda depolanan enerjinin Esneklik Potansiyel Enerjisi olduğunu ve enerji biriminin Joule (J) olduğunu belirtir.",
           "points": 5,
           "weight": 5,
           "return_card_ids": [
             "FB722-V7-K07"
           ],
           "scoring": {
-            "full": "Esneklik potansiyel enerjisi olduğunu yazar.",
+            "full": "Esneklik potansiyel enerjisi ve Joule (J) olduğunu yazar.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
           },
-          "content_revision": "6.0.0"
+          "content_revision": "7.9.0"
         },
         {
           "id": "FB722-V7-E05-R2",
-          "text": "Yay serbest kaldığında topa Kinetik Enerji (hareket enerjisi) aktarılacağını belirtir.",
+          "text": "Yayın sıkışma miktarı arttıkça depolanan esneklik potansiyel enerjisinin de artacağını açıklar.",
           "points": 5,
           "weight": 5,
           "return_card_ids": [
-            "FB722-V7-K01",
             "FB722-V7-K07"
           ],
           "scoring": {
-            "full": "Kinetik enerjiye dönüşeceğini yazar.",
+            "full": "Sıkışma miktarı arttıkça depolanan enerjinin arttığını belirtir.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
           },
-          "content_revision": "6.0.0"
+          "content_revision": "7.9.0"
         }
       ]
     },
@@ -1406,42 +1405,45 @@
       "id": "FB722-V7-H01",
       "outcome_id": "FB.7.2.2",
       "difficulty": "hard",
-      "title": "Okçunun yayı ve enerji dönüşümü",
-      "stem": "Bir okçu antrenmanda yayı önce 10 cm gererek oku fırlatıyor, ikinci denemesinde ise yayı esneklik sınırını aşmadan 20 cm gererek aynı oku fırlatıyor.\n1) İkinci atışta yayda depolanan esneklik potansiyel enerjisindeki değişimi ve okun çıkış süratini birinci atışla karşılaştırınız.\n2) Yayın gerilmesinden okun hedefe saplanmasına kadar geçen süreçteki enerji dönüşüm zincirini aşamalarıyla yazınız.",
+      "title": "Kinetik ve potansiyel enerji karşılaştırması",
+      "stem": "Mekanik enerji çeşitleri olan kinetik enerji ve çekim potansiyel enerjisini yıllık plandaki süreç bileşenleri doğrultusunda karşılaştırınız:\n1) Kinetik enerji ve çekim potansiyel enerjisinin 2 adet benzer özelliğini yazınız (enerji türü, birim veya iş yapabilme yeteneği yönünden).\n2) Kinetik enerji ve çekim potansiyel enerjisinin temel farklılığını (enerjinin kaynağı ve cismin durumu yönünden) açıklayınız.",
       "visual": null,
       "rubric": [
         {
           "id": "FB722-V7-H01-R1",
-          "text": "Yayın gerilme miktarı arttıkça depolanan esneklik potansiyel enerjisinin artacağını ve okun çıkış süratinin çok daha yüksek olacağını açıklar.",
+          "text": "Benzerlikler: Her ikisinin de birer mekanik enerji türü olduğunu, cisimlerin iş yapabilme yeteneğini temsil ettiğini ve her ikisinin de uluslararası biriminin joule (J) olduğunu açıklar.",
           "points": 10,
           "weight": 10,
           "return_card_ids": [
-            "FB722-V7-K07"
-          ],
-          "scoring": {
-            "full": "Gerilme arttıkça enerjinin ve çıkış süratinin arttığını belirtir.",
-            "zero": "Karşılanmıyor.",
-            "equivalent_wording_accepted": true,
-            "unasked_details_are_not_required": true
-          },
-          "content_revision": "6.0.0"
-        },
-        {
-          "id": "FB722-V7-H01-R2",
-          "text": "Enerji dönüşüm zincirini: 'Yaydaki Esneklik Potansiyel Enerjisi -> Okun Kinetik Enerjisi -> Çarpınca Isı ve Ses Enerjisi' şeklinde eksiksiz yazar.",
-          "points": 10,
-          "weight": 10,
-          "return_card_ids": [
-            "FB722-V7-K07",
+            "FB722-V7-K01",
+            "FB722-V7-K04",
             "FB722-V7-K08"
           ],
           "scoring": {
-            "full": "Dönüşüm zincirini doğru aşamalarla yazar.",
+            "full": "En az 2 benzer özelliği (enerji türü, birim Joule, iş yapabilme) doğru yazar.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
           },
-          "content_revision": "6.0.0"
+          "content_revision": "7.9.0"
+        },
+        {
+          "id": "FB722-V7-H01-R2",
+          "text": "Farklılıklar: Kinetik enerjinin hareket halindeki cisimlerin (sürat ve kütle kaynaklı) sahip olduğu enerji olduğunu; çekim potansiyel enerjisinin ise cisimlerin konumlarından (yerden yüksekliklerinden) kaynaklanan depolanmış enerji olduğunu açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB722-V7-K01",
+            "FB722-V7-K04",
+            "FB722-V7-K08"
+          ],
+          "scoring": {
+            "full": "Hareket kaynaklı kinetik ile konum kaynaklı potansiyel farkını doğru açıklar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "7.9.0"
         }
       ]
     },
@@ -1449,8 +1451,8 @@
       "id": "FB722-V7-H02",
       "outcome_id": "FB.7.2.2",
       "difficulty": "hard",
-      "title": "Hız treni ve mekanik korunum",
-      "stem": "Şemadaki sürtünmesiz hız treni rayında, tren A noktasından (en tepe) ilk hızsız harekete başlamaktadır. Tren B noktasından (yer seviyesi, en alt çukur) geçerek C noktasına (ikinci tepe, A'dan daha alçak) tırmanmaktadır.\n1) A, B ve C noktalarındaki kinetik enerji ve çekim potansiyel enerjilerini büyükten küçüğe karşılaştırınız.\n2) Trenin B noktasında neden maksimum sürate ulaştığını ve C noktasındaki süratinin B noktasından neden daha küçük olduğunu mekanik enerjinin korunumu kanununa göre gerekçelendiriniz.",
+      "title": "Ray üzerindeki vagonların enerjilerini karşılaştırma",
+      "stem": "Şemada sürtünmesiz ray üzerindeki eğlence treni A noktasından (en tepe) harekete başlayarak yer seviyesindeki B noktasından geçip A'dan daha alçak olan C noktasına (ikinci tepe) ulaşmaktadır.\n1) Trenin A, B ve C noktalarındaki çekim potansiyel enerjilerini büyükten küçüğe doğru karşılaştırınız.\n2) Trenin A, B ve C noktalarındaki kinetik enerjilerini (hareket enerjilerini) büyükten küçüğe doğru karşılaştırınız ve en büyük kinetik enerjiye hangi noktada ulaştığını gerekçelendiriniz.",
       "visual": {
         "kind": "image",
         "asset": "assets/question-roller-coaster.svg",
@@ -1461,35 +1463,37 @@
       "rubric": [
         {
           "id": "FB722-V7-H02-R1",
-          "text": "Potansiyel Enerji sıralaması: A > C > B (B'de sıfır); Kinetik Enerji sıralaması: B > C > A (A'da sıfır) olduğunu doğru karşılaştırır.",
+          "text": "Çekim potansiyel enerjisi sıralaması: Yükseklik ilişkisine göre A > C > B (B noktasında zemin seviyesinde sıfır) olduğunu doğru karşılaştırır.",
           "points": 10,
           "weight": 10,
           "return_card_ids": [
+            "FB722-V7-K04",
             "FB722-V7-K08"
           ],
           "scoring": {
-            "full": "A, B ve C noktalarındaki enerji sıralamalarını doğru yapar.",
+            "full": "A, B ve C noktalarındaki potansiyel enerji sıralamasını doğru yapar.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
           },
-          "content_revision": "6.0.0"
+          "content_revision": "7.9.0"
         },
         {
           "id": "FB722-V7-H02-R2",
-          "text": "A'daki potansiyelin B'de tamamen kinetiğe dönüşerek sürati maksimum yaptığını, C'ye çıkarken kinetiğin bir kısmının tekrar potansiyele dönüştüğünü açıklar.",
+          "text": "Kinetik enerji sıralaması: Sürat ilişkisine göre B > C > A (A noktasında ilk anda duruyorsa sıfır) olduğunu, en alçak nokta olan B'de kinetik enerjinin maksimum olduğunu açıklar.",
           "points": 10,
           "weight": 10,
           "return_card_ids": [
+            "FB722-V7-K01",
             "FB722-V7-K08"
           ],
           "scoring": {
-            "full": "Potansiyel-kinetik dönüşümünü ve sürat değişimini açıklar.",
+            "full": "Kinetik enerji sıralamasını ve B'de maksimum olma nedenini açıklar.",
             "zero": "Karşılanmıyor.",
             "equivalent_wording_accepted": true,
             "unasked_details_are_not_required": true
           },
-          "content_revision": "6.0.0"
+          "content_revision": "7.9.0"
         }
       ]
     }

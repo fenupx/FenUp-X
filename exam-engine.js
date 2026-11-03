@@ -9,7 +9,7 @@
 'use strict';
 
 const CONTENT_REVISION = '6.0.0';
-export const CONTENT_V6_VERSION = '7.8.0';
+export const CONTENT_V6_VERSION = '7.9.0';
 if (typeof window !== 'undefined') {
     window.__FENUPX_CONTENT_V6_VERSION__ = CONTENT_V6_VERSION;
 }
@@ -3434,6 +3434,12 @@ function openPrintPreview(triggerEl = null) {
     const printEl = $('exam-print-sheet');
     const modalEl = $('exam-print-preview-modal');
     if (!printEl || !modalEl) return;
+
+    // Üst bilgi bandındaki senaryo ve soru sayısını dinamikleştir
+    const subTitleEl = $('print-modal-subtitle') || modalEl.querySelector('.print-preview-title-group p');
+    if (subTitleEl) {
+        subTitleEl.textContent = `Senaryo ${scNum} standartlarında ${qs.length} açık uçlu soru. Toplam 100 puandır.`;
+    }
 
     // Soru puanları haritası yoksa 5'in katları standardıyla tamamla
     if (!state.attempt.questionPoints || Object.keys(state.attempt.questionPoints).length === 0) {

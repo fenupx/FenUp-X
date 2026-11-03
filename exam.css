@@ -1727,7 +1727,19 @@ input[type=range].exam-slider {
     border-radius: 14px;
     padding: 12px;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.exam-qimage-box figure {
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .exam-qimage {
@@ -3830,15 +3842,30 @@ body.exam-fullscreen-open {
     padding: 28px 16px 80px 16px;
     display: flex;
     justify-content: center;
+    align-items: flex-start;
     -webkit-overflow-scrolling: touch;
     min-height: 0;
 }
 
+#exam-print-sheet,
+.print-sheet,
+.exam-paper,
+.print-preview-paper {
+    height: auto !important;
+    min-height: max-content !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+
 #exam-print-sheet {
-    background: #ffffff;
-    color: #111827;
+    background: #ffffff !important;
+    color: #0f172a !important;
     width: 100%;
     max-width: 800px;
+    height: auto !important;
+    min-height: max-content !important;
+    overflow: visible !important;
     padding: 36px 44px;
     border-radius: 4px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
@@ -4865,4 +4892,30 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     pointer-events: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
+}
+
+/* ==========================================================================
+   V7.9: SORU KARTLARINDA GÖRSEL KAYNAKLARI ÇAKIŞMA ÖNLEME VE ALT HİZALAMA
+   ========================================================================== */
+#scene-yazili .exam-qimage-box .exam-visual-credit,
+.exam-qimage-box .exam-visual-credit {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 8px !important;
+    clear: both !important;
+    box-sizing: border-box !important;
+    font-size: 0.78rem !important;
+    color: #475569 !important;
+}
+
+#scene-yazili .exam-qimage-box .exam-visual-credit summary,
+.exam-qimage-box .exam-visual-credit summary {
+    min-height: 36px !important;
+    min-width: 0 !important;
+    font-size: 0.75rem !important;
+    color: #0284c7 !important;
+    cursor: pointer !important;
+    justify-content: flex-start !important;
+    padding: 2px 6px !important;
 }

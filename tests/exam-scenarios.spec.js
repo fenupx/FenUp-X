@@ -453,13 +453,33 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(typography.btnMinHeight).toBe('56px');
     });
 
-    test('V7.8 Master Formülsüz Müfredat, 24 Soru Görsel Ayrımı (question-*.svg) ve İpucusuz Şemalar Uyumu', async () => {
+    test('V7.9 Kitap-Yıllık Plan Eşitliği, Kompakt Çekim Potansiyel Şemaları ve 24 Soru Görsel Ayrımı', async () => {
         const ekPath = path.resolve('data/exam/content-v6/ek_icerik.json');
         const ekData = JSON.parse(fs.readFileSync(ekPath, 'utf8'));
+        const senPath = path.resolve('data/exam/content-v6/senaryo_kayitlari.json');
+        const senData = JSON.parse(fs.readFileSync(senPath, 'utf8'));
 
-        expect(ekData.version).toBe('7.8.0');
+        expect(ekData.version).toBe('7.9.0');
+        expect(senData.version).toBe('7.9.0');
 
-        // 24 Sorunun Eksiksiz Görsel Matrisi Doğrulaması (14 visual: null, 8 question-*.svg, 2 fotoğraf)
+        // Senaryo 3 ve 4 MEB Tablo Eşitliği
+        const s3 = senData.scenarios.find(s => s.code === 'S3');
+        const s4 = senData.scenarios.find(s => s.code === 'S4');
+        expect(s3.total_questions).toBe(8);
+        expect(s3.distribution.find(d => d.outcome_id === 'FB.7.1.1')?.count).toBe(2);
+        expect(s3.distribution.find(d => d.outcome_id === 'FB.7.1.3')?.count).toBe(1);
+        expect(s3.distribution.find(d => d.outcome_id === 'FB.7.1.4')?.count).toBe(1);
+        expect(s3.distribution.find(d => d.outcome_id === 'FB.7.2.1')?.count).toBe(2);
+        expect(s3.distribution.find(d => d.outcome_id === 'FB.7.2.2')?.count).toBe(2);
+
+        expect(s4.total_questions).toBe(6);
+        expect(s4.distribution.find(d => d.outcome_id === 'FB.7.1.3')?.count).toBe(1);
+        expect(s4.distribution.find(d => d.outcome_id === 'FB.7.1.4')?.count).toBe(1);
+        expect(s4.distribution.find(d => d.outcome_id === 'FB.7.1.5')?.count).toBe(1);
+        expect(s4.distribution.find(d => d.outcome_id === 'FB.7.2.1')?.count).toBe(2);
+        expect(s4.distribution.find(d => d.outcome_id === 'FB.7.2.2')?.count).toBe(1);
+
+        // 24 Sorunun Eksiksiz Görsel Matrisi Doğrulaması (14 visual: null, 9 question-*.svg, 1 fotoğraf)
         const expectedNull = [
             'FB714-V7-E02', 'FB714-V7-E04', 'FB714-V7-E06', 'FB714-V7-M01',
             'FB714-V7-M02', 'FB714-V7-M03', 'FB714-V7-M04', 'FB714-V7-H01',
@@ -470,7 +490,7 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
             'FB714-V7-E01': 'assets/question-nebula-collapse.svg',
             'FB714-V7-E03': 'assets/sun.jpg',
             'FB714-V7-E05': 'assets/question-star-colors.svg',
-            'FB722-V7-E03': 'assets/swing.jpg',
+            'FB722-V7-E03': 'assets/question-gravitational-potential.svg',
             'FB722-V7-E04': 'assets/question-mass-potential.svg',
             'FB722-V7-E05': 'assets/question-elastic-spring.svg',
             'FB722-V7-M01': 'assets/question-mass-kinetic.svg',
@@ -495,6 +515,7 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         const questionSvgFiles = [
             'question-nebula-collapse.svg',
             'question-star-colors.svg',
+            'question-gravitational-potential.svg',
             'question-mass-potential.svg',
             'question-elastic-spring.svg',
             'question-mass-kinetic.svg',
@@ -521,7 +542,7 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(ekData.cards['FB722-V7-K01'].visual?.asset).toBe('assets/diagram-motion-vs-rest.svg');
         expect(ekData.cards['FB722-V7-K02'].visual?.asset).toBe('assets/diagram-speed-kinetic-effect.svg');
         expect(ekData.cards['FB722-V7-K03'].visual?.asset).toBe('assets/diagram-mass-kinetic-effect.svg');
-        expect(ekData.cards['FB722-V7-K04'].visual?.asset).toBe('assets/swing.jpg');
+        expect(ekData.cards['FB722-V7-K04'].visual?.asset).toBe('assets/diagram-gravitational-potential.svg');
         expect(ekData.cards['FB722-V7-K05'].visual?.asset).toBe('assets/diagram-height-effect.svg');
         expect(ekData.cards['FB722-V7-K06'].visual?.asset).toBe('assets/diagram-mass-potential-effect.svg');
         expect(ekData.cards['FB722-V7-K07'].visual?.asset).toBe('assets/diagram-elastic-spring.svg');
