@@ -349,17 +349,27 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
             }
         });
 
-        // Kategori sekmelerini kontrol et
+        // Kategori sekmelerini kontrol et (V8.8: Robotlar, Hayvan Kâşifler, Öğrenciler, Bilim İnsanları)
         const tabAll = page.locator('.avatar-tab-btn[data-category="all"]');
+        const tabRobotlar = page.locator('.avatar-tab-btn[data-category="robotlar"]');
+        const tabHayvanlar = page.locator('.avatar-tab-btn[data-category="hayvanlar"]');
         const tabOgrenciler = page.locator('.avatar-tab-btn[data-category="ogrenciler"]');
         const tabBilim = page.locator('.avatar-tab-btn[data-category="bilim"]');
-        const tabKasifler = page.locator('.avatar-tab-btn[data-category="kasifler"]');
-        const tabOgretmenler = page.locator('.avatar-tab-btn[data-category="ogretmenler"]');
         await expect(tabAll).toBeVisible();
+        await expect(tabRobotlar).toBeVisible();
+        await expect(tabHayvanlar).toBeVisible();
         await expect(tabOgrenciler).toBeVisible();
         await expect(tabBilim).toBeVisible();
-        await expect(tabKasifler).toBeVisible();
-        await expect(tabOgretmenler).toBeVisible();
+
+        // Robotlar sekmesine tıklandığında yalnızca 8 robot avatarı görünür olmalı
+        await tabRobotlar.click();
+        const visibleRobotlar = page.locator('#avatar-selector .avatar-item:visible');
+        await expect(visibleRobotlar).toHaveCount(8);
+
+        // Hayvan Kâşifler sekmesine tıklandığında 8 hayvan avatarı görünür olmalı
+        await tabHayvanlar.click();
+        const visibleHayvanlar = page.locator('#avatar-selector .avatar-item:visible');
+        await expect(visibleHayvanlar).toHaveCount(8);
 
         // Öğrenciler sekmesine tıklandığında yalnızca 8 öğrenci avatarı görünür olmalı
         await tabOgrenciler.click();

@@ -182,8 +182,388 @@ const H = {
 };
 
 const kozmikAvatarlar = [
-    // --- 👦👧 ÖĞRENCİLER (8) ---
+    // --- 🤖 ROBOTLAR & AI DOSTLARI (8) ---
+{
+        id: 'av_robot_astrobot',
+        name: 'Astro-Bot (Dost Robot)',
+        category: 'robotlar',
+        url: makeSvgAvatar('av_robot_astrobot', ['#0f172a', '#0284c7'], `
+            <rect x="25" y="28" width="50" height="42" rx="18" fill="#0284c7" stroke="#38bdf8" stroke-width="2"/>
+            <path d="M30 36 C35 30, 48 30, 52 36" stroke="rgba(255,255,255,0.4)" stroke-width="2" fill="none"/>
+            <rect x="30" y="36" width="40" height="24" rx="10" fill="#0f172a" stroke="#0284c7" stroke-width="1.5"/>
+            <ellipse cx="40" cy="48" rx="4" ry="5" fill="#38bdf8"/>
+            <circle cx="41.5" cy="46.5" r="1.5" fill="#ffffff"/>
+            <ellipse cx="60" cy="48" rx="4" ry="5" fill="#38bdf8"/>
+            <circle cx="61.5" cy="46.5" r="1.5" fill="#ffffff"/>
+            <path d="M46 54 Q50 57 54 54" stroke="#38bdf8" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <line x1="50" y1="28" x2="50" y2="18" stroke="#38bdf8" stroke-width="2.5"/>
+            <circle cx="50" cy="17" r="4.5" fill="#ef4444" stroke="#fecaca" stroke-width="1.5"/>
+            <rect x="20" y="40" width="6" height="18" rx="3" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5"/>
+            <rect x="74" y="40" width="6" height="18" rx="3" fill="#38bdf8" stroke="#0284c7" stroke-width="1.5"/>
+            <rect x="42" y="70" width="16" height="6" fill="#0369a1"/>
+            <path d="M28 84 C30 76, 38 74, 50 74 C62 74, 70 76, 72 84 Z" fill="#f8fafc"/>
+            <polygon points="50,77 52,81 56,81 53,83 54,87 50,85 46,87 47,83 44,81 48,81" fill="#38bdf8"/>
+        `)
+    },
     {
+        id: 'av_robot_nano',
+        name: 'Nano (Deney Robotu)',
+        category: 'robotlar',
+        url: makeSvgAvatar('av_robot_nano', ['#064e3b', '#10b981'], `
+            <path d="M28 72 C26 50, 32 32, 50 32 C68 32, 74 50, 72 72 C71 82, 60 84, 50 84 C40 84, 29 82, 28 72 Z" fill="#22c55e"/>
+            <path d="M34 40 C38 34, 46 34, 50 34" stroke="rgba(255,255,255,0.4)" stroke-width="2" fill="none"/>
+            <circle cx="50" cy="52" r="15" fill="#0f172a" stroke="#15803d" stroke-width="2.5"/>
+            <circle cx="50" cy="52" r="11" fill="#064e3b"/>
+            <circle cx="50" cy="52" r="8" fill="#10b981"/>
+            <circle cx="47" cy="49" r="3.2" fill="#ffffff"/>
+            <circle cx="53" cy="55" r="1.5" fill="#ffffff"/>
+            <path d="M46 72 Q50 76 54 72" stroke="#064e3b" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M44 32 Q40 22 36 20" stroke="#15803d" stroke-width="2" fill="none"/>
+            <circle cx="35" cy="20" r="3" fill="#facc15"/>
+            <path d="M56 32 Q60 22 64 20" stroke="#15803d" stroke-width="2" fill="none"/>
+            <circle cx="65" cy="20" r="3" fill="#facc15"/>
+            <rect x="62" y="66" width="6" height="14" rx="3" fill="rgba(255,255,255,0.7)" stroke="#0284c7" stroke-width="1"/>
+            <rect x="62" y="73" width="6" height="7" rx="2" fill="#38bdf8"/>
+            <circle cx="65" cy="62" r="1.5" fill="#38bdf8" opacity="0.8"/>
+        `)
+    },
+    {
+        id: 'av_robot_sparky',
+        name: 'Sparky (Elektrik Robotu)',
+        category: 'robotlar',
+        url: makeSvgAvatar('av_robot_sparky', ['#78350f', '#eab308'], `
+            <rect x="26" y="30" width="48" height="42" rx="14" fill="#facc15" stroke="#eab308" stroke-width="2"/>
+            <path d="M32 38 C36 34, 44 34, 48 38" stroke="rgba(255,255,255,0.5)" stroke-width="2" fill="none"/>
+            <polygon points="26,44 16,36 22,44 14,48 26,54" fill="#f59e0b" stroke="#d97706" stroke-width="1"/>
+            <polygon points="74,44 84,36 78,44 86,48 74,54" fill="#f59e0b" stroke="#d97706" stroke-width="1"/>
+            <circle cx="39" cy="48" r="5" fill="#0284c7"/>
+            <circle cx="41" cy="46" r="1.8" fill="#ffffff"/>
+            <circle cx="61" cy="48" r="5" fill="#0284c7"/>
+            <circle cx="63" cy="46" r="1.8" fill="#ffffff"/>
+            <circle cx="33" cy="56" r="3" fill="#f43f5e" opacity="0.6"/>
+            <circle cx="67" cy="56" r="3" fill="#f43f5e" opacity="0.6"/>
+            <path d="M45 56 Q50 63 55 56 Z" fill="#b91c1c"/>
+            <path d="M30 84 C32 76, 40 74, 50 74 C60 74, 68 76, 70 84 Z" fill="#1e293b"/>
+            <polygon points="51,76 46,81 50,81 49,86 54,80 50,80" fill="#facc15"/>
+        `)
+    },
+    {
+        id: 'av_robot_panda',
+        name: 'Robo-Panda (Sibernetik Kâşif)',
+        category: 'robotlar',
+        url: makeSvgAvatar('av_robot_panda', ['#0f172a', '#0d9488'], `
+            <circle cx="50" cy="52" r="23" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+            <circle cx="32" cy="34" r="8" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+            <circle cx="32" cy="34" r="4" fill="#0d9488"/>
+            <circle cx="68" cy="34" r="8" fill="#1e293b" stroke="#475569" stroke-width="1.5"/>
+            <circle cx="68" cy="34" r="4" fill="#0d9488"/>
+            <ellipse cx="40" cy="50" rx="7" ry="8" fill="#1e293b" transform="rotate(-12 40 50)"/>
+            <ellipse cx="60" cy="50" rx="7" ry="8" fill="#1e293b" transform="rotate(12 60 50)"/>
+            <ellipse cx="40" cy="50" rx="3.5" ry="4" fill="#14b8a6"/>
+            <circle cx="41.5" cy="48.5" r="1.3" fill="#ffffff"/>
+            <ellipse cx="60" cy="50" rx="3.5" ry="4" fill="#14b8a6"/>
+            <circle cx="61.5" cy="48.5" r="1.3" fill="#ffffff"/>
+            <polygon points="48,57 52,57 50,60" fill="#0f172a"/>
+            <path d="M46 62 Q50 65 54 62" stroke="#0f172a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <rect x="66" y="62" width="6" height="18" rx="2" fill="#22c55e" stroke="#15803d" stroke-width="1"/>
+            <line x1="66" y1="68" x2="72" y2="68" stroke="#facc15" stroke-width="1"/>
+            <line x1="66" y1="74" x2="72" y2="74" stroke="#facc15" stroke-width="1"/>
+        `)
+    },
+    {
+        id: 'av_robot_rover',
+        name: 'Mars Rover Droid',
+        category: 'robotlar',
+        url: makeSvgAvatar('av_robot_rover', ['#450a0a', '#c2410c'], `
+            <rect x="32" y="44" width="36" height="26" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+            <rect x="36" y="32" width="11" height="12" rx="3" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+            <circle cx="41.5" cy="38" r="4" fill="#0284c7" stroke="#38bdf8" stroke-width="1"/>
+            <circle cx="43" cy="36.5" r="1.3" fill="#ffffff"/>
+            <rect x="53" y="32" width="11" height="12" rx="3" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+            <circle cx="58.5" cy="38" r="4" fill="#0284c7" stroke="#38bdf8" stroke-width="1"/>
+            <circle cx="60" cy="36.5" r="1.3" fill="#ffffff"/>
+            <line x1="47" y1="38" x2="53" y2="38" stroke="#64748b" stroke-width="2"/>
+            <polygon points="28,28 72,28 66,22 34,22" fill="#1e3a8a" stroke="#60a5fa" stroke-width="1.2"/>
+            <line x1="42" y1="22" x2="38" y2="28" stroke="#93c5fd" stroke-width="1"/>
+            <line x1="50" y1="22" x2="50" y2="28" stroke="#93c5fd" stroke-width="1"/>
+            <line x1="58" y1="22" x2="62" y2="28" stroke="#93c5fd" stroke-width="1"/>
+            <path d="M44 58 Q50 63 56 58" stroke="#10b981" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <rect x="22" y="66" width="12" height="18" rx="4" fill="#334155" stroke="#1e293b" stroke-width="1.5"/>
+            <rect x="66" y="66" width="12" height="18" rx="4" fill="#334155" stroke="#1e293b" stroke-width="1.5"/>
+        `)
+    },
+    {
+        id: 'av_robot_quantum',
+        name: 'Quantum Core',
+        category: 'robotlar',
+        url: makeSvgAvatar('av_robot_quantum', ['#1e1b4b', '#7c3aed'], `
+            <circle cx="50" cy="50" r="22" fill="#7c3aed" stroke="#c084fc" stroke-width="2.5"/>
+            <circle cx="50" cy="50" r="19" fill="#8b5cf6" opacity="0.6"/>
+            <circle cx="44" cy="44" r="5" fill="rgba(255,255,255,0.4)"/>
+            <ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#38bdf8" stroke-width="1.8" transform="rotate(-30 50 50)"/>
+            <circle cx="78" cy="34" r="3" fill="#38bdf8"/>
+            <ellipse cx="50" cy="50" rx="38" ry="14" fill="none" stroke="#f43f5e" stroke-width="1.8" transform="rotate(30 50 50)"/>
+            <circle cx="22" cy="34" r="3" fill="#f43f5e"/>
+            <ellipse cx="50" cy="50" rx="38" ry="12" fill="none" stroke="#facc15" stroke-width="1.5" transform="rotate(90 50 50)"/>
+            <circle cx="50" cy="14" r="3" fill="#facc15"/>
+            <path d="M40 48 Q44 44 48 48" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M52 48 Q56 44 60 48" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <circle cx="38" cy="54" r="2.5" fill="#f472b6"/>
+            <circle cx="62" cy="54" r="2.5" fill="#f472b6"/>
+            <path d="M46 54 Q50 59 54 54 Z" fill="#ffffff"/>
+        `)
+    },
+    {
+        id: 'av_robot_drone',
+        name: 'Aero-Drone',
+        category: 'robotlar',
+        url: makeSvgAvatar('av_robot_drone', ['#082f49', '#06b6d4'], `
+            <ellipse cx="50" cy="54" rx="22" ry="20" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+            <path d="M34 46 C38 40, 46 40, 50 40" stroke="rgba(255,255,255,0.6)" stroke-width="2" fill="none"/>
+            <rect x="47" y="30" width="6" height="5" fill="#0284c7"/>
+            <ellipse cx="50" cy="28" rx="26" ry="3.5" fill="#38bdf8" stroke="#0284c7" stroke-width="1.2"/>
+            <circle cx="50" cy="28" r="3" fill="#f8fafc" stroke="#0284c7" stroke-width="1"/>
+            <ellipse cx="50" cy="53" rx="16" ry="11" fill="#0f172a" stroke="#0284c7" stroke-width="1.5"/>
+            <path d="M40 54 Q44 49 48 54" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M52 54 Q56 49 60 54" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M28 56 L18 60 L20 66 L28 62 Z" fill="#0284c7"/>
+            <ellipse cx="18" cy="63" rx="2" ry="3" fill="#38bdf8"/>
+            <path d="M72 56 L82 60 L80 66 L72 62 Z" fill="#0284c7"/>
+            <ellipse cx="82" cy="63" rx="2" ry="3" fill="#38bdf8"/>
+        `)
+    },
+    {
+        id: 'av_robot_cyberfox',
+        name: 'Cyber-Fox (Neon Kâşif)',
+        category: 'robotlar',
+        url: makeSvgAvatar('av_robot_cyberfox', ['#3b0764', '#d946ef'], `
+            <polygon points="50,76 28,46 34,34 50,44 66,34 72,46" fill="#f97316" stroke="#ea580c" stroke-width="2"/>
+            <polygon points="50,76 34,46 44,56 50,52 56,56 66,46" fill="#f8fafc"/>
+            <polygon points="28,46 22,22 38,34" fill="#334155" stroke="#f97316" stroke-width="1.5"/>
+            <polygon points="28,40 25,26 35,34" fill="#d946ef"/>
+            <polygon points="72,46 78,22 62,34" fill="#334155" stroke="#f97316" stroke-width="1.5"/>
+            <polygon points="72,40 75,26 65,34" fill="#d946ef"/>
+            <path d="M34 46 L66 46 L60 53 L40 53 Z" fill="#06b6d4" stroke="#22d3ee" stroke-width="1"/>
+            <circle cx="43" cy="49" r="2.2" fill="#ffffff"/>
+            <circle cx="57" cy="49" r="2.2" fill="#ffffff"/>
+            <circle cx="50" cy="71" r="2" fill="#0f172a"/>
+        `)
+    },
+
+    // --- 🐾 SEVİMLİ HAYVAN KÂŞİFLER (8) ---
+{
+        id: 'av_hayvan_cat',
+        name: 'Cosmo-Cat (Uzay Kedisi)',
+        category: 'hayvanlar',
+        url: makeSvgAvatar('av_hayvan_cat', ['#0f172a', '#6366f1'], `
+            <circle cx="50" cy="52" r="21" fill="#f97316"/>
+            <path d="M42 56 Q50 63 58 56 Q50 50 42 56 Z" fill="#ffffff"/>
+            <polygon points="32,40 28,24 42,34" fill="#f97316"/>
+            <polygon points="32,38 30,27 39,34" fill="#f472b6"/>
+            <polygon points="68,40 72,24 58,34" fill="#f97316"/>
+            <polygon points="68,38 70,27 61,34" fill="#f472b6"/>
+            <ellipse cx="42" cy="48" rx="4.5" ry="5.5" fill="#10b981"/>
+            <ellipse cx="42" cy="48" rx="2" ry="4" fill="#0f172a"/>
+            <circle cx="40.5" cy="45.5" r="1.5" fill="#ffffff"/>
+            <circle cx="43.5" cy="50" r="0.8" fill="#ffffff"/>
+            <ellipse cx="58" cy="48" rx="4.5" ry="5.5" fill="#10b981"/>
+            <ellipse cx="58" cy="48" rx="2" ry="4" fill="#0f172a"/>
+            <circle cx="56.5" cy="45.5" r="1.5" fill="#ffffff"/>
+            <circle cx="59.5" cy="50" r="0.8" fill="#ffffff"/>
+            <polygon points="48,54 52,54 50,56" fill="#f43f5e"/>
+            <path d="M46 57 Q50 60 54 57" stroke="#9a3412" stroke-width="1.5" fill="none"/>
+            <line x1="33" y1="54" x2="25" y2="52" stroke="#9a3412" stroke-width="1.2"/>
+            <line x1="33" y1="57" x2="24" y2="58" stroke="#9a3412" stroke-width="1.2"/>
+            <line x1="67" y1="54" x2="75" y2="52" stroke="#9a3412" stroke-width="1.2"/>
+            <line x1="67" y1="57" x2="76" y2="58" stroke="#9a3412" stroke-width="1.2"/>
+            <circle cx="50" cy="48" r="26" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5"/>
+            <path d="M34 32 C40 26, 52 26, 60 30" stroke="rgba(255,255,255,0.7)" stroke-width="2" fill="none"/>
+            <polygon points="70,36 74,33 74,39" fill="#f97316"/>
+            <ellipse cx="68" cy="36" rx="3.5" ry="2.2" fill="#f97316"/>
+            <circle cx="66" cy="35" r="0.6" fill="#ffffff"/>
+        `)
+    },
+    {
+        id: 'av_hayvan_fox',
+        name: 'Kimyager Tilki',
+        category: 'hayvanlar',
+        url: makeSvgAvatar('av_hayvan_fox', ['#451a03', '#047857'], `
+            <polygon points="50,74 26,46 32,32 50,42 68,32 74,46" fill="#ea580c"/>
+            <polygon points="50,74 34,48 44,58 50,54 56,58 66,48" fill="#f8fafc"/>
+            <polygon points="26,46 20,20 38,32" fill="#ea580c"/>
+            <polygon points="20,20 23,28 27,24" fill="#1e293b"/>
+            <polygon points="28,40 24,26 34,33" fill="#fed7aa"/>
+            <polygon points="74,46 80,20 62,32" fill="#ea580c"/>
+            <polygon points="80,20 77,28 73,24" fill="#1e293b"/>
+            <polygon points="72,40 76,26 66,33" fill="#fed7aa"/>
+            <rect x="33" y="42" width="15" height="11" rx="4" fill="rgba(56,189,248,0.25)" stroke="#0284c7" stroke-width="2"/>
+            <rect x="52" y="42" width="15" height="11" rx="4" fill="rgba(56,189,248,0.25)" stroke="#0284c7" stroke-width="2"/>
+            <line x1="48" y1="47" x2="52" y2="47" stroke="#0284c7" stroke-width="2"/>
+            <line x1="33" y1="46" x2="26" y2="46" stroke="#0284c7" stroke-width="1.8"/>
+            <line x1="67" y1="46" x2="74" y2="46" stroke="#0284c7" stroke-width="1.8"/>
+            <ellipse cx="40.5" cy="47.5" rx="3.5" ry="4" fill="#78350f"/>
+            <circle cx="42" cy="46" r="1.3" fill="#ffffff"/>
+            <ellipse cx="59.5" cy="47.5" rx="3.5" ry="4" fill="#78350f"/>
+            <circle cx="61" cy="46" r="1.3" fill="#ffffff"/>
+            <circle cx="50" cy="68" r="2.2" fill="#0f172a"/>
+            <path d="M46 70 Q50 73 54 70" stroke="#78350f" stroke-width="1.5" fill="none"/>
+            <polygon points="68,66 74,66 76,78 66,78" fill="#34d399" stroke="#059669" stroke-width="1"/>
+            <rect x="69" y="62" width="4" height="4" fill="rgba(255,255,255,0.8)" stroke="#059669" stroke-width="0.8"/>
+            <circle cx="71" cy="71" r="1.2" fill="#ffffff"/>
+            <circle cx="71" cy="59" r="1" fill="#34d399"/>
+        `)
+    },
+    {
+        id: 'av_hayvan_owl',
+        name: 'Bilge Baykuş (Astronom)',
+        category: 'hayvanlar',
+        url: makeSvgAvatar('av_hayvan_owl', ['#090d16', '#312e81'], `
+            <ellipse cx="50" cy="54" rx="23" ry="21" fill="#78350f"/>
+            <circle cx="39" cy="52" r="11" fill="#fef3c7"/>
+            <circle cx="61" cy="52" r="11" fill="#fef3c7"/>
+            <circle cx="39" cy="52" r="7.5" fill="#f59e0b"/>
+            <circle cx="39" cy="52" r="4.8" fill="#0f172a"/>
+            <circle cx="37" cy="50" r="2" fill="#ffffff"/>
+            <circle cx="41" cy="54" r="1" fill="#ffffff"/>
+            <circle cx="61" cy="52" r="7.5" fill="#f59e0b"/>
+            <circle cx="61" cy="52" r="4.8" fill="#0f172a"/>
+            <circle cx="59" cy="50" r="2" fill="#ffffff"/>
+            <circle cx="63" cy="54" r="1" fill="#ffffff"/>
+            <polygon points="47,56 53,56 50,62" fill="#ea580c"/>
+            <polygon points="50,22 74,30 50,38 26,30" fill="#1e1b4b" stroke="#312e81" stroke-width="1.5"/>
+            <rect x="42" y="34" width="16" height="6" rx="2" fill="#1e1b4b"/>
+            <circle cx="50" cy="30" r="2" fill="#facc15"/>
+            <path d="M50 30 Q62 34 66 42" stroke="#facc15" stroke-width="1.8" fill="none"/>
+            <circle cx="66" cy="43" r="2" fill="#facc15"/>
+            <circle cx="28" cy="68" r="5" fill="none" stroke="#facc15" stroke-width="2"/>
+            <line x1="25" y1="72" x2="20" y2="78" stroke="#ca8a04" stroke-width="2.5" stroke-linecap="round"/>
+        `)
+    },
+    {
+        id: 'av_hayvan_dino',
+        name: 'Dino-Kâşif (Jeolog Dinozor)',
+        category: 'hayvanlar',
+        url: makeSvgAvatar('av_hayvan_dino', ['#292524', '#15803d'], `
+            <path d="M30 60 C26 40, 36 28, 52 28 C68 28, 76 40, 72 60 C70 74, 58 76, 50 76 C40 76, 32 72, 30 60 Z" fill="#22c55e"/>
+            <ellipse cx="50" cy="68" rx="14" ry="7" fill="#fef08a" opacity="0.8"/>
+            <ellipse cx="50" cy="36" rx="26" ry="6.5" fill="#78350f"/>
+            <path d="M36 36 C38 22, 62 22, 64 36 Z" fill="#92400e"/>
+            <rect x="37" y="33" width="26" height="3" fill="#15803d"/>
+            <circle cx="42" cy="48" r="5" fill="#0f172a"/>
+            <circle cx="40" cy="46" r="2" fill="#ffffff"/>
+            <circle cx="44" cy="50" r="0.9" fill="#ffffff"/>
+            <circle cx="58" cy="48" r="5" fill="#0f172a"/>
+            <circle cx="56" cy="46" r="2" fill="#ffffff"/>
+            <circle cx="60" cy="50" r="0.9" fill="#ffffff"/>
+            <ellipse cx="36" cy="55" rx="3" ry="1.8" fill="#f43f5e" opacity="0.4"/>
+            <ellipse cx="64" cy="55" rx="3" ry="1.8" fill="#f43f5e" opacity="0.4"/>
+            <path d="M46 58 Q50 63 54 58" stroke="#14532d" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <polygon points="47,58 48.5,61 50,58" fill="#ffffff"/>
+            <polygon points="50,58 51.5,61 53,58" fill="#ffffff"/>
+            <line x1="68" y1="62" x2="76" y2="78" stroke="#78350f" stroke-width="2.5" stroke-linecap="round"/>
+            <rect x="64" y="60" width="10" height="5" rx="1.5" fill="#94a3b8" stroke="#475569" stroke-width="1"/>
+        `)
+    },
+    {
+        id: 'av_hayvan_bunny',
+        name: 'Uzay Tavşanı',
+        category: 'hayvanlar',
+        url: makeSvgAvatar('av_hayvan_bunny', ['#1e1b4b', '#f43f5e'], `
+            <ellipse cx="38" cy="24" rx="6" ry="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+            <ellipse cx="38" cy="24" rx="3.5" ry="12" fill="#f472b6"/>
+            <ellipse cx="62" cy="24" rx="6" ry="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+            <ellipse cx="62" cy="24" rx="3.5" ry="12" fill="#f472b6"/>
+            <circle cx="50" cy="54" r="20" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+            <ellipse cx="43" cy="51" rx="4" ry="5" fill="#8b5cf6"/>
+            <circle cx="41.5" cy="49" r="1.6" fill="#ffffff"/>
+            <circle cx="44.5" cy="53" r="0.8" fill="#ffffff"/>
+            <ellipse cx="57" cy="51" rx="4" ry="5" fill="#8b5cf6"/>
+            <circle cx="55.5" cy="49" r="1.6" fill="#ffffff"/>
+            <circle cx="58.5" cy="53" r="0.8" fill="#ffffff"/>
+            <polygon points="48,57 52,57 50,59" fill="#f43f5e"/>
+            <path d="M47 60 Q50 63 53 60" stroke="#f43f5e" stroke-width="1.5" fill="none"/>
+            <polygon points="72,54 78,74 66,74" fill="#ea580c"/>
+            <polygon points="68,54 72,46 76,54" fill="#22c55e"/>
+            <polygon points="66,74 72,82 78,74" fill="#facc15"/>
+        `)
+    },
+    {
+        id: 'av_hayvan_bear',
+        name: 'Kutup Ayısı (İklim Araştırmacısı)',
+        category: 'hayvanlar',
+        url: makeSvgAvatar('av_hayvan_bear', ['#083344', '#38bdf8'], `
+            <circle cx="32" cy="34" r="6.5" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+            <circle cx="32" cy="34" r="3.5" fill="#fbcfe8"/>
+            <circle cx="68" cy="34" r="6.5" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+            <circle cx="68" cy="34" r="3.5" fill="#fbcfe8"/>
+            <circle cx="50" cy="50" r="23" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+            <path d="M33 40 C34 26, 66 26, 67 40 Z" fill="#0284c7"/>
+            <rect x="31" y="38" width="38" height="5" rx="2" fill="#38bdf8"/>
+            <circle cx="50" cy="24" r="4" fill="#f8fafc"/>
+            <circle cx="42" cy="48" r="4" fill="#0f172a"/>
+            <circle cx="40.5" cy="46.5" r="1.5" fill="#ffffff"/>
+            <circle cx="58" cy="48" r="4" fill="#0f172a"/>
+            <circle cx="56.5" cy="46.5" r="1.5" fill="#ffffff"/>
+            <ellipse cx="50" cy="57" rx="9" ry="6" fill="#e2e8f0"/>
+            <ellipse cx="50" cy="55" rx="4" ry="2.8" fill="#0f172a"/>
+            <path d="M47 58 Q50 61 53 58" stroke="#0f172a" stroke-width="1.5" fill="none"/>
+            <path d="M28 66 Q50 78 72 66 Q50 72 28 66 Z" fill="#ef4444"/>
+            <line x1="38" y1="68" x2="41" y2="74" stroke="#ffffff" stroke-width="2.5"/>
+            <line x1="48" y1="69" x2="51" y2="75" stroke="#ffffff" stroke-width="2.5"/>
+            <line x1="58" y1="68" x2="61" y2="74" stroke="#ffffff" stroke-width="2.5"/>
+        `)
+    },
+    {
+        id: 'av_hayvan_otter',
+        name: 'Dalgıç Samur (Deniz Biyoloğu)',
+        category: 'hayvanlar',
+        url: makeSvgAvatar('av_hayvan_otter', ['#022c22', '#06b6d4'], `
+            <circle cx="30" cy="44" r="4.5" fill="#451a03"/>
+            <circle cx="70" cy="44" r="4.5" fill="#451a03"/>
+            <circle cx="50" cy="52" r="22" fill="#78350f" stroke="#451a03" stroke-width="1.5"/>
+            <ellipse cx="50" cy="62" rx="14" ry="9" fill="#fef3c7"/>
+            <rect x="33" y="42" width="34" height="13" rx="5" fill="rgba(6,182,212,0.3)" stroke="#facc15" stroke-width="2"/>
+            <line x1="50" y1="42" x2="50" y2="55" stroke="#facc15" stroke-width="1.5"/>
+            <path d="M66 50 Q76 50 76 34 L76 22" fill="none" stroke="#facc15" stroke-width="2.5" stroke-linecap="round"/>
+            <ellipse cx="76" cy="22" rx="2" ry="1" fill="#ef4444"/>
+            <ellipse cx="42" cy="48" rx="3.5" ry="4" fill="#451a03"/>
+            <circle cx="43.5" cy="46.5" r="1.3" fill="#ffffff"/>
+            <ellipse cx="58" cy="48" rx="3.5" ry="4" fill="#451a03"/>
+            <circle cx="59.5" cy="46.5" r="1.3" fill="#ffffff"/>
+            <polygon points="48,60 52,60 50,62" fill="#0f172a"/>
+            <path d="M46 64 Q50 67 54 64" stroke="#451a03" stroke-width="1.5" fill="none"/>
+            <line x1="38" y1="62" x2="30" y2="60" stroke="#451a03" stroke-width="1"/>
+            <line x1="38" y1="65" x2="29" y2="65" stroke="#451a03" stroke-width="1"/>
+            <line x1="62" y1="62" x2="70" y2="60" stroke="#451a03" stroke-width="1"/>
+            <line x1="62" y1="65" x2="71" y2="65" stroke="#451a03" stroke-width="1"/>
+        `)
+    },
+    {
+        id: 'av_hayvan_koala',
+        name: 'Botanikçi Koala',
+        category: 'hayvanlar',
+        url: makeSvgAvatar('av_hayvan_koala', ['#14532d', '#65a30d'], `
+            <circle cx="28" cy="38" r="11" fill="#94a3b8" stroke="#64748b" stroke-width="1.5"/>
+            <circle cx="28" cy="38" r="7" fill="#f8fafc"/>
+            <circle cx="72" cy="38" r="11" fill="#94a3b8" stroke="#64748b" stroke-width="1.5"/>
+            <circle cx="72" cy="38" r="7" fill="#f8fafc"/>
+            <circle cx="50" cy="52" r="21" fill="#94a3b8" stroke="#64748b" stroke-width="1.5"/>
+            <ellipse cx="50" cy="56" rx="6" ry="9" fill="#1e293b"/>
+            <ellipse cx="48.5" cy="53" rx="2" ry="3.5" fill="#475569" opacity="0.6"/>
+            <ellipse cx="38" cy="48" rx="3.5" ry="4" fill="#0f172a"/>
+            <circle cx="37" cy="46.5" r="1.3" fill="#ffffff"/>
+            <ellipse cx="62" cy="48" rx="3.5" ry="4" fill="#0f172a"/>
+            <circle cx="61" cy="46.5" r="1.3" fill="#ffffff"/>
+            <circle cx="34" cy="56" r="3" fill="#f43f5e" opacity="0.35"/>
+            <circle cx="66" cy="56" r="3" fill="#f43f5e" opacity="0.35"/>
+            <path d="M26 68 Q22 56 34 56 Q36 68 26 68 Z" fill="#22c55e" stroke="#15803d" stroke-width="1"/>
+            <circle cx="66" cy="68" r="6" fill="none" stroke="#facc15" stroke-width="2"/>
+            <line x1="70" y1="73" x2="76" y2="80" stroke="#ca8a04" stroke-width="2.5" stroke-linecap="round"/>
+        `)
+    },
+
+    // --- 👦👧 GENÇ KÂŞİFLER & ÖĞRENCİLER (8) ---
+{
         id: 'av_ogrenci_1',
         name: 'Karizmatik Dalgalı Saçlı Öğrenci',
         category: 'ogrenciler',
@@ -378,7 +758,9 @@ const kozmikAvatarlar = [
     },
 
     // --- 🔬 BİLİM İNSANLARI (8) ---
-    {
+
+    // --- 🔬 BİLİM İNSANLARI & ÖĞRETMENLER (8) ---
+{
         id: 'av_bilim_einstein',
         name: 'Albert Einstein',
         category: 'bilim',
@@ -553,227 +935,11 @@ const kozmikAvatarlar = [
             <line x1="52" y1="71" x2="58" y2="73" stroke="#3b82f6" stroke-width="1"/>
         `)
     },
-    {
-        id: 'av_bilim_genetik',
-        name: 'Modern Genetikçi',
+{
+        id: 'av_bilim_ogretmen',
+        name: 'Güleryüzlü Fen Öğretmeni',
         category: 'bilim',
-        url: makeSvgAvatar('av_bilim_genetik', ['#083344', '#06b6d4'], `
-            <!-- Modern lab scrub / coat -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#0284c7"/>
-            <polygon points="46,65 54,65 50,72" fill="#0369a1"/>
-            <!-- ID Card on scrub -->
-            <rect x="34" y="70" width="8" height="6" rx="1.5" fill="#f8fafc" stroke="#38bdf8" stroke-width="1"/>
-            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#292524"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#292524')}
-            ${H.eyes('#06b6d4')}
-            ${H.smile()}
-            <path d="M28 42 C32 30, 44 26, 50 28 C56 26, 68 30, 72 42 C66 36, 56 34, 50 35 C42 34, 34 36, 28 42 Z" fill="#44403c"/>
-            <!-- Glowing DNA double-helix brooch -->
-            <path d="M64 68 Q68 71 64 74 T64 80" stroke="#38bdf8" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path d="M68 68 Q64 71 68 74 T68 80" stroke="#a855f7" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <line x1="64" y1="71" x2="68" y2="71" stroke="#facc15" stroke-width="1.2"/>
-            <line x1="64" y1="77" x2="68" y2="77" stroke="#facc15" stroke-width="1.2"/>
-        `)
-    },
-
-    // --- 🚀 KÂŞİFLER (8) ---
-    {
-        id: 'av_kasif_astronot',
-        name: 'Genç Astronot',
-        category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_astronot', ['#020617', '#1d4ed8'], `
-            <!-- Space suit shoulders with chest pack -->
-            <path d="M24 84 C26 68, 38 64, 50 64 C62 64, 74 68, 76 84 Z" fill="#f8fafc"/>
-            <rect x="42" y="68" width="16" height="10" rx="3" fill="#0284c7"/>
-            <circle cx="46" cy="73" r="1.5" fill="#38bdf8"/>
-            <circle cx="54" cy="73" r="1.5" fill="#facc15"/>
-            <!-- Big spherical helmet bubble -->
-            <circle cx="50" cy="46" r="26" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
-            <!-- Open visor opening showing face -->
-            <ellipse cx="50" cy="46" rx="20" ry="17" fill="#0f172a"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#451a03')}
-            ${H.eyes('#38bdf8')}
-            ${H.happyMouth()}
-            <!-- Brown hair tuft inside helmet -->
-            <path d="M38 34 C42 28, 58 28, 62 34 C56 32, 44 32, 38 34 Z" fill="#451a03"/>
-            <!-- Antenna with glowing tip -->
-            <line x1="50" y1="20" x2="50" y2="13" stroke="#94a3b8" stroke-width="2"/>
-            <circle cx="50" cy="12" r="3" fill="#facc15"/>
-        `)
-    },
-    {
-        id: 'av_kasif_safari',
-        name: 'Safari Doğa Kâşifi',
-        category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_safari', ['#14532d', '#4d7c0f'], `
-            <!-- Khaki vest & shirt -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#854d0e"/>
-            <polygon points="46,65 54,65 50,72" fill="#ca8a04"/>
-            <line x1="50" y1="72" x2="50" y2="84" stroke="#a16207" stroke-width="1.8"/>
-            <!-- Binoculars around neck -->
-            <circle cx="45" cy="69" r="3.5" fill="#334155" stroke="#0f172a" stroke-width="1"/>
-            <circle cx="55" cy="69" r="3.5" fill="#334155" stroke="#0f172a" stroke-width="1"/>
-            <line x1="48" y1="69" x2="52" y2="69" stroke="#334155" stroke-width="2.5"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#78350f')}
-            ${H.eyes('#15803d')}
-            ${H.happyMouth()}
-            <!-- Safari pith helmet with brim -->
-            <ellipse cx="50" cy="34" rx="26" ry="7" fill="#ca8a04"/>
-            <path d="M34 34 C36 18, 64 18, 66 34 Z" fill="#eab308"/>
-            <path d="M34 34 C42 32, 58 32, 66 34" stroke="#78350f" stroke-width="2.2" fill="none"/>
-        `)
-    },
-    {
-        id: 'av_kasif_dalgic',
-        name: 'Okyanus Dalgıcı',
-        category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_dalgic', ['#082f49', '#0284c7'], `
-            <!-- Neoprene wetsuit with yellow accents -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#0f172a"/>
-            <polygon points="47,65 53,65 50,84" fill="#facc15"/>
-            <!-- Neoprene hood covering head -->
-            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 C74 58, 66 67, 50 67 C34 67, 26 58, 26 46 Z" fill="#0f172a"/>
-            <!-- Cute face peek -->
-            <ellipse cx="50" cy="46" rx="16" ry="14" fill="#fed7aa"/>
-            <ellipse cx="38" cy="51" rx="3" ry="1.8" fill="rgba(244,63,94,0.4)"/>
-            <ellipse cx="62" cy="51" rx="3" ry="1.8" fill="rgba(244,63,94,0.4)"/>
-            ${H.eyebrows('#1e293b')}
-            <!-- Scuba mask with blue glass reflection -->
-            <rect x="34" y="40" width="32" height="13" rx="6" fill="rgba(56,189,248,0.35)" stroke="#facc15" stroke-width="2"/>
-            <ellipse cx="43" cy="46" rx="3.5" ry="4.5" fill="#0369a1"/>
-            <circle cx="42" cy="44.5" r="1.4" fill="#fff"/>
-            <ellipse cx="57" cy="46" rx="3.5" ry="4.5" fill="#0369a1"/>
-            <circle cx="56" cy="44.5" r="1.4" fill="#fff"/>
-            ${H.smile()}
-            <!-- Yellow Snorkel tube rising up with red top -->
-            <path d="M68 53 L73 53 L73 26" stroke="#facc15" stroke-width="3.5" fill="none" stroke-linecap="round"/>
-            <circle cx="73" cy="24" r="2.8" fill="#ef4444"/>
-            <!-- Water bubbles -->
-            <circle cx="30" cy="30" r="2" fill="none" stroke="#38bdf8" stroke-width="1"/>
-            <circle cx="34" cy="24" r="1.2" fill="none" stroke="#38bdf8" stroke-width="0.8"/>
-        `)
-    },
-    {
-        id: 'av_kasif_kutup',
-        name: 'Kutup Araştırmacısı',
-        category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_kutup', ['#0f172a', '#38bdf8'], `
-            <!-- Orange arctic parka -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#ea580c"/>
-            <!-- Massive fluffy fur hood rim -->
-            <circle cx="50" cy="44" r="26" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
-            <circle cx="50" cy="44" r="20" fill="#c2410c"/>
-            ${H.head('#fed7aa', 'rgba(239,68,68,0.55)')}
-            ${H.eyebrows('#451a03')}
-            ${H.eyes('#0284c7')}
-            <!-- Warm red knitted scarf covering mouth -->
-            <path d="M34 52 C38 56, 62 56, 66 52 L68 66 C58 70, 42 70, 32 66 Z" fill="#dc2626"/>
-            <path d="M42 66 L44 80 L52 80 L50 66 Z" fill="#b91c1c"/>
-            <!-- Frost sparkle on cheek -->
-            <polygon points="62,49 63,51 65,51 63.5,52.5 64,55 62,53.5 60,55 60.5,52.5 59,51 61,51" fill="#ffffff" opacity="0.8"/>
-        `)
-    },
-    {
-        id: 'av_kasif_arkeolog',
-        name: 'Arkeolog Yer Bilimci',
-        category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_arkeolog', ['#451a03', '#92400e'], `
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#a16207"/>
-            <polygon points="46,65 54,65 50,72" fill="#78350f"/>
-            <line x1="50" y1="72" x2="50" y2="84" stroke="#fef08a" stroke-width="1.8"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#78350f')}
-            ${H.eyes('#78350f')}
-            ${H.smile()}
-            <!-- Leather Fedora hat with shadow -->
-            <ellipse cx="50" cy="35" rx="27" ry="7" fill="#78350f"/>
-            <path d="M36 35 C38 20, 62 20, 64 35 Z" fill="#92400e"/>
-            <path d="M36 33 C44 31, 56 31, 64 33" stroke="#18181b" stroke-width="2.5" fill="none"/>
-            <!-- Golden ammonite fossil pin on lapel -->
-            <circle cx="36" cy="71" r="3.5" fill="#facc15" stroke="#ca8a04" stroke-width="1"/>
-            <path d="M36 71 A1.8 1.8 0 0 1 36 69.2 A2.5 2.5 0 0 1 38 71" fill="none" stroke="#b45309" stroke-width="1"/>
-        `)
-    },
-    {
-        id: 'av_kasif_volkan',
-        name: 'Yanardağ Gözlemcisi',
-        category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_volkan', ['#450a0a', '#b91c1c'], `
-            <!-- Silver reflective thermal suit with hazard stripes -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#cbd5e1"/>
-            <rect x="44" y="69" width="12" height="6" fill="#f59e0b"/>
-            <!-- Volcanology safety helmet -->
-            <path d="M30 40 C32 20, 68 20, 70 40 Z" fill="#dc2626"/>
-            <ellipse cx="50" cy="40" rx="22" ry="5" fill="#e2e8f0"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#18181b')}
-            ${H.eyes('#dc2626')}
-            ${H.smile()}
-            <!-- Raised gold heat visor -->
-            <rect x="36" y="27" width="28" height="9" rx="3.5" fill="#facc15" opacity="0.85" stroke="#ca8a04" stroke-width="1.5"/>
-            <!-- Lava ember sparks rising -->
-            <circle cx="24" cy="54" r="1.5" fill="#f97316"/>
-            <circle cx="76" cy="48" r="1.8" fill="#fbbf24"/>
-        `)
-    },
-    {
-        id: 'av_kasif_teleskop',
-        name: 'Gece Teleskop Gözlemcisi',
-        category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_teleskop', ['#1e1b4b', '#4f46e5'], `
-            <!-- Knitted cozy sweater -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#312e81"/>
-            <ellipse cx="50" cy="65" rx="9" ry="3.5" fill="#4338ca"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#1e1b4b')}
-            ${H.eyes('#6366f1')}
-            ${H.smile()}
-            <!-- Knitted navy beanie with yellow constellation stars -->
-            <path d="M30 42 C32 20, 68 20, 70 42 Z" fill="#1e1b4b"/>
-            <rect x="28" y="38" width="44" height="7" rx="3.5" fill="#4338ca"/>
-            <circle cx="44" cy="29" r="1.8" fill="#fde047"/>
-            <circle cx="56" cy="27" r="1.5" fill="#fde047"/>
-            <line x1="44" y1="29" x2="56" y2="27" stroke="#fef08a" stroke-width="0.8" stroke-dasharray="1 1"/>
-            <!-- Mini brass handheld telescope -->
-            <line x1="66" y1="78" x2="78" y2="62" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="78" cy="62" r="2.5" fill="#38bdf8"/>
-        `)
-    },
-    {
-        id: 'av_kasif_drone',
-        name: 'Siber Kâşif Drone Pilotu',
-        category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_drone', ['#022c22', '#059669'], `
-            <!-- Cyber runner jacket -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#0f172a"/>
-            <line x1="50" y1="65" x2="50" y2="84" stroke="#22c55e" stroke-width="2"/>
-            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#1e293b"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#0f172a')}
-            ${H.eyes('#10b981')}
-            ${H.smile()}
-            <!-- Futuristic glowing cyber HUD visor -->
-            <rect x="32" y="40" width="36" height="11" rx="4" fill="rgba(16,185,129,0.3)" stroke="#22c55e" stroke-width="2"/>
-            <line x1="36" y1="45" x2="54" y2="45" stroke="#4ade80" stroke-width="1.2"/>
-            <circle cx="58" cy="45" r="1.5" fill="#facc15"/>
-            <!-- Micro quadcopter drone hovering near shoulder -->
-            <circle cx="74" cy="30" r="3" fill="#0284c7"/>
-            <line x1="68" y1="28" x2="80" y2="32" stroke="#38bdf8" stroke-width="1.2"/>
-            <line x1="68" y1="32" x2="80" y2="28" stroke="#38bdf8" stroke-width="1.2"/>
-            <circle cx="68" cy="28" r="1.5" fill="#fde047"/>
-            <circle cx="80" cy="32" r="1.5" fill="#fde047"/>
-        `)
-    },
-
-    // --- 👨‍🏫 ÖĞRETMENLER & YÖNETİCİLER (8) ---
-    {
-        id: 'av_ogretmen_genc_kadin',
-        name: 'Genç Kadın Fen Öğretmeni',
-        category: 'ogretmenler',
-        url: makeSvgAvatar('av_ogretmen_genc_kadin', ['#701a75', '#c026d3'], `
+        url: makeSvgAvatar('av_bilim_ogretmen', ['#701a75', '#c026d3'], `
             <!-- Teal blazer over white blouse -->
             <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#0f766e"/>
             <polygon points="46,65 54,65 50,73" fill="#f8fafc"/>
@@ -792,170 +958,7 @@ const kozmikAvatarlar = [
             <path d="M30 42 C36 32, 44 30, 50 32 C56 30, 64 32, 70 42 Z" fill="#573010"/>
         `)
     },
-    {
-        id: 'av_ogretmen_genc_erkek',
-        name: 'Genç Erkek Fen Öğretmeni',
-        category: 'ogretmenler',
-        url: makeSvgAvatar('av_ogretmen_genc_erkek', ['#0f172a', '#0284c7'], `
-            <!-- Sky blue dress shirt & yellow necktie -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#0284c7"/>
-            <polygon points="46,65 54,65 50,71" fill="#f8fafc"/>
-            <polygon points="48.5,70 51.5,70 53,83 47,83" fill="#facc15"/>
-            <!-- Styled comb-over dark hair -->
-            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#18181b"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#18181b')}
-            ${H.eyes('#0f172a')}
-            ${H.happyMouth()}
-            <path d="M28 40 C34 28, 48 24, 54 26 C66 24, 72 30, 74 40 C66 32, 56 32, 50 35 C42 34, 34 36, 28 40 Z" fill="#27272a"/>
-        `)
-    },
-    {
-        id: 'av_ogretmen_kidemli_kadin',
-        name: 'Kıdemli Kadın Öğretmen',
-        category: 'ogretmenler',
-        url: makeSvgAvatar('av_ogretmen_kidemli_kadin', ['#312e81', '#4338ca'], `
-            <!-- Emerald cardigan over blouse -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#064e3b"/>
-            <polygon points="46,65 54,65 50,72" fill="#f8fafc"/>
-            <!-- Pearl necklace -->
-            <circle cx="44" cy="71" r="1.3" fill="#f8fafc"/>
-            <circle cx="47" cy="73" r="1.3" fill="#f8fafc"/>
-            <circle cx="50" cy="74" r="1.5" fill="#f8fafc"/>
-            <circle cx="53" cy="73" r="1.3" fill="#f8fafc"/>
-            <circle cx="56" cy="71" r="1.3" fill="#f8fafc"/>
-            <!-- Dignified silver hair bun with ornate hair pin -->
-            <ellipse cx="50" cy="24" rx="14" ry="9" fill="#94a3b8"/>
-            <circle cx="50" cy="20" r="3" fill="#cbd5e1"/>
-            <line x1="38" y1="20" x2="62" y2="28" stroke="#facc15" stroke-width="2"/>
-            <path d="M26 48 C24 34, 34 26, 50 26 C66 26, 76 34, 74 48 Z" fill="#94a3b8"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#64748b')}
-            ${H.eyes('#1e1b4b')}
-            ${H.smile()}
-            <!-- Silver reading glasses on chain -->
-            <circle cx="42" cy="46" r="5" fill="none" stroke="#cbd5e1" stroke-width="1.6"/>
-            <circle cx="58" cy="46" r="5" fill="none" stroke="#cbd5e1" stroke-width="1.6"/>
-            <line x1="47" y1="46" x2="53" y2="46" stroke="#cbd5e1" stroke-width="1.6"/>
-            <path d="M30 42 C36 32, 44 30, 50 32 C56 30, 64 32, 70 42 Z" fill="#cbd5e1"/>
-        `)
-    },
-    {
-        id: 'av_ogretmen_kidemli_erkek',
-        name: 'Kıdemli Erkek Fen Hocası',
-        category: 'ogretmenler',
-        url: makeSvgAvatar('av_ogretmen_kidemli_erkek', ['#1e293b', '#334155'], `
-            <!-- Corduroy jacket with elbow patch detail -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#78350f"/>
-            <polygon points="46,65 54,65 50,71" fill="#f8fafc"/>
-            <polygon points="48,70 52,70 51,82 49,82" fill="#991b1b"/>
-            <!-- Salt & pepper hair -->
-            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#64748b"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#94a3b8')}
-            ${H.eyes('#0f172a')}
-            <!-- Round scholarly spectacles -->
-            <circle cx="42" cy="46" r="5.5" fill="none" stroke="#94a3b8" stroke-width="1.8"/>
-            <circle cx="58" cy="46" r="5.5" fill="none" stroke="#94a3b8" stroke-width="1.8"/>
-            <line x1="47.5" y1="46" x2="52.5" y2="46" stroke="#94a3b8" stroke-width="1.8"/>
-            <!-- Silver-grey mustache -->
-            <path d="M40 54 C44 51, 48 51, 50 53 C52 51, 56 51, 60 54 C58 57, 54 57, 50 55 C46 57, 42 57, 40 54 Z" fill="#cbd5e1"/>
-            <path d="M28 40 C34 30, 44 28, 50 30 C56 28, 66 30, 72 40 Z" fill="#94a3b8"/>
-        `)
-    },
-    {
-        id: 'av_ogretmen_mentor',
-        name: 'Okul Mentörü & Koç',
-        category: 'ogretmenler',
-        url: makeSvgAvatar('av_ogretmen_mentor', ['#064e3b', '#047857'], `
-            <!-- Spruce green polo shirt -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#047857"/>
-            <polygon points="46,65 54,65 50,73" fill="#065f46"/>
-            <!-- Official school lanyard with ID card badge -->
-            <line x1="44" y1="65" x2="48" y2="76" stroke="#f97316" stroke-width="1.8"/>
-            <line x1="56" y1="65" x2="52" y2="76" stroke="#f97316" stroke-width="1.8"/>
-            <rect x="46" y="75" width="8" height="9" rx="1.5" fill="#f8fafc" stroke="#38bdf8" stroke-width="1"/>
-            <!-- Athletic short fade hair -->
-            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#292524"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#292524')}
-            ${H.eyes('#047857')}
-            ${H.happyMouth()}
-            <path d="M28 40 C34 30, 48 26, 54 28 C66 26, 72 32, 74 40 Z" fill="#44403c"/>
-        `)
-    },
-    {
-        id: 'av_ogretmen_mudur',
-        name: 'Bilge Okul Yöneticisi',
-        category: 'ogretmenler',
-        url: makeSvgAvatar('av_ogretmen_mudur', ['#18181b', '#27272a'], `
-            <!-- Tailored executive charcoal suit -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#18181b"/>
-            <polygon points="46,65 54,65 50,73" fill="#f8fafc"/>
-            <polygon points="48,71 52,71 50,83" fill="#94a3b8"/>
-            <!-- Gold school crest badge on lapel -->
-            <polygon points="36,70 38,67 40,70 38,73" fill="#facc15" stroke="#ca8a04" stroke-width="0.8"/>
-            <!-- Neatly groomed dark hair with silver temples -->
-            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#27272a"/>
-            <!-- Silver temples -->
-            <path d="M27 44 C26 38, 30 32, 34 34" stroke="#94a3b8" stroke-width="2" fill="none"/>
-            <path d="M73 44 C74 38, 70 32, 66 34" stroke="#94a3b8" stroke-width="2" fill="none"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#3f3f46')}
-            ${H.eyes('#0f172a')}
-            ${H.smile()}
-            <path d="M28 40 C34 28, 48 26, 54 28 C66 26, 72 30, 74 40 Z" fill="#3f3f46"/>
-        `)
-    },
-    {
-        id: 'av_ogretmen_doga',
-        name: 'Doğa Bilimleri Eğitmeni',
-        category: 'ogretmenler',
-        url: makeSvgAvatar('av_ogretmen_doga', ['#14532d', '#15803d'], `
-            <!-- Field cargo jacket -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#365314"/>
-            <polygon points="46,65 54,65 50,72" fill="#ca8a04"/>
-            <line x1="50" y1="72" x2="50" y2="84" stroke="#facc15" stroke-width="1.8"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#78350f')}
-            ${H.eyes('#15803d')}
-            ${H.happyMouth()}
-            <!-- Country fedora hat -->
-            <ellipse cx="50" cy="35" rx="26" ry="7" fill="#78350f"/>
-            <path d="M36 35 C38 20, 62 20, 64 35 Z" fill="#92400e"/>
-            <path d="M36 33 C44 31, 56 31, 64 33" stroke="#facc15" stroke-width="2" fill="none"/>
-            <!-- Brass magnifying glass inspecting a leaf -->
-            <circle cx="68" cy="72" r="5" fill="none" stroke="#facc15" stroke-width="2"/>
-            <line x1="72" y1="76" x2="77" y2="81" stroke="#ca8a04" stroke-width="2.8" stroke-linecap="round"/>
-            <path d="M66 72 Q68 70 70 72 Q68 74 66 72 Z" fill="#22c55e"/>
-        `)
-    },
-    {
-        id: 'av_ogretmen_direktor',
-        name: 'Laboratuvar Direktörü Eğitmen',
-        category: 'ogretmenler',
-        url: makeSvgAvatar('av_ogretmen_direktor', ['#0c4a6e', '#0369a1'], `
-            <!-- Sterile lab coat with dark blue lapel accents -->
-            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#f8fafc"/>
-            <polygon points="46,65 54,65 50,73" fill="#0284c7"/>
-            <line x1="62" y1="70" x2="62" y2="76" stroke="#0284c7" stroke-width="2" stroke-linecap="round"/>
-            <!-- Sleek high ponytail -->
-            <path d="M64 34 C76 28, 82 38, 78 50 C72 52, 68 44, 64 38 Z" fill="#18181b"/>
-            <circle cx="66" cy="36" r="3.5" fill="#0284c7"/>
-            <path d="M26 48 C24 34, 34 24, 50 24 C66 24, 76 34, 74 48 Z" fill="#18181b"/>
-            ${H.head('#fed7aa')}
-            ${H.eyebrows('#18181b')}
-            ${H.eyes('#0284c7')}
-            ${H.smile()}
-            <!-- Transparent safety spectacles with anti-glare tint -->
-            <rect x="34" y="41" width="13" height="9" rx="3.5" fill="rgba(56,189,248,0.25)" stroke="#38bdf8" stroke-width="1.8"/>
-            <rect x="53" y="41" width="13" height="9" rx="3.5" fill="rgba(56,189,248,0.25)" stroke="#38bdf8" stroke-width="1.8"/>
-            <line x1="47" y1="45" x2="53" y2="45" stroke="#38bdf8" stroke-width="1.8"/>
-            <!-- Sleek bangs -->
-            <path d="M30 42 C36 32, 44 30, 50 32 C56 30, 64 32, 70 42 Z" fill="#27272a"/>
-        `)
-    }
-];;
+];
 
 function isimSor(prefill, callback) {
     const overlay = document.createElement('div');
@@ -3236,10 +3239,10 @@ profileModal.innerHTML = `
         <div id="avatar-selector-container" class="is-hidden" style="border: 1px solid rgba(0, 210, 255, 0.3); border-radius:15px; background: rgba(0,0,0,0.5); margin-bottom:20px; padding: 10px;">
             <div class="avatar-tabs" id="avatar-category-tabs">
                 <button type="button" class="avatar-tab-btn active" data-category="all">Tümü (32)</button>
+                <button type="button" class="avatar-tab-btn" data-category="robotlar">🤖 Robotlar (8)</button>
+                <button type="button" class="avatar-tab-btn" data-category="hayvanlar">🐾 Hayvan Kâşifler (8)</button>
                 <button type="button" class="avatar-tab-btn" data-category="ogrenciler">👦👧 Öğrenciler (8)</button>
                 <button type="button" class="avatar-tab-btn" data-category="bilim">🔬 Bilim İnsanları (8)</button>
-                <button type="button" class="avatar-tab-btn" data-category="kasifler">🚀 Kâşifler (8)</button>
-                <button type="button" class="avatar-tab-btn" data-category="ogretmenler">👨‍🏫 Öğretmenler (8)</button>
             </div>
             <div class="avatar-grid" id="avatar-selector"></div>
         </div>
