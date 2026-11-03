@@ -3,6 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HW3RN9415Z"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-HW3RN9415Z', {
+        send_page_view: true
+      });
+      window.trackFenUpEvent = function(eventName, eventParams) {
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', eventName, eventParams || {});
+        }
+      };
+    </script>
+
     <title>FenUp X | Fen Bilimleri Platformu</title>
     <link rel="canonical" href="https://fenupx.com/" />
     <meta name="description" content="FenUp X ile fen bilimlerini keşfet: senaryona uygun yazılı provaları, görselli konu kartları, etkileşimli deneyler ve bilgi yarışmaları.">
@@ -41,7 +58,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=2026110201">
-    <link rel="stylesheet" href="exam.css?v=8.0.0">
+    <link rel="stylesheet" href="exam.css?v=8.1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -4645,7 +4662,109 @@
         </div>
     </div>
 
-    <footer id="main-footer" class="fenupx-footer">
+    <!-- 10. Kurumsal ve Yasal Bilgilendirme Modalı (#legal-modal) -->
+    <div id="legal-modal" class="modal-overlay legal-modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1" style="display: none;">
+        <div class="legal-modal-card">
+            <div class="legal-modal-header">
+                <div class="legal-modal-title-box">
+                    <i class="fas fa-shield-halved" style="color: var(--neon-blue, #38bdf8); font-size: 1.3rem;"></i>
+                    <h2 id="legal-modal-title" class="legal-modal-title">Kurumsal & Yasal Bilgilendirme</h2>
+                </div>
+                <button type="button" class="legal-modal-close close-btn" id="btn-close-legal-modal" aria-label="Kapat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="legal-tabs" role="tablist" aria-label="Kurumsal ve Yasal Sayfalar">
+                <button type="button" class="legal-tab-btn is-active" data-tab="about" role="tab" aria-selected="true" aria-controls="legal-tab-about">
+                    <i class="fas fa-info-circle"></i> <span>Hakkımızda</span>
+                </button>
+                <button type="button" class="legal-tab-btn" data-tab="privacy" role="tab" aria-selected="false" aria-controls="legal-tab-privacy">
+                    <i class="fas fa-user-shield"></i> <span>Gizlilik Politikası</span>
+                </button>
+                <button type="button" class="legal-tab-btn" data-tab="cookies" role="tab" aria-selected="false" aria-controls="legal-tab-cookies">
+                    <i class="fas fa-cookie-bite"></i> <span>Çerez Politikası</span>
+                </button>
+                <button type="button" class="legal-tab-btn" data-tab="terms" role="tab" aria-selected="false" aria-controls="legal-tab-terms">
+                    <i class="fas fa-file-contract"></i> <span>Kullanım Koşulları</span>
+                </button>
+            </div>
+
+            <div class="legal-content-body" id="legal-content-body">
+                <!-- 1. HAKKIMIZDA -->
+                <div id="legal-tab-about" class="legal-tab-pane is-active" role="tabpanel">
+                    <h3><i class="fas fa-rocket"></i> Bilimde Seviye Atlat: FenUp X</h3>
+                    <p><strong>FenUp X</strong>; ortaokul Fen Bilimleri dersi (5, 6, 7 ve 8. sınıf) öğrencileri ve öğretmenleri için Millî Eğitim Bakanlığı (MEB) güncel müfredatına, Türkiye Yüzyılı Maarif Modeli'ne ve Ortak Yazılı Sınav Sistemi (OYSS) standartlarına %100 uyumlu olarak geliştirilmiş yeni nesil bir fen eğitimi platformudur.</p>
+                    
+                    <div class="legal-highlight-box">
+                        <strong style="color: #38bdf8;">Misyonumuz:</strong> Fen bilimleri eğitimini ezberden çıkarıp analitik düşünme, deneyleme ve kavramsal akıl yürütme üzerine inşa ederek her öğrencinin başarısını somut verilerle en üst noktaya taşımaktır.
+                    </div>
+
+                    <h3><i class="fas fa-star"></i> Temel Niteliklerimiz</h3>
+                    <ul>
+                        <li><strong>MEB Senaryo Standartları:</strong> İl/ilçe zümre kararlarına tam uygun açık uçlu yazılı sınav provası, ölçüt temelli analitik rubrikler ve anında eksik analizi.</li>
+                        <li><strong>Kavram Yanılgısı Avcısı:</strong> Öğrencilerin fen kavramlarındaki eksik ve hatalı öğrenmelerini tespit edip düzelten özel görsel çalışma kartları ve hedefli tekrar sistemi.</li>
+                        <li><strong>Akıllı Tahta (ETAP) ve Sınıf Uyumu:</strong> Sınıflardaki etkileşimli tahtalarda 5-8 metre mesafeden rahat okunabilir akışkan tipografi, yüksek kontrastlı şemalar ve sunum modu.</li>
+                        <li><strong>Sanal Laboratuvar:</strong> Bilimsel deneyleri sınıf ortamında simüle eden, kontrol değişkenlerini (bağımsız, bağımlı, kontrol) adım adım kavratan interaktif deney düzenekleri.</li>
+                    </ul>
+
+                    <h3><i class="fas fa-eye"></i> Vizyonumuz</h3>
+                    <p>Ezbere değil, bilimsel süreç becerilerine ve kavramsal derinliğe dayalı; her öğrencinin potansiyelini zirveye taşıyan, reklam baskısından uzak, tamamen ücretsiz ve eşitlikçi bir fen eğitimi ekosistemi sunmak.</p>
+                </div>
+
+                <!-- 2. GİZLİLİK POLİTİKASI (KVKK / GDPR) -->
+                <div id="legal-tab-privacy" class="legal-tab-pane is-hidden" role="tabpanel" style="display: none;">
+                    <h3><i class="fas fa-shield-alt"></i> Gizlilik Politikası ve KVKK Aydınlatma Metni</h3>
+                    <p>FenUp X Ekibi olarak, 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") ve evrensel veri koruma ilkeleri doğrultusunda ziyaretçilerimizin ve öğrencilerimizin kişisel verilerinin güvenliğine en üst düzeyde önem veriyoruz.</p>
+
+                    <h3><i class="fas fa-child"></i> Öğrenci ve Çocuk Mahremiyeti</h3>
+                    <p>Platformumuz 18 yaş altı ortaokul öğrencilerinin kullanımı için tasarlandığından çocuk mahremiyeti temel kırmızı çizgimizdir. Platformumuz <strong>minimum veri toplama</strong> prensibini benimser:</p>
+                    <ul>
+                        <li>Platformu kullanırken T.C. kimlik numarası, telefon numarası veya açık adres gibi hassas veriler KESİNLİKLE talep edilmez.</li>
+                        <li>Yazılı sınav provasında çözülen sorular, verilen cevaplar ve puan ilerlemeleri yalnızca öğrencinin kendi tarayıcısında (yerel depolama - <code>localStorage</code>) saklanır; merkezi bir sunucuya veya dış ortama aktarılmaz.</li>
+                    </ul>
+
+                    <h3><i class="fas fa-user-lock"></i> Veri Paylaşımı ve Ticari Yasak</h3>
+                    <p>Öğrencilere, velilere veya öğretmenlere ait hiçbir bilgi; reklam, tanıtım, pazarlama veya ticari amaçla üçüncü kişi, kurum veya kuruluşlarla ASLA paylaşılmaz, satılmaz veya devredilmez.</p>
+
+                    <h3><i class="fas fa-key"></i> Veri Güvenliği ve Kalıcı Sıfırlama Hakkı</h3>
+                    <p>Sitemiz tüm veri iletimini modern SSL/TLS şifreleme protokolleri ile güvence altına alır. Kullanıcılarımız diledikleri an "Kaydı Kaldır" veya "İlerlemeyi Sıfırla" butonuyla tarayıcılarında saklanan tüm sınav verilerini tek tıkla kalıcı olarak silebilirler.</p>
+                </div>
+
+                <!-- 3. ÇEREZ POLİTİKASI -->
+                <div id="legal-tab-cookies" class="legal-tab-pane is-hidden" role="tabpanel" style="display: none;">
+                    <h3><i class="fas fa-cookie-bite"></i> Çerez (Cookie) Politikası</h3>
+                    <p>FenUp X, web sitemizin kesintisiz, hızlı ve güvenli çalışabilmesi, eğitsel tercihlerin hatırlanması ve platform performansının anonim olarak ölçülebilmesi amacıyla sınırlı çerezler kullanmaktadır.</p>
+
+                    <h3><i class="fas fa-cogs"></i> Kullanılan Çerez Türleri ve Amaçları</h3>
+                    <ul>
+                        <li><strong>Zorunlu ve İşlevsel Çerezler:</strong> Yazılı provasında kaldığınız soruyu hatırlamak, konu kartlarındaki çalışma ilerlemenizi kaydetmek ve tercih ettiğiniz görünüm ayarlarını korumak için kullanılır (tarayıcı yerel depolaması). Bu çerezler olmadan eğitim süreçleri kesintiye uğrar.</li>
+                        <li><strong>Analitik Çerezler (Google Analytics 4):</strong> Platformun hangi bölümlerinin daha çok kullanıldığını, senaryolar arası dağılımı ve teknik sayfa performansını anonim olarak ölçümlemek amacıyla Google Analytics 4 (<code>G-HW3RN9415Z</code>) kullanılır. Bu çerezler kimlik tespiti yapmaz, IP adreslerini anonimleştirir ve kişisel veri içermez.</li>
+                    </ul>
+
+                    <h3><i class="fas fa-sliders-h"></i> Çerez Yönetimi ve Devre Dışı Bırakma</h3>
+                    <p>Kullanıcılar tarayıcı ayarlarından (Chrome, Firefox, Safari, Edge vb.) çerezleri diledikleri zaman silebilir, engelleyebilir veya sınırlandırabilirler. Çerezlerin tamamen devre dışı bırakılması durumunda sınavda kaldığınız soru gibi bazı işlevsel kolaylıklar her sayfa yenilemesinde baştan başlayabilir.</p>
+                </div>
+
+                <!-- 4. KULLANIM KOŞULLARI -->
+                <div id="legal-tab-terms" class="legal-tab-pane is-hidden" role="tabpanel" style="display: none;">
+                    <h3><i class="fas fa-file-contract"></i> Kullanım Koşulları ve Eğitsel Standartlar</h3>
+                    <p>FenUp X web sitesini ziyaret ederek veya modüllerini kullanarak aşağıdaki kullanım koşullarını kabul etmiş sayılırsınız:</p>
+
+                    <h3><i class="fas fa-graduation-cap"></i> Eğitsel ve Adil Kullanım</h3>
+                    <p>FenUp X platformunda yer alan özgün açık uçlu sorular, analitik değerlendirme rubrikleri, kavram şemaları, konu özet kartları ve sanal laboratuvar bileşenleri; öğrencilerin bireysel hazırlıklarında ve öğretmenlerin sınıf içi eğitsel faaliyetlerinde tamamen <strong>ücretsiz ve serbestçe</strong> kullanılabilir.</p>
+
+                    <h3><i class="fas fa-copyright"></i> Fikri Mülkiyet ve Telif Hakları</h3>
+                    <p>Platformun yazılım mimarisi, özgün grafik ve SVG şemaları, vektörel çizimleri, soru bankası içeriği ve FenUp X marka unsurları FenUp X Ekibi'ne aittir. İçeriklerin ticari bir ürün haline getirilmesi, izinsiz satılması veya kâr amaçlı çoğaltılması yasaktır.</p>
+
+                    <h3><i class="fas fa-info-circle"></i> Sorumluluk Reddi ve Resmî Sınav Açıklaması</h3>
+                    <p>FenUp X'te sunulan sorular, MEB ders kitaplarına, kazanımlara ve il zümre konu-soru dağılım tablolarına titizlikle uygun olarak üretilmiş hazırlık ve prova materyalleridir. Millî Eğitim Bakanlığı'nın doğrudan resmî sınav soruları değildir ve sınavda birebir aynı soruların çıkacağı taahhüt edilmez.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer id="main-footer" class="fenupx-footer site-footer">
         <div class="footer-inner">
             <div class="footer-socials">
                 <a href="https://youtube.com/@FenUpX" target="_blank" class="social-icon" title="YouTube" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
@@ -4655,13 +4774,18 @@
                 <button id="btn-footer-info" class="footer-info-trigger mobile-only" type="button" aria-expanded="false" aria-controls="footer-info-dropdown">
                     <i class="fas fa-shield-halved" aria-hidden="true"></i> <span>Bilgilendirme</span> <i class="fas fa-chevron-up info-caret" aria-hidden="true"></i>
                 </button>
-                <div id="footer-info-dropdown" class="policy-links">
-                    <button class="text-btn btn-kvkk-open" type="button">Gizlilik Politikası</button>
+                <div id="footer-info-dropdown" class="policy-links footer-links">
+                    <button class="text-btn btn-legal-open" data-legal="about" type="button">Hakkımızda</button>
                     <span class="desktop-only" style="color: #555;">|</span>
-                    <button class="text-btn btn-terms-open" type="button">Kullanım Koşulları</button>
+                    <button class="text-btn btn-legal-open btn-kvkk-open" data-legal="privacy" type="button">Gizlilik Politikası</button>
                     <span class="desktop-only" style="color: #555;">|</span>
-                    <button class="text-btn btn-cookies-open" type="button">Çerez Politikası</button>
+                    <button class="text-btn btn-legal-open btn-cookies-open" data-legal="cookies" type="button">Çerez Politikası</button>
+                    <span class="desktop-only" style="color: #555;">|</span>
+                    <button class="text-btn btn-legal-open btn-terms-open" data-legal="terms" type="button">Kullanım Koşulları</button>
                 </div>
+            </div>
+            <div class="footer-copyright" style="font-size: 0.85rem; color: #94a3b8; margin-top: 8px;">
+                © 2026 FenUp X. Türkiye Yüzyılı Maarif Modeli ve MEB Yazılı Sınav Standartlarına Uygun Eğitim Platformu.
             </div>
         </div>
     </footer>
@@ -4669,10 +4793,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
     <script>
-        window.__FENUPX_CONTENT_V6_VERSION__ = '8.0.0';
+        window.__FENUPX_CONTENT_V6_VERSION__ = '8.1.0';
     </script>
-    <script type="module" src="exam-engine.js?v=8.0.0"></script>
+    <script type="module" src="exam-engine.js?v=8.1.0"></script>
     <script type="module" src="lab-engine.js?v=2026110201"></script>
-    <script type="module" src="script.js?v=8.0.0"></script>
+    <script type="module" src="script.js?v=8.1.0"></script>
 </body>
 </html>

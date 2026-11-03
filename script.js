@@ -2116,8 +2116,14 @@ function openModal(policyKey) {
         toggleMasterPause(); 
     }
     
-    if(modalTitle) modalTitle.textContent = policies[policyKey].title;
-    if(modalBody) modalBody.innerHTML = policies[policyKey].content;
+    // V8.1: Eğer modern #legal-modal mevcutsa sekmeli yapıyı aç
+    if (document.getElementById('legal-modal')) {
+        openLegalModal(policyKey);
+        return;
+    }
+
+    if(modalTitle && policies[policyKey]) modalTitle.textContent = policies[policyKey].title;
+    if(modalBody && policies[policyKey]) modalBody.innerHTML = policies[policyKey].content;
     showModal(policyModal);
 }
 
@@ -2127,6 +2133,88 @@ if(policyModal) {
     policyModal.onclick = (e) => { 
         if (e.target === policyModal) hideModal(policyModal); 
     };
+}
+
+// ============================================================================
+// V8.1: KURUMSAL & YASAL BİLGİLENDİRME MODAL VE SEKMELERİ (ABOUT / PRIVACY / COOKIES / TERMS)
+// ============================================================================
+const legalModal = document.getElementById('legal-modal');
+const btnCloseLegalModal = document.getElementById('btn-close-legal-modal');
+
+export function switchLegalTab(tabKey) {
+    if (!legalModal) return;
+    const tabMap = {
+        about: 'about',
+        hakkimizda: 'about',
+        privacy: 'privacy',
+        kvkk: 'privacy',
+        cookies: 'cookies',
+        cerez: 'cookies',
+        terms: 'terms',
+        kosullar: 'terms'
+    };
+    const targetKey = tabMap[tabKey] || 'about';
+
+    legalModal.querySelectorAll('.legal-tab-btn').forEach(btn => {
+        const isMatch = btn.getAttribute('data-tab') === targetKey;
+        btn.classList.toggle('is-active', isMatch);
+        btn.setAttribute('aria-selected', isMatch ? 'true' : 'false');
+    });
+
+    legalModal.querySelectorAll('.legal-tab-pane').forEach(pane => {
+        const isMatch = pane.id === `legal-tab-${targetKey}`;
+        pane.classList.toggle('is-active', isMatch);
+        pane.classList.toggle('is-hidden', !isMatch);
+        pane.style.display = isMatch ? 'block' : 'none';
+    });
+
+    const bodyEl = document.getElementById('legal-content-body');
+    if (bodyEl) bodyEl.scrollTop = 0;
+}
+
+export function openLegalModal(tabKey = 'about') {
+    if (!legalModal) return;
+    const sq = document.getElementById('scene-quiz');
+    const stq = document.getElementById('scene-tournament-quiz');
+    if (isGlobalPaused === false && ((sq && !sq.classList.contains('is-hidden')) || (stq && !stq.classList.contains('is-hidden')))) {
+        toggleMasterPause();
+    }
+    legalModal.classList.remove('is-hidden');
+    legalModal.classList.add('is-open');
+    legalModal.style.display = 'flex';
+    legalModal.setAttribute('aria-hidden', 'false');
+    switchLegalTab(tabKey);
+}
+
+export function closeLegalModal() {
+    if (!legalModal) return;
+    legalModal.classList.add('is-hidden');
+    legalModal.classList.remove('is-open');
+    legalModal.style.display = 'none';
+    legalModal.setAttribute('aria-hidden', 'true');
+}
+
+if (typeof window !== 'undefined') {
+    window.openLegalModal = openLegalModal;
+    window.closeLegalModal = closeLegalModal;
+    window.switchLegalTab = switchLegalTab;
+}
+
+if (btnCloseLegalModal) {
+    btnCloseLegalModal.onclick = () => closeLegalModal();
+}
+
+if (legalModal) {
+    legalModal.onclick = (e) => {
+        if (e.target === legalModal) closeLegalModal();
+    };
+    legalModal.querySelectorAll('.legal-tab-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const tab = btn.getAttribute('data-tab');
+            switchLegalTab(tab);
+        });
+    });
 }
 
 const btnFooterInfo = document.getElementById('btn-footer-info');
@@ -2157,30 +2245,49 @@ if (btnFooterInfo && footerInfoDropdown) {
     });
 }
 
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        if (legalModal && !legalModal.classList.contains('is-hidden')) {
+            closeLegalModal();
+        }
+    }
+});
+
+// Footer ve genel kurumsal bağlantılar
+document.querySelectorAll('.btn-legal-open').forEach(btn => {
+    btn.onclick = (e) => {
+        if (e) e.stopPropagation();
+        if (profileDropdown) profileDropdown.classList.add('is-hidden');
+        closeFooterInfoDropdown();
+        const tab = btn.getAttribute('data-legal') || 'about';
+        openLegalModal(tab);
+    };
+});
+
 document.querySelectorAll('.btn-kvkk-open').forEach(btn => btn.onclick = (e) => {
     if(e) e.stopPropagation();
     if(profileDropdown) profileDropdown.classList.add('is-hidden');
     closeFooterInfoDropdown();
-    openModal('kvkk');
+    openLegalModal('privacy');
 });
 document.querySelectorAll('.btn-terms-open').forEach(btn => btn.onclick = (e) => {
     if(e) e.stopPropagation();
     if(profileDropdown) profileDropdown.classList.add('is-hidden');
     closeFooterInfoDropdown();
-    openModal('terms');
+    openLegalModal('terms');
 });
 document.querySelectorAll('.btn-cookies-open').forEach(btn => btn.onclick = (e) => {
     if(e) e.stopPropagation();
     if(profileDropdown) profileDropdown.classList.add('is-hidden');
     closeFooterInfoDropdown();
-    openModal('cookies');
+    openLegalModal('cookies');
 });
 
 const cookiePolicyLink = document.getElementById('cookie-policy-link');
 if(cookiePolicyLink) {
     cookiePolicyLink.onclick = (e) => { 
         e.preventDefault(); 
-        openModal('cookies'); 
+        openLegalModal('cookies'); 
     };
 }
 

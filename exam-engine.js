@@ -9,9 +9,32 @@
 'use strict';
 
 const CONTENT_REVISION = '6.0.0';
-export const CONTENT_V6_VERSION = '8.0.0';
+export const CONTENT_V6_VERSION = '8.1.0';
 if (typeof window !== 'undefined') {
     window.__FENUPX_CONTENT_V6_VERSION__ = CONTENT_V6_VERSION;
+}
+
+/**
+ * GA4 & Analitik Güvenli Etkinlik Takip Sarmalayıcısı
+ * gtag betiği engellense veya geç yüklense dahi hata fırlatmaz.
+ */
+export function trackFenUpEvent(eventName, eventParams) {
+    try {
+        if (typeof window !== 'undefined') {
+            if (typeof window.trackFenUpEvent === 'function' && window.trackFenUpEvent !== trackFenUpEvent) {
+                window.trackFenUpEvent(eventName, eventParams);
+                return;
+            }
+            if (typeof window.gtag === 'function') {
+                window.gtag('event', eventName, eventParams || {});
+            }
+        }
+    } catch (e) {
+        // Sessizce yut - kullanıcı deneyimini asla kesme
+    }
+}
+if (typeof window !== 'undefined') {
+    window.trackFenUpEvent = trackFenUpEvent;
 }
 const CONTENT_PATHS = { '6.0.0': 'data/exam/content-v6/' };
 let ASSET_BASE = 'data/exam/content-v6/';
@@ -1138,6 +1161,16 @@ function bindScopeContinue() {
             syncScenarioData();
             state.hasSelectedScope = true;
             saveState();
+
+            // GA4: senaryo_secildi etkinliği
+            const activeSc = getActiveScenario();
+            const scId = activeSc ? `senaryo-${activeSc.scenario}` : `senaryo-${state.selectedScenario || '1'}`;
+            const totalQ = activeSc ? (activeSc.question_count || 0) : 0;
+            trackFenUpEvent('senaryo_secildi', {
+                senaryo: scId,
+                total_questions: totalQ
+            });
+
             goToStep('choice');
         } catch (err) {
             console.error('Hazırlanmaya başlarken hata:', err);
@@ -1487,6 +1520,14 @@ function renderStudy(cardIndex) {
 
     state.studyCardIdx = cardIndex;
     const c = CARDS[cardIndex];
+
+    // GA4: kart_goruntulendi etkinliği
+    if (c && c.id) {
+        trackFenUpEvent('kart_goruntulendi', {
+            card_id: c.id
+        });
+    }
+
     const isReviewMode = (state.studyMode === 'review' && Array.isArray(state.reviewCardIds) && state.reviewCardIds.length > 0);
 
     if (isReviewMode) {
@@ -2814,6 +2855,13 @@ function renderEval() {
 
                 saveState();
 
+                // GA4: soru_degerlendirildi (Hızlı Durum)
+                trackFenUpEvent('soru_degerlendirildi', {
+                    question_id: q.id,
+                    score: 0,
+                    status: statusType === 'empty' ? 'bos' : 'yanlis'
+                });
+
                 // Yumuşak geçiş: Eğer sonraki soru varsa 300ms sonra ilerle
                 if (evalIdx < questions.length - 1) {
                     setTimeout(() => {
@@ -2860,6 +2908,14 @@ function renderEval() {
                     }
 
                     saveState();
+
+                    // GA4: soru_degerlendirildi (Kriter Seçimi)
+                    const evalStatus = newScore === qPoints ? 'tam' : (newScore > 0 ? 'kismi' : 'yanlis');
+                    trackFenUpEvent('soru_degerlendirildi', {
+                        question_id: q.id,
+                        score: newScore,
+                        status: evalStatus
+                    });
                 };
             });
         }
@@ -3671,6 +3727,11 @@ function openPrintPreview(triggerEl = null) {
     const printEl = $('exam-print-sheet');
     const modalEl = $('exam-print-preview-modal');
     if (!printEl || !modalEl) return;
+
+    // GA4: pdf_onizleme_acildi etkinliği
+    trackFenUpEvent('pdf_onizleme_acildi', {
+        senaryo: `senaryo-${scNum}`
+    });
 
     // Üst bilgi bandındaki senaryo ve soru sayısını dinamikleştir
     const subTitleEl = $('print-modal-subtitle') || modalEl.querySelector('.print-preview-title-group p');

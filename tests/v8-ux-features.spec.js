@@ -118,4 +118,91 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         const hasSavedAfter = await page.evaluate(() => window.FenUpExam.hasSavedProgress('study'));
         expect(hasSavedAfter).toBe(false);
     });
+
+    test('5. V8.1: GA4 Etiket Entegrasyonu ve Özel Etkinliklerin (trackFenUpEvent) Güvenli Çağrılması', async ({ page }) => {
+        await page.addInitScript(() => localStorage.setItem('fenupx_cookie_consent', 'accepted'));
+        await page.goto('/');
+
+        // GA4 gtag betiği ve global sarmalayıcı mevcut olmalı
+        const gaSnippetExists = await page.evaluate(() => {
+            const scripts = Array.from(document.querySelectorAll('script'));
+            const hasGtagScript = scripts.some(s => s.src && s.src.includes('googletagmanager.com/gtag/js') && s.src.includes('G-HW3RN9415Z'));
+            const hasTrackWrapper = typeof window.trackFenUpEvent === 'function';
+            return { hasGtagScript, hasTrackWrapper };
+        });
+        expect(gaSnippetExists.hasGtagScript).toBe(true);
+        expect(gaSnippetExists.hasTrackWrapper).toBe(true);
+
+        // Özel etkinliklerin çağrılmasını dinle
+        const trackedEvents = [];
+        await page.exposeFunction('mockGtagRecorder', (eventName, params) => {
+            trackedEvents.push({ eventName, params });
+        });
+        await page.evaluate(() => {
+            window.gtag = (command, eventName, params) => {
+                if (command === 'event' && window.mockGtagRecorder) {
+                    window.mockGtagRecorder(eventName, params);
+                }
+            };
+        });
+
+        // 1. senaryo_secildi testi
+        await page.locator('#btn-yazili-modulu').click();
+        await page.locator('#btn-scope-continue').click();
+        await expect(page.locator('#exam-view-choice')).toBeVisible();
+
+        const senaryoEvent = trackedEvents.find(e => e.eventName === 'senaryo_secildi');
+        expect(senaryoEvent).toBeTruthy();
+        expect(senaryoEvent.params.senaryo).toContain('senaryo');
+        expect(senaryoEvent.params.total_questions).toBeGreaterThan(0);
+
+        // 2. kart_goruntulendi testi
+        await page.locator('#btn-choice-go-study').click();
+        await expect(page.locator('#exam-view-study')).toBeVisible();
+        const kartEvent = trackedEvents.find(e => e.eventName === 'kart_goruntulendi');
+        expect(kartEvent).toBeTruthy();
+        expect(kartEvent.params.card_id).toBeTruthy();
+    });
+
+    test('6. V8.1: Kurumsal & Yasal Sekmeli Modal (Hakkımızda / Gizlilik / Çerezler / Koşullar)', async ({ page }) => {
+        await page.addInitScript(() => localStorage.setItem('fenupx_cookie_consent', 'accepted'));
+        await page.goto('/');
+
+        const legalModal = page.locator('#legal-modal');
+        await expect(legalModal).toBeHidden();
+
+        // Footer'daki "Gizlilik Politikası" butonuna tıkla
+        const btnPrivacy = page.locator('.btn-legal-open[data-legal="privacy"]').first();
+        await btnPrivacy.click();
+
+        // Modal açılmalı ve "Gizlilik & KVKK" sekmesi aktif olmalı
+        await expect(legalModal).toBeVisible();
+        await expect(page.locator('#legal-tab-privacy')).toBeVisible();
+        await expect(page.locator('#legal-tab-about')).toBeHidden();
+
+        // "Hakkımızda" sekmesine geçiş
+        await page.locator('.legal-tab-btn[data-tab="about"]').click();
+        await expect(page.locator('#legal-tab-about')).toBeVisible();
+        await expect(page.locator('#legal-tab-about')).toContainText('Bilimde Seviye Atlat: FenUp X');
+        await expect(page.locator('#legal-tab-privacy')).toBeHidden();
+
+        // "Çerez Politikası" sekmesine geçiş
+        await page.locator('.legal-tab-btn[data-tab="cookies"]').click();
+        await expect(page.locator('#legal-tab-cookies')).toBeVisible();
+        await expect(page.locator('#legal-tab-cookies')).toContainText('G-HW3RN9415Z');
+
+        // "Kullanım Koşulları" sekmesine geçiş
+        await page.locator('.legal-tab-btn[data-tab="terms"]').click();
+        await expect(page.locator('#legal-tab-terms')).toBeVisible();
+
+        // Kapatma butonu ile kapatma
+        await page.locator('#btn-close-legal-modal').click();
+        await expect(legalModal).toBeHidden();
+
+        // Tekrar aç ve ESC tuşuyla kapatmayı test et
+        await page.evaluate(() => window.openLegalModal('about'));
+        await expect(legalModal).toBeVisible();
+        await page.keyboard.press('Escape');
+        await expect(legalModal).toBeHidden();
+    });
 });
