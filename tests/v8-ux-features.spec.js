@@ -628,4 +628,120 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         expect(streakResult.streak.count).toBeGreaterThanOrEqual(1);
         expect(streakResult.hasNewton).toBe(true);
     });
+
+    test('11. V8.9.1: Öğrenci Sınıf Sistemi, 1 Eylül Terfisi, 10 Evrensel Rozet, Yönetici Profili ve Küresel Akıllı Tahta', async ({ page }) => {
+        await page.addInitScript(() => localStorage.setItem('fenupx_cookie_consent', 'accepted'));
+        await page.goto('/');
+
+        // 1. Sınıf Seçimi Alanlarının Doğrulanması (Kayıt Formu ve Profil)
+        const regGradeSelect = page.locator('#user-grade');
+        await expect(regGradeSelect).toBeAttached();
+        const optionsCount = await regGradeSelect.locator('option').count();
+        expect(optionsCount).toBeGreaterThanOrEqual(3);
+
+        // 2. 1 Eylül Otomatik Sınıf Terfisi (Auto-Promotion) Doğrulaması
+        const promotionResult = await page.evaluate(() => {
+            const mock5 = { sinif: "5", lastPromotionYear: 2025 };
+            const mock6 = { sinif: "6", lastPromotionYear: 2025 };
+            const mock7 = { sinif: "7", lastPromotionYear: 2025 };
+
+            // window.checkAnnualPromotion fonksiyonunu doğrudan çağır
+            const p5 = window.checkAnnualPromotion(mock5);
+            const p6 = window.checkAnnualPromotion(mock6);
+            const p7 = window.checkAnnualPromotion(mock7);
+
+            return { p5, p6, p7 };
+        });
+
+        expect(promotionResult.p5).toBe("6");
+        expect(promotionResult.p6).toBe("7");
+        expect(promotionResult.p7).toBe("8");
+
+        // 3. 10 Evrensel Kozmik Rozet Kataloğu Doğrulaması
+        const badgesCheck = await page.evaluate(() => {
+            const list = window.KOZMIK_ROZETLER || [];
+            const ids = list.map(b => b.id);
+            return {
+                count: list.length,
+                hasBilimUstasi: ids.includes('badge_bilim_ustasi'),
+                hasKartKasifi: ids.includes('badge_kart_kasifi'),
+                hasHizliKafa: ids.includes('badge_hizli_kafa'),
+                hasKusursuz: ids.includes('badge_kusursuz'),
+                hasEfsane: ids.includes('badge_efsane')
+            };
+        });
+
+        expect(badgesCheck.count).toBe(10);
+        expect(badgesCheck.hasBilimUstasi).toBe(true);
+        expect(badgesCheck.hasKartKasifi).toBe(true);
+        expect(badgesCheck.hasHizliKafa).toBe(true);
+        expect(badgesCheck.hasKusursuz).toBe(true);
+        expect(badgesCheck.hasEfsane).toBe(true);
+
+        // 4. Yönetici (Admin) vs Öğrenci Profil Ayrımı
+        await page.evaluate(() => {
+            const modal = document.getElementById('profile-modal');
+            const adminView = document.getElementById('profile-admin-view');
+            const studentSecs = document.getElementById('profile-student-sections');
+            if (modal && adminView && studentSecs) {
+                // Admin modunu simüle et
+                adminView.classList.remove('is-hidden');
+                adminView.style.display = 'block';
+                studentSecs.style.display = 'none';
+                modal.classList.remove('is-hidden');
+                modal.classList.add('is-open', 'active');
+                modal.style.display = 'flex';
+            }
+        });
+
+        const adminCard = page.locator('#profile-admin-view');
+        await expect(adminCard).toBeVisible();
+        await expect(adminCard.locator('#btn-profile-goto-admin')).toBeVisible();
+        await expect(page.locator('#profile-student-sections')).toBeHidden();
+
+        // Modalı kapat
+        await page.locator('#close-profile').click();
+
+        // 5. Küresel Akıllı Tahta (ETAP) Yüzen Buton ve Modal Kontrolü
+        const floatBtn = page.locator('#floating-smartboard-btn');
+        await expect(floatBtn).toBeVisible();
+
+        const smartboardModal = page.locator('#smartboard-modal');
+        await expect(smartboardModal).toBeAttached();
+
+        // Butona tıkla ve Akıllı Tahtayı Aç
+        await floatBtn.click();
+        await expect(smartboardModal).toBeVisible();
+
+        const canvas = smartboardModal.locator('#smartboard-canvas');
+        await expect(canvas).toBeVisible();
+
+        // Beyaz ve Koyu Tahta Mod Geçişleri
+        const btnWhite = smartboardModal.locator('#sb-mode-white');
+        const btnDark = smartboardModal.locator('#sb-mode-dark');
+        await expect(btnWhite).toBeVisible();
+        await expect(btnDark).toBeVisible();
+
+        await btnDark.click();
+        await expect(btnDark).toHaveClass(/active/);
+        await expect(smartboardModal.locator('.smartboard-canvas-container')).toHaveClass(/mode-dark/);
+
+        await btnWhite.click();
+        await expect(btnWhite).toHaveClass(/active/);
+        await expect(smartboardModal.locator('.smartboard-canvas-container')).toHaveClass(/mode-white/);
+
+        // Tam Ekran (Fullscreen) Geçişi
+        const btnFs = smartboardModal.locator('#sb-btn-fullscreen');
+        await expect(btnFs).toBeVisible();
+        await btnFs.click();
+        await expect(smartboardModal.locator('.smartboard-dialog')).toHaveClass(/is-fullscreen/);
+        await btnFs.click();
+        await expect(smartboardModal.locator('.smartboard-dialog')).not.toHaveClass(/is-fullscreen/);
+
+        // Kapat Butonu
+        const btnCloseSb = smartboardModal.locator('#sb-btn-close');
+        await expect(btnCloseSb).toBeVisible();
+        await btnCloseSb.click();
+        await expect(smartboardModal).toBeHidden();
+    });
 });

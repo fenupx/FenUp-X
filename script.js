@@ -2167,11 +2167,21 @@ document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = function()
             if(scDisplay) scDisplay.textContent = quizState.score;
 
             setTimeout(() => { 
+                // V8.9.1: Hızlı Kafa ve Kusursuz Seri Rozetleri
+                const curSettings = getSettings(quizState.index);
+                const timeSpent = curSettings.time - (quizState.currentTimeLeft || 0);
+                if (timeSpent < 10) {
+                    unlockBadge('badge_hizli_kafa');
+                }
                 if (quizState.index >= 8) {
                     unlockBadge('badge_karadelik');
                 }
                 if (quizState.score >= 500) {
+                    unlockBadge('badge_efsane');
                     unlockBadge('badge_fenup_efsanesi');
+                }
+                if (quizState.index === 9) {
+                    unlockBadge('badge_kusursuz');
                 }
                 if (typeof checkAndUpdateStreak === 'function') {
                     checkAndUpdateStreak();
@@ -2248,7 +2258,13 @@ async function finishIndividual(msg) {
 
                 let updates = { dailyTracker: dailyTracker };
 
-                if (scoreDiff > 0) {
+                // V8.9.1: ADİL LİDERLİK TABLOSU İZOLASYONU (RANKING GUARD)
+                // Öğrenci farklı bir sınıfın sorularını antrenman için çözebilir;
+                // ancak yalnızca kendi kayıtlı olduğu sınıfın liderlik tablosuna puan yazılır:
+                const userGrade = userData.sinif ? String(userData.sinif) : null;
+                const isOwnGrade = !userGrade || String(selectedGrade) === userGrade;
+
+                if (scoreDiff > 0 && isOwnGrade) {
                     updates.totalScore = (userData.totalScore || 0) + scoreDiff;
                     updates[`totalScore${gradeSuffix}`] = (userData[`totalScore${gradeSuffix}`] || 0) + scoreDiff;
 
@@ -2272,6 +2288,8 @@ async function finishIndividual(msg) {
                         updates[`seasonScore${gradeSuffix}`] = scoreDiff;
                         updates[`lastSeasonId${gradeSuffix}`] = currentSeason;
                     }
+                } else if (scoreDiff > 0 && !isOwnGrade) {
+                    console.log(`[Ranking Guard] Öğrencinin sınıfı (${userGrade}), çözülen sınıf (${selectedGrade}) ile eşleşmediği için liderlik tablosuna puan yazılmadı. Yerel skor korundu.`);
                 }
 
                 await updateDoc(userRef, updates);
@@ -3189,6 +3207,14 @@ if (studentPane) {
                 </div>
                 <small class="auth-field-hint">Şampiyonlar Ligi liderlik tablosunda görünecek yarışmacı adın (Örn: Cesur Proton).</small>
             </div>
+            <div class="auth-field-group">
+                <label for="user-grade" class="auth-label">Sınıfın</label>
+                <select id="user-grade" class="fenupx-input auth-input reg-grade" name="grade">
+                    <option value="5">5. Sınıf</option>
+                    <option value="6">6. Sınıf</option>
+                    <option value="7" selected>7. Sınıf</option>
+                </select>
+            </div>
         </div>
         
         <div class="auth-field-group">
@@ -3328,9 +3354,15 @@ export function checkAndUpdateStreak() {
         localStorage.setItem('fenupx_streak_data', JSON.stringify(updated));
         updateStreakUI(count);
 
-        // Rozet kontrolleri
-        if (count >= 3) unlockBadge('badge_ates_serisi');
-        if (count >= 7) unlockBadge('badge_super_seri');
+        // Rozet kontrolleri (V8.9.1: Evrensel Rozetler)
+        if (count >= 3) {
+            unlockBadge('badge_seri_3');
+            unlockBadge('badge_ates_serisi');
+        }
+        if (count >= 7) {
+            unlockBadge('badge_seri_7');
+            unlockBadge('badge_super_seri');
+        }
 
         return updated;
     } catch (e) {
@@ -3354,76 +3386,78 @@ export function updateStreakUI(count) {
     }
 }
 
-// 10 Adet Kozmik Başarı Rozeti Tanımı
+// ==========================================================================
+// V8.9.1: 10 EVRENSEL KOZMİK BAŞARI ROZETİ TANIMI (TÜM SINIF DÜZEYLERİNE UYGUN)
+// ==========================================================================
 export const KOZMIK_ROZETLER = [
     {
         id: 'badge_ilk_adim',
         title: 'İlk Kâşif',
         icon: '🌟',
-        desc: 'Sitede ilk kez bir profil oluşturup avatar seçene.',
-        condition: 'Profil oluşturup avatar seç'
+        desc: 'Profilini oluşturup ilk avatarını seçen herkese.',
+        condition: 'Profilini oluşturup avatar seç'
     },
     {
-        id: 'badge_newton',
-        title: 'Küçük Newton',
-        icon: '🍎',
-        desc: 'Kuvvet, İş ve Enerji ünitesinde tam puanlık soru çözene.',
-        condition: 'Kuvvet ve Enerji sorularında tam puan al'
-    },
-    {
-        id: 'badge_galileo',
-        title: "Galileo'nun Çırağı",
-        icon: '🔭',
-        desc: 'Uzay Çağı ünitesindeki 6 çalışma kartını inceleyene.',
-        condition: 'Uzay Çağı ünitesindeki 6 kartı incele'
-    },
-    {
-        id: 'badge_modelci',
-        title: 'Uzay Mühendisi',
-        icon: '🛰️',
-        desc: 'FB.7.1.2 Uzay gözlem araçları modelleme sorularından tam puan alana.',
-        condition: 'FB.7.1.2 modelleme sorularında tam puan al'
+        id: 'badge_bilim_ustasi',
+        title: 'Fen Dehası',
+        icon: '💡',
+        desc: 'Kendi sınıfındaki herhangi bir yazılı provasında 85+ alan herkese.',
+        condition: 'Yazılı provasında 85 ve üzeri puan al'
     },
     {
         id: 'badge_laboratuvar',
         title: 'Sanal Simyacı',
         icon: '🧪',
-        desc: 'Sanal laboratuvarda en az 3 deney yapıp gözlem defterine kaydedene.',
+        desc: 'Sanal laboratuvarda herhangi 3 deneyi yapıp gözlem defterine kaydedene.',
         condition: 'Laboratuvarda 3 deney gözlemi kaydet'
     },
     {
         id: 'badge_karadelik',
         title: 'Kara Delik Avcısı',
         icon: '🕳️',
-        desc: 'Şampiyonlar Ligi yarışmasında Kara Delik riskini başarıyla geçene.',
+        desc: "Şampiyonlar Ligi'nde Kara Delik riskini göze alıp elenmeden doğru yanıtlayana.",
         condition: 'Şampiyonlar Ligi Kara Delik aşamasını başarıyla geç'
     },
     {
-        id: 'badge_prova_ustasi',
-        title: 'Yazılı Ustası',
-        icon: '📝',
-        desc: 'İlk OYSS yazılı provasını tamamlayana.',
-        condition: 'İlk OYSS yazılı provasını tamamla'
+        id: 'badge_kart_kasifi',
+        title: 'Bilgi Avcısı',
+        icon: '📚',
+        desc: 'Kendi sınıfının ünitelerindeki en az 10 çalışma kartını inceleyene.',
+        condition: 'En az 10 çalışma kartını incele'
     },
     {
-        id: 'badge_ates_serisi',
+        id: 'badge_seri_3',
         title: 'Kozmik Kıvılcım',
         icon: '🔥',
-        desc: '3 günlük seri (streak) yakalayana.',
+        desc: '3 gün üst üste siteye girip en az bir aktivite tamamlayana.',
         condition: '3 günlük çalışma serisi yakala'
     },
     {
-        id: 'badge_super_seri',
+        id: 'badge_seri_7',
         title: 'Sönmeyen Yıldız',
         icon: '⚡',
-        desc: '7 günlük seri (streak) yakalayana.',
+        desc: '7 günlük kesintisiz günlük seri yakalayana.',
         condition: '7 günlük çalışma serisi yakala'
     },
     {
-        id: 'badge_fenup_efsanesi',
-        title: 'FenUp Şampiyonu',
+        id: 'badge_hizli_kafa',
+        title: 'Işık Hızı',
+        icon: '⏱️',
+        desc: "Şampiyonlar Ligi'nde bir soruyu 10 saniyenin altında doğru bilene.",
+        condition: 'Bir soruyu 10 saniyenin altında doğru yanıtla'
+    },
+    {
+        id: 'badge_kusursuz',
+        title: 'Kusursuz Seri',
+        icon: '🎯',
+        desc: "Şampiyonlar Ligi'nde tek yarışmada 10'da 10 tam doğru yapana.",
+        condition: 'Tek yarışmada 10/10 tam doğru yap'
+    },
+    {
+        id: 'badge_efsane',
+        title: 'Kozmik Şampiyon',
         icon: '🏆',
-        desc: '500 toplam kâşif puanına ulaşana.',
+        desc: 'Toplamda 500 kâşif puanına ulaşan her öğrenciye.',
         condition: '500 toplam kâşif puanına ulaş'
     }
 ];
@@ -3439,14 +3473,35 @@ export function getEarnedBadges() {
     return [];
 }
 
+const BADGE_ALIASES = {
+    'badge_newton': 'badge_bilim_ustasi',
+    'badge_prova_ustasi': 'badge_bilim_ustasi',
+    'badge_galileo': 'badge_kart_kasifi',
+    'badge_modelci': 'badge_kart_kasifi',
+    'badge_ates_serisi': 'badge_seri_3',
+    'badge_super_seri': 'badge_seri_7',
+    'badge_fenup_efsanesi': 'badge_efsane'
+};
+
 export function unlockBadge(badgeId) {
     try {
+        const targetId = BADGE_ALIASES[badgeId] || badgeId;
         const earned = getEarnedBadges();
-        if (!earned.includes(badgeId)) {
+        let updated = false;
+
+        if (!earned.includes(targetId)) {
+            earned.push(targetId);
+            updated = true;
+        }
+        if (badgeId !== targetId && !earned.includes(badgeId)) {
             earned.push(badgeId);
+            updated = true;
+        }
+
+        if (updated) {
             localStorage.setItem('fenupx_badges', JSON.stringify(earned));
             renderBadgesShowcase();
-            const badge = KOZMIK_ROZETLER.find(b => b.id === badgeId);
+            const badge = KOZMIK_ROZETLER.find(b => b.id === targetId) || KOZMIK_ROZETLER.find(b => b.id === badgeId);
             if (badge) {
                 showBadgeEarnedToast(badge);
             }
@@ -3481,6 +3536,69 @@ function showBadgeEarnedToast(badge) {
     }, 4000);
 }
 
+// 1 Eylül Otomatik Sınıf Terfisi (Auto-Promotion)
+export function checkAnnualPromotion(user) {
+    if (!user) return null;
+    try {
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth(); // 0-based: 8 is September
+        const lastYear = user.lastPromotionYear ? parseInt(user.lastPromotionYear, 10) : (currentYear - 1);
+
+        if (currentMonth >= 8 && lastYear < currentYear) {
+            const currentGrade = String(user.sinif || "7");
+            let upgraded = false;
+            let newGrade = currentGrade;
+
+            if (currentGrade === "5") {
+                newGrade = "6";
+                upgraded = true;
+            } else if (currentGrade === "6") {
+                newGrade = "7";
+                upgraded = true;
+            } else if (currentGrade === "7") {
+                newGrade = "8";
+                upgraded = true;
+            }
+
+            if (upgraded) {
+                user.sinif = newGrade;
+                user.lastPromotionYear = currentYear;
+                try {
+                    localStorage.setItem('fenupx_user_grade', newGrade);
+                    const rawCu = localStorage.getItem('currentUser');
+                    if (rawCu) {
+                        const cu = JSON.parse(rawCu);
+                        cu.sinif = newGrade;
+                        cu.lastPromotionYear = currentYear;
+                        localStorage.setItem('currentUser', JSON.stringify(cu));
+                    }
+                } catch (_) {}
+
+                if (auth && auth.currentUser) {
+                    try {
+                        updateDoc(doc(db, "users", auth.currentUser.uid), {
+                            sinif: newGrade,
+                            lastPromotionYear: currentYear
+                        }).catch(() => {});
+                    } catch (_) {}
+                }
+
+                showBadgeEarnedToast({
+                    icon: "🎓",
+                    title: "Tebrikler!",
+                    desc: "Yeni eğitim öğretim yılında sınıfın güncellendi 🎓",
+                    condition: `${newGrade}. Sınıf Kâşifi`
+                });
+                return newGrade;
+            }
+        }
+    } catch (e) {
+        console.warn('Otomatik sınıf terfi hatası:', e);
+    }
+    return user.sinif || "7";
+}
+
 export function evaluateBadges() {
     try {
         const cachedAv = localStorage.getItem('fenupx_user_avatar');
@@ -3489,25 +3607,66 @@ export function evaluateBadges() {
         }
 
         const streak = getStreakData();
-        if (streak.count >= 3) unlockBadge('badge_ates_serisi');
-        if (streak.count >= 7) unlockBadge('badge_super_seri');
+        if (streak.count >= 3) {
+            unlockBadge('badge_seri_3');
+            unlockBadge('badge_ates_serisi');
+        }
+        if (streak.count >= 7) {
+            unlockBadge('badge_seri_7');
+            unlockBadge('badge_super_seri');
+        }
 
         const labCount = parseInt(localStorage.getItem('fenupx_lab_obs_count') || '0', 10);
         if (labCount >= 3) unlockBadge('badge_laboratuvar');
 
-        let viewedSpaceCards = [];
+        // Çalışma kartları inceleme (badge_kart_kasifi)
         try {
-            const rawCards = localStorage.getItem('fenupx_viewed_space_cards');
-            if (rawCards) viewedSpaceCards = JSON.parse(rawCards);
+            let totalViewed = 0;
+            const rawCards = localStorage.getItem('fenupx_viewed_cards');
+            if (rawCards) {
+                const arr = JSON.parse(rawCards);
+                if (Array.isArray(arr)) totalViewed = arr.length;
+            }
+            const rawSpace = localStorage.getItem('fenupx_viewed_space_cards');
+            if (rawSpace) {
+                const arrSpace = JSON.parse(rawSpace);
+                if (Array.isArray(arrSpace)) totalViewed = Math.max(totalViewed, arrSpace.length);
+            }
+            if (totalViewed >= 10 || totalViewed >= 6) {
+                unlockBadge('badge_kart_kasifi');
+            }
         } catch (_) {}
-        if (viewedSpaceCards.length >= 6) unlockBadge('badge_galileo');
 
+        // 85+ Yazılı Prova Skoru (badge_bilim_ustasi)
         try {
+            const rawSummary = localStorage.getItem('fenupx_last_exam_summary');
+            if (rawSummary) {
+                const sum = JSON.parse(rawSummary);
+                if (sum && typeof sum.score === 'number' && sum.score >= 85) {
+                    unlockBadge('badge_bilim_ustasi');
+                }
+            }
             const examStateRaw = localStorage.getItem('fenupx_exam_pilot_v1');
             if (examStateRaw) {
                 const es = JSON.parse(examStateRaw);
                 if (es && es.attempt && (es.attempt.finished || es.attempt.scores)) {
                     unlockBadge('badge_prova_ustasi');
+                    if (es.attempt.scores) {
+                        const totalSc = Object.values(es.attempt.scores).reduce((a, b) => a + (Number(b) || 0), 0);
+                        if (totalSc >= 85) unlockBadge('badge_bilim_ustasi');
+                    }
+                }
+            }
+        } catch (_) {}
+
+        // 500 Toplam Kâşif Puanı (badge_efsane)
+        try {
+            const rawCu = localStorage.getItem('currentUser');
+            if (rawCu) {
+                const cu = JSON.parse(rawCu);
+                if (cu && cu.totalScore >= 500) {
+                    unlockBadge('badge_efsane');
+                    unlockBadge('badge_fenup_efsanesi');
                 }
             }
         } catch (_) {}
@@ -3669,7 +3828,7 @@ profileModal.innerHTML = `
             <div class="profile-hero-meta">
                 <h3 id="profile-display-fullname" class="profile-hero-name">Kâşif Öğrenci</h3>
                 <div class="profile-hero-sub">
-                    <span id="profile-display-role-tag" class="profile-role-badge">⭐ Fen Kâşifi</span>
+                    <span id="profile-display-role-tag" class="profile-role-badge">⭐ Fen Kâşifi · 7. Sınıf</span>
                     <span class="profile-streak-badge">🔥 <span id="profile-streak-count">1</span> Günlük Seri</span>
                 </div>
                 <button id="btn-open-avatar-selector" class="f-btn f-btn-ikinci" style="font-size:0.8rem; padding:5px 12px; margin-top:6px;">
@@ -3690,44 +3849,60 @@ profileModal.innerHTML = `
             <div class="avatar-grid" id="avatar-selector"></div>
         </div>
 
-        <!-- 2. ORTA KISIM: 10 ADET KOZMİK BAŞARI ROZETİ VİTRİNİ (5x2 IZGARA) -->
-        <div class="profile-badges-section">
-            <div class="profile-section-title-bar">
-                <h4><i class="fas fa-medal"></i> Kozmik Başarı Rozetleri</h4>
-                <span class="profile-badge-counter" id="profile-badge-counter">0 / 10 Kazanıldı</span>
-            </div>
-            <div class="cosmic-badges-grid" id="cosmic-badges-grid">
-                <!-- 10 Rozet Dinamik Render Edilir -->
+        <!-- Yönetici (Admin) Sade Görünümü (V8.9.1) -->
+        <div id="profile-admin-view" class="profile-admin-view is-hidden" style="display:none;">
+            <div class="admin-profile-hero">
+                <div class="admin-profile-badge-icon">👑</div>
+                <h3 id="admin-display-fullname" style="color: #fbbf24; font-size: 1.3rem; margin: 4px 0;">Fen Bilimleri Öğretmeni / Yönetici</h3>
+                <p class="admin-title-badge">FenUp X Sistem Yöneticisi</p>
+                <p class="admin-school-badge"><i class="fas fa-school"></i> FenUp X Bilim Okulları · Yönetim</p>
+                <button type="button" id="btn-profile-goto-admin" class="f-btn f-btn-ana" style="margin-top: 15px; width: 100%;">
+                    <i class="fas fa-tools"></i> 🛠️ Yönetim Paneline Git
+                </button>
             </div>
         </div>
 
-        <!-- 3. ALT KISIM: KAZANIM DURUMU & ÇALIŞMA KARNESİ -->
-        <div class="profile-karne-section">
-            <div class="profile-section-title-bar">
-                <h4><i class="fas fa-graduation-cap"></i> 7. Sınıf Eksik Kazanım Karnesi</h4>
-                <span class="profile-karne-badge" id="profile-karne-status">Güncel Durum</span>
-            </div>
-            <div class="profile-karne-grid">
-                <div class="karne-stat-card">
-                    <span class="stat-label">Son Yazılı Provası</span>
-                    <span class="stat-val" id="karne-last-score">— / 100</span>
-                    <small class="stat-sub" id="karne-last-date">Henüz prova çözülmedi</small>
+        <!-- Öğrenciye Özel Rozet ve Karne Bölümleri (Admin Girişinde Gizlenir) -->
+        <div id="profile-student-sections" class="profile-student-sections">
+            <!-- 2. ORTA KISIM: 10 ADET EVRENSEL KOZMİK BAŞARI ROZETİ VİTRİNİ (5x2 IZGARA) -->
+            <div class="profile-badges-section">
+                <div class="profile-section-title-bar">
+                    <h4><i class="fas fa-medal"></i> Kozmik Başarı Rozetleri</h4>
+                    <span class="profile-badge-counter" id="profile-badge-counter">0 / 10 Kazanıldı</span>
                 </div>
-                <div class="karne-stat-card">
-                    <span class="stat-label">Güneş Sistemi & Uzay</span>
-                    <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-space" style="width: 0%;"></div></div>
-                    <small class="stat-sub" id="karne-sub-space">İnceleme: 0/6 Kart</small>
-                </div>
-                <div class="karne-stat-card">
-                    <span class="stat-label">Kuvvet, İş ve Enerji</span>
-                    <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-force" style="width: 0%;"></div></div>
-                    <small class="stat-sub" id="karne-sub-force">Kazanım: Başlangıç</small>
+                <div class="cosmic-badges-grid" id="cosmic-badges-grid">
+                    <!-- 10 Rozet Dinamik Render Edilir -->
                 </div>
             </div>
-            <div class="karne-outcome-details" id="karne-outcome-details">
-                <div class="karne-outcome-item">
-                    <i class="fas fa-info-circle" style="color: var(--neon-blue);"></i> 
-                    <span>Kazanım eksiklerini tamamlamak için yazılı provasında öz değerlendirme yapabilirsin.</span>
+
+            <!-- 3. ALT KISIM: KAZANIM DURUMU & ÇALIŞMA KARNESİ -->
+            <div class="profile-karne-section">
+                <div class="profile-section-title-bar">
+                    <h4><i class="fas fa-graduation-cap"></i> 7. Sınıf Eksik Kazanım Karnesi</h4>
+                    <span class="profile-karne-badge" id="profile-karne-status">Güncel Durum</span>
+                </div>
+                <div class="profile-karne-grid">
+                    <div class="karne-stat-card">
+                        <span class="stat-label">Son Yazılı Provası</span>
+                        <span class="stat-val" id="karne-last-score">— / 100</span>
+                        <small class="stat-sub" id="karne-last-date">Henüz prova çözülmedi</small>
+                    </div>
+                    <div class="karne-stat-card">
+                        <span class="stat-label">Güneş Sistemi & Uzay</span>
+                        <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-space" style="width: 0%;"></div></div>
+                        <small class="stat-sub" id="karne-sub-space">İnceleme: 0/6 Kart</small>
+                    </div>
+                    <div class="karne-stat-card">
+                        <span class="stat-label">Kuvvet, İş ve Enerji</span>
+                        <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-force" style="width: 0%;"></div></div>
+                        <small class="stat-sub" id="karne-sub-force">Kazanım: Başlangıç</small>
+                    </div>
+                </div>
+                <div class="karne-outcome-details" id="karne-outcome-details">
+                    <div class="karne-outcome-item">
+                        <i class="fas fa-info-circle" style="color: var(--neon-blue);"></i> 
+                        <span>Kazanım eksiklerini tamamlamak için yazılı provasında öz değerlendirme yapabilirsin.</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3763,6 +3938,15 @@ profileModal.innerHTML = `
                         <span class="tooltiptext"><i class="fas fa-exclamation-triangle" style="margin-right:5px;"></i> Kırıcı veya argo isim kullanan hesaplar tablodan kalıcı olarak silinir.</span>
                     </div>
                 </div>
+                <div class="auth-field-group">
+                    <label for="profile-grade" class="auth-label">Sınıfın</label>
+                    <select id="profile-grade" class="fenupx-input auth-input">
+                        <option value="5">5. Sınıf</option>
+                        <option value="6">6. Sınıf</option>
+                        <option value="7" selected>7. Sınıf</option>
+                        <option value="8">8. Sınıf (Mezun Kâşif)</option>
+                    </select>
+                </div>
                 
                 <button id="btn-save-profile" class="f-btn f-btn-ana" style="width:100%; margin-top:5px;">GÜNCELLE</button>
                 <button id="btn-delete-account" class="f-btn btn-danger" style="width:100%; margin-top:15px; padding: 12px; font-size:1rem;">Hesabımı Kalıcı Olarak Sil</button>
@@ -3784,6 +3968,19 @@ profileModal.innerHTML = `
     </div>
 `;
 document.body.appendChild(profileModal);
+
+const btnProfGotoAdmin = document.getElementById('btn-profile-goto-admin');
+if (btnProfGotoAdmin) {
+    btnProfGotoAdmin.onclick = () => {
+        resetDeleteAccountBox();
+        hideModal(profileModal);
+        const adminModal = document.getElementById('admin-modal');
+        if (adminModal) {
+            showModal(adminModal);
+            if (typeof loadAdminUsers === 'function') loadAdminUsers();
+        }
+    };
+}
 
 const btnOpenAvatar = document.getElementById('btn-open-avatar-selector');
 if(btnOpenAvatar) {
@@ -3899,16 +4096,69 @@ onAuthStateChanged(auth, async (user) => {
             const aItem = document.querySelector(`.avatar-item[data-url="${userAvatar}"]`);
             if(aItem) aItem.classList.add('selected');
 
-            // V8.9: Profil hero kartı bilgilerini güncelle
+            // V8.9.1: 1 Eylül Otomatik Sınıf Terfisi ve Sınıf Bilgisini Senkronize Et
+            checkAnnualPromotion(userData);
+            const userGrade = userData.sinif || "7";
+            localStorage.setItem('fenupx_user_grade', userGrade);
+            try {
+                const cu = { name: userData.name, surname: userData.surname, nickname: userData.nickname, email: userData.email, role: userData.role, sinif: userGrade };
+                localStorage.setItem('currentUser', JSON.stringify(cu));
+            } catch (_) {}
+
+            const pGrade = document.getElementById('profile-grade');
+            if (pGrade && userData.sinif) pGrade.value = userData.sinif;
+
+            const isAdmin = userData.role === 'admin';
+
+            // V8.9.1: Header Rozet / Streak Yönetimi (Admin sade gösterim)
+            const hStreakBadge = document.getElementById('header-streak-badge');
+            if (hStreakBadge) {
+                if (isAdmin) {
+                    hStreakBadge.innerHTML = '👑 <span id="header-streak-count">Yönetici</span>';
+                    hStreakBadge.classList.add('admin-streak-badge');
+                } else {
+                    hStreakBadge.classList.remove('admin-streak-badge');
+                    updateStreakUI();
+                }
+            }
+
+            // V8.9.1: Profil Modalında Yönetici / Öğrenci Görünüm Ayrımı
             const profHeroName = document.getElementById('profile-display-fullname');
             if (profHeroName) profHeroName.textContent = fullAd;
             const profHeroRole = document.getElementById('profile-display-role-tag');
-            if (profHeroRole) profHeroRole.textContent = userData.role === 'admin' ? '👑 Sistem Yöneticisi' : '⭐ Fen Kâşifi · 7. Sınıf';
+            const studentSecs = document.getElementById('profile-student-sections');
+            const adminView = document.getElementById('profile-admin-view');
+            const pStreakBadge = document.querySelector('.profile-streak-badge');
+            const pLevelBadge = document.getElementById('profile-level-badge');
 
-            evaluateBadges();
-            updateStreakUI();
-            renderBadgesShowcase();
-            renderKarneSummary();
+            if (isAdmin) {
+                if (studentSecs) studentSecs.style.display = 'none';
+                if (adminView) {
+                    adminView.classList.remove('is-hidden');
+                    adminView.style.display = 'block';
+                }
+                if (pStreakBadge) pStreakBadge.style.display = 'none';
+                if (pLevelBadge) pLevelBadge.textContent = '👑 Yönetici';
+                if (profHeroRole) profHeroRole.textContent = '👑 Fen Bilimleri Öğretmeni / Yönetici';
+            } else {
+                if (adminView) {
+                    adminView.classList.add('is-hidden');
+                    adminView.style.display = 'none';
+                }
+                if (studentSecs) studentSecs.style.display = 'block';
+                if (pStreakBadge) pStreakBadge.style.display = 'inline-flex';
+                if (profHeroRole) profHeroRole.textContent = `⭐ Fen Kâşifi · ${userGrade}. Sınıf`;
+
+                const karneTitle = document.querySelector('.profile-karne-section .profile-section-title-bar h4');
+                if (karneTitle) {
+                    karneTitle.innerHTML = `<i class="fas fa-graduation-cap"></i> ${userGrade}. Sınıf Eksik Kazanım Karnesi`;
+                }
+
+                evaluateBadges();
+                updateStreakUI();
+                renderBadgesShowcase();
+                renderKarneSummary();
+            }
 
             const lbg = document.getElementById('lb-guest-promo'); if(lbg) lbg.classList.add('is-hidden');
             const lbu = document.getElementById('lb-user-rank'); if(lbu) lbu.classList.remove('is-hidden');
@@ -4236,11 +4486,13 @@ if(btnSaveProf) {
         const pSur = document.getElementById('p-surname');
         const pNick = document.getElementById('p-nickname');
         const pca = document.getElementById('p-current-avatar');
+        const pGrade = document.getElementById('profile-grade');
         
         const name = pName ? pName.value.trim() : '';
         const surname = pSur ? pSur.value.trim() : '';
         const nickname = pNick ? pNick.value.trim() : '';
         const avatar = pca ? pca.src : '';
+        const sinif = pGrade ? pGrade.value : "7";
 
         if(!name || !surname || !nickname) return alert("Ad, soyad ve yarışmacı adı alanları boş bırakılamaz.");
         
@@ -4260,7 +4512,14 @@ if(btnSaveProf) {
             checkAndUpdateStreak();
             const profHeroName = document.getElementById('profile-display-fullname');
             if (profHeroName && name) profHeroName.textContent = `${name} ${surname}`;
-            await updateDoc(doc(db, "users", user.uid), { name, surname, nickname, avatar });
+            await updateDoc(doc(db, "users", user.uid), { name, surname, nickname, avatar, sinif });
+            localStorage.setItem('fenupx_user_grade', sinif);
+            try {
+                const rawCu = localStorage.getItem('currentUser');
+                const cu = rawCu ? JSON.parse(rawCu) : {};
+                cu.name = name; cu.surname = surname; cu.nickname = nickname; cu.avatar = avatar; cu.sinif = sinif;
+                localStorage.setItem('currentUser', JSON.stringify(cu));
+            } catch (_) {}
             alert("Profilin başarıyla güncellendi kaptan!");
             location.reload();
         } catch(err) {
@@ -4408,6 +4667,9 @@ if(btnStuSub) {
                 if(pass !== passConfirm) return alert("Şifreler eşleşmiyor! Lütfen kontrol edin.");
                 if(!uygunIsimMi(fName) || !uygunIsimMi(lName) || !uygunIsimMi(nick)) return alert("Uygunsuz kelime kullanımı tespit edildi. Sistem kuralları gereği üyeliğiniz reddedildi. Lütfen küfür veya argo içermeyen isimler kullanın.");
                 
+                const uGradeEl = document.getElementById('user-grade') || document.getElementById('reg-grade');
+                const userSinif = uGradeEl ? uGradeEl.value : "7";
+
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
                 try {
                     await sendEmailVerification(cred.user);
@@ -4415,8 +4677,13 @@ if(btnStuSub) {
                     console.warn("Doğrulama e-postası gönderilemedi:", verifyErr);
                 }
                 await setDoc(doc(db, "users", cred.user.uid), {
-                    name: fName, surname: lName, nickname: nick, email: email, role: "student", totalScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
+                    name: fName, surname: lName, nickname: nick, email: email, role: "student", sinif: userSinif, totalScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
                 });
+                localStorage.setItem('fenupx_user_grade', userSinif);
+                try {
+                    const cu = { name: fName, surname: lName, nickname: nick, email: email, role: "student", sinif: userSinif };
+                    localStorage.setItem('currentUser', JSON.stringify(cu));
+                } catch (_) {}
                 updateEmailVerifyBox(cred.user);
                 hideModal(authModal);
                 alert("Hesabınız oluşturuldu! E-posta adresinize bir doğrulama bağlantısı gönderdik. Hemen yarışmaya başlayabilirsiniz; puanlarınızın Şampiyonlar Ligi liderlik tablosuna kaydedilmesi için e-postanızı doğrulamanız yeterlidir.");
@@ -4444,10 +4711,17 @@ if(btnGoogleLog) {
                 const nameParts = gName.split(' ');
                 const firstName = nameParts[0];
                 const lastName = nameParts.slice(1).join(' ') || "X";
+                const gGradeEl = document.getElementById('google-user-grade') || document.getElementById('user-grade');
+                const gSinif = gGradeEl ? gGradeEl.value : "7";
                 
                 await setDoc(doc(db, "users", result.user.uid), {
-                    name: firstName, surname: lastName, nickname: gName, email: result.user.email, role: "student", totalScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
+                    name: firstName, surname: lastName, nickname: gName, email: result.user.email, role: "student", sinif: gSinif, totalScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
                 });
+                localStorage.setItem('fenupx_user_grade', gSinif);
+                try {
+                    const cu = { name: firstName, surname: lastName, nickname: gName, email: result.user.email, role: "student", sinif: gSinif };
+                    localStorage.setItem('currentUser', JSON.stringify(cu));
+                } catch (_) {}
                 
                 sessionStorage.removeItem('google_auth_in_progress');
                 location.reload();
@@ -5005,3 +5279,325 @@ try {
     renderBadgesShowcase();
     renderKarneSummary();
 } catch (_) {}
+
+// ==========================================================================
+// V8.9.1: KÜRESEL AKILLI TAHTA (ETAP) TAM EKRAN ÇİZİM TAHTASI MODÜLÜ
+// ==========================================================================
+let globalSmartboardState = {
+    isOpen: false,
+    isFullscreen: false,
+    mode: 'white',
+    color: '#2d3436',
+    size: 4,
+    isEraser: false,
+    isDrawing: false,
+    lastX: 0,
+    lastY: 0
+};
+
+export function toggleGlobalSmartboard(forceOpen) {
+    const modal = document.getElementById('smartboard-modal');
+    const floatBtn = document.getElementById('floating-smartboard-btn');
+    if (!modal) return;
+
+    const shouldOpen = (typeof forceOpen === 'boolean') 
+        ? forceOpen 
+        : (modal.classList.contains('is-hidden') || modal.style.display === 'none');
+
+    if (shouldOpen) {
+        modal.classList.remove('is-hidden');
+        modal.style.display = 'flex';
+        globalSmartboardState.isOpen = true;
+        if (floatBtn) floatBtn.classList.add('active');
+        resizeGlobalSmartboardCanvas();
+    } else {
+        modal.classList.add('is-hidden');
+        modal.style.display = 'none';
+        globalSmartboardState.isOpen = false;
+        if (floatBtn) floatBtn.classList.remove('active');
+    }
+}
+
+export function openSmartboard() { toggleGlobalSmartboard(true); }
+export function closeSmartboard() { toggleGlobalSmartboard(false); }
+
+function resizeGlobalSmartboardCanvas() {
+    const canvas = document.getElementById('smartboard-canvas');
+    if (!canvas) return;
+    const container = document.getElementById('sb-canvas-container');
+    if (!container) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const newWidth = container.clientWidth || 850;
+    const newHeight = container.clientHeight || 450;
+
+    let tempCanvas = null;
+    if (canvas.width > 0 && canvas.height > 0) {
+        tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        const tCtx = tempCanvas.getContext('2d');
+        if (tCtx) tCtx.drawImage(canvas, 0, 0);
+    }
+
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+
+    const bg = globalSmartboardState.mode === 'dark' ? '#1e293b' : '#ffffff';
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (tempCanvas) {
+        ctx.drawImage(tempCanvas, 0, 0);
+    }
+}
+
+function updateSmartboardPalette() {
+    const palette = document.getElementById('sb-color-palette');
+    if (!palette) return;
+
+    const isWhite = globalSmartboardState.mode === 'white';
+    const colors = isWhite 
+        ? [
+            { color: '#2d3436', title: 'Siyah' },
+            { color: '#e74c3c', title: 'Kırmızı' },
+            { color: '#0984e3', title: 'Mavi' },
+            { color: 'rgba(253, 203, 110, 0.7)', title: 'Floresan Fosforlu Sarı' }
+          ]
+        : [
+            { color: '#ffffff', title: 'Beyaz' },
+            { color: '#facc15', title: 'Neon Sarı' },
+            { color: '#38bdf8', title: 'Neon Mavi' },
+            { color: 'rgba(74, 222, 128, 0.7)', title: 'Neon Fosforlu Yeşil' }
+          ];
+
+    globalSmartboardState.color = colors[0].color;
+    globalSmartboardState.isEraser = false;
+
+    palette.innerHTML = `
+        <span class="sb-group-label"><i class="fas fa-palette"></i> Renk:</span>
+        ${colors.map((c, i) => `
+            <button type="button" class="sb-color-btn ${i === 0 ? 'active' : ''}" data-color="${c.color}" style="background:${c.color};" title="${c.title}"></button>
+        `).join('')}
+    `;
+
+    palette.querySelectorAll('.sb-color-btn').forEach(btn => {
+        btn.onclick = () => {
+            palette.querySelectorAll('.sb-color-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            globalSmartboardState.color = btn.dataset.color;
+            globalSmartboardState.isEraser = false;
+            const eraserBtn = document.getElementById('sb-btn-eraser');
+            if (eraserBtn) eraserBtn.classList.remove('active');
+        };
+    });
+}
+
+export function initGlobalSmartboard() {
+    const floatBtn = document.getElementById('floating-smartboard-btn');
+    const modal = document.getElementById('smartboard-modal');
+    const canvas = document.getElementById('smartboard-canvas');
+    if (!modal || !canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    if (floatBtn) {
+        floatBtn.onclick = (e) => {
+            e.preventDefault();
+            toggleGlobalSmartboard();
+        };
+    }
+
+    const closeBtn = document.getElementById('sb-btn-close');
+    if (closeBtn) {
+        closeBtn.onclick = () => toggleGlobalSmartboard(false);
+    }
+
+    modal.onclick = (e) => {
+        if (e.target === modal) toggleGlobalSmartboard(false);
+    };
+
+    const container = document.getElementById('sb-canvas-container');
+
+    // Tahta Modu Değiştiricileri (Beyaz / Koyu)
+    const btnWhite = document.getElementById('sb-mode-white');
+    const btnDark = document.getElementById('sb-mode-dark');
+
+    if (btnWhite && btnDark) {
+        btnWhite.onclick = () => {
+            if (globalSmartboardState.mode === 'white') return;
+            globalSmartboardState.mode = 'white';
+            btnWhite.classList.add('active');
+            btnDark.classList.remove('active');
+            if (container) {
+                container.classList.remove('mode-dark');
+                container.classList.add('mode-white');
+            }
+            updateSmartboardPalette();
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        };
+
+        btnDark.onclick = () => {
+            if (globalSmartboardState.mode === 'dark') return;
+            globalSmartboardState.mode = 'dark';
+            btnDark.classList.add('active');
+            btnWhite.classList.remove('active');
+            if (container) {
+                container.classList.remove('mode-white');
+                container.classList.add('mode-dark');
+            }
+            updateSmartboardPalette();
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        };
+    }
+
+    // Tam Ekran Butonu
+    const btnFs = document.getElementById('sb-btn-fullscreen');
+    const dialog = modal.querySelector('.smartboard-dialog');
+    if (btnFs && dialog) {
+        btnFs.onclick = () => {
+            globalSmartboardState.isFullscreen = !globalSmartboardState.isFullscreen;
+            dialog.classList.toggle('is-fullscreen', globalSmartboardState.isFullscreen);
+            btnFs.innerHTML = globalSmartboardState.isFullscreen 
+                ? '<i class="fas fa-compress"></i> <span>Normal Ekran</span>' 
+                : '<i class="fas fa-expand"></i> <span>Tam Ekran</span>';
+            setTimeout(resizeGlobalSmartboardCanvas, 50);
+        };
+    }
+
+    // Kalem Boyutları
+    const sizeBtns = modal.querySelectorAll('.sb-size-btn');
+    sizeBtns.forEach(btn => {
+        btn.onclick = () => {
+            sizeBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            globalSmartboardState.size = parseInt(btn.dataset.size || '4', 10);
+            globalSmartboardState.isEraser = false;
+            const eraserBtn = document.getElementById('sb-btn-eraser');
+            if (eraserBtn) eraserBtn.classList.remove('active');
+        };
+    });
+
+    // Silgi Butonu
+    const eraserBtn = document.getElementById('sb-btn-eraser');
+    if (eraserBtn) {
+        eraserBtn.onclick = () => {
+            globalSmartboardState.isEraser = !globalSmartboardState.isEraser;
+            eraserBtn.classList.toggle('active', globalSmartboardState.isEraser);
+            if (globalSmartboardState.isEraser) {
+                modal.querySelectorAll('.sb-color-btn').forEach(b => b.classList.remove('active'));
+            } else {
+                updateSmartboardPalette();
+            }
+        };
+    }
+
+    // Temizle Butonu
+    const clearBtn = document.getElementById('sb-btn-clear');
+    if (clearBtn) {
+        clearBtn.onclick = () => {
+            const bg = globalSmartboardState.mode === 'dark' ? '#1e293b' : '#ffffff';
+            ctx.fillStyle = bg;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        };
+    }
+
+    // Çizim Dinleyicileri (Touch & Mouse with e.preventDefault & touch-action: none)
+    function getPointerPos(evt) {
+        const rect = canvas.getBoundingClientRect();
+        let clientX = evt.clientX;
+        let clientY = evt.clientY;
+
+        if (evt.touches && evt.touches.length > 0) {
+            clientX = evt.touches[0].clientX;
+            clientY = evt.touches[0].clientY;
+        } else if (evt.changedTouches && evt.changedTouches.length > 0) {
+            clientX = evt.changedTouches[0].clientX;
+            clientY = evt.changedTouches[0].clientY;
+        }
+
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+
+        return {
+            x: (clientX - rect.left) * scaleX,
+            y: (clientY - rect.top) * scaleY
+        };
+    }
+
+    function startDraw(e) {
+        if (e.cancelable) e.preventDefault();
+        globalSmartboardState.isDrawing = true;
+        const pos = getPointerPos(e);
+        globalSmartboardState.lastX = pos.x;
+        globalSmartboardState.lastY = pos.y;
+    }
+
+    function moveDraw(e) {
+        if (!globalSmartboardState.isDrawing) return;
+        if (e.cancelable) e.preventDefault();
+
+        const pos = getPointerPos(e);
+        ctx.beginPath();
+        ctx.moveTo(globalSmartboardState.lastX, globalSmartboardState.lastY);
+        ctx.lineTo(pos.x, pos.y);
+
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        if (globalSmartboardState.isEraser) {
+            ctx.strokeStyle = globalSmartboardState.mode === 'dark' ? '#1e293b' : '#ffffff';
+            ctx.lineWidth = Math.max(globalSmartboardState.size * 4, 20);
+        } else {
+            ctx.strokeStyle = globalSmartboardState.color;
+            ctx.lineWidth = globalSmartboardState.size;
+        }
+
+        ctx.stroke();
+        globalSmartboardState.lastX = pos.x;
+        globalSmartboardState.lastY = pos.y;
+    }
+
+    function endDraw(e) {
+        if (!globalSmartboardState.isDrawing) return;
+        if (e && e.cancelable) e.preventDefault();
+        globalSmartboardState.isDrawing = false;
+    }
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', moveDraw);
+    canvas.addEventListener('mouseup', endDraw);
+    canvas.addEventListener('mouseleave', endDraw);
+
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', moveDraw, { passive: false });
+    canvas.addEventListener('touchend', endDraw, { passive: false });
+    canvas.addEventListener('touchcancel', endDraw, { passive: false });
+
+    window.addEventListener('resize', () => {
+        if (globalSmartboardState.isOpen) {
+            resizeGlobalSmartboardCanvas();
+        }
+    });
+
+    if (container) container.classList.add('mode-white');
+    updateSmartboardPalette();
+    resizeGlobalSmartboardCanvas();
+}
+
+if (typeof window !== 'undefined') {
+    window.toggleGlobalSmartboard = toggleGlobalSmartboard;
+    window.openSmartboard = openSmartboard;
+    window.closeSmartboard = closeSmartboard;
+    window.checkAnnualPromotion = checkAnnualPromotion;
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initGlobalSmartboard);
+} else {
+    initGlobalSmartboard();
+}

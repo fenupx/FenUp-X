@@ -57,8 +57,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@500;600;700&family=Kalam:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8.9.0">
-    <link rel="stylesheet" href="exam.css?v=8.9.0">
+    <link rel="stylesheet" href="style.css?v=8.9.1">
+    <link rel="stylesheet" href="exam.css?v=8.9.1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -4797,6 +4797,14 @@
                         </div>
                         <small class="auth-field-hint">Şampiyonlar Ligi liderlik tablosunda görünecek yarışmacı adın (Örn: Cesur Proton).</small>
                     </div>
+                    <div class="auth-field-group">
+                        <label for="user-grade" class="auth-label">Sınıfın</label>
+                        <select id="user-grade" class="fenupx-input auth-input reg-grade" name="grade">
+                            <option value="5">5. Sınıf</option>
+                            <option value="6">6. Sınıf</option>
+                            <option value="7" selected>7. Sınıf</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="auth-field-group">
@@ -4847,6 +4855,14 @@
                 <label for="google-nickname" class="auth-label">Yarışmacı Adın</label>
                 <input type="text" id="google-nickname" class="fenupx-input auth-input" placeholder="Yarışmacı Adın" maxlength="15">
             </div>
+            <div class="auth-field-group">
+                <label for="google-user-grade" class="auth-label">Sınıfın</label>
+                <select id="google-user-grade" class="fenupx-input auth-input">
+                    <option value="5">5. Sınıf</option>
+                    <option value="6">6. Sınıf</option>
+                    <option value="7" selected>7. Sınıf</option>
+                </select>
+            </div>
             <button id="btn-google-complete-submit" class="action-btn" style="width:100%;">KAYDI TAMAMLA</button>
         </div>
     </div>
@@ -4875,13 +4891,56 @@
         </div>
     </footer>
 
+    <!-- Küresel Akıllı Tahta (ETAP) Yüzen Tetikleyici & Çizim Modalı (V8.9.1) -->
+    <button id="floating-smartboard-btn" class="floating-smartboard-btn" title="Akıllı Tahta Çizim Alanı">
+        <i class="fas fa-pen-alt"></i> <span>✏️ Akıllı Tahta</span>
+    </button>
+
+    <div id="smartboard-modal" class="smartboard-modal is-hidden">
+        <div class="smartboard-dialog">
+            <div class="smartboard-header">
+                <div class="smartboard-header-left">
+                    <span class="smartboard-header-title"><i class="fas fa-chalkboard"></i> Akıllı Tahta (ETAP) Çizim Alanı</span>
+                    <div class="smartboard-mode-toggle">
+                        <button type="button" id="sb-mode-white" class="sb-mode-btn active" title="Beyaz Tahta">⬜ Beyaz Tahta</button>
+                        <button type="button" id="sb-mode-dark" class="sb-mode-btn" title="Koyu Tahta">⬛ Koyu Tahta</button>
+                    </div>
+                </div>
+                <div class="smartboard-header-actions">
+                    <button type="button" id="sb-btn-fullscreen" class="sb-action-btn" title="Tam Ekran Aç/Kapat"><i class="fas fa-expand"></i> <span>Tam Ekran</span></button>
+                    <button type="button" id="sb-btn-close" class="sb-action-btn sb-close-btn" title="Kapat"><i class="fas fa-times"></i></button>
+                </div>
+            </div>
+
+            <div class="smartboard-toolbar">
+                <div class="sb-tool-group sb-color-palette" id="sb-color-palette">
+                    <!-- Renkler JavaScript tarafından tahta moduna göre senkronize edilir -->
+                </div>
+                <div class="sb-tool-group">
+                    <span class="sb-group-label"><i class="fas fa-pen"></i> Kalınlık:</span>
+                    <button type="button" class="sb-size-btn" data-size="2" title="İnce (2px)">İnce</button>
+                    <button type="button" class="sb-size-btn active" data-size="4" title="Orta (4px)">Orta</button>
+                    <button type="button" class="sb-size-btn" data-size="10" title="Kalın Fosforlu (10px)">Fosforlu</button>
+                </div>
+                <div class="sb-tool-group sb-actions-group">
+                    <button type="button" id="sb-btn-eraser" class="sb-tool-btn" title="Silgi Modu"><i class="fas fa-eraser"></i> Silgi</button>
+                    <button type="button" id="sb-btn-clear" class="sb-tool-btn" title="Tahtayı Temizle"><i class="fas fa-trash-alt"></i> Temizle</button>
+                </div>
+            </div>
+
+            <div class="smartboard-canvas-container" id="sb-canvas-container">
+                <canvas id="smartboard-canvas" height="450"></canvas>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
     <script>
-        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.0';
+        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.1';
     </script>
-    <script type="module" src="exam-engine.js?v=8.9.0"></script>
-    <script type="module" src="lab-engine.js?v=8.9.0"></script>
-    <script type="module" src="script.js?v=8.9.0"></script>
+    <script type="module" src="exam-engine.js?v=8.9.1"></script>
+    <script type="module" src="lab-engine.js?v=8.9.1"></script>
+    <script type="module" src="script.js?v=8.9.1"></script>
 </body>
 </html>

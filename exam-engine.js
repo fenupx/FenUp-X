@@ -1616,6 +1616,18 @@ function renderStudy(cardIndex) {
     if (typeof window.checkAndUpdateStreak === 'function') {
         window.checkAndUpdateStreak();
     }
+    if (c && c.outcome_id) {
+        try {
+            let allViewedCards = JSON.parse(localStorage.getItem('fenupx_viewed_cards') || '[]');
+            if (!allViewedCards.includes(c.id)) {
+                allViewedCards.push(c.id);
+                localStorage.setItem('fenupx_viewed_cards', JSON.stringify(allViewedCards));
+            }
+            if (allViewedCards.length >= 10 && typeof window.unlockBadge === 'function') {
+                window.unlockBadge('badge_kart_kasifi');
+            }
+        } catch (_) {}
+    }
     if (c && c.outcome_id && c.outcome_id.startsWith('FB.7.1')) {
         try {
             let viewedCards = JSON.parse(localStorage.getItem('fenupx_viewed_space_cards') || '[]');
@@ -1625,6 +1637,7 @@ function renderStudy(cardIndex) {
             }
             if (viewedCards.length >= 6 && typeof window.unlockBadge === 'function') {
                 window.unlockBadge('badge_galileo');
+                window.unlockBadge('badge_kart_kasifi');
             }
         } catch (_) {}
     }
@@ -3327,13 +3340,17 @@ function renderSummary() {
     a.score = totalScore;
     saveState();
 
-    // V8.9.0: Yazılı Ustası Rozeti ve Karne Özeti Kaydı
+    // V8.9.1: Evrensel Rozetler ve Karne Özeti Kaydı
     if (typeof window.unlockBadge === 'function') {
         window.unlockBadge('badge_prova_ustasi');
+        if (totalScore >= 85) {
+            window.unlockBadge('badge_bilim_ustasi');
+        }
         if (totalScore >= 100) {
             window.unlockBadge('badge_newton');
         }
         if (totalScore >= 500) {
+            window.unlockBadge('badge_efsane');
             window.unlockBadge('badge_fenup_efsanesi');
         }
     }
