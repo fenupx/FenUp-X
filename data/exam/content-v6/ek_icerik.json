@@ -479,7 +479,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Bulutsunun kendi içine çökmesini sağlayan temel kuvvet kütle çekim kuvvetidir. Çekirdek tepkimeleri başlamadan önceki sıcak ve yoğun ara evreye ön yıldız (protostar) adı verilir."
     },
     "FB714-V7-E02": {
       "id": "FB714-V7-E02",
@@ -506,7 +507,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Bir yıldızın yaşam döngüsü boyunca izleyeceği yolu belirleyen temel faktör yıldızın başlangıç kütlesidir. Başlangıç kütlesi Güneş'in kütlesinden az olanlar küçük kütleli, katbekat fazla olanlar ise büyük kütleli yıldız yolunu izler."
     },
     "FB714-V7-E03": {
       "id": "FB714-V7-E03",
@@ -554,7 +556,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Güneş ömrünün sonuna doğru önce genişleyerek bir kırmızı dev evresine geçer; ardından dış gaz katmanlarını uzaya savurarak merkezde sıcak bir beyaz cüceye dönüşür."
     },
     "FB714-V7-E04": {
       "id": "FB714-V7-E04",
@@ -596,7 +599,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Gezegenimsi bulutsuların gezegenlerle hiçbir ilgisi yoktur; adları geçmişteki optik teleskoplarda gezegen gibi yuvarlak görünmelerinden gelir. Küçük kütleli yıldızların ömürlerinin sonunda dış gaz katmanlarını uzaya savurması ile oluşur."
     },
     "FB714-V7-E05": {
       "id": "FB714-V7-E05",
@@ -628,7 +632,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Yıldızların yüzey sıcaklıkları renkleriyle doğrudan ilişkilidir. Sıcaklık sıralaması en sıcaktan en soğuğa doğru X > Y > Z (Mavi > Sarı > Kırmızı) şeklindedir."
     },
     "FB714-V7-E06": {
       "id": "FB714-V7-E06",
@@ -670,7 +675,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Öğrenci Kutup Yıldızı'nın 430 yıl önceki görüntüsünü görmektedir. Çünkü yıldızdan çıkan ışınların Dünya'ya ulaşması 430 yıl sürer; uzaya bakmak geçmişe bakmaktır."
     },
     "FB714-V7-M01": {
       "id": "FB714-V7-M01",
@@ -713,7 +719,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "1) B yıldızının başlangıç kütlesi A yıldızından çok daha büyüktür. 2) Şiddetli patlama (süpernova patlaması) büyük kütleli B yıldızında gerçekleşir; nükleer yakıtı tükenen dev çekirdek kendi kütle çekimi altında aniden çökerek şiddetle patlar."
     },
     "FB714-V7-M02": {
       "id": "FB714-V7-M02",
@@ -756,7 +763,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Mavi renkli X yıldızının yüzey sıcaklığı ve ışıma enerjisi kırmızı Y yıldızından çok daha yüksektir. Ancak mavi yıldızlar nükleer yakıtlarını son derece hızlı tükettikleri için yaşam süreleri çok daha kısa olur; kırmızı yıldızlar ise yavaş yakıt tüketerek milyarlarca yıl yaşar."
     },
     "FB714-V7-M03": {
       "id": "FB714-V7-M03",
@@ -798,7 +806,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Öğrencinin yanılgısı ışık yılını bir zaman birimi sanmasıdır. Oysa ışık yılı bir uzaklık (mesafe) birimidir ve ışığın boşlukta 1 Dünya yılında aldığı yol olan yaklaşık 9.46 trilyon kilometreyi ifade eder."
     },
     "FB714-V7-M04": {
       "id": "FB714-V7-M04",
@@ -840,7 +849,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Proxima Centauri'den çıkan ışık Dünya'ya 4.2 yılda, Kutup Yıldızı'ndan çıkan ışık ise 430 yılda ulaşır. Bu durum, gök cisimlerini şimdiki anlarıyla değil, ışıklarının yola çıktığı geçmişteki hâlleriyle gözlemlediğimizi kanıtlar."
     },
     "FB714-V7-H01": {
       "id": "FB714-V7-H01",
@@ -882,7 +892,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Belirleyici temel kriter, süpernova patlamasından sonra geriye kalan çekirdeğin kütlesidir. Geriye kalan çekirdek kütlesi yaklaşık 3 Güneş kütlesinden küçükse nötron yıldızı (pulsar), 3 Güneş kütlesinden büyükse kütle çekimine hiçbir kuvvet direnemez ve cisim bir kara deliğe dönüşür."
     },
     "FB714-V7-H02": {
       "id": "FB714-V7-H02",
@@ -924,7 +935,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Gök bilimci Proxima Centauri'nin 4.2 yıl önceki, Andromeda Galaksisi'nin ise 2.5 milyon yıl önceki görüntüsünü görmektedir. Işık hızı sonlu olduğu için astronomik uzaklıklara bakmak aynı zamanda evrenin geçmişinde bir zaman yolculuğu yapmaktır."
     },
     "FB722-V7-E01": {
       "id": "FB722-V7-E01",
@@ -968,7 +980,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Hareket halindeki tüm cisimlerin süratlerinden dolayı sahip olduğu enerjiye kinetik enerji (hareket enerjisi) denir."
     },
     "FB722-V7-E02": {
       "id": "FB722-V7-E02",
@@ -1010,7 +1023,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Kamyon durduğu için (sürati sıfır olduğu için) kinetik enerjisi sıfırdır. Yer zemininde bulunduğu için (yerden yüksekliği olmadığı için) çekim potansiyel enerjisi de sıfırdır."
     },
     "FB722-V7-E03": {
       "id": "FB722-V7-E03",
@@ -1058,7 +1072,8 @@
           },
           "content_revision": "7.9.0"
         }
-      ]
+      ],
+      "sample_answer": "K kitabının çekim potansiyel enerjisi L kitabından daha büyüktür (K > L). Çünkü kütleleri eşit cisimlerden yerden yüksekliği daha fazla olanın depoladığı çekim potansiyel enerjisi daha fazladır."
     },
     "FB722-V7-E04": {
       "id": "FB722-V7-E04",
@@ -1106,7 +1121,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "5 kg kütleli gülle kumda daha derin bir iz bırakır. Çünkü aynı yükseklikte kütlesi büyük olan cismin çekim potansiyel enerjisi daha fazladır; kuma çarptığında daha fazla iş yapar."
     },
     "FB722-V7-E05": {
       "id": "FB722-V7-E05",
@@ -1154,7 +1170,8 @@
           },
           "content_revision": "7.9.0"
         }
-      ]
+      ],
+      "sample_answer": "Sıkıştırılmış veya gerilmiş esnek cisimlerde depolanan enerji türüne esneklik potansiyel enerjisi denir."
     },
     "FB722-V7-E06": {
       "id": "FB722-V7-E06",
@@ -1212,7 +1229,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "1) Gerilmiş ok yayı: Esneklik potansiyel enerjisi. 2) Koşan atlet: Kinetik enerji. 3) Yüksekte biriken baraj suyu: Çekim potansiyel enerjisi."
     },
     "FB722-V7-M01": {
       "id": "FB722-V7-M01",
@@ -1260,7 +1278,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "1) Ağır bilye (2m) takozu daha uzağa iter ve kinetik enerjisi daha büyüktür. 2) Rampadan inen bilyelerin yatay düzleme ulaştıklarında süratleri eşit olur; süratler eşitken kütlesi büyük olanın kinetik enerjisi daha fazla olduğu için takoz üzerinde daha fazla fiziksel iş yapar."
     },
     "FB722-V7-M02": {
       "id": "FB722-V7-M02",
@@ -1308,7 +1327,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "a) Kütlenin etkisi için 1 ve 2 numaralı düzenekler seçilmelidir; yükseklikler sabit tutulup kütleler değiştirilmiştir. b) Yüksekliğin etkisi için 1 ve 3 numaralı düzenekler seçilmelidir; kütleler sabit tutulup yükseklikler değiştirilmiştir."
     },
     "FB722-V7-M03": {
       "id": "FB722-V7-M03",
@@ -1356,7 +1376,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "1) Kalın yayın önündeki bilye daha uzağa fırlar; çünkü kalın ve sert yaylar aynı miktarda sıkıştırıldığında daha fazla esneklik potansiyel enerjisi depolar. 2) Bağımsız değişken: Yayın kalınlığı (cinsi); Bağımlı değişken: Bilyenin fırlama mesafesi (depolanan esneklik enerjisi); Kontrol edilen değişken: Sıkışma miktarı ve bilye kütlesi."
     },
     "FB722-V7-M04": {
       "id": "FB722-V7-M04",
@@ -1399,7 +1420,8 @@
           },
           "content_revision": "6.0.0"
         }
-      ]
+      ],
+      "sample_answer": "Göçmen kuş aynı anda iki enerji türüne sahiptir: 1) Süratle hareket ettiği için kinetik enerji, 2) Yerden 30 metre yüksekte bulunduğu için çekim potansiyel enerjisi. Kuşun toplam mekanik enerjisi bu iki enerjinin toplamına eşittir."
     },
     "FB722-V7-H01": {
       "id": "FB722-V7-H01",
@@ -1445,7 +1467,8 @@
           },
           "content_revision": "7.9.0"
         }
-      ]
+      ],
+      "sample_answer": "1) Benzerlikler: Her ikisi de mekanik enerji türüdür, cisimlerin iş yapabilme yeteneğini gösterir ve uluslararası birimleri joule (J)dür. 2) Farklılıklar: Kinetik enerji cisimlerin hareketinden (sürat ve kütle) kaynaklanırken; çekim potansiyel enerjisi cisimlerin konumundan (yerden yükseklik ve kütle) kaynaklanan depolanmış enerjidir."
     },
     "FB722-V7-H02": {
       "id": "FB722-V7-H02",
@@ -1495,7 +1518,8 @@
           },
           "content_revision": "7.9.0"
         }
-      ]
+      ],
+      "sample_answer": "1) Çekim potansiyel enerjisi sıralaması yükseklik ilişkisine göre A > C > B şeklindedir (yer seviyesindeki B'de sıfırdır). 2) Kinetik enerji sıralaması ise B > C > A şeklindedir. Potansiyel enerjinin kinetik enerjiye dönüştüğü en alçak nokta olan B noktasında sürat ve kinetik enerji maksimumdur."
     }
   }
 }

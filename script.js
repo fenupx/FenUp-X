@@ -81,6 +81,17 @@ styleEnjektor.innerHTML = `
     .avatar-item { width: 75px; height: 75px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: 0.3s; padding: 5px; background: rgba(255,255,255,0.05); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
     .avatar-item:hover { transform: scale(1.1); background: rgba(255,255,255,0.1); }
     .avatar-item.selected { border-color: #00d2ff; background: rgba(0,210,255,0.2); box-shadow: 0 0 20px rgba(0, 210, 255, 0.6); transform: scale(1.1); }
+    .avatar-tabs { display: flex; gap: 6px; margin: 10px 0 5px 0; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; }
+    .avatar-tabs::-webkit-scrollbar { height: 4px; }
+    .avatar-tabs::-webkit-scrollbar-thumb { background: rgba(0, 210, 255, 0.4); border-radius: 4px; }
+    .avatar-tab-btn {
+        padding: 6px 12px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 20px; color: #cbd5e1; font-size: 0.82rem; font-weight: 600; cursor: pointer;
+        white-space: nowrap; transition: all 0.2s; touch-action: manipulation;
+    }
+    .avatar-tab-btn:hover { background: rgba(0, 210, 255, 0.2); border-color: #00d2ff; color: #fff; }
+    .avatar-tab-btn.active { background: linear-gradient(135deg, #00d2ff, #0284c7); border-color: #00d2ff; color: #0f172a; font-weight: 700; box-shadow: 0 0 12px rgba(0, 210, 255, 0.4); }
+
     .profile-img-header { width: 35px; height: 35px; border-radius: 50%; vertical-align: middle; margin-right: 8px; border: 1px solid #00d2ff; }
     .btn-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; margin-top: 15px; }
     .btn-danger:hover { background: #ef4444; color: #fff; }
@@ -118,102 +129,548 @@ styleEnjektor.innerHTML = `
 `;
 document.head.appendChild(styleEnjektor);
 
+function makeSvgAvatar(id, bgGrad, innerSvg) {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+<defs>
+<linearGradient id="g_${id}" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="${bgGrad[0]}"/>
+<stop offset="100%" stop-color="${bgGrad[1]}"/>
+</linearGradient>
+</defs>
+<circle cx="50" cy="50" r="48" fill="url(#g_${id})" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+${innerSvg}
+</svg>`;
+    return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+
 const kozmikAvatarlar = [
+    // --- 👦👧 ÖĞRENCİLER (8) ---
     {
-        id: 'b1',
-        name: 'Modern Kasklı Astronot',
-        category: 'Astronomi',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b1%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230f172a%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230284c7%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b1%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2226%22%20fill%3D%22%23f8fafc%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%3Crect%20x%3D%2238%22%20y%3D%2272%22%20width%3D%2224%22%20height%3D%228%22%20rx%3D%224%22%20fill%3D%22%23cbd5e1%22/%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2250%22%20rx%3D%2218%22%20ry%3D%2213%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%222%22/%3E%3Cpath%20d%3D%22M39%2044%20Q48%2039%2057%2042%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2228%22%20y1%3D%2236%22%20x2%3D%2220%22%20y2%3D%2228%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2219%22%20cy%3D%2227%22%20r%3D%222.5%22%20fill%3D%22%2338bdf8%22/%3E%3Ccircle%20cx%3D%2222%22%20cy%3D%2222%22%20r%3D%221.5%22%20fill%3D%22%23facc15%22/%3E%3Ccircle%20cx%3D%2278%22%20cy%3D%2224%22%20r%3D%221.5%22%20fill%3D%22%23facc15%22/%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2268%22%20r%3D%221%22%20fill%3D%22%23fff%22/%3E%3C/svg%3E'
+        id: 'av_ogrenci_1',
+        name: 'Karizmatik Dalgalı Saçlı Öğrenci',
+        category: 'ogrenciler',
+        url: makeSvgAvatar('av_ogrenci_1', ['#1e1b4b', '#2563eb'], `
+            <circle cx="50" cy="46" r="19" fill="#fed7aa"/>
+            <path d="M30 40 Q50 20 70 38 Q66 22 50 22 Q34 22 30 40 Z" fill="#78350f"/>
+            <path d="M28 38 Q32 30 40 32 Q32 38 34 46 Z" fill="#92400e"/>
+            <path d="M72 38 Q68 30 60 32 Q68 38 66 46 Z" fill="#92400e"/>
+            <circle cx="43" cy="45" r="2.2" fill="#0f172a"/>
+            <circle cx="57" cy="45" r="2.2" fill="#0f172a"/>
+            <path d="M46 54 Q50 58 54 54" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M30 78 L40 65 L60 65 L70 78 Z" fill="#1e293b"/>
+            <path d="M46 65 L46 73 M54 65 L54 73" stroke="#e2e8f0" stroke-width="1.5"/>
+        `)
     },
     {
-        id: 'b2',
-        name: 'Teleskop Gözlemcisi',
-        category: 'Astronomi',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b2%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%231e1b4b%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%234338ca%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b2%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cpath%20d%3D%22M70%2018%20A12%2012%200%201%200%2076%2038%20A10%2010%200%200%201%2070%2018%20Z%22%20fill%3D%22%23fde047%22/%3E%3Cpath%20d%3D%22M26%2024%20L27%2028%20L31%2029%20L27%2030%20L26%2034%20L25%2030%20L21%2029%20L25%2028%20Z%22%20fill%3D%22%2338bdf8%22/%3E%3Cpath%20d%3D%22M30%2065%20L68%2032%20L74%2038%20L36%2071%20Z%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%230ea5e9%22%20stroke-width%3D%221.5%22/%3E%3Crect%20x%3D%2266%22%20y%3D%2230%22%20width%3D%2210%22%20height%3D%2210%22%20rx%3D%222%22%20fill%3D%22%230284c7%22%20transform%3D%22rotate%28-40%2071%2035%29%22/%3E%3Cline%20x1%3D%2242%22%20y1%3D%2262%22%20x2%3D%2226%22%20y2%3D%2286%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2242%22%20y1%3D%2262%22%20x2%3D%2258%22%20y2%3D%2286%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22/%3E%3Cline%20x1%3D%2242%22%20y1%3D%2262%22%20x2%3D%2242%22%20y2%3D%2284%22%20stroke%3D%22%2364748b%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E'
+        id: 'av_ogrenci_2',
+        name: 'Gözlüklü Araştırmacı Öğrenci',
+        category: 'ogrenciler',
+        url: makeSvgAvatar('av_ogrenci_2', ['#064e3b', '#10b981'], `
+            <circle cx="50" cy="46" r="19" fill="#fed7aa"/>
+            <path d="M32 38 Q50 24 68 38 Q60 26 50 26 Q38 26 32 38 Z" fill="#1e293b"/>
+            <circle cx="42" cy="45" r="6" fill="none" stroke="#0284c7" stroke-width="2"/>
+            <circle cx="58" cy="45" r="6" fill="none" stroke="#0284c7" stroke-width="2"/>
+            <line x1="48" y1="45" x2="52" y2="45" stroke="#0284c7" stroke-width="2"/>
+            <circle cx="42" cy="45" r="2" fill="#0f172a"/>
+            <circle cx="58" cy="45" r="2" fill="#0f172a"/>
+            <path d="M46 55 Q50 59 54 55" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#047857"/>
+            <polygon points="46,65 54,65 50,71" fill="#f8fafc"/>
+        `)
     },
     {
-        id: 'b3',
-        name: 'Uzay Araştırmacısı',
-        category: 'Astronomi',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b3%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%232e1065%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2306b6d4%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b3%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2265%22%20rx%3D%2238%22%20ry%3D%2212%22%20fill%3D%22none%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.2%29%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%223%203%22/%3E%3Crect%20x%3D%2242%22%20y%3D%2242%22%20width%3D%2216%22%20height%3D%2216%22%20rx%3D%223%22%20fill%3D%22%23f1f5f9%22%20stroke%3D%22%2306b6d4%22%20stroke-width%3D%221.5%22/%3E%3Crect%20x%3D%2218%22%20y%3D%2245%22%20width%3D%2220%22%20height%3D%2210%22%20rx%3D%221%22%20fill%3D%22%230284c7%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221%22/%3E%3Cline%20x1%3D%2228%22%20y1%3D%2245%22%20x2%3D%2228%22%20y2%3D%2255%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221%22/%3E%3Crect%20x%3D%2262%22%20y%3D%2245%22%20width%3D%2220%22%20height%3D%2210%22%20rx%3D%221%22%20fill%3D%22%230284c7%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221%22/%3E%3Cline%20x1%3D%2272%22%20y1%3D%2245%22%20x2%3D%2272%22%20y2%3D%2255%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221%22/%3E%3Cpath%20d%3D%22M50%2042%20L50%2028%20M44%2028%20A8%208%200%200%201%2056%2028%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%222%22%20fill%3D%22none%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2222%22%20r%3D%222%22%20fill%3D%22%23facc15%22/%3E%3Cpath%20d%3D%22M42%2016%20A14%2014%200%200%201%2058%2016%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%222%202%22%20fill%3D%22none%22/%3E%3C/svg%3E'
+        id: 'av_ogrenci_3',
+        name: 'Kulaklıklı Kodlamacı Genç',
+        category: 'ogrenciler',
+        url: makeSvgAvatar('av_ogrenci_3', ['#311042', '#a855f7'], `
+            <circle cx="50" cy="46" r="19" fill="#fcd34d"/>
+            <path d="M30 38 L36 28 L44 32 L50 26 L56 32 L64 28 L70 38 Z" fill="#334155"/>
+            <circle cx="43" cy="45" r="2.2" fill="#0f172a"/>
+            <circle cx="57" cy="45" r="2.2" fill="#0f172a"/>
+            <path d="M46 54 Q50 57 54 54" stroke="#b45309" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M28 46 A22 22 0 0 1 72 46" fill="none" stroke="#06b6d4" stroke-width="3"/>
+            <rect x="25" y="40" width="6" height="12" rx="3" fill="#0891b2"/>
+            <rect x="69" y="40" width="6" height="12" rx="3" fill="#0891b2"/>
+            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#6b21a8"/>
+            <text x="50" y="74" fill="#38bdf8" font-size="7" font-weight="bold" text-anchor="middle">&lt;/&gt;</text>
+        `)
     },
     {
-        id: 'b4',
-        name: 'Gezegen Kâşifi',
-        category: 'Astronomi',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b4%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23042f2e%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230d9488%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b4%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2222%22%20fill%3D%22%23f59e0b%22/%3E%3Cpath%20d%3D%22M30%2046%20Q50%2054%2070%2046%22%20stroke%3D%22%23d97706%22%20stroke-width%3D%223%22%20fill%3D%22none%22/%3E%3Cpath%20d%3D%22M32%2054%20Q50%2062%2068%2054%22%20stroke%3D%22%23b45309%22%20stroke-width%3D%222.5%22%20fill%3D%22none%22/%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2250%22%20rx%3D%2242%22%20ry%3D%2214%22%20fill%3D%22none%22%20stroke%3D%22%23fef08a%22%20stroke-width%3D%223.5%22%20transform%3D%22rotate%28-20%2050%2050%29%22/%3E%3Ccircle%20cx%3D%2276%22%20cy%3D%2234%22%20r%3D%223.5%22%20fill%3D%22%2338bdf8%22/%3E%3Cline%20x1%3D%2276%22%20y1%3D%2234%22%20x2%3D%2280%22%20y2%3D%2230%22%20stroke%3D%22%23fff%22%20stroke-width%3D%221.5%22/%3E%3C/svg%3E'
+        id: 'av_ogrenci_4',
+        name: 'Sarışın Enerjik Fen Kâşifi',
+        category: 'ogrenciler',
+        url: makeSvgAvatar('av_ogrenci_4', ['#78350f', '#f59e0b'], `
+            <circle cx="50" cy="46" r="19" fill="#fed7aa"/>
+            <path d="M28 40 Q40 22 72 34 Q64 22 48 24 Q34 26 28 40 Z" fill="#fde047"/>
+            <path d="M30 36 Q38 32 46 36" stroke="#eab308" stroke-width="2" fill="none"/>
+            <circle cx="43" cy="46" r="2.2" fill="#0f172a"/>
+            <circle cx="57" cy="46" r="2.2" fill="#0f172a"/>
+            <path d="M45 54 Q50 60 55 54" stroke="#c2410c" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L40 65 L60 65 L68 78 Z" fill="#ea580c"/>
+            <polygon points="50,67 52,71 56,71 53,74 54,78 50,75 46,78 47,74 44,71 48,71" fill="#facc15"/>
+        `)
     },
     {
-        id: 'b5',
-        name: 'Mikroskop Başında Biyolog',
-        category: 'Laboratuvar & Yaşam',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b5%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23064e3b%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23059669%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b5%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Crect%20x%3D%2244%22%20y%3D%2222%22%20width%3D%2210%22%20height%3D%2220%22%20rx%3D%222%22%20fill%3D%22%23e2e8f0%22%20transform%3D%22rotate%2815%2049%2032%29%22/%3E%3Cpolygon%20points%3D%2250%2C42%2042%2C48%2056%2C48%22%20fill%3D%22%2394a3b8%22/%3E%3Cpath%20d%3D%22M54%2030%20Q70%2040%2064%2064%22%20fill%3D%22none%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%225%22%20stroke-linecap%3D%22round%22/%3E%3Crect%20x%3D%2230%22%20y%3D%2258%22%20width%3D%2228%22%20height%3D%225%22%20rx%3D%221.5%22%20fill%3D%22%2338bdf8%22/%3E%3Crect%20x%3D%2226%22%20y%3D%2274%22%20width%3D%2246%22%20height%3D%228%22%20rx%3D%223%22%20fill%3D%22%23e2e8f0%22/%3E%3Crect%20x%3D%2252%22%20y%3D%2262%22%20width%3D%228%22%20height%3D%2214%22%20fill%3D%22%2394a3b8%22/%3E%3Cpath%20d%3D%22M72%2034%20Q80%2040%2072%2046%20T72%2058%22%20fill%3D%22none%22%20stroke%3D%22%2334d399%22%20stroke-width%3D%222%22/%3E%3Cpath%20d%3D%22M80%2034%20Q72%2040%2080%2046%20T80%2058%22%20fill%3D%22none%22%20stroke%3D%22%236ee7b7%22%20stroke-width%3D%222%22/%3E%3C/svg%3E'
+        id: 'av_ogrenci_5',
+        name: 'At Kuyruklu Dinamik Kız',
+        category: 'ogrenciler',
+        url: makeSvgAvatar('av_ogrenci_5', ['#831843', '#ec4899'], `
+            <path d="M64 36 Q80 32 76 54 Q70 48 64 44 Z" fill="#451a03"/>
+            <circle cx="66" cy="38" r="4" fill="#38bdf8"/>
+            <circle cx="50" cy="47" r="19" fill="#fcd34d"/>
+            <path d="M31 44 Q50 30 69 44 Q60 28 50 28 Q36 28 31 44 Z" fill="#451a03"/>
+            <circle cx="43" cy="46" r="2.2" fill="#0f172a"/>
+            <circle cx="57" cy="46" r="2.2" fill="#0f172a"/>
+            <path d="M46 55 Q50 59 54 55" stroke="#b45309" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#0d9488"/>
+            <line x1="50" y1="66" x2="50" y2="78" stroke="#facc15" stroke-width="1.5"/>
+        `)
     },
     {
-        id: 'b6',
-        name: 'Deney Tüplü Kimyager',
-        category: 'Laboratuvar & Yaşam',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b6%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23083344%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230891b2%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b6%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cpolygon%20points%3D%2234%2C74%2064%2C74%2054%2C44%2044%2C44%22%20fill%3D%22rgba%28255%2C255%2C255%2C0.2%29%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%222%22/%3E%3Crect%20x%3D%2245%22%20y%3D%2238%22%20width%3D%228%22%20height%3D%227%22%20rx%3D%221%22%20fill%3D%22%23e2e8f0%22/%3E%3Cpolygon%20points%3D%2237%2C72%2061%2C72%2056%2C56%2042%2C56%22%20fill%3D%22%2310b981%22/%3E%3Ccircle%20cx%3D%2248%22%20cy%3D%2262%22%20r%3D%222.5%22%20fill%3D%22%23a7f3d0%22/%3E%3Ccircle%20cx%3D%2253%22%20cy%3D%2258%22%20r%3D%221.5%22%20fill%3D%22%23fff%22/%3E%3Ccircle%20cx%3D%2249%22%20cy%3D%2248%22%20r%3D%222%22%20fill%3D%22%236ee7b7%22/%3E%3Ccircle%20cx%3D%2251%22%20cy%3D%2232%22%20r%3D%222.5%22%20fill%3D%22%2334d399%22/%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%2230%22%20r%3D%223%22%20fill%3D%22%23facc15%22/%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2238%22%20r%3D%223%22%20fill%3D%22%23facc15%22/%3E%3Cline%20x1%3D%2270%22%20y1%3D%2230%22%20x2%3D%2280%22%20y2%3D%2238%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%221.5%22/%3E%3C/svg%3E'
+        id: 'av_ogrenci_6',
+        name: 'Örgülü Araştırmacı Kız',
+        category: 'ogrenciler',
+        url: makeSvgAvatar('av_ogrenci_6', ['#1e3a5f', '#0ea5e9'], `
+            <circle cx="50" cy="47" r="19" fill="#fed7aa"/>
+            <path d="M32 46 Q26 56 28 68 Q32 68 34 58 Z" fill="#7c2d12"/>
+            <path d="M68 46 Q74 56 72 68 Q68 68 66 58 Z" fill="#7c2d12"/>
+            <circle cx="28" cy="67" r="2" fill="#facc15"/>
+            <circle cx="72" cy="67" r="2" fill="#facc15"/>
+            <path d="M31 42 Q50 28 69 42 Q60 27 50 27 Q37 27 31 42 Z" fill="#7c2d12"/>
+            <circle cx="43" cy="46" r="2.2" fill="#0f172a"/>
+            <circle cx="57" cy="46" r="2.2" fill="#0f172a"/>
+            <circle cx="41" cy="51" r="1" fill="#ea580c"/>
+            <circle cx="59" cy="51" r="1" fill="#ea580c"/>
+            <path d="M46 55 Q50 59 54 55" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#0284c7"/>
+            <rect x="44" y="66" width="12" height="12" fill="#facc15"/>
+        `)
     },
     {
-        id: 'b7',
-        name: 'Doğa Araştırmacısı',
-        category: 'Laboratuvar & Yaşam',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b7%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%2314532d%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2316a34a%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b7%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2246%22%20cy%3D%2248%22%20r%3D%2224%22%20fill%3D%22%230284c7%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221.5%22/%3E%3Cpath%20d%3D%22M36%2040%20Q44%2034%2048%2042%20Q52%2046%2044%2054%20Q36%2050%2036%2040%20Z%22%20fill%3D%22%2322c55e%22/%3E%3Cpath%20d%3D%22M52%2050%20Q60%2046%2064%2054%20Q58%2064%2050%2060%20Z%22%20fill%3D%22%2322c55e%22/%3E%3Ccircle%20cx%3D%2264%22%20cy%3D%2240%22%20r%3D%2214%22%20fill%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke%3D%22%23fbbf24%22%20stroke-width%3D%223%22/%3E%3Cline%20x1%3D%2274%22%20y1%3D%2250%22%20x2%3D%2286%22%20y2%3D%2264%22%20stroke%3D%22%23b45309%22%20stroke-width%3D%224%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M60%2040%20Q64%2034%2070%2038%20Q68%2046%2060%2040%20Z%22%20fill%3D%22%2384cc16%22/%3E%3C/svg%3E'
+        id: 'av_ogrenci_7',
+        name: 'Önlüklü Fen Meraklısı Kız',
+        category: 'ogrenciler',
+        url: makeSvgAvatar('av_ogrenci_7', ['#0f172a', '#14b8a6'], `
+            <circle cx="50" cy="48" r="19" fill="#fed7aa"/>
+            <path d="M30 46 Q50 26 70 46 Q64 26 50 26 Q36 26 30 46 Z" fill="#3b1e08"/>
+            <rect x="36" y="30" width="12" height="8" rx="3" fill="none" stroke="#38bdf8" stroke-width="2"/>
+            <rect x="52" y="30" width="12" height="8" rx="3" fill="none" stroke="#38bdf8" stroke-width="2"/>
+            <line x1="48" y1="34" x2="52" y2="34" stroke="#38bdf8" stroke-width="2"/>
+            <circle cx="43" cy="48" r="2.2" fill="#0f172a"/>
+            <circle cx="57" cy="48" r="2.2" fill="#0f172a"/>
+            <path d="M46 56 Q50 60 54 56" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L40 67 L60 67 L68 78 Z" fill="#f8fafc"/>
+            <polygon points="46,67 54,67 50,74" fill="#0d9488"/>
+            <line x1="62" y1="71" x2="62" y2="76" stroke="#ef4444" stroke-width="1.5"/>
+        `)
     },
     {
-        id: 'b8',
-        name: 'Botanik Kâşifi',
-        category: 'Laboratuvar & Yaşam',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b8%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23022c22%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%2315803d%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b8%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cpath%20d%3D%22M34%2054%20L38%2076%20L62%2076%20L66%2054%20Z%22%20fill%3D%22rgba%28255%2C255%2C255%2C0.2%29%22%20stroke%3D%22%23e2e8f0%22%20stroke-width%3D%222%22/%3E%3Cpath%20d%3D%22M37%2066%20L38%2075%20L62%2075%20L63%2066%20Z%22%20fill%3D%22%2378350f%22/%3E%3Cpath%20d%3D%22M50%2068%20Q50%2048%2048%2038%22%20fill%3D%22none%22%20stroke%3D%22%2322c55e%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M49%2046%20Q38%2042%2042%2034%20Q50%2038%2049%2046%20Z%22%20fill%3D%22%234ade80%22/%3E%3Cpath%20d%3D%22M49%2042%20Q60%2036%2056%2028%20Q48%2032%2049%2042%20Z%22%20fill%3D%22%2386efac%22/%3E%3Ccircle%20cx%3D%2226%22%20cy%3D%2226%22%20r%3D%226%22%20fill%3D%22%23facc15%22/%3E%3Cline%20x1%3D%2226%22%20y1%3D%2216%22%20x2%3D%2226%22%20y2%3D%2212%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2216%22%20y1%3D%2226%22%20x2%3D%2212%22%20y2%3D%2226%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3C/svg%3E'
+        id: 'av_ogrenci_8',
+        name: 'Gözlüklü Çalışkan Kız',
+        category: 'ogrenciler',
+        url: makeSvgAvatar('av_ogrenci_8', ['#4c1d95', '#8b5cf6'], `
+            <circle cx="50" cy="46" r="19" fill="#fcd34d"/>
+            <path d="M30 44 Q50 25 70 44 Q60 25 50 25 Q35 25 30 44 Z" fill="#1c1917"/>
+            <path d="M32 38 Q50 29 68 38" fill="none" stroke="#f43f5e" stroke-width="3"/>
+            <circle cx="42" cy="45" r="5.5" fill="none" stroke="#ef4444" stroke-width="2"/>
+            <circle cx="58" cy="45" r="5.5" fill="none" stroke="#ef4444" stroke-width="2"/>
+            <line x1="47.5" y1="45" x2="52.5" y2="45" stroke="#ef4444" stroke-width="2"/>
+            <circle cx="42" cy="45" r="2" fill="#0f172a"/>
+            <circle cx="58" cy="45" r="2" fill="#0f172a"/>
+            <path d="M45 54 Q50 59 55 54" stroke="#b45309" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#7c3aed"/>
+            <polygon points="47,65 53,65 50,70" fill="#fed7aa"/>
+        `)
+    },
+
+    // --- 🔬 BİLİM İNSANLARI (8) ---
+    {
+        id: 'av_bilim_einstein',
+        name: 'Albert Einstein',
+        category: 'bilim',
+        url: makeSvgAvatar('av_bilim_einstein', ['#0f172a', '#475569'], `
+            <path d="M24 44 Q22 28 34 26 Q36 18 48 20 Q60 18 64 26 Q78 28 76 44 Q80 54 74 62 Q72 48 68 44 Q32 48 26 62 Q20 54 24 44 Z" fill="#e2e8f0"/>
+            <circle cx="50" cy="47" r="18" fill="#fed7aa"/>
+            <circle cx="43" cy="44" r="2" fill="#0f172a"/>
+            <circle cx="57" cy="44" r="2" fill="#0f172a"/>
+            <path d="M38 54 Q50 50 62 54 Q56 60 50 56 Q44 60 38 54 Z" fill="#f8fafc"/>
+            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#573a24"/>
+            <polygon points="47,65 53,65 50,72" fill="#cbd5e1"/>
+        `)
     },
     {
-        id: 'b9',
-        name: 'Robotik Araştırmacısı',
-        category: 'Fizik & Teknoloji',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b9%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230f172a%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231e293b%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b9%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Crect%20x%3D%2232%22%20y%3D%2232%22%20width%3D%2236%22%20height%3D%2234%22%20rx%3D%228%22%20fill%3D%22%23e2e8f0%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2250%22%20y1%3D%2232%22%20x2%3D%2250%22%20y2%3D%2220%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2218%22%20r%3D%223.5%22%20fill%3D%22%23ef4444%22/%3E%3Crect%20x%3D%2227%22%20y%3D%2244%22%20width%3D%225%22%20height%3D%2210%22%20rx%3D%222%22%20fill%3D%22%2338bdf8%22/%3E%3Crect%20x%3D%2268%22%20y%3D%2244%22%20width%3D%225%22%20height%3D%2210%22%20rx%3D%222%22%20fill%3D%22%2338bdf8%22/%3E%3Ccircle%20cx%3D%2243%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%230284c7%22/%3E%3Ccircle%20cx%3D%2243%22%20cy%3D%2246%22%20r%3D%222%22%20fill%3D%22%2338bdf8%22/%3E%3Ccircle%20cx%3D%2257%22%20cy%3D%2246%22%20r%3D%224.5%22%20fill%3D%22%230284c7%22/%3E%3Ccircle%20cx%3D%2257%22%20cy%3D%2246%22%20r%3D%222%22%20fill%3D%22%2338bdf8%22/%3E%3Cpath%20d%3D%22M42%2057%20Q50%2062%2058%2057%22%20fill%3D%22none%22%20stroke%3D%22%230ea5e9%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22/%3E%3Crect%20x%3D%2244%22%20y%3D%2267%22%20width%3D%2212%22%20height%3D%227%22%20fill%3D%22%2364748b%22/%3E%3C/svg%3E'
+        id: 'av_bilim_curie',
+        name: 'Marie Curie',
+        category: 'bilim',
+        url: makeSvgAvatar('av_bilim_curie', ['#064e3b', '#059669'], `
+            <ellipse cx="50" cy="26" rx="10" ry="7" fill="#422006"/>
+            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
+            <path d="M32 40 Q50 28 68 40 Q60 26 50 26 Q36 26 32 40 Z" fill="#422006"/>
+            <circle cx="43" cy="44" r="2" fill="#0f172a"/>
+            <circle cx="57" cy="44" r="2" fill="#0f172a"/>
+            <path d="M46 54 Q50 57 54 54" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#1f2937"/>
+            <rect x="64" y="60" width="6" height="14" rx="3" fill="#10b981" stroke="#a7f3d0" stroke-width="1"/>
+            <circle cx="67" cy="56" r="1.5" fill="#34d399"/>
+        `)
     },
     {
-        id: 'b10',
-        name: 'Roket Mühendisi',
-        category: 'Fizik & Teknoloji',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b10%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23450a0a%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23c2410c%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b10%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cpath%20d%3D%22M50%2018%20Q62%2034%2060%2056%20L40%2056%20Q38%2034%2050%2018%20Z%22%20fill%3D%22%23f8fafc%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%221.5%22/%3E%3Cpath%20d%3D%22M50%2018%20Q55%2026%2057%2032%20L43%2032%20Q45%2026%2050%2018%20Z%22%20fill%3D%22%23ef4444%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2240%22%20r%3D%225%22%20fill%3D%22%230284c7%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221.5%22/%3E%3Cpolygon%20points%3D%2240%2C50%2030%2C62%2040%2C60%22%20fill%3D%22%23ef4444%22/%3E%3Cpolygon%20points%3D%2260%2C50%2070%2C62%2060%2C60%22%20fill%3D%22%23ef4444%22/%3E%3Cpolygon%20points%3D%2243%2C56%2050%2C78%2047%2C56%22%20fill%3D%22%23facc15%22/%3E%3Cpolygon%20points%3D%2247%2C56%2050%2C84%2053%2C56%22%20fill%3D%22%23f97316%22/%3E%3Cpolygon%20points%3D%2253%2C56%2050%2C78%2057%2C56%22%20fill%3D%22%23facc15%22/%3E%3C/svg%3E'
+        id: 'av_bilim_newton',
+        name: 'Isaac Newton',
+        category: 'bilim',
+        url: makeSvgAvatar('av_bilim_newton', ['#1e1b4b', '#4338ca'], `
+            <path d="M26 42 Q28 22 50 22 Q72 22 74 42 Q78 58 72 68 Q66 52 66 42 Q34 52 28 68 Q22 58 26 42 Z" fill="#cbd5e1"/>
+            <circle cx="50" cy="45" r="17" fill="#fed7aa"/>
+            <circle cx="44" cy="43" r="2" fill="#0f172a"/>
+            <circle cx="56" cy="43" r="2" fill="#0f172a"/>
+            <path d="M46 52 Q50 55 54 52" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 63 L58 63 L68 78 Z" fill="#1e293b"/>
+            <polygon points="46,63 54,63 50,69" fill="#f8fafc"/>
+            <circle cx="36" cy="71" r="4" fill="#ef4444"/>
+            <path d="M36 67 Q38 65 39 67" stroke="#22c55e" stroke-width="1.5" fill="none"/>
+        `)
     },
     {
-        id: 'b11',
-        name: 'Elektronik Kâşifi',
-        category: 'Fizik & Teknoloji',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b11%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%2318181b%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%233f3f46%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b11%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Crect%20x%3D%2235%22%20y%3D%2235%22%20width%3D%2230%22%20height%3D%2230%22%20rx%3D%224%22%20fill%3D%22%230f172a%22%20stroke%3D%22%2322c55e%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2240%22%20y1%3D%2228%22%20x2%3D%2240%22%20y2%3D%2235%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2250%22%20y1%3D%2228%22%20x2%3D%2250%22%20y2%3D%2235%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2260%22%20y1%3D%2228%22%20x2%3D%2260%22%20y2%3D%2235%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2240%22%20y1%3D%2265%22%20x2%3D%2240%22%20y2%3D%2272%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2250%22%20y1%3D%2265%22%20x2%3D%2250%22%20y2%3D%2272%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2260%22%20y1%3D%2265%22%20x2%3D%2260%22%20y2%3D%2272%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2228%22%20y1%3D%2242%22%20x2%3D%2235%22%20y2%3D%2242%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2228%22%20y1%3D%2258%22%20x2%3D%2235%22%20y2%3D%2258%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2265%22%20y1%3D%2242%22%20x2%3D%2272%22%20y2%3D%2242%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2265%22%20y1%3D%2258%22%20x2%3D%2272%22%20y2%3D%2258%22%20stroke%3D%22%23facc15%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%224%22%20fill%3D%22%2322c55e%22/%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2250%22%20rx%3D%229%22%20ry%3D%223.5%22%20fill%3D%22none%22%20stroke%3D%22%234ade80%22%20stroke-width%3D%221%22%20transform%3D%22rotate%2830%2050%2050%29%22/%3E%3Cellipse%20cx%3D%2250%22%20cy%3D%2250%22%20rx%3D%229%22%20ry%3D%223.5%22%20fill%3D%22none%22%20stroke%3D%22%234ade80%22%20stroke-width%3D%221%22%20transform%3D%22rotate%28-30%2050%2050%29%22/%3E%3C/svg%3E'
+        id: 'av_bilim_sancar',
+        name: 'Aziz Sancar',
+        category: 'bilim',
+        url: makeSvgAvatar('av_bilim_sancar', ['#881337', '#e11d48'], `
+            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
+            <path d="M32 38 Q50 24 68 38 Q60 26 50 26 Q38 26 32 38 Z" fill="#94a3b8"/>
+            <circle cx="43" cy="44" r="5" fill="none" stroke="#475569" stroke-width="1.8"/>
+            <circle cx="57" cy="44" r="5" fill="none" stroke="#475569" stroke-width="1.8"/>
+            <line x1="48" y1="44" x2="52" y2="44" stroke="#475569" stroke-width="1.8"/>
+            <circle cx="43" cy="44" r="1.8" fill="#0f172a"/>
+            <circle cx="57" cy="44" r="1.8" fill="#0f172a"/>
+            <path d="M46 54 Q50 57 54 54" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#0f172a"/>
+            <polygon points="48,64 52,64 51,74 49,74" fill="#e11d48"/>
+            <circle cx="38" cy="70" r="3" fill="#facc15" stroke="#ca8a04" stroke-width="1"/>
+        `)
     },
     {
-        id: 'b12',
-        name: 'Enerji Araştırmacısı',
-        category: 'Fizik & Teknoloji',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b12%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%232e1065%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%237c3aed%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b12%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2248%22%20r%3D%2225%22%20fill%3D%22rgba%28124%2C58%2C237%2C0.3%29%22%20stroke%3D%22%23c084fc%22%20stroke-width%3D%222%22/%3E%3Cpolygon%20points%3D%2253%2C28%2042%2C46%2049%2C46%2046%2C68%2059%2C48%2051%2C48%22%20fill%3D%22%23facc15%22%20stroke%3D%22%23eab308%22%20stroke-width%3D%221%22/%3E%3Cpath%20d%3D%22M30%2048%20Q50%2032%2070%2048%22%20fill%3D%22none%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%222%202%22/%3E%3Cpath%20d%3D%22M30%2048%20Q50%2064%2070%2048%22%20fill%3D%22none%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%221.5%22%20stroke-dasharray%3D%222%202%22/%3E%3Cpath%20d%3D%22M42%2073%20L58%2073%20L62%2082%20L38%2082%20Z%22%20fill%3D%22%2364748b%22/%3E%3C/svg%3E'
+        id: 'av_bilim_tesla',
+        name: 'Nikola Tesla',
+        category: 'bilim',
+        url: makeSvgAvatar('av_bilim_tesla', ['#022c22', '#06b6d4'], `
+            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
+            <path d="M32 38 Q50 24 68 38 Q64 26 50 24 Q36 26 32 38 Z" fill="#09090b"/>
+            <circle cx="43" cy="44" r="2" fill="#0f172a"/>
+            <circle cx="57" cy="44" r="2" fill="#0f172a"/>
+            <path d="M42 53 Q50 51 58 53 Q54 56 50 54 Q46 56 42 53 Z" fill="#09090b"/>
+            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#18181b"/>
+            <polygon points="48,64 52,64 50,71" fill="#f8fafc"/>
+            <polygon points="68,62 65,68 68,68 66,74 72,67 69,67" fill="#facc15"/>
+        `)
     },
     {
-        id: 'b13',
-        name: 'Gözlüklü Genç Araştırmacı',
-        category: 'Akademik',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b13%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%231e293b%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%23334155%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b13%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2246%22%20r%3D%2220%22%20fill%3D%22%23fcd34d%22/%3E%3Cpath%20d%3D%22M32%2040%20Q50%2024%2068%2040%20Q62%2026%2050%2026%20Q38%2026%2032%2040%20Z%22%20fill%3D%22%2378350f%22/%3E%3Ccircle%20cx%3D%2243%22%20cy%3D%2245%22%20r%3D%226%22%20fill%3D%22none%22%20stroke%3D%22%230f172a%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2257%22%20cy%3D%2245%22%20r%3D%226%22%20fill%3D%22none%22%20stroke%3D%22%230f172a%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2249%22%20y1%3D%2245%22%20x2%3D%2251%22%20y2%3D%2245%22%20stroke%3D%22%230f172a%22%20stroke-width%3D%222%22/%3E%3Cline%20x1%3D%2237%22%20y1%3D%2245%22%20x2%3D%2233%22%20y2%3D%2244%22%20stroke%3D%22%230f172a%22%20stroke-width%3D%221.5%22/%3E%3Cline%20x1%3D%2263%22%20y1%3D%2245%22%20x2%3D%2267%22%20y2%3D%2244%22%20stroke%3D%22%230f172a%22%20stroke-width%3D%221.5%22/%3E%3Cpath%20d%3D%22M46%2054%20Q50%2057%2054%2054%22%20fill%3D%22none%22%20stroke%3D%22%23b45309%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M34%2076%20L44%2064%20L50%2068%20L56%2064%20L66%2076%20Z%22%20fill%3D%22%23f8fafc%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%221.5%22/%3E%3C/svg%3E'
+        id: 'av_bilim_galileo',
+        name: 'Galileo Galilei',
+        category: 'bilim',
+        url: makeSvgAvatar('av_bilim_galileo', ['#1e293b', '#0284c7'], `
+            <circle cx="50" cy="45" r="18" fill="#fed7aa"/>
+            <path d="M30 40 Q50 24 70 40 Q62 26 50 26 Q36 26 30 40 Z" fill="#cbd5e1"/>
+            <path d="M36 50 Q50 64 64 50 Q66 64 50 68 Q34 64 36 50 Z" fill="#cbd5e1"/>
+            <circle cx="43" cy="43" r="2" fill="#0f172a"/>
+            <circle cx="57" cy="43" r="2" fill="#0f172a"/>
+            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#334155"/>
+            <line x1="64" y1="74" x2="72" y2="64" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+        `)
     },
     {
-        id: 'b14',
-        name: 'Meraklı Öğrenci',
-        category: 'Akademik',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b14%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23172554%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%231d4ed8%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b14%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2248%22%20r%3D%2219%22%20fill%3D%22%23fed7aa%22/%3E%3Cpath%20d%3D%22M34%2044%20Q50%2030%2066%2044%20L68%2042%20Q50%2024%2032%2042%20Z%22%20fill%3D%22%232563eb%22/%3E%3Crect%20x%3D%2264%22%20y%3D%2242%22%20width%3D%228%22%20height%3D%223%22%20rx%3D%221.5%22%20fill%3D%22%231d4ed8%22/%3E%3Ccircle%20cx%3D%2244%22%20cy%3D%2248%22%20r%3D%222%22%20fill%3D%22%231e293b%22/%3E%3Ccircle%20cx%3D%2256%22%20cy%3D%2248%22%20r%3D%222%22%20fill%3D%22%231e293b%22/%3E%3Cpath%20d%3D%22M46%2056%20Q50%2061%2054%2056%22%20fill%3D%22none%22%20stroke%3D%22%23c2410c%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M74%2024%20L75%2027%20L78%2028%20L75%2029%20L74%2032%20L73%2029%20L70%2028%20L73%2027%20Z%22%20fill%3D%22%23facc15%22/%3E%3Cpath%20d%3D%22M32%2078%20L42%2066%20L58%2066%20L68%2078%20Z%22%20fill%3D%22%23f97316%22/%3E%3C/svg%3E'
+        id: 'av_bilim_heysem',
+        name: 'İbni Heysem',
+        category: 'bilim',
+        url: makeSvgAvatar('av_bilim_heysem', ['#451a03', '#d97706'], `
+            <ellipse cx="50" cy="30" rx="20" ry="12" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"/>
+            <circle cx="50" cy="22" r="3" fill="#f59e0b"/>
+            <circle cx="50" cy="48" r="17" fill="#fed7aa"/>
+            <path d="M38 54 Q50 66 62 54 Q64 64 50 68 Q36 64 38 54 Z" fill="#475569"/>
+            <circle cx="44" cy="45" r="2" fill="#0f172a"/>
+            <circle cx="56" cy="45" r="2" fill="#0f172a"/>
+            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#78350f"/>
+            <circle cx="50" cy="72" r="4" fill="none" stroke="#38bdf8" stroke-width="1.5"/>
+            <line x1="44" y1="72" x2="56" y2="72" stroke="#fde047" stroke-width="1"/>
+        `)
     },
     {
-        id: 'b15',
-        name: 'Fen Öğretmeni / Danışman',
-        category: 'Akademik',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b15%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%23312e81%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%234f46e5%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b15%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cpolygon%20points%3D%2250%2C22%2074%2C32%2050%2C40%2026%2C32%22%20fill%3D%22%230f172a%22/%3E%3Cpolygon%20points%3D%2246%2C39%2050%2C40%2054%2C39%2052%2C48%2048%2C48%22%20fill%3D%22%231e293b%22/%3E%3Cline%20x1%3D%2250%22%20y1%3D%2231%22%20x2%3D%2268%22%20y2%3D%2244%22%20stroke%3D%22%23f59e0b%22%20stroke-width%3D%221.5%22/%3E%3Ccircle%20cx%3D%2268%22%20cy%3D%2245%22%20r%3D%222%22%20fill%3D%22%23f59e0b%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2252%22%20r%3D%2216%22%20fill%3D%22%23fed7aa%22/%3E%3Crect%20x%3D%2240%22%20y%3D%2249%22%20width%3D%227%22%20height%3D%225%22%20rx%3D%221.5%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.5%22/%3E%3Crect%20x%3D%2253%22%20y%3D%2249%22%20width%3D%227%22%20height%3D%225%22%20rx%3D%221.5%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.5%22/%3E%3Cline%20x1%3D%2247%22%20y1%3D%2251%22%20x2%3D%2253%22%20y2%3D%2251%22%20stroke%3D%22%23475569%22%20stroke-width%3D%221.5%22/%3E%3Cpath%20d%3D%22M46%2060%20Q50%2064%2054%2060%22%20fill%3D%22none%22%20stroke%3D%22%239a3412%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M36%2078%20L46%2066%20L54%2066%20L64%2078%20Z%22%20fill%3D%22%231e293b%22/%3E%3Cpolygon%20points%3D%2249%2C66%2051%2C66%2052%2C74%2050%2C77%2048%2C74%22%20fill%3D%22%23f59e0b%22/%3E%3C/svg%3E'
+        id: 'av_bilim_genetik',
+        name: 'Modern Genetikçi',
+        category: 'bilim',
+        url: makeSvgAvatar('av_bilim_genetik', ['#083344', '#06b6d4'], `
+            <circle cx="50" cy="47" r="18" fill="#fed7aa"/>
+            <path d="M32 38 Q50 24 68 38 Q62 26 50 26 Q38 26 32 38 Z" fill="#292524"/>
+            <circle cx="43" cy="45" r="2" fill="#0f172a"/>
+            <circle cx="57" cy="45" r="2" fill="#0f172a"/>
+            <path d="M46 55 Q50 58 54 55" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#0284c7"/>
+            <path d="M48 68 Q52 71 48 74 T48 78" stroke="#38bdf8" stroke-width="1.5" fill="none"/>
+            <path d="M52 68 Q48 71 52 74 T52 78" stroke="#a855f7" stroke-width="1.5" fill="none"/>
+        `)
+    },
+
+    // --- 🚀 KÂŞİFLER (8) ---
+    {
+        id: 'av_kasif_astronot',
+        name: 'Genç Astronot',
+        category: 'kasifler',
+        url: makeSvgAvatar('av_kasif_astronot', ['#090d16', '#2563eb'], `
+            <circle cx="50" cy="46" r="24" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+            <rect x="32" y="32" width="36" height="26" rx="13" fill="#0f172a"/>
+            <circle cx="50" cy="45" r="11" fill="#fed7aa"/>
+            <circle cx="46" cy="43" r="1.8" fill="#0f172a"/>
+            <circle cx="54" cy="43" r="1.8" fill="#0f172a"/>
+            <path d="M48 49 Q50 52 52 49" stroke="#c2410c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <line x1="50" y1="22" x2="50" y2="16" stroke="#94a3b8" stroke-width="2"/>
+            <circle cx="50" cy="15" r="3" fill="#38bdf8"/>
+            <path d="M32 78 L40 68 L60 68 L68 78 Z" fill="#f1f5f9"/>
+            <rect x="46" y="70" width="8" height="6" fill="#0284c7"/>
+        `)
     },
     {
-        id: 'b16',
-        name: 'Bilim Rehberi',
-        category: 'Akademik',
-        url: 'data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%20100%20100%22%20width%3D%22100%22%20height%3D%22100%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22b16%22%20x1%3D%220%25%22%20y1%3D%220%25%22%20x2%3D%22100%25%22%20y2%3D%22100%25%22%3E%3Cstop%20offset%3D%220%25%22%20stop-color%3D%22%230c4a6e%22/%3E%3Cstop%20offset%3D%22100%25%22%20stop-color%3D%22%230284c7%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2248%22%20fill%3D%22url%28%23b16%29%22%20stroke%3D%22rgba%28255%2C255%2C255%2C0.25%29%22%20stroke-width%3D%222%22/%3E%3Cpolygon%20points%3D%2250%2C18%2053%2C28%2064%2C30%2055%2C36%2058%2C46%2050%2C40%2042%2C46%2045%2C36%2036%2C30%2047%2C28%22%20fill%3D%22%23fde047%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2258%22%20r%3D%2218%22%20fill%3D%22rgba%2815%2C23%2C42%2C0.8%29%22%20stroke%3D%22%2338bdf8%22%20stroke-width%3D%222%22/%3E%3Cpolygon%20points%3D%2250%2C44%2054%2C58%2050%2C55%2046%2C58%22%20fill%3D%22%23ef4444%22/%3E%3Cpolygon%20points%3D%2250%2C72%2054%2C58%2050%2C61%2046%2C58%22%20fill%3D%22%2394a3b8%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2243%22%20r%3D%221.5%22%20fill%3D%22%23fde047%22/%3E%3Ccircle%20cx%3D%2265%22%20cy%3D%2258%22%20r%3D%221.5%22%20fill%3D%22%2338bdf8%22/%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2273%22%20r%3D%221.5%22%20fill%3D%22%2338bdf8%22/%3E%3Ccircle%20cx%3D%2235%22%20cy%3D%2258%22%20r%3D%221.5%22%20fill%3D%22%2338bdf8%22/%3E%3C/svg%3E'
+        id: 'av_kasif_safari',
+        name: 'Safari Doğa Kâşifi',
+        category: 'kasifler',
+        url: makeSvgAvatar('av_kasif_safari', ['#14532d', '#65a30d'], `
+            <circle cx="50" cy="48" r="18" fill="#fed7aa"/>
+            <ellipse cx="50" cy="34" rx="24" ry="7" fill="#ca8a04"/>
+            <path d="M36 34 Q50 18 64 34 Z" fill="#a16207"/>
+            <circle cx="43" cy="47" r="2.2" fill="#0f172a"/>
+            <circle cx="57" cy="47" r="2.2" fill="#0f172a"/>
+            <path d="M46 56 Q50 60 54 56" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <circle cx="45" cy="67" r="3" fill="#334155"/>
+            <circle cx="55" cy="67" r="3" fill="#334155"/>
+            <line x1="48" y1="67" x2="52" y2="67" stroke="#334155" stroke-width="2"/>
+            <path d="M32 78 L42 67 L58 67 L68 78 Z" fill="#854d0e"/>
+        `)
+    },
+    {
+        id: 'av_kasif_dalgic',
+        name: 'Okyanus Dalgıcı',
+        category: 'kasifler',
+        url: makeSvgAvatar('av_kasif_dalgic', ['#082f49', '#0284c7'], `
+            <circle cx="50" cy="46" r="20" fill="#0f172a"/>
+            <circle cx="50" cy="48" r="14" fill="#fed7aa"/>
+            <rect x="36" y="42" width="28" height="12" rx="6" fill="rgba(56, 189, 248, 0.4)" stroke="#facc15" stroke-width="2"/>
+            <circle cx="44" cy="47" r="2" fill="#0f172a"/>
+            <circle cx="56" cy="47" r="2" fill="#0f172a"/>
+            <path d="M66 52 L70 52 L70 28" stroke="#facc15" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <circle cx="70" cy="27" r="2.5" fill="#ef4444"/>
+            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#1e293b"/>
+            <polygon points="48,66 52,66 50,78" fill="#facc15"/>
+        `)
+    },
+    {
+        id: 'av_kasif_kutup',
+        name: 'Kutup Araştırmacısı',
+        category: 'kasifler',
+        url: makeSvgAvatar('av_kasif_kutup', ['#0f2942', '#38bdf8'], `
+            <circle cx="50" cy="45" r="24" fill="#f1f5f9"/>
+            <circle cx="50" cy="46" r="16" fill="#fed7aa"/>
+            <circle cx="44" cy="43" r="2" fill="#0f172a"/>
+            <circle cx="56" cy="43" r="2" fill="#0f172a"/>
+            <circle cx="41" cy="47" r="2.5" fill="rgba(239, 68, 68, 0.4)"/>
+            <circle cx="59" cy="47" r="2.5" fill="rgba(239, 68, 68, 0.4)"/>
+            <path d="M38 52 Q50 56 62 52 L64 64 Q50 67 36 64 Z" fill="#ef4444"/>
+            <path d="M32 78 L40 64 L60 64 L68 78 Z" fill="#ea580c"/>
+        `)
+    },
+    {
+        id: 'av_kasif_arkeolog',
+        name: 'Arkeolog Yer Bilimci',
+        category: 'kasifler',
+        url: makeSvgAvatar('av_kasif_arkeolog', ['#451a03', '#b45309'], `
+            <circle cx="50" cy="48" r="18" fill="#fed7aa"/>
+            <ellipse cx="50" cy="36" rx="25" ry="6" fill="#78350f"/>
+            <path d="M38 36 L40 24 Q50 22 60 24 L62 36 Z" fill="#92400e"/>
+            <rect x="40" y="33" width="20" height="3" fill="#18181b"/>
+            <circle cx="43" cy="47" r="2.2" fill="#0f172a"/>
+            <circle cx="57" cy="47" r="2.2" fill="#0f172a"/>
+            <path d="M46 56 Q50 59 54 56" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#a16207"/>
+            <line x1="50" y1="66" x2="50" y2="78" stroke="#fde047" stroke-width="1.5"/>
+        `)
+    },
+    {
+        id: 'av_kasif_volkan',
+        name: 'Yanardağ Gözlemcisi',
+        category: 'kasifler',
+        url: makeSvgAvatar('av_kasif_volkan', ['#450a0a', '#dc2626'], `
+            <circle cx="50" cy="48" r="18" fill="#fed7aa"/>
+            <path d="M32 38 Q50 18 68 38 Z" fill="#ef4444"/>
+            <ellipse cx="50" cy="38" rx="20" ry="4" fill="#cbd5e1"/>
+            <circle cx="43" cy="47" r="2" fill="#0f172a"/>
+            <circle cx="57" cy="47" r="2" fill="#0f172a"/>
+            <path d="M46 56 Q50 59 54 56" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#94a3b8"/>
+            <polygon points="50,69 54,76 46,76" fill="#facc15"/>
+        `)
+    },
+    {
+        id: 'av_kasif_teleskop',
+        name: 'Gece Teleskop Gözlemcisi',
+        category: 'kasifler',
+        url: makeSvgAvatar('av_kasif_teleskop', ['#1e1b4b', '#6366f1'], `
+            <circle cx="50" cy="48" r="18" fill="#fed7aa"/>
+            <path d="M32 40 Q50 20 68 40 Z" fill="#312e81"/>
+            <rect x="30" y="38" width="40" height="6" rx="3" fill="#4338ca"/>
+            <circle cx="46" cy="30" r="1.5" fill="#fde047"/>
+            <circle cx="54" cy="27" r="1" fill="#fde047"/>
+            <circle cx="43" cy="48" r="2.2" fill="#0f172a"/>
+            <circle cx="57" cy="48" r="2.2" fill="#0f172a"/>
+            <path d="M46 56 Q50 60 54 56" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#1e293b"/>
+            <line x1="62" y1="74" x2="72" y2="62" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+        `)
+    },
+    {
+        id: 'av_kasif_drone',
+        name: 'Siber Kâşif Drone Pilotu',
+        category: 'kasifler',
+        url: makeSvgAvatar('av_kasif_drone', ['#022c22', '#10b981'], `
+            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
+            <path d="M32 38 Q50 24 68 38 Q60 26 50 26 Q38 26 32 38 Z" fill="#0f172a"/>
+            <rect x="34" y="40" width="32" height="9" rx="3" fill="#06b6d4" stroke="#22c55e" stroke-width="1.5"/>
+            <line x1="36" y1="44" x2="48" y2="44" stroke="#fff" stroke-width="1"/>
+            <path d="M46 55 Q50 58 54 55" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#0f172a"/>
+            <circle cx="50" cy="72" r="3" fill="#22c55e"/>
+            <line x1="44" y1="70" x2="56" y2="74" stroke="#38bdf8" stroke-width="1"/>
+            <line x1="44" y1="74" x2="56" y2="70" stroke="#38bdf8" stroke-width="1"/>
+        `)
+    },
+
+    // --- 👨‍🏫 ÖĞRETMENLER & YÖNETİCİLER (8) ---
+    {
+        id: 'av_ogretmen_genc_kadin',
+        name: 'Genç Kadın Fen Öğretmeni',
+        category: 'ogretmenler',
+        url: makeSvgAvatar('av_ogretmen_genc_kadin', ['#701a75', '#d946ef'], `
+            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
+            <path d="M30 44 Q50 24 70 44 Q62 25 50 25 Q36 25 30 44 Z" fill="#3b1e08"/>
+            <circle cx="43" cy="44" r="5" fill="none" stroke="#0284c7" stroke-width="1.8"/>
+            <circle cx="57" cy="44" r="5" fill="none" stroke="#0284c7" stroke-width="1.8"/>
+            <line x1="48" y1="44" x2="52" y2="44" stroke="#0284c7" stroke-width="1.8"/>
+            <circle cx="43" cy="44" r="1.8" fill="#0f172a"/>
+            <circle cx="57" cy="44" r="1.8" fill="#0f172a"/>
+            <path d="M45 54 Q50 58 55 54" stroke="#c2410c" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#0e7490"/>
+            <polygon points="47,64 53,64 50,70" fill="#f8fafc"/>
+        `)
+    },
+    {
+        id: 'av_ogretmen_genc_erkek',
+        name: 'Genç Erkek Fen Öğretmeni',
+        category: 'ogretmenler',
+        url: makeSvgAvatar('av_ogretmen_genc_erkek', ['#0f172a', '#0284c7'], `
+            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
+            <path d="M32 38 Q50 24 68 38 Q60 25 50 25 Q38 25 32 38 Z" fill="#1c1917"/>
+            <circle cx="43" cy="44" r="2.2" fill="#0f172a"/>
+            <circle cx="57" cy="44" r="2.2" fill="#0f172a"/>
+            <path d="M45 54 Q50 58 55 54" stroke="#c2410c" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#0284c7"/>
+            <polygon points="46,64 54,64 50,71" fill="#f8fafc"/>
+            <polygon points="49,70 51,70 52,78 48,78" fill="#facc15"/>
+        `)
+    },
+    {
+        id: 'av_ogretmen_kidemli_kadin',
+        name: 'Kıdemli Kadın Öğretmen',
+        category: 'ogretmenler',
+        url: makeSvgAvatar('av_ogretmen_kidemli_kadin', ['#312e81', '#6366f1'], `
+            <ellipse cx="50" cy="24" rx="9" ry="6" fill="#94a3b8"/>
+            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
+            <path d="M32 40 Q50 26 68 40 Q60 26 50 26 Q36 26 32 40 Z" fill="#94a3b8"/>
+            <circle cx="43" cy="44" r="4.5" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+            <circle cx="57" cy="44" r="4.5" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
+            <line x1="47.5" y1="44" x2="52.5" y2="44" stroke="#e2e8f0" stroke-width="1.5"/>
+            <circle cx="43" cy="44" r="1.8" fill="#0f172a"/>
+            <circle cx="57" cy="44" r="1.8" fill="#0f172a"/>
+            <path d="M46 54 Q50 57 54 54" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#064e3b"/>
+            <circle cx="50" cy="68" r="2.5" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+        `)
+    },
+    {
+        id: 'av_ogretmen_kidemli_erkek',
+        name: 'Kıdemli Erkek Fen Hocası',
+        category: 'ogretmenler',
+        url: makeSvgAvatar('av_ogretmen_kidemli_erkek', ['#1e293b', '#475569'], `
+            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
+            <path d="M32 38 Q50 24 68 38 Q60 25 50 25 Q38 25 32 38 Z" fill="#94a3b8"/>
+            <circle cx="43" cy="44" r="5" fill="none" stroke="#64748b" stroke-width="1.8"/>
+            <circle cx="57" cy="44" r="5" fill="none" stroke="#64748b" stroke-width="1.8"/>
+            <line x1="48" y1="44" x2="52" y2="44" stroke="#64748b" stroke-width="1.8"/>
+            <circle cx="43" cy="44" r="1.8" fill="#0f172a"/>
+            <circle cx="57" cy="44" r="1.8" fill="#0f172a"/>
+            <path d="M42 53 Q50 51 58 53 Q54 56 50 54 Q46 56 42 53 Z" fill="#94a3b8"/>
+            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#78350f"/>
+            <polygon points="47,64 53,64 50,71" fill="#f8fafc"/>
+        `)
+    },
+    {
+        id: 'av_ogretmen_mentor',
+        name: 'Okul Mentörü & Koç',
+        category: 'ogretmenler',
+        url: makeSvgAvatar('av_ogretmen_mentor', ['#064e3b', '#10b981'], `
+            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
+            <path d="M32 38 Q50 24 68 38 Q60 25 50 25 Q38 25 32 38 Z" fill="#292524"/>
+            <circle cx="43" cy="44" r="2.2" fill="#0f172a"/>
+            <circle cx="57" cy="44" r="2.2" fill="#0f172a"/>
+            <path d="M45 54 Q50 58 55 54" stroke="#c2410c" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#047857"/>
+            <line x1="46" y1="64" x2="49" y2="72" stroke="#f59e0b" stroke-width="1.5"/>
+            <line x1="54" y1="64" x2="51" y2="72" stroke="#f59e0b" stroke-width="1.5"/>
+            <rect x="47" y="72" width="6" height="6" fill="#f8fafc" stroke="#38bdf8" stroke-width="1"/>
+        `)
+    },
+    {
+        id: 'av_ogretmen_mudur',
+        name: 'Bilge Okul Yöneticisi',
+        category: 'ogretmenler',
+        url: makeSvgAvatar('av_ogretmen_mudur', ['#18181b', '#3f3f46'], `
+            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
+            <path d="M32 38 Q50 24 68 38 Q60 25 50 25 Q38 25 32 38 Z" fill="#52525b"/>
+            <circle cx="43" cy="44" r="2.2" fill="#0f172a"/>
+            <circle cx="57" cy="44" r="2.2" fill="#0f172a"/>
+            <path d="M46 54 Q50 57 54 54" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#18181b"/>
+            <polygon points="46,64 54,64 50,71" fill="#f8fafc"/>
+            <polygon points="38,68 40,65 42,68 40,71" fill="#facc15"/>
+        `)
+    },
+    {
+        id: 'av_ogretmen_doga',
+        name: 'Doğa Bilimleri Eğitmeni',
+        category: 'ogretmenler',
+        url: makeSvgAvatar('av_ogretmen_doga', ['#14532d', '#15803d'], `
+            <circle cx="50" cy="48" r="18" fill="#fed7aa"/>
+            <ellipse cx="50" cy="36" rx="24" ry="6" fill="#78350f"/>
+            <path d="M38 36 L40 24 Q50 22 60 24 L62 36 Z" fill="#92400e"/>
+            <circle cx="43" cy="47" r="2.2" fill="#0f172a"/>
+            <circle cx="57" cy="47" r="2.2" fill="#0f172a"/>
+            <path d="M46 56 Q50 59 54 56" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#365314"/>
+            <circle cx="64" cy="70" r="4" fill="none" stroke="#facc15" stroke-width="1.5"/>
+            <line x1="67" y1="73" x2="72" y2="77" stroke="#ca8a04" stroke-width="2"/>
+        `)
+    },
+    {
+        id: 'av_ogretmen_direktor',
+        name: 'Laboratuvar Direktörü Eğitmen',
+        category: 'ogretmenler',
+        url: makeSvgAvatar('av_ogretmen_direktor', ['#0c4a6e', '#0369a1'], `
+            <circle cx="50" cy="47" r="18" fill="#fed7aa"/>
+            <path d="M30 44 Q50 24 70 44 Q62 25 50 25 Q36 25 30 44 Z" fill="#18181b"/>
+            <rect x="36" y="41" width="12" height="7" rx="2" fill="none" stroke="#38bdf8" stroke-width="1.8"/>
+            <rect x="52" y="41" width="12" height="7" rx="2" fill="none" stroke="#38bdf8" stroke-width="1.8"/>
+            <line x1="48" y1="44" x2="52" y2="44" stroke="#38bdf8" stroke-width="1.8"/>
+            <circle cx="42" cy="44" r="1.8" fill="#0f172a"/>
+            <circle cx="58" cy="44" r="1.8" fill="#0f172a"/>
+            <path d="M45 55 Q50 59 55 55" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+            <path d="M32 78 L40 66 L60 66 L68 78 Z" fill="#f8fafc"/>
+            <polygon points="46,66 54,66 50,72" fill="#0284c7"/>
+        `)
     }
 ];
 
@@ -2493,7 +2950,14 @@ profileModal.innerHTML = `
             <button id="btn-open-avatar-selector" class="f-btn f-btn-ikinci" style="font-size:0.9rem; padding:8px 15px;">Avatarımı Değiştir</button>
         </div>
         
-        <div id="avatar-selector-container" class="is-hidden" style="border: 1px solid rgba(0, 210, 255, 0.3); border-radius:15px; background: rgba(0,0,0,0.5); margin-bottom:20px;">
+        <div id="avatar-selector-container" class="is-hidden" style="border: 1px solid rgba(0, 210, 255, 0.3); border-radius:15px; background: rgba(0,0,0,0.5); margin-bottom:20px; padding: 10px;">
+            <div class="avatar-tabs" id="avatar-category-tabs">
+                <button type="button" class="avatar-tab-btn active" data-category="all">Tümü (32)</button>
+                <button type="button" class="avatar-tab-btn" data-category="ogrenciler">👦👧 Öğrenciler (8)</button>
+                <button type="button" class="avatar-tab-btn" data-category="bilim">🔬 Bilim İnsanları (8)</button>
+                <button type="button" class="avatar-tab-btn" data-category="kasifler">🚀 Kâşifler (8)</button>
+                <button type="button" class="avatar-tab-btn" data-category="ogretmenler">👨‍🏫 Öğretmenler (8)</button>
+            </div>
             <div class="avatar-grid" id="avatar-selector"></div>
         </div>
 
@@ -2554,13 +3018,15 @@ if(btnOpenAvatar) {
 
 const avatarContainer = document.getElementById('avatar-selector');
 if(avatarContainer) {
+    avatarContainer.innerHTML = '';
     kozmikAvatarlar.forEach(av => {
         const img = document.createElement('img');
         img.src = av.url; 
         img.className = "avatar-item"; 
         img.dataset.url = av.url;
-        img.alt = av.name || "Bilim Kâşifi";
-        img.title = `${av.name} (${av.category})`;
+        img.dataset.category = av.category;
+        img.alt = av.name || "Karakter Avatarı";
+        img.title = `${av.name}`;
         img.onclick = () => {
             document.querySelectorAll('.avatar-item').forEach(i => i.classList.remove('selected'));
             img.classList.add('selected');
@@ -2569,7 +3035,7 @@ if(avatarContainer) {
             const asc = document.getElementById('avatar-selector-container'); 
             if(asc) asc.classList.add('is-hidden'); 
 
-            // V8.3: Sağ üstteki kullanıcı profil avatarı anında güncellensin ve localStorage'a kaydedilsin
+            // V8.6: Sağ üstteki kullanıcı profil avatarı anında güncellensin ve localStorage'a kaydedilsin
             try {
                 localStorage.setItem('fenupx_user_avatar', av.url);
             } catch (_) {}
@@ -2587,6 +3053,36 @@ if(avatarContainer) {
         };
         avatarContainer.appendChild(img);
     });
+
+    // V8.6: Kategori Sekmeleri tab filtreleme dinleyicileri
+    const avatarTabs = document.querySelectorAll('.avatar-tab-btn');
+    avatarTabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            e.stopPropagation();
+            avatarTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const targetCat = tab.dataset.category;
+            const items = avatarContainer.querySelectorAll('.avatar-item');
+            items.forEach(item => {
+                if (targetCat === 'all' || item.dataset.category === targetCat) {
+                    item.style.display = 'inline-block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Sayfa açıldığında önbellekte kayıtlı avatar varsa yükle
+    try {
+        const cachedAv = localStorage.getItem('fenupx_user_avatar');
+        if (cachedAv) {
+            const pca = document.getElementById('p-current-avatar');
+            if (pca) pca.src = cachedAv;
+            const matchItem = avatarContainer.querySelector(`.avatar-item[data-url="${cachedAv}"]`);
+            if (matchItem) matchItem.classList.add('selected');
+        }
+    } catch (_) {}
 }
 
 onAuthStateChanged(auth, async (user) => {
@@ -2596,7 +3092,7 @@ onAuthStateChanged(auth, async (user) => {
         
         if (userSnap.exists()) {
             const userData = userSnap.data();
-            const userAvatar = userData.avatar || kozmikAvatarlar[0].url;
+            const userAvatar = userData.avatar || localStorage.getItem("fenupx_user_avatar") || kozmikAvatarlar[0].url;
             const fullAd = `${userData.name} ${userData.surname}`;
             
             if(btnUyelik) {

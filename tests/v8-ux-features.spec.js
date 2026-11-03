@@ -313,7 +313,7 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await expect(page.locator('#dual-work-variables-bar')).toBeHidden();
     });
 
-    test('8. V8.3: Yönetim Paneli Sayaçları, Soru Filtresi ve 16 Bilim Kâşifi Avatarı', async ({ page }) => {
+    test('8. V8.3 & V8.6: Yönetim Paneli Sayaçları, Soru Filtresi ve 32 Kategorize Karakter Avatarı', async ({ page }) => {
         await page.addInitScript(() => localStorage.setItem('fenupx_cookie_consent', 'accepted'));
         await page.goto('/');
 
@@ -330,9 +330,51 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await expect(gradeFilters).toBeAttached();
         await expect(outcomeFilter).toBeAttached();
 
-        // 2. 16 Bilim Kâşifi Avatarı Entegrasyonunu Doğrula
+        // 2. 32 Kategorize Karakter Avatarı Entegrasyonunu Doğrula
         const avatarItems = page.locator('#avatar-selector .avatar-item');
-        await expect(avatarItems).toHaveCount(16);
+        await expect(avatarItems).toHaveCount(32);
+
+        // Profil modalını ve avatar seçiciyi görünür yap
+        await page.evaluate(() => {
+            const modal = document.getElementById('profile-modal');
+            if (modal) {
+                modal.classList.remove('is-hidden');
+                modal.classList.add('is-open', 'active');
+                modal.style.display = 'flex';
+            }
+            const asc = document.getElementById('avatar-selector-container');
+            if (asc) {
+                asc.classList.remove('is-hidden');
+                asc.style.display = 'block';
+            }
+        });
+
+        // Kategori sekmelerini kontrol et
+        const tabAll = page.locator('.avatar-tab-btn[data-category="all"]');
+        const tabOgrenciler = page.locator('.avatar-tab-btn[data-category="ogrenciler"]');
+        const tabBilim = page.locator('.avatar-tab-btn[data-category="bilim"]');
+        const tabKasifler = page.locator('.avatar-tab-btn[data-category="kasifler"]');
+        const tabOgretmenler = page.locator('.avatar-tab-btn[data-category="ogretmenler"]');
+        await expect(tabAll).toBeVisible();
+        await expect(tabOgrenciler).toBeVisible();
+        await expect(tabBilim).toBeVisible();
+        await expect(tabKasifler).toBeVisible();
+        await expect(tabOgretmenler).toBeVisible();
+
+        // Öğrenciler sekmesine tıklandığında yalnızca 8 öğrenci avatarı görünür olmalı
+        await tabOgrenciler.click();
+        const visibleOgrenciler = page.locator('#avatar-selector .avatar-item:visible');
+        await expect(visibleOgrenciler).toHaveCount(8);
+
+        // Bilim İnsanları sekmesine tıklandığında 8 bilim insanı görünür olmalı
+        await tabBilim.click();
+        const visibleBilim = page.locator('#avatar-selector .avatar-item:visible');
+        await expect(visibleBilim).toHaveCount(8);
+
+        // Tümü sekmesine dönüldüğünde 32 avatar görünür olmalı
+        await tabAll.click();
+        const visibleAll = page.locator('#avatar-selector .avatar-item:visible');
+        await expect(visibleAll).toHaveCount(32);
 
         // Birinci avatarı tıkla ve localStorage kaydını doğrula
         await avatarItems.nth(0).dispatchEvent('click');
@@ -369,9 +411,20 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await expect(page.locator('#exam-print-sheet')).toHaveClass(/is-answers-mode/);
 
         // Kırmızı el yazısı cevap kutuları görünür olmalı ve örnek çözüm içermeli
-        const handwrittenBox = page.locator('.exam-print-handwritten-answer').first();
+        const handwrittenBox = page.locator('.print-ruled-lines .exam-print-handwritten-answer').first();
         await expect(handwrittenBox).toBeVisible();
         await expect(handwrittenBox).toContainText('Öğretmen Çözümü & Anahtar Kavramlar');
+
+        // V8.6: El yazısı font ve stil zırhını kontrol et
+        const fontStyles = await handwrittenBox.evaluate(el => {
+            const cs = window.getComputedStyle(el);
+            return {
+                fontFamily: cs.fontFamily,
+                color: cs.color
+            };
+        });
+        expect(fontStyles.fontFamily.toLowerCase()).toMatch(/caveat|kalam|cursive/);
+        expect(fontStyles.color).toBe('rgb(220, 38, 38)');
 
         // Puan baremi görünür olmalı
         const pointBracket = page.locator('.print-q-points-bracket').first();

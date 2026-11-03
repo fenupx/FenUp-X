@@ -734,6 +734,62 @@ export function syncScenarioData() {
     profiles = DATA.selection_policy?.scenario_profiles || {};
 }
 
+// --- V8.6: 48/48 VE 72/72 TAM ÇÖZÜM REHBERİ & V7 ÖRNEK CEVAPLAR SÖZLÜĞÜ ---
+export const SAMPLE_ANSWERS_V7 = {
+    'FB714-V7-E01': 'Bulutsunun kendi içine çökmesini sağlayan temel kuvvet kütle çekim kuvvetidir. Çekirdek tepkimeleri başlamadan önceki sıcak ve yoğun ara evreye ön yıldız (protostar) adı verilir.',
+    'FB714-V7-E02': 'Bir yıldızın yaşam döngüsü boyunca izleyeceği yolu belirleyen temel faktör yıldızın başlangıç kütlesidir. Başlangıç kütlesi Güneş\'in kütlesinden az olanlar küçük kütleli, katbekat fazla olanlar ise büyük kütleli yıldız yolunu izler.',
+    'FB714-V7-E03': 'Güneş ömrünün sonuna doğru önce genişleyerek bir kırmızı dev evresine geçer; ardından dış gaz katmanlarını uzaya savurarak merkezde sıcak bir beyaz cüceye dönüşür.',
+    'FB714-V7-E04': 'Gezegenimsi bulutsuların gezegenlerle hiçbir ilgisi yoktur; adları geçmişteki optik teleskoplarda gezegen gibi yuvarlak görünmelerinden gelir. Küçük kütleli yıldızların ömürlerinin sonunda dış gaz katmanlarını uzaya savurması ile oluşur.',
+    'FB714-V7-E05': 'Yıldızların yüzey sıcaklıkları renkleriyle doğrudan ilişkilidir. Sıcaklık sıralaması en sıcaktan en soğuğa doğru X > Y > Z (Mavi > Sarı > Kırmızı) şeklindedir.',
+    'FB714-V7-E06': 'Öğrenci Kutup Yıldızı\'nın 430 yıl önceki görüntüsünü görmektedir. Çünkü yıldızdan çıkan ışınların Dünya\'ya ulaşması 430 yıl sürer; uzaya bakmak geçmişe bakmaktır.',
+    'FB714-V7-M01': '1) B yıldızının başlangıç kütlesi A yıldızından çok daha büyüktür. 2) Şiddetli patlama (süpernova patlaması) büyük kütleli B yıldızında gerçekleşir; nükleer yakıtı tükenen dev çekirdek kendi kütle çekimi altında aniden çökerek şiddetle patlar.',
+    'FB714-V7-M02': 'Mavi renkli X yıldızının yüzey sıcaklığı ve ışıma enerjisi kırmızı Y yıldızından çok daha yüksektir. Ancak mavi yıldızlar nükleer yakıtlarını son derece hızlı tükettikleri için yaşam süreleri çok daha kısa olur; kırmızı yıldızlar ise yavaş yakıt tüketerek milyarlarca yıl yaşar.',
+    'FB714-V7-M03': 'Öğrencinin yanılgısı ışık yılını bir zaman birimi sanmasıdır. Oysa ışık yılı bir uzaklık (mesafe) birimidir ve ışığın boşlukta 1 Dünya yılında aldığı yol olan yaklaşık 9.46 trilyon kilometreyi ifade eder.',
+    'FB714-V7-M04': 'Proxima Centauri\'den çıkan ışık Dünya\'ya 4.2 yılda, Kutup Yıldızı\'ndan çıkan ışık ise 430 yılda ulaşır. Bu durum, gök cisimlerini şimdiki anlarıyla değil, ışıklarının yola çıktığı geçmişteki hâlleriyle gözlemlediğimizi kanıtlar.',
+    'FB714-V7-H01': 'Belirleyici temel kriter, süpernova patlamasından sonra geriye kalan çekirdeğin kütlesidir. Geriye kalan çekirdek kütlesi yaklaşık 3 Güneş kütlesinden küçükse nötron yıldızı (pulsar), 3 Güneş kütlesinden büyükse kütle çekimine hiçbir kuvvet direnemez ve cisim bir kara deliğe dönüşür.',
+    'FB714-V7-H02': 'Gök bilimci Proxima Centauri\'nin 4.2 yıl önceki, Andromeda Galaksisi\'nin ise 2.5 milyon yıl önceki görüntüsünü görmektedir. Işık hızı sonlu olduğu için astronomik uzaklıklara bakmak aynı zamanda evrenin geçmişinde bir zaman yolculuğu yapmaktır.',
+    'FB722-V7-E01': 'Hareket halindeki tüm cisimlerin süratlerinden dolayı sahip olduğu enerjiye kinetik enerji (hareket enerjisi) denir.',
+    'FB722-V7-E02': 'Kamyon durduğu için (sürati sıfır olduğu için) kinetik enerjisi sıfırdır. Yer zemininde bulunduğu için (yerden yüksekliği olmadığı için) çekim potansiyel enerjisi de sıfırdır.',
+    'FB722-V7-E03': 'K kitabının çekim potansiyel enerjisi L kitabından daha büyüktür (K > L). Çünkü kütleleri eşit cisimlerden yerden yüksekliği daha fazla olanın depoladığı çekim potansiyel enerjisi daha fazladır.',
+    'FB722-V7-E04': '5 kg kütleli gülle kumda daha derin bir iz bırakır. Çünkü aynı yükseklikte kütlesi büyük olan cismin çekim potansiyel enerjisi daha fazladır; kuma çarptığında daha fazla iş yapar.',
+    'FB722-V7-E05': 'Sıkıştırılmış veya gerilmiş esnek cisimlerde depolanan enerji türüne esneklik potansiyel enerjisi denir.',
+    'FB722-V7-E06': '1) Gerilmiş ok yayı: Esneklik potansiyel enerjisi. 2) Koşan atlet: Kinetik enerji. 3) Yüksekte biriken baraj suyu: Çekim potansiyel enerjisi.',
+    'FB722-V7-M01': '1) Ağır bilye (2m) takozu daha uzağa iter ve kinetik enerjisi daha büyüktür. 2) Rampadan inen bilyelerin yatay düzleme ulaştıklarında süratleri eşit olur; süratler eşitken kütlesi büyük olanın kinetik enerjisi daha fazla olduğu için takoz üzerinde daha fazla fiziksel iş yapar.',
+    'FB722-V7-M02': 'a) Kütlenin etkisi için 1 ve 2 numaralı düzenekler seçilmelidir; yükseklikler sabit tutulup kütleler değiştirilmiştir. b) Yüksekliğin etkisi için 1 ve 3 numaralı düzenekler seçilmelidir; kütleler sabit tutulup yükseklikler değiştirilmiştir.',
+    'FB722-V7-M03': '1) Kalın yayın önündeki bilye daha uzağa fırlar; çünkü kalın ve sert yaylar aynı miktarda sıkıştırıldığında daha fazla esneklik potansiyel enerjisi depolar. 2) Bağımsız değişken: Yayın kalınlığı (cinsi); Bağımlı değişken: Bilyenin fırlama mesafesi (depolanan esneklik enerjisi); Kontrol edilen değişken: Sıkışma miktarı ve bilye kütlesi.',
+    'FB722-V7-M04': 'Göçmen kuş aynı anda iki enerji türüne sahiptir: 1) Süratle hareket ettiği için kinetik enerji, 2) Yerden 30 metre yüksekte bulunduğu için çekim potansiyel enerjisi. Kuşun toplam mekanik enerjisi bu iki enerjinin toplamına eşittir.',
+    'FB722-V7-H01': '1) Benzerlikler: Her ikisi de mekanik enerji türüdür, cisimlerin iş yapabilme yeteneğini gösterir ve uluslararası birimleri joule (J)dür. 2) Farklılıklar: Kinetik enerji cisimlerin hareketinden (sürat ve kütle) kaynaklanırken; çekim potansiyel enerjisi cisimlerin konumundan (yerden yükseklik ve kütle) kaynaklanan depolanmış enerjidir.',
+    'FB722-V7-H02': '1) Çekim potansiyel enerjisi sıralaması yükseklik ilişkisine göre A > C > B şeklindedir (yer seviyesindeki B\'de sıfırdır). 2) Kinetik enerji sıralaması ise B > C > A şeklindedir. Potansiyel enerjinin kinetik enerjiye dönüştüğü en alçak nokta olan B noktasında sürat ve kinetik enerji maksimumdur.'
+};
+
+/**
+ * V8.6: 48/48 ve 72/72 tüm açık uçlu soruların örnek çözümlerini eksiksiz döndüren güçlendirilmiş yardımcı
+ */
+export function getQuestionSampleAnswer(q) {
+    if (!q) return '';
+    if (typeof q.sample_answer === 'string' && q.sample_answer.trim().length > 0) {
+        return q.sample_answer.trim();
+    }
+    if (q.rubric && typeof q.rubric === 'object' && typeof q.rubric.full_credit === 'string' && q.rubric.full_credit.trim().length > 0) {
+        return q.rubric.full_credit.trim();
+    }
+    if (q.id && SAMPLE_ANSWERS_V7[q.id]) {
+        return SAMPLE_ANSWERS_V7[q.id];
+    }
+    // Kriterlerden birleştirerek tam puanlık paragraf oluştur
+    const criteria = Array.isArray(q.rubric) ? q.rubric : (q.rubric && Array.isArray(q.rubric.criteria) ? q.rubric.criteria : (Array.isArray(q.criteria) ? q.criteria : []));
+    if (criteria.length > 0) {
+        const parts = criteria.map(c => {
+            if (c.scoring && typeof c.scoring.full === 'string' && c.scoring.full.trim()) return c.scoring.full.trim();
+            if (c.text && typeof c.text === 'string' && c.text.trim()) return c.text.trim();
+            if (c.description && typeof c.description === 'string' && c.description.trim()) return c.description.trim();
+            return '';
+        }).filter(Boolean);
+        if (parts.length > 0) return parts.join(' ');
+    }
+    return 'Örnek çözüm: Soru kökünde sorulan fen kazanımına uygun gerekçeli ve tam puanlık MEB açıklaması.';
+}
+
 // --- VERİ YÜKLEME ---
 function applyLoadedData(revision, incoming) {
     const base = CONTENT_PATHS[revision];
@@ -880,7 +936,7 @@ async function loadData(revision = CONTENT_REVISION, showError = true) {
                             content_revision: '7.0.0'
                         }));
                     }
-                    const sampleAnswer = q.sample_answer || (typeof q.rubric === 'object' && q.rubric.full_credit ? q.rubric.full_credit : '');
+                    const sampleAnswer = getQuestionSampleAnswer(q);
                     return {
                         ...q,
                         stem,
@@ -2759,7 +2815,7 @@ function renderEval() {
                         <h4 style="margin: 0;"><i class="fas fa-check-circle" style="color: #10b981;"></i> 2. Örnek Tam Puanlık Cevap:</h4>
                         <span class="q-points-badge" style="background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #34d399;">${qPoints} Puan</span>
                     </div>
-                    <p class="sample-answer-text">${formatSampleAnswerWithHighlights(q.sample_answer)}</p>
+                    <p class="sample-answer-text">${formatSampleAnswerWithHighlights(getQuestionSampleAnswer(q))}</p>
                     <div class="eval-alt-note">
                         <i class="fas fa-info-circle"></i> ${esc(q.accepted_alternatives || 'Aynı bilimsel anlamı veren farklı ifadeler kabul edilir.')}
                     </div>
@@ -3537,20 +3593,24 @@ export function formatSampleAnswerWithHighlights(rawText) {
         'bilimsel inceleme', 'uzaya taşır', 'uzay çalışmaları', 'araştırma merkezi', 'gözlemler',
         'astronotların', 'astronot', 'haberleşme', 'yayın', 'iletişim', 'yer gözlem', 'yeryüzü görüntüleme',
         'afet alanı', 'ışık yılı', 'mesafe birimi', 'zaman birimi', 'bulutsu', 'nebula',
+        'kütle çekim kuvveti', 'kütle çekim', 'ön yıldız', 'protostar', 'kırmızı dev', 'gezegenimsi bulutsu',
         'yıldız', 'kara delik', 'kütle', 'ağırlık', 'değişmeyen madde', 'yer çekimi kuvveti',
-        'yer çekimi', 'dinamometre', 'eşit kollu terazi', 'kinetik enerji', 'potansiyel enerji',
+        'yer çekimi', 'dinamometre', 'eşit kollu terazi', 'kinetik enerji', 'hareket enerjisi', 'potansiyel enerji',
         'çekim potansiyel enerjisi', 'çekim potansiyel', 'esneklik potansiyel enerjisi', 'esneklik potansiyel',
         'fiziksel anlamda iş', 'fiziksel iş', 'kuvvet', 'alınan yol', 'aynı doğrultuda', 'enerji aktarımı',
         'sürat', 'yükseklik', 'sürtünme kuvveti', 'sürtünme', 'hava direnci', 'su direnci', 'ısı enerjisi',
         'sonda', 'roket', 'uzay istasyonu', 'teleskop', 'Hubble', 'TÜRKSAT 6A', 'İMECE', 'ışık kirliliği',
         'gözlemevi', 'rasathane', 'uzay kirliliği', 'insan yapımı', 'enkaz', 'gök taşı', 'doğal kökenli',
-        'uydu parçası', 'yapay uydu', 'uydu', 'doğal uydu', 'büyük kütleli', 'küçük kütleli', 'süpernova',
-        'nötron yıldızı', 'beyaz cüce', 'siyah cüce', 'galaksi', 'samanyolu', 'elips', 'sarmal', 'düzensiz',
+        'uydu parçası', 'yapay uydu', 'uydu', 'doğal uydu', 'büyük kütleli', 'küçük kütleli', 'başlangıç kütlesi',
+        'süpernova patlaması', 'süpernova', 'nötron yıldızı', 'pulsar', 'beyaz cüce', 'siyah cüce',
+        'Andromeda Galaksisi', 'Andromeda', 'Proxima Centauri', 'Kutup Yıldızı',
+        'galaksi', 'samanyolu', 'elips', 'sarmal', 'düzensiz',
         'evren', 'uzay', 'hücre', 'çekirdek', 'sitoplazma', 'hücre zarı', 'mitokondri', 'kloroplast',
         'ribozom', 'koful', 'golgi', 'lizozom', 'sentrozom', 'endoplazmik retikulum',
         'çarpışma riski', 'çarpışma', 'yörünge', 'görev sonu', 'atmosfer', 'uzaklaştırma', 'yakalama',
         'manevra', 'robot kol', 'hasar riski', 'Güneş Sistemi', 'Güneş', 'Dünya', 'Ay', 'değişken',
-        'bağımsız değişken', 'bağımlı değişken', 'kontrol edilen değişken', 'sabit değişken', 'iş yapar', 'iş'
+        'bağımsız değişken', 'bağımlı değişken', 'kontrol edilen değişken', 'sabit değişken', 'iş yapar', 'iş',
+        'mekanik enerji', 'joule', 'takoz', 'sarmal yay', 'yay', 'kum havuzu', 'yüzey sıcaklığı', 'ışıma enerjisi', 'yaşam süresi'
     ];
     keyTerms.sort((a, b) => b.length - a.length);
 
@@ -3816,25 +3876,31 @@ async function generateExamPdfBlob(questions, attempt, mode = 'blank') {
             }
         }
 
-        // V8.5: Cevap Anahtarı modunda kırmızı çözüm kutusu
+        // V8.6: Çizgili Cevap Alanı / Kırmızı Çözüm (Cevap Anahtarı modunda doğrudan çizgili alanın içine oturur)
         if (isAnswers) {
-            const answerStack = [
-                { text: `✍️ Örnek Çözüm & Anahtar Kavramlar [${qPoints} Puan]:`, bold: true, fontSize: 8.5, color: '#b91c1c' },
-                { text: q.sample_answer || '', fontSize: 9.2, color: '#dc2626', italics: true, margin: [0, 2, 0, 2] }
-            ];
-            if (q.accepted_alternatives) {
-                answerStack.push({ text: `Kabul Edilen Eşdeğer İfadeler: ${q.accepted_alternatives}`, fontSize: 7.6, color: '#991b1b', italics: true });
-            }
+            const answerText = getQuestionSampleAnswer(q);
+            qStack.push({
+                text: 'Cevabınız ve Fen Bilimsel Gerekçeniz (Örnek Çözüm & Anahtar Kavramlar):',
+                fontSize: 7.8,
+                bold: true,
+                italics: true,
+                color: '#dc2626',
+                margin: [0, 3, 0, 2]
+            });
+
             qStack.push({
                 table: {
                     widths: ['*'],
                     body: [
                         [
                             {
-                                stack: answerStack,
-                                fillColor: '#fef2f2',
-                                borderColor: ['#dc2626', '#fecaca', '#fecaca', '#fecaca'],
-                                border: [true, false, false, false],
+                                text: [
+                                    { text: answerText, fontSize: 9.6, color: '#dc2626', italics: true, lineHeight: 1.4 },
+                                    ...(q.accepted_alternatives ? [{ text: `\n(MEB Kabul Edilen Eşdeğer İfadeler: ${q.accepted_alternatives})`, fontSize: 7.6, color: '#991b1b', italics: true }] : [])
+                                ],
+                                border: [false, false, false, true],
+                                borderColor: ['#fff', '#fff', '#fff', '#cbd5e1'],
+                                fillColor: '#fffbfa',
                                 margin: [4, 4, 4, 4]
                             }
                         ]
@@ -3842,43 +3908,40 @@ async function generateExamPdfBlob(questions, attempt, mode = 'blank') {
                 },
                 layout: {
                     hLineWidth: () => 0.5,
-                    vLineWidth: (colIdx) => (colIdx === 0 ? 2 : 0.5),
-                    hLineColor: () => '#fecaca',
-                    vLineColor: (colIdx) => (colIdx === 0 ? '#dc2626' : '#fecaca')
+                    vLineWidth: () => 0
                 },
-                margin: [0, 2, 0, 6]
+                margin: [0, 0, 0, 8]
+            });
+        } else {
+            qStack.push({
+                text: 'Cevabınız ve Fen Bilimsel Gerekçeniz:',
+                fontSize: 7.8,
+                bold: true,
+                italics: true,
+                color: '#475569',
+                margin: [0, 3, 0, 2]
+            });
+
+            const ruledLinesBody = Array(lineCount).fill(0).map(() => [
+                { text: ' ', height: 14, border: [false, false, false, true], borderColor: ['#fff', '#fff', '#fff', '#94a3b8'] }
+            ]);
+
+            qStack.push({
+                table: {
+                    widths: ['*'],
+                    body: ruledLinesBody
+                },
+                layout: {
+                    hLineWidth: () => 0.5,
+                    vLineWidth: () => 0,
+                    paddingLeft: () => 0,
+                    paddingRight: () => 0,
+                    paddingTop: () => 0,
+                    paddingBottom: () => 0
+                },
+                margin: [0, 0, 0, 6]
             });
         }
-
-        // Çizgili Cevap Alanı
-        qStack.push({
-            text: 'Cevabınız ve Fen Bilimsel Gerekçeniz:',
-            fontSize: 7.8,
-            bold: true,
-            italics: true,
-            color: '#475569',
-            margin: [0, 3, 0, 2]
-        });
-
-        const ruledLinesBody = Array(lineCount).fill(0).map(() => [
-            { text: ' ', height: 14, border: [false, false, false, true], borderColor: ['#fff', '#fff', '#fff', '#94a3b8'] }
-        ]);
-
-        qStack.push({
-            table: {
-                widths: ['*'],
-                body: ruledLinesBody
-            },
-            layout: {
-                hLineWidth: () => 0.5,
-                vLineWidth: () => 0,
-                paddingLeft: () => 0,
-                paddingRight: () => 0,
-                paddingTop: () => 0,
-                paddingBottom: () => 0
-            },
-            margin: [0, 0, 0, 6]
-        });
 
         // unbreakable: true soru bloğunun sayfa sınırında bölünmesini engeller
         docContent.push({
@@ -4041,15 +4104,17 @@ function openPrintPreview(triggerEl = null) {
                             ${table}
                             ${visual}
                         </div>
-                        <div class="exam-print-handwritten-answer">
-                            <div class="handwritten-title"><i class="fas fa-pen-nib"></i> ✍️ Öğretmen Çözümü & Anahtar Kavramlar [${qPoints} Puan]:</div>
-                            <p class="handwritten-text">${formatSampleAnswerWithHighlights(q.sample_answer)}</p>
-                            ${q.accepted_alternatives ? `<div class="handwritten-alternatives"><strong>Kabul Edilen Eşdeğer İfadeler:</strong> ${esc(q.accepted_alternatives)}</div>` : ''}
-                        </div>
-                        <div class="print-answer-lines-container">
+                        <div class="print-answer-lines-container print-answer-space exam-print-answer-lines">
                             <span class="print-lines-label">Cevabınız ve Fen Bilimsel Gerekçeniz:</span>
                             <div class="print-ruled-lines">
-                                ${ruledLines}
+                                <div class="exam-print-handwritten-answer">
+                                    <div class="handwritten-title"><i class="fas fa-pen-nib"></i> ✍️ Öğretmen Çözümü & Anahtar Kavramlar [${qPoints} Puan]:</div>
+                                    <p class="handwritten-text">${formatSampleAnswerWithHighlights(getQuestionSampleAnswer(q))}</p>
+                                    ${q.accepted_alternatives ? `<div class="handwritten-alternatives"><strong>(MEB Kabul Edilen):</strong> ${esc(q.accepted_alternatives)}</div>` : ''}
+                                </div>
+                                <div class="print-blank-lines">
+                                    ${ruledLines}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -5017,6 +5082,8 @@ if (typeof window !== 'undefined') {
         getQuestionHistoryStats,
         questionVisualHtml,
         formatSampleAnswerWithHighlights,
+        getQuestionSampleAnswer,
+        SAMPLE_ANSWERS_V7,
         getPrintMode: () => currentPrintMode,
         getState: () => state,
         setScenario: (sc) => {
