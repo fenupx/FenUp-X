@@ -58,7 +58,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=2026110201">
-    <link rel="stylesheet" href="exam.css?v=8.3.0">
+    <link rel="stylesheet" href="exam.css?v=8.4.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -498,15 +498,15 @@
                     <div id="dual-work-variables-bar" class="lab-canvas-variables-bar is-hidden">
                         <div class="var-badge-item indep">
                             <span class="var-label"><i class="fas fa-filter"></i> Bağımsız Değişken:</span>
-                            <strong id="bar-indep-var-text">Uygulanan Kuvvet (F)</strong>
+                            <strong id="bar-indep-var-text">Uygulanan Kuvvet</strong>
                         </div>
                         <div class="var-badge-item ctrl">
                             <span class="var-label"><i class="fas fa-lock"></i> Kontrol Edilen / Sabit Değişken:</span>
-                            <strong id="bar-ctrl-var-text">Alınan Yol (x) ve Cisim Kütlesi</strong>
+                            <strong id="bar-ctrl-var-text">Alınan Yol ve Cisim Kütlesi</strong>
                         </div>
                         <div class="var-badge-item dep">
                             <span class="var-label"><i class="fas fa-bullseye"></i> Bağımlı Değişken:</span>
-                            <strong id="bar-dep-var-text">Yapılan Fiziksel İş (W)</strong>
+                            <strong id="bar-dep-var-text">Yapılan Fiziksel İş</strong>
                         </div>
                     </div>
 
@@ -833,15 +833,15 @@
                             <!-- Mod 1 Slider Grubu: Kuvvet Farklı, Yol Sabit -->
                             <div id="sliders-dual-mode1" class="lab-lens-sliders-row lab-dual-sliders-row">
                                 <div class="lab-angle-slider-wrap">
-                                    <label for="slider-dual-m1-dist"><i class="fas fa-ruler-horizontal"></i> Sabit Yol (x₁ = x₂): <span id="display-dual-m1-dist">4.0 m</span></label>
+                                    <label for="slider-dual-m1-dist"><i class="fas fa-ruler-horizontal"></i> Sabit Yol: <span id="display-dual-m1-dist">4.0 m</span></label>
                                     <input type="range" id="slider-dual-m1-dist" min="1" max="6" value="4" step="0.5">
                                 </div>
                                 <div class="lab-angle-slider-wrap">
-                                    <label for="slider-dual-f1"><i class="fas fa-arrow-right" style="color: #38bdf8;"></i> 1. Düzenek Kuvveti (F₁): <span id="display-dual-f1">10 N</span></label>
+                                    <label for="slider-dual-f1"><i class="fas fa-arrow-right" style="color: #38bdf8;"></i> 1. Düzenek Kuvveti: <span id="display-dual-f1">10 N</span></label>
                                     <input type="range" id="slider-dual-f1" min="5" max="50" value="10" step="5">
                                 </div>
                                 <div class="lab-angle-slider-wrap">
-                                    <label for="slider-dual-f2"><i class="fas fa-arrow-right" style="color: #f59e0b;"></i> 2. Düzenek Kuvveti (F₂): <span id="display-dual-f2">20 N</span></label>
+                                    <label for="slider-dual-f2"><i class="fas fa-arrow-right" style="color: #f59e0b;"></i> 2. Düzenek Kuvveti: <span id="display-dual-f2">20 N</span></label>
                                     <input type="range" id="slider-dual-f2" min="5" max="50" value="20" step="5">
                                 </div>
                             </div>
@@ -849,15 +849,15 @@
                             <!-- Mod 2 Slider Grubu: Yol Farklı, Kuvvet Sabit -->
                             <div id="sliders-dual-mode2" class="lab-lens-sliders-row lab-dual-sliders-row is-hidden">
                                 <div class="lab-angle-slider-wrap">
-                                    <label for="slider-dual-m2-force"><i class="fas fa-weight-hanging"></i> Sabit Kuvvet (F₁ = F₂): <span id="display-dual-m2-force">15 N</span></label>
+                                    <label for="slider-dual-m2-force"><i class="fas fa-weight-hanging"></i> Sabit Kuvvet: <span id="display-dual-m2-force">15 N</span></label>
                                     <input type="range" id="slider-dual-m2-force" min="5" max="40" value="15" step="5">
                                 </div>
                                 <div class="lab-angle-slider-wrap">
-                                    <label for="slider-dual-x1"><i class="fas fa-ruler" style="color: #38bdf8;"></i> 1. Düzenek Yolu (x₁): <span id="display-dual-x1">2.0 m</span></label>
+                                    <label for="slider-dual-x1"><i class="fas fa-ruler" style="color: #38bdf8;"></i> 1. Düzenek Yolu: <span id="display-dual-x1">2.0 m</span></label>
                                     <input type="range" id="slider-dual-x1" min="1" max="6" value="2" step="0.5">
                                 </div>
                                 <div class="lab-angle-slider-wrap">
-                                    <label for="slider-dual-x2"><i class="fas fa-ruler" style="color: #f59e0b;"></i> 2. Düzenek Yolu (x₂): <span id="display-dual-x2">5.0 m</span></label>
+                                    <label for="slider-dual-x2"><i class="fas fa-ruler" style="color: #f59e0b;"></i> 2. Düzenek Yolu: <span id="display-dual-x2">5.0 m</span></label>
                                     <input type="range" id="slider-dual-x2" min="1" max="6" value="5" step="0.5">
                                 </div>
                             </div>
@@ -1431,14 +1431,14 @@
                                 <div class="lab-dual-results-grid">
                                     <div class="lab-track-result-card track-1">
                                         <div class="track-header"><span class="track-tag">1. DÜZENEK</span></div>
-                                        <div class="track-metric-row"><span>Kuvvet (F₁):</span> <strong id="dual-res-f1">10 N</strong></div>
-                                        <div class="track-metric-row"><span>Alınan Yol (x₁):</span> <strong id="dual-res-x1">0.0 / 4.0 m</strong></div>
+                                        <div class="track-metric-row"><span>Uygulanan Kuvvet:</span> <strong id="dual-res-f1">10 N</strong></div>
+                                        <div class="track-metric-row"><span>Alınan Yol:</span> <strong id="dual-res-x1">0.0 / 4.0 m</strong></div>
                                         <div class="track-metric-row highlight"><span>İş Durumu:</span> <strong id="dual-res-w1" style="color: #38bdf8;">Bekliyor</strong></div>
                                     </div>
                                     <div class="lab-track-result-card track-2">
                                         <div class="track-header"><span class="track-tag orange">2. DÜZENEK</span></div>
-                                        <div class="track-metric-row"><span>Kuvvet (F₂):</span> <strong id="dual-res-f2">20 N</strong></div>
-                                        <div class="track-metric-row"><span>Alınan Yol (x₂):</span> <strong id="dual-res-x2">0.0 / 4.0 m</strong></div>
+                                        <div class="track-metric-row"><span>Uygulanan Kuvvet:</span> <strong id="dual-res-f2">20 N</strong></div>
+                                        <div class="track-metric-row"><span>Alınan Yol:</span> <strong id="dual-res-x2">0.0 / 4.0 m</strong></div>
                                         <div class="track-metric-row highlight"><span>İş Durumu:</span> <strong id="dual-res-w2" style="color: #f59e0b;">Bekliyor</strong></div>
                                     </div>
                                 </div>
@@ -4841,10 +4841,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
     <script>
-        window.__FENUPX_CONTENT_V6_VERSION__ = '8.3.0';
+        window.__FENUPX_CONTENT_V6_VERSION__ = '8.4.0';
     </script>
-    <script type="module" src="exam-engine.js?v=8.3.0"></script>
-    <script type="module" src="lab-engine.js?v=8.3.0"></script>
-    <script type="module" src="script.js?v=8.3.0"></script>
+    <script type="module" src="exam-engine.js?v=8.4.0"></script>
+    <script type="module" src="lab-engine.js?v=8.4.0"></script>
+    <script type="module" src="script.js?v=8.4.0"></script>
 </body>
 </html>

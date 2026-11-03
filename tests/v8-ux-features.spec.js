@@ -55,20 +55,19 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await page.locator('#btn-practice-finish').click();
         await expect(page.locator('#exam-view-eval')).toBeVisible();
 
-        // Hızlı durum butonları görünür olmalı
-        const btnEmpty = page.locator('.btn-eval-empty');
-        const btnIncorrect = page.locator('.btn-eval-incorrect');
-        await expect(btnEmpty).toBeVisible();
-        await expect(btnIncorrect).toBeVisible();
+        // Hızlı durum butonu "Yapamadım / Boş Bıraktım (0 Puan)" görünür olmalı
+        const btnZero = page.locator('#btn-eval-zero');
+        await expect(btnZero).toBeVisible();
+        await expect(btnZero).toContainText('Yapamadım / Boş Bıraktım');
 
-        // 1. soruda "Boş Bıraktım" seçeneğine tıkla
-        await btnEmpty.click();
+        // 1. soruda "Yapamadım / Boş Bıraktım" seçeneğine tıkla
+        await btnZero.click();
 
-        // Puan 0 olmalı ve durum empty olarak kaydedilmeli
+        // Puan 0 olmalı ve durum zero/empty olarak kaydedilmeli
         const isEvalMarked = await page.evaluate(() => {
             const state = window.FenUpExam.getState();
             const qId = state.attempt.ids[0];
-            return state.attempt.questionStatuses?.[qId] === 'empty' && state.attempt.evaluatedQuestions?.[qId] === true;
+            return (state.attempt.questionStatuses?.[qId] === 'zero' || state.attempt.questionStatuses?.[qId] === 'empty') && state.attempt.evaluatedQuestions?.[qId] === true;
         });
         expect(isEvalMarked).toBe(true);
     });
@@ -249,10 +248,10 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await expect(page.locator('#controls-work-single')).toBeHidden();
         await expect(page.locator('#dual-work-variables-bar')).toBeVisible();
 
-        // Bilimsel Süreç Değişkenleri Metinlerini Doğrula
-        await expect(page.locator('#bar-indep-var-text')).toContainText('Uygulanan Kuvvet (F)');
+        // Bilimsel Süreç Değişkenleri Metinlerini Doğrula (Harf Kodsuz Sade Türkçe)
+        await expect(page.locator('#bar-indep-var-text')).toContainText('Uygulanan Kuvvet');
         await expect(page.locator('#bar-ctrl-var-text')).toContainText('Alınan Yol');
-        await expect(page.locator('#bar-dep-var-text')).toContainText('Yapılan Fiziksel İş (W)');
+        await expect(page.locator('#bar-dep-var-text')).toContainText('Yapılan Fiziksel İş');
 
         // Mod 1 Sürgülerinin Görünür Olduğunu Kontrol Et
         await expect(page.locator('#sliders-dual-mode1')).toBeVisible();
@@ -262,7 +261,13 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         const btnPlay = page.locator('#btn-dual-play-pause');
         await btnPlay.click();
 
-        // Her iki düzenek hedefe ulaşana kadar bekle (t1 & t2 finish)
+        // V8.4 Bilimsel İvmelenme: 20 N (t2, a=2 m/s²) hedefe 10 N'dan (t1, a=1 m/s²) ÖNCE varmalı
+        await page.waitForFunction(() => {
+            const dual = window.FenUpLab?.labState?.work?.dual;
+            return dual && dual.t2.isFinished && !dual.t1.isFinished;
+        }, { timeout: 10000 });
+
+        // Ardından 10 N da hedefe ulaşmalı (t1 & t2 finish)
         await page.waitForFunction(() => {
             const dual = window.FenUpLab?.labState?.work?.dual;
             return dual && dual.t1.isFinished && dual.t2.isFinished;
@@ -278,14 +283,20 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await expect(page.locator('#sliders-dual-mode2')).toBeVisible();
         await expect(page.locator('#sliders-dual-mode1')).toBeHidden();
 
-        // Mod 2 Bilimsel Değişkenlerini Doğrula
-        await expect(page.locator('#bar-indep-var-text')).toContainText('Alınan Yol (x)');
-        await expect(page.locator('#bar-ctrl-var-text')).toContainText('Uygulanan Kuvvet (F)');
+        // Mod 2 Bilimsel Değişkenlerini Doğrula (Harf Kodsuz Sade Türkçe)
+        await expect(page.locator('#bar-indep-var-text')).toContainText('Alınan Yol');
+        await expect(page.locator('#bar-ctrl-var-text')).toContainText('Uygulanan Kuvvet');
 
         // Hareketi Başlat
         await btnPlay.click();
 
-        // Her iki düzenek hedefe ulaşana kadar bekle
+        // V8.4 Yol Farkı: 2 metre (t1) hedefe 5 metreden (t2) ÖNCE varmalı
+        await page.waitForFunction(() => {
+            const dual = window.FenUpLab?.labState?.work?.dual;
+            return dual && dual.t1.isFinished && !dual.t2.isFinished;
+        }, { timeout: 10000 });
+
+        // Ardından 5 metre de hedefe ulaşmalı
         await page.waitForFunction(() => {
             const dual = window.FenUpLab?.labState?.work?.dual;
             return dual && dual.t1.isFinished && dual.t2.isFinished;

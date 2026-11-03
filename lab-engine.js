@@ -267,15 +267,18 @@ export const labState = {
         netWork: 200,           // W_net (J)
         heatWork: 0,            // W_fs (J)
 
-        // V8.2: Çift Düzenekli Karşılaştırma Modu (Mod 1 & Mod 2)
+        // V8.4: Çift Düzenekli Karşılaştırma Modu (Newton İvmelenme Fiziği F = m · a)
         dual: {
             isPlaying: false,
             completed: false,
+            mass: 10.0, // kg (özdeş kütle)
             speed: 0.022,
             t1: {
                 force: 10,
                 distance: 4.0,
                 currentDist: 0.0,
+                velocity: 0.0,
+                accel: 1.0,
                 progress: 0.0,
                 joule: 0.0,
                 targetJoule: 40.0,
@@ -285,6 +288,8 @@ export const labState = {
                 force: 20,
                 distance: 4.0,
                 currentDist: 0.0,
+                velocity: 0.0,
+                accel: 2.0,
                 progress: 0.0,
                 joule: 0.0,
                 targetJoule: 80.0,
@@ -9069,13 +9074,13 @@ function setWorkMode(mode) {
         if (slidersMode2) slidersMode2.classList.add('is-hidden');
         if (badgeDualMode) badgeDualMode.textContent = "Mod 1: Kuvvetin İşe Etkisi (Yol Sabit)";
 
-        // MEB Bilimsel Değişkenleri
-        if (barIndep) barIndep.textContent = "Uygulanan Kuvvet (F)";
-        if (barCtrl) barCtrl.textContent = "Alınan Yol (x) ve Cisim Kütlesi (10 kg)";
-        if (barDep) barDep.textContent = "Yapılan Fiziksel İş (W)";
-        if (labelIndepVal) labelIndepVal.textContent = "Uygulanan Kuvvet (F₁ ≠ F₂)";
-        if (labelCtrlVal) labelCtrlVal.textContent = "Alınan Yol ve Cisim Kütlesi (10 kg)";
-        if (labelDepVal) labelDepVal.textContent = "Yapılan Fiziksel İş (W)";
+        // MEB Bilimsel Değişkenleri (Formülsüz Sade Türkçe)
+        if (barIndep) barIndep.textContent = "Uygulanan Kuvvet";
+        if (barCtrl) barCtrl.textContent = "Alınan Yol ve Cisim Kütlesi";
+        if (barDep) barDep.textContent = "Yapılan Fiziksel İş";
+        if (labelIndepVal) labelIndepVal.textContent = "Uygulanan Kuvvet";
+        if (labelCtrlVal) labelCtrlVal.textContent = "Alınan Yol ve Cisim Kütlesi";
+        if (labelDepVal) labelDepVal.textContent = "Yapılan Fiziksel İş";
 
         const sDist = document.getElementById('slider-dual-m1-dist');
         const sF1 = document.getElementById('slider-dual-f1');
@@ -9108,13 +9113,13 @@ function setWorkMode(mode) {
         if (slidersMode2) slidersMode2.classList.remove('is-hidden');
         if (badgeDualMode) badgeDualMode.textContent = "Mod 2: Alınan Yolun İşe Etkisi (Kuvvet Sabit)";
 
-        // MEB Bilimsel Değişkenleri
-        if (barIndep) barIndep.textContent = "Alınan Yol (x)";
-        if (barCtrl) barCtrl.textContent = "Uygulanan Kuvvet (F) ve Cisim Kütlesi (10 kg)";
-        if (barDep) barDep.textContent = "Yapılan Fiziksel İş (W)";
-        if (labelIndepVal) labelIndepVal.textContent = "Alınan Yol (x₁ ≠ x₂)";
-        if (labelCtrlVal) labelCtrlVal.textContent = "Uygulanan Kuvvet ve Cisim Kütlesi (10 kg)";
-        if (labelDepVal) labelDepVal.textContent = "Yapılan Fiziksel İş (W)";
+        // MEB Bilimsel Değişkenleri (Formülsüz Sade Türkçe)
+        if (barIndep) barIndep.textContent = "Alınan Yol";
+        if (barCtrl) barCtrl.textContent = "Uygulanan Kuvvet ve Cisim Kütlesi";
+        if (barDep) barDep.textContent = "Yapılan Fiziksel İş";
+        if (labelIndepVal) labelIndepVal.textContent = "Alınan Yol";
+        if (labelCtrlVal) labelCtrlVal.textContent = "Uygulanan Kuvvet ve Cisim Kütlesi";
+        if (labelDepVal) labelDepVal.textContent = "Yapılan Fiziksel İş";
 
         const sForce = document.getElementById('slider-dual-m2-force');
         const sX1 = document.getElementById('slider-dual-x1');
@@ -9159,11 +9164,13 @@ function resetDualMotion() {
     dual.completed = false;
 
     dual.t1.currentDist = 0.0;
+    dual.t1.velocity = 0.0;
     dual.t1.progress = 0.0;
     dual.t1.joule = 0.0;
     dual.t1.isFinished = false;
 
     dual.t2.currentDist = 0.0;
+    dual.t2.velocity = 0.0;
     dual.t2.progress = 0.0;
     dual.t2.joule = 0.0;
     dual.t2.isFinished = false;
@@ -9294,24 +9301,36 @@ function updateWorkDualPhysics() {
     const work = labState.work;
     const dual = work.dual;
     if (dual.isPlaying) {
-        const step = dual.speed;
+        // V8.4: Bilimsel Newton İvmelenme Fiziği (F = m · a)
+        // Kütleler özdeş (m = 10 kg). Kuvveti büyük olan cisim daha büyük ivmeyle hızlanır!
+        // 60 FPS simülasyon adımı (dt ≈ 1/60 s)
+        const dt = 1 / 60;
+        const mass = (dual.mass && dual.mass > 0) ? dual.mass : 10.0;
 
-        // Track 1
+        // 1. Düzenek: a1 = F1 / m
         if (!dual.t1.isFinished) {
-            dual.t1.currentDist += step;
+            const a1 = Math.max(0.1, dual.t1.force / mass);
+            dual.t1.accel = a1;
+            dual.t1.velocity = (dual.t1.velocity || 0) + a1 * dt;
+            dual.t1.currentDist += dual.t1.velocity * dt;
             if (dual.t1.currentDist >= dual.t1.distance) {
                 dual.t1.currentDist = dual.t1.distance;
+                dual.t1.velocity = 0;
                 dual.t1.isFinished = true;
             }
             dual.t1.progress = dual.t1.distance > 0 ? (dual.t1.currentDist / dual.t1.distance) : 1;
             dual.t1.joule = dual.t1.force * dual.t1.currentDist;
         }
 
-        // Track 2
+        // 2. Düzenek: a2 = F2 / m
         if (!dual.t2.isFinished) {
-            dual.t2.currentDist += step;
+            const a2 = Math.max(0.1, dual.t2.force / mass);
+            dual.t2.accel = a2;
+            dual.t2.velocity = (dual.t2.velocity || 0) + a2 * dt;
+            dual.t2.currentDist += dual.t2.velocity * dt;
             if (dual.t2.currentDist >= dual.t2.distance) {
                 dual.t2.currentDist = dual.t2.distance;
+                dual.t2.velocity = 0;
                 dual.t2.isFinished = true;
             }
             dual.t2.progress = dual.t2.distance > 0 ? (dual.t2.currentDist / dual.t2.distance) : 1;
@@ -9877,26 +9896,21 @@ function drawDualTrack(ctx, trackNum, t, groundY, isAmber) {
     const primaryColor = isAmber ? '#f59e0b' : '#38bdf8';
     const tagBg = isAmber ? 'rgba(245, 158, 11, 0.2)' : 'rgba(56, 189, 248, 0.2)';
 
-    // A. Parkur Etiketi & Parametre Bilgisi
+    // A. Parkur Etiketi & Parametre Bilgisi (MEB Standart Sade Türkçe)
     const tagY = groundY - 110;
     ctx.fillStyle = tagBg;
     ctx.strokeStyle = primaryColor;
     ctx.lineWidth = 1.2;
     ctx.beginPath();
-    ctx.roundRect(x0, tagY, 110, 22, 6);
+    ctx.roundRect(x0, tagY, 240, 24, 6);
     ctx.fill();
     ctx.stroke();
 
-    ctx.font = 'bold 11px system-ui, -apple-system, sans-serif';
+    ctx.font = 'bold 12px system-ui, -apple-system, sans-serif';
     ctx.fillStyle = primaryColor;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(`${trackNum}. DÜZENEK`, x0 + 55, tagY + 11);
-
-    ctx.font = '600 12px system-ui, -apple-system, sans-serif';
-    ctx.fillStyle = '#cbd5e1';
     ctx.textAlign = 'left';
-    ctx.fillText(`Kuvvet: ${t.force.toFixed(0)} N  ·  Hedef Yol: ${t.distance.toFixed(1)} m  ·  Kütle: 10 kg`, x0 + 122, tagY + 11);
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${trackNum}. Düzenek: ${t.force.toFixed(0)} Newton · ${t.distance.toFixed(0)} metre`, x0 + 12, tagY + 12);
 
     // B. Zemin Çizgisi ve Cetvel Taraması
     ctx.strokeStyle = 'rgba(100, 116, 139, 0.7)';
@@ -9974,29 +9988,19 @@ function drawDualTrack(ctx, trackNum, t, groundY, isAmber) {
     ctx.fillText('HEDEF', finishX, groundY - 74);
     ctx.restore();
 
-    // C. Ahşap Sandık (10 kg)
+    // C. Ahşap Sandık (Sade Görünüm)
     const crateW = 54;
     const crateH = 42;
     const crateX = x0 + t.currentDist * pxPerMeter;
     const crateY = groundY - crateH;
     drawWorkCrate(ctx, crateX, crateY, crateW, crateH);
 
-    // Kütle Yazısı (10 kg)
-    ctx.font = 'bold 11px system-ui, -apple-system, sans-serif';
-    ctx.fillStyle = '#ffffff';
-    ctx.shadowColor = '#000000';
-    ctx.shadowBlur = 4;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('10 kg', crateX + crateW / 2, crateY + crateH / 2);
-    ctx.shadowBlur = 0;
-
     // D. Dinamometre
     const dynX = crateX + crateW;
     const dynY = groundY - 18;
     drawDynamometer(ctx, dynX, dynY, t.force, primaryColor);
 
-    // E. Uygulanan Kuvvet Vektör Oku (F)
+    // E. Uygulanan Kuvvet Vektör Oku (Sade Değer: 10 N / 20 N)
     const hookX = dynX + 46;
     const arrowLen = 32 + (t.force / 50) * 55;
     drawWorkVectorArrow(
@@ -10006,14 +10010,14 @@ function drawDualTrack(ctx, trackNum, t, groundY, isAmber) {
         hookX + arrowLen,
         dynY,
         primaryColor,
-        `F${trackNum} = ${t.force.toFixed(0)} N`
+        `${t.force.toFixed(0)} N`
     );
 
     ctx.font = 'bold 12px system-ui, -apple-system, sans-serif';
     ctx.fillStyle = primaryColor;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'bottom';
-    ctx.fillText(`F${trackNum} = ${t.force.toFixed(0)} N`, hookX + arrowLen / 2, dynY - 7);
+    ctx.fillText(`${t.force.toFixed(0)} N`, hookX + arrowLen / 2, dynY - 7);
 
     ctx.restore();
 }
@@ -10107,18 +10111,18 @@ function drawWorkDualSimulation(ctx, work) {
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     const modeTitle = mode === "force" 
-        ? "MOD 1: KUVVETİN İŞE ETKİSİ" 
-        : "MOD 2: ALINAN YOLUN İŞE ETKİSİ";
+        ? "Kuvvetin İşe Etkisi" 
+        : "Alınan Yolun İşe Etkisi";
     ctx.fillText(modeTitle, 55, bannerY + bannerH / 2);
 
     ctx.font = '12px system-ui, -apple-system, sans-serif';
     ctx.textAlign = 'right';
     if (mode === "force") {
         ctx.fillStyle = '#38bdf8';
-        ctx.fillText(`Sabit Yol: ${dual.t1.distance.toFixed(1)} m  |  Farklı Kuvvetler: F₁ = ${dual.t1.force.toFixed(0)} N, F₂ = ${dual.t2.force.toFixed(0)} N`, 745, bannerY + bannerH / 2);
+        ctx.fillText(`Yol Sabit: ${dual.t1.distance.toFixed(0)} metre  |  Farklı Kuvvetler: ${dual.t1.force.toFixed(0)} Newton ve ${dual.t2.force.toFixed(0)} Newton`, 745, bannerY + bannerH / 2);
     } else {
         ctx.fillStyle = '#f59e0b';
-        ctx.fillText(`Sabit Kuvvet: ${dual.t1.force.toFixed(0)} N  |  Farklı Yollar: x₁ = ${dual.t1.distance.toFixed(1)} m, x₂ = ${dual.t2.distance.toFixed(1)} m`, 745, bannerY + bannerH / 2);
+        ctx.fillText(`Kuvvet Sabit: ${dual.t1.force.toFixed(0)} Newton  |  Farklı Yollar: ${dual.t1.distance.toFixed(0)} metre ve ${dual.t2.distance.toFixed(0)} metre`, 745, bannerY + bannerH / 2);
     }
     ctx.restore();
 

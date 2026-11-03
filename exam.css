@@ -5010,33 +5010,8 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     flex-wrap: wrap;
 }
 
-.btn-eval-empty {
-    background: #f1f5f9 !important;
-    color: #475569 !important;
-    border: 1px solid #cbd5e1 !important;
-    padding: 10px 18px !important;
-    border-radius: 10px !important;
-    font-weight: 700 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    cursor: pointer !important;
-    touch-action: manipulation !important;
-    transition: all 0.2s ease !important;
-}
-
-.btn-eval-empty:hover {
-    background: #e2e8f0 !important;
-    color: #1e293b !important;
-    border-color: #94a3b8 !important;
-}
-
-.btn-eval-empty.active {
-    background: #e2e8f0 !important;
-    border-color: #64748b !important;
-    box-shadow: 0 0 0 2px rgba(100, 116, 139, 0.3) !important;
-}
-
+.btn-eval-zero,
+.btn-eval-empty,
 .btn-eval-incorrect {
     background: #fef2f2 !important;
     color: #b91c1c !important;
@@ -5052,12 +5027,16 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     transition: all 0.2s ease !important;
 }
 
+.btn-eval-zero:hover,
+.btn-eval-empty:hover,
 .btn-eval-incorrect:hover {
     background: #fee2e2 !important;
     color: #991b1b !important;
     border-color: #f87171 !important;
 }
 
+.btn-eval-zero.active,
+.btn-eval-empty.active,
 .btn-eval-incorrect.active {
     background: #fee2e2 !important;
     border-color: #ef4444 !important;
@@ -5203,6 +5182,7 @@ body:has(#scene-yazili.study-active) .cookie-banner {
   .exam-btn-primary,
   .exam-btn-secondary,
   .exam-profile-btn,
+  .btn-eval-zero,
   .btn-eval-empty,
   .btn-eval-incorrect {
     min-height: 56px !important;

@@ -2701,8 +2701,7 @@ function renderEval() {
     if (qContainer && q) {
         a.questionStatuses = a.questionStatuses || {};
         const qStatus = a.questionStatuses[q.id] || null;
-        const isEmptySelected = (qStatus === 'empty');
-        const isIncorrectSelected = (qStatus === 'incorrect');
+        const isZeroSelected = (qStatus === 'zero' || qStatus === 'empty' || qStatus === 'incorrect');
         const visual = questionVisualHtml(q);
 
         const t = q.table;
@@ -2766,11 +2765,8 @@ function renderEval() {
                             <span class="eval-criteria-sub">Kendi cevabında yer alan bilimsel unsurları işaretle veya hızlı durum seç:</span>
                         </div>
                         <div class="eval-quick-status-actions">
-                            <button type="button" class="btn-eval-empty ${isEmptySelected ? 'active' : ''}" title="Soruyu boş bıraktıysan tıkla">
-                                <i class="fas fa-minus-circle"></i> Boş Bıraktım
-                            </button>
-                            <button type="button" class="btn-eval-incorrect ${isIncorrectSelected ? 'active' : ''}" title="Soruyu tamamen yanlış yaptıysan tıkla">
-                                <i class="fas fa-times-circle"></i> Yanlış Yaptım
+                            <button type="button" id="btn-eval-zero" class="btn-eval-zero btn-eval-empty ${isZeroSelected ? 'active' : ''}" title="Soruyu yapamadıysan veya boş bıraktıysan tıkla">
+                                <i class="fas fa-times-circle"></i> Yapamadım / Boş Bıraktım (0 Puan)
                             </button>
                         </div>
                     </div>
@@ -2800,13 +2796,11 @@ function renderEval() {
                         <span class="live-score-val" id="eval-current-q-score">${currentQScore} <small>/ ${qPoints} Puan</small></span>
                     </div>
                     <div class="live-eval-status">
-                        ${isEmptySelected
-                            ? '<span class="status-badge empty"><i class="fas fa-minus-circle"></i> Boş Bırakıldı (0 Puan)</span>'
-                            : (isIncorrectSelected
-                                ? '<span class="status-badge incorrect"><i class="fas fa-times-circle"></i> Yanlış Yapıldı (0 Puan)</span>'
-                                : (isEvaluated
-                                    ? '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Değerlendirme Kaydedildi</span>'
-                                    : '<span class="status-badge pending"><i class="fas fa-pencil-alt"></i> Kayıt Bekliyor</span>'))}
+                        ${isZeroSelected
+                            ? '<span class="status-badge empty"><i class="fas fa-times-circle"></i> Yapamadım / Boş Bırakıldı (0 Puan)</span>'
+                            : (isEvaluated
+                                ? '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Değerlendirme Kaydedildi</span>'
+                                : '<span class="status-badge pending"><i class="fas fa-pencil-alt"></i> Kayıt Bekliyor</span>')}
                     </div>
                 </div>
             </article>
@@ -2814,12 +2808,11 @@ function renderEval() {
 
         // Buton ve Checkbox olayları (İnceleme modunda salt okunur)
         if (!state.reviewingEval) {
-            const btnEmpty = qContainer.querySelector('.btn-eval-empty');
-            const btnIncorrect = qContainer.querySelector('.btn-eval-incorrect');
+            const btnZero = qContainer.querySelector('#btn-eval-zero, .btn-eval-zero');
 
-            const handleQuickStatus = (statusType) => {
+            const handleZeroStatus = () => {
                 a.questionStatuses = a.questionStatuses || {};
-                a.questionStatuses[q.id] = statusType;
+                a.questionStatuses[q.id] = 'zero';
                 a.selectedCriteria[q.id] = [];
                 a.evaluatedQuestions[q.id] = true;
 
@@ -2829,9 +2822,8 @@ function renderEval() {
                     cb.closest('.exam-criterion-item')?.classList.remove('checked');
                 });
 
-                // Buton aktifliklerini güncelle
-                if (btnEmpty) btnEmpty.classList.toggle('active', statusType === 'empty');
-                if (btnIncorrect) btnIncorrect.classList.toggle('active', statusType === 'incorrect');
+                // Buton aktifliğini güncelle
+                if (btnZero) btnZero.classList.add('active');
 
                 // Canlı puanı ve durum rozetini güncelle
                 const scoreValEl = $('eval-current-q-score');
@@ -2839,9 +2831,7 @@ function renderEval() {
 
                 const liveStatusEl = qContainer.querySelector('.live-eval-status');
                 if (liveStatusEl) {
-                    liveStatusEl.innerHTML = statusType === 'empty'
-                        ? '<span class="status-badge empty"><i class="fas fa-minus-circle"></i> Boş Bırakıldı (0 Puan)</span>'
-                        : '<span class="status-badge incorrect"><i class="fas fa-times-circle"></i> Yanlış Yapıldı (0 Puan)</span>';
+                    liveStatusEl.innerHTML = '<span class="status-badge empty"><i class="fas fa-times-circle"></i> Yapamadım / Boş Bırakıldı (0 Puan)</span>';
                 }
 
                 // Nav strip rozetini tamamlandı yap
@@ -2859,13 +2849,13 @@ function renderEval() {
                 trackFenUpEvent('soru_degerlendirildi', {
                     question_id: q.id,
                     score: 0,
-                    status: statusType === 'empty' ? 'bos' : 'yanlis'
+                    status: 'yapamadim_bos'
                 });
 
                 // Yumuşak geçiş: Eğer sonraki soru varsa 300ms sonra ilerle
                 if (evalIdx < questions.length - 1) {
                     setTimeout(() => {
-                        if (a.evalQuestionIndex === evalIdx && a.questionStatuses[q.id] === statusType) {
+                        if (a.evalQuestionIndex === evalIdx && a.questionStatuses[q.id] === 'zero') {
                             a.evalQuestionIndex = evalIdx + 1;
                             saveState();
                             renderEval();
@@ -2874,16 +2864,14 @@ function renderEval() {
                 }
             };
 
-            if (btnEmpty) btnEmpty.onclick = () => handleQuickStatus('empty');
-            if (btnIncorrect) btnIncorrect.onclick = () => handleQuickStatus('incorrect');
+            if (btnZero) btnZero.onclick = handleZeroStatus;
 
             qContainer.querySelectorAll('.exam-criterion-checkbox').forEach(cb => {
                 cb.onchange = () => {
-                    // Kriter işaretlendiğinde boş/yanlış durumunu sıfırla
+                    // Kriter işaretlendiğinde sıfır puan durumunu temizle
                     a.questionStatuses = a.questionStatuses || {};
                     a.questionStatuses[q.id] = null;
-                    if (btnEmpty) btnEmpty.classList.remove('active');
-                    if (btnIncorrect) btnIncorrect.classList.remove('active');
+                    if (btnZero) btnZero.classList.remove('active');
 
                     const cId = cb.dataset.criterionId;
                     const currentSel = a.selectedCriteria[q.id] || [];
@@ -3134,12 +3122,12 @@ function renderSummary() {
     const yapamadimEl = $('summary-yapamadim-count');
     if (yapamadimEl) yapamadimEl.textContent = zeroCount;
 
-    // V8.0 Boş ve Yanlış Sayıları
+    // V8.4 Boş ve Yapamadım (Sıfır Puan) Sayıları
     let emptyCount = 0;
     let incorrectCount = 0;
     questions.forEach(q => {
         const st = a.questionStatuses?.[q.id];
-        if (st === 'empty') emptyCount++;
+        if (st === 'empty' || st === 'zero') emptyCount++;
         else if (st === 'incorrect') incorrectCount++;
     });
 
