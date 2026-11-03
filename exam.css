@@ -4063,11 +4063,12 @@ body.exam-fullscreen-open {
 
 .exam-print-handwritten-answer {
     display: none;
-    font-family: 'Caveat', 'Kalam', cursive !important;
+    font-family: 'Kalam', 'Caveat', cursive !important;
+    font-weight: 500 !important;
     color: #dc2626 !important;
-    font-size: 1.25rem !important;
-    line-height: 1.7 !important;
-    letter-spacing: 0.3px !important;
+    font-size: 1.15rem !important;
+    line-height: 1.8 !important;
+    letter-spacing: 0.2px !important;
     background: transparent !important;
     border: none !important;
     padding: 6px 4px !important;
@@ -4095,40 +4096,44 @@ body.exam-fullscreen-open {
     display: block !important;
 }
 
+/* V8.7: Sade Örnek Çözüm Rozeti */
+.exam-print-answer-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    font-size: 0.78rem !important;
+    font-weight: 800 !important;
+    color: #b91c1c !important;
+    background: rgba(254, 226, 226, 0.75) !important;
+    border: 1px solid rgba(239, 68, 68, 0.35) !important;
+    border-radius: 4px !important;
+    padding: 2px 8px !important;
+    margin-bottom: 6px !important;
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    line-height: 1.4 !important;
+}
+
 .exam-print-handwritten-answer .handwritten-title {
-    font-weight: 700;
-    font-size: 0.95rem;
-    margin-bottom: 4px;
-    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: #b91c1c;
+    display: none !important;
 }
 
 .exam-print-handwritten-answer .handwritten-text {
-    margin: 0;
-    font-size: 1.25rem !important;
-    font-weight: 700;
+    margin: 0 !important;
+    font-size: 1.15rem !important;
+    font-weight: 500 !important;
     color: #dc2626 !important;
-    font-family: 'Caveat', 'Kalam', cursive !important;
-    line-height: 1.7 !important;
-    letter-spacing: 0.3px !important;
+    font-family: 'Kalam', 'Caveat', cursive !important;
+    line-height: 1.8 !important;
+    letter-spacing: 0.2px !important;
 }
 
 .exam-print-handwritten-answer .handwritten-text strong {
-    color: #991b1b !important;
-    font-weight: 700 !important;
-    text-decoration: underline;
-    text-decoration-color: rgba(220, 38, 38, 0.5);
+    font-weight: 600 !important;
+    color: #dc2626 !important;
+    text-decoration: none !important;
 }
 
 .exam-print-handwritten-answer .handwritten-alternatives {
-    margin-top: 6px;
-    font-size: 0.95rem;
-    font-family: 'Caveat', 'Kalam', cursive !important;
-    color: #991b1b !important;
-    font-style: italic;
+    display: none !important;
 }
 
 .print-lines-label {
@@ -4513,11 +4518,12 @@ body:has(#scene-yazili.study-active) .cookie-banner {
 
     .exam-print-container.is-answers-mode .exam-print-handwritten-answer {
         display: block !important;
-        font-family: 'Caveat', 'Kalam', cursive !important;
+        font-family: 'Kalam', 'Caveat', cursive !important;
+        font-weight: 500 !important;
         color: #dc2626 !important;
-        font-size: 1.25rem !important;
-        line-height: 1.7 !important;
-        letter-spacing: 0.3px !important;
+        font-size: 1.15rem !important;
+        line-height: 1.8 !important;
+        letter-spacing: 0.2px !important;
         background: transparent !important;
         border: none !important;
         padding: 6px 4px !important;
@@ -4525,6 +4531,21 @@ body:has(#scene-yazili.study-active) .cookie-banner {
         background-size: 100% 32px !important;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    .exam-print-answer-badge {
+        display: inline-flex !important;
+        font-size: 0.75rem !important;
+        font-weight: 800 !important;
+        color: #b91c1c !important;
+        background: #fee2e2 !important;
+        border: 1px solid #f87171 !important;
+        border-radius: 4px !important;
+        padding: 2px 6px !important;
+        margin-bottom: 4px !important;
+        font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }

@@ -3876,11 +3876,11 @@ async function generateExamPdfBlob(questions, attempt, mode = 'blank') {
             }
         }
 
-        // V8.6: Çizgili Cevap Alanı / Kırmızı Çözüm (Cevap Anahtarı modunda doğrudan çizgili alanın içine oturur)
+        // V8.7: Çizgili Cevap Alanı / Kırmızı Çözüm (Örnek Çözüm · Puan sade formatı)
         if (isAnswers) {
             const answerText = getQuestionSampleAnswer(q);
             qStack.push({
-                text: 'Cevabınız ve Fen Bilimsel Gerekçeniz (Örnek Çözüm & Anahtar Kavramlar):',
+                text: 'Cevabınız ve Fen Bilimsel Gerekçeniz (Örnek Çözüm · ' + qPoints + ' Puan):',
                 fontSize: 7.8,
                 bold: true,
                 italics: true,
@@ -3895,8 +3895,7 @@ async function generateExamPdfBlob(questions, attempt, mode = 'blank') {
                         [
                             {
                                 text: [
-                                    { text: answerText, fontSize: 9.6, color: '#dc2626', italics: true, lineHeight: 1.4 },
-                                    ...(q.accepted_alternatives ? [{ text: `\n(MEB Kabul Edilen Eşdeğer İfadeler: ${q.accepted_alternatives})`, fontSize: 7.6, color: '#991b1b', italics: true }] : [])
+                                    { text: answerText, fontSize: 9.6, color: '#dc2626', italics: true, lineHeight: 1.4 }
                                 ],
                                 border: [false, false, false, true],
                                 borderColor: ['#fff', '#fff', '#fff', '#cbd5e1'],
@@ -4108,9 +4107,8 @@ function openPrintPreview(triggerEl = null) {
                             <span class="print-lines-label">Cevabınız ve Fen Bilimsel Gerekçeniz:</span>
                             <div class="print-ruled-lines">
                                 <div class="exam-print-handwritten-answer">
-                                    <div class="handwritten-title"><i class="fas fa-pen-nib"></i> ✍️ Öğretmen Çözümü & Anahtar Kavramlar [${qPoints} Puan]:</div>
-                                    <p class="handwritten-text">${formatSampleAnswerWithHighlights(getQuestionSampleAnswer(q))}</p>
-                                    ${q.accepted_alternatives ? `<div class="handwritten-alternatives"><strong>(MEB Kabul Edilen):</strong> ${esc(q.accepted_alternatives)}</div>` : ''}
+                                    <div class="exam-print-answer-badge">Örnek Çözüm · ${qPoints} Puan</div>
+                                    <p class="handwritten-text">${esc(getQuestionSampleAnswer(q))}</p>
                                 </div>
                                 <div class="print-blank-lines">
                                     ${ruledLines}

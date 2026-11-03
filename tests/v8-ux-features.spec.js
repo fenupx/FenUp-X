@@ -413,7 +413,9 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         // Kırmızı el yazısı cevap kutuları görünür olmalı ve örnek çözüm içermeli
         const handwrittenBox = page.locator('.print-ruled-lines .exam-print-handwritten-answer').first();
         await expect(handwrittenBox).toBeVisible();
-        await expect(handwrittenBox).toContainText('Öğretmen Çözümü & Anahtar Kavramlar');
+        await expect(handwrittenBox).toContainText('Örnek Çözüm');
+        await expect(handwrittenBox).not.toContainText('Anahtarla kelime eşleşmesi aranmaz');
+        await expect(handwrittenBox).not.toContainText('MEB Kabul Edilen');
 
         // V8.6: El yazısı font ve stil zırhını kontrol et
         const fontStyles = await handwrittenBox.evaluate(el => {

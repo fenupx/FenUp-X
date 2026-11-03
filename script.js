@@ -81,16 +81,17 @@ styleEnjektor.innerHTML = `
     .avatar-item { width: 75px; height: 75px; border-radius: 50%; border: 3px solid transparent; cursor: pointer; transition: 0.3s; padding: 5px; background: rgba(255,255,255,0.05); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
     .avatar-item:hover { transform: scale(1.1); background: rgba(255,255,255,0.1); }
     .avatar-item.selected { border-color: #00d2ff; background: rgba(0,210,255,0.2); box-shadow: 0 0 20px rgba(0, 210, 255, 0.6); transform: scale(1.1); }
-    .avatar-tabs { display: flex; gap: 6px; margin: 10px 0 5px 0; overflow-x: auto; padding-bottom: 6px; scrollbar-width: thin; }
-    .avatar-tabs::-webkit-scrollbar { height: 4px; }
-    .avatar-tabs::-webkit-scrollbar-thumb { background: rgba(0, 210, 255, 0.4); border-radius: 4px; }
-    .avatar-tab-btn {
-        padding: 6px 12px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18);
-        border-radius: 20px; color: #cbd5e1; font-size: 0.82rem; font-weight: 600; cursor: pointer;
-        white-space: nowrap; transition: all 0.2s; touch-action: manipulation;
+    .avatar-tabs, .avatar-category-nav {
+        display: flex !important; flex-wrap: wrap !important; gap: 8px !important; justify-content: center !important; margin-bottom: 16px !important;
     }
-    .avatar-tab-btn:hover { background: rgba(0, 210, 255, 0.2); border-color: #00d2ff; color: #fff; }
-    .avatar-tab-btn.active { background: linear-gradient(135deg, #00d2ff, #0284c7); border-color: #00d2ff; color: #0f172a; font-weight: 700; box-shadow: 0 0 12px rgba(0, 210, 255, 0.4); }
+    .avatar-tab-btn {
+        white-space: nowrap !important; padding: 8px 14px !important; font-size: 0.9rem !important;
+        border-radius: 20px !important; border: 1px solid rgba(255,255,255,0.15) !important;
+        background: rgba(15,23,42,0.6) !important; color: #94a3b8 !important; cursor: pointer !important;
+        transition: all 0.2s !important; touch-action: manipulation;
+    }
+    .avatar-tab-btn:hover { background: rgba(2, 132, 199, 0.25) !important; border-color: #38bdf8 !important; color: #f8fafc !important; }
+    .avatar-tab-btn.active { background: #0284c7 !important; color: #ffffff !important; border-color: #38bdf8 !important; font-weight: 600 !important; box-shadow: 0 0 12px rgba(2, 132, 199, 0.4) !important; }
 
     .profile-img-header { width: 35px; height: 35px; border-radius: 50%; vertical-align: middle; margin-right: 8px; border: 1px solid #00d2ff; }
     .btn-danger { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; margin-top: 15px; }
@@ -137,11 +138,48 @@ function makeSvgAvatar(id, bgGrad, innerSvg) {
 <stop offset="100%" stop-color="${bgGrad[1]}"/>
 </linearGradient>
 </defs>
-<circle cx="50" cy="50" r="48" fill="url(#g_${id})" stroke="rgba(255,255,255,0.25)" stroke-width="2"/>
+<circle cx="50" cy="50" r="48" fill="url(#g_${id})" stroke="rgba(255,255,255,0.35)" stroke-width="2"/>
+<circle cx="50" cy="50" r="46.5" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
 ${innerSvg}
 </svg>`;
     return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
 }
+
+// Chibi helpers
+const H = {
+    head: (skin = '#fed7aa', blush = 'rgba(244,63,94,0.4)') => `
+        <path d="M28 45 C27 59, 36 67, 50 67 C64 67, 73 59, 72 45 C72 31, 63 25, 50 25 C37 25, 28 31, 28 45 Z" fill="${skin}"/>
+        <ellipse cx="36" cy="53" rx="4" ry="2.2" fill="${blush}"/>
+        <ellipse cx="64" cy="53" rx="4" ry="2.2" fill="${blush}"/>
+    `,
+    eyes: (eyeColor = '#0284c7', eyelashColor = '#0f172a') => `
+        <g class="chibi-eyes">
+            <path d="M37 43 Q42 39 47 43" stroke="${eyelashColor}" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+            <ellipse cx="42.5" cy="46.5" rx="3.8" ry="4.8" fill="#1e293b"/>
+            <ellipse cx="42.5" cy="48" rx="3.2" ry="2.8" fill="${eyeColor}" opacity="0.85"/>
+            <circle cx="41" cy="44.5" r="1.6" fill="#ffffff"/>
+            <circle cx="44" cy="48" r="0.8" fill="#ffffff"/>
+            <path d="M53 43 Q58 39 63 43" stroke="${eyelashColor}" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+            <ellipse cx="57.5" cy="46.5" rx="3.8" ry="4.8" fill="#1e293b"/>
+            <ellipse cx="57.5" cy="48" rx="3.2" ry="2.8" fill="${eyeColor}" opacity="0.85"/>
+            <circle cx="56" cy="44.5" r="1.6" fill="#ffffff"/>
+            <circle cx="59" cy="48" r="0.8" fill="#ffffff"/>
+        </g>
+    `,
+    smile: (lipColor = '#e11d48') => `
+        <path d="M46 56 Q50 60.5 54 56 Q50 58.5 46 56 Z" fill="${lipColor}"/>
+        <circle cx="50" cy="52" r="0.8" fill="#ea580c" opacity="0.35"/>
+    `,
+    happyMouth: () => `
+        <path d="M45.5 55 Q50 62 54.5 55 Z" fill="#b91c1c"/>
+        <path d="M47 57.5 Q50 61 53 57.5 Z" fill="#fda4af"/>
+        <circle cx="50" cy="51.5" r="0.8" fill="#ea580c" opacity="0.35"/>
+    `,
+    eyebrows: (color = '#451a03') => `
+        <path d="M37 39 Q42 37 46 39" stroke="${color}" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <path d="M54 39 Q58 37 63 39" stroke="${color}" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+    `
+};
 
 const kozmikAvatarlar = [
     // --- 👦👧 ÖĞRENCİLER (8) ---
@@ -150,136 +188,192 @@ const kozmikAvatarlar = [
         name: 'Karizmatik Dalgalı Saçlı Öğrenci',
         category: 'ogrenciler',
         url: makeSvgAvatar('av_ogrenci_1', ['#1e1b4b', '#2563eb'], `
-            <circle cx="50" cy="46" r="19" fill="#fed7aa"/>
-            <path d="M30 40 Q50 20 70 38 Q66 22 50 22 Q34 22 30 40 Z" fill="#78350f"/>
-            <path d="M28 38 Q32 30 40 32 Q32 38 34 46 Z" fill="#92400e"/>
-            <path d="M72 38 Q68 30 60 32 Q68 38 66 46 Z" fill="#92400e"/>
-            <circle cx="43" cy="45" r="2.2" fill="#0f172a"/>
-            <circle cx="57" cy="45" r="2.2" fill="#0f172a"/>
-            <path d="M46 54 Q50 58 54 54" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M30 78 L40 65 L60 65 L70 78 Z" fill="#1e293b"/>
-            <path d="M46 65 L46 73 M54 65 L54 73" stroke="#e2e8f0" stroke-width="1.5"/>
+            <!-- Hoodie body -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#1e293b"/>
+            <path d="M40 66 L44 80 M60 66 L56 80" stroke="#f8fafc" stroke-width="1.8" stroke-linecap="round"/>
+            <circle cx="44" cy="81" r="1.5" fill="#38bdf8"/>
+            <circle cx="56" cy="81" r="1.5" fill="#38bdf8"/>
+            <!-- Back Hair Layer -->
+            <path d="M26 48 C24 36, 32 24, 50 24 C68 24, 76 36, 74 48 C74 56, 70 60, 68 62 C68 45, 62 30, 50 30 C38 30, 32 45, 32 62 C30 60, 26 56, 26 48 Z" fill="#451a03"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#451a03')}
+            ${H.eyes('#0284c7')}
+            ${H.happyMouth()}
+            <!-- Wavy front bangs with glossy highlights -->
+            <path d="M28 42 C30 30, 42 22, 54 24 C66 26, 72 32, 73 42 C68 34, 58 32, 50 35 C42 38, 36 36, 28 42 Z" fill="#78350f"/>
+            <path d="M30 40 C34 32, 44 26, 52 26 C42 28, 35 34, 30 40 Z" fill="#92400e"/>
+            <path d="M48 27 C56 26, 64 30, 68 36 C64 32, 56 30, 48 27 Z" fill="rgba(255,255,255,0.25)"/>
         `)
     },
     {
         id: 'av_ogrenci_2',
         name: 'Gözlüklü Araştırmacı Öğrenci',
         category: 'ogrenciler',
-        url: makeSvgAvatar('av_ogrenci_2', ['#064e3b', '#10b981'], `
-            <circle cx="50" cy="46" r="19" fill="#fed7aa"/>
-            <path d="M32 38 Q50 24 68 38 Q60 26 50 26 Q38 26 32 38 Z" fill="#1e293b"/>
-            <circle cx="42" cy="45" r="6" fill="none" stroke="#0284c7" stroke-width="2"/>
-            <circle cx="58" cy="45" r="6" fill="none" stroke="#0284c7" stroke-width="2"/>
+        url: makeSvgAvatar('av_ogrenci_2', ['#064e3b', '#059669'], `
+            <!-- Green knit sweater with white collar -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#047857"/>
+            <polygon points="46,65 54,65 50,72" fill="#f8fafc"/>
+            <polygon points="43,65 47,65 45,69" fill="#10b981"/>
+            <polygon points="57,65 53,65 55,69" fill="#10b981"/>
+            <path d="M26 46 C24 34, 34 24, 50 24 C66 24, 76 34, 74 46 Z" fill="#1e293b"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#1e293b')}
+            ${H.eyes('#059669')}
+            ${H.smile()}
+            <!-- Modern rounded glasses with blue tint -->
+            <rect x="34" y="40" width="14" height="11" rx="4" fill="rgba(56,189,248,0.15)" stroke="#0284c7" stroke-width="2"/>
+            <rect x="52" y="40" width="14" height="11" rx="4" fill="rgba(56,189,248,0.15)" stroke="#0284c7" stroke-width="2"/>
             <line x1="48" y1="45" x2="52" y2="45" stroke="#0284c7" stroke-width="2"/>
-            <circle cx="42" cy="45" r="2" fill="#0f172a"/>
-            <circle cx="58" cy="45" r="2" fill="#0f172a"/>
-            <path d="M46 55 Q50 59 54 55" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#047857"/>
-            <polygon points="46,65 54,65 50,71" fill="#f8fafc"/>
+            <line x1="34" y1="43" x2="31" y2="43" stroke="#0284c7" stroke-width="1.8"/>
+            <line x1="66" y1="43" x2="69" y2="43" stroke="#0284c7" stroke-width="1.8"/>
+            <!-- Neat hair bangs -->
+            <path d="M30 40 C34 30, 44 26, 50 28 C56 26, 66 30, 70 40 C64 34, 56 34, 50 36 C44 34, 36 34, 30 40 Z" fill="#334155"/>
         `)
     },
     {
         id: 'av_ogrenci_3',
         name: 'Kulaklıklı Kodlamacı Genç',
         category: 'ogrenciler',
-        url: makeSvgAvatar('av_ogrenci_3', ['#311042', '#a855f7'], `
-            <circle cx="50" cy="46" r="19" fill="#fcd34d"/>
-            <path d="M30 38 L36 28 L44 32 L50 26 L56 32 L64 28 L70 38 Z" fill="#334155"/>
-            <circle cx="43" cy="45" r="2.2" fill="#0f172a"/>
-            <circle cx="57" cy="45" r="2.2" fill="#0f172a"/>
-            <path d="M46 54 Q50 57 54 54" stroke="#b45309" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M28 46 A22 22 0 0 1 72 46" fill="none" stroke="#06b6d4" stroke-width="3"/>
-            <rect x="25" y="40" width="6" height="12" rx="3" fill="#0891b2"/>
-            <rect x="69" y="40" width="6" height="12" rx="3" fill="#0891b2"/>
-            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#6b21a8"/>
-            <text x="50" y="74" fill="#38bdf8" font-size="7" font-weight="bold" text-anchor="middle">&lt;/&gt;</text>
+        url: makeSvgAvatar('av_ogrenci_3', ['#2e1065', '#9333ea'], `
+            <!-- Coder t-shirt -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#3b0764"/>
+            <text x="50" y="76" fill="#38bdf8" font-size="7.5" font-weight="900" text-anchor="middle" font-family="monospace">&lt;dev/&gt;</text>
+            <!-- Headband of headphones -->
+            <path d="M27 46 A23 23 0 0 1 73 46" fill="none" stroke="#06b6d4" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M30 46 A20 20 0 0 1 70 46" fill="none" stroke="#22d3ee" stroke-width="1.2" opacity="0.6"/>
+            <!-- Spiky hair back -->
+            <path d="M28 42 L34 26 L42 30 L50 22 L58 30 L66 26 L72 42 Z" fill="#1e1b4b"/>
+            ${H.head('#fcd34d')}
+            ${H.eyebrows('#1e1b4b')}
+            ${H.eyes('#8b5cf6')}
+            ${H.happyMouth()}
+            <!-- Spiky bangs in front -->
+            <polygon points="32,42 38,34 44,40 50,32 56,40 62,34 68,42 62,38 56,36 50,36 44,36 38,38" fill="#312e81"/>
+            <!-- Over-ear gaming headphones earcups with glowing LED ring -->
+            <rect x="23" y="38" width="8" height="15" rx="4" fill="#0f172a" stroke="#06b6d4" stroke-width="1.8"/>
+            <circle cx="27" cy="45.5" r="2.5" fill="#38bdf8"/>
+            <rect x="69" y="38" width="8" height="15" rx="4" fill="#0f172a" stroke="#06b6d4" stroke-width="1.8"/>
+            <circle cx="73" cy="45.5" r="2.5" fill="#38bdf8"/>
         `)
     },
     {
         id: 'av_ogrenci_4',
         name: 'Sarışın Enerjik Fen Kâşifi',
         category: 'ogrenciler',
-        url: makeSvgAvatar('av_ogrenci_4', ['#78350f', '#f59e0b'], `
-            <circle cx="50" cy="46" r="19" fill="#fed7aa"/>
-            <path d="M28 40 Q40 22 72 34 Q64 22 48 24 Q34 26 28 40 Z" fill="#fde047"/>
-            <path d="M30 36 Q38 32 46 36" stroke="#eab308" stroke-width="2" fill="none"/>
-            <circle cx="43" cy="46" r="2.2" fill="#0f172a"/>
-            <circle cx="57" cy="46" r="2.2" fill="#0f172a"/>
-            <path d="M45 54 Q50 60 55 54" stroke="#c2410c" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L40 65 L60 65 L68 78 Z" fill="#ea580c"/>
-            <polygon points="50,67 52,71 56,71 53,74 54,78 50,75 46,78 47,74 44,71 48,71" fill="#facc15"/>
+        url: makeSvgAvatar('av_ogrenci_4', ['#78350f', '#d97706'], `
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#ea580c"/>
+            <path d="M50 65 L50 84" stroke="#facc15" stroke-width="1.8"/>
+            <polygon points="50,67 52,71 56,71 53,74 54,78 50,75 46,78 47,74 44,71 48,71" fill="#fde047"/>
+            <!-- Golden windswept hair back -->
+            <path d="M24 46 C22 30, 36 20, 50 20 C64 20, 78 30, 76 46 Z" fill="#ca8a04"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#a16207')}
+            ${H.eyes('#d97706')}
+            ${H.happyMouth()}
+            <!-- Layered blonde bangs with star hairpin -->
+            <path d="M26 42 C30 28, 44 24, 52 26 C64 24, 72 30, 74 42 C68 34, 58 32, 50 35 C42 32, 32 34, 26 42 Z" fill="#fde047"/>
+            <path d="M30 38 Q42 30 52 32" stroke="#fef08a" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <polygon points="65,34 66.5,37 70,37 67,39.5 68,43 65,40.5 62,43 63,39.5 60,37 63.5,37" fill="#ef4444"/>
         `)
     },
     {
         id: 'av_ogrenci_5',
         name: 'At Kuyruklu Dinamik Kız',
         category: 'ogrenciler',
-        url: makeSvgAvatar('av_ogrenci_5', ['#831843', '#ec4899'], `
-            <path d="M64 36 Q80 32 76 54 Q70 48 64 44 Z" fill="#451a03"/>
-            <circle cx="66" cy="38" r="4" fill="#38bdf8"/>
-            <circle cx="50" cy="47" r="19" fill="#fcd34d"/>
-            <path d="M31 44 Q50 30 69 44 Q60 28 50 28 Q36 28 31 44 Z" fill="#451a03"/>
-            <circle cx="43" cy="46" r="2.2" fill="#0f172a"/>
-            <circle cx="57" cy="46" r="2.2" fill="#0f172a"/>
-            <path d="M46 55 Q50 59 54 55" stroke="#b45309" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#0d9488"/>
-            <line x1="50" y1="66" x2="50" y2="78" stroke="#facc15" stroke-width="1.5"/>
+        url: makeSvgAvatar('av_ogrenci_5', ['#831843', '#db2777'], `
+            <!-- Ponytail behind head -->
+            <path d="M64 36 C78 30, 84 42, 80 56 C74 58, 68 48, 64 42 Z" fill="#3b1e08"/>
+            <ellipse cx="67" cy="38" rx="4" ry="5" fill="#38bdf8"/>
+            <!-- Teal sporty jacket -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#0d9488"/>
+            <line x1="50" y1="65" x2="50" y2="84" stroke="#facc15" stroke-width="1.8"/>
+            <path d="M26 48 C24 34, 34 24, 50 24 C66 24, 76 34, 74 48 Z" fill="#3b1e08"/>
+            ${H.head('#fcd34d')}
+            ${H.eyebrows('#451a03')}
+            ${H.eyes('#db2777')}
+            ${H.smile()}
+            <!-- Cute bangs with side tendrils -->
+            <path d="M30 46 C32 34, 42 28, 50 30 C58 28, 68 34, 70 46 C66 38, 58 36, 50 38 C42 36, 34 38, 30 46 Z" fill="#573010"/>
+            <path d="M30 44 C28 50, 30 56, 32 60" stroke="#573010" stroke-width="2.5" fill="none" stroke-linecap="round"/>
         `)
     },
     {
         id: 'av_ogrenci_6',
         name: 'Örgülü Araştırmacı Kız',
         category: 'ogrenciler',
-        url: makeSvgAvatar('av_ogrenci_6', ['#1e3a5f', '#0ea5e9'], `
-            <circle cx="50" cy="47" r="19" fill="#fed7aa"/>
-            <path d="M32 46 Q26 56 28 68 Q32 68 34 58 Z" fill="#7c2d12"/>
-            <path d="M68 46 Q74 56 72 68 Q68 68 66 58 Z" fill="#7c2d12"/>
-            <circle cx="28" cy="67" r="2" fill="#facc15"/>
-            <circle cx="72" cy="67" r="2" fill="#facc15"/>
-            <path d="M31 42 Q50 28 69 42 Q60 27 50 27 Q37 27 31 42 Z" fill="#7c2d12"/>
-            <circle cx="43" cy="46" r="2.2" fill="#0f172a"/>
-            <circle cx="57" cy="46" r="2.2" fill="#0f172a"/>
-            <circle cx="41" cy="51" r="1" fill="#ea580c"/>
-            <circle cx="59" cy="51" r="1" fill="#ea580c"/>
-            <path d="M46 55 Q50 59 54 55" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#0284c7"/>
-            <rect x="44" y="66" width="12" height="12" fill="#facc15"/>
+        url: makeSvgAvatar('av_ogrenci_6', ['#0c4a6e', '#0284c7'], `
+            <!-- Braided pigtails hanging down -->
+            <path d="M32 46 C24 56, 26 66, 28 74 C32 74, 34 66, 34 56 Z" fill="#7c2d12"/>
+            <circle cx="28" cy="72" r="3" fill="#facc15"/>
+            <path d="M68 46 C76 56, 74 66, 72 74 C68 74, 66 66, 66 56 Z" fill="#7c2d12"/>
+            <circle cx="72" cy="72" r="3" fill="#facc15"/>
+            <!-- Denim overall -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#0284c7"/>
+            <rect x="42" y="65" width="16" height="19" fill="#fde047"/>
+            <line x1="38" y1="65" x2="42" y2="84" stroke="#0369a1" stroke-width="2.5"/>
+            <line x1="62" y1="65" x2="58" y2="84" stroke="#0369a1" stroke-width="2.5"/>
+            ${H.head('#fed7aa')}
+            <!-- Cute freckles -->
+            <circle cx="39" cy="52" r="0.9" fill="#c2410c" opacity="0.6"/>
+            <circle cx="41" cy="54" r="0.8" fill="#c2410c" opacity="0.6"/>
+            <circle cx="59" cy="54" r="0.8" fill="#c2410c" opacity="0.6"/>
+            <circle cx="61" cy="52" r="0.9" fill="#c2410c" opacity="0.6"/>
+            ${H.eyebrows('#7c2d12')}
+            ${H.eyes('#0284c7')}
+            ${H.happyMouth()}
+            <!-- Chestnut front hair -->
+            <path d="M28 44 C32 30, 44 26, 50 28 C56 26, 68 30, 72 44 C66 36, 58 34, 50 36 C42 34, 34 36, 28 44 Z" fill="#9a3412"/>
         `)
     },
     {
         id: 'av_ogrenci_7',
         name: 'Önlüklü Fen Meraklısı Kız',
         category: 'ogrenciler',
-        url: makeSvgAvatar('av_ogrenci_7', ['#0f172a', '#14b8a6'], `
-            <circle cx="50" cy="48" r="19" fill="#fed7aa"/>
-            <path d="M30 46 Q50 26 70 46 Q64 26 50 26 Q36 26 30 46 Z" fill="#3b1e08"/>
-            <rect x="36" y="30" width="12" height="8" rx="3" fill="none" stroke="#38bdf8" stroke-width="2"/>
-            <rect x="52" y="30" width="12" height="8" rx="3" fill="none" stroke="#38bdf8" stroke-width="2"/>
-            <line x1="48" y1="34" x2="52" y2="34" stroke="#38bdf8" stroke-width="2"/>
-            <circle cx="43" cy="48" r="2.2" fill="#0f172a"/>
-            <circle cx="57" cy="48" r="2.2" fill="#0f172a"/>
-            <path d="M46 56 Q50 60 54 56" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L40 67 L60 67 L68 78 Z" fill="#f8fafc"/>
-            <polygon points="46,67 54,67 50,74" fill="#0d9488"/>
-            <line x1="62" y1="71" x2="62" y2="76" stroke="#ef4444" stroke-width="1.5"/>
+        url: makeSvgAvatar('av_ogrenci_7', ['#042f2e', '#0d9488'], `
+            <!-- White Lab coat -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#f8fafc"/>
+            <polygon points="46,65 54,65 50,74" fill="#0f766e"/>
+            <line x1="62" y1="70" x2="62" y2="76" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="64.5" y1="70" x2="64.5" y2="76" stroke="#3b82f6" stroke-width="1.8" stroke-linecap="round"/>
+            <!-- Brunette hair back -->
+            <path d="M26 48 C24 34, 34 24, 50 24 C66 24, 76 34, 74 48 C74 58, 68 64, 68 64 C68 50, 64 36, 50 36 C36 36, 32 50, 32 64 C32 64, 26 58, 26 48 Z" fill="#3b1e08"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#451a03')}
+            ${H.eyes('#10b981')}
+            ${H.smile()}
+            <!-- Brunette bob bangs -->
+            <path d="M30 46 C32 34, 42 28, 50 30 C58 28, 68 34, 70 46 C66 38, 58 36, 50 38 C42 36, 34 38, 30 46 Z" fill="#573010"/>
+            <!-- Safety Goggles on forehead with strap -->
+            <path d="M30 35 C32 32, 68 32, 70 35" stroke="#38bdf8" stroke-width="2.5" fill="none"/>
+            <rect x="35" y="28" width="13" height="9" rx="3.5" fill="rgba(56,189,248,0.3)" stroke="#0284c7" stroke-width="1.8"/>
+            <rect x="52" y="28" width="13" height="9" rx="3.5" fill="rgba(56,189,248,0.3)" stroke="#0284c7" stroke-width="1.8"/>
+            <line x1="48" y1="32.5" x2="52" y2="32.5" stroke="#0284c7" stroke-width="2"/>
         `)
     },
     {
         id: 'av_ogrenci_8',
         name: 'Gözlüklü Çalışkan Kız',
         category: 'ogrenciler',
-        url: makeSvgAvatar('av_ogrenci_8', ['#4c1d95', '#8b5cf6'], `
-            <circle cx="50" cy="46" r="19" fill="#fcd34d"/>
-            <path d="M30 44 Q50 25 70 44 Q60 25 50 25 Q35 25 30 44 Z" fill="#1c1917"/>
-            <path d="M32 38 Q50 29 68 38" fill="none" stroke="#f43f5e" stroke-width="3"/>
-            <circle cx="42" cy="45" r="5.5" fill="none" stroke="#ef4444" stroke-width="2"/>
-            <circle cx="58" cy="45" r="5.5" fill="none" stroke="#ef4444" stroke-width="2"/>
-            <line x1="47.5" y1="45" x2="52.5" y2="45" stroke="#ef4444" stroke-width="2"/>
-            <circle cx="42" cy="45" r="2" fill="#0f172a"/>
-            <circle cx="58" cy="45" r="2" fill="#0f172a"/>
-            <path d="M45 54 Q50 59 55 54" stroke="#b45309" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#7c3aed"/>
-            <polygon points="47,65 53,65 50,70" fill="#fed7aa"/>
+        url: makeSvgAvatar('av_ogrenci_8', ['#4c1d95', '#7c3aed'], `
+            <!-- Lavender cardigan -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#8b5cf6"/>
+            <polygon points="46,65 54,65 50,72" fill="#ede9fe"/>
+            <circle cx="50" cy="76" r="1.2" fill="#f8fafc"/>
+            <circle cx="50" cy="80" r="1.2" fill="#f8fafc"/>
+            <!-- Long dark hair -->
+            <path d="M26 50 C24 34, 34 24, 50 24 C66 24, 76 34, 74 50 C76 66, 68 70, 68 70 C68 50, 64 36, 50 36 C36 36, 32 50, 32 70 C32 70, 24 66, 26 50 Z" fill="#18181b"/>
+            <!-- Red headband -->
+            <path d="M30 38 Q50 26 70 38" stroke="#ef4444" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            ${H.head('#fcd34d')}
+            ${H.eyebrows('#18181b')}
+            ${H.eyes('#7c3aed')}
+            ${H.smile()}
+            <!-- Chic red round spectacles -->
+            <circle cx="42" cy="46" r="6" fill="rgba(254,205,211,0.2)" stroke="#ef4444" stroke-width="1.8"/>
+            <circle cx="58" cy="46" r="6" fill="rgba(254,205,211,0.2)" stroke="#ef4444" stroke-width="1.8"/>
+            <line x1="48" y1="46" x2="52" y2="46" stroke="#ef4444" stroke-width="1.8"/>
+            <!-- Soft bangs -->
+            <path d="M32 42 C36 34, 44 32, 50 34 C56 32, 64 34, 68 42 C64 36, 58 35, 50 37 C42 35, 36 36, 32 42 Z" fill="#27272a"/>
         `)
     },
 
@@ -289,108 +383,174 @@ const kozmikAvatarlar = [
         name: 'Albert Einstein',
         category: 'bilim',
         url: makeSvgAvatar('av_bilim_einstein', ['#0f172a', '#475569'], `
-            <path d="M24 44 Q22 28 34 26 Q36 18 48 20 Q60 18 64 26 Q78 28 76 44 Q80 54 74 62 Q72 48 68 44 Q32 48 26 62 Q20 54 24 44 Z" fill="#e2e8f0"/>
-            <circle cx="50" cy="47" r="18" fill="#fed7aa"/>
-            <circle cx="43" cy="44" r="2" fill="#0f172a"/>
-            <circle cx="57" cy="44" r="2" fill="#0f172a"/>
-            <path d="M38 54 Q50 50 62 54 Q56 60 50 56 Q44 60 38 54 Z" fill="#f8fafc"/>
-            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#573a24"/>
-            <polygon points="47,65 53,65 50,72" fill="#cbd5e1"/>
+            <!-- Tweed vest and tie -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#573a24"/>
+            <polygon points="46,65 54,65 50,73" fill="#f8fafc"/>
+            <polygon points="48,71 52,71 50,79" fill="#94a3b8"/>
+            <!-- Bushy wild cloud hair -->
+            <path d="M22 46 C18 32, 26 22, 36 22 C38 16, 48 16, 54 18 C62 14, 72 20, 74 26 C84 28, 86 42, 80 52 C84 62, 74 70, 70 66 C68 50, 64 36, 50 36 C36 36, 32 50, 30 66 C26 70, 16 62, 20 52 C16 48, 18 42, 22 46 Z" fill="#e2e8f0"/>
+            <path d="M30 32 C38 24, 62 24, 70 32" stroke="#f8fafc" stroke-width="2.5" fill="none" opacity="0.6"/>
+            ${H.head('#fed7aa')}
+            <!-- Kind wrinkly chibi eyes -->
+            <path d="M36 41 Q42 38 47 41" stroke="#475569" stroke-width="2.4" fill="none"/>
+            <ellipse cx="42.5" cy="45.5" rx="3.5" ry="4" fill="#334155"/>
+            <circle cx="41.5" cy="44" r="1.4" fill="#ffffff"/>
+            <path d="M53 41 Q58 38 64 41" stroke="#475569" stroke-width="2.4" fill="none"/>
+            <ellipse cx="57.5" cy="45.5" rx="3.5" ry="4" fill="#334155"/>
+            <circle cx="56.5" cy="44" r="1.4" fill="#ffffff"/>
+            <!-- Bushy white mustache -->
+            <path d="M36 54 C40 50, 48 50, 50 53 C52 50, 60 50, 64 54 C66 59, 56 61, 50 56 C44 61, 34 59, 36 54 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="0.8"/>
+            <circle cx="50" cy="51" r="1" fill="#ea580c" opacity="0.4"/>
         `)
     },
     {
         id: 'av_bilim_curie',
         name: 'Marie Curie',
         category: 'bilim',
-        url: makeSvgAvatar('av_bilim_curie', ['#064e3b', '#059669'], `
-            <ellipse cx="50" cy="26" rx="10" ry="7" fill="#422006"/>
-            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
-            <path d="M32 40 Q50 28 68 40 Q60 26 50 26 Q36 26 32 40 Z" fill="#422006"/>
-            <circle cx="43" cy="44" r="2" fill="#0f172a"/>
-            <circle cx="57" cy="44" r="2" fill="#0f172a"/>
-            <path d="M46 54 Q50 57 54 54" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#1f2937"/>
-            <rect x="64" y="60" width="6" height="14" rx="3" fill="#10b981" stroke="#a7f3d0" stroke-width="1"/>
-            <circle cx="67" cy="56" r="1.5" fill="#34d399"/>
+        url: makeSvgAvatar('av_bilim_curie', ['#064e3b', '#10b981'], `
+            <!-- Victorian dark high-collar gown -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#1e293b"/>
+            <ellipse cx="50" cy="65" rx="8" ry="3" fill="#f8fafc"/>
+            <!-- Victorian hair bun -->
+            <ellipse cx="50" cy="24" rx="14" ry="9" fill="#3b1e08"/>
+            <circle cx="50" cy="22" r="3" fill="#78350f"/>
+            <path d="M26 48 C24 34, 34 26, 50 26 C66 26, 76 34, 74 48 Z" fill="#3b1e08"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#451a03')}
+            ${H.eyes('#059669')}
+            ${H.smile('#b91c1c')}
+            <!-- Hair bangs swept up -->
+            <path d="M30 42 C36 32, 44 30, 50 32 C56 30, 64 32, 70 42 C64 36, 58 35, 50 36 C42 35, 36 36, 30 42 Z" fill="#573010"/>
+            <!-- Glowing Erlenmeyer flask held in hands -->
+            <polygon points="66,74 78,74 74,65 70,65" fill="#34d399" opacity="0.85" stroke="#a7f3d0" stroke-width="1"/>
+            <rect x="70.5" y="62" width="3" height="4" fill="#a7f3d0"/>
+            <circle cx="72" cy="70" r="1.5" fill="#ffffff"/>
+            <circle cx="75" cy="68" r="1" fill="#ffffff"/>
+            <circle cx="72" cy="59" r="1.2" fill="#34d399"/>
         `)
     },
     {
         id: 'av_bilim_newton',
         name: 'Isaac Newton',
         category: 'bilim',
-        url: makeSvgAvatar('av_bilim_newton', ['#1e1b4b', '#4338ca'], `
-            <path d="M26 42 Q28 22 50 22 Q72 22 74 42 Q78 58 72 68 Q66 52 66 42 Q34 52 28 68 Q22 58 26 42 Z" fill="#cbd5e1"/>
-            <circle cx="50" cy="45" r="17" fill="#fed7aa"/>
-            <circle cx="44" cy="43" r="2" fill="#0f172a"/>
-            <circle cx="56" cy="43" r="2" fill="#0f172a"/>
-            <path d="M46 52 Q50 55 54 52" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 63 L58 63 L68 78 Z" fill="#1e293b"/>
-            <polygon points="46,63 54,63 50,69" fill="#f8fafc"/>
-            <circle cx="36" cy="71" r="4" fill="#ef4444"/>
-            <path d="M36 67 Q38 65 39 67" stroke="#22c55e" stroke-width="1.5" fill="none"/>
+        url: makeSvgAvatar('av_bilim_newton', ['#1e1b4b', '#3730a3'], `
+            <!-- Velvet baroque coat with lace cravat -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#1e1b4b"/>
+            <!-- White jabot lace cravat -->
+            <path d="M46 65 L54 65 L52 76 L48 76 Z" fill="#f8fafc"/>
+            <line x1="47" y1="69" x2="53" y2="69" stroke="#cbd5e1" stroke-width="1"/>
+            <line x1="48" y1="73" x2="52" y2="73" stroke="#cbd5e1" stroke-width="1"/>
+            <!-- Powdered silver-grey baroque curls -->
+            <path d="M22 46 C20 30, 32 20, 50 20 C68 20, 80 30, 78 46 C82 60, 74 72, 72 74 C68 56, 64 36, 50 36 C36 36, 32 56, 28 74 C26 72, 18 60, 22 46 Z" fill="#cbd5e1"/>
+            <circle cx="25" cy="56" r="4.5" fill="#e2e8f0"/>
+            <circle cx="75" cy="56" r="4.5" fill="#e2e8f0"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#64748b')}
+            ${H.eyes('#3b82f6')}
+            ${H.smile()}
+            <path d="M30 40 C36 32, 44 32, 50 34 C56 32, 64 32, 70 40 Z" fill="#e2e8f0"/>
+            <!-- Glossy red apple badge with green leaf -->
+            <circle cx="36" cy="72" r="4.5" fill="#ef4444"/>
+            <circle cx="35" cy="70.5" r="1.3" fill="#ffffff"/>
+            <path d="M36 67.5 Q38 65 40 66.5" stroke="#22c55e" stroke-width="1.8" fill="none" stroke-linecap="round"/>
         `)
     },
     {
         id: 'av_bilim_sancar',
         name: 'Aziz Sancar',
         category: 'bilim',
-        url: makeSvgAvatar('av_bilim_sancar', ['#881337', '#e11d48'], `
-            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
-            <path d="M32 38 Q50 24 68 38 Q60 26 50 26 Q38 26 32 38 Z" fill="#94a3b8"/>
-            <circle cx="43" cy="44" r="5" fill="none" stroke="#475569" stroke-width="1.8"/>
-            <circle cx="57" cy="44" r="5" fill="none" stroke="#475569" stroke-width="1.8"/>
-            <line x1="48" y1="44" x2="52" y2="44" stroke="#475569" stroke-width="1.8"/>
-            <circle cx="43" cy="44" r="1.8" fill="#0f172a"/>
-            <circle cx="57" cy="44" r="1.8" fill="#0f172a"/>
-            <path d="M46 54 Q50 57 54 54" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#0f172a"/>
-            <polygon points="48,64 52,64 51,74 49,74" fill="#e11d48"/>
-            <circle cx="38" cy="70" r="3" fill="#facc15" stroke="#ca8a04" stroke-width="1"/>
+        url: makeSvgAvatar('av_bilim_sancar', ['#881337', '#be123c'], `
+            <!-- Dark formal suit & red tie -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#0f172a"/>
+            <polygon points="46,65 54,65 50,73" fill="#f8fafc"/>
+            <polygon points="48,70 52,70 51,82 49,82" fill="#e11d48"/>
+            <!-- Dignified silver hair -->
+            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#94a3b8"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#64748b')}
+            ${H.eyes('#0f172a')}
+            ${H.smile()}
+            <!-- Wire-rim spectacles -->
+            <circle cx="42" cy="46" r="5.5" fill="none" stroke="#475569" stroke-width="1.8"/>
+            <circle cx="58" cy="46" r="5.5" fill="none" stroke="#475569" stroke-width="1.8"/>
+            <line x1="47.5" y1="46" x2="52.5" y2="46" stroke="#475569" stroke-width="1.8"/>
+            <!-- Parted silver hair front -->
+            <path d="M28 42 C32 30, 44 26, 48 28 C56 26, 68 30, 72 42 C66 36, 56 34, 48 35 C42 34, 34 36, 28 42 Z" fill="#cbd5e1"/>
+            <!-- Gold Nobel Prize Medal on lapel -->
+            <circle cx="36" cy="72" r="3.8" fill="#facc15" stroke="#ca8a04" stroke-width="1"/>
+            <circle cx="36" cy="72" r="2.2" fill="#fde047"/>
+            <line x1="36" y1="67" x2="36" y2="69" stroke="#ef4444" stroke-width="1.8"/>
         `)
     },
     {
         id: 'av_bilim_tesla',
         name: 'Nikola Tesla',
         category: 'bilim',
-        url: makeSvgAvatar('av_bilim_tesla', ['#022c22', '#06b6d4'], `
-            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
-            <path d="M32 38 Q50 24 68 38 Q64 26 50 24 Q36 26 32 38 Z" fill="#09090b"/>
-            <circle cx="43" cy="44" r="2" fill="#0f172a"/>
-            <circle cx="57" cy="44" r="2" fill="#0f172a"/>
-            <path d="M42 53 Q50 51 58 53 Q54 56 50 54 Q46 56 42 53 Z" fill="#09090b"/>
-            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#18181b"/>
-            <polygon points="48,64 52,64 50,71" fill="#f8fafc"/>
-            <polygon points="68,62 65,68 68,68 66,74 72,67 69,67" fill="#facc15"/>
+        url: makeSvgAvatar('av_bilim_tesla', ['#022c22', '#0891b2'], `
+            <!-- Victorian high-collar formal suit with bowtie -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#18181b"/>
+            <polygon points="46,65 54,65 50,71" fill="#f8fafc"/>
+            <polygon points="47,68 53,68 50,70" fill="#09090b"/>
+            <!-- Parted dark hair -->
+            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#09090b"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#09090b')}
+            ${H.eyes('#0891b2')}
+            <!-- Sharp neat mustache -->
+            <path d="M42 54 C45 52, 48 52, 50 54 C52 52, 55 52, 58 54 C57 57, 52 57, 50 55 C48 57, 43 57, 42 54 Z" fill="#09090b"/>
+            <path d="M47 58 Q50 60 53 58" stroke="#b91c1c" stroke-width="1.5" fill="none"/>
+            <!-- Center-parted sleek bangs -->
+            <path d="M28 42 C34 30, 46 26, 49 32 C51 32, 62 28, 72 42 C64 34, 54 32, 50 35 C46 32, 36 34, 28 42 Z" fill="#18181b"/>
+            <!-- Electric lightning sparks on shoulders -->
+            <polygon points="24,66 21,72 25,72 22,78 28,70 25,70" fill="#facc15"/>
+            <polygon points="76,64 73,70 77,70 74,76 80,68 77,68" fill="#38bdf8"/>
         `)
     },
     {
         id: 'av_bilim_galileo',
         name: 'Galileo Galilei',
         category: 'bilim',
-        url: makeSvgAvatar('av_bilim_galileo', ['#1e293b', '#0284c7'], `
-            <circle cx="50" cy="45" r="18" fill="#fed7aa"/>
-            <path d="M30 40 Q50 24 70 40 Q62 26 50 26 Q36 26 30 40 Z" fill="#cbd5e1"/>
-            <path d="M36 50 Q50 64 64 50 Q66 64 50 68 Q34 64 36 50 Z" fill="#cbd5e1"/>
-            <circle cx="43" cy="43" r="2" fill="#0f172a"/>
-            <circle cx="57" cy="43" r="2" fill="#0f172a"/>
-            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#334155"/>
-            <line x1="64" y1="74" x2="72" y2="64" stroke="#f59e0b" stroke-width="3" stroke-linecap="round"/>
+        url: makeSvgAvatar('av_bilim_galileo', ['#1e293b', '#0369a1'], `
+            <!-- Scholar robe with fur trim -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#334155"/>
+            <path d="M38 65 C44 70, 56 70, 62 65 Z" fill="#94a3b8"/>
+            <!-- Curly grey hair & full renaissance beard -->
+            <path d="M24 46 C22 30, 34 22, 50 22 C66 22, 78 30, 76 46 Z" fill="#94a3b8"/>
+            <!-- Full curly beard -->
+            <path d="M34 50 C32 64, 40 72, 50 72 C60 72, 68 64, 66 50 C62 56, 56 58, 50 58 C44 58, 38 56, 34 50 Z" fill="#cbd5e1"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#64748b')}
+            ${H.eyes('#0284c7')}
+            <path d="M46 54 Q50 56.5 54 54" stroke="#c2410c" stroke-width="1.8" fill="none"/>
+            <path d="M30 40 C36 30, 44 30, 50 32 C56 30, 64 30, 70 40 Z" fill="#cbd5e1"/>
+            <!-- Brass telescope icon -->
+            <line x1="66" y1="78" x2="78" y2="62" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
+            <line x1="66" y1="78" x2="78" y2="62" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="78" cy="62" r="2.5" fill="#38bdf8"/>
         `)
     },
     {
         id: 'av_bilim_heysem',
         name: 'İbni Heysem',
         category: 'bilim',
-        url: makeSvgAvatar('av_bilim_heysem', ['#451a03', '#d97706'], `
-            <ellipse cx="50" cy="30" rx="20" ry="12" fill="#fef3c7" stroke="#b45309" stroke-width="1.5"/>
-            <circle cx="50" cy="22" r="3" fill="#f59e0b"/>
-            <circle cx="50" cy="48" r="17" fill="#fed7aa"/>
-            <path d="M38 54 Q50 66 62 54 Q64 64 50 68 Q36 64 38 54 Z" fill="#475569"/>
-            <circle cx="44" cy="45" r="2" fill="#0f172a"/>
-            <circle cx="56" cy="45" r="2" fill="#0f172a"/>
-            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#78350f"/>
-            <circle cx="50" cy="72" r="4" fill="none" stroke="#38bdf8" stroke-width="1.5"/>
-            <line x1="44" y1="72" x2="56" y2="72" stroke="#fde047" stroke-width="1"/>
+        url: makeSvgAvatar('av_bilim_heysem', ['#451a03', '#b45309'], `
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#78350f"/>
+            <polygon points="46,65 54,65 50,74" fill="#fef3c7"/>
+            <!-- Ornate scholar turban with emerald jewel -->
+            <ellipse cx="50" cy="30" rx="22" ry="14" fill="#fef3c7" stroke="#b45309" stroke-width="1.8"/>
+            <path d="M32 30 C36 22, 64 22, 68 30" stroke="#d97706" stroke-width="2" fill="none"/>
+            <circle cx="50" cy="22" r="3.5" fill="#059669" stroke="#facc15" stroke-width="1.2"/>
+            <!-- Trimmed scholar beard -->
+            <path d="M36 52 C36 65, 42 70, 50 70 C58 70, 64 65, 64 52 Z" fill="#475569"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#1e293b')}
+            ${H.eyes('#b45309')}
+            <path d="M46 54 Q50 56.5 54 54" stroke="#c2410c" stroke-width="1.8" fill="none"/>
+            <!-- Optical glass prism ray badge -->
+            <polygon points="46,74 54,74 50,68" fill="rgba(56,189,248,0.4)" stroke="#38bdf8" stroke-width="1"/>
+            <line x1="42" y1="71" x2="48" y2="71" stroke="#ffffff" stroke-width="1"/>
+            <line x1="52" y1="71" x2="58" y2="69" stroke="#ef4444" stroke-width="1"/>
+            <line x1="52" y1="71" x2="58" y2="73" stroke="#3b82f6" stroke-width="1"/>
         `)
     },
     {
@@ -398,14 +558,22 @@ const kozmikAvatarlar = [
         name: 'Modern Genetikçi',
         category: 'bilim',
         url: makeSvgAvatar('av_bilim_genetik', ['#083344', '#06b6d4'], `
-            <circle cx="50" cy="47" r="18" fill="#fed7aa"/>
-            <path d="M32 38 Q50 24 68 38 Q62 26 50 26 Q38 26 32 38 Z" fill="#292524"/>
-            <circle cx="43" cy="45" r="2" fill="#0f172a"/>
-            <circle cx="57" cy="45" r="2" fill="#0f172a"/>
-            <path d="M46 55 Q50 58 54 55" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#0284c7"/>
-            <path d="M48 68 Q52 71 48 74 T48 78" stroke="#38bdf8" stroke-width="1.5" fill="none"/>
-            <path d="M52 68 Q48 71 52 74 T52 78" stroke="#a855f7" stroke-width="1.5" fill="none"/>
+            <!-- Modern lab scrub / coat -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#0284c7"/>
+            <polygon points="46,65 54,65 50,72" fill="#0369a1"/>
+            <!-- ID Card on scrub -->
+            <rect x="34" y="70" width="8" height="6" rx="1.5" fill="#f8fafc" stroke="#38bdf8" stroke-width="1"/>
+            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#292524"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#292524')}
+            ${H.eyes('#06b6d4')}
+            ${H.smile()}
+            <path d="M28 42 C32 30, 44 26, 50 28 C56 26, 68 30, 72 42 C66 36, 56 34, 50 35 C42 34, 34 36, 28 42 Z" fill="#44403c"/>
+            <!-- Glowing DNA double-helix brooch -->
+            <path d="M64 68 Q68 71 64 74 T64 80" stroke="#38bdf8" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M68 68 Q64 71 68 74 T68 80" stroke="#a855f7" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <line x1="64" y1="71" x2="68" y2="71" stroke="#facc15" stroke-width="1.2"/>
+            <line x1="64" y1="77" x2="68" y2="77" stroke="#facc15" stroke-width="1.2"/>
         `)
     },
 
@@ -414,34 +582,48 @@ const kozmikAvatarlar = [
         id: 'av_kasif_astronot',
         name: 'Genç Astronot',
         category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_astronot', ['#090d16', '#2563eb'], `
-            <circle cx="50" cy="46" r="24" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
-            <rect x="32" y="32" width="36" height="26" rx="13" fill="#0f172a"/>
-            <circle cx="50" cy="45" r="11" fill="#fed7aa"/>
-            <circle cx="46" cy="43" r="1.8" fill="#0f172a"/>
-            <circle cx="54" cy="43" r="1.8" fill="#0f172a"/>
-            <path d="M48 49 Q50 52 52 49" stroke="#c2410c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            <line x1="50" y1="22" x2="50" y2="16" stroke="#94a3b8" stroke-width="2"/>
-            <circle cx="50" cy="15" r="3" fill="#38bdf8"/>
-            <path d="M32 78 L40 68 L60 68 L68 78 Z" fill="#f1f5f9"/>
-            <rect x="46" y="70" width="8" height="6" fill="#0284c7"/>
+        url: makeSvgAvatar('av_kasif_astronot', ['#020617', '#1d4ed8'], `
+            <!-- Space suit shoulders with chest pack -->
+            <path d="M24 84 C26 68, 38 64, 50 64 C62 64, 74 68, 76 84 Z" fill="#f8fafc"/>
+            <rect x="42" y="68" width="16" height="10" rx="3" fill="#0284c7"/>
+            <circle cx="46" cy="73" r="1.5" fill="#38bdf8"/>
+            <circle cx="54" cy="73" r="1.5" fill="#facc15"/>
+            <!-- Big spherical helmet bubble -->
+            <circle cx="50" cy="46" r="26" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2"/>
+            <!-- Open visor opening showing face -->
+            <ellipse cx="50" cy="46" rx="20" ry="17" fill="#0f172a"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#451a03')}
+            ${H.eyes('#38bdf8')}
+            ${H.happyMouth()}
+            <!-- Brown hair tuft inside helmet -->
+            <path d="M38 34 C42 28, 58 28, 62 34 C56 32, 44 32, 38 34 Z" fill="#451a03"/>
+            <!-- Antenna with glowing tip -->
+            <line x1="50" y1="20" x2="50" y2="13" stroke="#94a3b8" stroke-width="2"/>
+            <circle cx="50" cy="12" r="3" fill="#facc15"/>
         `)
     },
     {
         id: 'av_kasif_safari',
         name: 'Safari Doğa Kâşifi',
         category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_safari', ['#14532d', '#65a30d'], `
-            <circle cx="50" cy="48" r="18" fill="#fed7aa"/>
-            <ellipse cx="50" cy="34" rx="24" ry="7" fill="#ca8a04"/>
-            <path d="M36 34 Q50 18 64 34 Z" fill="#a16207"/>
-            <circle cx="43" cy="47" r="2.2" fill="#0f172a"/>
-            <circle cx="57" cy="47" r="2.2" fill="#0f172a"/>
-            <path d="M46 56 Q50 60 54 56" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <circle cx="45" cy="67" r="3" fill="#334155"/>
-            <circle cx="55" cy="67" r="3" fill="#334155"/>
-            <line x1="48" y1="67" x2="52" y2="67" stroke="#334155" stroke-width="2"/>
-            <path d="M32 78 L42 67 L58 67 L68 78 Z" fill="#854d0e"/>
+        url: makeSvgAvatar('av_kasif_safari', ['#14532d', '#4d7c0f'], `
+            <!-- Khaki vest & shirt -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#854d0e"/>
+            <polygon points="46,65 54,65 50,72" fill="#ca8a04"/>
+            <line x1="50" y1="72" x2="50" y2="84" stroke="#a16207" stroke-width="1.8"/>
+            <!-- Binoculars around neck -->
+            <circle cx="45" cy="69" r="3.5" fill="#334155" stroke="#0f172a" stroke-width="1"/>
+            <circle cx="55" cy="69" r="3.5" fill="#334155" stroke="#0f172a" stroke-width="1"/>
+            <line x1="48" y1="69" x2="52" y2="69" stroke="#334155" stroke-width="2.5"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#78350f')}
+            ${H.eyes('#15803d')}
+            ${H.happyMouth()}
+            <!-- Safari pith helmet with brim -->
+            <ellipse cx="50" cy="34" rx="26" ry="7" fill="#ca8a04"/>
+            <path d="M34 34 C36 18, 64 18, 66 34 Z" fill="#eab308"/>
+            <path d="M34 34 C42 32, 58 32, 66 34" stroke="#78350f" stroke-width="2.2" fill="none"/>
         `)
     },
     {
@@ -449,94 +631,140 @@ const kozmikAvatarlar = [
         name: 'Okyanus Dalgıcı',
         category: 'kasifler',
         url: makeSvgAvatar('av_kasif_dalgic', ['#082f49', '#0284c7'], `
-            <circle cx="50" cy="46" r="20" fill="#0f172a"/>
-            <circle cx="50" cy="48" r="14" fill="#fed7aa"/>
-            <rect x="36" y="42" width="28" height="12" rx="6" fill="rgba(56, 189, 248, 0.4)" stroke="#facc15" stroke-width="2"/>
-            <circle cx="44" cy="47" r="2" fill="#0f172a"/>
-            <circle cx="56" cy="47" r="2" fill="#0f172a"/>
-            <path d="M66 52 L70 52 L70 28" stroke="#facc15" stroke-width="3" fill="none" stroke-linecap="round"/>
-            <circle cx="70" cy="27" r="2.5" fill="#ef4444"/>
-            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#1e293b"/>
-            <polygon points="48,66 52,66 50,78" fill="#facc15"/>
+            <!-- Neoprene wetsuit with yellow accents -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#0f172a"/>
+            <polygon points="47,65 53,65 50,84" fill="#facc15"/>
+            <!-- Neoprene hood covering head -->
+            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 C74 58, 66 67, 50 67 C34 67, 26 58, 26 46 Z" fill="#0f172a"/>
+            <!-- Cute face peek -->
+            <ellipse cx="50" cy="46" rx="16" ry="14" fill="#fed7aa"/>
+            <ellipse cx="38" cy="51" rx="3" ry="1.8" fill="rgba(244,63,94,0.4)"/>
+            <ellipse cx="62" cy="51" rx="3" ry="1.8" fill="rgba(244,63,94,0.4)"/>
+            ${H.eyebrows('#1e293b')}
+            <!-- Scuba mask with blue glass reflection -->
+            <rect x="34" y="40" width="32" height="13" rx="6" fill="rgba(56,189,248,0.35)" stroke="#facc15" stroke-width="2"/>
+            <ellipse cx="43" cy="46" rx="3.5" ry="4.5" fill="#0369a1"/>
+            <circle cx="42" cy="44.5" r="1.4" fill="#fff"/>
+            <ellipse cx="57" cy="46" rx="3.5" ry="4.5" fill="#0369a1"/>
+            <circle cx="56" cy="44.5" r="1.4" fill="#fff"/>
+            ${H.smile()}
+            <!-- Yellow Snorkel tube rising up with red top -->
+            <path d="M68 53 L73 53 L73 26" stroke="#facc15" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <circle cx="73" cy="24" r="2.8" fill="#ef4444"/>
+            <!-- Water bubbles -->
+            <circle cx="30" cy="30" r="2" fill="none" stroke="#38bdf8" stroke-width="1"/>
+            <circle cx="34" cy="24" r="1.2" fill="none" stroke="#38bdf8" stroke-width="0.8"/>
         `)
     },
     {
         id: 'av_kasif_kutup',
         name: 'Kutup Araştırmacısı',
         category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_kutup', ['#0f2942', '#38bdf8'], `
-            <circle cx="50" cy="45" r="24" fill="#f1f5f9"/>
-            <circle cx="50" cy="46" r="16" fill="#fed7aa"/>
-            <circle cx="44" cy="43" r="2" fill="#0f172a"/>
-            <circle cx="56" cy="43" r="2" fill="#0f172a"/>
-            <circle cx="41" cy="47" r="2.5" fill="rgba(239, 68, 68, 0.4)"/>
-            <circle cx="59" cy="47" r="2.5" fill="rgba(239, 68, 68, 0.4)"/>
-            <path d="M38 52 Q50 56 62 52 L64 64 Q50 67 36 64 Z" fill="#ef4444"/>
-            <path d="M32 78 L40 64 L60 64 L68 78 Z" fill="#ea580c"/>
+        url: makeSvgAvatar('av_kasif_kutup', ['#0f172a', '#38bdf8'], `
+            <!-- Orange arctic parka -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#ea580c"/>
+            <!-- Massive fluffy fur hood rim -->
+            <circle cx="50" cy="44" r="26" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+            <circle cx="50" cy="44" r="20" fill="#c2410c"/>
+            ${H.head('#fed7aa', 'rgba(239,68,68,0.55)')}
+            ${H.eyebrows('#451a03')}
+            ${H.eyes('#0284c7')}
+            <!-- Warm red knitted scarf covering mouth -->
+            <path d="M34 52 C38 56, 62 56, 66 52 L68 66 C58 70, 42 70, 32 66 Z" fill="#dc2626"/>
+            <path d="M42 66 L44 80 L52 80 L50 66 Z" fill="#b91c1c"/>
+            <!-- Frost sparkle on cheek -->
+            <polygon points="62,49 63,51 65,51 63.5,52.5 64,55 62,53.5 60,55 60.5,52.5 59,51 61,51" fill="#ffffff" opacity="0.8"/>
         `)
     },
     {
         id: 'av_kasif_arkeolog',
         name: 'Arkeolog Yer Bilimci',
         category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_arkeolog', ['#451a03', '#b45309'], `
-            <circle cx="50" cy="48" r="18" fill="#fed7aa"/>
-            <ellipse cx="50" cy="36" rx="25" ry="6" fill="#78350f"/>
-            <path d="M38 36 L40 24 Q50 22 60 24 L62 36 Z" fill="#92400e"/>
-            <rect x="40" y="33" width="20" height="3" fill="#18181b"/>
-            <circle cx="43" cy="47" r="2.2" fill="#0f172a"/>
-            <circle cx="57" cy="47" r="2.2" fill="#0f172a"/>
-            <path d="M46 56 Q50 59 54 56" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#a16207"/>
-            <line x1="50" y1="66" x2="50" y2="78" stroke="#fde047" stroke-width="1.5"/>
+        url: makeSvgAvatar('av_kasif_arkeolog', ['#451a03', '#92400e'], `
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#a16207"/>
+            <polygon points="46,65 54,65 50,72" fill="#78350f"/>
+            <line x1="50" y1="72" x2="50" y2="84" stroke="#fef08a" stroke-width="1.8"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#78350f')}
+            ${H.eyes('#78350f')}
+            ${H.smile()}
+            <!-- Leather Fedora hat with shadow -->
+            <ellipse cx="50" cy="35" rx="27" ry="7" fill="#78350f"/>
+            <path d="M36 35 C38 20, 62 20, 64 35 Z" fill="#92400e"/>
+            <path d="M36 33 C44 31, 56 31, 64 33" stroke="#18181b" stroke-width="2.5" fill="none"/>
+            <!-- Golden ammonite fossil pin on lapel -->
+            <circle cx="36" cy="71" r="3.5" fill="#facc15" stroke="#ca8a04" stroke-width="1"/>
+            <path d="M36 71 A1.8 1.8 0 0 1 36 69.2 A2.5 2.5 0 0 1 38 71" fill="none" stroke="#b45309" stroke-width="1"/>
         `)
     },
     {
         id: 'av_kasif_volkan',
         name: 'Yanardağ Gözlemcisi',
         category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_volkan', ['#450a0a', '#dc2626'], `
-            <circle cx="50" cy="48" r="18" fill="#fed7aa"/>
-            <path d="M32 38 Q50 18 68 38 Z" fill="#ef4444"/>
-            <ellipse cx="50" cy="38" rx="20" ry="4" fill="#cbd5e1"/>
-            <circle cx="43" cy="47" r="2" fill="#0f172a"/>
-            <circle cx="57" cy="47" r="2" fill="#0f172a"/>
-            <path d="M46 56 Q50 59 54 56" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#94a3b8"/>
-            <polygon points="50,69 54,76 46,76" fill="#facc15"/>
+        url: makeSvgAvatar('av_kasif_volkan', ['#450a0a', '#b91c1c'], `
+            <!-- Silver reflective thermal suit with hazard stripes -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#cbd5e1"/>
+            <rect x="44" y="69" width="12" height="6" fill="#f59e0b"/>
+            <!-- Volcanology safety helmet -->
+            <path d="M30 40 C32 20, 68 20, 70 40 Z" fill="#dc2626"/>
+            <ellipse cx="50" cy="40" rx="22" ry="5" fill="#e2e8f0"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#18181b')}
+            ${H.eyes('#dc2626')}
+            ${H.smile()}
+            <!-- Raised gold heat visor -->
+            <rect x="36" y="27" width="28" height="9" rx="3.5" fill="#facc15" opacity="0.85" stroke="#ca8a04" stroke-width="1.5"/>
+            <!-- Lava ember sparks rising -->
+            <circle cx="24" cy="54" r="1.5" fill="#f97316"/>
+            <circle cx="76" cy="48" r="1.8" fill="#fbbf24"/>
         `)
     },
     {
         id: 'av_kasif_teleskop',
         name: 'Gece Teleskop Gözlemcisi',
         category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_teleskop', ['#1e1b4b', '#6366f1'], `
-            <circle cx="50" cy="48" r="18" fill="#fed7aa"/>
-            <path d="M32 40 Q50 20 68 40 Z" fill="#312e81"/>
-            <rect x="30" y="38" width="40" height="6" rx="3" fill="#4338ca"/>
-            <circle cx="46" cy="30" r="1.5" fill="#fde047"/>
-            <circle cx="54" cy="27" r="1" fill="#fde047"/>
-            <circle cx="43" cy="48" r="2.2" fill="#0f172a"/>
-            <circle cx="57" cy="48" r="2.2" fill="#0f172a"/>
-            <path d="M46 56 Q50 60 54 56" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#1e293b"/>
-            <line x1="62" y1="74" x2="72" y2="62" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+        url: makeSvgAvatar('av_kasif_teleskop', ['#1e1b4b', '#4f46e5'], `
+            <!-- Knitted cozy sweater -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#312e81"/>
+            <ellipse cx="50" cy="65" rx="9" ry="3.5" fill="#4338ca"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#1e1b4b')}
+            ${H.eyes('#6366f1')}
+            ${H.smile()}
+            <!-- Knitted navy beanie with yellow constellation stars -->
+            <path d="M30 42 C32 20, 68 20, 70 42 Z" fill="#1e1b4b"/>
+            <rect x="28" y="38" width="44" height="7" rx="3.5" fill="#4338ca"/>
+            <circle cx="44" cy="29" r="1.8" fill="#fde047"/>
+            <circle cx="56" cy="27" r="1.5" fill="#fde047"/>
+            <line x1="44" y1="29" x2="56" y2="27" stroke="#fef08a" stroke-width="0.8" stroke-dasharray="1 1"/>
+            <!-- Mini brass handheld telescope -->
+            <line x1="66" y1="78" x2="78" y2="62" stroke="#d97706" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="78" cy="62" r="2.5" fill="#38bdf8"/>
         `)
     },
     {
         id: 'av_kasif_drone',
         name: 'Siber Kâşif Drone Pilotu',
         category: 'kasifler',
-        url: makeSvgAvatar('av_kasif_drone', ['#022c22', '#10b981'], `
-            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
-            <path d="M32 38 Q50 24 68 38 Q60 26 50 26 Q38 26 32 38 Z" fill="#0f172a"/>
-            <rect x="34" y="40" width="32" height="9" rx="3" fill="#06b6d4" stroke="#22c55e" stroke-width="1.5"/>
-            <line x1="36" y1="44" x2="48" y2="44" stroke="#fff" stroke-width="1"/>
-            <path d="M46 55 Q50 58 54 55" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 65 L58 65 L68 78 Z" fill="#0f172a"/>
-            <circle cx="50" cy="72" r="3" fill="#22c55e"/>
-            <line x1="44" y1="70" x2="56" y2="74" stroke="#38bdf8" stroke-width="1"/>
-            <line x1="44" y1="74" x2="56" y2="70" stroke="#38bdf8" stroke-width="1"/>
+        url: makeSvgAvatar('av_kasif_drone', ['#022c22', '#059669'], `
+            <!-- Cyber runner jacket -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#0f172a"/>
+            <line x1="50" y1="65" x2="50" y2="84" stroke="#22c55e" stroke-width="2"/>
+            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#1e293b"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#0f172a')}
+            ${H.eyes('#10b981')}
+            ${H.smile()}
+            <!-- Futuristic glowing cyber HUD visor -->
+            <rect x="32" y="40" width="36" height="11" rx="4" fill="rgba(16,185,129,0.3)" stroke="#22c55e" stroke-width="2"/>
+            <line x1="36" y1="45" x2="54" y2="45" stroke="#4ade80" stroke-width="1.2"/>
+            <circle cx="58" cy="45" r="1.5" fill="#facc15"/>
+            <!-- Micro quadcopter drone hovering near shoulder -->
+            <circle cx="74" cy="30" r="3" fill="#0284c7"/>
+            <line x1="68" y1="28" x2="80" y2="32" stroke="#38bdf8" stroke-width="1.2"/>
+            <line x1="68" y1="32" x2="80" y2="28" stroke="#38bdf8" stroke-width="1.2"/>
+            <circle cx="68" cy="28" r="1.5" fill="#fde047"/>
+            <circle cx="80" cy="32" r="1.5" fill="#fde047"/>
         `)
     },
 
@@ -545,17 +773,23 @@ const kozmikAvatarlar = [
         id: 'av_ogretmen_genc_kadin',
         name: 'Genç Kadın Fen Öğretmeni',
         category: 'ogretmenler',
-        url: makeSvgAvatar('av_ogretmen_genc_kadin', ['#701a75', '#d946ef'], `
-            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
-            <path d="M30 44 Q50 24 70 44 Q62 25 50 25 Q36 25 30 44 Z" fill="#3b1e08"/>
-            <circle cx="43" cy="44" r="5" fill="none" stroke="#0284c7" stroke-width="1.8"/>
-            <circle cx="57" cy="44" r="5" fill="none" stroke="#0284c7" stroke-width="1.8"/>
-            <line x1="48" y1="44" x2="52" y2="44" stroke="#0284c7" stroke-width="1.8"/>
-            <circle cx="43" cy="44" r="1.8" fill="#0f172a"/>
-            <circle cx="57" cy="44" r="1.8" fill="#0f172a"/>
-            <path d="M45 54 Q50 58 55 54" stroke="#c2410c" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#0e7490"/>
-            <polygon points="47,64 53,64 50,70" fill="#f8fafc"/>
+        url: makeSvgAvatar('av_ogretmen_genc_kadin', ['#701a75', '#c026d3'], `
+            <!-- Teal blazer over white blouse -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#0f766e"/>
+            <polygon points="46,65 54,65 50,73" fill="#f8fafc"/>
+            <!-- Atom necklace pendant -->
+            <circle cx="50" cy="74" r="1.5" fill="#facc15"/>
+            <!-- Styled brunette bob hair -->
+            <path d="M26 48 C24 34, 34 24, 50 24 C66 24, 76 34, 74 48 C76 60, 70 66, 68 66 C68 50, 64 36, 50 36 C36 36, 32 50, 32 66 C30 66, 24 60, 26 48 Z" fill="#3b1e08"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#451a03')}
+            ${H.eyes('#0f766e')}
+            ${H.smile()}
+            <!-- Modern blue spectacles -->
+            <rect x="34" y="41" width="13" height="10" rx="3.5" fill="rgba(56,189,248,0.15)" stroke="#0284c7" stroke-width="1.8"/>
+            <rect x="53" y="41" width="13" height="10" rx="3.5" fill="rgba(56,189,248,0.15)" stroke="#0284c7" stroke-width="1.8"/>
+            <line x1="47" y1="45" x2="53" y2="45" stroke="#0284c7" stroke-width="1.8"/>
+            <path d="M30 42 C36 32, 44 30, 50 32 C56 30, 64 32, 70 42 Z" fill="#573010"/>
         `)
     },
     {
@@ -563,80 +797,114 @@ const kozmikAvatarlar = [
         name: 'Genç Erkek Fen Öğretmeni',
         category: 'ogretmenler',
         url: makeSvgAvatar('av_ogretmen_genc_erkek', ['#0f172a', '#0284c7'], `
-            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
-            <path d="M32 38 Q50 24 68 38 Q60 25 50 25 Q38 25 32 38 Z" fill="#1c1917"/>
-            <circle cx="43" cy="44" r="2.2" fill="#0f172a"/>
-            <circle cx="57" cy="44" r="2.2" fill="#0f172a"/>
-            <path d="M45 54 Q50 58 55 54" stroke="#c2410c" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#0284c7"/>
-            <polygon points="46,64 54,64 50,71" fill="#f8fafc"/>
-            <polygon points="49,70 51,70 52,78 48,78" fill="#facc15"/>
+            <!-- Sky blue dress shirt & yellow necktie -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#0284c7"/>
+            <polygon points="46,65 54,65 50,71" fill="#f8fafc"/>
+            <polygon points="48.5,70 51.5,70 53,83 47,83" fill="#facc15"/>
+            <!-- Styled comb-over dark hair -->
+            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#18181b"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#18181b')}
+            ${H.eyes('#0f172a')}
+            ${H.happyMouth()}
+            <path d="M28 40 C34 28, 48 24, 54 26 C66 24, 72 30, 74 40 C66 32, 56 32, 50 35 C42 34, 34 36, 28 40 Z" fill="#27272a"/>
         `)
     },
     {
         id: 'av_ogretmen_kidemli_kadin',
         name: 'Kıdemli Kadın Öğretmen',
         category: 'ogretmenler',
-        url: makeSvgAvatar('av_ogretmen_kidemli_kadin', ['#312e81', '#6366f1'], `
-            <ellipse cx="50" cy="24" rx="9" ry="6" fill="#94a3b8"/>
-            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
-            <path d="M32 40 Q50 26 68 40 Q60 26 50 26 Q36 26 32 40 Z" fill="#94a3b8"/>
-            <circle cx="43" cy="44" r="4.5" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
-            <circle cx="57" cy="44" r="4.5" fill="none" stroke="#e2e8f0" stroke-width="1.5"/>
-            <line x1="47.5" y1="44" x2="52.5" y2="44" stroke="#e2e8f0" stroke-width="1.5"/>
-            <circle cx="43" cy="44" r="1.8" fill="#0f172a"/>
-            <circle cx="57" cy="44" r="1.8" fill="#0f172a"/>
-            <path d="M46 54 Q50 57 54 54" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#064e3b"/>
-            <circle cx="50" cy="68" r="2.5" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+        url: makeSvgAvatar('av_ogretmen_kidemli_kadin', ['#312e81', '#4338ca'], `
+            <!-- Emerald cardigan over blouse -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#064e3b"/>
+            <polygon points="46,65 54,65 50,72" fill="#f8fafc"/>
+            <!-- Pearl necklace -->
+            <circle cx="44" cy="71" r="1.3" fill="#f8fafc"/>
+            <circle cx="47" cy="73" r="1.3" fill="#f8fafc"/>
+            <circle cx="50" cy="74" r="1.5" fill="#f8fafc"/>
+            <circle cx="53" cy="73" r="1.3" fill="#f8fafc"/>
+            <circle cx="56" cy="71" r="1.3" fill="#f8fafc"/>
+            <!-- Dignified silver hair bun with ornate hair pin -->
+            <ellipse cx="50" cy="24" rx="14" ry="9" fill="#94a3b8"/>
+            <circle cx="50" cy="20" r="3" fill="#cbd5e1"/>
+            <line x1="38" y1="20" x2="62" y2="28" stroke="#facc15" stroke-width="2"/>
+            <path d="M26 48 C24 34, 34 26, 50 26 C66 26, 76 34, 74 48 Z" fill="#94a3b8"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#64748b')}
+            ${H.eyes('#1e1b4b')}
+            ${H.smile()}
+            <!-- Silver reading glasses on chain -->
+            <circle cx="42" cy="46" r="5" fill="none" stroke="#cbd5e1" stroke-width="1.6"/>
+            <circle cx="58" cy="46" r="5" fill="none" stroke="#cbd5e1" stroke-width="1.6"/>
+            <line x1="47" y1="46" x2="53" y2="46" stroke="#cbd5e1" stroke-width="1.6"/>
+            <path d="M30 42 C36 32, 44 30, 50 32 C56 30, 64 32, 70 42 Z" fill="#cbd5e1"/>
         `)
     },
     {
         id: 'av_ogretmen_kidemli_erkek',
         name: 'Kıdemli Erkek Fen Hocası',
         category: 'ogretmenler',
-        url: makeSvgAvatar('av_ogretmen_kidemli_erkek', ['#1e293b', '#475569'], `
-            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
-            <path d="M32 38 Q50 24 68 38 Q60 25 50 25 Q38 25 32 38 Z" fill="#94a3b8"/>
-            <circle cx="43" cy="44" r="5" fill="none" stroke="#64748b" stroke-width="1.8"/>
-            <circle cx="57" cy="44" r="5" fill="none" stroke="#64748b" stroke-width="1.8"/>
-            <line x1="48" y1="44" x2="52" y2="44" stroke="#64748b" stroke-width="1.8"/>
-            <circle cx="43" cy="44" r="1.8" fill="#0f172a"/>
-            <circle cx="57" cy="44" r="1.8" fill="#0f172a"/>
-            <path d="M42 53 Q50 51 58 53 Q54 56 50 54 Q46 56 42 53 Z" fill="#94a3b8"/>
-            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#78350f"/>
-            <polygon points="47,64 53,64 50,71" fill="#f8fafc"/>
+        url: makeSvgAvatar('av_ogretmen_kidemli_erkek', ['#1e293b', '#334155'], `
+            <!-- Corduroy jacket with elbow patch detail -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#78350f"/>
+            <polygon points="46,65 54,65 50,71" fill="#f8fafc"/>
+            <polygon points="48,70 52,70 51,82 49,82" fill="#991b1b"/>
+            <!-- Salt & pepper hair -->
+            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#64748b"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#94a3b8')}
+            ${H.eyes('#0f172a')}
+            <!-- Round scholarly spectacles -->
+            <circle cx="42" cy="46" r="5.5" fill="none" stroke="#94a3b8" stroke-width="1.8"/>
+            <circle cx="58" cy="46" r="5.5" fill="none" stroke="#94a3b8" stroke-width="1.8"/>
+            <line x1="47.5" y1="46" x2="52.5" y2="46" stroke="#94a3b8" stroke-width="1.8"/>
+            <!-- Silver-grey mustache -->
+            <path d="M40 54 C44 51, 48 51, 50 53 C52 51, 56 51, 60 54 C58 57, 54 57, 50 55 C46 57, 42 57, 40 54 Z" fill="#cbd5e1"/>
+            <path d="M28 40 C34 30, 44 28, 50 30 C56 28, 66 30, 72 40 Z" fill="#94a3b8"/>
         `)
     },
     {
         id: 'av_ogretmen_mentor',
         name: 'Okul Mentörü & Koç',
         category: 'ogretmenler',
-        url: makeSvgAvatar('av_ogretmen_mentor', ['#064e3b', '#10b981'], `
-            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
-            <path d="M32 38 Q50 24 68 38 Q60 25 50 25 Q38 25 32 38 Z" fill="#292524"/>
-            <circle cx="43" cy="44" r="2.2" fill="#0f172a"/>
-            <circle cx="57" cy="44" r="2.2" fill="#0f172a"/>
-            <path d="M45 54 Q50 58 55 54" stroke="#c2410c" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#047857"/>
-            <line x1="46" y1="64" x2="49" y2="72" stroke="#f59e0b" stroke-width="1.5"/>
-            <line x1="54" y1="64" x2="51" y2="72" stroke="#f59e0b" stroke-width="1.5"/>
-            <rect x="47" y="72" width="6" height="6" fill="#f8fafc" stroke="#38bdf8" stroke-width="1"/>
+        url: makeSvgAvatar('av_ogretmen_mentor', ['#064e3b', '#047857'], `
+            <!-- Spruce green polo shirt -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#047857"/>
+            <polygon points="46,65 54,65 50,73" fill="#065f46"/>
+            <!-- Official school lanyard with ID card badge -->
+            <line x1="44" y1="65" x2="48" y2="76" stroke="#f97316" stroke-width="1.8"/>
+            <line x1="56" y1="65" x2="52" y2="76" stroke="#f97316" stroke-width="1.8"/>
+            <rect x="46" y="75" width="8" height="9" rx="1.5" fill="#f8fafc" stroke="#38bdf8" stroke-width="1"/>
+            <!-- Athletic short fade hair -->
+            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#292524"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#292524')}
+            ${H.eyes('#047857')}
+            ${H.happyMouth()}
+            <path d="M28 40 C34 30, 48 26, 54 28 C66 26, 72 32, 74 40 Z" fill="#44403c"/>
         `)
     },
     {
         id: 'av_ogretmen_mudur',
         name: 'Bilge Okul Yöneticisi',
         category: 'ogretmenler',
-        url: makeSvgAvatar('av_ogretmen_mudur', ['#18181b', '#3f3f46'], `
-            <circle cx="50" cy="46" r="18" fill="#fed7aa"/>
-            <path d="M32 38 Q50 24 68 38 Q60 25 50 25 Q38 25 32 38 Z" fill="#52525b"/>
-            <circle cx="43" cy="44" r="2.2" fill="#0f172a"/>
-            <circle cx="57" cy="44" r="2.2" fill="#0f172a"/>
-            <path d="M46 54 Q50 57 54 54" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 64 L58 64 L68 78 Z" fill="#18181b"/>
-            <polygon points="46,64 54,64 50,71" fill="#f8fafc"/>
-            <polygon points="38,68 40,65 42,68 40,71" fill="#facc15"/>
+        url: makeSvgAvatar('av_ogretmen_mudur', ['#18181b', '#27272a'], `
+            <!-- Tailored executive charcoal suit -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#18181b"/>
+            <polygon points="46,65 54,65 50,73" fill="#f8fafc"/>
+            <polygon points="48,71 52,71 50,83" fill="#94a3b8"/>
+            <!-- Gold school crest badge on lapel -->
+            <polygon points="36,70 38,67 40,70 38,73" fill="#facc15" stroke="#ca8a04" stroke-width="0.8"/>
+            <!-- Neatly groomed dark hair with silver temples -->
+            <path d="M26 46 C24 32, 34 22, 50 22 C66 22, 76 32, 74 46 Z" fill="#27272a"/>
+            <!-- Silver temples -->
+            <path d="M27 44 C26 38, 30 32, 34 34" stroke="#94a3b8" stroke-width="2" fill="none"/>
+            <path d="M73 44 C74 38, 70 32, 66 34" stroke="#94a3b8" stroke-width="2" fill="none"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#3f3f46')}
+            ${H.eyes('#0f172a')}
+            ${H.smile()}
+            <path d="M28 40 C34 28, 48 26, 54 28 C66 26, 72 30, 74 40 Z" fill="#3f3f46"/>
         `)
     },
     {
@@ -644,15 +912,22 @@ const kozmikAvatarlar = [
         name: 'Doğa Bilimleri Eğitmeni',
         category: 'ogretmenler',
         url: makeSvgAvatar('av_ogretmen_doga', ['#14532d', '#15803d'], `
-            <circle cx="50" cy="48" r="18" fill="#fed7aa"/>
-            <ellipse cx="50" cy="36" rx="24" ry="6" fill="#78350f"/>
-            <path d="M38 36 L40 24 Q50 22 60 24 L62 36 Z" fill="#92400e"/>
-            <circle cx="43" cy="47" r="2.2" fill="#0f172a"/>
-            <circle cx="57" cy="47" r="2.2" fill="#0f172a"/>
-            <path d="M46 56 Q50 59 54 56" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L42 66 L58 66 L68 78 Z" fill="#365314"/>
-            <circle cx="64" cy="70" r="4" fill="none" stroke="#facc15" stroke-width="1.5"/>
-            <line x1="67" y1="73" x2="72" y2="77" stroke="#ca8a04" stroke-width="2"/>
+            <!-- Field cargo jacket -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#365314"/>
+            <polygon points="46,65 54,65 50,72" fill="#ca8a04"/>
+            <line x1="50" y1="72" x2="50" y2="84" stroke="#facc15" stroke-width="1.8"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#78350f')}
+            ${H.eyes('#15803d')}
+            ${H.happyMouth()}
+            <!-- Country fedora hat -->
+            <ellipse cx="50" cy="35" rx="26" ry="7" fill="#78350f"/>
+            <path d="M36 35 C38 20, 62 20, 64 35 Z" fill="#92400e"/>
+            <path d="M36 33 C44 31, 56 31, 64 33" stroke="#facc15" stroke-width="2" fill="none"/>
+            <!-- Brass magnifying glass inspecting a leaf -->
+            <circle cx="68" cy="72" r="5" fill="none" stroke="#facc15" stroke-width="2"/>
+            <line x1="72" y1="76" x2="77" y2="81" stroke="#ca8a04" stroke-width="2.8" stroke-linecap="round"/>
+            <path d="M66 72 Q68 70 70 72 Q68 74 66 72 Z" fill="#22c55e"/>
         `)
     },
     {
@@ -660,19 +935,27 @@ const kozmikAvatarlar = [
         name: 'Laboratuvar Direktörü Eğitmen',
         category: 'ogretmenler',
         url: makeSvgAvatar('av_ogretmen_direktor', ['#0c4a6e', '#0369a1'], `
-            <circle cx="50" cy="47" r="18" fill="#fed7aa"/>
-            <path d="M30 44 Q50 24 70 44 Q62 25 50 25 Q36 25 30 44 Z" fill="#18181b"/>
-            <rect x="36" y="41" width="12" height="7" rx="2" fill="none" stroke="#38bdf8" stroke-width="1.8"/>
-            <rect x="52" y="41" width="12" height="7" rx="2" fill="none" stroke="#38bdf8" stroke-width="1.8"/>
-            <line x1="48" y1="44" x2="52" y2="44" stroke="#38bdf8" stroke-width="1.8"/>
-            <circle cx="42" cy="44" r="1.8" fill="#0f172a"/>
-            <circle cx="58" cy="44" r="1.8" fill="#0f172a"/>
-            <path d="M45 55 Q50 59 55 55" stroke="#c2410c" stroke-width="1.8" fill="none" stroke-linecap="round"/>
-            <path d="M32 78 L40 66 L60 66 L68 78 Z" fill="#f8fafc"/>
-            <polygon points="46,66 54,66 50,72" fill="#0284c7"/>
+            <!-- Sterile lab coat with dark blue lapel accents -->
+            <path d="M26 84 C28 68, 38 65, 50 65 C62 65, 72 68, 74 84 Z" fill="#f8fafc"/>
+            <polygon points="46,65 54,65 50,73" fill="#0284c7"/>
+            <line x1="62" y1="70" x2="62" y2="76" stroke="#0284c7" stroke-width="2" stroke-linecap="round"/>
+            <!-- Sleek high ponytail -->
+            <path d="M64 34 C76 28, 82 38, 78 50 C72 52, 68 44, 64 38 Z" fill="#18181b"/>
+            <circle cx="66" cy="36" r="3.5" fill="#0284c7"/>
+            <path d="M26 48 C24 34, 34 24, 50 24 C66 24, 76 34, 74 48 Z" fill="#18181b"/>
+            ${H.head('#fed7aa')}
+            ${H.eyebrows('#18181b')}
+            ${H.eyes('#0284c7')}
+            ${H.smile()}
+            <!-- Transparent safety spectacles with anti-glare tint -->
+            <rect x="34" y="41" width="13" height="9" rx="3.5" fill="rgba(56,189,248,0.25)" stroke="#38bdf8" stroke-width="1.8"/>
+            <rect x="53" y="41" width="13" height="9" rx="3.5" fill="rgba(56,189,248,0.25)" stroke="#38bdf8" stroke-width="1.8"/>
+            <line x1="47" y1="45" x2="53" y2="45" stroke="#38bdf8" stroke-width="1.8"/>
+            <!-- Sleek bangs -->
+            <path d="M30 42 C36 32, 44 30, 50 32 C56 30, 64 32, 70 42 Z" fill="#27272a"/>
         `)
     }
-];
+];;
 
 function isimSor(prefill, callback) {
     const overlay = document.createElement('div');
@@ -2942,7 +3225,7 @@ const profileModal = document.createElement('div');
 profileModal.id = "profile-modal";
 profileModal.className = "modal-overlay is-hidden";
 profileModal.innerHTML = `
-    <div class="modal-content glass-panel" style="max-width:450px; padding: 30px;">
+    <div class="modal-content glass-panel" style="max-width: 540px; width: 92%; padding: 30px;">
         <button id="close-profile" class="close-btn"><i class="fas fa-times"></i></button>
         
         <div id="p-avatar-display" style="margin-bottom:15px; display:flex; flex-direction:column; align-items:center;">
