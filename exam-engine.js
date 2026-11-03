@@ -960,9 +960,29 @@ async function loadData(revision = CONTENT_REVISION, showError = true) {
                 const existingOutcomeIds = new Set((data.outcomes || []).map(o => o.id));
                 const uniqueEkOutcomes = rawEkOutcomes.filter(o => !existingOutcomeIds.has(o.id));
 
-                data.allCards = [...data.v6Cards, ...ekCards];
-                data.allQuestions = [...data.v6Questions, ...ekQuestions];
-                data.allOutcomes = [...(data.outcomes || []), ...uniqueEkOutcomes];
+                const diffWeight = { 'easy': 1, 'medium': 2, 'hard': 3 };
+                data.allCards = [...data.v6Cards, ...ekCards].sort((a, b) => {
+                    const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
+                    const oB = OUTCOME_ORDER.indexOf(b.outcome_id);
+                    const diffO = (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
+                    if (diffO !== 0) return diffO;
+                    return (a.sequence || 0) - (b.sequence || 0);
+                });
+                data.allQuestions = [...data.v6Questions, ...ekQuestions].sort((a, b) => {
+                    const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
+                    const oB = OUTCOME_ORDER.indexOf(b.outcome_id);
+                    const diffO = (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
+                    if (diffO !== 0) return diffO;
+                    const dA = diffWeight[a.difficulty] || 2;
+                    const dB = diffWeight[b.difficulty] || 2;
+                    if (dA !== dB) return dA - dB;
+                    return (a.id || '').localeCompare(b.id || '');
+                });
+                data.allOutcomes = [...(data.outcomes || []), ...uniqueEkOutcomes].sort((a, b) => {
+                    const oA = OUTCOME_ORDER.indexOf(a.id);
+                    const oB = OUTCOME_ORDER.indexOf(b.id);
+                    return (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
+                });
 
                 resolvedDataCache.set(targetRev, data);
                 return data;
@@ -4281,7 +4301,18 @@ export function renderAdminQuestionReview() {
         return;
     }
 
-    const allQuestions = (DATA && (DATA.allQuestions || DATA.questions)) || QUESTIONS || [];
+    const rawAllQuestions = (DATA && (DATA.allQuestions || DATA.questions)) || QUESTIONS || [];
+    const diffWeight = { 'easy': 1, 'medium': 2, 'hard': 3 };
+    const allQuestions = [...rawAllQuestions].sort((a, b) => {
+        const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
+        const oB = OUTCOME_ORDER.indexOf(b.outcome_id);
+        const diffO = (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
+        if (diffO !== 0) return diffO;
+        const dA = diffWeight[a.difficulty] || 2;
+        const dB = diffWeight[b.difficulty] || 2;
+        if (dA !== dB) return dA - dB;
+        return (a.id || '').localeCompare(b.id || '');
+    });
 
     if (tabBtn) {
         tabBtn.innerHTML = `<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (${allQuestions.length} Soru)`;
@@ -4321,7 +4352,12 @@ export function renderAdminQuestionReview() {
 
     // 2. Kademe: Kazanım Filtresi Seçeneklerini Doldur
     if (outcomeFilter) {
-        const outcomes = Array.from(new Set(questionsByGrade.map(q => q.outcome_id).filter(Boolean)));
+        const outcomes = Array.from(new Set(questionsByGrade.map(q => q.outcome_id).filter(Boolean)))
+            .sort((a, b) => {
+                const oA = OUTCOME_ORDER.indexOf(a);
+                const oB = OUTCOME_ORDER.indexOf(b);
+                return (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
+            });
         const prevOutcome = currentAdminOutcome;
         outcomeFilter.innerHTML = `<option value="all">Tüm Kazanımlar (${questionsByGrade.length} Soru)</option>` + 
             outcomes.map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join('');

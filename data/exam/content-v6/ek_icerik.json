@@ -126,6 +126,278 @@
     }
   ],
   "cards": {
+    "FB712-V6-K00": {
+      "id": "FB712-V6-K00",
+      "outcome_id": "FB.7.1.2",
+      "content_revision": "6.0.0",
+      "title": "Uzay Gözlem ve Keşif Araçları Modelleri",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "lead": "Gök bilimcilerin uzayı incelemek için kullandığı tüm teknolojiler bilimsel modeller yoluyla somutlaştırılır.",
+      "body": [
+        "Uzay gözlem ve araştırma araçları; hedeflerine, bulundukları konuma ve taşıdıkları görev yüklerine göre farklı yapısal tasarımlara sahiptir.",
+        "Öğrencilerin fen bilimleri performans görevlerinde atık ve geri dönüştürülebilir malzemelerle modelleyebilecekleri temel araçlar şunlardır: Teleskoplar, Yapay Uydular, Uzay Sondaları ve Uzay İstasyonları.",
+        "Bilimsel modelleme yalnızca bir maket yapmak değil; parçaların işlevlerini tanımlamak, çalışma prensibini açıklamak ve test verilerine (yeni kanıtlara) göre modeli geliştirmektir."
+      ],
+      "takeaway": "Bilimsel bir model, gök cisimlerini veya uzay araçlarını temsil eden ve kanıtlar ışığında revize edilen bir düşünme ve tasarım aracıdır.",
+      "misconception": "Teleskop dışındaki uzay araçlarının (uydular veya sondalar) gözlem aracı sayılmadığı yanılgısı. Gerçekte sondalar ve gözlem uyduları uzayın en detaylı görüntü ve verilerini toplayan gözlem teknolojileridir.",
+      "check": {
+        "prompt": "Uzay gözlem aracı modeli tasarlarken bir parçanın görevi neden açıkça tanımlanmalıdır?",
+        "answer": "Çünkü bilimsel modelleme salt görsel benzerlik değil, aracın çalışma prensibini ve bileşenlerinin işlevlerini yansıtmayı amaçlar."
+      },
+      "show_check": true,
+      "visual": null,
+      "table": null,
+      "source_refs": [
+        "B711",
+        "Yıllık Plan FB.7.1.2"
+      ],
+      "learning_focus": "Uzay Gözlem Araçları: Çalışma Haritan",
+      "book_section": "Uzay Teknolojileri ve Gözlem Araçları",
+      "source_alignment": {
+        "book_printed_pages": [
+          16,
+          26
+        ],
+        "scope": "FB.7.1.2",
+        "page_notation": "MEB 7. Sınıf Fen Bilimleri 1. Ders Kitabı Performans Görevi ve Model Tasarımı"
+      },
+      "card_type": "overview",
+      "topics": [
+        "Teleskop modelleri (Mercekli ve Aynalı)",
+        "Yapay uydu modelleri ve bileşenleri",
+        "Uzay sondası ve rover tasarımı",
+        "Uzay istasyonu yaşam modülleri",
+        "Kanıta dayalı model yenileme"
+      ],
+      "sequence": 0
+    },
+    "FB712-V6-K01": {
+      "id": "FB712-V6-K01",
+      "outcome_id": "FB.7.1.2",
+      "content_revision": "6.0.0",
+      "title": "Teleskop Modelleri: Mercekli ve Aynalı Optik Sistemler",
+      "eyebrow": "OPTİK MODEL · TELESKOP TASARIMI",
+      "lead": "Işığı toplama ve odaklama şekillerine göre teleskoplar mercekli veya aynalı modeller olarak tasarlanır.",
+      "body": [
+        "Mercekli Teleskop Modeli (Galileo Tipi): İki adet ince kenarlı mercek kullanılır. Dıştaki geniş boruda 'Objektif Merceği' (büyük çaplı, ışığı toplar ve odaklar), içteki dar boruda ise 'Oküler / Göz Merceği' (küçük odaklı, görüntüyü büyütür) yer alır.",
+        "Netleme Mekanizması: İç içe geçen iki karton borunun kaydırılması, iki mercek arasındaki mesafeyi odak uzaklıkları toplamına eşitleyerek görüntünün göz merceğinin odak noktasına düşmesini sağlar.",
+        "Aynalı Teleskop Modeli (Newton Tipi): Tüpün tabanında ışığı toplayıp yansıtan 'Çukur Ayna' (birincil ayna), odak noktası yakınında ışığı yana yönlendiren 45° açılı 'Düz Ayna' (ikincil ayna) ve yan tüpte büyütme yapan 'Oküler Mercek' bulunur."
+      ],
+      "takeaway": "Mercekli teleskoplar ışığı kırarak, aynalı teleskoplar ise ışığı yansıtarak tek bir odakta toplar ve büyütür.",
+      "misconception": "Teleskobun büyütme gücünün sadece tüp uzunluğuna bağlı olduğu yanılgısı. Büyütme, objektif odak uzaklığının oküler odak uzaklığına oranıdır; netlik ve parlaklık ise objektif çapına (açıklığına) bağlıdır.",
+      "check": {
+        "prompt": "Mercekli bir modelde iç içe boruların ileri-geri kaydırılmasının temel optik amacı nedir?",
+        "answer": "Objektifin oluşturduğu ara görüntünün oküler merceğin odak noktasıyla çakışmasını sağlayarak görüntüyü netleştirmektir."
+      },
+      "show_check": true,
+      "visual": null,
+      "table": null,
+      "source_refs": [
+        "B711"
+      ],
+      "learning_focus": "Mercekli ve Aynalı Teleskop Modelleri",
+      "book_section": "Teleskopun Yapısı",
+      "source_alignment": {
+        "book_printed_pages": [
+          20,
+          24
+        ],
+        "scope": "FB.7.1.2.a"
+      },
+      "card_type": "concept",
+      "topics": [
+        "Objektif merceği",
+        "Oküler mercek",
+        "Çukur ayna",
+        "Düz ayna",
+        "Odaklama tüpü"
+      ],
+      "sequence": 1
+    },
+    "FB712-V6-K02": {
+      "id": "FB712-V6-K02",
+      "outcome_id": "FB.7.1.2",
+      "content_revision": "6.0.0",
+      "title": "Yapay Uydu Modeli: Dünya ve Uzay Gözlem Sistemleri",
+      "eyebrow": "MÜHENDİSLİK MODELİ · UYDU SİSTEMLERİ",
+      "lead": "Dünya yörüngesinde dönen yapay uydular; gözlem, keşif, haritacılık ve haberleşme amacıyla özel modüllerden oluşur.",
+      "body": [
+        "Bir yapay uydu modelinde yer alması gereken 4 temel bileşen:",
+        "1. Gövde (Platform / Uydu Otobüsü): Tüm hassas elektronik devreleri, bilgisayarları ve yön kontrol iticilerini barındırır.",
+        "2. Güneş Panelleri (Kanatlar): Güneş ışığını elektrik enerjisine dönüştürerek uydunun tüm sistemlerini ve bataryalarını kesintisiz besler.",
+        "3. Çanak Anten / Haberleşme Ünitesi: Toplanan gözlem verilerini, fotoğrafları ve telemetri bilgilerini yer istasyonuna (Dünya'ya) aktarır ve komutları alır.",
+        "4. Faydalı Yük (Gözlem Kamerası / Sensörler): Yeryüzünü veya uzayı tarayan optik kameralar, kızılötesi tarayıcılar ve radar sistemleridir."
+      ],
+      "takeaway": "Yapay uydu modeli; enerji (Güneş paneli), iletişim (çanak anten), koruma (gövde) ve veri toplama (sensör/kamera) bileşenlerinin dengeli birleşimidir.",
+      "misconception": "Yapay uyduların Dünya yörüngesinde yakıt yakarak sürekli motor çalıştırmak zorunda olduğu yanılgısı. Uydular yer çekimi ile merkezkaç dengesinde serbest düşüş hareketiyle yörüngede dolanır; iticiler sadece yörünge düzeltmesi içindir.",
+      "check": {
+        "prompt": "Öğrenci uydu modeline neden alüminyum/altın yansıtıcı folyo kaplar?",
+        "answer": "Gerçek uydulardaki çok katmanlı ısı yalıtım battaniyelerini modelleyerek uzaydaki aşırı sıcaklık farklarından iç donanımı korumak için."
+      },
+      "show_check": true,
+      "visual": null,
+      "table": null,
+      "source_refs": [
+        "B711"
+      ],
+      "learning_focus": "Yapay Uydu Modeli Bileşenleri",
+      "book_section": "Yapay Uydular",
+      "source_alignment": {
+        "book_printed_pages": [
+          17,
+          19
+        ],
+        "scope": "FB.7.1.2.a"
+      },
+      "card_type": "concept",
+      "topics": [
+        "Güneş panelleri",
+        "Çanak anten",
+        "Faydalı yük",
+        "Isı yalıtımı",
+        "Yörünge gözlemi"
+      ],
+      "sequence": 2
+    },
+    "FB712-V6-K03": {
+      "id": "FB712-V6-K03",
+      "outcome_id": "FB.7.1.2",
+      "content_revision": "6.0.0",
+      "title": "Uzay Sondası ve Gezgin (Rover) Modeli",
+      "eyebrow": "KEŞİF ROBOTİĞİ · DERİN UZAY VE YÜZEY MODELİ",
+      "lead": "Gezegenlerin, uyduların ve asteroitlerin yüzeyine inen veya yanından geçen insansız bilim robotları modellenir.",
+      "body": [
+        "Uzay Sondası Modeli: Bir gök cisminin yörüngesine girerek veya yakından geçerek atmosferini, manyetik alanını ve sıcaklığını ölçen insansız gözlem aracıdır. Büyük yönlendirilebilir yüksek kazançlı çanak anten ve bilimsel spektrometreler taşır.",
+        "Yüzey Gezgini (Rover) Modeli: Ay veya Mars gibi engebeli yüzeylerde hareket edebilen tekerlekli robotik laboratuvardır.",
+        "Rover Model Bileşenleri: Engebeli arazide devrilmeyi önleyen 6 tekerlekli rocker-bogie salıncak süspansiyon sistemi, kaya örneklerini delip toplayan robotik kol ve çevreyi 3 boyutlu tarayan direk üstü mastcam kameralar."
+      ],
+      "takeaway": "Sondalar ve gezginler (rover), insanların gidemeyeceği tehlikeli ve uzak ortamlara gönderilen yüksek teknolojili insansız bilim elçileridir.",
+      "misconception": "Uzay sondalarının içinde pilot veya astronot bulunduğu yanılgısı. Sondalar ve gezginler tamamen insansız olup otonom yazılımlar ve Dünya'dan gönderilen radyo sinyalleriyle yönetilir.",
+      "check": {
+        "prompt": "Mars rover modelinde tekerleklerin geniş yüzeyli tasarlanmasının fiziksel gerekçesi nedir?",
+        "answer": "Yüzey alanını artırıp kumlu zemine yapılan basıncı azaltarak robotun kuma saplanmasını önlemektir."
+      },
+      "show_check": true,
+      "visual": null,
+      "table": null,
+      "source_refs": [
+        "B711"
+      ],
+      "learning_focus": "Uzay Sondası ve Rover Modelleri",
+      "book_section": "Uzay Sondaları",
+      "source_alignment": {
+        "book_printed_pages": [
+          18,
+          20
+        ],
+        "scope": "FB.7.1.2.a"
+      },
+      "card_type": "concept",
+      "topics": [
+        "Uzay sondası",
+        "Yüzey gezgini (Rover)",
+        "Rocker-bogie süspansiyon",
+        "Robotik kol",
+        "Derin uzay anteni"
+      ],
+      "sequence": 3
+    },
+    "FB712-V6-K04": {
+      "id": "FB712-V6-K04",
+      "outcome_id": "FB.7.1.2",
+      "content_revision": "6.0.0",
+      "title": "Uzay İstasyonu Modeli: Yörüngedeki Yaşam ve Gözlem Üssü",
+      "eyebrow": "MODÜLER MİMARİ · UZAY LABORATUVARI",
+      "lead": "İçinde astronotların uzun süre yaşayıp mikroyerçekimi deneyleri yaptığı dev uzay üsleri modellenir.",
+      "body": [
+        "Uluslararası Uzay İstasyonu (ISS) benzeri modeller, birbirine kenetlenen silindir 'modüller' şeklinde tasarlanır.",
+        "Model Bileşenleri:",
+        "1. Yaşam ve Laboratuvar Modülleri: Basınçlı hava, uyku tulumları, biyoloji ve fizik deney düzenekleri içerir.",
+        "2. Kenetlenme Kapıları (Docking Ports): Uzay mekiklerinin ve kargo kapsüllerinin istasyona kilitlendiği geçiş noktalarıdır.",
+        "3. Dev Güneş Paneli Dizilimleri: İstasyondaki yaşam destek ünitelerinin ve laboratuvarların ihtiyaç duyduğu devasa elektriği üretir.",
+        "4. Isı Radyatör Panelleri: Elektronik sistemlerin ve astronotların ürettiği fazla ısıyı uzay boşluğuna yayan beyaz panellerdir."
+      ],
+      "takeaway": "Uzay istasyonları; yaşam destek, bilimsel laboratuvar, kenetlenme ve enerji sistemlerini bünyesinde toplayan en büyük insanlı uzay yapılarıdır.",
+      "misconception": "Uzay istasyonunun başka gezegenlere seyahat eden bir gemi olduğu yanılgısı. İstasyon Dünya çevresindeki alçak yörüngede (yaklaşık 400 km) sabit olarak dolanır.",
+      "check": {
+        "prompt": "Uzay istasyonu modelinde neden birden fazla bağımsız modül bulunur?",
+        "answer": "Büyük yapılar tek roketle fırlatılamadığı için uzayda parça parça birleştirilir ve acil durumlarda bölümler birbirinden izole edilebilir."
+      },
+      "show_check": true,
+      "visual": null,
+      "table": null,
+      "source_refs": [
+        "B711"
+      ],
+      "learning_focus": "Uzay İstasyonu Modeli Mimarisi",
+      "book_section": "Uzay İstasyonları",
+      "source_alignment": {
+        "book_printed_pages": [
+          17,
+          21
+        ],
+        "scope": "FB.7.1.2.a"
+      },
+      "card_type": "concept",
+      "topics": [
+        "Modüler yapı",
+        "Kenetlenme kapısı",
+        "Yaşam destek sistemi",
+        "Güneş dizilimleri",
+        "Isı radyatörleri"
+      ],
+      "sequence": 4
+    },
+    "FB712-V6-K05": {
+      "id": "FB712-V6-K05",
+      "outcome_id": "FB.7.1.2",
+      "content_revision": "6.0.0",
+      "title": "Bilimsel Modeli Yeni Kanıtlara Göre Yenileme (Mühendislik Döngüsü)",
+      "eyebrow": "SÜREÇ BECERİSİ · KANITA DAYALI YENİLEME",
+      "lead": "İlk tasarlanan model mükemmel değildir; test edilir, eksiklikler kanıtlanır ve model bilimsel olarak iyileştirilir.",
+      "body": [
+        "Bilimsel modelleme süreci bir döngüdür: Problem Belirleme -> Model Tasarımı -> Test ve Gözlem -> Kanıt Toplama -> Modeli Yenileme.",
+        "Karşılaşılan Sorunlar ve Bilimsel Çözüm Kanıtları:",
+        "• Teleskopta karanlık görüntü kanıtı -> Objektif açıklığı (çapı) büyütülür (daha fazla ışık toplanır).",
+        "• Teleskop borusunda iç parlama kanıtı -> Borunun içi mat siyah renkle kaplanır (ışık saçılması soğurulur).",
+        "• Görüntüde el titremesi kanıtı -> Modele üçayak (tripod) sabit taban eklenir.",
+        "• Uyduda güç yetersizliği kanıtı -> Güneş paneli yüzey alanı artırılır veya güneşi izleyen döner eksen eklenir.",
+        "• Sondada kum zemin batma kanıtı -> Tekerlek tabanı genişletilir veya palet modeline dönüştürülür.",
+        "• Atmosferik bozulma kanıtı -> Gözlem modeli yeryüzünden uzay ortamına (uzay teleskobu) taşınır."
+      ],
+      "takeaway": "Bilimsel modelin gücü, karşılaşılan problemlere karşı yeni deneysel kanıtlarla kendini yenileyebilme yeteneğidir.",
+      "misconception": "Bir modelde hata çıkmasının başarısızlık olduğu yanılgısı. Hatalar ve test kanıtları, bilimsel modelin gerçeğe daha çok yaklaşmasını sağlayan en değerli verilerdir.",
+      "check": {
+        "prompt": "Test edilen bir modelde kanıtlara göre değişiklik yapılması hangi fen sürecini temsil eder?",
+        "answer": "FB.7.1.2.b alt kazanımı olan 'Modeli yeni kanıtlara göre yenileme ve geliştirme' sürecini temsil eder."
+      },
+      "show_check": true,
+      "visual": null,
+      "table": null,
+      "source_refs": [
+        "B711",
+        "Yıllık Plan FB.7.1.2.b"
+      ],
+      "learning_focus": "Kanıta Dayalı Model Yenileme Döngüsü",
+      "book_section": "Model Değerlendirme ve Geliştirme",
+      "source_alignment": {
+        "book_printed_pages": [
+          25,
+          27
+        ],
+        "scope": "FB.7.1.2.b"
+      },
+      "card_type": "process",
+      "topics": [
+        "Kanıta dayalı revizyon",
+        "Teleskop açıklığı",
+        "Tripod sabitleme",
+        "Mat kaplama",
+        "Güneş açısı",
+        "Tekerlek basıncı"
+      ],
+      "sequence": 5
+    },
     "FB714-V7-K00": {
       "id": "FB714-V7-K00",
       "outcome_id": "FB.7.1.4",
@@ -466,281 +738,523 @@
         "caption": "Kinetik ve Potansiyel Enerji",
         "fit": "contain"
       }
-    },
-    "FB712-V6-K00": {
-      "id": "FB712-V6-K00",
+    }
+  },
+  "questions": {
+    "FB712-V6-E01": {
+      "id": "FB712-V6-E01",
       "outcome_id": "FB.7.1.2",
-      "content_revision": "6.0.0",
-      "title": "Uzay Gözlem ve Keşif Araçları Modelleri",
-      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
-      "lead": "Gök bilimcilerin uzayı incelemek için kullandığı tüm teknolojiler bilimsel modeller yoluyla somutlaştırılır.",
-      "body": [
-        "Uzay gözlem ve araştırma araçları; hedeflerine, bulundukları konuma ve taşıdıkları görev yüklerine göre farklı yapısal tasarımlara sahiptir.",
-        "Öğrencilerin fen bilimleri performans görevlerinde atık ve geri dönüştürülebilir malzemelerle modelleyebilecekleri temel araçlar şunlardır: Teleskoplar, Yapay Uydular, Uzay Sondaları ve Uzay İstasyonları.",
-        "Bilimsel modelleme yalnızca bir maket yapmak değil; parçaların işlevlerini tanımlamak, çalışma prensibini açıklamak ve test verilerine (yeni kanıtlara) göre modeli geliştirmektir."
+      "difficulty": "easy",
+      "difficulty_status": "editorial_estimate",
+      "type": "open_response",
+      "title": "Yapay Uydu Modelinde Parça Görevleri",
+      "stem": "Fen bilimleri dersi performans görevinde karton kutu, plastik tabak ve alüminyum folyo kullanarak bir Dünya gözlem uydusu modeli tasarlayan Mehmet; gövdenin iki yanına mavi renkli petek desenli dikdörtgen mukavvalar, üst kısmına ise huni şeklinde bir plastik parça eklemiştir.\n\nMehmet'in modelinde kullandığı mavi mukavvaların (Güneş panelleri) ve huni parçanın (çanak anten) gerçek bir yapay uydudaki hayati görevlerini yazınız.",
+      "sample_answer": "Mavi paneller (Güneş panelleri) Güneş ışığını elektrik enerjisine çevirerek uydunun çalışmasını sağlar. Huni parça (çanak anten) ise uydunun çektiği gözlem fotoğraflarını ve verileri Dünya'daki yer istasyonuna göndermesini ve Dünya'dan komut almasını sağlar.",
+      "hint": "Bir uydu uzayda elektrik ihtiyacını nereden karşılar ve topladığı bilgileri Dünya'ya nasıl iletir?",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren ifadeler kabul edilir. Örneğin elektrik üretimi/enerji sağlama ve radyo dalgalarıyla iletişim/veri aktarımı yazılması yeterlidir.",
+      "rubric": [
+        {
+          "id": "FB712-V6-E01-R1",
+          "text": "Güneş panellerinin elektrik enerjisi üretme/enerji sağlama görevini doğru açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB712-V6-K02"
+          ],
+          "scoring": {
+            "full": "Güneş panellerinin uydunun elektrik ihtiyacını sağladığını belirtir.",
+            "zero": "Yanlış veya eksik açıklama."
+          }
+        },
+        {
+          "id": "FB712-V6-E01-R2",
+          "text": "Çanak antenin Dünya ile iletişim/veri aktarımı sağlama görevini doğru açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB712-V6-K02"
+          ],
+          "scoring": {
+            "full": "Çanak antenin yer istasyonuna veri gönderme ve komut alma işlevini belirtir.",
+            "zero": "Yanlış veya eksik açıklama."
+          }
+        }
       ],
-      "takeaway": "Bilimsel bir model, gök cisimlerini veya uzay araçlarını temsil eden ve kanıtlar ışığında revize edilen bir düşünme ve tasarım aracıdır.",
-      "misconception": "Teleskop dışındaki uzay araçlarının (uydular veya sondalar) gözlem aracı sayılmadığı yanılgısı. Gerçekte sondalar ve gözlem uyduları uzayın en detaylı görüntü ve verilerini toplayan gözlem teknolojileridir.",
-      "check": {
-        "prompt": "Uzay gözlem aracı modeli tasarlarken bir parçanın görevi neden açıkça tanımlanmalıdır?",
-        "answer": "Çünkü bilimsel modelleme salt görsel benzerlik değil, aracın çalışma prensibini ve bileşenlerinin işlevlerini yansıtmayı amaçlar."
-      },
-      "show_check": true,
-      "visual": null,
-      "table": null,
-      "source_refs": [
-        "B711",
-        "Yıllık Plan FB.7.1.2"
+      "max_points": 15,
+      "return_card_ids": [
+        "FB712-V6-K02"
       ],
-      "learning_focus": "Uzay Gözlem Araçları: Çalışma Haritan",
-      "book_section": "Uzay Teknolojileri ve Gözlem Araçları",
-      "source_alignment": {
-        "book_printed_pages": [
-          16,
-          26
-        ],
-        "scope": "FB.7.1.2",
-        "page_notation": "MEB 7. Sınıf Fen Bilimleri 1. Ders Kitabı Performans Görevi ve Model Tasarımı"
-      },
-      "card_type": "overview",
-      "topics": [
-        "Teleskop modelleri (Mercekli ve Aynalı)",
-        "Yapay uydu modelleri ve bileşenleri",
-        "Uzay sondası ve rover tasarımı",
-        "Uzay istasyonu yaşam modülleri",
-        "Kanıta dayalı model yenileme"
+      "process_components": [
+        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
       ],
-      "sequence": 0
-    },
-    "FB712-V6-K01": {
-      "id": "FB712-V6-K01",
-      "outcome_id": "FB.7.1.2",
-      "content_revision": "6.0.0",
-      "title": "Teleskop Modelleri: Mercekli ve Aynalı Optik Sistemler",
-      "eyebrow": "OPTİK MODEL · TELESKOP TASARIMI",
-      "lead": "Işığı toplama ve odaklama şekillerine göre teleskoplar mercekli veya aynalı modeller olarak tasarlanır.",
-      "body": [
-        "Mercekli Teleskop Modeli (Galileo Tipi): İki adet ince kenarlı mercek kullanılır. Dıştaki geniş boruda 'Objektif Merceği' (büyük çaplı, ışığı toplar ve odaklar), içteki dar boruda ise 'Oküler / Göz Merceği' (küçük odaklı, görüntüyü büyütür) yer alır.",
-        "Netleme Mekanizması: İç içe geçen iki karton borunun kaydırılması, iki mercek arasındaki mesafeyi odak uzaklıkları toplamına eşitleyerek görüntünün göz merceğinin odak noktasına düşmesini sağlar.",
-        "Aynalı Teleskop Modeli (Newton Tipi): Tüpün tabanında ışığı toplayıp yansıtan 'Çukur Ayna' (birincil ayna), odak noktası yakınında ışığı yana yönlendiren 45° açılı 'Düz Ayna' (ikincil ayna) ve yan tüpte büyütme yapan 'Oküler Mercek' bulunur."
-      ],
-      "takeaway": "Mercekli teleskoplar ışığı kırarak, aynalı teleskoplar ise ışığı yansıtarak tek bir odakta toplar ve büyütür.",
-      "misconception": "Teleskobun büyütme gücünün sadece tüp uzunluğuna bağlı olduğu yanılgısı. Büyütme, objektif odak uzaklığının oküler odak uzaklığına oranıdır; netlik ve parlaklık ise objektif çapına (açıklığına) bağlıdır.",
-      "check": {
-        "prompt": "Mercekli bir modelde iç içe boruların ileri-geri kaydırılmasının temel optik amacı nedir?",
-        "answer": "Objektifin oluşturduğu ara görüntünün oküler merceğin odak noktasıyla çakışmasını sağlayarak görüntüyü netleştirmektir."
-      },
-      "show_check": true,
-      "visual": null,
-      "table": null,
+      "family_id": "FB.7.1.2-satellite-parts",
       "source_refs": [
         "B711"
       ],
-      "learning_focus": "Mercekli ve Aynalı Teleskop Modelleri",
-      "book_section": "Teleskopun Yapısı",
-      "source_alignment": {
-        "book_printed_pages": [
-          20,
-          24
-        ],
-        "scope": "FB.7.1.2.a"
-      },
-      "card_type": "concept",
-      "topics": [
-        "Objektif merceği",
-        "Oküler mercek",
-        "Çukur ayna",
-        "Düz ayna",
-        "Odaklama tüpü"
-      ],
-      "sequence": 1
-    },
-    "FB712-V6-K02": {
-      "id": "FB712-V6-K02",
-      "outcome_id": "FB.7.1.2",
-      "content_revision": "6.0.0",
-      "title": "Yapay Uydu Modeli: Dünya ve Uzay Gözlem Sistemleri",
-      "eyebrow": "MÜHENDİSLİK MODELİ · UYDU SİSTEMLERİ",
-      "lead": "Dünya yörüngesinde dönen yapay uydular; gözlem, keşif, haritacılık ve haberleşme amacıyla özel modüllerden oluşur.",
-      "body": [
-        "Bir yapay uydu modelinde yer alması gereken 4 temel bileşen:",
-        "1. Gövde (Platform / Uydu Otobüsü): Tüm hassas elektronik devreleri, bilgisayarları ve yön kontrol iticilerini barındırır.",
-        "2. Güneş Panelleri (Kanatlar): Güneş ışığını elektrik enerjisine dönüştürerek uydunun tüm sistemlerini ve bataryalarını kesintisiz besler.",
-        "3. Çanak Anten / Haberleşme Ünitesi: Toplanan gözlem verilerini, fotoğrafları ve telemetri bilgilerini yer istasyonuna (Dünya'ya) aktarır ve komutları alır.",
-        "4. Faydalı Yük (Gözlem Kamerası / Sensörler): Yeryüzünü veya uzayı tarayan optik kameralar, kızılötesi tarayıcılar ve radar sistemleridir."
-      ],
-      "takeaway": "Yapay uydu modeli; enerji (Güneş paneli), iletişim (çanak anten), koruma (gövde) ve veri toplama (sensör/kamera) bileşenlerinin dengeli birleşimidir.",
-      "misconception": "Yapay uyduların Dünya yörüngesinde yakıt yakarak sürekli motor çalıştırmak zorunda olduğu yanılgısı. Uydular yer çekimi ile merkezkaç dengesinde serbest düşüş hareketiyle yörüngede dolanır; iticiler sadece yörünge düzeltmesi içindir.",
-      "check": {
-        "prompt": "Öğrenci uydu modeline neden alüminyum/altın yansıtıcı folyo kaplar?",
-        "answer": "Gerçek uydulardaki çok katmanlı ısı yalıtım battaniyelerini modelleyerek uzaydaki aşırı sıcaklık farklarından iç donanımı korumak için."
-      },
-      "show_check": true,
-      "visual": null,
+      "originality": "MEB performans görevi modelleme kurgusu esas alınarak özgün hazırlanmıştır.",
+      "review_status": "final_editorial_audit_2026_11_03",
       "table": null,
-      "source_refs": [
-        "B711"
-      ],
-      "learning_focus": "Yapay Uydu Modeli Bileşenleri",
-      "book_section": "Yapay Uydular",
-      "source_alignment": {
+      "visual": null,
+      "score_weight": 15,
+      "score_weight_rationale": "İki temel uydu bileşeninin görev tanımlaması (8+7 puan).",
+      "incompatible_with": [],
+      "leakage_review": {
+        "stem_contains_solution_rule": false
+      },
+      "assessment_alignment": {
         "book_printed_pages": [
           17,
           19
         ],
-        "scope": "FB.7.1.2.a"
+        "taught_card_ids": [
+          "FB712-V6-K02"
+        ]
       },
-      "card_type": "concept",
-      "topics": [
-        "Güneş panelleri",
-        "Çanak anten",
-        "Faydalı yük",
-        "Isı yalıtımı",
-        "Yörünge gözlemi"
-      ],
-      "sequence": 2
+      "rubric_point_examples": {
+        "15": {
+          "FB712-V6-E01-R1": 8,
+          "FB712-V6-E01-R2": 7
+        }
+      },
+      "audit": {
+        "source_scope_checked": true,
+        "difficulty_status": "easy"
+      },
+      "repeat_key": "FB712-E01"
     },
-    "FB712-V6-K03": {
-      "id": "FB712-V6-K03",
+    "FB712-V6-E02": {
+      "id": "FB712-V6-E02",
       "outcome_id": "FB.7.1.2",
-      "content_revision": "6.0.0",
-      "title": "Uzay Sondası ve Gezgin (Rover) Modeli",
-      "eyebrow": "KEŞİF ROBOTİĞİ · DERİN UZAY VE YÜZEY MODELİ",
-      "lead": "Gezegenlerin, uyduların ve asteroitlerin yüzeyine inen veya yanından geçen insansız bilim robotları modellenir.",
-      "body": [
-        "Uzay Sondası Modeli: Bir gök cisminin yörüngesine girerek veya yakından geçerek atmosferini, manyetik alanını ve sıcaklığını ölçen insansız gözlem aracıdır. Büyük yönlendirilebilir yüksek kazançlı çanak anten ve bilimsel spektrometreler taşır.",
-        "Yüzey Gezgini (Rover) Modeli: Ay veya Mars gibi engebeli yüzeylerde hareket edebilen tekerlekli robotik laboratuvardır.",
-        "Rover Model Bileşenleri: Engebeli arazide devrilmeyi önleyen 6 tekerlekli rocker-bogie salıncak süspansiyon sistemi, kaya örneklerini delip toplayan robotik kol ve çevreyi 3 boyutlu tarayan direk üstü mastcam kameralar."
+      "difficulty": "easy",
+      "difficulty_status": "editorial_estimate",
+      "type": "open_response",
+      "title": "Mercekli Teleskop Modelinde Mercek Seçimi",
+      "stem": "İki adet ince kenarlı büyüteç merceği ve karton boru kullanarak basit bir mercekli teleskop modeli kurmak isteyen Zeynep'in elinde iki mercek bulunmaktadır:\n• 1. Mercek: Çapı geniş ve odak uzaklığı büyük mercek.\n• 2. Mercek: Çapı dar ve odak uzaklığı küçük mercek.\n\nZeynep'in gök cisimlerini büyüterek inceleyebileceği doğru bir teleskop modeli kurabilmesi için bu iki merceği borunun hangi kısımlarına (göz tarafı ve incelenen gök cismi tarafı) takması gerektiğini merceklerin bilimsel adlarıyla (objektif ve oküler) eşleştirerek yazınız.",
+      "sample_answer": "1. Mercek (geniş çaplı ve büyük odaklı) gök cismine bakan uca takılmalıdır ve adı 'Objektif Merceği'dir. 2. Mercek (dar çaplı ve küçük odaklı) ise göze bakan uca takılmalıdır ve adı 'Oküler (Göz) Merceği'dir.",
+      "hint": "Gök cisminden gelen ışığı toplayan mercek büyük, gözümüzü dayadığımız mercek küçüktür.",
+      "accepted_alternatives": "Cisim tarafı = Objektif (büyük mercek), Göz tarafı = Oküler / Göz merceği (küçük mercek) eşleştirmesi tam puan için yeterlidir.",
+      "rubric": [
+        {
+          "id": "FB712-V6-E02-R1",
+          "text": "Objektif merceğini (1. mercek) gök cismi tarafına takılacağını ve ışığı topladığını doğru açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB712-V6-K01"
+          ],
+          "scoring": {
+            "full": "Geniş/büyük merceğin gök cismi tarafına (objektif) takılacağını belirtir.",
+            "zero": "Ters eşleştirme veya tanımsız bırakma."
+          }
+        },
+        {
+          "id": "FB712-V6-E02-R2",
+          "text": "Oküler merceğini (2. mercek) göz tarafına takılacağını doğru açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB712-V6-K01"
+          ],
+          "scoring": {
+            "full": "Küçük merceğin göz tarafına (oküler) takılacağını belirtir.",
+            "zero": "Yanlış eşleştirme."
+          }
+        }
       ],
-      "takeaway": "Sondalar ve gezginler (rover), insanların gidemeyeceği tehlikeli ve uzak ortamlara gönderilen yüksek teknolojili insansız bilim elçileridir.",
-      "misconception": "Uzay sondalarının içinde pilot veya astronot bulunduğu yanılgısı. Sondalar ve gezginler tamamen insansız olup otonom yazılımlar ve Dünya'dan gönderilen radyo sinyalleriyle yönetilir.",
-      "check": {
-        "prompt": "Mars rover modelinde tekerleklerin geniş yüzeyli tasarlanmasının fiziksel gerekçesi nedir?",
-        "answer": "Yüzey alanını artırıp kumlu zemine yapılan basıncı azaltarak robotun kuma saplanmasını önlemektir."
-      },
-      "show_check": true,
-      "visual": null,
-      "table": null,
+      "max_points": 15,
+      "return_card_ids": [
+        "FB712-V6-K01"
+      ],
+      "process_components": [
+        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
+      ],
+      "family_id": "FB.7.1.2-telescope-lenses",
       "source_refs": [
         "B711"
       ],
-      "learning_focus": "Uzay Sondası ve Rover Modelleri",
-      "book_section": "Uzay Sondaları",
-      "source_alignment": {
+      "originality": "MEB ders kitabı teleskop yapımı etkinliği esas alınarak özgün yazılmıştır.",
+      "review_status": "final_editorial_audit_2026_11_03",
+      "table": null,
+      "visual": null,
+      "score_weight": 15,
+      "score_weight_rationale": "İki merceğin konum ve ad eşleştirmesi.",
+      "incompatible_with": [],
+      "leakage_review": {
+        "stem_contains_solution_rule": false
+      },
+      "assessment_alignment": {
         "book_printed_pages": [
-          18,
-          20
+          20,
+          24
         ],
-        "scope": "FB.7.1.2.a"
+        "taught_card_ids": [
+          "FB712-V6-K01"
+        ]
       },
-      "card_type": "concept",
-      "topics": [
-        "Uzay sondası",
-        "Yüzey gezgini (Rover)",
-        "Rocker-bogie süspansiyon",
-        "Robotik kol",
-        "Derin uzay anteni"
-      ],
-      "sequence": 3
+      "rubric_point_examples": {
+        "15": {
+          "FB712-V6-E02-R1": 8,
+          "FB712-V6-E02-R2": 7
+        }
+      },
+      "audit": {
+        "source_scope_checked": true,
+        "difficulty_status": "easy"
+      },
+      "repeat_key": "FB712-E02"
     },
-    "FB712-V6-K04": {
-      "id": "FB712-V6-K04",
+    "FB712-V6-E03": {
+      "id": "FB712-V6-E03",
       "outcome_id": "FB.7.1.2",
-      "content_revision": "6.0.0",
-      "title": "Uzay İstasyonu Modeli: Yörüngedeki Yaşam ve Gözlem Üssü",
-      "eyebrow": "MODÜLER MİMARİ · UZAY LABORATUVARI",
-      "lead": "İçinde astronotların uzun süre yaşayıp mikroyerçekimi deneyleri yaptığı dev uzay üsleri modellenir.",
-      "body": [
-        "Uluslararası Uzay İstasyonu (ISS) benzeri modeller, birbirine kenetlenen silindir 'modüller' şeklinde tasarlanır.",
-        "Model Bileşenleri:",
-        "1. Yaşam ve Laboratuvar Modülleri: Basınçlı hava, uyku tulumları, biyoloji ve fizik deney düzenekleri içerir.",
-        "2. Kenetlenme Kapıları (Docking Ports): Uzay mekiklerinin ve kargo kapsüllerinin istasyona kilitlendiği geçiş noktalarıdır.",
-        "3. Dev Güneş Paneli Dizilimleri: İstasyondaki yaşam destek ünitelerinin ve laboratuvarların ihtiyaç duyduğu devasa elektriği üretir.",
-        "4. Isı Radyatör Panelleri: Elektronik sistemlerin ve astronotların ürettiği fazla ısıyı uzay boşluğuna yayan beyaz panellerdir."
+      "difficulty": "easy",
+      "difficulty_status": "editorial_estimate",
+      "type": "open_response",
+      "title": "Uzay Sondası ve Uzay İstasyonu Modelleri Karşılaştırması",
+      "stem": "Bir fen bilimleri sergisinde iki öğrenci grubu farklı uzay araçlarının modellerini sunmaktadır:\n• A Grubu: Mars yüzeyine inip toprak analizi yapan insansız bir 'Uzay Sondası' modeli sergilemektedir.\n• B Grubu: Dünya yörüngesinde dolanan ve içinde astronotların bulunduğu modüler bir 'Uzay İstasyonu' modeli sergilemektedir.\n\nBu iki model aracın 'insan barındırma (yaşam ortamı)' ve 'görev konumu/hareketi' özellikleri bakımından temel farklarını yazınız.",
+      "sample_answer": "1. İnsan barındırma farkı: Uzay istasyonu astronotların içinde uzun süre yaşadığı ve çalıştığı insanlı bir yaşam merkezidir; uzay sondası ise tamamen insansız çalışan robotik bir araçtır.\n2. Konum/hareket farkı: Uzay istasyonu Dünya yörüngesinde sabit hızla dolanır; uzay sondası ise incelenecek başka bir gök cismine (Mars, Jüpiter vb.) doğru milyonlarca kilometre yol alarak hedefe gider veya yüzeyine iner.",
+      "hint": "İstasyon kimler için tasarlanmıştır ve nereye gider? Sonda içinde canlı taşır mı?",
+      "accepted_alternatives": "İstasyonun insanlı/yörüngede olduğunu, sondanın insansız/derin uzayda gök cismine gittiğini belirten ifadeler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB712-V6-E03-R1",
+          "text": "İnsanlı vs insansız (yaşam ortamı) farkını doğru açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB712-V6-K03",
+            "FB712-V6-K04"
+          ],
+          "scoring": {
+            "full": "İstasyonun insanlı yaşam modülleri içerdiğini, sondanın insansız olduğunu belirtir.",
+            "zero": "Eksik veya hatalı açıklama."
+          }
+        },
+        {
+          "id": "FB712-V6-E03-R2",
+          "text": "Yörüngede sabit dolanma ile derin uzay/hedef gök cismine gitme hareket farkını doğru açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB712-V6-K03",
+            "FB712-V6-K04"
+          ],
+          "scoring": {
+            "full": "İstasyonun Dünya yörüngesinde kaldığını, sondanın hedef gök cismine seyahat ettiğini belirtir.",
+            "zero": "Eksik veya hatalı açıklama."
+          }
+        }
       ],
-      "takeaway": "Uzay istasyonları; yaşam destek, bilimsel laboratuvar, kenetlenme ve enerji sistemlerini bünyesinde toplayan en büyük insanlı uzay yapılarıdır.",
-      "misconception": "Uzay istasyonunun başka gezegenlere seyahat eden bir gemi olduğu yanılgısı. İstasyon Dünya çevresindeki alçak yörüngede (yaklaşık 400 km) sabit olarak dolanır.",
-      "check": {
-        "prompt": "Uzay istasyonu modelinde neden birden fazla bağımsız modül bulunur?",
-        "answer": "Büyük yapılar tek roketle fırlatılamadığı için uzayda parça parça birleştirilir ve acil durumlarda bölümler birbirinden izole edilebilir."
-      },
-      "show_check": true,
-      "visual": null,
-      "table": null,
+      "max_points": 15,
+      "return_card_ids": [
+        "FB712-V6-K03",
+        "FB712-V6-K04"
+      ],
+      "process_components": [
+        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
+      ],
+      "family_id": "FB.7.1.2-probe-vs-station",
       "source_refs": [
         "B711"
       ],
-      "learning_focus": "Uzay İstasyonu Modeli Mimarisi",
-      "book_section": "Uzay İstasyonları",
-      "source_alignment": {
+      "originality": "Özgün karşılaştırma kurgusu.",
+      "review_status": "final_editorial_audit_2026_11_03",
+      "table": null,
+      "visual": null,
+      "score_weight": 15,
+      "score_weight_rationale": "İki temel model arasındaki yapısal ve görevsel fark analizi.",
+      "incompatible_with": [],
+      "leakage_review": {
+        "stem_contains_solution_rule": false
+      },
+      "assessment_alignment": {
         "book_printed_pages": [
           17,
           21
         ],
-        "scope": "FB.7.1.2.a"
+        "taught_card_ids": [
+          "FB712-V6-K03",
+          "FB712-V6-K04"
+        ]
       },
-      "card_type": "concept",
-      "topics": [
-        "Modüler yapı",
-        "Kenetlenme kapısı",
-        "Yaşam destek sistemi",
-        "Güneş dizilimleri",
-        "Isı radyatörleri"
-      ],
-      "sequence": 4
+      "rubric_point_examples": {
+        "15": {
+          "FB712-V6-E03-R1": 8,
+          "FB712-V6-E03-R2": 7
+        }
+      },
+      "audit": {
+        "source_scope_checked": true,
+        "difficulty_status": "easy"
+      },
+      "repeat_key": "FB712-E03"
     },
-    "FB712-V6-K05": {
-      "id": "FB712-V6-K05",
+    "FB712-V6-M01": {
+      "id": "FB712-V6-M01",
       "outcome_id": "FB.7.1.2",
-      "content_revision": "6.0.0",
-      "title": "Bilimsel Modeli Yeni Kanıtlara Göre Yenileme (Mühendislik Döngüsü)",
-      "eyebrow": "SÜREÇ BECERİSİ · KANITA DAYALI YENİLEME",
-      "lead": "İlk tasarlanan model mükemmel değildir; test edilir, eksiklikler kanıtlanır ve model bilimsel olarak iyileştirilir.",
-      "body": [
-        "Bilimsel modelleme süreci bir döngüdür: Problem Belirleme -> Model Tasarımı -> Test ve Gözlem -> Kanıt Toplama -> Modeli Yenileme.",
-        "Karşılaşılan Sorunlar ve Bilimsel Çözüm Kanıtları:",
-        "• Teleskopta karanlık görüntü kanıtı -> Objektif açıklığı (çapı) büyütülür (daha fazla ışık toplanır).",
-        "• Teleskop borusunda iç parlama kanıtı -> Borunun içi mat siyah renkle kaplanır (ışık saçılması soğurulur).",
-        "• Görüntüde el titremesi kanıtı -> Modele üçayak (tripod) sabit taban eklenir.",
-        "• Uyduda güç yetersizliği kanıtı -> Güneş paneli yüzey alanı artırılır veya güneşi izleyen döner eksen eklenir.",
-        "• Sondada kum zemin batma kanıtı -> Tekerlek tabanı genişletilir veya palet modeline dönüştürülür.",
-        "• Atmosferik bozulma kanıtı -> Gözlem modeli yeryüzünden uzay ortamına (uzay teleskobu) taşınır."
+      "difficulty": "medium",
+      "difficulty_status": "editorial_estimate",
+      "type": "open_response",
+      "title": "İç İçe Silindir Mekanizması ve Odak Çakıştırma",
+      "stem": "Ahmet, iki mukavva silindiri iç içe geçirerek uçlarına ince kenarlı mercekler yerleştirmiş ve bir mercekli teleskop modeli kurmuştur. Ahmet uzak bir binanın çatısına baktığında görüntünün bulanık olduğunu görmüş; içteki silindiri yavaşça dışarı doğru çekerek belirli bir konuma getirdiğinde görüntünün kusursuz şekilde netleştiğini gözlemlemiştir.\n\nİç içe geçen silindirlerin hareket ettirilmesinin görüntüyü netleştirmesindeki bilimsel çalışma prensibini merceklerin odak uzaklıkları ve odak noktaları ile ilişkilendirerek açıklayınız.",
+      "sample_answer": "Uzaktaki cisimden gelen paralel ışınlar objektif merceğinde kırıldıktan sonra merceğin odak uzaklığında ters ve gerçek bir ara görüntü oluşturur. Bu ara görüntünün gözümüz tarafından net ve büyütülmüş olarak görülebilmesi için oküler (göz) merceğinin odak noktasına tam olarak denk gelmesi (çakışması) gerekir. Silindirlerin iç içe kaydırılması iki mercek arasındaki mesafeyi tam olarak odak uzaklıkları toplamına ($f_1 + f_2$) getirir ve netleme ayarını sağlar.",
+      "hint": "Merceklerin arasındaki mesafe değiştiğinde odak noktalarının konumu nasıl etkilenir?",
+      "accepted_alternatives": "Mercekler arası mesafenin değiştirilmesiyle ara görüntünün oküler merceğin odak noktasıyla çakıştırıldığı ve netleme yapıldığı vurgulanan tüm cevaplar kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB712-V6-M01-R1",
+          "text": "Silindirlerin hareketinin iki mercek arasındaki mesafeyi değiştirdiğini belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB712-V6-K01"
+          ],
+          "scoring": {
+            "full": "İki mercek arasındaki uzaklığın ayarlandığını net açıklar.",
+            "zero": "Mesafe kavramına değinmez."
+          }
+        },
+        {
+          "id": "FB712-V6-M01-R2",
+          "text": "Objektifin oluşturduğu görüntünün oküler merceğin odak noktasına denk gelmesi/çakışması prensibini açıklar.",
+          "points": 12,
+          "weight": 12,
+          "return_card_ids": [
+            "FB712-V6-K01"
+          ],
+          "scoring": {
+            "full": "Odak noktalarının çakışması veya görüntünün odak noktasına getirilerek netleme sağlandığını açıklar.",
+            "partial": "Yalnızca 'netlik ayarı yapılır' diyerek optik odak ilişkisini kuramayanlara 5-7 puan.",
+            "zero": "Yanlış optik açıklama."
+          }
+        }
       ],
-      "takeaway": "Bilimsel modelin gücü, karşılaşılan problemlere karşı yeni deneysel kanıtlarla kendini yenileyebilme yeteneğidir.",
-      "misconception": "Bir modelde hata çıkmasının başarısızlık olduğu yanılgısı. Hatalar ve test kanıtları, bilimsel modelin gerçeğe daha çok yaklaşmasını sağlayan en değerli verilerdir.",
-      "check": {
-        "prompt": "Test edilen bir modelde kanıtlara göre değişiklik yapılması hangi fen sürecini temsil eder?",
-        "answer": "FB.7.1.2.b alt kazanımı olan 'Modeli yeni kanıtlara göre yenileme ve geliştirme' sürecini temsil eder."
-      },
-      "show_check": true,
-      "visual": null,
-      "table": null,
+      "max_points": 20,
+      "return_card_ids": [
+        "FB712-V6-K01"
+      ],
+      "process_components": [
+        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir.",
+        "FB.7.1.2.b: Uzay gözlem araçları ile ilgili hazırladığı modeli yeni kanıtlara göre yeniler."
+      ],
+      "family_id": "FB.7.1.2-focus-mechanism",
       "source_refs": [
-        "B711",
-        "Yıllık Plan FB.7.1.2.b"
+        "B711"
       ],
-      "learning_focus": "Kanıta Dayalı Model Yenileme Döngüsü",
-      "book_section": "Model Değerlendirme ve Geliştirme",
-      "source_alignment": {
+      "originality": "Özgün optik modelleme mekanizması kurgusu.",
+      "review_status": "final_editorial_audit_2026_11_03",
+      "table": null,
+      "visual": null,
+      "score_weight": 20,
+      "score_weight_rationale": "Orta güçlükte optik mekanizma ve odak çakışması analizi.",
+      "incompatible_with": [],
+      "leakage_review": {
+        "stem_contains_solution_rule": false
+      },
+      "assessment_alignment": {
+        "book_printed_pages": [
+          20,
+          24
+        ],
+        "taught_card_ids": [
+          "FB712-V6-K01"
+        ]
+      },
+      "rubric_point_examples": {
+        "20": {
+          "FB712-V6-M01-R1": 8,
+          "FB712-V6-M01-R2": 12
+        }
+      },
+      "audit": {
+        "source_scope_checked": true,
+        "difficulty_status": "medium"
+      },
+      "repeat_key": "FB712-M01"
+    },
+    "FB712-V6-M02": {
+      "id": "FB712-V6-M02",
+      "outcome_id": "FB.7.1.2",
+      "difficulty": "medium",
+      "difficulty_status": "editorial_estimate",
+      "type": "open_response",
+      "title": "Aynalı (Newton) Teleskop Modeli ve Işığın İzlediği Yol",
+      "stem": "Bir öğrenci Newton tipi aynalı teleskop modeli tasarlamıştır. Modelin parçaları şunlardır:\n• Tüpün alt tabanında: Büyük Çukur Ayna\n• Tüpün üst kısmında içte: 45° açıyla yerleştirilmiş Düz Ayna\n• Tüpün yan tarafında: İnce kenarlı Oküler Mercek\n\nBu aynalı teleskop modelinde gök cisminden gelen ışığın gözlemcinin gözüne ulaşana kadar sırasıyla hangi optik parçalardan geçtiğini (ışık yolunu) yazınız ve çukur aynanın buradaki temel optik işlevini açıklayınız.",
+      "sample_answer": "Işığın izlediği yol sırasıyla:\n1. Tüpün açık ağzından girerek tabandaki Çukur Aynaya çarpar.\n2. Çukur aynadan yansıyarak odak noktasına doğru toplanırken eğik duran Düz Aynaya çarpar.\n3. Düz aynadan tüpün yan tarafına doğru 90 derece yansır ve Oküler Merceğe gelir.\n4. Oküler mercekten kırılarak göze ulaşır.\nÇukur aynanın görevi: Uzaktaki cisimden gelen paralel ışık ışınlarını yansıtarak tek bir odak noktasında toplamak ve aydınlık bir görüntü oluşturmaktır.",
+      "hint": "Aynalı teleskopta ışık tüpün tabanına kadar iner, oradan geri yansır.",
+      "accepted_alternatives": "Çukur Ayna -> Düz Ayna -> Oküler Mercek sıralamasını veren ve çukur aynanın ışığı toplayıp yansıtma işlevini belirten tüm cevaplar kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB712-V6-M02-R1",
+          "text": "Işığın sırasıyla Çukur Ayna -> Düz Ayna -> Oküler Mercek yolunu izlediğini doğru belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB712-V6-K01"
+          ],
+          "scoring": {
+            "full": "Üç optik elemanın sırasını doğru yazar.",
+            "partial": "Sıralamada bir elemanı karıştıranlara 5 puan.",
+            "zero": "Yanlış sıralama."
+          }
+        },
+        {
+          "id": "FB712-V6-M02-R2",
+          "text": "Çukur aynanın ışığı yansıtarak tek bir odakta toplama görevini açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB712-V6-K01"
+          ],
+          "scoring": {
+            "full": "Işığı yansıtma ve odaklama işlevini açıklar.",
+            "zero": "Mercek gibi kırar diyen veya eksik açıklayanlara 0 puan."
+          }
+        }
+      ],
+      "max_points": 20,
+      "return_card_ids": [
+        "FB712-V6-K01"
+      ],
+      "process_components": [
+        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
+      ],
+      "family_id": "FB.7.1.2-reflector-path",
+      "source_refs": [
+        "B711"
+      ],
+      "originality": "Özgün optik şema çözümleme kurgusu.",
+      "review_status": "final_editorial_audit_2026_11_03",
+      "table": null,
+      "visual": null,
+      "score_weight": 20,
+      "score_weight_rationale": "Işık izleme yolu ve çukur ayna optik görevi.",
+      "incompatible_with": [],
+      "leakage_review": {
+        "stem_contains_solution_rule": false
+      },
+      "assessment_alignment": {
+        "book_printed_pages": [
+          21,
+          24
+        ],
+        "taught_card_ids": [
+          "FB712-V6-K01"
+        ]
+      },
+      "rubric_point_examples": {
+        "20": {
+          "FB712-V6-M02-R1": 10,
+          "FB712-V6-M02-R2": 10
+        }
+      },
+      "audit": {
+        "source_scope_checked": true,
+        "difficulty_status": "medium"
+      },
+      "repeat_key": "FB712-M02"
+    },
+    "FB712-V6-H01": {
+      "id": "FB712-V6-H01",
+      "outcome_id": "FB.7.1.2",
+      "difficulty": "hard",
+      "difficulty_status": "editorial_estimate",
+      "type": "open_response",
+      "title": "Kanıtlara Dayalı Model Revizyonu ve Mühendislik Döngüsü",
+      "stem": "Bir fen bilimleri proje ekibi, uzay gözlem ve keşif araçları ünitesi kapsamında geri dönüştürülebilir atık malzemeler kullanarak iki farklı model üretmiş ve test simülasyonları gerçekleştirmiştir:\n\n1. Durum (Mercekli Teleskop Modeli): Ay gözlemi simülasyonunda kraterlerin çok karanlık ve soluk kaldığı, ayrıca boru içinden yansıyan ortam ışıklarının görüntüyü parlatıp kontrastı düşürdüğü kanıtlanmıştır.\n2. Durum (Mars Gezgini / Rover Modeli): Kum havuzunda yapılan sürüş testinde tekerleklerin kuma gömülerek aracın saplandığı ve dondurucu ortam simülasyonunda bataryaların aşırı soğuktan donarak çalışmayı durdurduğu kanıtlanmıştır.\n\nEkibin FB.7.1.2.b (hazırladığı modeli yeni kanıtlara göre yeniler) süreci doğrultusunda hem Teleskop Modelinde hem de Rover Modelinde bu sorunları çözmek için yapması gereken toplam 3 bilimsel/mühendislik revizyonunu gerekçeleriyle açıklayınız.",
+      "sample_answer": "Teleskop Modeli İçin Yenilemeler:\n1. Objektif merceğinin çapı (açıklığı) büyütülmelidir. Gerekçe: Mercek alanı arttıkça uzaktaki gök cisminden teleskoba giren ışık miktarı artar ve karanlık/soluk görüntü aydınlanır.\n2. Borunun iç yüzeyi mat siyah boya veya kadife ile kaplanmalıdır. Gerekçe: Siyah ve mat yüzeyler boru içindeki ışık yansımalarını soğurarak parlamayı önler ve kontrastı artırır.\n\nRover Modeli İçin Yenilemeler:\n3. Tekerleklerin taban genişliği artırılmalı veya tırtıklı palet sistemine geçilmelidir. Gerekçe: Yüzey alanının artması kuma uygulanan basıncı azaltarak batmayı engeller.\n(Veya: Batarya ünitesi etrafına altın/alüminyum folyo yalıtım kalkanı ve ısıtıcı eklenmelidir. Gerekçe: Isı transferini engelleyerek bataryanın donmasını önler.)",
+      "hint": "Teleskopta ışık miktarını ve boru içi parlamayı nasıl çözersiniz? Rover'da kuma batmayı (basınç) veya soğuktan donmayı nasıl engellersiniz?",
+      "accepted_alternatives": "Belirtilen 4 geçerli çözümden en az 3 tanesini doğru fiziksel gerekçesiyle açıklayan öğrenciler tam puan alır.",
+      "rubric": [
+        {
+          "id": "FB712-V6-H01-R1",
+          "text": "Teleskopta objektif çapını büyütme gerekçesini (ışık toplama kapasitesi) doğru açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB712-V6-K01",
+            "FB712-V6-K05"
+          ],
+          "scoring": {
+            "full": "Açıklık/çap artırımı ve toplanan ışık ilişkisini doğru açıklar.",
+            "zero": "Eksik veya hatalı açıklama."
+          }
+        },
+        {
+          "id": "FB712-V6-H01-R2",
+          "text": "Teleskopta boru içini mat siyaha kaplama gerekçesini (yansımaları ve parlamayı önleme) doğru açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB712-V6-K05"
+          ],
+          "scoring": {
+            "full": "Mat siyahın ışığı soğurarak iç saçılmayı önlediğini belirtir.",
+            "zero": "Eksik veya hatalı açıklama."
+          }
+        },
+        {
+          "id": "FB712-V6-H01-R3",
+          "text": "Rover modelinde tekerlek genişletme (basıncı azaltma) veya yalıtım kalkanı ekleme gerekçesini doğru açıklar.",
+          "points": 9,
+          "weight": 9,
+          "return_card_ids": [
+            "FB712-V6-K03",
+            "FB712-V6-K05"
+          ],
+          "scoring": {
+            "full": "Tekerlek yüzey alanı-basınç ilişkisi veya ısı yalıtımı ile donmayı önleme ilişkisini doğru açıklar.",
+            "partial": "Gerekçesiz yalnızca 'tekerlek büyütülür' diyene 4 puan.",
+            "zero": "Yanlış açıklama."
+          }
+        }
+      ],
+      "max_points": 25,
+      "return_card_ids": [
+        "FB712-V6-K01",
+        "FB712-V6-K03",
+        "FB712-V6-K05"
+      ],
+      "process_components": [
+        "FB.7.1.2.b: Uzay gözlem araçları ile ilgili hazırladığı modeli yeni kanıtlara göre yeniler."
+      ],
+      "family_id": "FB.7.1.2-engineering-revision",
+      "source_refs": [
+        "B711"
+      ],
+      "originality": "MEB performans görevi kanıta dayalı yenileme süreci üst düzey açık uçlu kurgu.",
+      "review_status": "final_editorial_audit_2026_11_03",
+      "table": null,
+      "visual": null,
+      "score_weight": 25,
+      "score_weight_rationale": "Üst düzey kanıta dayalı çoklu model revizyon analizi (Zor soru).",
+      "incompatible_with": [],
+      "leakage_review": {
+        "stem_contains_solution_rule": false
+      },
+      "assessment_alignment": {
         "book_printed_pages": [
           25,
           27
         ],
-        "scope": "FB.7.1.2.b"
+        "taught_card_ids": [
+          "FB712-V6-K01",
+          "FB712-V6-K03",
+          "FB712-V6-K05"
+        ]
       },
-      "card_type": "process",
-      "topics": [
-        "Kanıta dayalı revizyon",
-        "Teleskop açıklığı",
-        "Tripod sabitleme",
-        "Mat kaplama",
-        "Güneş açısı",
-        "Tekerlek basıncı"
-      ],
-      "sequence": 5
-    }
-  },
-  "questions": {
+      "rubric_point_examples": {
+        "25": {
+          "FB712-V6-H01-R1": 8,
+          "FB712-V6-H01-R2": 8,
+          "FB712-V6-H01-R3": 9
+        }
+      },
+      "audit": {
+        "source_scope_checked": true,
+        "difficulty_status": "hard"
+      },
+      "repeat_key": "FB712-H01"
+    },
     "FB714-V7-E01": {
       "id": "FB714-V7-E01",
       "outcome_id": "FB.7.1.4",
@@ -1829,523 +2343,281 @@
         }
       ],
       "sample_answer": "1) Çekim potansiyel enerjisi sıralaması yükseklik ilişkisine göre A > C > B şeklindedir (yer seviyesindeki B'de sıfırdır). 2) Kinetik enerji sıralaması ise B > C > A şeklindedir. Potansiyel enerjinin kinetik enerjiye dönüştüğü en alçak nokta olan B noktasında sürat ve kinetik enerji maksimumdur."
-    },
-    "FB712-V6-E01": {
-      "id": "FB712-V6-E01",
+    }
+  },
+  "calisma_kartlari": [
+    {
+      "id": "FB712-V6-K00",
       "outcome_id": "FB.7.1.2",
-      "difficulty": "easy",
-      "difficulty_status": "editorial_estimate",
-      "type": "open_response",
-      "title": "Yapay Uydu Modelinde Parça Görevleri",
-      "stem": "Fen bilimleri dersi performans görevinde karton kutu, plastik tabak ve alüminyum folyo kullanarak bir Dünya gözlem uydusu modeli tasarlayan Mehmet; gövdenin iki yanına mavi renkli petek desenli dikdörtgen mukavvalar, üst kısmına ise huni şeklinde bir plastik parça eklemiştir.\n\nMehmet'in modelinde kullandığı mavi mukavvaların (Güneş panelleri) ve huni parçanın (çanak anten) gerçek bir yapay uydudaki hayati görevlerini yazınız.",
-      "sample_answer": "Mavi paneller (Güneş panelleri) Güneş ışığını elektrik enerjisine çevirerek uydunun çalışmasını sağlar. Huni parça (çanak anten) ise uydunun çektiği gözlem fotoğraflarını ve verileri Dünya'daki yer istasyonuna göndermesini ve Dünya'dan komut almasını sağlar.",
-      "hint": "Bir uydu uzayda elektrik ihtiyacını nereden karşılar ve topladığı bilgileri Dünya'ya nasıl iletir?",
-      "accepted_alternatives": "Aynı bilimsel anlamı veren ifadeler kabul edilir. Örneğin elektrik üretimi/enerji sağlama ve radyo dalgalarıyla iletişim/veri aktarımı yazılması yeterlidir.",
-      "rubric": [
-        {
-          "id": "FB712-V6-E01-R1",
-          "text": "Güneş panellerinin elektrik enerjisi üretme/enerji sağlama görevini doğru açıklar.",
-          "points": 8,
-          "weight": 8,
-          "return_card_ids": [
-            "FB712-V6-K02"
-          ],
-          "scoring": {
-            "full": "Güneş panellerinin uydunun elektrik ihtiyacını sağladığını belirtir.",
-            "zero": "Yanlış veya eksik açıklama."
-          }
-        },
-        {
-          "id": "FB712-V6-E01-R2",
-          "text": "Çanak antenin Dünya ile iletişim/veri aktarımı sağlama görevini doğru açıklar.",
-          "points": 7,
-          "weight": 7,
-          "return_card_ids": [
-            "FB712-V6-K02"
-          ],
-          "scoring": {
-            "full": "Çanak antenin yer istasyonuna veri gönderme ve komut alma işlevini belirtir.",
-            "zero": "Yanlış veya eksik açıklama."
-          }
-        }
+      "content_revision": "6.0.0",
+      "title": "Uzay Gözlem ve Keşif Araçları Modelleri",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "lead": "Gök bilimcilerin uzayı incelemek için kullandığı tüm teknolojiler bilimsel modeller yoluyla somutlaştırılır.",
+      "body": [
+        "Uzay gözlem ve araştırma araçları; hedeflerine, bulundukları konuma ve taşıdıkları görev yüklerine göre farklı yapısal tasarımlara sahiptir.",
+        "Öğrencilerin fen bilimleri performans görevlerinde atık ve geri dönüştürülebilir malzemelerle modelleyebilecekleri temel araçlar şunlardır: Teleskoplar, Yapay Uydular, Uzay Sondaları ve Uzay İstasyonları.",
+        "Bilimsel modelleme yalnızca bir maket yapmak değil; parçaların işlevlerini tanımlamak, çalışma prensibini açıklamak ve test verilerine (yeni kanıtlara) göre modeli geliştirmektir."
       ],
-      "max_points": 15,
-      "return_card_ids": [
-        "FB712-V6-K02"
+      "takeaway": "Bilimsel bir model, gök cisimlerini veya uzay araçlarını temsil eden ve kanıtlar ışığında revize edilen bir düşünme ve tasarım aracıdır.",
+      "misconception": "Teleskop dışındaki uzay araçlarının (uydular veya sondalar) gözlem aracı sayılmadığı yanılgısı. Gerçekte sondalar ve gözlem uyduları uzayın en detaylı görüntü ve verilerini toplayan gözlem teknolojileridir.",
+      "check": {
+        "prompt": "Uzay gözlem aracı modeli tasarlarken bir parçanın görevi neden açıkça tanımlanmalıdır?",
+        "answer": "Çünkü bilimsel modelleme salt görsel benzerlik değil, aracın çalışma prensibini ve bileşenlerinin işlevlerini yansıtmayı amaçlar."
+      },
+      "show_check": true,
+      "visual": null,
+      "table": null,
+      "source_refs": [
+        "B711",
+        "Yıllık Plan FB.7.1.2"
       ],
-      "process_components": [
-        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
+      "learning_focus": "Uzay Gözlem Araçları: Çalışma Haritan",
+      "book_section": "Uzay Teknolojileri ve Gözlem Araçları",
+      "source_alignment": {
+        "book_printed_pages": [
+          16,
+          26
+        ],
+        "scope": "FB.7.1.2",
+        "page_notation": "MEB 7. Sınıf Fen Bilimleri 1. Ders Kitabı Performans Görevi ve Model Tasarımı"
+      },
+      "card_type": "overview",
+      "topics": [
+        "Teleskop modelleri (Mercekli ve Aynalı)",
+        "Yapay uydu modelleri ve bileşenleri",
+        "Uzay sondası ve rover tasarımı",
+        "Uzay istasyonu yaşam modülleri",
+        "Kanıta dayalı model yenileme"
       ],
-      "family_id": "FB.7.1.2-satellite-parts",
+      "sequence": 0
+    },
+    {
+      "id": "FB712-V6-K01",
+      "outcome_id": "FB.7.1.2",
+      "content_revision": "6.0.0",
+      "title": "Teleskop Modelleri: Mercekli ve Aynalı Optik Sistemler",
+      "eyebrow": "OPTİK MODEL · TELESKOP TASARIMI",
+      "lead": "Işığı toplama ve odaklama şekillerine göre teleskoplar mercekli veya aynalı modeller olarak tasarlanır.",
+      "body": [
+        "Mercekli Teleskop Modeli (Galileo Tipi): İki adet ince kenarlı mercek kullanılır. Dıştaki geniş boruda 'Objektif Merceği' (büyük çaplı, ışığı toplar ve odaklar), içteki dar boruda ise 'Oküler / Göz Merceği' (küçük odaklı, görüntüyü büyütür) yer alır.",
+        "Netleme Mekanizması: İç içe geçen iki karton borunun kaydırılması, iki mercek arasındaki mesafeyi odak uzaklıkları toplamına eşitleyerek görüntünün göz merceğinin odak noktasına düşmesini sağlar.",
+        "Aynalı Teleskop Modeli (Newton Tipi): Tüpün tabanında ışığı toplayıp yansıtan 'Çukur Ayna' (birincil ayna), odak noktası yakınında ışığı yana yönlendiren 45° açılı 'Düz Ayna' (ikincil ayna) ve yan tüpte büyütme yapan 'Oküler Mercek' bulunur."
+      ],
+      "takeaway": "Mercekli teleskoplar ışığı kırarak, aynalı teleskoplar ise ışığı yansıtarak tek bir odakta toplar ve büyütür.",
+      "misconception": "Teleskobun büyütme gücünün sadece tüp uzunluğuna bağlı olduğu yanılgısı. Büyütme, objektif odak uzaklığının oküler odak uzaklığına oranıdır; netlik ve parlaklık ise objektif çapına (açıklığına) bağlıdır.",
+      "check": {
+        "prompt": "Mercekli bir modelde iç içe boruların ileri-geri kaydırılmasının temel optik amacı nedir?",
+        "answer": "Objektifin oluşturduğu ara görüntünün oküler merceğin odak noktasıyla çakışmasını sağlayarak görüntüyü netleştirmektir."
+      },
+      "show_check": true,
+      "visual": null,
+      "table": null,
       "source_refs": [
         "B711"
       ],
-      "originality": "MEB performans görevi modelleme kurgusu esas alınarak özgün hazırlanmıştır.",
-      "review_status": "final_editorial_audit_2026_11_03",
-      "table": null,
-      "visual": null,
-      "score_weight": 15,
-      "score_weight_rationale": "İki temel uydu bileşeninin görev tanımlaması (8+7 puan).",
-      "incompatible_with": [],
-      "leakage_review": {
-        "stem_contains_solution_rule": false
+      "learning_focus": "Mercekli ve Aynalı Teleskop Modelleri",
+      "book_section": "Teleskopun Yapısı",
+      "source_alignment": {
+        "book_printed_pages": [
+          20,
+          24
+        ],
+        "scope": "FB.7.1.2.a"
       },
-      "assessment_alignment": {
+      "card_type": "concept",
+      "topics": [
+        "Objektif merceği",
+        "Oküler mercek",
+        "Çukur ayna",
+        "Düz ayna",
+        "Odaklama tüpü"
+      ],
+      "sequence": 1
+    },
+    {
+      "id": "FB712-V6-K02",
+      "outcome_id": "FB.7.1.2",
+      "content_revision": "6.0.0",
+      "title": "Yapay Uydu Modeli: Dünya ve Uzay Gözlem Sistemleri",
+      "eyebrow": "MÜHENDİSLİK MODELİ · UYDU SİSTEMLERİ",
+      "lead": "Dünya yörüngesinde dönen yapay uydular; gözlem, keşif, haritacılık ve haberleşme amacıyla özel modüllerden oluşur.",
+      "body": [
+        "Bir yapay uydu modelinde yer alması gereken 4 temel bileşen:",
+        "1. Gövde (Platform / Uydu Otobüsü): Tüm hassas elektronik devreleri, bilgisayarları ve yön kontrol iticilerini barındırır.",
+        "2. Güneş Panelleri (Kanatlar): Güneş ışığını elektrik enerjisine dönüştürerek uydunun tüm sistemlerini ve bataryalarını kesintisiz besler.",
+        "3. Çanak Anten / Haberleşme Ünitesi: Toplanan gözlem verilerini, fotoğrafları ve telemetri bilgilerini yer istasyonuna (Dünya'ya) aktarır ve komutları alır.",
+        "4. Faydalı Yük (Gözlem Kamerası / Sensörler): Yeryüzünü veya uzayı tarayan optik kameralar, kızılötesi tarayıcılar ve radar sistemleridir."
+      ],
+      "takeaway": "Yapay uydu modeli; enerji (Güneş paneli), iletişim (çanak anten), koruma (gövde) ve veri toplama (sensör/kamera) bileşenlerinin dengeli birleşimidir.",
+      "misconception": "Yapay uyduların Dünya yörüngesinde yakıt yakarak sürekli motor çalıştırmak zorunda olduğu yanılgısı. Uydular yer çekimi ile merkezkaç dengesinde serbest düşüş hareketiyle yörüngede dolanır; iticiler sadece yörünge düzeltmesi içindir.",
+      "check": {
+        "prompt": "Öğrenci uydu modeline neden alüminyum/altın yansıtıcı folyo kaplar?",
+        "answer": "Gerçek uydulardaki çok katmanlı ısı yalıtım battaniyelerini modelleyerek uzaydaki aşırı sıcaklık farklarından iç donanımı korumak için."
+      },
+      "show_check": true,
+      "visual": null,
+      "table": null,
+      "source_refs": [
+        "B711"
+      ],
+      "learning_focus": "Yapay Uydu Modeli Bileşenleri",
+      "book_section": "Yapay Uydular",
+      "source_alignment": {
         "book_printed_pages": [
           17,
           19
         ],
-        "taught_card_ids": [
-          "FB712-V6-K02"
-        ]
+        "scope": "FB.7.1.2.a"
       },
-      "rubric_point_examples": {
-        "15": {
-          "FB712-V6-E01-R1": 8,
-          "FB712-V6-E01-R2": 7
-        }
-      },
-      "audit": {
-        "source_scope_checked": true,
-        "difficulty_status": "easy"
-      },
-      "repeat_key": "FB712-E01"
+      "card_type": "concept",
+      "topics": [
+        "Güneş panelleri",
+        "Çanak anten",
+        "Faydalı yük",
+        "Isı yalıtımı",
+        "Yörünge gözlemi"
+      ],
+      "sequence": 2
     },
-    "FB712-V6-E02": {
-      "id": "FB712-V6-E02",
+    {
+      "id": "FB712-V6-K03",
       "outcome_id": "FB.7.1.2",
-      "difficulty": "easy",
-      "difficulty_status": "editorial_estimate",
-      "type": "open_response",
-      "title": "Mercekli Teleskop Modelinde Mercek Seçimi",
-      "stem": "İki adet ince kenarlı büyüteç merceği ve karton boru kullanarak basit bir mercekli teleskop modeli kurmak isteyen Zeynep'in elinde iki mercek bulunmaktadır:\n• 1. Mercek: Çapı geniş ve odak uzaklığı büyük mercek.\n• 2. Mercek: Çapı dar ve odak uzaklığı küçük mercek.\n\nZeynep'in gök cisimlerini büyüterek inceleyebileceği doğru bir teleskop modeli kurabilmesi için bu iki merceği borunun hangi kısımlarına (göz tarafı ve incelenen gök cismi tarafı) takması gerektiğini merceklerin bilimsel adlarıyla (objektif ve oküler) eşleştirerek yazınız.",
-      "sample_answer": "1. Mercek (geniş çaplı ve büyük odaklı) gök cismine bakan uca takılmalıdır ve adı 'Objektif Merceği'dir. 2. Mercek (dar çaplı ve küçük odaklı) ise göze bakan uca takılmalıdır ve adı 'Oküler (Göz) Merceği'dir.",
-      "hint": "Gök cisminden gelen ışığı toplayan mercek büyük, gözümüzü dayadığımız mercek küçüktür.",
-      "accepted_alternatives": "Cisim tarafı = Objektif (büyük mercek), Göz tarafı = Oküler / Göz merceği (küçük mercek) eşleştirmesi tam puan için yeterlidir.",
-      "rubric": [
-        {
-          "id": "FB712-V6-E02-R1",
-          "text": "Objektif merceğini (1. mercek) gök cismi tarafına takılacağını ve ışığı topladığını doğru açıklar.",
-          "points": 8,
-          "weight": 8,
-          "return_card_ids": [
-            "FB712-V6-K01"
-          ],
-          "scoring": {
-            "full": "Geniş/büyük merceğin gök cismi tarafına (objektif) takılacağını belirtir.",
-            "zero": "Ters eşleştirme veya tanımsız bırakma."
-          }
-        },
-        {
-          "id": "FB712-V6-E02-R2",
-          "text": "Oküler merceğini (2. mercek) göz tarafına takılacağını doğru açıklar.",
-          "points": 7,
-          "weight": 7,
-          "return_card_ids": [
-            "FB712-V6-K01"
-          ],
-          "scoring": {
-            "full": "Küçük merceğin göz tarafına (oküler) takılacağını belirtir.",
-            "zero": "Yanlış eşleştirme."
-          }
-        }
+      "content_revision": "6.0.0",
+      "title": "Uzay Sondası ve Gezgin (Rover) Modeli",
+      "eyebrow": "KEŞİF ROBOTİĞİ · DERİN UZAY VE YÜZEY MODELİ",
+      "lead": "Gezegenlerin, uyduların ve asteroitlerin yüzeyine inen veya yanından geçen insansız bilim robotları modellenir.",
+      "body": [
+        "Uzay Sondası Modeli: Bir gök cisminin yörüngesine girerek veya yakından geçerek atmosferini, manyetik alanını ve sıcaklığını ölçen insansız gözlem aracıdır. Büyük yönlendirilebilir yüksek kazançlı çanak anten ve bilimsel spektrometreler taşır.",
+        "Yüzey Gezgini (Rover) Modeli: Ay veya Mars gibi engebeli yüzeylerde hareket edebilen tekerlekli robotik laboratuvardır.",
+        "Rover Model Bileşenleri: Engebeli arazide devrilmeyi önleyen 6 tekerlekli rocker-bogie salıncak süspansiyon sistemi, kaya örneklerini delip toplayan robotik kol ve çevreyi 3 boyutlu tarayan direk üstü mastcam kameralar."
       ],
-      "max_points": 15,
-      "return_card_ids": [
-        "FB712-V6-K01"
-      ],
-      "process_components": [
-        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
-      ],
-      "family_id": "FB.7.1.2-telescope-lenses",
+      "takeaway": "Sondalar ve gezginler (rover), insanların gidemeyeceği tehlikeli ve uzak ortamlara gönderilen yüksek teknolojili insansız bilim elçileridir.",
+      "misconception": "Uzay sondalarının içinde pilot veya astronot bulunduğu yanılgısı. Sondalar ve gezginler tamamen insansız olup otonom yazılımlar ve Dünya'dan gönderilen radyo sinyalleriyle yönetilir.",
+      "check": {
+        "prompt": "Mars rover modelinde tekerleklerin geniş yüzeyli tasarlanmasının fiziksel gerekçesi nedir?",
+        "answer": "Yüzey alanını artırıp kumlu zemine yapılan basıncı azaltarak robotun kuma saplanmasını önlemektir."
+      },
+      "show_check": true,
+      "visual": null,
+      "table": null,
       "source_refs": [
         "B711"
       ],
-      "originality": "MEB ders kitabı teleskop yapımı etkinliği esas alınarak özgün yazılmıştır.",
-      "review_status": "final_editorial_audit_2026_11_03",
-      "table": null,
-      "visual": null,
-      "score_weight": 15,
-      "score_weight_rationale": "İki merceğin konum ve ad eşleştirmesi.",
-      "incompatible_with": [],
-      "leakage_review": {
-        "stem_contains_solution_rule": false
-      },
-      "assessment_alignment": {
+      "learning_focus": "Uzay Sondası ve Rover Modelleri",
+      "book_section": "Uzay Sondaları",
+      "source_alignment": {
         "book_printed_pages": [
-          20,
-          24
+          18,
+          20
         ],
-        "taught_card_ids": [
-          "FB712-V6-K01"
-        ]
+        "scope": "FB.7.1.2.a"
       },
-      "rubric_point_examples": {
-        "15": {
-          "FB712-V6-E02-R1": 8,
-          "FB712-V6-E02-R2": 7
-        }
-      },
-      "audit": {
-        "source_scope_checked": true,
-        "difficulty_status": "easy"
-      },
-      "repeat_key": "FB712-E02"
+      "card_type": "concept",
+      "topics": [
+        "Uzay sondası",
+        "Yüzey gezgini (Rover)",
+        "Rocker-bogie süspansiyon",
+        "Robotik kol",
+        "Derin uzay anteni"
+      ],
+      "sequence": 3
     },
-    "FB712-V6-E03": {
-      "id": "FB712-V6-E03",
+    {
+      "id": "FB712-V6-K04",
       "outcome_id": "FB.7.1.2",
-      "difficulty": "easy",
-      "difficulty_status": "editorial_estimate",
-      "type": "open_response",
-      "title": "Uzay Sondası ve Uzay İstasyonu Modelleri Karşılaştırması",
-      "stem": "Bir fen bilimleri sergisinde iki öğrenci grubu farklı uzay araçlarının modellerini sunmaktadır:\n• A Grubu: Mars yüzeyine inip toprak analizi yapan insansız bir 'Uzay Sondası' modeli sergilemektedir.\n• B Grubu: Dünya yörüngesinde dolanan ve içinde astronotların bulunduğu modüler bir 'Uzay İstasyonu' modeli sergilemektedir.\n\nBu iki model aracın 'insan barındırma (yaşam ortamı)' ve 'görev konumu/hareketi' özellikleri bakımından temel farklarını yazınız.",
-      "sample_answer": "1. İnsan barındırma farkı: Uzay istasyonu astronotların içinde uzun süre yaşadığı ve çalıştığı insanlı bir yaşam merkezidir; uzay sondası ise tamamen insansız çalışan robotik bir araçtır.\n2. Konum/hareket farkı: Uzay istasyonu Dünya yörüngesinde sabit hızla dolanır; uzay sondası ise incelenecek başka bir gök cismine (Mars, Jüpiter vb.) doğru milyonlarca kilometre yol alarak hedefe gider veya yüzeyine iner.",
-      "hint": "İstasyon kimler için tasarlanmıştır ve nereye gider? Sonda içinde canlı taşır mı?",
-      "accepted_alternatives": "İstasyonun insanlı/yörüngede olduğunu, sondanın insansız/derin uzayda gök cismine gittiğini belirten ifadeler kabul edilir.",
-      "rubric": [
-        {
-          "id": "FB712-V6-E03-R1",
-          "text": "İnsanlı vs insansız (yaşam ortamı) farkını doğru açıklar.",
-          "points": 8,
-          "weight": 8,
-          "return_card_ids": [
-            "FB712-V6-K03",
-            "FB712-V6-K04"
-          ],
-          "scoring": {
-            "full": "İstasyonun insanlı yaşam modülleri içerdiğini, sondanın insansız olduğunu belirtir.",
-            "zero": "Eksik veya hatalı açıklama."
-          }
-        },
-        {
-          "id": "FB712-V6-E03-R2",
-          "text": "Yörüngede sabit dolanma ile derin uzay/hedef gök cismine gitme hareket farkını doğru açıklar.",
-          "points": 7,
-          "weight": 7,
-          "return_card_ids": [
-            "FB712-V6-K03",
-            "FB712-V6-K04"
-          ],
-          "scoring": {
-            "full": "İstasyonun Dünya yörüngesinde kaldığını, sondanın hedef gök cismine seyahat ettiğini belirtir.",
-            "zero": "Eksik veya hatalı açıklama."
-          }
-        }
+      "content_revision": "6.0.0",
+      "title": "Uzay İstasyonu Modeli: Yörüngedeki Yaşam ve Gözlem Üssü",
+      "eyebrow": "MODÜLER MİMARİ · UZAY LABORATUVARI",
+      "lead": "İçinde astronotların uzun süre yaşayıp mikroyerçekimi deneyleri yaptığı dev uzay üsleri modellenir.",
+      "body": [
+        "Uluslararası Uzay İstasyonu (ISS) benzeri modeller, birbirine kenetlenen silindir 'modüller' şeklinde tasarlanır.",
+        "Model Bileşenleri:",
+        "1. Yaşam ve Laboratuvar Modülleri: Basınçlı hava, uyku tulumları, biyoloji ve fizik deney düzenekleri içerir.",
+        "2. Kenetlenme Kapıları (Docking Ports): Uzay mekiklerinin ve kargo kapsüllerinin istasyona kilitlendiği geçiş noktalarıdır.",
+        "3. Dev Güneş Paneli Dizilimleri: İstasyondaki yaşam destek ünitelerinin ve laboratuvarların ihtiyaç duyduğu devasa elektriği üretir.",
+        "4. Isı Radyatör Panelleri: Elektronik sistemlerin ve astronotların ürettiği fazla ısıyı uzay boşluğuna yayan beyaz panellerdir."
       ],
-      "max_points": 15,
-      "return_card_ids": [
-        "FB712-V6-K03",
-        "FB712-V6-K04"
-      ],
-      "process_components": [
-        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
-      ],
-      "family_id": "FB.7.1.2-probe-vs-station",
+      "takeaway": "Uzay istasyonları; yaşam destek, bilimsel laboratuvar, kenetlenme ve enerji sistemlerini bünyesinde toplayan en büyük insanlı uzay yapılarıdır.",
+      "misconception": "Uzay istasyonunun başka gezegenlere seyahat eden bir gemi olduğu yanılgısı. İstasyon Dünya çevresindeki alçak yörüngede (yaklaşık 400 km) sabit olarak dolanır.",
+      "check": {
+        "prompt": "Uzay istasyonu modelinde neden birden fazla bağımsız modül bulunur?",
+        "answer": "Büyük yapılar tek roketle fırlatılamadığı için uzayda parça parça birleştirilir ve acil durumlarda bölümler birbirinden izole edilebilir."
+      },
+      "show_check": true,
+      "visual": null,
+      "table": null,
       "source_refs": [
         "B711"
       ],
-      "originality": "Özgün karşılaştırma kurgusu.",
-      "review_status": "final_editorial_audit_2026_11_03",
-      "table": null,
-      "visual": null,
-      "score_weight": 15,
-      "score_weight_rationale": "İki temel model arasındaki yapısal ve görevsel fark analizi.",
-      "incompatible_with": [],
-      "leakage_review": {
-        "stem_contains_solution_rule": false
-      },
-      "assessment_alignment": {
+      "learning_focus": "Uzay İstasyonu Modeli Mimarisi",
+      "book_section": "Uzay İstasyonları",
+      "source_alignment": {
         "book_printed_pages": [
           17,
           21
         ],
-        "taught_card_ids": [
-          "FB712-V6-K03",
-          "FB712-V6-K04"
-        ]
+        "scope": "FB.7.1.2.a"
       },
-      "rubric_point_examples": {
-        "15": {
-          "FB712-V6-E03-R1": 8,
-          "FB712-V6-E03-R2": 7
-        }
-      },
-      "audit": {
-        "source_scope_checked": true,
-        "difficulty_status": "easy"
-      },
-      "repeat_key": "FB712-E03"
+      "card_type": "concept",
+      "topics": [
+        "Modüler yapı",
+        "Kenetlenme kapısı",
+        "Yaşam destek sistemi",
+        "Güneş dizilimleri",
+        "Isı radyatörleri"
+      ],
+      "sequence": 4
     },
-    "FB712-V6-M01": {
-      "id": "FB712-V6-M01",
+    {
+      "id": "FB712-V6-K05",
       "outcome_id": "FB.7.1.2",
-      "difficulty": "medium",
-      "difficulty_status": "editorial_estimate",
-      "type": "open_response",
-      "title": "İç İçe Silindir Mekanizması ve Odak Çakıştırma",
-      "stem": "Ahmet, iki mukavva silindiri iç içe geçirerek uçlarına ince kenarlı mercekler yerleştirmiş ve bir mercekli teleskop modeli kurmuştur. Ahmet uzak bir binanın çatısına baktığında görüntünün bulanık olduğunu görmüş; içteki silindiri yavaşça dışarı doğru çekerek belirli bir konuma getirdiğinde görüntünün kusursuz şekilde netleştiğini gözlemlemiştir.\n\nİç içe geçen silindirlerin hareket ettirilmesinin görüntüyü netleştirmesindeki bilimsel çalışma prensibini merceklerin odak uzaklıkları ve odak noktaları ile ilişkilendirerek açıklayınız.",
-      "sample_answer": "Uzaktaki cisimden gelen paralel ışınlar objektif merceğinde kırıldıktan sonra merceğin odak uzaklığında ters ve gerçek bir ara görüntü oluşturur. Bu ara görüntünün gözümüz tarafından net ve büyütülmüş olarak görülebilmesi için oküler (göz) merceğinin odak noktasına tam olarak denk gelmesi (çakışması) gerekir. Silindirlerin iç içe kaydırılması iki mercek arasındaki mesafeyi tam olarak odak uzaklıkları toplamına ($f_1 + f_2$) getirir ve netleme ayarını sağlar.",
-      "hint": "Merceklerin arasındaki mesafe değiştiğinde odak noktalarının konumu nasıl etkilenir?",
-      "accepted_alternatives": "Mercekler arası mesafenin değiştirilmesiyle ara görüntünün oküler merceğin odak noktasıyla çakıştırıldığı ve netleme yapıldığı vurgulanan tüm cevaplar kabul edilir.",
-      "rubric": [
-        {
-          "id": "FB712-V6-M01-R1",
-          "text": "Silindirlerin hareketinin iki mercek arasındaki mesafeyi değiştirdiğini belirtir.",
-          "points": 8,
-          "weight": 8,
-          "return_card_ids": [
-            "FB712-V6-K01"
-          ],
-          "scoring": {
-            "full": "İki mercek arasındaki uzaklığın ayarlandığını net açıklar.",
-            "zero": "Mesafe kavramına değinmez."
-          }
-        },
-        {
-          "id": "FB712-V6-M01-R2",
-          "text": "Objektifin oluşturduğu görüntünün oküler merceğin odak noktasına denk gelmesi/çakışması prensibini açıklar.",
-          "points": 12,
-          "weight": 12,
-          "return_card_ids": [
-            "FB712-V6-K01"
-          ],
-          "scoring": {
-            "full": "Odak noktalarının çakışması veya görüntünün odak noktasına getirilerek netleme sağlandığını açıklar.",
-            "partial": "Yalnızca 'netlik ayarı yapılır' diyerek optik odak ilişkisini kuramayanlara 5-7 puan.",
-            "zero": "Yanlış optik açıklama."
-          }
-        }
+      "content_revision": "6.0.0",
+      "title": "Bilimsel Modeli Yeni Kanıtlara Göre Yenileme (Mühendislik Döngüsü)",
+      "eyebrow": "SÜREÇ BECERİSİ · KANITA DAYALI YENİLEME",
+      "lead": "İlk tasarlanan model mükemmel değildir; test edilir, eksiklikler kanıtlanır ve model bilimsel olarak iyileştirilir.",
+      "body": [
+        "Bilimsel modelleme süreci bir döngüdür: Problem Belirleme -> Model Tasarımı -> Test ve Gözlem -> Kanıt Toplama -> Modeli Yenileme.",
+        "Karşılaşılan Sorunlar ve Bilimsel Çözüm Kanıtları:",
+        "• Teleskopta karanlık görüntü kanıtı -> Objektif açıklığı (çapı) büyütülür (daha fazla ışık toplanır).",
+        "• Teleskop borusunda iç parlama kanıtı -> Borunun içi mat siyah renkle kaplanır (ışık saçılması soğurulur).",
+        "• Görüntüde el titremesi kanıtı -> Modele üçayak (tripod) sabit taban eklenir.",
+        "• Uyduda güç yetersizliği kanıtı -> Güneş paneli yüzey alanı artırılır veya güneşi izleyen döner eksen eklenir.",
+        "• Sondada kum zemin batma kanıtı -> Tekerlek tabanı genişletilir veya palet modeline dönüştürülür.",
+        "• Atmosferik bozulma kanıtı -> Gözlem modeli yeryüzünden uzay ortamına (uzay teleskobu) taşınır."
       ],
-      "max_points": 20,
-      "return_card_ids": [
-        "FB712-V6-K01"
-      ],
-      "process_components": [
-        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir.",
-        "FB.7.1.2.b: Uzay gözlem araçları ile ilgili hazırladığı modeli yeni kanıtlara göre yeniler."
-      ],
-      "family_id": "FB.7.1.2-focus-mechanism",
-      "source_refs": [
-        "B711"
-      ],
-      "originality": "Özgün optik modelleme mekanizması kurgusu.",
-      "review_status": "final_editorial_audit_2026_11_03",
-      "table": null,
+      "takeaway": "Bilimsel modelin gücü, karşılaşılan problemlere karşı yeni deneysel kanıtlarla kendini yenileyebilme yeteneğidir.",
+      "misconception": "Bir modelde hata çıkmasının başarısızlık olduğu yanılgısı. Hatalar ve test kanıtları, bilimsel modelin gerçeğe daha çok yaklaşmasını sağlayan en değerli verilerdir.",
+      "check": {
+        "prompt": "Test edilen bir modelde kanıtlara göre değişiklik yapılması hangi fen sürecini temsil eder?",
+        "answer": "FB.7.1.2.b alt kazanımı olan 'Modeli yeni kanıtlara göre yenileme ve geliştirme' sürecini temsil eder."
+      },
+      "show_check": true,
       "visual": null,
-      "score_weight": 20,
-      "score_weight_rationale": "Orta güçlükte optik mekanizma ve odak çakışması analizi.",
-      "incompatible_with": [],
-      "leakage_review": {
-        "stem_contains_solution_rule": false
-      },
-      "assessment_alignment": {
-        "book_printed_pages": [
-          20,
-          24
-        ],
-        "taught_card_ids": [
-          "FB712-V6-K01"
-        ]
-      },
-      "rubric_point_examples": {
-        "20": {
-          "FB712-V6-M01-R1": 8,
-          "FB712-V6-M01-R2": 12
-        }
-      },
-      "audit": {
-        "source_scope_checked": true,
-        "difficulty_status": "medium"
-      },
-      "repeat_key": "FB712-M01"
-    },
-    "FB712-V6-M02": {
-      "id": "FB712-V6-M02",
-      "outcome_id": "FB.7.1.2",
-      "difficulty": "medium",
-      "difficulty_status": "editorial_estimate",
-      "type": "open_response",
-      "title": "Aynalı (Newton) Teleskop Modeli ve Işığın İzlediği Yol",
-      "stem": "Bir öğrenci Newton tipi aynalı teleskop modeli tasarlamıştır. Modelin parçaları şunlardır:\n• Tüpün alt tabanında: Büyük Çukur Ayna\n• Tüpün üst kısmında içte: 45° açıyla yerleştirilmiş Düz Ayna\n• Tüpün yan tarafında: İnce kenarlı Oküler Mercek\n\nBu aynalı teleskop modelinde gök cisminden gelen ışığın gözlemcinin gözüne ulaşana kadar sırasıyla hangi optik parçalardan geçtiğini (ışık yolunu) yazınız ve çukur aynanın buradaki temel optik işlevini açıklayınız.",
-      "sample_answer": "Işığın izlediği yol sırasıyla:\n1. Tüpün açık ağzından girerek tabandaki Çukur Aynaya çarpar.\n2. Çukur aynadan yansıyarak odak noktasına doğru toplanırken eğik duran Düz Aynaya çarpar.\n3. Düz aynadan tüpün yan tarafına doğru 90 derece yansır ve Oküler Merceğe gelir.\n4. Oküler mercekten kırılarak göze ulaşır.\nÇukur aynanın görevi: Uzaktaki cisimden gelen paralel ışık ışınlarını yansıtarak tek bir odak noktasında toplamak ve aydınlık bir görüntü oluşturmaktır.",
-      "hint": "Aynalı teleskopta ışık tüpün tabanına kadar iner, oradan geri yansır.",
-      "accepted_alternatives": "Çukur Ayna -> Düz Ayna -> Oküler Mercek sıralamasını veren ve çukur aynanın ışığı toplayıp yansıtma işlevini belirten tüm cevaplar kabul edilir.",
-      "rubric": [
-        {
-          "id": "FB712-V6-M02-R1",
-          "text": "Işığın sırasıyla Çukur Ayna -> Düz Ayna -> Oküler Mercek yolunu izlediğini doğru belirtir.",
-          "points": 10,
-          "weight": 10,
-          "return_card_ids": [
-            "FB712-V6-K01"
-          ],
-          "scoring": {
-            "full": "Üç optik elemanın sırasını doğru yazar.",
-            "partial": "Sıralamada bir elemanı karıştıranlara 5 puan.",
-            "zero": "Yanlış sıralama."
-          }
-        },
-        {
-          "id": "FB712-V6-M02-R2",
-          "text": "Çukur aynanın ışığı yansıtarak tek bir odakta toplama görevini açıklar.",
-          "points": 10,
-          "weight": 10,
-          "return_card_ids": [
-            "FB712-V6-K01"
-          ],
-          "scoring": {
-            "full": "Işığı yansıtma ve odaklama işlevini açıklar.",
-            "zero": "Mercek gibi kırar diyen veya eksik açıklayanlara 0 puan."
-          }
-        }
-      ],
-      "max_points": 20,
-      "return_card_ids": [
-        "FB712-V6-K01"
-      ],
-      "process_components": [
-        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
-      ],
-      "family_id": "FB.7.1.2-reflector-path",
-      "source_refs": [
-        "B711"
-      ],
-      "originality": "Özgün optik şema çözümleme kurgusu.",
-      "review_status": "final_editorial_audit_2026_11_03",
       "table": null,
-      "visual": null,
-      "score_weight": 20,
-      "score_weight_rationale": "Işık izleme yolu ve çukur ayna optik görevi.",
-      "incompatible_with": [],
-      "leakage_review": {
-        "stem_contains_solution_rule": false
-      },
-      "assessment_alignment": {
-        "book_printed_pages": [
-          21,
-          24
-        ],
-        "taught_card_ids": [
-          "FB712-V6-K01"
-        ]
-      },
-      "rubric_point_examples": {
-        "20": {
-          "FB712-V6-M02-R1": 10,
-          "FB712-V6-M02-R2": 10
-        }
-      },
-      "audit": {
-        "source_scope_checked": true,
-        "difficulty_status": "medium"
-      },
-      "repeat_key": "FB712-M02"
-    },
-    "FB712-V6-H01": {
-      "id": "FB712-V6-H01",
-      "outcome_id": "FB.7.1.2",
-      "difficulty": "hard",
-      "difficulty_status": "editorial_estimate",
-      "type": "open_response",
-      "title": "Kanıtlara Dayalı Model Revizyonu ve Mühendislik Döngüsü",
-      "stem": "Bir fen bilimleri proje ekibi, uzay gözlem ve keşif araçları ünitesi kapsamında geri dönüştürülebilir atık malzemeler kullanarak iki farklı model üretmiş ve test simülasyonları gerçekleştirmiştir:\n\n1. Durum (Mercekli Teleskop Modeli): Ay gözlemi simülasyonunda kraterlerin çok karanlık ve soluk kaldığı, ayrıca boru içinden yansıyan ortam ışıklarının görüntüyü parlatıp kontrastı düşürdüğü kanıtlanmıştır.\n2. Durum (Mars Gezgini / Rover Modeli): Kum havuzunda yapılan sürüş testinde tekerleklerin kuma gömülerek aracın saplandığı ve dondurucu ortam simülasyonunda bataryaların aşırı soğuktan donarak çalışmayı durdurduğu kanıtlanmıştır.\n\nEkibin FB.7.1.2.b (hazırladığı modeli yeni kanıtlara göre yeniler) süreci doğrultusunda hem Teleskop Modelinde hem de Rover Modelinde bu sorunları çözmek için yapması gereken toplam 3 bilimsel/mühendislik revizyonunu gerekçeleriyle açıklayınız.",
-      "sample_answer": "Teleskop Modeli İçin Yenilemeler:\n1. Objektif merceğinin çapı (açıklığı) büyütülmelidir. Gerekçe: Mercek alanı arttıkça uzaktaki gök cisminden teleskoba giren ışık miktarı artar ve karanlık/soluk görüntü aydınlanır.\n2. Borunun iç yüzeyi mat siyah boya veya kadife ile kaplanmalıdır. Gerekçe: Siyah ve mat yüzeyler boru içindeki ışık yansımalarını soğurarak parlamayı önler ve kontrastı artırır.\n\nRover Modeli İçin Yenilemeler:\n3. Tekerleklerin taban genişliği artırılmalı veya tırtıklı palet sistemine geçilmelidir. Gerekçe: Yüzey alanının artması kuma uygulanan basıncı azaltarak batmayı engeller.\n(Veya: Batarya ünitesi etrafına altın/alüminyum folyo yalıtım kalkanı ve ısıtıcı eklenmelidir. Gerekçe: Isı transferini engelleyerek bataryanın donmasını önler.)",
-      "hint": "Teleskopta ışık miktarını ve boru içi parlamayı nasıl çözersiniz? Rover'da kuma batmayı (basınç) veya soğuktan donmayı nasıl engellersiniz?",
-      "accepted_alternatives": "Belirtilen 4 geçerli çözümden en az 3 tanesini doğru fiziksel gerekçesiyle açıklayan öğrenciler tam puan alır.",
-      "rubric": [
-        {
-          "id": "FB712-V6-H01-R1",
-          "text": "Teleskopta objektif çapını büyütme gerekçesini (ışık toplama kapasitesi) doğru açıklar.",
-          "points": 8,
-          "weight": 8,
-          "return_card_ids": [
-            "FB712-V6-K01",
-            "FB712-V6-K05"
-          ],
-          "scoring": {
-            "full": "Açıklık/çap artırımı ve toplanan ışık ilişkisini doğru açıklar.",
-            "zero": "Eksik veya hatalı açıklama."
-          }
-        },
-        {
-          "id": "FB712-V6-H01-R2",
-          "text": "Teleskopta boru içini mat siyaha kaplama gerekçesini (yansımaları ve parlamayı önleme) doğru açıklar.",
-          "points": 8,
-          "weight": 8,
-          "return_card_ids": [
-            "FB712-V6-K05"
-          ],
-          "scoring": {
-            "full": "Mat siyahın ışığı soğurarak iç saçılmayı önlediğini belirtir.",
-            "zero": "Eksik veya hatalı açıklama."
-          }
-        },
-        {
-          "id": "FB712-V6-H01-R3",
-          "text": "Rover modelinde tekerlek genişletme (basıncı azaltma) veya yalıtım kalkanı ekleme gerekçesini doğru açıklar.",
-          "points": 9,
-          "weight": 9,
-          "return_card_ids": [
-            "FB712-V6-K03",
-            "FB712-V6-K05"
-          ],
-          "scoring": {
-            "full": "Tekerlek yüzey alanı-basınç ilişkisi veya ısı yalıtımı ile donmayı önleme ilişkisini doğru açıklar.",
-            "partial": "Gerekçesiz yalnızca 'tekerlek büyütülür' diyene 4 puan.",
-            "zero": "Yanlış açıklama."
-          }
-        }
-      ],
-      "max_points": 25,
-      "return_card_ids": [
-        "FB712-V6-K01",
-        "FB712-V6-K03",
-        "FB712-V6-K05"
-      ],
-      "process_components": [
-        "FB.7.1.2.b: Uzay gözlem araçları ile ilgili hazırladığı modeli yeni kanıtlara göre yeniler."
-      ],
-      "family_id": "FB.7.1.2-engineering-revision",
       "source_refs": [
-        "B711"
+        "B711",
+        "Yıllık Plan FB.7.1.2.b"
       ],
-      "originality": "MEB performans görevi kanıta dayalı yenileme süreci üst düzey açık uçlu kurgu.",
-      "review_status": "final_editorial_audit_2026_11_03",
-      "table": null,
-      "visual": null,
-      "score_weight": 25,
-      "score_weight_rationale": "Üst düzey kanıta dayalı çoklu model revizyon analizi (Zor soru).",
-      "incompatible_with": [],
-      "leakage_review": {
-        "stem_contains_solution_rule": false
-      },
-      "assessment_alignment": {
+      "learning_focus": "Kanıta Dayalı Model Yenileme Döngüsü",
+      "book_section": "Model Değerlendirme ve Geliştirme",
+      "source_alignment": {
         "book_printed_pages": [
           25,
           27
         ],
-        "taught_card_ids": [
-          "FB712-V6-K01",
-          "FB712-V6-K03",
-          "FB712-V6-K05"
-        ]
+        "scope": "FB.7.1.2.b"
       },
-      "rubric_point_examples": {
-        "25": {
-          "FB712-V6-H01-R1": 8,
-          "FB712-V6-H01-R2": 8,
-          "FB712-V6-H01-R3": 9
-        }
-      },
-      "audit": {
-        "source_scope_checked": true,
-        "difficulty_status": "hard"
-      },
-      "repeat_key": "FB712-H01"
-    }
-  },
-  "calisma_kartlari": [
+      "card_type": "process",
+      "topics": [
+        "Kanıta dayalı revizyon",
+        "Teleskop açıklığı",
+        "Tripod sabitleme",
+        "Mat kaplama",
+        "Güneş açısı",
+        "Tekerlek basıncı"
+      ],
+      "sequence": 5
+    },
     {
       "id": "FB714-V7-K00",
       "outcome_id": "FB.7.1.4",
@@ -2686,281 +2958,523 @@
         "caption": "Kinetik ve Potansiyel Enerji",
         "fit": "contain"
       }
-    },
+    }
+  ],
+  "sorular": [
     {
-      "id": "FB712-V6-K00",
+      "id": "FB712-V6-E01",
       "outcome_id": "FB.7.1.2",
-      "content_revision": "6.0.0",
-      "title": "Uzay Gözlem ve Keşif Araçları Modelleri",
-      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
-      "lead": "Gök bilimcilerin uzayı incelemek için kullandığı tüm teknolojiler bilimsel modeller yoluyla somutlaştırılır.",
-      "body": [
-        "Uzay gözlem ve araştırma araçları; hedeflerine, bulundukları konuma ve taşıdıkları görev yüklerine göre farklı yapısal tasarımlara sahiptir.",
-        "Öğrencilerin fen bilimleri performans görevlerinde atık ve geri dönüştürülebilir malzemelerle modelleyebilecekleri temel araçlar şunlardır: Teleskoplar, Yapay Uydular, Uzay Sondaları ve Uzay İstasyonları.",
-        "Bilimsel modelleme yalnızca bir maket yapmak değil; parçaların işlevlerini tanımlamak, çalışma prensibini açıklamak ve test verilerine (yeni kanıtlara) göre modeli geliştirmektir."
+      "difficulty": "easy",
+      "difficulty_status": "editorial_estimate",
+      "type": "open_response",
+      "title": "Yapay Uydu Modelinde Parça Görevleri",
+      "stem": "Fen bilimleri dersi performans görevinde karton kutu, plastik tabak ve alüminyum folyo kullanarak bir Dünya gözlem uydusu modeli tasarlayan Mehmet; gövdenin iki yanına mavi renkli petek desenli dikdörtgen mukavvalar, üst kısmına ise huni şeklinde bir plastik parça eklemiştir.\n\nMehmet'in modelinde kullandığı mavi mukavvaların (Güneş panelleri) ve huni parçanın (çanak anten) gerçek bir yapay uydudaki hayati görevlerini yazınız.",
+      "sample_answer": "Mavi paneller (Güneş panelleri) Güneş ışığını elektrik enerjisine çevirerek uydunun çalışmasını sağlar. Huni parça (çanak anten) ise uydunun çektiği gözlem fotoğraflarını ve verileri Dünya'daki yer istasyonuna göndermesini ve Dünya'dan komut almasını sağlar.",
+      "hint": "Bir uydu uzayda elektrik ihtiyacını nereden karşılar ve topladığı bilgileri Dünya'ya nasıl iletir?",
+      "accepted_alternatives": "Aynı bilimsel anlamı veren ifadeler kabul edilir. Örneğin elektrik üretimi/enerji sağlama ve radyo dalgalarıyla iletişim/veri aktarımı yazılması yeterlidir.",
+      "rubric": [
+        {
+          "id": "FB712-V6-E01-R1",
+          "text": "Güneş panellerinin elektrik enerjisi üretme/enerji sağlama görevini doğru açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB712-V6-K02"
+          ],
+          "scoring": {
+            "full": "Güneş panellerinin uydunun elektrik ihtiyacını sağladığını belirtir.",
+            "zero": "Yanlış veya eksik açıklama."
+          }
+        },
+        {
+          "id": "FB712-V6-E01-R2",
+          "text": "Çanak antenin Dünya ile iletişim/veri aktarımı sağlama görevini doğru açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB712-V6-K02"
+          ],
+          "scoring": {
+            "full": "Çanak antenin yer istasyonuna veri gönderme ve komut alma işlevini belirtir.",
+            "zero": "Yanlış veya eksik açıklama."
+          }
+        }
       ],
-      "takeaway": "Bilimsel bir model, gök cisimlerini veya uzay araçlarını temsil eden ve kanıtlar ışığında revize edilen bir düşünme ve tasarım aracıdır.",
-      "misconception": "Teleskop dışındaki uzay araçlarının (uydular veya sondalar) gözlem aracı sayılmadığı yanılgısı. Gerçekte sondalar ve gözlem uyduları uzayın en detaylı görüntü ve verilerini toplayan gözlem teknolojileridir.",
-      "check": {
-        "prompt": "Uzay gözlem aracı modeli tasarlarken bir parçanın görevi neden açıkça tanımlanmalıdır?",
-        "answer": "Çünkü bilimsel modelleme salt görsel benzerlik değil, aracın çalışma prensibini ve bileşenlerinin işlevlerini yansıtmayı amaçlar."
-      },
-      "show_check": true,
-      "visual": null,
-      "table": null,
-      "source_refs": [
-        "B711",
-        "Yıllık Plan FB.7.1.2"
+      "max_points": 15,
+      "return_card_ids": [
+        "FB712-V6-K02"
       ],
-      "learning_focus": "Uzay Gözlem Araçları: Çalışma Haritan",
-      "book_section": "Uzay Teknolojileri ve Gözlem Araçları",
-      "source_alignment": {
-        "book_printed_pages": [
-          16,
-          26
-        ],
-        "scope": "FB.7.1.2",
-        "page_notation": "MEB 7. Sınıf Fen Bilimleri 1. Ders Kitabı Performans Görevi ve Model Tasarımı"
-      },
-      "card_type": "overview",
-      "topics": [
-        "Teleskop modelleri (Mercekli ve Aynalı)",
-        "Yapay uydu modelleri ve bileşenleri",
-        "Uzay sondası ve rover tasarımı",
-        "Uzay istasyonu yaşam modülleri",
-        "Kanıta dayalı model yenileme"
+      "process_components": [
+        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
       ],
-      "sequence": 0
-    },
-    {
-      "id": "FB712-V6-K01",
-      "outcome_id": "FB.7.1.2",
-      "content_revision": "6.0.0",
-      "title": "Teleskop Modelleri: Mercekli ve Aynalı Optik Sistemler",
-      "eyebrow": "OPTİK MODEL · TELESKOP TASARIMI",
-      "lead": "Işığı toplama ve odaklama şekillerine göre teleskoplar mercekli veya aynalı modeller olarak tasarlanır.",
-      "body": [
-        "Mercekli Teleskop Modeli (Galileo Tipi): İki adet ince kenarlı mercek kullanılır. Dıştaki geniş boruda 'Objektif Merceği' (büyük çaplı, ışığı toplar ve odaklar), içteki dar boruda ise 'Oküler / Göz Merceği' (küçük odaklı, görüntüyü büyütür) yer alır.",
-        "Netleme Mekanizması: İç içe geçen iki karton borunun kaydırılması, iki mercek arasındaki mesafeyi odak uzaklıkları toplamına eşitleyerek görüntünün göz merceğinin odak noktasına düşmesini sağlar.",
-        "Aynalı Teleskop Modeli (Newton Tipi): Tüpün tabanında ışığı toplayıp yansıtan 'Çukur Ayna' (birincil ayna), odak noktası yakınında ışığı yana yönlendiren 45° açılı 'Düz Ayna' (ikincil ayna) ve yan tüpte büyütme yapan 'Oküler Mercek' bulunur."
-      ],
-      "takeaway": "Mercekli teleskoplar ışığı kırarak, aynalı teleskoplar ise ışığı yansıtarak tek bir odakta toplar ve büyütür.",
-      "misconception": "Teleskobun büyütme gücünün sadece tüp uzunluğuna bağlı olduğu yanılgısı. Büyütme, objektif odak uzaklığının oküler odak uzaklığına oranıdır; netlik ve parlaklık ise objektif çapına (açıklığına) bağlıdır.",
-      "check": {
-        "prompt": "Mercekli bir modelde iç içe boruların ileri-geri kaydırılmasının temel optik amacı nedir?",
-        "answer": "Objektifin oluşturduğu ara görüntünün oküler merceğin odak noktasıyla çakışmasını sağlayarak görüntüyü netleştirmektir."
-      },
-      "show_check": true,
-      "visual": null,
-      "table": null,
+      "family_id": "FB.7.1.2-satellite-parts",
       "source_refs": [
         "B711"
       ],
-      "learning_focus": "Mercekli ve Aynalı Teleskop Modelleri",
-      "book_section": "Teleskopun Yapısı",
-      "source_alignment": {
-        "book_printed_pages": [
-          20,
-          24
-        ],
-        "scope": "FB.7.1.2.a"
-      },
-      "card_type": "concept",
-      "topics": [
-        "Objektif merceği",
-        "Oküler mercek",
-        "Çukur ayna",
-        "Düz ayna",
-        "Odaklama tüpü"
-      ],
-      "sequence": 1
-    },
-    {
-      "id": "FB712-V6-K02",
-      "outcome_id": "FB.7.1.2",
-      "content_revision": "6.0.0",
-      "title": "Yapay Uydu Modeli: Dünya ve Uzay Gözlem Sistemleri",
-      "eyebrow": "MÜHENDİSLİK MODELİ · UYDU SİSTEMLERİ",
-      "lead": "Dünya yörüngesinde dönen yapay uydular; gözlem, keşif, haritacılık ve haberleşme amacıyla özel modüllerden oluşur.",
-      "body": [
-        "Bir yapay uydu modelinde yer alması gereken 4 temel bileşen:",
-        "1. Gövde (Platform / Uydu Otobüsü): Tüm hassas elektronik devreleri, bilgisayarları ve yön kontrol iticilerini barındırır.",
-        "2. Güneş Panelleri (Kanatlar): Güneş ışığını elektrik enerjisine dönüştürerek uydunun tüm sistemlerini ve bataryalarını kesintisiz besler.",
-        "3. Çanak Anten / Haberleşme Ünitesi: Toplanan gözlem verilerini, fotoğrafları ve telemetri bilgilerini yer istasyonuna (Dünya'ya) aktarır ve komutları alır.",
-        "4. Faydalı Yük (Gözlem Kamerası / Sensörler): Yeryüzünü veya uzayı tarayan optik kameralar, kızılötesi tarayıcılar ve radar sistemleridir."
-      ],
-      "takeaway": "Yapay uydu modeli; enerji (Güneş paneli), iletişim (çanak anten), koruma (gövde) ve veri toplama (sensör/kamera) bileşenlerinin dengeli birleşimidir.",
-      "misconception": "Yapay uyduların Dünya yörüngesinde yakıt yakarak sürekli motor çalıştırmak zorunda olduğu yanılgısı. Uydular yer çekimi ile merkezkaç dengesinde serbest düşüş hareketiyle yörüngede dolanır; iticiler sadece yörünge düzeltmesi içindir.",
-      "check": {
-        "prompt": "Öğrenci uydu modeline neden alüminyum/altın yansıtıcı folyo kaplar?",
-        "answer": "Gerçek uydulardaki çok katmanlı ısı yalıtım battaniyelerini modelleyerek uzaydaki aşırı sıcaklık farklarından iç donanımı korumak için."
-      },
-      "show_check": true,
-      "visual": null,
+      "originality": "MEB performans görevi modelleme kurgusu esas alınarak özgün hazırlanmıştır.",
+      "review_status": "final_editorial_audit_2026_11_03",
       "table": null,
-      "source_refs": [
-        "B711"
-      ],
-      "learning_focus": "Yapay Uydu Modeli Bileşenleri",
-      "book_section": "Yapay Uydular",
-      "source_alignment": {
+      "visual": null,
+      "score_weight": 15,
+      "score_weight_rationale": "İki temel uydu bileşeninin görev tanımlaması (8+7 puan).",
+      "incompatible_with": [],
+      "leakage_review": {
+        "stem_contains_solution_rule": false
+      },
+      "assessment_alignment": {
         "book_printed_pages": [
           17,
           19
         ],
-        "scope": "FB.7.1.2.a"
+        "taught_card_ids": [
+          "FB712-V6-K02"
+        ]
       },
-      "card_type": "concept",
-      "topics": [
-        "Güneş panelleri",
-        "Çanak anten",
-        "Faydalı yük",
-        "Isı yalıtımı",
-        "Yörünge gözlemi"
-      ],
-      "sequence": 2
+      "rubric_point_examples": {
+        "15": {
+          "FB712-V6-E01-R1": 8,
+          "FB712-V6-E01-R2": 7
+        }
+      },
+      "audit": {
+        "source_scope_checked": true,
+        "difficulty_status": "easy"
+      },
+      "repeat_key": "FB712-E01"
     },
     {
-      "id": "FB712-V6-K03",
+      "id": "FB712-V6-E02",
       "outcome_id": "FB.7.1.2",
-      "content_revision": "6.0.0",
-      "title": "Uzay Sondası ve Gezgin (Rover) Modeli",
-      "eyebrow": "KEŞİF ROBOTİĞİ · DERİN UZAY VE YÜZEY MODELİ",
-      "lead": "Gezegenlerin, uyduların ve asteroitlerin yüzeyine inen veya yanından geçen insansız bilim robotları modellenir.",
-      "body": [
-        "Uzay Sondası Modeli: Bir gök cisminin yörüngesine girerek veya yakından geçerek atmosferini, manyetik alanını ve sıcaklığını ölçen insansız gözlem aracıdır. Büyük yönlendirilebilir yüksek kazançlı çanak anten ve bilimsel spektrometreler taşır.",
-        "Yüzey Gezgini (Rover) Modeli: Ay veya Mars gibi engebeli yüzeylerde hareket edebilen tekerlekli robotik laboratuvardır.",
-        "Rover Model Bileşenleri: Engebeli arazide devrilmeyi önleyen 6 tekerlekli rocker-bogie salıncak süspansiyon sistemi, kaya örneklerini delip toplayan robotik kol ve çevreyi 3 boyutlu tarayan direk üstü mastcam kameralar."
+      "difficulty": "easy",
+      "difficulty_status": "editorial_estimate",
+      "type": "open_response",
+      "title": "Mercekli Teleskop Modelinde Mercek Seçimi",
+      "stem": "İki adet ince kenarlı büyüteç merceği ve karton boru kullanarak basit bir mercekli teleskop modeli kurmak isteyen Zeynep'in elinde iki mercek bulunmaktadır:\n• 1. Mercek: Çapı geniş ve odak uzaklığı büyük mercek.\n• 2. Mercek: Çapı dar ve odak uzaklığı küçük mercek.\n\nZeynep'in gök cisimlerini büyüterek inceleyebileceği doğru bir teleskop modeli kurabilmesi için bu iki merceği borunun hangi kısımlarına (göz tarafı ve incelenen gök cismi tarafı) takması gerektiğini merceklerin bilimsel adlarıyla (objektif ve oküler) eşleştirerek yazınız.",
+      "sample_answer": "1. Mercek (geniş çaplı ve büyük odaklı) gök cismine bakan uca takılmalıdır ve adı 'Objektif Merceği'dir. 2. Mercek (dar çaplı ve küçük odaklı) ise göze bakan uca takılmalıdır ve adı 'Oküler (Göz) Merceği'dir.",
+      "hint": "Gök cisminden gelen ışığı toplayan mercek büyük, gözümüzü dayadığımız mercek küçüktür.",
+      "accepted_alternatives": "Cisim tarafı = Objektif (büyük mercek), Göz tarafı = Oküler / Göz merceği (küçük mercek) eşleştirmesi tam puan için yeterlidir.",
+      "rubric": [
+        {
+          "id": "FB712-V6-E02-R1",
+          "text": "Objektif merceğini (1. mercek) gök cismi tarafına takılacağını ve ışığı topladığını doğru açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB712-V6-K01"
+          ],
+          "scoring": {
+            "full": "Geniş/büyük merceğin gök cismi tarafına (objektif) takılacağını belirtir.",
+            "zero": "Ters eşleştirme veya tanımsız bırakma."
+          }
+        },
+        {
+          "id": "FB712-V6-E02-R2",
+          "text": "Oküler merceğini (2. mercek) göz tarafına takılacağını doğru açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB712-V6-K01"
+          ],
+          "scoring": {
+            "full": "Küçük merceğin göz tarafına (oküler) takılacağını belirtir.",
+            "zero": "Yanlış eşleştirme."
+          }
+        }
       ],
-      "takeaway": "Sondalar ve gezginler (rover), insanların gidemeyeceği tehlikeli ve uzak ortamlara gönderilen yüksek teknolojili insansız bilim elçileridir.",
-      "misconception": "Uzay sondalarının içinde pilot veya astronot bulunduğu yanılgısı. Sondalar ve gezginler tamamen insansız olup otonom yazılımlar ve Dünya'dan gönderilen radyo sinyalleriyle yönetilir.",
-      "check": {
-        "prompt": "Mars rover modelinde tekerleklerin geniş yüzeyli tasarlanmasının fiziksel gerekçesi nedir?",
-        "answer": "Yüzey alanını artırıp kumlu zemine yapılan basıncı azaltarak robotun kuma saplanmasını önlemektir."
-      },
-      "show_check": true,
-      "visual": null,
-      "table": null,
+      "max_points": 15,
+      "return_card_ids": [
+        "FB712-V6-K01"
+      ],
+      "process_components": [
+        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
+      ],
+      "family_id": "FB.7.1.2-telescope-lenses",
       "source_refs": [
         "B711"
       ],
-      "learning_focus": "Uzay Sondası ve Rover Modelleri",
-      "book_section": "Uzay Sondaları",
-      "source_alignment": {
+      "originality": "MEB ders kitabı teleskop yapımı etkinliği esas alınarak özgün yazılmıştır.",
+      "review_status": "final_editorial_audit_2026_11_03",
+      "table": null,
+      "visual": null,
+      "score_weight": 15,
+      "score_weight_rationale": "İki merceğin konum ve ad eşleştirmesi.",
+      "incompatible_with": [],
+      "leakage_review": {
+        "stem_contains_solution_rule": false
+      },
+      "assessment_alignment": {
         "book_printed_pages": [
-          18,
-          20
+          20,
+          24
         ],
-        "scope": "FB.7.1.2.a"
+        "taught_card_ids": [
+          "FB712-V6-K01"
+        ]
       },
-      "card_type": "concept",
-      "topics": [
-        "Uzay sondası",
-        "Yüzey gezgini (Rover)",
-        "Rocker-bogie süspansiyon",
-        "Robotik kol",
-        "Derin uzay anteni"
-      ],
-      "sequence": 3
+      "rubric_point_examples": {
+        "15": {
+          "FB712-V6-E02-R1": 8,
+          "FB712-V6-E02-R2": 7
+        }
+      },
+      "audit": {
+        "source_scope_checked": true,
+        "difficulty_status": "easy"
+      },
+      "repeat_key": "FB712-E02"
     },
     {
-      "id": "FB712-V6-K04",
+      "id": "FB712-V6-E03",
       "outcome_id": "FB.7.1.2",
-      "content_revision": "6.0.0",
-      "title": "Uzay İstasyonu Modeli: Yörüngedeki Yaşam ve Gözlem Üssü",
-      "eyebrow": "MODÜLER MİMARİ · UZAY LABORATUVARI",
-      "lead": "İçinde astronotların uzun süre yaşayıp mikroyerçekimi deneyleri yaptığı dev uzay üsleri modellenir.",
-      "body": [
-        "Uluslararası Uzay İstasyonu (ISS) benzeri modeller, birbirine kenetlenen silindir 'modüller' şeklinde tasarlanır.",
-        "Model Bileşenleri:",
-        "1. Yaşam ve Laboratuvar Modülleri: Basınçlı hava, uyku tulumları, biyoloji ve fizik deney düzenekleri içerir.",
-        "2. Kenetlenme Kapıları (Docking Ports): Uzay mekiklerinin ve kargo kapsüllerinin istasyona kilitlendiği geçiş noktalarıdır.",
-        "3. Dev Güneş Paneli Dizilimleri: İstasyondaki yaşam destek ünitelerinin ve laboratuvarların ihtiyaç duyduğu devasa elektriği üretir.",
-        "4. Isı Radyatör Panelleri: Elektronik sistemlerin ve astronotların ürettiği fazla ısıyı uzay boşluğuna yayan beyaz panellerdir."
+      "difficulty": "easy",
+      "difficulty_status": "editorial_estimate",
+      "type": "open_response",
+      "title": "Uzay Sondası ve Uzay İstasyonu Modelleri Karşılaştırması",
+      "stem": "Bir fen bilimleri sergisinde iki öğrenci grubu farklı uzay araçlarının modellerini sunmaktadır:\n• A Grubu: Mars yüzeyine inip toprak analizi yapan insansız bir 'Uzay Sondası' modeli sergilemektedir.\n• B Grubu: Dünya yörüngesinde dolanan ve içinde astronotların bulunduğu modüler bir 'Uzay İstasyonu' modeli sergilemektedir.\n\nBu iki model aracın 'insan barındırma (yaşam ortamı)' ve 'görev konumu/hareketi' özellikleri bakımından temel farklarını yazınız.",
+      "sample_answer": "1. İnsan barındırma farkı: Uzay istasyonu astronotların içinde uzun süre yaşadığı ve çalıştığı insanlı bir yaşam merkezidir; uzay sondası ise tamamen insansız çalışan robotik bir araçtır.\n2. Konum/hareket farkı: Uzay istasyonu Dünya yörüngesinde sabit hızla dolanır; uzay sondası ise incelenecek başka bir gök cismine (Mars, Jüpiter vb.) doğru milyonlarca kilometre yol alarak hedefe gider veya yüzeyine iner.",
+      "hint": "İstasyon kimler için tasarlanmıştır ve nereye gider? Sonda içinde canlı taşır mı?",
+      "accepted_alternatives": "İstasyonun insanlı/yörüngede olduğunu, sondanın insansız/derin uzayda gök cismine gittiğini belirten ifadeler kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB712-V6-E03-R1",
+          "text": "İnsanlı vs insansız (yaşam ortamı) farkını doğru açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB712-V6-K03",
+            "FB712-V6-K04"
+          ],
+          "scoring": {
+            "full": "İstasyonun insanlı yaşam modülleri içerdiğini, sondanın insansız olduğunu belirtir.",
+            "zero": "Eksik veya hatalı açıklama."
+          }
+        },
+        {
+          "id": "FB712-V6-E03-R2",
+          "text": "Yörüngede sabit dolanma ile derin uzay/hedef gök cismine gitme hareket farkını doğru açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB712-V6-K03",
+            "FB712-V6-K04"
+          ],
+          "scoring": {
+            "full": "İstasyonun Dünya yörüngesinde kaldığını, sondanın hedef gök cismine seyahat ettiğini belirtir.",
+            "zero": "Eksik veya hatalı açıklama."
+          }
+        }
       ],
-      "takeaway": "Uzay istasyonları; yaşam destek, bilimsel laboratuvar, kenetlenme ve enerji sistemlerini bünyesinde toplayan en büyük insanlı uzay yapılarıdır.",
-      "misconception": "Uzay istasyonunun başka gezegenlere seyahat eden bir gemi olduğu yanılgısı. İstasyon Dünya çevresindeki alçak yörüngede (yaklaşık 400 km) sabit olarak dolanır.",
-      "check": {
-        "prompt": "Uzay istasyonu modelinde neden birden fazla bağımsız modül bulunur?",
-        "answer": "Büyük yapılar tek roketle fırlatılamadığı için uzayda parça parça birleştirilir ve acil durumlarda bölümler birbirinden izole edilebilir."
-      },
-      "show_check": true,
-      "visual": null,
-      "table": null,
+      "max_points": 15,
+      "return_card_ids": [
+        "FB712-V6-K03",
+        "FB712-V6-K04"
+      ],
+      "process_components": [
+        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
+      ],
+      "family_id": "FB.7.1.2-probe-vs-station",
       "source_refs": [
         "B711"
       ],
-      "learning_focus": "Uzay İstasyonu Modeli Mimarisi",
-      "book_section": "Uzay İstasyonları",
-      "source_alignment": {
+      "originality": "Özgün karşılaştırma kurgusu.",
+      "review_status": "final_editorial_audit_2026_11_03",
+      "table": null,
+      "visual": null,
+      "score_weight": 15,
+      "score_weight_rationale": "İki temel model arasındaki yapısal ve görevsel fark analizi.",
+      "incompatible_with": [],
+      "leakage_review": {
+        "stem_contains_solution_rule": false
+      },
+      "assessment_alignment": {
         "book_printed_pages": [
           17,
           21
         ],
-        "scope": "FB.7.1.2.a"
+        "taught_card_ids": [
+          "FB712-V6-K03",
+          "FB712-V6-K04"
+        ]
       },
-      "card_type": "concept",
-      "topics": [
-        "Modüler yapı",
-        "Kenetlenme kapısı",
-        "Yaşam destek sistemi",
-        "Güneş dizilimleri",
-        "Isı radyatörleri"
-      ],
-      "sequence": 4
+      "rubric_point_examples": {
+        "15": {
+          "FB712-V6-E03-R1": 8,
+          "FB712-V6-E03-R2": 7
+        }
+      },
+      "audit": {
+        "source_scope_checked": true,
+        "difficulty_status": "easy"
+      },
+      "repeat_key": "FB712-E03"
     },
     {
-      "id": "FB712-V6-K05",
+      "id": "FB712-V6-M01",
       "outcome_id": "FB.7.1.2",
-      "content_revision": "6.0.0",
-      "title": "Bilimsel Modeli Yeni Kanıtlara Göre Yenileme (Mühendislik Döngüsü)",
-      "eyebrow": "SÜREÇ BECERİSİ · KANITA DAYALI YENİLEME",
-      "lead": "İlk tasarlanan model mükemmel değildir; test edilir, eksiklikler kanıtlanır ve model bilimsel olarak iyileştirilir.",
-      "body": [
-        "Bilimsel modelleme süreci bir döngüdür: Problem Belirleme -> Model Tasarımı -> Test ve Gözlem -> Kanıt Toplama -> Modeli Yenileme.",
-        "Karşılaşılan Sorunlar ve Bilimsel Çözüm Kanıtları:",
-        "• Teleskopta karanlık görüntü kanıtı -> Objektif açıklığı (çapı) büyütülür (daha fazla ışık toplanır).",
-        "• Teleskop borusunda iç parlama kanıtı -> Borunun içi mat siyah renkle kaplanır (ışık saçılması soğurulur).",
-        "• Görüntüde el titremesi kanıtı -> Modele üçayak (tripod) sabit taban eklenir.",
-        "• Uyduda güç yetersizliği kanıtı -> Güneş paneli yüzey alanı artırılır veya güneşi izleyen döner eksen eklenir.",
-        "• Sondada kum zemin batma kanıtı -> Tekerlek tabanı genişletilir veya palet modeline dönüştürülür.",
-        "• Atmosferik bozulma kanıtı -> Gözlem modeli yeryüzünden uzay ortamına (uzay teleskobu) taşınır."
+      "difficulty": "medium",
+      "difficulty_status": "editorial_estimate",
+      "type": "open_response",
+      "title": "İç İçe Silindir Mekanizması ve Odak Çakıştırma",
+      "stem": "Ahmet, iki mukavva silindiri iç içe geçirerek uçlarına ince kenarlı mercekler yerleştirmiş ve bir mercekli teleskop modeli kurmuştur. Ahmet uzak bir binanın çatısına baktığında görüntünün bulanık olduğunu görmüş; içteki silindiri yavaşça dışarı doğru çekerek belirli bir konuma getirdiğinde görüntünün kusursuz şekilde netleştiğini gözlemlemiştir.\n\nİç içe geçen silindirlerin hareket ettirilmesinin görüntüyü netleştirmesindeki bilimsel çalışma prensibini merceklerin odak uzaklıkları ve odak noktaları ile ilişkilendirerek açıklayınız.",
+      "sample_answer": "Uzaktaki cisimden gelen paralel ışınlar objektif merceğinde kırıldıktan sonra merceğin odak uzaklığında ters ve gerçek bir ara görüntü oluşturur. Bu ara görüntünün gözümüz tarafından net ve büyütülmüş olarak görülebilmesi için oküler (göz) merceğinin odak noktasına tam olarak denk gelmesi (çakışması) gerekir. Silindirlerin iç içe kaydırılması iki mercek arasındaki mesafeyi tam olarak odak uzaklıkları toplamına ($f_1 + f_2$) getirir ve netleme ayarını sağlar.",
+      "hint": "Merceklerin arasındaki mesafe değiştiğinde odak noktalarının konumu nasıl etkilenir?",
+      "accepted_alternatives": "Mercekler arası mesafenin değiştirilmesiyle ara görüntünün oküler merceğin odak noktasıyla çakıştırıldığı ve netleme yapıldığı vurgulanan tüm cevaplar kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB712-V6-M01-R1",
+          "text": "Silindirlerin hareketinin iki mercek arasındaki mesafeyi değiştirdiğini belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB712-V6-K01"
+          ],
+          "scoring": {
+            "full": "İki mercek arasındaki uzaklığın ayarlandığını net açıklar.",
+            "zero": "Mesafe kavramına değinmez."
+          }
+        },
+        {
+          "id": "FB712-V6-M01-R2",
+          "text": "Objektifin oluşturduğu görüntünün oküler merceğin odak noktasına denk gelmesi/çakışması prensibini açıklar.",
+          "points": 12,
+          "weight": 12,
+          "return_card_ids": [
+            "FB712-V6-K01"
+          ],
+          "scoring": {
+            "full": "Odak noktalarının çakışması veya görüntünün odak noktasına getirilerek netleme sağlandığını açıklar.",
+            "partial": "Yalnızca 'netlik ayarı yapılır' diyerek optik odak ilişkisini kuramayanlara 5-7 puan.",
+            "zero": "Yanlış optik açıklama."
+          }
+        }
       ],
-      "takeaway": "Bilimsel modelin gücü, karşılaşılan problemlere karşı yeni deneysel kanıtlarla kendini yenileyebilme yeteneğidir.",
-      "misconception": "Bir modelde hata çıkmasının başarısızlık olduğu yanılgısı. Hatalar ve test kanıtları, bilimsel modelin gerçeğe daha çok yaklaşmasını sağlayan en değerli verilerdir.",
-      "check": {
-        "prompt": "Test edilen bir modelde kanıtlara göre değişiklik yapılması hangi fen sürecini temsil eder?",
-        "answer": "FB.7.1.2.b alt kazanımı olan 'Modeli yeni kanıtlara göre yenileme ve geliştirme' sürecini temsil eder."
-      },
-      "show_check": true,
-      "visual": null,
-      "table": null,
+      "max_points": 20,
+      "return_card_ids": [
+        "FB712-V6-K01"
+      ],
+      "process_components": [
+        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir.",
+        "FB.7.1.2.b: Uzay gözlem araçları ile ilgili hazırladığı modeli yeni kanıtlara göre yeniler."
+      ],
+      "family_id": "FB.7.1.2-focus-mechanism",
       "source_refs": [
-        "B711",
-        "Yıllık Plan FB.7.1.2.b"
+        "B711"
       ],
-      "learning_focus": "Kanıta Dayalı Model Yenileme Döngüsü",
-      "book_section": "Model Değerlendirme ve Geliştirme",
-      "source_alignment": {
+      "originality": "Özgün optik modelleme mekanizması kurgusu.",
+      "review_status": "final_editorial_audit_2026_11_03",
+      "table": null,
+      "visual": null,
+      "score_weight": 20,
+      "score_weight_rationale": "Orta güçlükte optik mekanizma ve odak çakışması analizi.",
+      "incompatible_with": [],
+      "leakage_review": {
+        "stem_contains_solution_rule": false
+      },
+      "assessment_alignment": {
+        "book_printed_pages": [
+          20,
+          24
+        ],
+        "taught_card_ids": [
+          "FB712-V6-K01"
+        ]
+      },
+      "rubric_point_examples": {
+        "20": {
+          "FB712-V6-M01-R1": 8,
+          "FB712-V6-M01-R2": 12
+        }
+      },
+      "audit": {
+        "source_scope_checked": true,
+        "difficulty_status": "medium"
+      },
+      "repeat_key": "FB712-M01"
+    },
+    {
+      "id": "FB712-V6-M02",
+      "outcome_id": "FB.7.1.2",
+      "difficulty": "medium",
+      "difficulty_status": "editorial_estimate",
+      "type": "open_response",
+      "title": "Aynalı (Newton) Teleskop Modeli ve Işığın İzlediği Yol",
+      "stem": "Bir öğrenci Newton tipi aynalı teleskop modeli tasarlamıştır. Modelin parçaları şunlardır:\n• Tüpün alt tabanında: Büyük Çukur Ayna\n• Tüpün üst kısmında içte: 45° açıyla yerleştirilmiş Düz Ayna\n• Tüpün yan tarafında: İnce kenarlı Oküler Mercek\n\nBu aynalı teleskop modelinde gök cisminden gelen ışığın gözlemcinin gözüne ulaşana kadar sırasıyla hangi optik parçalardan geçtiğini (ışık yolunu) yazınız ve çukur aynanın buradaki temel optik işlevini açıklayınız.",
+      "sample_answer": "Işığın izlediği yol sırasıyla:\n1. Tüpün açık ağzından girerek tabandaki Çukur Aynaya çarpar.\n2. Çukur aynadan yansıyarak odak noktasına doğru toplanırken eğik duran Düz Aynaya çarpar.\n3. Düz aynadan tüpün yan tarafına doğru 90 derece yansır ve Oküler Merceğe gelir.\n4. Oküler mercekten kırılarak göze ulaşır.\nÇukur aynanın görevi: Uzaktaki cisimden gelen paralel ışık ışınlarını yansıtarak tek bir odak noktasında toplamak ve aydınlık bir görüntü oluşturmaktır.",
+      "hint": "Aynalı teleskopta ışık tüpün tabanına kadar iner, oradan geri yansır.",
+      "accepted_alternatives": "Çukur Ayna -> Düz Ayna -> Oküler Mercek sıralamasını veren ve çukur aynanın ışığı toplayıp yansıtma işlevini belirten tüm cevaplar kabul edilir.",
+      "rubric": [
+        {
+          "id": "FB712-V6-M02-R1",
+          "text": "Işığın sırasıyla Çukur Ayna -> Düz Ayna -> Oküler Mercek yolunu izlediğini doğru belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB712-V6-K01"
+          ],
+          "scoring": {
+            "full": "Üç optik elemanın sırasını doğru yazar.",
+            "partial": "Sıralamada bir elemanı karıştıranlara 5 puan.",
+            "zero": "Yanlış sıralama."
+          }
+        },
+        {
+          "id": "FB712-V6-M02-R2",
+          "text": "Çukur aynanın ışığı yansıtarak tek bir odakta toplama görevini açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB712-V6-K01"
+          ],
+          "scoring": {
+            "full": "Işığı yansıtma ve odaklama işlevini açıklar.",
+            "zero": "Mercek gibi kırar diyen veya eksik açıklayanlara 0 puan."
+          }
+        }
+      ],
+      "max_points": 20,
+      "return_card_ids": [
+        "FB712-V6-K01"
+      ],
+      "process_components": [
+        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
+      ],
+      "family_id": "FB.7.1.2-reflector-path",
+      "source_refs": [
+        "B711"
+      ],
+      "originality": "Özgün optik şema çözümleme kurgusu.",
+      "review_status": "final_editorial_audit_2026_11_03",
+      "table": null,
+      "visual": null,
+      "score_weight": 20,
+      "score_weight_rationale": "Işık izleme yolu ve çukur ayna optik görevi.",
+      "incompatible_with": [],
+      "leakage_review": {
+        "stem_contains_solution_rule": false
+      },
+      "assessment_alignment": {
+        "book_printed_pages": [
+          21,
+          24
+        ],
+        "taught_card_ids": [
+          "FB712-V6-K01"
+        ]
+      },
+      "rubric_point_examples": {
+        "20": {
+          "FB712-V6-M02-R1": 10,
+          "FB712-V6-M02-R2": 10
+        }
+      },
+      "audit": {
+        "source_scope_checked": true,
+        "difficulty_status": "medium"
+      },
+      "repeat_key": "FB712-M02"
+    },
+    {
+      "id": "FB712-V6-H01",
+      "outcome_id": "FB.7.1.2",
+      "difficulty": "hard",
+      "difficulty_status": "editorial_estimate",
+      "type": "open_response",
+      "title": "Kanıtlara Dayalı Model Revizyonu ve Mühendislik Döngüsü",
+      "stem": "Bir fen bilimleri proje ekibi, uzay gözlem ve keşif araçları ünitesi kapsamında geri dönüştürülebilir atık malzemeler kullanarak iki farklı model üretmiş ve test simülasyonları gerçekleştirmiştir:\n\n1. Durum (Mercekli Teleskop Modeli): Ay gözlemi simülasyonunda kraterlerin çok karanlık ve soluk kaldığı, ayrıca boru içinden yansıyan ortam ışıklarının görüntüyü parlatıp kontrastı düşürdüğü kanıtlanmıştır.\n2. Durum (Mars Gezgini / Rover Modeli): Kum havuzunda yapılan sürüş testinde tekerleklerin kuma gömülerek aracın saplandığı ve dondurucu ortam simülasyonunda bataryaların aşırı soğuktan donarak çalışmayı durdurduğu kanıtlanmıştır.\n\nEkibin FB.7.1.2.b (hazırladığı modeli yeni kanıtlara göre yeniler) süreci doğrultusunda hem Teleskop Modelinde hem de Rover Modelinde bu sorunları çözmek için yapması gereken toplam 3 bilimsel/mühendislik revizyonunu gerekçeleriyle açıklayınız.",
+      "sample_answer": "Teleskop Modeli İçin Yenilemeler:\n1. Objektif merceğinin çapı (açıklığı) büyütülmelidir. Gerekçe: Mercek alanı arttıkça uzaktaki gök cisminden teleskoba giren ışık miktarı artar ve karanlık/soluk görüntü aydınlanır.\n2. Borunun iç yüzeyi mat siyah boya veya kadife ile kaplanmalıdır. Gerekçe: Siyah ve mat yüzeyler boru içindeki ışık yansımalarını soğurarak parlamayı önler ve kontrastı artırır.\n\nRover Modeli İçin Yenilemeler:\n3. Tekerleklerin taban genişliği artırılmalı veya tırtıklı palet sistemine geçilmelidir. Gerekçe: Yüzey alanının artması kuma uygulanan basıncı azaltarak batmayı engeller.\n(Veya: Batarya ünitesi etrafına altın/alüminyum folyo yalıtım kalkanı ve ısıtıcı eklenmelidir. Gerekçe: Isı transferini engelleyerek bataryanın donmasını önler.)",
+      "hint": "Teleskopta ışık miktarını ve boru içi parlamayı nasıl çözersiniz? Rover'da kuma batmayı (basınç) veya soğuktan donmayı nasıl engellersiniz?",
+      "accepted_alternatives": "Belirtilen 4 geçerli çözümden en az 3 tanesini doğru fiziksel gerekçesiyle açıklayan öğrenciler tam puan alır.",
+      "rubric": [
+        {
+          "id": "FB712-V6-H01-R1",
+          "text": "Teleskopta objektif çapını büyütme gerekçesini (ışık toplama kapasitesi) doğru açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB712-V6-K01",
+            "FB712-V6-K05"
+          ],
+          "scoring": {
+            "full": "Açıklık/çap artırımı ve toplanan ışık ilişkisini doğru açıklar.",
+            "zero": "Eksik veya hatalı açıklama."
+          }
+        },
+        {
+          "id": "FB712-V6-H01-R2",
+          "text": "Teleskopta boru içini mat siyaha kaplama gerekçesini (yansımaları ve parlamayı önleme) doğru açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB712-V6-K05"
+          ],
+          "scoring": {
+            "full": "Mat siyahın ışığı soğurarak iç saçılmayı önlediğini belirtir.",
+            "zero": "Eksik veya hatalı açıklama."
+          }
+        },
+        {
+          "id": "FB712-V6-H01-R3",
+          "text": "Rover modelinde tekerlek genişletme (basıncı azaltma) veya yalıtım kalkanı ekleme gerekçesini doğru açıklar.",
+          "points": 9,
+          "weight": 9,
+          "return_card_ids": [
+            "FB712-V6-K03",
+            "FB712-V6-K05"
+          ],
+          "scoring": {
+            "full": "Tekerlek yüzey alanı-basınç ilişkisi veya ısı yalıtımı ile donmayı önleme ilişkisini doğru açıklar.",
+            "partial": "Gerekçesiz yalnızca 'tekerlek büyütülür' diyene 4 puan.",
+            "zero": "Yanlış açıklama."
+          }
+        }
+      ],
+      "max_points": 25,
+      "return_card_ids": [
+        "FB712-V6-K01",
+        "FB712-V6-K03",
+        "FB712-V6-K05"
+      ],
+      "process_components": [
+        "FB.7.1.2.b: Uzay gözlem araçları ile ilgili hazırladığı modeli yeni kanıtlara göre yeniler."
+      ],
+      "family_id": "FB.7.1.2-engineering-revision",
+      "source_refs": [
+        "B711"
+      ],
+      "originality": "MEB performans görevi kanıta dayalı yenileme süreci üst düzey açık uçlu kurgu.",
+      "review_status": "final_editorial_audit_2026_11_03",
+      "table": null,
+      "visual": null,
+      "score_weight": 25,
+      "score_weight_rationale": "Üst düzey kanıta dayalı çoklu model revizyon analizi (Zor soru).",
+      "incompatible_with": [],
+      "leakage_review": {
+        "stem_contains_solution_rule": false
+      },
+      "assessment_alignment": {
         "book_printed_pages": [
           25,
           27
         ],
-        "scope": "FB.7.1.2.b"
+        "taught_card_ids": [
+          "FB712-V6-K01",
+          "FB712-V6-K03",
+          "FB712-V6-K05"
+        ]
       },
-      "card_type": "process",
-      "topics": [
-        "Kanıta dayalı revizyon",
-        "Teleskop açıklığı",
-        "Tripod sabitleme",
-        "Mat kaplama",
-        "Güneş açısı",
-        "Tekerlek basıncı"
-      ],
-      "sequence": 5
-    }
-  ],
-  "sorular": [
+      "rubric_point_examples": {
+        "25": {
+          "FB712-V6-H01-R1": 8,
+          "FB712-V6-H01-R2": 8,
+          "FB712-V6-H01-R3": 9
+        }
+      },
+      "audit": {
+        "source_scope_checked": true,
+        "difficulty_status": "hard"
+      },
+      "repeat_key": "FB712-H01"
+    },
     {
       "id": "FB714-V7-E01",
       "outcome_id": "FB.7.1.4",
@@ -4049,520 +4563,6 @@
         }
       ],
       "sample_answer": "1) Çekim potansiyel enerjisi sıralaması yükseklik ilişkisine göre A > C > B şeklindedir (yer seviyesindeki B'de sıfırdır). 2) Kinetik enerji sıralaması ise B > C > A şeklindedir. Potansiyel enerjinin kinetik enerjiye dönüştüğü en alçak nokta olan B noktasında sürat ve kinetik enerji maksimumdur."
-    },
-    {
-      "id": "FB712-V6-E01",
-      "outcome_id": "FB.7.1.2",
-      "difficulty": "easy",
-      "difficulty_status": "editorial_estimate",
-      "type": "open_response",
-      "title": "Yapay Uydu Modelinde Parça Görevleri",
-      "stem": "Fen bilimleri dersi performans görevinde karton kutu, plastik tabak ve alüminyum folyo kullanarak bir Dünya gözlem uydusu modeli tasarlayan Mehmet; gövdenin iki yanına mavi renkli petek desenli dikdörtgen mukavvalar, üst kısmına ise huni şeklinde bir plastik parça eklemiştir.\n\nMehmet'in modelinde kullandığı mavi mukavvaların (Güneş panelleri) ve huni parçanın (çanak anten) gerçek bir yapay uydudaki hayati görevlerini yazınız.",
-      "sample_answer": "Mavi paneller (Güneş panelleri) Güneş ışığını elektrik enerjisine çevirerek uydunun çalışmasını sağlar. Huni parça (çanak anten) ise uydunun çektiği gözlem fotoğraflarını ve verileri Dünya'daki yer istasyonuna göndermesini ve Dünya'dan komut almasını sağlar.",
-      "hint": "Bir uydu uzayda elektrik ihtiyacını nereden karşılar ve topladığı bilgileri Dünya'ya nasıl iletir?",
-      "accepted_alternatives": "Aynı bilimsel anlamı veren ifadeler kabul edilir. Örneğin elektrik üretimi/enerji sağlama ve radyo dalgalarıyla iletişim/veri aktarımı yazılması yeterlidir.",
-      "rubric": [
-        {
-          "id": "FB712-V6-E01-R1",
-          "text": "Güneş panellerinin elektrik enerjisi üretme/enerji sağlama görevini doğru açıklar.",
-          "points": 8,
-          "weight": 8,
-          "return_card_ids": [
-            "FB712-V6-K02"
-          ],
-          "scoring": {
-            "full": "Güneş panellerinin uydunun elektrik ihtiyacını sağladığını belirtir.",
-            "zero": "Yanlış veya eksik açıklama."
-          }
-        },
-        {
-          "id": "FB712-V6-E01-R2",
-          "text": "Çanak antenin Dünya ile iletişim/veri aktarımı sağlama görevini doğru açıklar.",
-          "points": 7,
-          "weight": 7,
-          "return_card_ids": [
-            "FB712-V6-K02"
-          ],
-          "scoring": {
-            "full": "Çanak antenin yer istasyonuna veri gönderme ve komut alma işlevini belirtir.",
-            "zero": "Yanlış veya eksik açıklama."
-          }
-        }
-      ],
-      "max_points": 15,
-      "return_card_ids": [
-        "FB712-V6-K02"
-      ],
-      "process_components": [
-        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
-      ],
-      "family_id": "FB.7.1.2-satellite-parts",
-      "source_refs": [
-        "B711"
-      ],
-      "originality": "MEB performans görevi modelleme kurgusu esas alınarak özgün hazırlanmıştır.",
-      "review_status": "final_editorial_audit_2026_11_03",
-      "table": null,
-      "visual": null,
-      "score_weight": 15,
-      "score_weight_rationale": "İki temel uydu bileşeninin görev tanımlaması (8+7 puan).",
-      "incompatible_with": [],
-      "leakage_review": {
-        "stem_contains_solution_rule": false
-      },
-      "assessment_alignment": {
-        "book_printed_pages": [
-          17,
-          19
-        ],
-        "taught_card_ids": [
-          "FB712-V6-K02"
-        ]
-      },
-      "rubric_point_examples": {
-        "15": {
-          "FB712-V6-E01-R1": 8,
-          "FB712-V6-E01-R2": 7
-        }
-      },
-      "audit": {
-        "source_scope_checked": true,
-        "difficulty_status": "easy"
-      },
-      "repeat_key": "FB712-E01"
-    },
-    {
-      "id": "FB712-V6-E02",
-      "outcome_id": "FB.7.1.2",
-      "difficulty": "easy",
-      "difficulty_status": "editorial_estimate",
-      "type": "open_response",
-      "title": "Mercekli Teleskop Modelinde Mercek Seçimi",
-      "stem": "İki adet ince kenarlı büyüteç merceği ve karton boru kullanarak basit bir mercekli teleskop modeli kurmak isteyen Zeynep'in elinde iki mercek bulunmaktadır:\n• 1. Mercek: Çapı geniş ve odak uzaklığı büyük mercek.\n• 2. Mercek: Çapı dar ve odak uzaklığı küçük mercek.\n\nZeynep'in gök cisimlerini büyüterek inceleyebileceği doğru bir teleskop modeli kurabilmesi için bu iki merceği borunun hangi kısımlarına (göz tarafı ve incelenen gök cismi tarafı) takması gerektiğini merceklerin bilimsel adlarıyla (objektif ve oküler) eşleştirerek yazınız.",
-      "sample_answer": "1. Mercek (geniş çaplı ve büyük odaklı) gök cismine bakan uca takılmalıdır ve adı 'Objektif Merceği'dir. 2. Mercek (dar çaplı ve küçük odaklı) ise göze bakan uca takılmalıdır ve adı 'Oküler (Göz) Merceği'dir.",
-      "hint": "Gök cisminden gelen ışığı toplayan mercek büyük, gözümüzü dayadığımız mercek küçüktür.",
-      "accepted_alternatives": "Cisim tarafı = Objektif (büyük mercek), Göz tarafı = Oküler / Göz merceği (küçük mercek) eşleştirmesi tam puan için yeterlidir.",
-      "rubric": [
-        {
-          "id": "FB712-V6-E02-R1",
-          "text": "Objektif merceğini (1. mercek) gök cismi tarafına takılacağını ve ışığı topladığını doğru açıklar.",
-          "points": 8,
-          "weight": 8,
-          "return_card_ids": [
-            "FB712-V6-K01"
-          ],
-          "scoring": {
-            "full": "Geniş/büyük merceğin gök cismi tarafına (objektif) takılacağını belirtir.",
-            "zero": "Ters eşleştirme veya tanımsız bırakma."
-          }
-        },
-        {
-          "id": "FB712-V6-E02-R2",
-          "text": "Oküler merceğini (2. mercek) göz tarafına takılacağını doğru açıklar.",
-          "points": 7,
-          "weight": 7,
-          "return_card_ids": [
-            "FB712-V6-K01"
-          ],
-          "scoring": {
-            "full": "Küçük merceğin göz tarafına (oküler) takılacağını belirtir.",
-            "zero": "Yanlış eşleştirme."
-          }
-        }
-      ],
-      "max_points": 15,
-      "return_card_ids": [
-        "FB712-V6-K01"
-      ],
-      "process_components": [
-        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
-      ],
-      "family_id": "FB.7.1.2-telescope-lenses",
-      "source_refs": [
-        "B711"
-      ],
-      "originality": "MEB ders kitabı teleskop yapımı etkinliği esas alınarak özgün yazılmıştır.",
-      "review_status": "final_editorial_audit_2026_11_03",
-      "table": null,
-      "visual": null,
-      "score_weight": 15,
-      "score_weight_rationale": "İki merceğin konum ve ad eşleştirmesi.",
-      "incompatible_with": [],
-      "leakage_review": {
-        "stem_contains_solution_rule": false
-      },
-      "assessment_alignment": {
-        "book_printed_pages": [
-          20,
-          24
-        ],
-        "taught_card_ids": [
-          "FB712-V6-K01"
-        ]
-      },
-      "rubric_point_examples": {
-        "15": {
-          "FB712-V6-E02-R1": 8,
-          "FB712-V6-E02-R2": 7
-        }
-      },
-      "audit": {
-        "source_scope_checked": true,
-        "difficulty_status": "easy"
-      },
-      "repeat_key": "FB712-E02"
-    },
-    {
-      "id": "FB712-V6-E03",
-      "outcome_id": "FB.7.1.2",
-      "difficulty": "easy",
-      "difficulty_status": "editorial_estimate",
-      "type": "open_response",
-      "title": "Uzay Sondası ve Uzay İstasyonu Modelleri Karşılaştırması",
-      "stem": "Bir fen bilimleri sergisinde iki öğrenci grubu farklı uzay araçlarının modellerini sunmaktadır:\n• A Grubu: Mars yüzeyine inip toprak analizi yapan insansız bir 'Uzay Sondası' modeli sergilemektedir.\n• B Grubu: Dünya yörüngesinde dolanan ve içinde astronotların bulunduğu modüler bir 'Uzay İstasyonu' modeli sergilemektedir.\n\nBu iki model aracın 'insan barındırma (yaşam ortamı)' ve 'görev konumu/hareketi' özellikleri bakımından temel farklarını yazınız.",
-      "sample_answer": "1. İnsan barındırma farkı: Uzay istasyonu astronotların içinde uzun süre yaşadığı ve çalıştığı insanlı bir yaşam merkezidir; uzay sondası ise tamamen insansız çalışan robotik bir araçtır.\n2. Konum/hareket farkı: Uzay istasyonu Dünya yörüngesinde sabit hızla dolanır; uzay sondası ise incelenecek başka bir gök cismine (Mars, Jüpiter vb.) doğru milyonlarca kilometre yol alarak hedefe gider veya yüzeyine iner.",
-      "hint": "İstasyon kimler için tasarlanmıştır ve nereye gider? Sonda içinde canlı taşır mı?",
-      "accepted_alternatives": "İstasyonun insanlı/yörüngede olduğunu, sondanın insansız/derin uzayda gök cismine gittiğini belirten ifadeler kabul edilir.",
-      "rubric": [
-        {
-          "id": "FB712-V6-E03-R1",
-          "text": "İnsanlı vs insansız (yaşam ortamı) farkını doğru açıklar.",
-          "points": 8,
-          "weight": 8,
-          "return_card_ids": [
-            "FB712-V6-K03",
-            "FB712-V6-K04"
-          ],
-          "scoring": {
-            "full": "İstasyonun insanlı yaşam modülleri içerdiğini, sondanın insansız olduğunu belirtir.",
-            "zero": "Eksik veya hatalı açıklama."
-          }
-        },
-        {
-          "id": "FB712-V6-E03-R2",
-          "text": "Yörüngede sabit dolanma ile derin uzay/hedef gök cismine gitme hareket farkını doğru açıklar.",
-          "points": 7,
-          "weight": 7,
-          "return_card_ids": [
-            "FB712-V6-K03",
-            "FB712-V6-K04"
-          ],
-          "scoring": {
-            "full": "İstasyonun Dünya yörüngesinde kaldığını, sondanın hedef gök cismine seyahat ettiğini belirtir.",
-            "zero": "Eksik veya hatalı açıklama."
-          }
-        }
-      ],
-      "max_points": 15,
-      "return_card_ids": [
-        "FB712-V6-K03",
-        "FB712-V6-K04"
-      ],
-      "process_components": [
-        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
-      ],
-      "family_id": "FB.7.1.2-probe-vs-station",
-      "source_refs": [
-        "B711"
-      ],
-      "originality": "Özgün karşılaştırma kurgusu.",
-      "review_status": "final_editorial_audit_2026_11_03",
-      "table": null,
-      "visual": null,
-      "score_weight": 15,
-      "score_weight_rationale": "İki temel model arasındaki yapısal ve görevsel fark analizi.",
-      "incompatible_with": [],
-      "leakage_review": {
-        "stem_contains_solution_rule": false
-      },
-      "assessment_alignment": {
-        "book_printed_pages": [
-          17,
-          21
-        ],
-        "taught_card_ids": [
-          "FB712-V6-K03",
-          "FB712-V6-K04"
-        ]
-      },
-      "rubric_point_examples": {
-        "15": {
-          "FB712-V6-E03-R1": 8,
-          "FB712-V6-E03-R2": 7
-        }
-      },
-      "audit": {
-        "source_scope_checked": true,
-        "difficulty_status": "easy"
-      },
-      "repeat_key": "FB712-E03"
-    },
-    {
-      "id": "FB712-V6-M01",
-      "outcome_id": "FB.7.1.2",
-      "difficulty": "medium",
-      "difficulty_status": "editorial_estimate",
-      "type": "open_response",
-      "title": "İç İçe Silindir Mekanizması ve Odak Çakıştırma",
-      "stem": "Ahmet, iki mukavva silindiri iç içe geçirerek uçlarına ince kenarlı mercekler yerleştirmiş ve bir mercekli teleskop modeli kurmuştur. Ahmet uzak bir binanın çatısına baktığında görüntünün bulanık olduğunu görmüş; içteki silindiri yavaşça dışarı doğru çekerek belirli bir konuma getirdiğinde görüntünün kusursuz şekilde netleştiğini gözlemlemiştir.\n\nİç içe geçen silindirlerin hareket ettirilmesinin görüntüyü netleştirmesindeki bilimsel çalışma prensibini merceklerin odak uzaklıkları ve odak noktaları ile ilişkilendirerek açıklayınız.",
-      "sample_answer": "Uzaktaki cisimden gelen paralel ışınlar objektif merceğinde kırıldıktan sonra merceğin odak uzaklığında ters ve gerçek bir ara görüntü oluşturur. Bu ara görüntünün gözümüz tarafından net ve büyütülmüş olarak görülebilmesi için oküler (göz) merceğinin odak noktasına tam olarak denk gelmesi (çakışması) gerekir. Silindirlerin iç içe kaydırılması iki mercek arasındaki mesafeyi tam olarak odak uzaklıkları toplamına ($f_1 + f_2$) getirir ve netleme ayarını sağlar.",
-      "hint": "Merceklerin arasındaki mesafe değiştiğinde odak noktalarının konumu nasıl etkilenir?",
-      "accepted_alternatives": "Mercekler arası mesafenin değiştirilmesiyle ara görüntünün oküler merceğin odak noktasıyla çakıştırıldığı ve netleme yapıldığı vurgulanan tüm cevaplar kabul edilir.",
-      "rubric": [
-        {
-          "id": "FB712-V6-M01-R1",
-          "text": "Silindirlerin hareketinin iki mercek arasındaki mesafeyi değiştirdiğini belirtir.",
-          "points": 8,
-          "weight": 8,
-          "return_card_ids": [
-            "FB712-V6-K01"
-          ],
-          "scoring": {
-            "full": "İki mercek arasındaki uzaklığın ayarlandığını net açıklar.",
-            "zero": "Mesafe kavramına değinmez."
-          }
-        },
-        {
-          "id": "FB712-V6-M01-R2",
-          "text": "Objektifin oluşturduğu görüntünün oküler merceğin odak noktasına denk gelmesi/çakışması prensibini açıklar.",
-          "points": 12,
-          "weight": 12,
-          "return_card_ids": [
-            "FB712-V6-K01"
-          ],
-          "scoring": {
-            "full": "Odak noktalarının çakışması veya görüntünün odak noktasına getirilerek netleme sağlandığını açıklar.",
-            "partial": "Yalnızca 'netlik ayarı yapılır' diyerek optik odak ilişkisini kuramayanlara 5-7 puan.",
-            "zero": "Yanlış optik açıklama."
-          }
-        }
-      ],
-      "max_points": 20,
-      "return_card_ids": [
-        "FB712-V6-K01"
-      ],
-      "process_components": [
-        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir.",
-        "FB.7.1.2.b: Uzay gözlem araçları ile ilgili hazırladığı modeli yeni kanıtlara göre yeniler."
-      ],
-      "family_id": "FB.7.1.2-focus-mechanism",
-      "source_refs": [
-        "B711"
-      ],
-      "originality": "Özgün optik modelleme mekanizması kurgusu.",
-      "review_status": "final_editorial_audit_2026_11_03",
-      "table": null,
-      "visual": null,
-      "score_weight": 20,
-      "score_weight_rationale": "Orta güçlükte optik mekanizma ve odak çakışması analizi.",
-      "incompatible_with": [],
-      "leakage_review": {
-        "stem_contains_solution_rule": false
-      },
-      "assessment_alignment": {
-        "book_printed_pages": [
-          20,
-          24
-        ],
-        "taught_card_ids": [
-          "FB712-V6-K01"
-        ]
-      },
-      "rubric_point_examples": {
-        "20": {
-          "FB712-V6-M01-R1": 8,
-          "FB712-V6-M01-R2": 12
-        }
-      },
-      "audit": {
-        "source_scope_checked": true,
-        "difficulty_status": "medium"
-      },
-      "repeat_key": "FB712-M01"
-    },
-    {
-      "id": "FB712-V6-M02",
-      "outcome_id": "FB.7.1.2",
-      "difficulty": "medium",
-      "difficulty_status": "editorial_estimate",
-      "type": "open_response",
-      "title": "Aynalı (Newton) Teleskop Modeli ve Işığın İzlediği Yol",
-      "stem": "Bir öğrenci Newton tipi aynalı teleskop modeli tasarlamıştır. Modelin parçaları şunlardır:\n• Tüpün alt tabanında: Büyük Çukur Ayna\n• Tüpün üst kısmında içte: 45° açıyla yerleştirilmiş Düz Ayna\n• Tüpün yan tarafında: İnce kenarlı Oküler Mercek\n\nBu aynalı teleskop modelinde gök cisminden gelen ışığın gözlemcinin gözüne ulaşana kadar sırasıyla hangi optik parçalardan geçtiğini (ışık yolunu) yazınız ve çukur aynanın buradaki temel optik işlevini açıklayınız.",
-      "sample_answer": "Işığın izlediği yol sırasıyla:\n1. Tüpün açık ağzından girerek tabandaki Çukur Aynaya çarpar.\n2. Çukur aynadan yansıyarak odak noktasına doğru toplanırken eğik duran Düz Aynaya çarpar.\n3. Düz aynadan tüpün yan tarafına doğru 90 derece yansır ve Oküler Merceğe gelir.\n4. Oküler mercekten kırılarak göze ulaşır.\nÇukur aynanın görevi: Uzaktaki cisimden gelen paralel ışık ışınlarını yansıtarak tek bir odak noktasında toplamak ve aydınlık bir görüntü oluşturmaktır.",
-      "hint": "Aynalı teleskopta ışık tüpün tabanına kadar iner, oradan geri yansır.",
-      "accepted_alternatives": "Çukur Ayna -> Düz Ayna -> Oküler Mercek sıralamasını veren ve çukur aynanın ışığı toplayıp yansıtma işlevini belirten tüm cevaplar kabul edilir.",
-      "rubric": [
-        {
-          "id": "FB712-V6-M02-R1",
-          "text": "Işığın sırasıyla Çukur Ayna -> Düz Ayna -> Oküler Mercek yolunu izlediğini doğru belirtir.",
-          "points": 10,
-          "weight": 10,
-          "return_card_ids": [
-            "FB712-V6-K01"
-          ],
-          "scoring": {
-            "full": "Üç optik elemanın sırasını doğru yazar.",
-            "partial": "Sıralamada bir elemanı karıştıranlara 5 puan.",
-            "zero": "Yanlış sıralama."
-          }
-        },
-        {
-          "id": "FB712-V6-M02-R2",
-          "text": "Çukur aynanın ışığı yansıtarak tek bir odakta toplama görevini açıklar.",
-          "points": 10,
-          "weight": 10,
-          "return_card_ids": [
-            "FB712-V6-K01"
-          ],
-          "scoring": {
-            "full": "Işığı yansıtma ve odaklama işlevini açıklar.",
-            "zero": "Mercek gibi kırar diyen veya eksik açıklayanlara 0 puan."
-          }
-        }
-      ],
-      "max_points": 20,
-      "return_card_ids": [
-        "FB712-V6-K01"
-      ],
-      "process_components": [
-        "FB.7.1.2.a: Uzay gözlem araçları ile ilgili model önerir."
-      ],
-      "family_id": "FB.7.1.2-reflector-path",
-      "source_refs": [
-        "B711"
-      ],
-      "originality": "Özgün optik şema çözümleme kurgusu.",
-      "review_status": "final_editorial_audit_2026_11_03",
-      "table": null,
-      "visual": null,
-      "score_weight": 20,
-      "score_weight_rationale": "Işık izleme yolu ve çukur ayna optik görevi.",
-      "incompatible_with": [],
-      "leakage_review": {
-        "stem_contains_solution_rule": false
-      },
-      "assessment_alignment": {
-        "book_printed_pages": [
-          21,
-          24
-        ],
-        "taught_card_ids": [
-          "FB712-V6-K01"
-        ]
-      },
-      "rubric_point_examples": {
-        "20": {
-          "FB712-V6-M02-R1": 10,
-          "FB712-V6-M02-R2": 10
-        }
-      },
-      "audit": {
-        "source_scope_checked": true,
-        "difficulty_status": "medium"
-      },
-      "repeat_key": "FB712-M02"
-    },
-    {
-      "id": "FB712-V6-H01",
-      "outcome_id": "FB.7.1.2",
-      "difficulty": "hard",
-      "difficulty_status": "editorial_estimate",
-      "type": "open_response",
-      "title": "Kanıtlara Dayalı Model Revizyonu ve Mühendislik Döngüsü",
-      "stem": "Bir fen bilimleri proje ekibi, uzay gözlem ve keşif araçları ünitesi kapsamında geri dönüştürülebilir atık malzemeler kullanarak iki farklı model üretmiş ve test simülasyonları gerçekleştirmiştir:\n\n1. Durum (Mercekli Teleskop Modeli): Ay gözlemi simülasyonunda kraterlerin çok karanlık ve soluk kaldığı, ayrıca boru içinden yansıyan ortam ışıklarının görüntüyü parlatıp kontrastı düşürdüğü kanıtlanmıştır.\n2. Durum (Mars Gezgini / Rover Modeli): Kum havuzunda yapılan sürüş testinde tekerleklerin kuma gömülerek aracın saplandığı ve dondurucu ortam simülasyonunda bataryaların aşırı soğuktan donarak çalışmayı durdurduğu kanıtlanmıştır.\n\nEkibin FB.7.1.2.b (hazırladığı modeli yeni kanıtlara göre yeniler) süreci doğrultusunda hem Teleskop Modelinde hem de Rover Modelinde bu sorunları çözmek için yapması gereken toplam 3 bilimsel/mühendislik revizyonunu gerekçeleriyle açıklayınız.",
-      "sample_answer": "Teleskop Modeli İçin Yenilemeler:\n1. Objektif merceğinin çapı (açıklığı) büyütülmelidir. Gerekçe: Mercek alanı arttıkça uzaktaki gök cisminden teleskoba giren ışık miktarı artar ve karanlık/soluk görüntü aydınlanır.\n2. Borunun iç yüzeyi mat siyah boya veya kadife ile kaplanmalıdır. Gerekçe: Siyah ve mat yüzeyler boru içindeki ışık yansımalarını soğurarak parlamayı önler ve kontrastı artırır.\n\nRover Modeli İçin Yenilemeler:\n3. Tekerleklerin taban genişliği artırılmalı veya tırtıklı palet sistemine geçilmelidir. Gerekçe: Yüzey alanının artması kuma uygulanan basıncı azaltarak batmayı engeller.\n(Veya: Batarya ünitesi etrafına altın/alüminyum folyo yalıtım kalkanı ve ısıtıcı eklenmelidir. Gerekçe: Isı transferini engelleyerek bataryanın donmasını önler.)",
-      "hint": "Teleskopta ışık miktarını ve boru içi parlamayı nasıl çözersiniz? Rover'da kuma batmayı (basınç) veya soğuktan donmayı nasıl engellersiniz?",
-      "accepted_alternatives": "Belirtilen 4 geçerli çözümden en az 3 tanesini doğru fiziksel gerekçesiyle açıklayan öğrenciler tam puan alır.",
-      "rubric": [
-        {
-          "id": "FB712-V6-H01-R1",
-          "text": "Teleskopta objektif çapını büyütme gerekçesini (ışık toplama kapasitesi) doğru açıklar.",
-          "points": 8,
-          "weight": 8,
-          "return_card_ids": [
-            "FB712-V6-K01",
-            "FB712-V6-K05"
-          ],
-          "scoring": {
-            "full": "Açıklık/çap artırımı ve toplanan ışık ilişkisini doğru açıklar.",
-            "zero": "Eksik veya hatalı açıklama."
-          }
-        },
-        {
-          "id": "FB712-V6-H01-R2",
-          "text": "Teleskopta boru içini mat siyaha kaplama gerekçesini (yansımaları ve parlamayı önleme) doğru açıklar.",
-          "points": 8,
-          "weight": 8,
-          "return_card_ids": [
-            "FB712-V6-K05"
-          ],
-          "scoring": {
-            "full": "Mat siyahın ışığı soğurarak iç saçılmayı önlediğini belirtir.",
-            "zero": "Eksik veya hatalı açıklama."
-          }
-        },
-        {
-          "id": "FB712-V6-H01-R3",
-          "text": "Rover modelinde tekerlek genişletme (basıncı azaltma) veya yalıtım kalkanı ekleme gerekçesini doğru açıklar.",
-          "points": 9,
-          "weight": 9,
-          "return_card_ids": [
-            "FB712-V6-K03",
-            "FB712-V6-K05"
-          ],
-          "scoring": {
-            "full": "Tekerlek yüzey alanı-basınç ilişkisi veya ısı yalıtımı ile donmayı önleme ilişkisini doğru açıklar.",
-            "partial": "Gerekçesiz yalnızca 'tekerlek büyütülür' diyene 4 puan.",
-            "zero": "Yanlış açıklama."
-          }
-        }
-      ],
-      "max_points": 25,
-      "return_card_ids": [
-        "FB712-V6-K01",
-        "FB712-V6-K03",
-        "FB712-V6-K05"
-      ],
-      "process_components": [
-        "FB.7.1.2.b: Uzay gözlem araçları ile ilgili hazırladığı modeli yeni kanıtlara göre yeniler."
-      ],
-      "family_id": "FB.7.1.2-engineering-revision",
-      "source_refs": [
-        "B711"
-      ],
-      "originality": "MEB performans görevi kanıta dayalı yenileme süreci üst düzey açık uçlu kurgu.",
-      "review_status": "final_editorial_audit_2026_11_03",
-      "table": null,
-      "visual": null,
-      "score_weight": 25,
-      "score_weight_rationale": "Üst düzey kanıta dayalı çoklu model revizyon analizi (Zor soru).",
-      "incompatible_with": [],
-      "leakage_review": {
-        "stem_contains_solution_rule": false
-      },
-      "assessment_alignment": {
-        "book_printed_pages": [
-          25,
-          27
-        ],
-        "taught_card_ids": [
-          "FB712-V6-K01",
-          "FB712-V6-K03",
-          "FB712-V6-K05"
-        ]
-      },
-      "rubric_point_examples": {
-        "25": {
-          "FB712-V6-H01-R1": 8,
-          "FB712-V6-H01-R2": 8,
-          "FB712-V6-H01-R3": 9
-        }
-      },
-      "audit": {
-        "source_scope_checked": true,
-        "difficulty_status": "hard"
-      },
-      "repeat_key": "FB712-H01"
     }
   ]
 }
