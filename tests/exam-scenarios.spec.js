@@ -32,7 +32,7 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
 
         const ekCards = Array.isArray(ek.cards) ? ek.cards : Object.values(ek.cards);
         const allCards = [...v6.cards, ...ekCards];
-        expect(allCards.length).toBe(52); // 34 (V6) + 18 (V7.3 Master)
+        expect(allCards.length).toBe(58); // 34 (V6) + 18 (V7.3 Master) + 6 (FB712)
 
         // Senaryo 3'te FB.7.1.5 kazanımı yoktur
         const sc3 = scenarios.find(s => (s.scenario === 3 || s.code === 'S3'));
@@ -379,7 +379,7 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         expect(first721Index).toBeGreaterThan(last714Index);
     });
 
-    test('Öğretmen Yönetim Paneli 72 soruluk tam havuzu OUTCOME_ORDER sırasıyla göstermeli', async ({ page }) => {
+    test('Öğretmen Yönetim Paneli 78 soruluk tam havuzu OUTCOME_ORDER sırasıyla göstermeli', async ({ page }) => {
         await page.goto('/index.html');
         await page.click('#btn-yazili-modulu');
 
@@ -391,10 +391,10 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
         });
 
         const tabBtnText = await page.textContent('#btn-admin-tab-questions');
-        expect(tabBtnText).toContain('72 Soru');
+        expect(tabBtnText).toContain('78 Soru');
 
         const optionCount = await page.$$eval('#admin-bank-select option', opts => opts.length);
-        expect(optionCount).toBe(72);
+        expect(optionCount).toBe(78);
 
         // İlk ve son soruların OUTCOME_ORDER uyumu
         const firstOptText = await page.$eval('#admin-bank-select option:first-child', el => el.textContent);
@@ -532,8 +532,8 @@ test.describe('7. Sınıf Yazılı Senaryoları (S1 - S5) ve Dinamik Puanlama Te
             expect(svgContent).not.toMatch(/pulsar|füzyon|fuzyon|merak|dubhe/i);
         }
 
-        // K01-K08 kartlarının istisnasız 2 kısa paragraftan oluştuğunu doğrula
-        for (const cid of Object.keys(ekData.cards)) {
+        // K01-K08 kartlarının istisnasız 2 kısa paragraftan oluştuğunu doğrula (V7.9 kartları)
+        for (const cid of Object.keys(ekData.cards).filter(id => id.includes('-V7-'))) {
             if (cid.endsWith('K00')) continue;
             expect(ekData.cards[cid].body).toHaveLength(2);
         }

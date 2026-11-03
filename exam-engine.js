@@ -46,7 +46,7 @@ const STORAGE_KEY = 'fenupx_exam_pilot_v1';
 const names = { easy: 'Kolay', medium: 'Orta', hard: 'Zor' };
 
 export const OUTCOME_ORDER = [
-    "FB.7.1.1", "FB.7.1.3", "FB.7.1.4", "FB.7.1.5", "FB.7.2.1", "FB.7.2.2"
+    "FB.7.1.1", "FB.7.1.2", "FB.7.1.3", "FB.7.1.4", "FB.7.1.5", "FB.7.2.1", "FB.7.2.2"
 ];
 
 let DATA = null;
@@ -734,8 +734,16 @@ export function syncScenarioData() {
     profiles = DATA.selection_policy?.scenario_profiles || {};
 }
 
-// --- V8.6: 48/48 VE 72/72 TAM ÇÖZÜM REHBERİ & V7 ÖRNEK CEVAPLAR SÖZLÜĞÜ ---
+// --- V8.6 & V8.8: 48/48, 72/72 VE 78/78 TAM ÇÖZÜM REHBERİ & ÖRNEK CEVAPLAR SÖZLÜĞÜ ---
 export const SAMPLE_ANSWERS_V7 = {
+    // FB.7.1.2: Uzay Gözlem Araçları Modelleri
+    'FB712-V6-E01': "Güneş panelleri uydunun elektrik enerjisini üretir, çanak anten ise yer istasyonuyla veri iletişimini sağlar.",
+    'FB712-V6-E02': "Geniş mercek gök cismine bakan Objektif, dar mercek ise göze bakan Oküler merceğidir.",
+    'FB712-V6-E03': "İstasyon astronot barındıran yörünge üssüdür; sonda ise başka gök cisimlerine giden insansız keşif robotudur.",
+    'FB712-V6-M01': "Tüplerin kaydırılması mercekler arası mesafeyi değiştirerek görüntünün odak noktasıyla çakışmasını ve netleşmesini sağlar.",
+    'FB712-V6-M02': "Işık: Çukur Ayna -> Düz Ayna -> Oküler yolunu izler. Çukur ayna ışığı toplayıp odaklayan birincil yansıtıcıdır.",
+    'FB712-V6-H01': "1. Objektif çapı büyütülür (ışık artar). 2. Boru içi mat siyaha boyanır (parlama önlenir). 3. Rover tekerleği genişletilir (basınç düşer, batmaz).",
+    // FB.7.1.4: Yıldızların Yaşamı
     'FB714-V7-E01': 'Bulutsunun kendi içine çökmesini sağlayan temel kuvvet kütle çekim kuvvetidir. Çekirdek tepkimeleri başlamadan önceki sıcak ve yoğun ara evreye ön yıldız (protostar) adı verilir.',
     'FB714-V7-E02': 'Bir yıldızın yaşam döngüsü boyunca izleyeceği yolu belirleyen temel faktör yıldızın başlangıç kütlesidir. Başlangıç kütlesi Güneş\'in kütlesinden az olanlar küçük kütleli, katbekat fazla olanlar ise büyük kütleli yıldız yolunu izler.',
     'FB714-V7-E03': 'Güneş ömrünün sonuna doğru önce genişleyerek bir kırmızı dev evresine geçer; ardından dış gaz katmanlarını uzaya savurarak merkezde sıcak bir beyaz cüceye dönüşür.',
@@ -926,7 +934,7 @@ async function loadData(revision = CONTENT_REVISION, showError = true) {
                             text: c.text || c.description || '',
                             points: c.points || 5,
                             weight: c.weight || c.points || 5,
-                            return_card_ids: c.return_card_ids || (q.outcome_id === 'FB.7.1.4' ? ['FB714-V7-K00'] : ['FB722-V7-K00']),
+                            return_card_ids: c.return_card_ids || (q.outcome_id === 'FB.7.1.4' ? ['FB714-V7-K00'] : (q.outcome_id === 'FB.7.1.2' ? ['FB712-V6-K00'] : ['FB722-V7-K00'])),
                             scoring: c.scoring || {
                                 full: c.text || c.description || '',
                                 zero: 'Cevapta bu ölçüt karşılanmıyor.',
