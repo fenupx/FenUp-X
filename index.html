@@ -57,8 +57,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@500;600;700&family=Kalam:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8.9.1">
-    <link rel="stylesheet" href="exam.css?v=8.9.1">
+    <link rel="stylesheet" href="style.css?v=8.9.2">
+    <link rel="stylesheet" href="exam.css?v=8.9.2">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -4662,6 +4662,46 @@
         </div>
     </div>
 
+    <!-- V8.9.2: Tek Seferlik Sınıf Seçim Modalı (Mevcut Sınıfsız Hesaplar İçin Onboarding) -->
+    <div id="modal-onboarding-grade" class="modal-overlay is-hidden" role="dialog" aria-modal="true" aria-hidden="true" style="display: none;">
+        <div class="modal-content glass-panel onboarding-grade-content" style="max-width: 520px; width: 92%; padding: 28px; text-align: center;">
+            <div class="onboarding-grade-header" style="margin-bottom: 20px;">
+                <div class="onboarding-icon-ring" style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, rgba(0, 210, 255, 0.2), rgba(251, 191, 36, 0.2)); border: 2px solid #38bdf8; display: inline-flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 12px; box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);">
+                    🚀
+                </div>
+                <h2 style="font-size: 1.5rem; color: #f8fafc; margin: 0 0 8px 0; font-weight: 700;">🚀 Yeni Sezonda Sınıfını Belirle!</h2>
+                <p style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5; margin: 0;">
+                    Şampiyonlar Ligi puanlarının ve yazılı provalarının doğru akranlarınla yarışması için lütfen kaçıncı sınıfta olduğunu seç:
+                </p>
+            </div>
+            <div class="onboarding-grade-grid" id="onboarding-grade-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 16px;">
+                <button type="button" class="btn-onboarding-grade" data-grade="5">
+                    <span class="ob-grade-num">5</span>
+                    <span class="ob-grade-title">5. Sınıf</span>
+                    <span class="ob-grade-sub">Güneş, Dünya ve Ay</span>
+                </button>
+                <button type="button" class="btn-onboarding-grade" data-grade="6">
+                    <span class="ob-grade-num">6</span>
+                    <span class="ob-grade-title">6. Sınıf</span>
+                    <span class="ob-grade-sub">Güneş Sistemi & Tutulmalar</span>
+                </button>
+                <button type="button" class="btn-onboarding-grade" data-grade="7">
+                    <span class="ob-grade-num">7</span>
+                    <span class="ob-grade-title">7. Sınıf</span>
+                    <span class="ob-grade-sub">Uzay Araştırmaları & Enerji</span>
+                </button>
+                <button type="button" class="btn-onboarding-grade" data-grade="8">
+                    <span class="ob-grade-num">8</span>
+                    <span class="ob-grade-title">8. Sınıf</span>
+                    <span class="ob-grade-sub">Mevsimler, İklim & DNA</span>
+                </button>
+            </div>
+            <p style="font-size: 0.8rem; color: #94a3b8; margin: 0;">
+                <i class="fas fa-info-circle"></i> Sınıfını daha sonra profil ayarlarından dilediğin zaman değiştirebilirsin.
+            </p>
+        </div>
+    </div>
+
     <div id="admin-modal" class="modal-overlay is-hidden">
         <div class="modal-content glass-panel" style="max-height: 90vh; width: 95%; max-width: 900px; padding: 30px; display: flex; flex-direction: column;">
             <button id="btn-close-admin" class="close-btn"><i class="fas fa-times"></i></button>
@@ -4803,6 +4843,7 @@
                             <option value="5">5. Sınıf</option>
                             <option value="6">6. Sınıf</option>
                             <option value="7" selected>7. Sınıf</option>
+                            <option value="8">8. Sınıf</option>
                         </select>
                     </div>
                 </div>
@@ -4861,6 +4902,7 @@
                     <option value="5">5. Sınıf</option>
                     <option value="6">6. Sınıf</option>
                     <option value="7" selected>7. Sınıf</option>
+                    <option value="8">8. Sınıf</option>
                 </select>
             </div>
             <button id="btn-google-complete-submit" class="action-btn" style="width:100%;">KAYDI TAMAMLA</button>
@@ -4937,10 +4979,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
     <script>
-        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.1';
+        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.2';
     </script>
-    <script type="module" src="exam-engine.js?v=8.9.1"></script>
-    <script type="module" src="lab-engine.js?v=8.9.1"></script>
-    <script type="module" src="script.js?v=8.9.1"></script>
+    <script type="module" src="exam-engine.js?v=8.9.2"></script>
+    <script type="module" src="lab-engine.js?v=8.9.2"></script>
+    <script type="module" src="script.js?v=8.9.2"></script>
 </body>
 </html>

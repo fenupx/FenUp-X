@@ -3213,6 +3213,7 @@ if (studentPane) {
                     <option value="5">5. Sınıf</option>
                     <option value="6">6. Sınıf</option>
                     <option value="7" selected>7. Sınıf</option>
+                    <option value="8">8. Sınıf</option>
                 </select>
             </div>
         </div>
@@ -3534,6 +3535,77 @@ function showBadgeEarnedToast(badge) {
     toast._timeout = setTimeout(() => {
         toast.classList.remove('show');
     }, 4000);
+}
+
+// V8.9.2: 4 Sınıf Düzeyi Desteği (5, 6, 7, 8)
+export const VALID_GRADES = ['5', '6', '7', '8'];
+if (typeof window !== 'undefined') {
+    window.VALID_GRADES = VALID_GRADES;
+}
+
+// V8.9.2: Sınıf bilgisi bulunmayan mevcut hesaplar için tek seferlik onboarding kontrolü
+export function checkMissingGradeOnboarding(user, userData) {
+    if (!user || !userData) return;
+    if (userData.role === 'admin') return;
+    if (userData.sinif && VALID_GRADES.includes(String(userData.sinif).trim())) return;
+
+    const modal = document.getElementById('modal-onboarding-grade');
+    if (!modal) return;
+
+    modal.classList.remove('is-hidden');
+    modal.style.display = 'flex';
+
+    const gradeBtns = modal.querySelectorAll('.btn-onboarding-grade');
+    gradeBtns.forEach(btn => {
+        btn.onclick = async () => {
+            const selectedGrade = btn.dataset.grade;
+            if (!VALID_GRADES.includes(selectedGrade)) return;
+
+            userData.sinif = selectedGrade;
+            try {
+                localStorage.setItem('fenupx_user_sinif', selectedGrade);
+                localStorage.setItem('fenupx_user_grade', selectedGrade);
+                const rawCu = localStorage.getItem('currentUser');
+                if (rawCu) {
+                    const cu = JSON.parse(rawCu);
+                    cu.sinif = selectedGrade;
+                    localStorage.setItem('currentUser', JSON.stringify(cu));
+                }
+            } catch (_) {}
+
+            if (auth && auth.currentUser) {
+                try {
+                    await updateDoc(doc(db, "users", auth.currentUser.uid), {
+                        sinif: selectedGrade
+                    });
+                } catch (err) {
+                    console.warn("Sınıf güncelleme hatası:", err);
+                }
+            }
+
+            modal.classList.add('is-hidden');
+            modal.style.display = 'none';
+
+            // Profil ekranındaki sınıf seçimini de güncelle
+            const profGrade = document.getElementById('profile-grade');
+            if (profGrade) profGrade.value = selectedGrade;
+
+            const roleTag = document.getElementById('profile-display-role-tag');
+            if (roleTag) {
+                roleTag.textContent = `⭐ Fen Kâşifi · ${selectedGrade}. Sınıf`;
+            }
+
+            showBadgeEarnedToast({
+                icon: "🎓",
+                title: "Sınıfın Belirlendi!",
+                desc: `Sınıfın başarıyla ${selectedGrade}. Sınıf olarak belirlendi! 🎓`,
+                condition: `${selectedGrade}. Sınıf Kâşifi`
+            });
+        };
+    });
+}
+if (typeof window !== 'undefined') {
+    window.checkMissingGradeOnboarding = checkMissingGradeOnboarding;
 }
 
 // 1 Eylül Otomatik Sınıf Terfisi (Auto-Promotion)
@@ -3944,7 +4016,7 @@ profileModal.innerHTML = `
                         <option value="5">5. Sınıf</option>
                         <option value="6">6. Sınıf</option>
                         <option value="7" selected>7. Sınıf</option>
-                        <option value="8">8. Sınıf (Mezun Kâşif)</option>
+                        <option value="8">8. Sınıf</option>
                     </select>
                 </div>
                 
@@ -4109,6 +4181,11 @@ onAuthStateChanged(auth, async (user) => {
             if (pGrade && userData.sinif) pGrade.value = userData.sinif;
 
             const isAdmin = userData.role === 'admin';
+
+            // V8.9.2: Sınıf bilgisi bulunmayan mevcut öğrenciler için tek seferlik onboarding penceresi
+            if (!isAdmin && (!userData.sinif || !VALID_GRADES.includes(String(userData.sinif).trim()))) {
+                checkMissingGradeOnboarding(user, userData);
+            }
 
             // V8.9.1: Header Rozet / Streak Yönetimi (Admin sade gösterim)
             const hStreakBadge = document.getElementById('header-streak-badge');
@@ -4492,7 +4569,7 @@ if(btnSaveProf) {
         const surname = pSur ? pSur.value.trim() : '';
         const nickname = pNick ? pNick.value.trim() : '';
         const avatar = pca ? pca.src : '';
-        const sinif = pGrade ? pGrade.value : "7";
+        const sinif = (pGrade && VALID_GRADES.includes(pGrade.value)) ? pGrade.value : "7";
 
         if(!name || !surname || !nickname) return alert("Ad, soyad ve yarışmacı adı alanları boş bırakılamaz.");
         
@@ -4668,7 +4745,7 @@ if(btnStuSub) {
                 if(!uygunIsimMi(fName) || !uygunIsimMi(lName) || !uygunIsimMi(nick)) return alert("Uygunsuz kelime kullanımı tespit edildi. Sistem kuralları gereği üyeliğiniz reddedildi. Lütfen küfür veya argo içermeyen isimler kullanın.");
                 
                 const uGradeEl = document.getElementById('user-grade') || document.getElementById('reg-grade');
-                const userSinif = uGradeEl ? uGradeEl.value : "7";
+                const userSinif = (uGradeEl && VALID_GRADES.includes(uGradeEl.value)) ? uGradeEl.value : "7";
 
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
                 try {
@@ -4712,7 +4789,7 @@ if(btnGoogleLog) {
                 const firstName = nameParts[0];
                 const lastName = nameParts.slice(1).join(' ') || "X";
                 const gGradeEl = document.getElementById('google-user-grade') || document.getElementById('user-grade');
-                const gSinif = gGradeEl ? gGradeEl.value : "7";
+                const gSinif = (gGradeEl && VALID_GRADES.includes(gGradeEl.value)) ? gGradeEl.value : "7";
                 
                 await setDoc(doc(db, "users", result.user.uid), {
                     name: firstName, surname: lastName, nickname: gName, email: result.user.email, role: "student", sinif: gSinif, totalScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
@@ -4862,7 +4939,8 @@ function renderAdminUsers(filterText = '') {
     if(!adminUserList) return;
     adminUserList.innerHTML = '';
     const lowerFilter = filterText.toLowerCase();
-    const filtered = allAdminUsers.filter(u => 
+    const sourceList = (window.allAdminUsers && Array.isArray(window.allAdminUsers) && window.allAdminUsers.length > 0) ? window.allAdminUsers : allAdminUsers;
+    const filtered = sourceList.filter(u => 
         (u.name && u.name.toLowerCase().includes(lowerFilter)) || 
         (u.nickname && u.nickname.toLowerCase().includes(lowerFilter)) ||
         (u.email && u.email.toLowerCase().includes(lowerFilter))
@@ -4879,6 +4957,7 @@ function renderAdminUsers(filterText = '') {
         const onlineBadge = isOnline 
             ? `<span class="admin-online-badge"><span style="color:#10b981; font-size:0.6rem;">●</span> Çevrimiçi</span>` 
             : '';
+        const gradeText = (u.sinif && VALID_GRADES.includes(String(u.sinif))) ? `${u.sinif}. Sınıf` : 'Belirtilmemiş';
         const row = document.createElement('div');
         row.className = `admin-user-row ${isBanned ? 'banned' : ''}`;
         row.innerHTML = `
@@ -4888,6 +4967,18 @@ function renderAdminUsers(filterText = '') {
                     <h4>${u.nickname || 'İsimsiz Kaptan'}${onlineBadge}</h4>
                     <p>${u.name || ''} ${u.surname || ''} | ${u.email || ''}</p>
                 </div>
+            </div>
+            <div class="admin-user-grade-col">
+                <span class="admin-grade-badge" style="display: block; font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">
+                    <i class="fas fa-graduation-cap"></i> Sınıf: <strong style="color: #38bdf8;">${gradeText}</strong>
+                </span>
+                <select class="admin-grade-select" data-uid="${u.id}" aria-label="Sınıf Düzenle">
+                    <option value="" ${!u.sinif ? 'selected' : ''}>Belirtilmemiş</option>
+                    <option value="5" ${String(u.sinif) === '5' ? 'selected' : ''}>5. Sınıf</option>
+                    <option value="6" ${String(u.sinif) === '6' ? 'selected' : ''}>6. Sınıf</option>
+                    <option value="7" ${String(u.sinif) === '7' ? 'selected' : ''}>7. Sınıf</option>
+                    <option value="8" ${String(u.sinif) === '8' ? 'selected' : ''}>8. Sınıf</option>
+                </select>
             </div>
             <div class="admin-user-stats">
                 <i class="fas fa-star" style="color:#f59e0b;"></i> ${formatScore(u.totalScore || 0)} Puan
@@ -4901,6 +4992,14 @@ function renderAdminUsers(filterText = '') {
             </div>
         `;
         adminUserList.appendChild(row);
+    });
+
+    document.querySelectorAll('.admin-grade-select').forEach(sel => {
+        sel.onchange = async () => {
+            const uid = sel.dataset.uid;
+            const newGrade = sel.value;
+            await changeUserGrade(uid, newGrade);
+        };
     });
 
     document.querySelectorAll('.btn-edit-nick').forEach(btn => {
@@ -4935,6 +5034,31 @@ async function changeUserNickname(uid, newNick) {
     } catch(e) {
         alert("İsim değiştirilemedi: " + e.message);
     }
+}
+
+export async function changeUserGrade(uid, newGrade) {
+    try {
+        await updateDoc(doc(db, "users", uid), { sinif: newGrade });
+        const userIndex = allAdminUsers.findIndex(u => u.id === uid);
+        if(userIndex > -1) {
+            allAdminUsers[userIndex].sinif = newGrade;
+        }
+        const asi = document.getElementById('admin-search-input');
+        renderAdminUsers(asi ? asi.value : '');
+        showBadgeEarnedToast({
+            icon: "✅",
+            title: "Sınıf Güncellendi",
+            desc: newGrade ? `Öğrencinin sınıfı ${newGrade}. Sınıf olarak güncellendi.` : "Öğrencinin sınıfı sıfırlandı.",
+            condition: "Yönetici İşlemi"
+        });
+    } catch(e) {
+        alert("Sınıf güncellenemedi: " + e.message);
+    }
+}
+if (typeof window !== 'undefined') {
+    window.changeUserGrade = changeUserGrade;
+    window.renderAdminUsers = renderAdminUsers;
+    window.loadAdminUsers = loadAdminUsers;
 }
 
 async function toggleBanStatus(uid, banStatus) {

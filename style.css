@@ -4742,4 +4742,97 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
 }
 
+/* ==========================================================================
+   V8.9.2: Tek Seferlik Sınıf Seçim Modalı (Onboarding) ve Yönetici Sınıf Düzenleyici
+   ========================================================================== */
+.onboarding-grade-content {
+    background: rgba(15, 23, 42, 0.95) !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.2) !important;
+}
+
+.btn-onboarding-grade {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 12px;
+    background: rgba(30, 41, 59, 0.7);
+    border: 2px solid rgba(56, 189, 248, 0.3);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #f8fafc;
+    text-align: center;
+}
+
+.btn-onboarding-grade:hover {
+    background: rgba(56, 189, 248, 0.18);
+    border-color: #38bdf8;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(56, 189, 248, 0.4);
+}
+
+.btn-onboarding-grade:active {
+    transform: translateY(0);
+}
+
+.ob-grade-num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #38bdf8;
+    line-height: 1;
+    margin-bottom: 4px;
+}
+
+.ob-grade-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 2px;
+}
+
+.ob-grade-sub {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+/* Yönetici Paneli Sınıf Sütunu */
+.admin-user-grade-col {
+    flex: 1;
+    min-width: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-grade-select {
+    background: rgba(15, 23, 42, 0.9);
+    color: #f8fafc;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.admin-grade-select:focus {
+    outline: none;
+    border-color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+}
+
+@media (max-width: 1023px) {
+    .admin-user-grade-col {
+        width: 100% !important;
+        margin: 6px 0 !important;
+        text-align: left !important;
+        align-items: flex-start !important;
+    }
+}
+
 

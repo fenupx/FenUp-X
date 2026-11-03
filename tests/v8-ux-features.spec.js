@@ -744,4 +744,101 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await btnCloseSb.click();
         await expect(smartboardModal).toBeHidden();
     });
+
+    test('12. V8.9.2: 8. Sınıf Desteği, Tek Seferlik Sınıf Onboarding Modalı ve Yönetim Paneli Sınıf Düzenleyici', async ({ page }) => {
+        await page.goto('/');
+        await page.waitForLoadState('domcontentloaded');
+
+        // 1. Kayıt, Google ve Profil Formlarında 8. Sınıf Seçeneği Kontrolü
+        const gradeOptions = await page.evaluate(() => {
+            const reg = document.getElementById('user-grade');
+            const google = document.getElementById('google-user-grade');
+            const prof = document.getElementById('profile-grade');
+            return {
+                regHas8: reg ? Array.from(reg.options).some(o => o.value === '8') : false,
+                googleHas8: google ? Array.from(google.options).some(o => o.value === '8') : false,
+                profHas8: prof ? Array.from(prof.options).some(o => o.value === '8') : false,
+                validGrades: window.VALID_GRADES || []
+            };
+        });
+
+        expect(gradeOptions.regHas8).toBe(true);
+        expect(gradeOptions.googleHas8).toBe(true);
+        expect(gradeOptions.profHas8).toBe(true);
+        expect(gradeOptions.validGrades).toContain('8');
+
+        // 2. Tek Seferlik Sınıf Seçim Modalı (#modal-onboarding-grade)
+        const obModal = page.locator('#modal-onboarding-grade');
+        await expect(obModal).toBeAttached();
+
+        const btn5 = obModal.locator('.btn-onboarding-grade[data-grade="5"]');
+        const btn6 = obModal.locator('.btn-onboarding-grade[data-grade="6"]');
+        const btn7 = obModal.locator('.btn-onboarding-grade[data-grade="7"]');
+        const btn8 = obModal.locator('.btn-onboarding-grade[data-grade="8"]');
+
+        await expect(btn5).toBeAttached();
+        await expect(btn6).toBeAttached();
+        await expect(btn7).toBeAttached();
+        await expect(btn8).toBeAttached();
+
+        // 3. checkMissingGradeOnboarding Tetiklenme Mantığı
+        const onboardingResult = await page.evaluate(async () => {
+            // Sınıfı olmayan bir öğrenci simülasyonu
+            const mockUser = { uid: "test-user-no-grade" };
+            const mockData = { name: "Ali", surname: "Kaya", role: "student", sinif: "" };
+
+            window.checkMissingGradeOnboarding(mockUser, mockData);
+
+            const modal = document.getElementById('modal-onboarding-grade');
+            const isOpen = modal && !modal.classList.contains('is-hidden') && modal.style.display === 'flex';
+
+            // 8. Sınıf butonuna tıklama simülasyonu
+            const btn8El = modal.querySelector('.btn-onboarding-grade[data-grade="8"]');
+            if (btn8El) {
+                btn8El.click();
+            }
+
+            const isClosedAfterClick = modal && modal.classList.contains('is-hidden');
+            const savedSinif = mockData.sinif;
+            const lsSinif = localStorage.getItem('fenupx_user_sinif');
+
+            return { isOpen, isClosedAfterClick, savedSinif, lsSinif };
+        });
+
+        expect(onboardingResult.isOpen).toBe(true);
+        expect(onboardingResult.isClosedAfterClick).toBe(true);
+        expect(onboardingResult.savedSinif).toBe('8');
+        expect(onboardingResult.lsSinif).toBe('8');
+
+        // 4. Yönetim Paneli Sınıf Sütunu ve Tek Tıkla Düzenleme
+        const adminGradeColCheck = await page.evaluate(() => {
+            // allAdminUsers listesini test verisi ile doldur
+            window.allAdminUsers = [
+                { id: "stu-1", name: "Ayşe", surname: "Yıldız", nickname: "YıldızGöz", email: "ayse@test.com", role: "student", sinif: "6", totalScore: 120 },
+                { id: "stu-2", name: "Can", surname: "Demir", nickname: "DemirKafa", email: "can@test.com", role: "student", sinif: "", totalScore: 80 }
+            ];
+
+            if (typeof window.renderAdminUsers === 'function') {
+                window.renderAdminUsers();
+            }
+
+            const list = document.getElementById('admin-user-list');
+            const rows = list ? list.querySelectorAll('.admin-user-row') : [];
+            const hasGradeCols = rows.length > 0 && !!rows[0].querySelector('.admin-user-grade-col');
+            const firstRowGradeSelect = rows[0]?.querySelector('.admin-grade-select');
+            const secondRowGradeBadge = rows[1]?.querySelector('.admin-grade-badge');
+
+            return {
+                rowCount: rows.length,
+                hasGradeCols,
+                firstRowGradeVal: firstRowGradeSelect ? firstRowGradeSelect.value : null,
+                secondRowText: secondRowGradeBadge ? secondRowGradeBadge.textContent : ""
+            };
+        });
+
+        expect(adminGradeColCheck.rowCount).toBe(2);
+        expect(adminGradeColCheck.hasGradeCols).toBe(true);
+        expect(adminGradeColCheck.firstRowGradeVal).toBe('6');
+        expect(adminGradeColCheck.secondRowText).toContain('Belirtilmemiş');
+    });
 });
