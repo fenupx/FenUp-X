@@ -9,7 +9,7 @@
 'use strict';
 
 const CONTENT_REVISION = '6.0.0';
-export const CONTENT_V6_VERSION = '7.9.0';
+export const CONTENT_V6_VERSION = '8.0.0';
 if (typeof window !== 'undefined') {
     window.__FENUPX_CONTENT_V6_VERSION__ = CONTENT_V6_VERSION;
 }
@@ -32,6 +32,93 @@ let QUESTIONS = [];
 let profiles = {};
 let storageOK = true;
 let lastSavedRaw = null;
+
+// --- V8.0 İLERLEME SORGULAMA VE KALICI SIFIRLAMA API'LERİ ---
+export function hasSavedProgress(type = null) {
+    if (type === 'study') {
+        const s = state.savedStudy;
+        return !!(s && typeof s.cardIdx === 'number' && s.cardIdx >= 0 && (s.cardIdx > 0 || (Array.isArray(s.visitedCards) && s.visitedCards.length > 0)));
+    }
+    if (type === 'attempt' || type === 'practice') {
+        const a = state.attempt;
+        const isAttemptFinished = !!(a && (a.status === 'completed' || a.finished));
+        return !!(a && Array.isArray(a.ids) && a.ids.length >= 6 && a.ids.length <= 9 && !isAttemptFinished);
+    }
+    return hasSavedProgress('study') || hasSavedProgress('attempt');
+}
+
+export function clearSavedProgress(type = 'all') {
+    if (type === 'all' || type === 'study') {
+        state.savedStudy = null;
+        state.studyCardIdx = 0;
+        state.studySessionIsFresh = true;
+    }
+    if (type === 'all' || type === 'attempt' || type === 'practice') {
+        if (state.attempt && !state.attempt.finished && state.attempt.status !== 'completed') {
+            state.attempt = null;
+        }
+    }
+    if (typeof localStorage !== 'undefined') {
+        try {
+            if (type === 'all') {
+                localStorage.removeItem(STORAGE_KEY);
+            }
+            localStorage.removeItem('fenupx_saved_study');
+            localStorage.removeItem('fenupx_saved_attempt');
+            localStorage.removeItem('fenupx_study_progress');
+            localStorage.removeItem('fenupx_practice_progress');
+            localStorage.removeItem('fenupx_exam_active_question');
+            localStorage.removeItem('fenupx_exam_answers');
+            localStorage.removeItem('fenupx_exam_scores');
+        } catch (_) {}
+    }
+    saveState();
+}
+
+// --- V8.0 LIGHTBOX (GÖRSEL BÜYÜTME) API'LERİ ---
+export function openLightbox(src, alt = '', caption = '') {
+    const modalEl = $('exam-lightbox-modal');
+    const contentEl = $('exam-lightbox-content');
+    const captionEl = $('exam-lightbox-caption');
+    if (!modalEl || !contentEl) return;
+
+    contentEl.innerHTML = `<img src="${esc(src)}" alt="${esc(alt)}" class="exam-lightbox-img">`;
+    if (captionEl) {
+        captionEl.textContent = caption || alt || '';
+    }
+
+    modalEl.classList.remove('is-hidden');
+    modalEl.classList.add('is-open', 'active');
+    modalEl.style.display = 'flex';
+    modalEl.setAttribute('aria-hidden', 'false');
+    if (typeof document !== 'undefined') {
+        document.body.classList.add('exam-modal-open');
+    }
+
+    const btnClose = $('btn-lightbox-close');
+    if (btnClose) {
+        btnClose.onclick = (e) => {
+            e.preventDefault();
+            closeLightbox();
+        };
+        btnClose.focus();
+    }
+    modalEl.onclick = (e) => {
+        if (e.target === modalEl) closeLightbox();
+    };
+}
+
+export function closeLightbox() {
+    const modalEl = $('exam-lightbox-modal');
+    if (!modalEl) return;
+    modalEl.classList.remove('is-open', 'active');
+    modalEl.classList.add('is-hidden');
+    modalEl.style.display = 'none';
+    modalEl.setAttribute('aria-hidden', 'true');
+    if (typeof document !== 'undefined') {
+        document.body.classList.remove('exam-modal-open');
+    }
+}
 
 function createDefaultState() {
     return {
@@ -301,13 +388,16 @@ export function questionVisualHtml(q, options = {}) {
         const galleryClass = isPrint ? 'print-qgallery' : 'exam-qgallery';
         return `
             <div class="${boxClass} exam-qgallery-box">
+                ${!isPrint ? '<span class="exam-zoom-hint" title="Büyütmek için tıkla"><i class="fas fa-search-plus"></i> Büyüt</span>' : ''}
                 <div class="${galleryClass}">
-                    ${v.items.map(it => `
+                    ${v.items.map(it => {
+                        const itSrc = esc(ASSET_BASE + it.asset + '?v=' + CONTENT_V6_VERSION);
+                        return `
                         <figure>
-                            <img class="${imgClass}" src="${esc(ASSET_BASE + it.asset + '?v=' + CONTENT_V6_VERSION)}" alt="${esc(it.alt || it.label || '')}">
+                            <img class="${imgClass}" src="${itSrc}" alt="${esc(it.alt || it.label || '')}" ${!isPrint ? `data-lightbox-src="${itSrc}" data-lightbox-alt="${esc(it.alt || it.label || '')}" data-lightbox-caption="${esc(it.label || '')}"` : ''}>
                             <figcaption>${esc(it.label || '')}</figcaption>
                         </figure>
-                    `).join('')}
+                    `;}).join('')}
                 </div>
                 ${!isPrint ? visualCreditHtml(v) : ''}
             </div>
@@ -315,10 +405,12 @@ export function questionVisualHtml(q, options = {}) {
     }
 
     if (v.asset) {
+        const assetSrc = esc(ASSET_BASE + v.asset + '?v=' + CONTENT_V6_VERSION);
         return `
             <div class="${boxClass}">
+                ${!isPrint ? '<span class="exam-zoom-hint" title="Büyütmek için tıkla"><i class="fas fa-search-plus"></i> Büyüt</span>' : ''}
                 <figure class="${v.theme === 'dark' ? 'diagram dark-theme' : ''}">
-                    <img class="${imgClass}" src="${esc(ASSET_BASE + v.asset + '?v=' + CONTENT_V6_VERSION)}" alt="${esc(v.alt || '')}">
+                    <img class="${imgClass}" src="${assetSrc}" alt="${esc(v.alt || '')}" ${!isPrint ? `data-lightbox-src="${assetSrc}" data-lightbox-alt="${esc(v.alt || '')}" data-lightbox-caption="${esc(v.caption || '')}"` : ''}>
                     ${v.caption ? `<figcaption class="exam-caption">${esc(v.caption)}</figcaption>` : ''}
                 </figure>
                 ${!isPrint ? visualCreditHtml(v) : ''}
@@ -1212,11 +1304,7 @@ function renderChoice() {
                         ? window.confirm('Kaldığın çalışma kaydı silinsin mi?')
                         : true;
                     if (ok) {
-                        state.savedStudy = null;
-                        if (state.attempt && !state.attempt.finished && state.attempt.status !== 'completed') {
-                            state.attempt = null;
-                        }
-                        saveState();
+                        clearSavedProgress(activeSessionType || 'all');
                         renderChoice();
                     }
                 };
@@ -1566,31 +1654,32 @@ function renderStudy(cardIndex) {
                         const isOutcomeActive = (o.id === c.outcome_id);
                         const outcomeCards = CARDS.filter(x => x.outcome_id === o.id);
                         return `
-                            <div class="study-plan-outcome-item ${isOutcomeActive ? 'active' : ''}">
-                                <button type="button" class="study-plan-outcome-head ${isOutcomeActive ? 'active' : ''}" data-outcome-id="${esc(o.id)}" aria-expanded="${isOutcomeActive}">
+                            <div class="exam-cardnav-group study-plan-outcome-item ${isOutcomeActive ? 'active' : ''}" data-outcome-group="${esc(o.id)}">
+                                <button type="button" class="exam-cardnav-group-header study-plan-outcome-head ${isOutcomeActive ? 'active' : ''}" data-outcome-id="${esc(o.id)}" aria-expanded="${isOutcomeActive}">
                                     <div class="study-outcome-meta">
                                         <span class="study-outcome-tag">${esc(o.id)}</span>
                                         <strong class="study-outcome-title">${esc(o.short_title || o.title)}</strong>
                                     </div>
-                                    <i class="fas fa-chevron-${isOutcomeActive ? 'down' : 'right'} outcome-arrow"></i>
-                                </button>
-                                ${isOutcomeActive ? `
-                                    <div class="study-plan-cards-sublist">
-                                        ${outcomeCards.map((x, jInOutcome) => {
-                                            const cardIdxInAll = CARDS.findIndex(card => card.id === x.id);
-                                            const isCurrent = (cardIdxInAll === cardIndex);
-                                            const activeVisited = state.studySessionIsFresh ? [c.id] : (state.savedStudy?.visitedCards || [c.id]);
-                                            const isVisited = activeVisited.includes(x.id);
-                                            return `
-                                                <button type="button" class="exam-cardnav-btn ${isCurrent ? 'active' : ''} ${isVisited ? 'visited' : ''}" data-study-card="${cardIdxInAll}" aria-pressed="${isCurrent}">
-                                                    <b>${jInOutcome + 1}</b>
-                                                    <span>${esc(x.title)}</span>
-                                                    ${isVisited ? '<i class="fas fa-check cardnav-check" title="İncelendi"></i>' : ''}
-                                                </button>
-                                            `;
-                                        }).join('')}
+                                    <div class="study-outcome-header-right" style="display: flex; align-items: center; gap: 8px;">
+                                        <span class="outcome-card-count" style="font-size: 0.8rem; color: #64748b; font-weight: 500;">${outcomeCards.length} Kart</span>
+                                        <span class="outcome-arrow">${isOutcomeActive ? '▾' : '▸'}</span>
                                     </div>
-                                ` : ''}
+                                </button>
+                                <div class="exam-cardnav-sublist study-plan-cards-sublist">
+                                    ${outcomeCards.map((x, jInOutcome) => {
+                                        const cardIdxInAll = CARDS.findIndex(card => card.id === x.id);
+                                        const isCurrent = (cardIdxInAll === cardIndex);
+                                        const activeVisited = state.studySessionIsFresh ? [c.id] : (state.savedStudy?.visitedCards || [c.id]);
+                                        const isVisited = activeVisited.includes(x.id);
+                                        return `
+                                            <button type="button" class="exam-cardnav-btn ${isCurrent ? 'active' : ''} ${isVisited ? 'visited' : ''}" data-study-card="${cardIdxInAll}" aria-pressed="${isCurrent}">
+                                                <b>${jInOutcome + 1}</b>
+                                                <span>${esc(x.title)}</span>
+                                                ${isVisited ? '<i class="fas fa-check cardnav-check" title="İncelendi"></i>' : ''}
+                                            </button>
+                                        `;
+                                    }).join('')}
+                                </div>
                             </div>
                         `;
                     }).join('')}
@@ -1605,11 +1694,41 @@ function renderStudy(cardIndex) {
                 };
             }
 
-            cardnav.querySelectorAll('[data-outcome-id]').forEach(btn => {
-                btn.onclick = () => {
-                    const oid = btn.dataset.outcomeId;
-                    const targetIdx = CARDS.findIndex(card => card.outcome_id === oid);
-                    if (targetIdx !== -1) renderStudy(targetIdx);
+            // V8.0 Akordiyon Tıklama Davranışı (Tekli Akordiyon Mantığı)
+            cardnav.querySelectorAll('.exam-cardnav-group-header').forEach(headerBtn => {
+                headerBtn.onclick = () => {
+                    const groupEl = headerBtn.closest('.exam-cardnav-group');
+                    if (!groupEl) return;
+                    const isAlreadyActive = groupEl.classList.contains('active');
+
+                    // Diğer tüm grupları daralt
+                    cardnav.querySelectorAll('.exam-cardnav-group').forEach(otherGroup => {
+                        if (otherGroup !== groupEl) {
+                            otherGroup.classList.remove('active');
+                            const otherHead = otherGroup.querySelector('.exam-cardnav-group-header');
+                            if (otherHead) {
+                                otherHead.classList.remove('active');
+                                otherHead.setAttribute('aria-expanded', 'false');
+                                const arrow = otherHead.querySelector('.outcome-arrow');
+                                if (arrow) arrow.textContent = '▸';
+                            }
+                        }
+                    });
+
+                    // Tıklanan grubu toggle et
+                    if (isAlreadyActive) {
+                        groupEl.classList.remove('active');
+                        headerBtn.classList.remove('active');
+                        headerBtn.setAttribute('aria-expanded', 'false');
+                        const arrow = headerBtn.querySelector('.outcome-arrow');
+                        if (arrow) arrow.textContent = '▸';
+                    } else {
+                        groupEl.classList.add('active');
+                        headerBtn.classList.add('active');
+                        headerBtn.setAttribute('aria-expanded', 'true');
+                        const arrow = headerBtn.querySelector('.outcome-arrow');
+                        if (arrow) arrow.textContent = '▾';
+                    }
                 };
             });
         }
@@ -1617,6 +1736,14 @@ function renderStudy(cardIndex) {
         cardnav.querySelectorAll('[data-study-card]').forEach(btn => {
             btn.onclick = () => renderStudy(Number(btn.dataset.studyCard));
         });
+
+        // Aktif kartı görünür alana kaydır
+        const activeNavBtn = cardnav.querySelector('.exam-cardnav-btn.active');
+        if (activeNavBtn && typeof activeNavBtn.scrollIntoView === 'function') {
+            try {
+                activeNavBtn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            } catch (_) {}
+        }
     }
 
     // Sağ Panel (Aktif Konu Kartı - Profesyonel Eğitim Portalı Görünümü)
@@ -1677,8 +1804,8 @@ function renderStudy(cardIndex) {
                         ${loadedRevision === '1' ? `<div class="exam-takeaway"><strong>📌 Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>
                         ${c.misconception ? `<p class="exam-warning"><strong>⚠️ Karıştırma:</strong> ${esc(c.misconception)}</p>` : ''}` : ''}
                     </div>
-                    <div class="exam-visualbox ${!c.visual && !c.table ? 'is-hidden' : ''} ${c.visual?.theme === 'dark' ? 'theme-dark diagram' : ''}" id="exam-visual">
-                        ${visualAssetPath ? `<img src="${esc(visualAssetPath)}" alt="${esc(c.visual?.alt || '')}">` : ''}
+                    <div class="exam-visualbox ${!c.visual && !c.table ? 'is-hidden' : ''} ${c.visual?.theme === 'dark' ? 'theme-dark diagram' : ''}" id="exam-visual" ${visualAssetPath ? `data-lightbox-src="${esc(visualAssetPath)}" data-lightbox-caption="${esc(c.visual?.caption || '')}" title="Büyütmek için tıklayın"` : ''}>
+                        ${visualAssetPath ? `<img src="${esc(visualAssetPath)}" alt="${esc(c.visual?.alt || '')}"><span class="exam-zoom-hint"><i class="fas fa-search-plus"></i> Büyüt</span>` : ''}
                         ${c.table ? cardTableHtml(c.table) : ''}
                         ${c.visual?.caption ? `<p class="exam-caption">${esc(c.visual.caption)}</p>` : (loadedRevision !== '3.0.0' && loadedRevision !== '6.0.0' ? '<p class="exam-caption">Şematik öğretim modeli; ölçekli değildir.</p>' : '')}
                     </div>
@@ -2531,6 +2658,10 @@ function renderEval() {
     const qContainer = $('eval-single-question-container');
 
     if (qContainer && q) {
+        a.questionStatuses = a.questionStatuses || {};
+        const qStatus = a.questionStatuses[q.id] || null;
+        const isEmptySelected = (qStatus === 'empty');
+        const isIncorrectSelected = (qStatus === 'incorrect');
         const visual = questionVisualHtml(q);
 
         const t = q.table;
@@ -2586,11 +2717,21 @@ function renderEval() {
                     </div>
                 </div>
 
-                <!-- 3. “Cevabında hangileri var?” Ölçüt Listesi -->
+                <!-- 3. “Cevabında hangileri var?” Ölçüt Listesi & Hızlı Durum Butonları -->
                 <div class="eval-criteria-section">
                     <div class="eval-criteria-header">
-                        <h4><i class="fas fa-tasks" style="color: #38bdf8;"></i> 3. Cevabında hangileri var?</h4>
-                        <span class="eval-criteria-sub">Kendi cevabında yer alan bilimsel unsurları işaretle:</span>
+                        <div>
+                            <h4><i class="fas fa-tasks" style="color: #38bdf8;"></i> 3. Cevabında hangileri var?</h4>
+                            <span class="eval-criteria-sub">Kendi cevabında yer alan bilimsel unsurları işaretle veya hızlı durum seç:</span>
+                        </div>
+                        <div class="eval-quick-status-actions">
+                            <button type="button" class="btn-eval-empty ${isEmptySelected ? 'active' : ''}" title="Soruyu boş bıraktıysan tıkla">
+                                <i class="fas fa-minus-circle"></i> Boş Bıraktım
+                            </button>
+                            <button type="button" class="btn-eval-incorrect ${isIncorrectSelected ? 'active' : ''}" title="Soruyu tamamen yanlış yaptıysan tıkla">
+                                <i class="fas fa-times-circle"></i> Yanlış Yaptım
+                            </button>
+                        </div>
                     </div>
                     <div class="eval-criteria-list" role="group" aria-label="Bilimsel başarı ölçütleri">
                         ${criteria.map(c => {
@@ -2618,18 +2759,84 @@ function renderEval() {
                         <span class="live-score-val" id="eval-current-q-score">${currentQScore} <small>/ ${qPoints} Puan</small></span>
                     </div>
                     <div class="live-eval-status">
-                        ${isEvaluated
-                            ? '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Değerlendirme Kaydedildi</span>'
-                            : '<span class="status-badge pending"><i class="fas fa-pencil-alt"></i> Kayıt Bekliyor</span>'}
+                        ${isEmptySelected
+                            ? '<span class="status-badge empty"><i class="fas fa-minus-circle"></i> Boş Bırakıldı (0 Puan)</span>'
+                            : (isIncorrectSelected
+                                ? '<span class="status-badge incorrect"><i class="fas fa-times-circle"></i> Yanlış Yapıldı (0 Puan)</span>'
+                                : (isEvaluated
+                                    ? '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Değerlendirme Kaydedildi</span>'
+                                    : '<span class="status-badge pending"><i class="fas fa-pencil-alt"></i> Kayıt Bekliyor</span>'))}
                     </div>
                 </div>
             </article>
         `;
 
-        // Checkbox tıklama olayları (İnceleme modunda salt okunur)
+        // Buton ve Checkbox olayları (İnceleme modunda salt okunur)
         if (!state.reviewingEval) {
+            const btnEmpty = qContainer.querySelector('.btn-eval-empty');
+            const btnIncorrect = qContainer.querySelector('.btn-eval-incorrect');
+
+            const handleQuickStatus = (statusType) => {
+                a.questionStatuses = a.questionStatuses || {};
+                a.questionStatuses[q.id] = statusType;
+                a.selectedCriteria[q.id] = [];
+                a.evaluatedQuestions[q.id] = true;
+
+                // Tüm checkboxları temizle
+                qContainer.querySelectorAll('.exam-criterion-checkbox').forEach(cb => {
+                    cb.checked = false;
+                    cb.closest('.exam-criterion-item')?.classList.remove('checked');
+                });
+
+                // Buton aktifliklerini güncelle
+                if (btnEmpty) btnEmpty.classList.toggle('active', statusType === 'empty');
+                if (btnIncorrect) btnIncorrect.classList.toggle('active', statusType === 'incorrect');
+
+                // Canlı puanı ve durum rozetini güncelle
+                const scoreValEl = $('eval-current-q-score');
+                if (scoreValEl) scoreValEl.innerHTML = `0 <small>/ ${qPoints} Puan</small>`;
+
+                const liveStatusEl = qContainer.querySelector('.live-eval-status');
+                if (liveStatusEl) {
+                    liveStatusEl.innerHTML = statusType === 'empty'
+                        ? '<span class="status-badge empty"><i class="fas fa-minus-circle"></i> Boş Bırakıldı (0 Puan)</span>'
+                        : '<span class="status-badge incorrect"><i class="fas fa-times-circle"></i> Yanlış Yapıldı (0 Puan)</span>';
+                }
+
+                // Nav strip rozetini tamamlandı yap
+                const navBtn = navStrip?.querySelector(`[data-eval-q="${evalIdx}"]`);
+                if (navBtn) navBtn.classList.add('eval-completed');
+
+                // Progress text
+                const currentEvaluated = questions.filter(qu => !!(a.evaluatedQuestions && a.evaluatedQuestions[qu.id])).length;
+                const prgEl = $('eval-progress-text');
+                if (prgEl) prgEl.textContent = `${currentEvaluated} / ${questions.length} Değerlendirildi`;
+
+                saveState();
+
+                // Yumuşak geçiş: Eğer sonraki soru varsa 300ms sonra ilerle
+                if (evalIdx < questions.length - 1) {
+                    setTimeout(() => {
+                        if (a.evalQuestionIndex === evalIdx && a.questionStatuses[q.id] === statusType) {
+                            a.evalQuestionIndex = evalIdx + 1;
+                            saveState();
+                            renderEval();
+                        }
+                    }, 300);
+                }
+            };
+
+            if (btnEmpty) btnEmpty.onclick = () => handleQuickStatus('empty');
+            if (btnIncorrect) btnIncorrect.onclick = () => handleQuickStatus('incorrect');
+
             qContainer.querySelectorAll('.exam-criterion-checkbox').forEach(cb => {
                 cb.onchange = () => {
+                    // Kriter işaretlendiğinde boş/yanlış durumunu sıfırla
+                    a.questionStatuses = a.questionStatuses || {};
+                    a.questionStatuses[q.id] = null;
+                    if (btnEmpty) btnEmpty.classList.remove('active');
+                    if (btnIncorrect) btnIncorrect.classList.remove('active');
+
                     const cId = cb.dataset.criterionId;
                     const currentSel = a.selectedCriteria[q.id] || [];
                     if (cb.checked) {
@@ -2645,6 +2852,13 @@ function renderEval() {
                     const newScore = criteria.filter(c => currentSel.includes(c.id)).reduce((s, c) => s + c.points, 0);
                     const scoreValEl = $('eval-current-q-score');
                     if (scoreValEl) scoreValEl.innerHTML = `${newScore} <small>/ ${qPoints} Puan</small>`;
+
+                    a.evaluatedQuestions[q.id] = true;
+                    const liveStatusEl = qContainer.querySelector('.live-eval-status');
+                    if (liveStatusEl) {
+                        liveStatusEl.innerHTML = '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Değerlendirme Kaydedildi</span>';
+                    }
+
                     saveState();
                 };
             });
@@ -2863,6 +3077,29 @@ function renderSummary() {
     if (kismenEl) kismenEl.textContent = partialCount;
     const yapamadimEl = $('summary-yapamadim-count');
     if (yapamadimEl) yapamadimEl.textContent = zeroCount;
+
+    // V8.0 Boş ve Yanlış Sayıları
+    let emptyCount = 0;
+    let incorrectCount = 0;
+    questions.forEach(q => {
+        const st = a.questionStatuses?.[q.id];
+        if (st === 'empty') emptyCount++;
+        else if (st === 'incorrect') incorrectCount++;
+    });
+
+    const emptyPill = $('summary-empty-pill');
+    const emptyCountEl = $('summary-empty-count');
+    if (emptyCountEl) emptyCountEl.textContent = emptyCount;
+    if (emptyPill) {
+        emptyPill.style.display = emptyCount > 0 ? 'inline-flex' : 'none';
+    }
+
+    const incorrectPill = $('summary-incorrect-pill');
+    const incorrectCountEl = $('summary-incorrect-count');
+    if (incorrectCountEl) incorrectCountEl.textContent = incorrectCount;
+    if (incorrectPill) {
+        incorrectPill.style.display = incorrectCount > 0 ? 'inline-flex' : 'none';
+    }
 
     // Konu Bazlı Başarı Analizi
     const goodListEl = $('summary-good-topics-list');
@@ -4330,6 +4567,10 @@ if (typeof window !== 'undefined') {
         openExamView,
         getRoute,
         saveProgress,
+        hasSavedProgress,
+        clearSavedProgress,
+        openLightbox,
+        closeLightbox,
         closeExamView,
         goToStep,
         renderStudy,
@@ -4364,6 +4605,52 @@ if (typeof window !== 'undefined') {
         OUTCOME_ORDER,
         syncScenarioData
     };
+}
+
+// Global Lightbox Dinleyicileri (V8.0)
+if (typeof document !== 'undefined') {
+    document.addEventListener('click', (e) => {
+        const target = e.target.closest('[data-lightbox-src], .exam-qimage, .exam-visualbox img');
+        if (target && !target.closest('#exam-lightbox-modal')) {
+            const src = target.getAttribute('data-lightbox-src') || target.getAttribute('src');
+            const alt = target.getAttribute('alt') || '';
+            const caption = target.getAttribute('data-lightbox-caption') || target.closest('.exam-qimage-box')?.querySelector('.exam-qimage-caption')?.textContent || '';
+            if (src) {
+                e.preventDefault();
+                openLightbox(src, alt, caption);
+            }
+        }
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modal = $('exam-lightbox-modal');
+            if (modal && !modal.classList.contains('is-hidden') && modal.style.display !== 'none') {
+                closeLightbox();
+            }
+        }
+    });
+
+    const initLightbox = () => {
+        const lbModal = $('exam-lightbox-modal');
+        if (lbModal) {
+            lbModal.addEventListener('click', (e) => {
+                if (e.target === lbModal) {
+                    closeLightbox();
+                }
+            });
+        }
+        const lbClose = $('btn-lightbox-close');
+        if (lbClose) {
+            lbClose.onclick = closeLightbox;
+        }
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initLightbox);
+    } else {
+        initLightbox();
+    }
 }
 
 // Sayfa ilk yüklendiğinde kapsam butonunu bağla ve veriyi arka planda önceden getir

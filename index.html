@@ -41,7 +41,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=2026110201">
-    <link rel="stylesheet" href="exam.css?v=7.9.0">
+    <link rel="stylesheet" href="exam.css?v=8.0.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -4410,6 +4410,8 @@
                         <span class="stat-pill success"><i class="fas fa-check-circle"></i> <span id="summary-tam-count">0</span> Tam Soru</span>
                         <span class="stat-pill warning"><i class="fas fa-adjust"></i> <span id="summary-kismen-count">0</span> Kısmi Puanlı</span>
                         <span class="stat-pill danger"><i class="fas fa-times-circle"></i> <span id="summary-yapamadim-count">0</span> 0 Puanlı</span>
+                        <span class="stat-pill neutral" id="summary-empty-pill" style="display: none;"><i class="fas fa-minus-circle"></i> <span id="summary-empty-count">0</span> Boş</span>
+                        <span class="stat-pill danger-subtle" id="summary-incorrect-pill" style="display: none;"><i class="fas fa-times"></i> <span id="summary-incorrect-count">0</span> Yanlış</span>
                     </div>
                     <p class="summary-disclaimer-note"><i class="fas fa-info-circle"></i> Puanın, kendi cevabında işaretlediğin ölçütlere göre hesaplandı.</p>
                 </div>
@@ -4494,6 +4496,17 @@
                 <!-- Yazdırılabilir Sınav Kâğıdı Şablonu -->
                 <div id="exam-print-sheet" class="exam-print-container"></div>
             </div>
+        </div>
+    </div>
+
+    <!-- 9. Görsel Büyütme Modalı (Lightbox) -->
+    <div id="exam-lightbox-modal" class="modal-overlay is-hidden" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1" style="display: none;">
+        <div class="exam-lightbox-dialog">
+            <button type="button" class="exam-lightbox-close" id="btn-lightbox-close" aria-label="Görseli Kapat">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="exam-lightbox-content" id="exam-lightbox-content"></div>
+            <p class="exam-lightbox-caption" id="exam-lightbox-caption"></p>
         </div>
     </div>
 
@@ -4656,10 +4669,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
     <script>
-        window.__FENUPX_CONTENT_V6_VERSION__ = '7.9.0';
+        window.__FENUPX_CONTENT_V6_VERSION__ = '8.0.0';
     </script>
-    <script type="module" src="exam-engine.js?v=7.9.0"></script>
+    <script type="module" src="exam-engine.js?v=8.0.0"></script>
     <script type="module" src="lab-engine.js?v=2026110201"></script>
-    <script type="module" src="script.js?v=7.9.0"></script>
+    <script type="module" src="script.js?v=8.0.0"></script>
 </body>
 </html>
