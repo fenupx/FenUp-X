@@ -492,6 +492,22 @@
                         <div class="metrics-pill work-force"><i class="fas fa-arrows-alt-h"></i> Kuvvet: <strong id="mbar-work-force">40 N</strong> · Yol: <strong id="mbar-work-dist">0.0 m</strong></div>
                     </div>
 
+                    <!-- V8.2: Çift Düzenekli İş Deneyi Bilimsel Süreç Değişkenleri Şeridi -->
+                    <div id="dual-work-variables-bar" class="lab-canvas-variables-bar is-hidden">
+                        <div class="var-badge-item indep">
+                            <span class="var-label"><i class="fas fa-filter"></i> Bağımsız Değişken:</span>
+                            <strong id="bar-indep-var-text">Uygulanan Kuvvet (F)</strong>
+                        </div>
+                        <div class="var-badge-item ctrl">
+                            <span class="var-label"><i class="fas fa-lock"></i> Kontrol Edilen / Sabit Değişken:</span>
+                            <strong id="bar-ctrl-var-text">Alınan Yol (x) ve Cisim Kütlesi</strong>
+                        </div>
+                        <div class="var-badge-item dep">
+                            <span class="var-label"><i class="fas fa-bullseye"></i> Bağımlı Değişken:</span>
+                            <strong id="bar-dep-var-text">Yapılan Fiziksel İş (W)</strong>
+                        </div>
+                    </div>
+
                     <!-- Canvas Altı Responsive Metrik Şeridi (Deney 7.2 - Mekanik Enerji Dönüşümü) -->
                     <div id="metrics-bar-7-2" class="lab-canvas-metrics-bar is-hidden">
                         <div class="metrics-pill" style="color: #10b981;"><i class="fas fa-mountain"></i> Potansiyel: <strong id="mbar-72-ep">0.0 J</strong></div>
@@ -764,27 +780,84 @@
 
                     <!-- Canvas Altı Hızlı Dokunmatik İş ve Kuvvet Kontrol Barı (Deney 7.1) -->
                     <div id="quick-controls-7-1" class="lab-canvas-quick-controls is-hidden">
-                        <div class="lab-quick-lens-row">
-                            <div class="lab-toggle-btn-group" id="group-scenarios-7-1">
-                                <button class="lab-toggle-btn active" id="btn-scenario-horizontal" title="Kutuyu Yatay İtme"><i class="fas fa-box"></i> 📦 Yatay İtme</button>
-                                <button class="lab-toggle-btn" id="btn-scenario-lift" title="Yerden Yukarı Kaldırma"><i class="fas fa-arrow-up"></i> 🏋️ Yukarı Kaldırma</button>
-                                <button class="lab-toggle-btn" id="btn-scenario-carry" title="Çantayla Yatay Yürüme"><i class="fas fa-walking"></i> 🎒 Çantayla Yürüme</button>
-                                <button class="lab-toggle-btn" id="btn-scenario-wall" title="Sabit Duvarı İtme"><i class="fas fa-hand-paper"></i> 🧱 Duvarı İtme</button>
-                            </div>
-                            <div class="lab-toggle-btn-group">
-                                <button class="lab-toggle-btn active" id="btn-work-play-pause" title="Hareketi Başlat / Duraklat"><i class="fas fa-play"></i> <span id="label-work-play">Hareketi Başlat</span></button>
-                                <button class="lab-toggle-btn" id="btn-work-friction" title="Zemin Sürtünmesi"><i class="fas fa-wind"></i> Sürtünme: <span id="label-work-friction">Kapalı</span></button>
-                                <button class="lab-toggle-btn" id="btn-work-reset" title="Konumu Başa Al"><i class="fas fa-redo"></i> Başa Al</button>
+                        <!-- V8.2: Deney Modu Seçici (Tekli İnceleme vs. Çift Düzenekli Karşılaştırma Modları) -->
+                        <div class="lab-work-mode-row">
+                            <div class="lab-toggle-btn-group lab-mode-switch-group" id="group-work-exp-modes">
+                                <button class="lab-toggle-btn active" id="btn-work-mode-single" title="Tekli İnceleme (4 Ayrı Senaryo)"><i class="fas fa-cube"></i> Tekli İnceleme</button>
+                                <button class="lab-toggle-btn" id="btn-work-mode-force" title="Mod 1: Kuvvetin İşe Etkisi (Yol Sabit)"><i class="fas fa-balance-scale-right"></i> Mod 1: Kuvvetin İşe Etkisi (Yol Sabit)</button>
+                                <button class="lab-toggle-btn" id="btn-work-mode-dist" title="Mod 2: Alınan Yolun İşe Etkisi (Kuvvet Sabit)"><i class="fas fa-ruler-combined"></i> Mod 2: Alınan Yolun İşe Etkisi (Kuvvet Sabit)</button>
                             </div>
                         </div>
-                        <div class="lab-lens-sliders-row">
-                            <div class="lab-angle-slider-wrap">
-                                <label for="lab-work-force-range">Uygulanan Kuvvet: <span id="lab-work-force-display">40 N</span></label>
-                                <input type="range" id="lab-work-force-range" min="10" max="100" value="40" step="5">
+
+                        <!-- Tekli İnceleme Kontrolleri (Mevcut Senaryolar) -->
+                        <div id="controls-work-single">
+                            <div class="lab-quick-lens-row">
+                                <div class="lab-toggle-btn-group" id="group-scenarios-7-1">
+                                    <button class="lab-toggle-btn active" id="btn-scenario-horizontal" title="Kutuyu Yatay İtme"><i class="fas fa-box"></i> 📦 Yatay İtme</button>
+                                    <button class="lab-toggle-btn" id="btn-scenario-lift" title="Yerden Yukarı Kaldırma"><i class="fas fa-arrow-up"></i> 🏋️ Yukarı Kaldırma</button>
+                                    <button class="lab-toggle-btn" id="btn-scenario-carry" title="Çantayla Yatay Yürüme"><i class="fas fa-walking"></i> 🎒 Çantayla Yürüme</button>
+                                    <button class="lab-toggle-btn" id="btn-scenario-wall" title="Sabit Duvarı İtme"><i class="fas fa-hand-paper"></i> 🧱 Duvarı İtme</button>
+                                </div>
+                                <div class="lab-toggle-btn-group">
+                                    <button class="lab-toggle-btn active" id="btn-work-play-pause" title="Hareketi Başlat / Duraklat"><i class="fas fa-play"></i> <span id="label-work-play">Hareketi Başlat</span></button>
+                                    <button class="lab-toggle-btn" id="btn-work-friction" title="Zemin Sürtünmesi"><i class="fas fa-wind"></i> Sürtünme: <span id="label-work-friction">Kapalı</span></button>
+                                    <button class="lab-toggle-btn" id="btn-work-reset" title="Konumu Başa Al"><i class="fas fa-redo"></i> Başa Al</button>
+                                </div>
                             </div>
-                            <div class="lab-angle-slider-wrap" id="wrap-work-distance">
-                                <label for="lab-work-distance-range"><span id="label-work-dist-title">Alınan Yol</span>: <span id="lab-work-distance-display">5.0 m</span></label>
-                                <input type="range" id="lab-work-distance-range" min="1" max="10" value="5" step="0.5">
+                            <div class="lab-lens-sliders-row">
+                                <div class="lab-angle-slider-wrap">
+                                    <label for="lab-work-force-range">Uygulanan Kuvvet: <span id="lab-work-force-display">40 N</span></label>
+                                    <input type="range" id="lab-work-force-range" min="10" max="100" value="40" step="5">
+                                </div>
+                                <div class="lab-angle-slider-wrap" id="wrap-work-distance">
+                                    <label for="lab-work-distance-range"><span id="label-work-dist-title">Alınan Yol</span>: <span id="lab-work-distance-display">5.0 m</span></label>
+                                    <input type="range" id="lab-work-distance-range" min="1" max="10" value="5" step="0.5">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- V8.2: Çift Düzenekli Karşılaştırma Modu Kontrolleri -->
+                        <div id="controls-work-dual" class="is-hidden">
+                            <div class="lab-quick-lens-row lab-dual-actions-row">
+                                <div class="lab-toggle-btn-group">
+                                    <button class="lab-toggle-btn active lab-btn-etap-large" id="btn-dual-play-pause" title="Her İki Düzeneği Aynı Anda Başlat"><i class="fas fa-play"></i> <span id="label-dual-play">Hareketi Başlat</span></button>
+                                    <button class="lab-toggle-btn lab-btn-etap-large" id="btn-dual-reset" title="Düzeneği Başlangıç Noktasına Sıfırla"><i class="fas fa-redo"></i> Sıfırla</button>
+                                </div>
+                                <div class="lab-dual-mode-badge" id="badge-dual-current-mode">
+                                    <i class="fas fa-microscope"></i> <span id="label-dual-mode-badge">Mod 1: Kuvvetin İşe Etkisi (Yol Sabit)</span>
+                                </div>
+                            </div>
+
+                            <!-- Mod 1 Slider Grubu: Kuvvet Farklı, Yol Sabit -->
+                            <div id="sliders-dual-mode1" class="lab-lens-sliders-row lab-dual-sliders-row">
+                                <div class="lab-angle-slider-wrap">
+                                    <label for="slider-dual-m1-dist"><i class="fas fa-ruler-horizontal"></i> Sabit Yol (x₁ = x₂): <span id="display-dual-m1-dist">4.0 m</span></label>
+                                    <input type="range" id="slider-dual-m1-dist" min="1" max="6" value="4" step="0.5">
+                                </div>
+                                <div class="lab-angle-slider-wrap">
+                                    <label for="slider-dual-f1"><i class="fas fa-arrow-right" style="color: #38bdf8;"></i> 1. Düzenek Kuvveti (F₁): <span id="display-dual-f1">10 N</span></label>
+                                    <input type="range" id="slider-dual-f1" min="5" max="50" value="10" step="5">
+                                </div>
+                                <div class="lab-angle-slider-wrap">
+                                    <label for="slider-dual-f2"><i class="fas fa-arrow-right" style="color: #f59e0b;"></i> 2. Düzenek Kuvveti (F₂): <span id="display-dual-f2">20 N</span></label>
+                                    <input type="range" id="slider-dual-f2" min="5" max="50" value="20" step="5">
+                                </div>
+                            </div>
+
+                            <!-- Mod 2 Slider Grubu: Yol Farklı, Kuvvet Sabit -->
+                            <div id="sliders-dual-mode2" class="lab-lens-sliders-row lab-dual-sliders-row is-hidden">
+                                <div class="lab-angle-slider-wrap">
+                                    <label for="slider-dual-m2-force"><i class="fas fa-weight-hanging"></i> Sabit Kuvvet (F₁ = F₂): <span id="display-dual-m2-force">15 N</span></label>
+                                    <input type="range" id="slider-dual-m2-force" min="5" max="40" value="15" step="5">
+                                </div>
+                                <div class="lab-angle-slider-wrap">
+                                    <label for="slider-dual-x1"><i class="fas fa-ruler" style="color: #38bdf8;"></i> 1. Düzenek Yolu (x₁): <span id="display-dual-x1">2.0 m</span></label>
+                                    <input type="range" id="slider-dual-x1" min="1" max="6" value="2" step="0.5">
+                                </div>
+                                <div class="lab-angle-slider-wrap">
+                                    <label for="slider-dual-x2"><i class="fas fa-ruler" style="color: #f59e0b;"></i> 2. Düzenek Yolu (x₂): <span id="display-dual-x2">5.0 m</span></label>
+                                    <input type="range" id="slider-dual-x2" min="1" max="6" value="5" step="0.5">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1303,12 +1376,13 @@
                         
                         <!-- DENEY 7.1 DEĞİŞKENLERİ -->
                         <div id="vars-container-7-1" class="is-hidden">
-                            <div class="lab-panel-box">
-                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
-                                <div class="lab-vars-list">
-                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Uygulanan Kuvvet, Alınan Yol (Yer Değiştirme), Kuvvet Doğrultusu ve Sürtünme</div>
-                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Yapılan Fiziksel İş (Joule) ve İş Durumu (Yapıldı / Yapılmadı)</div>
-                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Cisim Kütlesi (10 kg), Yer Çekimi</div>
+                            <!-- Bilimsel Süreç Değişkenleri Kartı -->
+                            <div class="lab-panel-box" id="box-scientific-vars-7-1">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Bilimsel Değişkenleri</h4>
+                                <div class="lab-vars-list" id="list-vars-single-7-1">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız Değişken:</span> <span id="label-indep-var-val">Uygulanan Kuvvet ve Alınan Yol</span></div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> <span id="label-ctrl-var-val">Cisim Kütlesi (10 kg), Yer Çekimi</span></div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı Değişken:</span> <span id="label-dep-var-val">Yapılan Fiziksel İş (Joule) ve İş Durumu</span></div>
                                 </div>
                             </div>
 
@@ -1317,12 +1391,12 @@
                                 <div class="pedagogical-icon" id="work-pedagogical-icon"><i class="fas fa-play-circle" style="color: #38bdf8;"></i></div>
                                 <div class="pedagogical-content">
                                     <strong id="work-pedagogical-title">🏁 Deneye Hazır (Simülasyonu Başlatın)</strong>
-                                    <p id="work-pedagogical-text">Uygulanan kuvvet ile hareket doğrultusu aynıdır (yatay). Sandık hareket ettirildiğinde fiziksel iş yapılacaktır. Hareketi gözlemlemek için "Oynat" butonuna basınız.</p>
+                                    <p id="work-pedagogical-text">Uygulanan kuvvet ile hareket doğrultusu aynıdır (yatay). Sandık hareket ettirildiğinde fiziksel iş yapılacaktır. Hareketi gözlemlemek için "Hareketi Başlat" butonuna basınız.</p>
                                 </div>
                             </div>
 
-
-                            <div class="lab-panel-box" style="margin-top: 12px;">
+                            <!-- Tekli Deney Anlık Ölçüm ve İş Değerleri -->
+                            <div class="lab-panel-box" id="panel-work-single-metrics" style="margin-top: 12px;">
                                 <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Anlık Ölçüm ve İş Değerleri</h4>
                                 <div class="lab-stats-grid">
                                     <div class="lab-stat-chip">
@@ -1347,6 +1421,28 @@
                                     </div>
                                 </div>
                                 <button id="btn-record-data-7-1" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+
+                            <!-- V8.2: Çift Düzenekli Karşılaştırmalı Canlı Ölçüm Kartı -->
+                            <div class="lab-panel-box is-hidden" id="panel-work-dual-metrics" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-balance-scale"></i> Çift Düzenek Karşılaştırma Sonuçları</h4>
+                                <div class="lab-dual-results-grid">
+                                    <div class="lab-track-result-card track-1">
+                                        <div class="track-header"><span class="track-tag">1. DÜZENEK</span></div>
+                                        <div class="track-metric-row"><span>Kuvvet (F₁):</span> <strong id="dual-res-f1">10 N</strong></div>
+                                        <div class="track-metric-row"><span>Alınan Yol (x₁):</span> <strong id="dual-res-x1">0.0 / 4.0 m</strong></div>
+                                        <div class="track-metric-row highlight"><span>İş (W₁):</span> <strong id="dual-res-w1" style="color: #38bdf8;">0.0 J</strong></div>
+                                    </div>
+                                    <div class="lab-track-result-card track-2">
+                                        <div class="track-header"><span class="track-tag orange">2. DÜZENEK</span></div>
+                                        <div class="track-metric-row"><span>Kuvvet (F₂):</span> <strong id="dual-res-f2">20 N</strong></div>
+                                        <div class="track-metric-row"><span>Alınan Yol (x₂):</span> <strong id="dual-res-x2">0.0 / 4.0 m</strong></div>
+                                        <div class="track-metric-row highlight"><span>İş (W₂):</span> <strong id="dual-res-w2" style="color: #f59e0b;">0.0 J</strong></div>
+                                    </div>
+                                </div>
+                                <div class="lab-dual-summary-chip" id="chip-dual-comparison-summary">
+                                    <i class="fas fa-info-circle"></i> <span id="text-dual-comparison-summary">Simülasyonu başlatarak iki düzeneğin iş miktarlarını karşılaştırın.</span>
+                                </div>
                             </div>
                         </div>
 
@@ -4793,10 +4889,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
     <script>
-        window.__FENUPX_CONTENT_V6_VERSION__ = '8.1.0';
+        window.__FENUPX_CONTENT_V6_VERSION__ = '8.2.0';
     </script>
-    <script type="module" src="exam-engine.js?v=8.1.0"></script>
-    <script type="module" src="lab-engine.js?v=2026110201"></script>
-    <script type="module" src="script.js?v=8.1.0"></script>
+    <script type="module" src="exam-engine.js?v=8.2.0"></script>
+    <script type="module" src="lab-engine.js?v=8.2.0"></script>
+    <script type="module" src="script.js?v=8.2.0"></script>
 </body>
 </html>

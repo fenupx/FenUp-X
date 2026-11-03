@@ -240,6 +240,7 @@ export const labState = {
 
     // Deney 7.1 Fizik Durumu (Fiziksel Anlamda İş: W = F · Δx)
     work: {
+        expMode: "single",      // "single" | "force" (Mod 1) | "dist" (Mod 2)
         scenario: "horizontal", // "horizontal" | "lift" | "carry" | "wall"
         force: 40,              // 10 - 100 N
         distance: 5.0,          // 1.0 - 10.0 m (veya h)
@@ -249,7 +250,7 @@ export const labState = {
         gravity: 10,            // 10 m/s^2 (G = 100 N)
         frictionForceVal: 20,   // fs = 20 N
 
-        // Animasyon ve Hareket
+        // Animasyon ve Hareket (Tekli Mod)
         isPlaying: false,
         progress: 0,            // 0.0 -> 1.0 (mevcut yer değiştirme oranı)
         animSpeed: 0.012,       // ilerleme hızı
@@ -265,6 +266,31 @@ export const labState = {
         netForce: 40,           // F_net (N)
         netWork: 200,           // W_net (J)
         heatWork: 0,            // W_fs (J)
+
+        // V8.2: Çift Düzenekli Karşılaştırma Modu (Mod 1 & Mod 2)
+        dual: {
+            isPlaying: false,
+            completed: false,
+            speed: 0.022,
+            t1: {
+                force: 10,
+                distance: 4.0,
+                currentDist: 0.0,
+                progress: 0.0,
+                joule: 0.0,
+                targetJoule: 40.0,
+                isFinished: false
+            },
+            t2: {
+                force: 20,
+                distance: 4.0,
+                currentDist: 0.0,
+                progress: 0.0,
+                joule: 0.0,
+                targetJoule: 80.0,
+                isFinished: false
+            }
+        },
 
         measurements: []
     },
@@ -8889,6 +8915,401 @@ function setupWorkControlsDOM() {
     if (btnRecord) {
         btnRecord.addEventListener('click', recordMeasurement);
     }
+
+    // 8. V8.2: Çift Düzenekli Deney Modu Seçici Butonları
+    const btnModeSingle = document.getElementById('btn-work-mode-single');
+    const btnModeForce = document.getElementById('btn-work-mode-force');
+    const btnModeDist = document.getElementById('btn-work-mode-dist');
+    if (btnModeSingle) btnModeSingle.addEventListener('click', () => setWorkMode('single'));
+    if (btnModeForce) btnModeForce.addEventListener('click', () => setWorkMode('force'));
+    if (btnModeDist) btnModeDist.addEventListener('click', () => setWorkMode('dist'));
+
+    // 9. V8.2: Çift Düzenek Kontrolleri (Oynat & Sıfırla)
+    const btnDualPlay = document.getElementById('btn-dual-play-pause');
+    const btnDualReset = document.getElementById('btn-dual-reset');
+    if (btnDualPlay) btnDualPlay.addEventListener('click', toggleDualPlayPause);
+    if (btnDualReset) btnDualReset.addEventListener('click', resetDualMotion);
+
+    // 10. V8.2: Mod 1 Slider'ları (Yol Sabit, Kuvvet Farklı)
+    const sM1Dist = document.getElementById('slider-dual-m1-dist');
+    const dM1Dist = document.getElementById('display-dual-m1-dist');
+    if (sM1Dist) {
+        sM1Dist.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            labState.work.dual.t1.distance = val;
+            labState.work.dual.t2.distance = val;
+            labState.work.dual.t1.targetJoule = labState.work.dual.t1.force * val;
+            labState.work.dual.t2.targetJoule = labState.work.dual.t2.force * val;
+            if (dM1Dist) dM1Dist.textContent = `${val.toFixed(1)} m`;
+            resetDualMotion();
+        });
+    }
+
+    const sF1 = document.getElementById('slider-dual-f1');
+    const dF1 = document.getElementById('display-dual-f1');
+    if (sF1) {
+        sF1.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            labState.work.dual.t1.force = val;
+            labState.work.dual.t1.targetJoule = val * labState.work.dual.t1.distance;
+            if (dF1) dF1.textContent = `${val.toFixed(0)} N`;
+            resetDualMotion();
+        });
+    }
+
+    const sF2 = document.getElementById('slider-dual-f2');
+    const dF2 = document.getElementById('display-dual-f2');
+    if (sF2) {
+        sF2.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            labState.work.dual.t2.force = val;
+            labState.work.dual.t2.targetJoule = val * labState.work.dual.t2.distance;
+            if (dF2) dF2.textContent = `${val.toFixed(0)} N`;
+            resetDualMotion();
+        });
+    }
+
+    // 11. V8.2: Mod 2 Slider'ları (Kuvvet Sabit, Yol Farklı)
+    const sM2Force = document.getElementById('slider-dual-m2-force');
+    const dM2Force = document.getElementById('display-dual-m2-force');
+    if (sM2Force) {
+        sM2Force.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            labState.work.dual.t1.force = val;
+            labState.work.dual.t2.force = val;
+            labState.work.dual.t1.targetJoule = val * labState.work.dual.t1.distance;
+            labState.work.dual.t2.targetJoule = val * labState.work.dual.t2.distance;
+            if (dM2Force) dM2Force.textContent = `${val.toFixed(0)} N`;
+            resetDualMotion();
+        });
+    }
+
+    const sX1 = document.getElementById('slider-dual-x1');
+    const dX1 = document.getElementById('display-dual-x1');
+    if (sX1) {
+        sX1.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            labState.work.dual.t1.distance = val;
+            labState.work.dual.t1.targetJoule = labState.work.dual.t1.force * val;
+            if (dX1) dX1.textContent = `${val.toFixed(1)} m`;
+            resetDualMotion();
+        });
+    }
+
+    const sX2 = document.getElementById('slider-dual-x2');
+    const dX2 = document.getElementById('display-dual-x2');
+    if (sX2) {
+        sX2.addEventListener('input', (e) => {
+            const val = parseFloat(e.target.value);
+            labState.work.dual.t2.distance = val;
+            labState.work.dual.t2.targetJoule = labState.work.dual.t2.force * val;
+            if (dX2) dX2.textContent = `${val.toFixed(1)} m`;
+            resetDualMotion();
+        });
+    }
+}
+
+// --- V8.2: ÇİFT DÜZENEKLİ İŞ KARŞILAŞTIRMA MODU FONKSİYONLARI ---
+
+function setWorkMode(mode) {
+    const work = labState.work;
+    work.expMode = mode;
+
+    // Buton aktifliklerini senkronize et
+    const btnSingle = document.getElementById('btn-work-mode-single');
+    const btnForce = document.getElementById('btn-work-mode-force');
+    const btnDist = document.getElementById('btn-work-mode-dist');
+    if (btnSingle) btnSingle.classList.toggle('active', mode === 'single');
+    if (btnForce) btnForce.classList.toggle('active', mode === 'force');
+    if (btnDist) btnDist.classList.toggle('active', mode === 'dist');
+
+    // Görünürlükleri yönet
+    const singleControls = document.getElementById('controls-work-single');
+    const dualControls = document.getElementById('controls-work-dual');
+    const mbarSingle = document.getElementById('metrics-bar-7-1');
+    const varsBarDual = document.getElementById('dual-work-variables-bar');
+    const panelSingle = document.getElementById('panel-work-single-metrics');
+    const panelDual = document.getElementById('panel-work-dual-metrics');
+    const slidersMode1 = document.getElementById('sliders-dual-mode1');
+    const slidersMode2 = document.getElementById('sliders-dual-mode2');
+    const badgeDualMode = document.getElementById('label-dual-mode-badge');
+
+    // Değişken metinleri
+    const barIndep = document.getElementById('bar-indep-var-text');
+    const barCtrl = document.getElementById('bar-ctrl-var-text');
+    const barDep = document.getElementById('bar-dep-var-text');
+    const labelIndepVal = document.getElementById('label-indep-var-val');
+    const labelCtrlVal = document.getElementById('label-ctrl-var-val');
+    const labelDepVal = document.getElementById('label-dep-var-val');
+
+    if (mode === "single") {
+        if (singleControls) singleControls.classList.remove('is-hidden');
+        if (dualControls) dualControls.classList.add('is-hidden');
+        if (mbarSingle) mbarSingle.classList.remove('is-hidden');
+        if (varsBarDual) varsBarDual.classList.add('is-hidden');
+        if (panelSingle) panelSingle.classList.remove('is-hidden');
+        if (panelDual) panelDual.classList.add('is-hidden');
+
+        if (labelIndepVal) labelIndepVal.textContent = "Uygulanan Kuvvet ve Alınan Yol";
+        if (labelCtrlVal) labelCtrlVal.textContent = "Cisim Kütlesi (10 kg), Yer Çekimi";
+        if (labelDepVal) labelDepVal.textContent = "Yapılan Fiziksel İş (Joule) ve İş Durumu";
+
+        resetWorkMotion();
+        calculateWorkPhysics();
+        showLabToast("📦 Tekli İnceleme Moduna Geçildi");
+    } else if (mode === "force") {
+        // Mod 1: Kuvvetin İşe Etkisi (Yol Sabit)
+        if (singleControls) singleControls.classList.add('is-hidden');
+        if (dualControls) dualControls.classList.remove('is-hidden');
+        if (mbarSingle) mbarSingle.classList.add('is-hidden');
+        if (varsBarDual) varsBarDual.classList.remove('is-hidden');
+        if (panelSingle) panelSingle.classList.add('is-hidden');
+        if (panelDual) panelDual.classList.remove('is-hidden');
+        if (slidersMode1) slidersMode1.classList.remove('is-hidden');
+        if (slidersMode2) slidersMode2.classList.add('is-hidden');
+        if (badgeDualMode) badgeDualMode.textContent = "Mod 1: Kuvvetin İşe Etkisi (Yol Sabit)";
+
+        // MEB Bilimsel Değişkenleri
+        if (barIndep) barIndep.textContent = "Uygulanan Kuvvet (F)";
+        if (barCtrl) barCtrl.textContent = "Alınan Yol (x) ve Cisim Kütlesi (10 kg)";
+        if (barDep) barDep.textContent = "Yapılan Fiziksel İş (W)";
+        if (labelIndepVal) labelIndepVal.textContent = "Uygulanan Kuvvet (F₁ ≠ F₂)";
+        if (labelCtrlVal) labelCtrlVal.textContent = "Alınan Yol (x₁ = x₂) ve Cisim Kütlesi (10 kg)";
+        if (labelDepVal) labelDepVal.textContent = "Yapılan Fiziksel İş (W = F · Δx)";
+
+        const sDist = document.getElementById('slider-dual-m1-dist');
+        const sF1 = document.getElementById('slider-dual-f1');
+        const sF2 = document.getElementById('slider-dual-f2');
+        const distVal = sDist ? parseFloat(sDist.value) : 4.0;
+        const f1Val = sF1 ? parseFloat(sF1.value) : 10;
+        const f2Val = sF2 ? parseFloat(sF2.value) : 20;
+
+        work.dual.t1.distance = distVal;
+        work.dual.t1.force = f1Val;
+        work.dual.t1.targetJoule = f1Val * distVal;
+
+        work.dual.t2.distance = distVal;
+        work.dual.t2.force = f2Val;
+        work.dual.t2.targetJoule = f2Val * distVal;
+
+        resetDualMotion();
+        updateDualPedagogicalCard('ready');
+        updateDualMetricsPanel();
+        showLabToast("⚖️ Mod 1: Kuvvetin İşe Etkisi (Yol Sabit: " + distVal.toFixed(1) + " m)");
+    } else if (mode === "dist") {
+        // Mod 2: Alınan Yolun İşe Etkisi (Kuvvet Sabit)
+        if (singleControls) singleControls.classList.add('is-hidden');
+        if (dualControls) dualControls.classList.remove('is-hidden');
+        if (mbarSingle) mbarSingle.classList.add('is-hidden');
+        if (varsBarDual) varsBarDual.classList.remove('is-hidden');
+        if (panelSingle) panelSingle.classList.add('is-hidden');
+        if (panelDual) panelDual.classList.remove('is-hidden');
+        if (slidersMode1) slidersMode1.classList.add('is-hidden');
+        if (slidersMode2) slidersMode2.classList.remove('is-hidden');
+        if (badgeDualMode) badgeDualMode.textContent = "Mod 2: Alınan Yolun İşe Etkisi (Kuvvet Sabit)";
+
+        // MEB Bilimsel Değişkenleri
+        if (barIndep) barIndep.textContent = "Alınan Yol (x)";
+        if (barCtrl) barCtrl.textContent = "Uygulanan Kuvvet (F) ve Cisim Kütlesi (10 kg)";
+        if (barDep) barDep.textContent = "Yapılan Fiziksel İş (W)";
+        if (labelIndepVal) labelIndepVal.textContent = "Alınan Yol (x₁ ≠ x₂)";
+        if (labelCtrlVal) labelCtrlVal.textContent = "Uygulanan Kuvvet (F₁ = F₂) ve Cisim Kütlesi (10 kg)";
+        if (labelDepVal) labelDepVal.textContent = "Yapılan Fiziksel İş (W = F · Δx)";
+
+        const sForce = document.getElementById('slider-dual-m2-force');
+        const sX1 = document.getElementById('slider-dual-x1');
+        const sX2 = document.getElementById('slider-dual-x2');
+        const forceVal = sForce ? parseFloat(sForce.value) : 15;
+        const x1Val = sX1 ? parseFloat(sX1.value) : 2.0;
+        const x2Val = sX2 ? parseFloat(sX2.value) : 5.0;
+
+        work.dual.t1.force = forceVal;
+        work.dual.t1.distance = x1Val;
+        work.dual.t1.targetJoule = forceVal * x1Val;
+
+        work.dual.t2.force = forceVal;
+        work.dual.t2.distance = x2Val;
+        work.dual.t2.targetJoule = forceVal * x2Val;
+
+        resetDualMotion();
+        updateDualPedagogicalCard('ready');
+        updateDualMetricsPanel();
+        showLabToast("📏 Mod 2: Alınan Yolun İşe Etkisi (Kuvvet Sabit: " + forceVal.toFixed(0) + " N)");
+    }
+}
+
+function toggleDualPlayPause() {
+    const dual = labState.work.dual;
+    if (dual.completed) {
+        resetDualMotion();
+    }
+    dual.isPlaying = !dual.isPlaying;
+    updateDualPlayButton(dual.isPlaying);
+    if (dual.isPlaying) {
+        updateDualPedagogicalCard('running');
+        showLabToast("▶️ Çift Düzenek Hareketi Başlatıldı");
+    } else {
+        showLabToast("⏸️ Hareket Duraklatıldı");
+    }
+}
+
+function resetDualMotion() {
+    const dual = labState.work.dual;
+    dual.isPlaying = false;
+    dual.completed = false;
+
+    dual.t1.currentDist = 0.0;
+    dual.t1.progress = 0.0;
+    dual.t1.joule = 0.0;
+    dual.t1.isFinished = false;
+
+    dual.t2.currentDist = 0.0;
+    dual.t2.progress = 0.0;
+    dual.t2.joule = 0.0;
+    dual.t2.isFinished = false;
+
+    updateDualPlayButton(false);
+    updateDualPedagogicalCard('ready');
+    updateDualMetricsPanel();
+}
+
+function updateDualPlayButton(isPlaying) {
+    const btnPlay = document.getElementById('btn-dual-play-pause');
+    const labelPlay = document.getElementById('label-dual-play');
+    if (!btnPlay) return;
+    const dual = labState.work.dual;
+    if (dual.completed) {
+        btnPlay.innerHTML = '<i class="fas fa-redo"></i> <span id="label-dual-play">Tekrar Başlat</span>';
+        btnPlay.classList.add('active');
+    } else if (isPlaying) {
+        btnPlay.innerHTML = '<i class="fas fa-pause"></i> <span id="label-dual-play">Duraklat</span>';
+        btnPlay.classList.add('active');
+    } else {
+        btnPlay.innerHTML = '<i class="fas fa-play"></i> <span id="label-dual-play">Hareketi Başlat</span>';
+        btnPlay.classList.remove('active');
+    }
+}
+
+function updateDualPedagogicalCard(state) {
+    const work = labState.work;
+    const mode = work.expMode;
+    const box = document.getElementById('work-pedagogical-box');
+    const icon = document.getElementById('work-pedagogical-icon');
+    const title = document.getElementById('work-pedagogical-title');
+    const text = document.getElementById('work-pedagogical-text');
+    if (!box || !title || !text) return;
+
+    if (mode === "force") {
+        if (state === "ready") {
+            box.className = "lab-pedagogical-card";
+            if (icon) icon.innerHTML = '<i class="fas fa-play-circle" style="color: #38bdf8;"></i>';
+            title.textContent = "🏁 Mod 1 Deneyine Hazır (Yol Eşit, Kuvvetler Farklı)";
+            text.textContent = `Alınan yol sabit tutulurken (x₁ = x₂ = ${work.dual.t1.distance.toFixed(1)} m), 1. düzeneğe ${work.dual.t1.force.toFixed(0)} N, 2. düzeneğe ${work.dual.t2.force.toFixed(0)} N kuvvet uygulanacaktır. Hareketi başlatarak kuvvet büyüklüğünün yapılan işe etkisini gözlemleyiniz.`;
+        } else if (state === "running") {
+            box.className = "lab-pedagogical-card is-work";
+            if (icon) icon.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: #38bdf8;"></i>';
+            title.textContent = "⏳ Eş Zamanlı Hareket (İş Hesaplanıyor...)";
+            text.textContent = `Her iki sandık aynı anda hareket ediyor. Kuvveti büyük olan 2. düzenekte iş sayacının daha hızlı arttığına dikkat ediniz!`;
+        } else if (state === "finished") {
+            box.className = "lab-pedagogical-card is-work";
+            if (icon) icon.innerHTML = '<i class="fas fa-check-circle" style="color: #10b981;"></i>';
+            title.textContent = "✅ Mod 1 Deney Sonucu: Kuvvet Arttıkça Yapılan İş Artar!";
+            text.textContent = "Sonuç: Alınan yol sabit tutulduğunda, uygulanan kuvvet arttıkça yapılan fiziksel iş artar (Doğru orantı).";
+        }
+    } else if (mode === "dist") {
+        if (state === "ready") {
+            box.className = "lab-pedagogical-card";
+            if (icon) icon.innerHTML = '<i class="fas fa-play-circle" style="color: #38bdf8;"></i>';
+            title.textContent = "🏁 Mod 2 Deneyine Hazır (Kuvvet Eşit, Yollar Farklı)";
+            text.textContent = `Uygulanan kuvvet eşit tutulurken (F₁ = F₂ = ${work.dual.t1.force.toFixed(0)} N), 1. düzenek ${work.dual.t1.distance.toFixed(1)} m, 2. düzenek ${work.dual.t2.distance.toFixed(1)} m yol alacaktır. Hareketi başlatarak alınan yolun yapılan işe etkisini gözlemleyiniz.`;
+        } else if (state === "running") {
+            box.className = "lab-pedagogical-card is-work";
+            if (icon) icon.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: #38bdf8;"></i>';
+            title.textContent = "⏳ Eş Zamanlı Hareket (İş Hesaplanıyor...)";
+            text.textContent = `Her iki sandık eşit kuvvetle çekilmektedir. 1. düzenek hedefe daha erken ulaşacak, 2. düzenek daha uzun yol aldığı için daha çok iş üretecektir!`;
+        } else if (state === "finished") {
+            box.className = "lab-pedagogical-card is-work";
+            if (icon) icon.innerHTML = '<i class="fas fa-check-circle" style="color: #10b981;"></i>';
+            title.textContent = "✅ Mod 2 Deney Sonucu: Alınan Yol Arttıkça Yapılan İş Artar!";
+            text.textContent = "Sonuç: Uygulanan kuvvet sabit tutulduğunda, alınan yol arttıkça yapılan fiziksel iş artar (Doğru orantı).";
+        }
+    }
+}
+
+function updateDualMetricsPanel() {
+    const dual = labState.work.dual;
+    const mode = labState.work.expMode;
+
+    const elF1 = document.getElementById('dual-res-f1');
+    const elX1 = document.getElementById('dual-res-x1');
+    const elW1 = document.getElementById('dual-res-w1');
+
+    const elF2 = document.getElementById('dual-res-f2');
+    const elX2 = document.getElementById('dual-res-x2');
+    const elW2 = document.getElementById('dual-res-w2');
+
+    const textComp = document.getElementById('text-dual-comparison-summary');
+
+    if (elF1) elF1.textContent = `${dual.t1.force.toFixed(0)} N`;
+    if (elX1) elX1.textContent = `${dual.t1.currentDist.toFixed(1)} / ${dual.t1.distance.toFixed(1)} m`;
+    if (elW1) elW1.textContent = `${dual.t1.joule.toFixed(1)} J`;
+
+    if (elF2) elF2.textContent = `${dual.t2.force.toFixed(0)} N`;
+    if (elX2) elX2.textContent = `${dual.t2.currentDist.toFixed(1)} / ${dual.t2.distance.toFixed(1)} m`;
+    if (elW2) elW2.textContent = `${dual.t2.joule.toFixed(1)} J`;
+
+    if (textComp) {
+        if (dual.completed) {
+            if (mode === "force") {
+                textComp.textContent = `W₂ (${dual.t2.joule.toFixed(0)} J) > W₁ (${dual.t1.joule.toFixed(0)} J): Alınan yol eşit tutulduğunda kuvvet arttıkça yapılan iş doğru orantılı artar.`;
+            } else {
+                textComp.textContent = `W₂ (${dual.t2.joule.toFixed(0)} J) > W₁ (${dual.t1.joule.toFixed(0)} J): Uygulanan kuvvet eşit tutulduğunda alınan yol arttıkça yapılan iş doğru orantılı artar.`;
+            }
+        } else if (dual.isPlaying) {
+            textComp.textContent = `Hareket devam ediyor: W₁ = ${dual.t1.joule.toFixed(1)} J | W₂ = ${dual.t2.joule.toFixed(1)} J`;
+        } else {
+            textComp.textContent = `Simülasyonu başlatarak iki düzeneğin iş miktarlarını (W = F · Δx) karşılaştırın.`;
+        }
+    }
+}
+
+function updateWorkDualPhysics() {
+    const work = labState.work;
+    const dual = work.dual;
+    if (dual.isPlaying) {
+        const step = dual.speed;
+
+        // Track 1
+        if (!dual.t1.isFinished) {
+            dual.t1.currentDist += step;
+            if (dual.t1.currentDist >= dual.t1.distance) {
+                dual.t1.currentDist = dual.t1.distance;
+                dual.t1.isFinished = true;
+            }
+            dual.t1.progress = dual.t1.distance > 0 ? (dual.t1.currentDist / dual.t1.distance) : 1;
+            dual.t1.joule = dual.t1.force * dual.t1.currentDist;
+        }
+
+        // Track 2
+        if (!dual.t2.isFinished) {
+            dual.t2.currentDist += step;
+            if (dual.t2.currentDist >= dual.t2.distance) {
+                dual.t2.currentDist = dual.t2.distance;
+                dual.t2.isFinished = true;
+            }
+            dual.t2.progress = dual.t2.distance > 0 ? (dual.t2.currentDist / dual.t2.distance) : 1;
+            dual.t2.joule = dual.t2.force * dual.t2.currentDist;
+        }
+
+        updateDualMetricsPanel();
+
+        if (dual.t1.isFinished && dual.t2.isFinished) {
+            dual.isPlaying = false;
+            dual.completed = true;
+            updateDualPlayButton(false);
+            updateDualPedagogicalCard('finished');
+        }
+    }
 }
 
 function updateWorkPlayButton(isPlaying) {
@@ -9340,6 +9761,10 @@ function updateWorkMetricsBar() {
 
 function updateWorkPhysics() {
     const work = labState.work;
+    if (work.expMode !== "single") {
+        updateWorkDualPhysics();
+        return;
+    }
     if (work.isPlaying) {
         if (work.scenario === "wall" || (work.scenario === "horizontal" && work.frictionEnabled && work.force <= 20) || (work.scenario === "lift" && work.force < (work.mass * work.gravity))) {
             work.progress = 0;
@@ -9364,6 +9789,378 @@ function updateWorkPhysics() {
     updateWorkMetricsBar();
 }
 
+// --- V8.2: ÇİFT DÜZENEKLİ İŞ DENEYİ CANVAS 2D ÇİZİM MOTORU ---
+
+function drawDynamometer(ctx, x, y, forceVal, color) {
+    ctx.save();
+    // Kutudan çıkan çelik bağlantı pimi
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(x - 6, y);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    // Dinamometre şeffaf silindirik gövdesi
+    const cylW = 38;
+    const cylH = 14;
+    ctx.fillStyle = '#1e293b';
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(x, y - cylH / 2, cylW, cylH, 3);
+    ctx.fill();
+    ctx.stroke();
+
+    // İç ölçek çizgileri
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.lineWidth = 1;
+    for (let i = 6; i < cylW - 6; i += 6) {
+        ctx.beginPath();
+        ctx.moveTo(x + i, y - 4);
+        ctx.lineTo(x + i, y + 4);
+        ctx.stroke();
+    }
+
+    // Yay helezonu (Spring coils)
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    const springStart = x + 4;
+    const springEnd = x + cylW - 6;
+    for (let sx = springStart; sx <= springEnd; sx += 4) {
+        const sy = (sx % 8 === 0) ? (y - 3) : (y + 3);
+        if (sx === springStart) ctx.moveTo(sx, y);
+        else ctx.lineTo(sx, sy);
+    }
+    ctx.stroke();
+
+    // Çıkış pimi ve çelik kanca
+    const hookBaseX = x + cylW;
+    ctx.strokeStyle = '#cbd5e1';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(hookBaseX, y);
+    ctx.lineTo(hookBaseX + 6, y);
+    ctx.stroke();
+
+    // Kanca eğrisi
+    ctx.beginPath();
+    ctx.arc(hookBaseX + 8, y + 2, 4, -Math.PI / 2, Math.PI / 2);
+    ctx.stroke();
+
+    ctx.restore();
+}
+
+function drawDualTrack(ctx, trackNum, t, groundY, isAmber) {
+    ctx.save();
+    const x0 = 70;
+    const pxPerMeter = 110;
+    const totalDistPx = 6 * pxPerMeter; // 660 px (0 - 6 m)
+    const primaryColor = isAmber ? '#f59e0b' : '#38bdf8';
+    const tagBg = isAmber ? 'rgba(245, 158, 11, 0.2)' : 'rgba(56, 189, 248, 0.2)';
+
+    // A. Parkur Etiketi & Parametre Bilgisi
+    const tagY = groundY - 110;
+    ctx.fillStyle = tagBg;
+    ctx.strokeStyle = primaryColor;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.roundRect(x0, tagY, 110, 22, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = 'bold 11px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = primaryColor;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${trackNum}. DÜZENEK`, x0 + 55, tagY + 11);
+
+    ctx.font = '600 12px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = '#cbd5e1';
+    ctx.textAlign = 'left';
+    ctx.fillText(`Kuvvet: ${t.force.toFixed(0)} N  ·  Hedef Yol: ${t.distance.toFixed(1)} m  ·  Kütle: 10 kg`, x0 + 122, tagY + 11);
+
+    // B. Zemin Çizgisi ve Cetvel Taraması
+    ctx.strokeStyle = 'rgba(100, 116, 139, 0.7)';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(x0 - 20, groundY);
+    ctx.lineTo(x0 + totalDistPx + 20, groundY);
+    ctx.stroke();
+
+    ctx.strokeStyle = 'rgba(71, 85, 105, 0.35)';
+    ctx.lineWidth = 1;
+    for (let gx = x0 - 20; gx <= x0 + totalDistPx + 20; gx += 15) {
+        ctx.beginPath();
+        ctx.moveTo(gx, groundY);
+        ctx.lineTo(gx - 8, groundY + 8);
+        ctx.stroke();
+    }
+
+    // Cetvel Metre Çizgileri (0m - 6m)
+    for (let m = 0; m <= 6; m++) {
+        const mx = x0 + m * pxPerMeter;
+        ctx.strokeStyle = (m === 0 || m === Math.round(t.distance)) ? primaryColor : '#94a3b8';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(mx, groundY);
+        ctx.lineTo(mx, groundY + 10);
+        ctx.stroke();
+
+        ctx.font = 'bold 11px system-ui, -apple-system, sans-serif';
+        ctx.fillStyle = (m === 0) ? '#10b981' : (m === Math.round(t.distance) ? primaryColor : '#94a3b8');
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText(`${m} m`, mx, groundY + 12);
+
+        if (m < 6) {
+            const hx = mx + pxPerMeter / 2;
+            ctx.strokeStyle = 'rgba(148, 163, 184, 0.45)';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(hx, groundY);
+            ctx.lineTo(hx, groundY + 6);
+            ctx.stroke();
+        }
+    }
+
+    // Başlangıç Çizgisi (0 m)
+    ctx.save();
+    ctx.strokeStyle = 'rgba(16, 185, 129, 0.6)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(x0, groundY - 70);
+    ctx.lineTo(x0, groundY);
+    ctx.stroke();
+    ctx.restore();
+
+    // Hedef Bitiş Çizgisi (t.distance)
+    const finishX = x0 + t.distance * pxPerMeter;
+    ctx.save();
+    ctx.strokeStyle = primaryColor;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 4]);
+    ctx.beginPath();
+    ctx.moveTo(finishX, groundY - 70);
+    ctx.lineTo(finishX, groundY);
+    ctx.stroke();
+    ctx.fillStyle = primaryColor;
+    ctx.beginPath();
+    ctx.roundRect(finishX - 25, groundY - 82, 50, 16, 4);
+    ctx.fill();
+    ctx.font = 'bold 9px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = '#0f172a';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('HEDEF', finishX, groundY - 74);
+    ctx.restore();
+
+    // C. Ahşap Sandık (10 kg)
+    const crateW = 54;
+    const crateH = 42;
+    const crateX = x0 + t.currentDist * pxPerMeter;
+    const crateY = groundY - crateH;
+    drawWorkCrate(ctx, crateX, crateY, crateW, crateH);
+
+    // Kütle Yazısı (10 kg)
+    ctx.font = 'bold 11px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#000000';
+    ctx.shadowBlur = 4;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('10 kg', crateX + crateW / 2, crateY + crateH / 2);
+    ctx.shadowBlur = 0;
+
+    // D. Dinamometre
+    const dynX = crateX + crateW;
+    const dynY = groundY - 18;
+    drawDynamometer(ctx, dynX, dynY, t.force, primaryColor);
+
+    // E. Uygulanan Kuvvet Vektör Oku (F)
+    const hookX = dynX + 46;
+    const arrowLen = 32 + (t.force / 50) * 55;
+    drawWorkVectorArrow(
+        ctx,
+        hookX,
+        dynY,
+        hookX + arrowLen,
+        dynY,
+        primaryColor,
+        `F${trackNum} = ${t.force.toFixed(0)} N`
+    );
+
+    ctx.font = 'bold 12px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = primaryColor;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'bottom';
+    ctx.fillText(`F${trackNum} = ${t.force.toFixed(0)} N`, hookX + arrowLen / 2, dynY - 7);
+
+    // F. Sandık Üstü Canlı İş Sayacı & Tamamlandı Rozeti
+    const badgeY = crateY - 24;
+    const curW = t.joule;
+    if (t.isFinished) {
+        const bWidth = 160;
+        ctx.fillStyle = 'rgba(16, 185, 129, 0.95)';
+        ctx.strokeStyle = '#34d399';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(crateX + crateW / 2 - bWidth / 2, badgeY, bWidth, 22, 11);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.font = 'bold 11px system-ui, -apple-system, sans-serif';
+        ctx.fillStyle = '#0f172a';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`✓ Tamamlanan İş: ${curW.toFixed(0)} J`, crateX + crateW / 2, badgeY + 11);
+    } else {
+        const bWidth = 130;
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        ctx.strokeStyle = primaryColor;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(crateX + crateW / 2 - bWidth / 2, badgeY, bWidth, 20, 10);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.font = 'bold 11px system-ui, -apple-system, sans-serif';
+        ctx.fillStyle = primaryColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(`W${trackNum} = ${curW.toFixed(1)} J (${t.currentDist.toFixed(1)} m)`, crateX + crateW / 2, badgeY + 10);
+    }
+
+    ctx.restore();
+}
+
+function drawDualComparisonBanner(ctx, work) {
+    ctx.save();
+    const dual = work.dual;
+    const mode = work.expMode;
+    const cardY = 440;
+    const cardH = 46;
+
+    if (dual.completed) {
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.92)';
+        ctx.strokeStyle = '#10b981';
+        ctx.lineWidth = 2;
+        ctx.shadowColor = 'rgba(16, 185, 129, 0.4)';
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.roundRect(40, cardY, 720, cardH, 10);
+        ctx.fill();
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+
+        ctx.font = 'bold 13px system-ui, -apple-system, sans-serif';
+        ctx.fillStyle = '#10b981';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        if (mode === "force") {
+            ctx.fillText(
+                `🎯 SONUÇ: Alınan yol sabitken (4.0 m), kuvvet arttıkça yapılan iş artar! [W₂ (${dual.t2.joule.toFixed(0)} J) > W₁ (${dual.t1.joule.toFixed(0)} J)]`,
+                400,
+                cardY + cardH / 2
+            );
+        } else {
+            ctx.fillText(
+                `🎯 SONUÇ: Uygulanan kuvvet sabitken (${dual.t1.force} N), alınan yol arttıkça yapılan iş artar! [W₂ (${dual.t2.joule.toFixed(0)} J) > W₁ (${dual.t1.joule.toFixed(0)} J)]`,
+                400,
+                cardY + cardH / 2
+            );
+        }
+    } else {
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+        ctx.strokeStyle = 'rgba(148, 163, 184, 0.25)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.roundRect(40, cardY, 720, cardH, 10);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.font = '12px system-ui, -apple-system, sans-serif';
+        ctx.fillStyle = '#94a3b8';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        if (dual.isPlaying) {
+            ctx.fillStyle = '#38bdf8';
+            ctx.fillText('⏳ Kutular eş zamanlı hareket ediyor... Alınan yol boyunca iş sayaçlarını (W = F · Δx) karşılaştırınız.', 400, cardY + cardH / 2);
+        } else {
+            ctx.fillText('💡 "Hareketi Başlat" butonuna basarak her iki düzeneği aynı anda başlatıp yapılan işleri karşılaştırınız.', 400, cardY + cardH / 2);
+        }
+    }
+    ctx.restore();
+}
+
+function drawWorkDualSimulation(ctx, work) {
+    const dual = work.dual;
+    const mode = work.expMode;
+
+    // 1. Arka Plan
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 500);
+    bgGrad.addColorStop(0, '#0a0e1a');
+    bgGrad.addColorStop(0.5, '#0f172a');
+    bgGrad.addColorStop(1, '#080c14');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 800, 500);
+
+    // 2. Üst Başlık Şeridi (Mod Başlığı ve Sabit Değişken)
+    ctx.save();
+    const bannerY = 12;
+    const bannerH = 34;
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+    ctx.strokeStyle = mode === "force" ? 'rgba(56, 189, 248, 0.45)' : 'rgba(245, 158, 11, 0.45)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(40, bannerY, 720, bannerH, 8);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.font = 'bold 13px system-ui, -apple-system, sans-serif';
+    ctx.fillStyle = '#f8fafc';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    const modeTitle = mode === "force" 
+        ? "MOD 1: KUVVETİN İŞE ETKİSİ" 
+        : "MOD 2: ALINAN YOLUN İŞE ETKİSİ";
+    ctx.fillText(modeTitle, 55, bannerY + bannerH / 2);
+
+    ctx.font = '12px system-ui, -apple-system, sans-serif';
+    ctx.textAlign = 'right';
+    if (mode === "force") {
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillText(`Sabit Yol (x₁ = x₂ = ${dual.t1.distance.toFixed(1)} m)  |  Farklı Kuvvetler (F₁ = ${dual.t1.force} N, F₂ = ${dual.t2.force} N)`, 745, bannerY + bannerH / 2);
+    } else {
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillText(`Sabit Kuvvet (F₁ = F₂ = ${dual.t1.force} N)  |  Farklı Yollar (x₁ = ${dual.t1.distance.toFixed(1)} m, x₂ = ${dual.t2.distance.toFixed(1)} m)`, 745, bannerY + bannerH / 2);
+    }
+    ctx.restore();
+
+    // 3. Üst Parkur (1. Düzenek)
+    drawDualTrack(ctx, 1, dual.t1, 200, false);
+
+    // 4. Parkur Ayırıcı Çizgi
+    ctx.save();
+    ctx.strokeStyle = 'rgba(148, 163, 184, 0.15)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([6, 6]);
+    ctx.beginPath();
+    ctx.moveTo(40, 230);
+    ctx.lineTo(760, 230);
+    ctx.stroke();
+    ctx.restore();
+
+    // 5. Alt Parkur (2. Düzenek)
+    drawDualTrack(ctx, 2, dual.t2, 390, true);
+
+    // 6. Alt Sonuç / Yönlendirme Kartı
+    drawDualComparisonBanner(ctx, work);
+}
+
 // --- DENEY 7.1 CANVAS 2D ÇİZİM MOTORU ---
 
 function drawWorkSimulation() {
@@ -9374,6 +10171,13 @@ function drawWorkSimulation() {
 
     ctx.save();
     ctx.scale(scale, scale);
+
+    // V8.2: Çift Düzenekli Karşılaştırma Modu Çizimi
+    if (work.expMode !== "single") {
+        drawWorkDualSimulation(ctx, work);
+        ctx.restore();
+        return;
+    }
 
     // 1. Arka Plan
     const bgGrad = ctx.createLinearGradient(0, 0, 0, 500);
@@ -23344,6 +24148,9 @@ if (typeof window !== "undefined") {
         resetCurrentExperiment,
         toggleLabFullscreen,
         setIncidentAngle,
+        setWorkMode,
+        toggleDualPlayPause,
+        resetDualMotion,
         EXPERIMENTS_DATABASE,
         labState
     };

@@ -1,3 +1,9 @@
+/**
+ * FenUp X — V8.2: Sanal Laboratuvar 7. Sınıf İş Deneyi Çift Düzenekli Karşılaştırma Modu
+ * Mod 1: "Kuvvetin İşe Etkisi (Yol Sabit)" - Bağımsız Değişken: Kuvvet (F), Kontrol Değişkeni: Yol (x)
+ * Mod 2: "Alınan Yolun İşe Etkisi (Kuvvet Sabit)" - Bağımsız Değişken: Alınan Yol (x), Kontrol Değişkeni: Kuvvet (F)
+ * Bağımlı Değişken: Yapılan Fiziksel İş (W = F · Δx)
+ */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut, deleteUser, EmailAuthProvider, reauthenticateWithCredential, reauthenticateWithPopup, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, deleteDoc, collection, getDocs, query, orderBy, limit, addDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";

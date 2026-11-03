@@ -205,4 +205,88 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await page.keyboard.press('Escape');
         await expect(legalModal).toBeHidden();
     });
+
+    test('7. V8.2: 7. Sınıf Sanal Laboratuvarı Çift Düzenekli İş Deneyi (Mod 1 Kuvvetin İşe Etkisi & Mod 2 Yolun İşe Etkisi)', async ({ page }) => {
+        await page.addInitScript(() => localStorage.setItem('fenupx_cookie_consent', 'accepted'));
+        await page.goto('/');
+
+        // Sanal Laboratuvar modülünü aç ve 7.1 deneyine gir
+        await page.locator('#btn-deney-modulu').click();
+        await page.waitForFunction(() => typeof window.FenUpLab !== 'undefined' && typeof window.FenUpLab.openExperimentWorkspace === 'function');
+        await page.evaluate(() => {
+            window.FenUpLab.openExperimentWorkspace('7.1');
+        });
+
+        const workspace = page.locator('#lab-workspace-view');
+        await expect(workspace).toBeVisible();
+
+        // 1. Mod seçici butonlarının varlığını kontrol et
+        const btnSingle = page.locator('#btn-work-mode-single');
+        const btnForce = page.locator('#btn-work-mode-force');
+        const btnDist = page.locator('#btn-work-mode-dist');
+
+        await expect(btnSingle).toBeVisible();
+        await expect(btnForce).toBeVisible();
+        await expect(btnDist).toBeVisible();
+        await expect(btnSingle).toHaveClass(/active/);
+
+        // 2. Mod 1: Kuvvetin İşe Etkisi (Yol Sabit) Moduna Geç
+        await btnForce.click();
+        await expect(btnForce).toHaveClass(/active/);
+        await expect(page.locator('#controls-work-dual')).toBeVisible();
+        await expect(page.locator('#controls-work-single')).toBeHidden();
+        await expect(page.locator('#dual-work-variables-bar')).toBeVisible();
+
+        // Bilimsel Süreç Değişkenleri Metinlerini Doğrula
+        await expect(page.locator('#bar-indep-var-text')).toContainText('Uygulanan Kuvvet (F)');
+        await expect(page.locator('#bar-ctrl-var-text')).toContainText('Alınan Yol');
+        await expect(page.locator('#bar-dep-var-text')).toContainText('Yapılan Fiziksel İş (W)');
+
+        // Mod 1 Sürgülerinin Görünür Olduğunu Kontrol Et
+        await expect(page.locator('#sliders-dual-mode1')).toBeVisible();
+        await expect(page.locator('#sliders-dual-mode2')).toBeHidden();
+
+        // Hareketi Başlat
+        const btnPlay = page.locator('#btn-dual-play-pause');
+        await btnPlay.click();
+
+        // Her iki düzenek hedefe ulaşana kadar bekle (t1 & t2 finish)
+        await page.waitForFunction(() => {
+            const dual = window.FenUpLab?.labState?.work?.dual;
+            return dual && dual.t1.isFinished && dual.t2.isFinished;
+        }, { timeout: 15000 });
+
+        // Mod 1 Sonuç Cümlesini Doğrula
+        const pedText = page.locator('#work-pedagogical-text');
+        await expect(pedText).toContainText('Sonuç: Alınan yol sabit tutulduğunda, uygulanan kuvvet arttıkça yapılan fiziksel iş artar (Doğru orantı).');
+
+        // 3. Mod 2: Alınan Yolun İşe Etkisi (Kuvvet Sabit) Moduna Geç
+        await btnDist.click();
+        await expect(btnDist).toHaveClass(/active/);
+        await expect(page.locator('#sliders-dual-mode2')).toBeVisible();
+        await expect(page.locator('#sliders-dual-mode1')).toBeHidden();
+
+        // Mod 2 Bilimsel Değişkenlerini Doğrula
+        await expect(page.locator('#bar-indep-var-text')).toContainText('Alınan Yol (x)');
+        await expect(page.locator('#bar-ctrl-var-text')).toContainText('Uygulanan Kuvvet (F)');
+
+        // Hareketi Başlat
+        await btnPlay.click();
+
+        // Her iki düzenek hedefe ulaşana kadar bekle
+        await page.waitForFunction(() => {
+            const dual = window.FenUpLab?.labState?.work?.dual;
+            return dual && dual.t1.isFinished && dual.t2.isFinished;
+        }, { timeout: 15000 });
+
+        // Mod 2 Sonuç Cümlesini Doğrula
+        await expect(pedText).toContainText('Sonuç: Uygulanan kuvvet sabit tutulduğunda, alınan yol arttıkça yapılan fiziksel iş artar (Doğru orantı).');
+
+        // 4. Tekli İnceleme Moduna Geri Dön
+        await btnSingle.click();
+        await expect(btnSingle).toHaveClass(/active/);
+        await expect(page.locator('#controls-work-single')).toBeVisible();
+        await expect(page.locator('#controls-work-dual')).toBeHidden();
+        await expect(page.locator('#dual-work-variables-bar')).toBeHidden();
+    });
 });

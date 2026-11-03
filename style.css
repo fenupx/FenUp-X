@@ -3461,3 +3461,258 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     flex-direction: column;
     gap: 4px;
 }
+
+/* ==========================================================================
+   V8.2 SANAL LABORATUVAR: 7. SINIF İŞ DENEYİ ÇİFT DÜZENEK & BİLİMSEL DEĞİŞKENLER
+   ========================================================================== */
+
+.lab-work-mode-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 12px;
+    width: 100%;
+}
+
+.lab-mode-switch-group {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.lab-mode-switch-group .lab-toggle-btn {
+    flex: 1 1 auto;
+    text-align: center;
+    padding: 10px 14px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: 10px;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    color: #cbd5e1;
+    transition: all 0.25s ease;
+}
+
+.lab-mode-switch-group .lab-toggle-btn:hover {
+    border-color: rgba(56, 189, 248, 0.5);
+    color: #ffffff;
+    background: rgba(56, 189, 248, 0.15);
+}
+
+.lab-mode-switch-group .lab-toggle-btn.active {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.35), rgba(2, 132, 199, 0.2));
+    border-color: #38bdf8;
+    color: #ffffff;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.3);
+}
+
+/* Canvas Altı Bilimsel Süreç Değişkenleri Şeridi */
+.lab-canvas-variables-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin-top: 10px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+.var-badge-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.92rem;
+    color: #cbd5e1;
+    min-width: 0;
+}
+
+.var-badge-item .var-label {
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.var-badge-item.indep .var-label { color: #38bdf8; }
+.var-badge-item.ctrl .var-label { color: #10b981; }
+.var-badge-item.dep .var-label { color: #f59e0b; }
+
+.var-badge-item strong {
+    color: #ffffff;
+    font-weight: 800;
+}
+
+/* Çift Düzenek Hızlı Kontrolleri */
+.lab-dual-actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.lab-btn-etap-large {
+    min-height: 48px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 8px 22px;
+    border-radius: 12px;
+}
+
+.lab-dual-mode-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    color: #38bdf8;
+    font-size: 0.92rem;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 999px;
+}
+
+.lab-dual-sliders-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 10px;
+}
+
+/* Sağ Panel Çift Düzenek Karşılaştırma Kartları */
+.lab-dual-results-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.lab-track-result-card {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.lab-track-result-card.track-2 {
+    border-color: rgba(245, 158, 11, 0.35);
+}
+
+.lab-track-result-card .track-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.track-tag {
+    background: rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+    font-weight: 800;
+    font-size: 0.8rem;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.track-tag.orange {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+}
+
+.track-metric-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    color: #94a3b8;
+}
+
+.track-metric-row.highlight {
+    border-top: 1px dashed rgba(148, 163, 184, 0.2);
+    padding-top: 4px;
+    margin-top: 2px;
+    font-weight: 700;
+}
+
+.track-metric-row strong {
+    color: #f8fafc;
+}
+
+.lab-dual-summary-chip {
+    margin-top: 10px;
+    background: rgba(30, 41, 59, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 0.86rem;
+    color: #e2e8f0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.4;
+}
+
+.lab-dual-summary-chip i {
+    color: #38bdf8;
+    margin-top: 2px;
+}
+
+/* Akıllı Tahta (ETAP Pardus 1920x1080) Desteği */
+@media (min-width: 1200px) {
+    .lab-btn-etap-large {
+        min-height: 52px;
+        font-size: 1.15rem;
+    }
+    .var-badge-item {
+        font-size: 1rem;
+    }
+    .lab-dual-mode-badge {
+        font-size: 1rem;
+        padding: 8px 18px;
+    }
+}
+
+/* Mobil Cihazlar & Dar Ekranlar */
+@media (max-width: 768px) {
+    .lab-work-mode-row {
+        overflow-x: auto;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+    }
+    .lab-mode-switch-group {
+        flex-wrap: nowrap;
+    }
+    .lab-mode-switch-group .lab-toggle-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        font-size: 0.88rem;
+    }
+    .lab-canvas-variables-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 8px 12px;
+    }
+    .lab-dual-sliders-row {
+        grid-template-columns: 1fr;
+    }
+    .lab-dual-results-grid {
+        grid-template-columns: 1fr;
+    }
+    .lab-dual-actions-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .lab-btn-etap-large {
+        width: 100%;
+    }
+}
