@@ -1,0 +1,88 @@
+{
+  "revision": "6.0.1",
+  "questions": [
+    {
+      "id": "FB722-V7-E05",
+      "stem": "Şemada bir sarmal yayın önüne top konulmuş ve yay geriye doğru sıkıştırılmıştır.\n1) Sıkışan yayda depolanan potansiyel enerjinin türünü ve uluslararası enerji birimini yazınız.\n2) Yayın sıkışma miktarı artırıldığında yayda depolanan enerjinin nasıl değişeceğini açıklayınız.",
+      "sample_answer": "Sıkıştırılan yayda esneklik potansiyel enerjisi depolanır. Enerjinin uluslararası birimi joule (J)dür. Aynı yay daha çok sıkıştırıldığında depolanan enerji artar.",
+      "rubric": [
+        {
+          "id": "FB722-V7-E05-R1",
+          "text": "Sıkışmış yayda depolanan enerjinin Esneklik Potansiyel Enerjisi olduğunu ve enerji biriminin Joule (J) olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB722-V7-K07"
+          ],
+          "scoring": {
+            "full": "Esneklik potansiyel enerjisi ve Joule (J) olduğunu yazar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.1"
+        },
+        {
+          "id": "FB722-V7-E05-R2",
+          "text": "Yayın sıkışma miktarı arttıkça depolanan esneklik potansiyel enerjisinin de artacağını açıklar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB722-V7-K07"
+          ],
+          "scoring": {
+            "full": "Sıkışma miktarı arttıkça depolanan enerjinin arttığını belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.1"
+        }
+      ],
+      "content_revision": "6.0.1"
+    },
+    {
+      "id": "FB714-V7-H01",
+      "title": "İki yıldızın yaşam yolunu karşılaştırma",
+      "stem": "Bir gözlem raporunda A yıldızının çevresinde gezegenimsi bulutsu, B yıldızının çevresinde ise süpernova kalıntısı saptanmıştır.\n1) A ve B yıldızlarının başlangıç kütlelerini küçük/büyük olarak karşılaştırınız. Her biri için rapordaki kanıtı kullanarak gerekçenizi yazınız.\n2) A yıldızından geriye kalması beklenen yapıyı ve B yıldızından geriye kalabilecek iki farklı yapıyı belirtiniz. Bu yapıların aynı yaşam yoluna ait olup olmadığını açıklayınız.",
+      "sample_answer": "A küçük kütleli yıldız yolundadır; gezegenimsi bulutsu evresinden sonra beyaz cüce kalır. B büyük kütleli yıldız yolundadır; süpernova sonrasında nötron yıldızı veya kara delik kalabilir. Bu iki son yapı büyük kütleli yıldız yolunun alternatif sonuçlarıdır; beyaz cüce ise küçük kütleli yıldız yoluna aittir.",
+      "rubric": [
+        {
+          "id": "FB714-V7-H01-R1",
+          "text": "A yıldızını gezegenimsi bulutsu kanıtıyla küçük kütleli, B yıldızını süpernova kanıtıyla büyük kütleli yıldız yoluyla ilişkilendirir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB714-V7-K03",
+            "FB714-V7-K04"
+          ],
+          "scoring": {
+            "full": "A yıldızını gezegenimsi bulutsu kanıtıyla küçük kütleli, B yıldızını süpernova kanıtıyla büyük kütleli yıldız yoluyla ilişkilendirir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.1"
+        },
+        {
+          "id": "FB714-V7-H01-R2",
+          "text": "A için beyaz cüceyi; B için aynı büyük kütleli yıldız yolunun alternatif sonuçları olan nötron yıldızı ve kara deliği belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB714-V7-K03",
+            "FB714-V7-K04"
+          ],
+          "scoring": {
+            "full": "A için beyaz cüceyi; B için aynı büyük kütleli yıldız yolunun alternatif sonuçları olan nötron yıldızı ve kara deliği belirtir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "6.0.1"
+        }
+      ],
+      "content_revision": "6.0.1"
+    }
+  ]
+}

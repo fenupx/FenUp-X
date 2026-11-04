@@ -8,7 +8,7 @@
 
 'use strict';
 
-const CONTENT_REVISION = '6.0.0';
+const CONTENT_REVISION = '6.0.1';
 export const CONTENT_V6_VERSION = '8.1.0';
 if (typeof window !== 'undefined') {
     window.__FENUPX_CONTENT_V6_VERSION__ = CONTENT_V6_VERSION;
@@ -36,7 +36,7 @@ export function trackFenUpEvent(eventName, eventParams) {
 if (typeof window !== 'undefined') {
     window.trackFenUpEvent = trackFenUpEvent;
 }
-const CONTENT_PATHS = { '6.0.0': 'data/exam/content-v6/' };
+const CONTENT_PATHS = { '6.0.0': 'data/exam/content-v6/', '6.0.1': 'data/exam/content-v6/' };
 let ASSET_BASE = 'data/exam/content-v6/';
 let loadedRevision = null;
 const dataVersions = new Map();
@@ -290,13 +290,13 @@ function loadStateFromStorage() {
                 let hadUnfinishedLegacy = false;
 
                 // Unfinished study with old content revision
-                if (state.savedStudy && state.savedStudy.contentRevision && state.savedStudy.contentRevision !== CONTENT_REVISION) {
+                if (state.savedStudy && state.savedStudy.contentRevision && !CONTENT_PATHS[state.savedStudy.contentRevision]) {
                     hadUnfinishedLegacy = true;
                     state.savedStudy = null;
                 }
 
                 // Attempt with old content revision
-                if (state.attempt && state.attempt.contentRevision && state.attempt.contentRevision !== CONTENT_REVISION) {
+                if (state.attempt && state.attempt.contentRevision && !CONTENT_PATHS[state.attempt.contentRevision]) {
                     const isFinished = state.attempt.finished || state.attempt.status === 'completed';
                     if (!isFinished) {
                         hadUnfinishedLegacy = true;
@@ -984,6 +984,12 @@ async function loadData(revision = CONTENT_REVISION, showError = true) {
                     return (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
                 });
 
+                if (targetRev === '6.0.1') {
+                    const patchResponse = await fetch(base + 'content-patch-6.0.1.json');
+                    if (!patchResponse.ok) throw new Error('İçerik düzeltmesi yüklenemedi.');
+                    const patch = await patchResponse.json();
+                    data.allQuestions = data.allQuestions.map(q => ({...q, ...(patch.questions.find(p => p.id === q.id) || {})}));
+                }
                 resolvedDataCache.set(targetRev, data);
                 return data;
             })());
@@ -1734,7 +1740,7 @@ function renderStudy(cardIndex) {
     if (btnFullscreen) {
         btnFullscreen.onclick = () => toggleStudyFullscreen();
         const studyView = $('exam-view-study');
-        const isFs = studyView?.classList.contains('fullscreen-study-active') || (typeof document !== 'undefined' && (!!document.fullscreenElement || !!document.webkitFullscreenElement));
+        const isFs = studyView?.classList.contains('fullscreen-study-active') || (typeof document !== 'undefined' && (document.fullscreenElement === studyView || document.webkitFullscreenElement === studyView));
         btnFullscreen.classList.toggle('active', !!isFs);
         btnFullscreen.setAttribute('aria-pressed', String(!!isFs));
         const fsTitle = isFs ? 'Tam Ekrandan Çık' : 'Tam Ekran Çalış';
@@ -2084,20 +2090,23 @@ export function toggleStudyPlan() {
 }
 
 // Tam Ekran / Odaklanmış Ders Modu Yönetimi (Native Fullscreen API + Mobil Sayfa İçi Zırh)
+let studyFullscreenAnchor = null;
 export function exitStudyFullscreen() {
     const studyView = $('exam-view-study');
     const btn = $('btn-study-fullscreen');
 
     if (studyView) {
         studyView.classList.remove('fullscreen-study-active');
+        studyView.removeAttribute('data-fullscreen-mode');
+        if (studyFullscreenAnchor?.parentNode) { studyFullscreenAnchor.replaceWith(studyView); studyFullscreenAnchor = null; }
     }
     if (typeof document !== 'undefined') {
         document.body.classList.remove('exam-fullscreen-open');
         try {
-            if (document.fullscreenElement && typeof document.exitFullscreen === 'function') {
+            if (document.fullscreenElement === studyView && typeof document.exitFullscreen === 'function') {
                 const p = document.exitFullscreen();
                 if (p && typeof p.catch === 'function') p.catch(() => {});
-            } else if (document.webkitFullscreenElement && typeof document.webkitExitFullscreen === 'function') {
+            } else if (document.webkitFullscreenElement === studyView && typeof document.webkitExitFullscreen === 'function') {
                 document.webkitExitFullscreen();
             }
         } catch (_) {}
@@ -2117,13 +2126,19 @@ export function enterStudyFullscreen() {
     if (!studyView) return;
     const btn = $('btn-study-fullscreen');
 
+    if (!studyFullscreenAnchor) {
+        studyFullscreenAnchor = document.createComment('study fullscreen return');
+        studyView.before(studyFullscreenAnchor);
+        document.body.appendChild(studyView);
+    }
     studyView.classList.add('fullscreen-study-active');
+    studyView.dataset.fullscreenMode = 'css';
     if (typeof document !== 'undefined') {
         document.body.classList.add('exam-fullscreen-open');
         try {
             if (typeof studyView.requestFullscreen === 'function') {
                 const p = studyView.requestFullscreen();
-                if (p && typeof p.catch === 'function') p.catch(() => {});
+                if (p && typeof p.then === 'function') p.then(() => { if (document.fullscreenElement === studyView) studyView.dataset.fullscreenMode = 'native'; }).catch(() => {});
             } else if (typeof studyView.webkitRequestFullscreen === 'function') {
                 studyView.webkitRequestFullscreen();
             }
@@ -2143,7 +2158,7 @@ export function enterStudyFullscreen() {
 export function toggleStudyFullscreen() {
     const studyView = $('exam-view-study');
     if (!studyView) return;
-    const isCurrentlyFs = studyView.classList.contains('fullscreen-study-active') || (typeof document !== 'undefined' && (!!document.fullscreenElement || !!document.webkitFullscreenElement));
+    const isCurrentlyFs = studyView.classList.contains('fullscreen-study-active') || (typeof document !== 'undefined' && (document.fullscreenElement === studyView || document.webkitFullscreenElement === studyView));
 
     if (isCurrentlyFs) {
         exitStudyFullscreen();
@@ -2218,11 +2233,9 @@ function renderPractice() {
         const profileBadge = $('exam-selected-profile-badge');
         const updateProfileBadge = (p) => {
             if (!profileBadge) return;
-            const meta = {
-                temel: 'Temel (6 kolay · 1 orta)',
-                dengeli: 'Dengeli (4 kolay · 2 orta · 1 zor)',
-                zorlayici: 'Zorlayıcı (1 kolay · 3 orta · 3 zor)'
-            }[p] || 'Dengeli (4 kolay · 2 orta · 1 zor)';
+            const totals = getProfileTotals(setupScenario, p, state.profileRuns[p] || 0);
+            const label = `${totals.easy} kolay · ${totals.medium} orta · ${totals.hard} zor`;
+            const meta = `${{temel:'Temel',dengeli:'Dengeli',zorlayici:'Zorlayıcı'}[p]} (${label})`;
             const parts = meta.split(' ');
             profileBadge.innerHTML = `Seçilen düzey: <strong>${esc(parts[0])}</strong> ${esc(meta.substring(parts[0].length))}`;
         };
@@ -2230,6 +2243,9 @@ function renderPractice() {
 
         document.querySelectorAll('[data-exam-profile]').forEach(btn => {
             const p = btn.dataset.examProfile;
+            const totals = getProfileTotals(setupScenario, p, state.profileRuns[p] || 0);
+            const detail = btn.querySelector('small');
+            if (detail) detail.textContent = `${totals.easy} kolay · ${totals.medium} orta · ${totals.hard} zor`;
             const isActive = (p === currentProfile);
             btn.classList.toggle('active', isActive);
             btn.setAttribute('aria-checked', String(isActive));
@@ -3014,9 +3030,6 @@ function renderEval() {
                     saveState();
 
                     // V8.9: Küçük Newton ve Uzay Mühendisi Rozet Kontrolü
-                    if (q.outcome_id === 'FB.7.2.1' || q.outcome_id === 'FB.7.2.2') {
-                        if (typeof window.unlockBadge === 'function') window.unlockBadge('badge_newton');
-                    }
                     if (q.outcome_id === 'FB.7.1.2') {
                         if (typeof window.unlockBadge === 'function') window.unlockBadge('badge_modelci');
                     }
@@ -3029,7 +3042,7 @@ function renderEval() {
 
                     if (evalIdx < questions.length - 1) {
                         setTimeout(() => {
-                            if (a.evalQuestionIndex === evalIdx && a.questionStatuses[q.id] === 'full') {
+                            if (state.attempt === a && state.currentStep === 'eval' && a.evalQuestionIndex === evalIdx && a.questionStatuses[q.id] === 'full') {
                                 a.evalQuestionIndex = evalIdx + 1;
                                 saveState();
                                 renderEval();
@@ -3082,7 +3095,7 @@ function renderEval() {
 
                 if (evalIdx < questions.length - 1) {
                     setTimeout(() => {
-                        if (a.evalQuestionIndex === evalIdx && a.questionStatuses[q.id] === 'zero') {
+                        if (state.attempt === a && state.currentStep === 'eval' && a.evalQuestionIndex === evalIdx && a.questionStatuses[q.id] === 'zero') {
                             a.evalQuestionIndex = evalIdx + 1;
                             saveState();
                             renderEval();
@@ -3170,9 +3183,6 @@ function renderEval() {
                     saveState();
 
                     // V8.9: Küçük Newton ve Uzay Mühendisi Rozet Kontrolü
-                    if (q.outcome_id === 'FB.7.2.1' || q.outcome_id === 'FB.7.2.2') {
-                        if (typeof window.unlockBadge === 'function') window.unlockBadge('badge_newton');
-                    }
                     if (q.outcome_id === 'FB.7.1.2') {
                         if (typeof window.unlockBadge === 'function') window.unlockBadge('badge_modelci');
                     }
@@ -3185,6 +3195,7 @@ function renderEval() {
 
                     if (evalIdx < questions.length - 1) {
                         setTimeout(() => {
+                            if (state.attempt !== a || state.currentStep !== 'eval' || a.evalQuestionIndex !== evalIdx) return;
                             a.evalQuestionIndex = evalIdx + 1;
                             saveState();
                             renderEval();
@@ -3341,8 +3352,7 @@ function renderSummary() {
     saveState();
 
     // V8.9.1: Evrensel Rozetler ve Karne Özeti Kaydı
-    if (typeof window.unlockBadge === 'function') {
-        window.unlockBadge('badge_prova_ustasi');
+    if ((a.finished || a.status === 'completed') && typeof window.unlockBadge === 'function') {
         if (totalScore >= 85) {
             window.unlockBadge('badge_bilim_ustasi');
         }
@@ -3360,6 +3370,7 @@ function renderSummary() {
             .map(q => `${q.outcome_id}: ${q.title}`);
         const summaryData = {
             score: totalScore,
+            completed: !!(a.finished || a.status === 'completed'),
             maxScore: 100,
             percent: totalScore,
             missingOutcomes: missingOutcomesList,
@@ -3461,8 +3472,8 @@ function renderSummary() {
     let incorrectCount = 0;
     questions.forEach(q => {
         const st = a.questionStatuses?.[q.id];
-        if (st === 'empty' || st === 'zero') emptyCount++;
-        else if (st === 'incorrect') incorrectCount++;
+        if (!(a.answers?.[q.id] || '').trim()) emptyCount++;
+        if (st === 'incorrect') incorrectCount++;
     });
 
     const emptyPill = $('summary-empty-pill');
@@ -4882,6 +4893,13 @@ export function getScenarioQuota(scenario, profileName, run = 0) {
     return quota;
 }
 
+export function getProfileTotals(scenario, profileName, run = 0) {
+    return Object.values(getScenarioQuota(scenario, profileName, run)).reduce((sum, q) => {
+        for (const d of ['easy','medium','hard']) sum[d] += q[d] || 0;
+        return sum;
+    }, {easy:0,medium:0,hard:0});
+}
+
 export function selectQuestions(profileName, history, run = 0) {
     const scenario = getActiveScenario();
     const targetCount = scenario.question_count;
@@ -5090,7 +5108,9 @@ export async function openExamView(options = {}) {
             ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
                 document.addEventListener(evt, () => {
                     const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-                    if (!isFs) {
+                    if (isFs && (document.fullscreenElement || document.webkitFullscreenElement)?.id === 'exam-view-study') {
+                        $('exam-view-study').dataset.fullscreenMode = 'native';
+                    } else if (!isFs || $('exam-view-study')?.dataset.fullscreenMode === 'native') {
                         exitStudyFullscreen();
                     }
                 });
@@ -5198,6 +5218,9 @@ if (typeof window !== 'undefined') {
         enterStudyFullscreen,
         exitStudyFullscreen,
         selectQuestions,
+        getScenarioQuota,
+        getProfileTotals,
+        getActiveScenario,
         getQuestionHistoryStats,
         questionVisualHtml,
         formatSampleAnswerWithHighlights,
@@ -5254,6 +5277,7 @@ export function toggleScratchpad(forceOpen) {
         container.classList.add('is-hidden');
         if (btnToggle) btnToggle.classList.remove('active');
         scratchpadState.isOpen = false;
+        scratchpadState.isDrawing = false;
     }
 }
 

@@ -4852,7 +4852,7 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
 .account-admin #profile-grade { display: none; }
 .account-admin label[for="profile-grade"] { display: none; }
 .admin-user-class-filters { display: flex; gap: 6px; flex-shrink: 0; margin-bottom: 8px; }
-.admin-user-class-filters button { flex: 1; min-width: 0; min-height: 40px; background: #172033; color: #f8fafc; border: 1px solid #64748b; border-radius: 8px; }
+.admin-user-class-filters button { flex: 1; min-width: 0; min-height: 48px; background: #172033; color: #f8fafc; border: 1px solid #64748b; border-radius: 8px; }
 .admin-user-class-filters button[aria-pressed="true"] { background: #075985; border-color: #38bdf8; }
 #admin-user-list { min-height: 0 !important; overscroll-behavior: contain; }
 #floating-smartboard-btn { position: relative; bottom: auto; right: auto; z-index: 50; align-self: flex-end; margin: 12px 24px 24px; flex-shrink: 0; }
@@ -4872,3 +4872,51 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     .admin-user-row { padding: 8px !important; gap: 5px !important; min-width: 0; overflow-wrap: anywhere; }
     #admin-user-list { padding: 6px !important; }
 }
+
+/* One visible control set for these experiments; right-panel teaching text stays. */
+#quick-controls-6-8, #quick-controls-6-9 { display: none !important; pointer-events: none !important; }
+.lab-mini-pill-btn { background: #172033; color: #f8fafc; border: 1px solid #64748b; border-radius: 8px; padding: 10px 12px; min-height: 44px; touch-action: manipulation; }
+.lab-mini-pill-btn.active { background: #075985; border-color: #38bdf8; }
+:is(.lab-mini-pill-btn, .lab-select-pill):focus-visible { outline: 3px solid #38bdf8; outline-offset: 2px; }
+@media (max-width: 600px) {
+    #admin-user-list .admin-user-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center !important; }
+    #admin-user-list .admin-user-info { min-width: 0; width: auto !important; gap: 6px; }
+    #admin-user-list .admin-user-avatar { width: 30px; height: 30px; flex-shrink: 0; }
+    #admin-user-list .admin-user-details { min-width: 0; }
+    #admin-user-list .admin-user-details h4 { font-size: 13px; }
+    #admin-user-list .admin-user-details p { font-size: 11px; }
+    #admin-user-list .admin-user-grade-col { width: auto !important; margin: 0 !important; }
+    #admin-user-list .admin-grade-badge { display: none !important; }
+    #admin-user-list .admin-grade-select { min-height: 44px; max-width: 110px; }
+    #admin-user-list .admin-user-stats { text-align: left; font-size: 12px; }
+    #admin-user-list .admin-actions { gap: 4px; }
+    #admin-user-list .admin-actions button { font-size: 11px; padding: 4px 6px; min-height: 44px; }
+}
+@media (max-height: 520px) {
+    #admin-modal .modal-content { padding: 10px !important; }
+    #admin-modal h2 { font-size: 18px !important; }
+    #admin-modal .admin-tabs { margin-bottom: 4px !important; }
+    #admin-panel-users > div:has(> #admin-search-input) { margin-bottom: 4px !important; }
+}
+@media (max-width: 600px) {
+    #admin-modal h2 { font-size: 24px !important; }
+    #admin-modal .modal-content > div:has(> h2), #admin-modal .admin-tabs { margin-bottom: 4px !important; flex-shrink: 0; }
+    #admin-modal .admin-tab-btn { font-size: 12px; padding: 6px 8px !important; }
+    #admin-panel-users > div:has(> #admin-search-input) { margin-bottom: 8px !important; flex-shrink: 0; }
+    #admin-users-stats .admin-stat-card * { font-size: 10px !important; line-height: 1.1; }
+    #admin-user-list .admin-user-row { position: relative; grid-template-columns: 110px minmax(0, 1fr); }
+    #admin-user-list .admin-user-info { grid-column: 1 / -1; margin-bottom: 0 !important; }
+    #admin-user-list .admin-user-details h4 { padding-right: 60px; }
+    #admin-user-list .admin-user-stats { position: absolute; right: 8px; top: 8px; font-size: 11px !important; }
+    #admin-user-list .admin-user-grade-col { grid-column: 1; grid-row: 2; }
+    #admin-user-list .admin-actions { grid-column: 2; grid-row: 2; min-width: 0; }
+    #admin-user-list .admin-actions button { flex: 1; min-width: 0; padding: 4px !important; font-size: 11px !important; }
+}
+
+.account-teacher :is(#profile-grade, label[for="profile-grade"]) { display: none; }
+
+.account-admin .auth-field-group:has(#p-nickname) { display: none; }
+@media (max-width: 600px) {
+    #admin-modal .modal-content { padding: 12px !important; }
+}
+#admin-user-list .admin-user-row { transition: background-color 0.2s; }

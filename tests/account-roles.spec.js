@@ -2,26 +2,31 @@ import { test, expect } from '@playwright/test';
 
 // In-memory Firebase boundary: these tests never write to production accounts.
 async function mockFirebase(page) {
-    await page.addInitScript(() => { localStorage.setItem('fenupx_cookie_consent', 'accepted'); window.__records = {}; window.__writes = []; });
+    page.on('dialog', d => d.accept());
+    await page.addInitScript(() => { localStorage.setItem('fenupx_cookie_consent', 'accepted'); window.__records = JSON.parse(sessionStorage.getItem('__records') || '{}'); window.__writes = []; });
     await page.route('https://www.gstatic.com/firebasejs/**', async route => {
         const url = route.request().url();
         let body = '';
         if (url.includes('firebase-app')) body = 'export const initializeApp = () => ({});';
         if (url.includes('firebase-auth')) body = `
-            const auth = { currentUser: null }; export const getAuth = () => auth;
-            export const onAuthStateChanged = (_, cb) => { window.__login = async (uid) => { auth.currentUser = uid ? { uid, emailVerified: true, providerData: [] } : null; await cb(auth.currentUser); }; setTimeout(() => cb(null), 0); };
+            const makeUser = uid => uid ? {uid,emailVerified:true,providerData:[],displayName:'Test Specimen',email:'specimen@example.invalid'} : null;
+            const auth = { currentUser: makeUser(sessionStorage.getItem('__uid')) }; export const getAuth = () => auth;
+            export const onAuthStateChanged = (_, cb) => { window.__login = async (uid) => { auth.currentUser = makeUser(uid); uid ? sessionStorage.setItem('__uid',uid) : sessionStorage.removeItem('__uid'); sessionStorage.setItem('__records',JSON.stringify(window.__records)); await cb(auth.currentUser); }; setTimeout(() => cb(auth.currentUser), 0); };
             export const signOut = () => window.__login(null);
+            export const createUserWithEmailAndPassword = async () => { await window.__login('created'); return {user:auth.currentUser}; };
+            export const signInWithPopup = async () => { await window.__login('google-created'); return {user:auth.currentUser}; };
             export class GoogleAuthProvider {};
             export const EmailAuthProvider = {};
-            ${['createUserWithEmailAndPassword','signInWithEmailAndPassword','signInWithPopup','deleteUser','reauthenticateWithCredential','reauthenticateWithPopup','sendEmailVerification','sendPasswordResetEmail'].map(n => `export const ${n} = async () => ({});`).join('\n')}`;
+            ${['signInWithEmailAndPassword','deleteUser','reauthenticateWithCredential','reauthenticateWithPopup','sendEmailVerification','sendPasswordResetEmail'].map(n => `export const ${n} = async () => ({});`).join('\n')}`;
         if (url.includes('firebase-firestore')) body = `
             export const getFirestore = () => ({});
             export const doc = (_, collection, uid) => ({ collection, uid });
             export const getDoc = async ref => { const data = window.__records[ref.uid]; if (window.__delay) await new Promise(r => setTimeout(r, window.__delay)); return { exists: () => !!data, data: () => data }; };
-            export const updateDoc = async (ref, data) => { if (window.__fail) throw Error('test failure'); await new Promise(r => setTimeout(r, 50)); window.__writes.push({uid: ref.uid, data}); Object.assign(window.__records[ref.uid], data); };
+            export const updateDoc = async (ref, data) => { if (window.__fail) throw Error('test failure'); await new Promise(r => setTimeout(r, 50)); window.__writes.push({uid: ref.uid, data}); Object.assign(window.__records[ref.uid], data); sessionStorage.setItem('__records',JSON.stringify(window.__records)); };
+            export const setDoc = async (ref,data) => {window.__records[ref.uid]=data;sessionStorage.setItem('__records',JSON.stringify(window.__records));};
             export const collection = (_, name) => name;
             export const getDocs = async () => ({ forEach: fn => Object.entries(window.__records).forEach(([id, data]) => fn({ id, data: () => data })) });
-            ${['setDoc','deleteDoc','query','orderBy','limit','addDoc'].map(n => `export const ${n} = () => ({});`).join('\n')}`;
+            ${['deleteDoc','query','orderBy','limit','addDoc'].map(n => `export const ${n} = () => ({});`).join('\n')}`;
         await route.fulfill({ contentType: 'text/javascript', body, headers: {'Access-Control-Allow-Origin':'*'} });
     });
     await page.goto('/');
@@ -35,8 +40,12 @@ test('role transitions, delayed profiles, class onboarding retries and persisten
         await window.__login('a');
     });
     await expect(page.locator('#header-streak-badge')).toBeHidden();
+    await expect(page.locator('#admin-display-email')).toHaveText('specimen@example.invalid');
+    await expect(page.locator('#admin-display-fullname')).toHaveText('Test Admin');
     await expect(page.locator('#btn-admin-panel')).not.toHaveClass(/is-hidden/);
     await page.evaluate(() => window.__login('t'));
+    await expect(page.locator('#profile-display-role-tag')).toHaveText('Öğretmen');
+    await expect(page.locator('#profile-grade')).toBeHidden();
     await expect(page.locator('#modal-onboarding-grade')).toBeHidden();
     await expect(page.locator('#btn-admin-panel')).toHaveClass(/is-hidden/);
     await page.evaluate(() => window.__login('s'));
@@ -81,7 +90,7 @@ test('promotion remains inert for missing baseline, dates, repeated sessions and
     expect(await page.evaluate(() => window.__writes)).toEqual([]);
 });
 
-test('class native styles and drawing access at phone, landscape, tablet and board sizes', async ({page}) => {
+test('class native styles and drawing access at phone, landscape, tablet and board sizes', async ({page}, info) => {
     await mockFirebase(page);
     for (const [width,height,phone] of [[320,650,true],[375,667,true],[390,844,true],[430,932,true],[844,390,true],[844,430,true],[768,1024,false],[820,1180,false],[1366,768,false],[1920,1080,false]]) {
         await page.setViewportSize({width,height});
@@ -100,5 +109,74 @@ test('class native styles and drawing access at phone, landscape, tablet and boa
     for (const grade of ['5','6','7','8']) {
         await page.locator('#user-grade').selectOption(grade);
         await expect(page.locator('#user-grade')).toHaveValue(grade);
+    }
+    await page.locator('#user-grade').click();
+    await page.screenshot({path:`tests/artifacts/release-893-native-select-${info.project.name}.png`,animations:'disabled'});
+    await page.keyboard.press('Escape');
+});
+
+test('compact admin metrics and scroll remain inside portrait and short landscape panel',async({page})=>{
+    await mockFirebase(page);
+    await page.evaluate(async()=>{
+        window.__records={a:{role:'admin',name:'Test',surname:'Admin'},t:{role:'teacher',name:'Test',surname:'Teacher'}};
+        for(let i=0;i<10;i++)window.__records['s'+i]={role:'student',name:'Test',surname:'Student',nickname:'Specimen '+i,email:'specimen@example.invalid',sinif:'6'};
+        await window.__login('a');await window.loadAdminUsers();
+        const m=document.getElementById('admin-modal');m.classList.remove('is-hidden');m.classList.add('is-open','active');
+    });
+    for(const [width,height] of [[390,844],[844,390]]) {
+        await page.setViewportSize({width,height});
+        await page.evaluate(async()=>{ document.getElementById('admin-user-list').getBoundingClientRect(); await document.fonts.ready; await Promise.all(document.getAnimations().filter(a=>Number.isFinite(a.effect?.getComputedTiming().endTime)).map(a=>a.finished.catch(()=>{}))); });
+        const metrics=await page.locator('#admin-users-stats').boundingBox();expect(metrics.height).toBeLessThanOrEqual(80);
+        const list=await page.locator('#admin-user-list').boundingBox();expect(list.height).toBeGreaterThan(20);expect(list.y+list.height).toBeLessThanOrEqual(height);
+        if(width===390) { const row=await page.locator('.admin-user-row').first().boundingBox(); expect(list.height/row.height).toBeGreaterThanOrEqual(4); }
+        await page.locator('#admin-user-list').evaluate(el=>el.scrollTop=el.scrollHeight);
+        await page.locator('.admin-grade-select').last().click({trial:true});
+        await page.screenshot({path:`tests/artifacts/release-893-admin-${width}.png`,animations:'disabled'});
+    }
+});
+
+
+async function openSignup(page) {
+    const login = page.locator('#btn-uyelik');
+    if (!(await login.isVisible())) await page.locator('#btn-mobile-menu').click();
+    await login.click();
+    await page.getByRole('link',{name:'Hemen Üye Ol',exact:true}).click();
+}
+for (const grade of ['5','6','7','8']) test(`email signup persists explicitly selected grade ${grade} through profile reload`,async({page})=>{
+    await mockFirebase(page);await openSignup(page);
+    await page.locator('#student-first-name').fill('Deneme');await page.locator('#student-last-name').fill('Kullanıcı');
+    await page.locator('#student-reg-nickname').fill('TestKaptan');
+    await page.locator('#user-grade').selectOption(grade);
+    await page.locator('#student-email').fill('specimen@example.invalid');
+    await page.locator('#student-pass').fill('TestOnly123!');await page.locator('#student-pass-confirm').fill('TestOnly123!');
+    await Promise.all([page.waitForEvent('load'),page.locator('#btn-student-submit').click()]);
+    await page.waitForFunction(()=>window.__login && document.getElementById('profile-grade')?.value===window.__records.created?.sinif);
+    expect(await page.evaluate(()=>window.__records.created.sinif)).toBe(grade);
+    await expect(page.locator('#profile-grade')).toHaveValue(grade);
+    await expect(page.locator('#modal-onboarding-grade')).toBeHidden();
+});
+
+test('first Google login requests an explicit grade and persists onboarding across reload',async({page})=>{
+    await mockFirebase(page);
+    const login=page.locator('#btn-uyelik');if(!(await login.isVisible()))await page.locator('#btn-mobile-menu').click();await login.click();
+    await Promise.all([page.waitForEvent('load'),page.locator('#btn-google-login').click()]);
+    await expect(page.locator('#modal-onboarding-grade')).toBeVisible();
+    await page.locator('.btn-onboarding-grade[data-grade="8"]').click();
+    await expect(page.locator('#modal-onboarding-grade')).toBeHidden();
+    await page.reload();await page.waitForFunction(()=>window.__login && window.__records['google-created']?.sinif==='8');
+    await expect(page.locator('#modal-onboarding-grade')).toBeHidden();
+    await expect(page.locator('#profile-grade')).toHaveValue('8');
+});
+
+test('profile edits persist all four grades and preserve existing score',async({page})=>{
+    await mockFirebase(page);
+    await page.evaluate(async()=>{window.__records.s={role:'student',name:'Deneme',surname:'Kullanıcı',nickname:'TestKaptan',sinif:'5',totalScore:120};await window.__login('s');});
+    for(const grade of ['5','6','7','8']) {
+        await page.evaluate(()=>{const m=document.getElementById('profile-modal');m.classList.remove('is-hidden');m.classList.add('is-open','active');m.style.display='flex';m.querySelector('details').open=true;});
+        await page.locator('#profile-grade').selectOption(grade);
+        await Promise.all([page.waitForEvent('load'),page.locator('#btn-save-profile').click()]);
+        await page.waitForFunction(()=>window.__login && document.getElementById('profile-grade')?.value===window.__records.s?.sinif);
+        expect(await page.evaluate(()=>window.__records.s.sinif)).toBe(grade);
+        expect(await page.evaluate(()=>window.__records.s.totalScore)).toBe(120);
     }
 });

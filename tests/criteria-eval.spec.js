@@ -94,8 +94,8 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
 
     // Soru 1: Öğrenci cevabı ve örnek cevap görünmeli
     await expect(page.locator('.eval-student-answer-box')).toContainText('Bu soruya detaylı bilimsel cevabımı yazdım.');
-    await expect(page.locator('.eval-sample-answer-box')).toContainText('Örnek Bilimsel Açıklama');
-    await expect(page.locator('.eval-alt-note')).toContainText('Aynı bilimsel anlamı veren farklı ifadeler kabul edilir.');
+    await expect(page.locator('.eval-sample-answer-box')).toContainText('Örnek Tam Puanlık Cevap');
+    await expect(page.locator('.eval-alt-note')).toContainText('Aynı bilimsel anlamı veren farklı ifadeler');
 
     // Soru 1 ölçütleri
     const criterionItems = page.locator('.exam-criterion-item');
@@ -107,6 +107,7 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
     await expect(liveScoreEl).toContainText('0');
 
     // İlk ölçütü işaretle
+    await page.locator('#btn-eval-partial').click();
     await criterionItems.first().click();
     // Puan canlı artmalı (> 0)
     const scoreAfterFirst = await liveScoreEl.innerText();
@@ -133,12 +134,14 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
     await expect(page.locator('.eval-card .exam-qmeta')).toContainText('SORU 3 / 7');
 
     // Soru 3: Sadece ilk ölçütü işaretle (kısmi puan)
-    await page.locator('.exam-criterion-item').first().click();
+    await page.locator('#btn-eval-partial').click();
+      await page.locator('.exam-criterion-item').first().click();
     await page.locator('#btn-eval-next-q').click();
 
     // Soru 4, 5, 6'yı da kaydederek geç
     for (let s = 4; s <= 6; s++) {
       await expect(page.locator('.eval-card .exam-qmeta')).toContainText(`SORU ${s} / 7`);
+      await page.locator('#btn-eval-partial').click();
       await page.locator('.exam-criterion-item').first().click();
       await page.locator('#btn-eval-next-q').click();
     }
@@ -148,7 +151,8 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
     await expect(page.locator('#btn-eval-to-summary')).toBeVisible();
 
     // Son soruda da ilk ölçütü seç ve özete geç
-    await page.locator('.exam-criterion-item').first().click();
+    await page.locator('#btn-eval-partial').click();
+      await page.locator('.exam-criterion-item').first().click();
     await page.locator('#btn-eval-to-summary').click();
 
     // 5. Aşama: Çalışma Özeti Ekranı Açılmalı
@@ -190,11 +194,13 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
 
     // 7 soruyu da bilerek eksik ölçütlerle kaydet
     for (let q = 1; q <= 6; q++) {
+      await page.locator('#btn-eval-partial').click();
       await page.locator('.exam-criterion-item').first().click();
       await page.locator('#btn-eval-next-q').click();
     }
     // 7. soru
-    await page.locator('.exam-criterion-item').first().click();
+    await page.locator('#btn-eval-partial').click();
+      await page.locator('.exam-criterion-item').first().click();
     await page.locator('#btn-eval-to-summary').click();
 
     await expect(page.locator('#exam-view-summary')).toBeVisible();
@@ -316,6 +322,7 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
 
     // Ölçüt checkbox'ları yeni yapıda tıklanabilir olmalı
     const firstCriterion = page.locator('.exam-criterion-item').first();
+    await page.locator('#btn-eval-partial').click();
     await expect(firstCriterion).toBeVisible();
     await firstCriterion.click();
     await expect(page.locator('#eval-current-q-score')).not.toContainText('0 /');
@@ -338,10 +345,12 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
 
     // 7 soruyu hızla değerlendirip özete geç
     for (let i = 0; i < 6; i++) {
+      await page.locator('#btn-eval-partial').click();
       await page.locator('.exam-criterion-item').first().click();
       await page.locator('#btn-eval-next-q').click();
     }
-    await page.locator('.exam-criterion-item').first().click();
+    await page.locator('#btn-eval-partial').click();
+      await page.locator('.exam-criterion-item').first().click();
     await page.locator('#btn-eval-to-summary').click();
 
     await expect(page.locator('#exam-view-summary')).toBeVisible();

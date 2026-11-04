@@ -5898,3 +5898,9 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     }
 }
 
+
+/* Fullscreen root is portaled to body to escape transformed/glass ancestors. */
+#exam-view-study.fullscreen-study-active:not(.is-hidden) {
+    margin: 0 !important; max-width: none !important; max-height: none !important;
+    transform: none !important; border-radius: 0 !important;
+}

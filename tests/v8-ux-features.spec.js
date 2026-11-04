@@ -19,10 +19,20 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await page.locator('#btn-choice-go-study').click();
         await expect(page.locator('#exam-view-study')).toBeVisible();
 
+        if (await page.locator('#btn-study-toggle-plan').getAttribute('aria-expanded') === 'false') await page.locator('#btn-study-toggle-plan').click();
+
         // Akordiyon grupları mevcut olmalı
         const groups = page.locator('#exam-cardnav .exam-cardnav-group');
         const groupCount = await groups.count();
         expect(groupCount).toBeGreaterThanOrEqual(2);
+
+        const mobilePicker = page.locator('#exam-outcome-select');
+        if (await mobilePicker.isVisible()) {
+            const lastValue = await mobilePicker.locator('option').last().getAttribute('value');
+            await mobilePicker.selectOption(lastValue);
+            await expect(page.locator('#exam-cardnav .exam-cardnav-group.active')).toHaveAttribute('data-outcome-group', lastValue);
+            return;
+        }
 
         // Aktif kartın grubu otomatik açık (expanded) olmalı
         const activeGroup = page.locator('#exam-cardnav .exam-cardnav-group.active');
@@ -169,6 +179,7 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
 
         // 1. Üst Menüdeki #btn-hakkimizda orijinal scene-hakkimizda sahnesini açmalı
         const btnHakkimizda = page.locator('#btn-hakkimizda');
+        if (!(await btnHakkimizda.isVisible())) await page.locator('#btn-mobile-menu').click();
         await expect(btnHakkimizda).toBeVisible();
         await btnHakkimizda.click();
 
@@ -185,7 +196,8 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await expect(policyModal).toBeHidden();
 
         // Footer'daki "Gizlilik Politikası" butonuna tıkla
-        const btnPrivacy = page.locator('#main-footer .btn-kvkk-open');
+        const btnPrivacy = page.locator(page.viewportSize().width <= 820 ? '.mobile-nav-footer-section .btn-kvkk-open' : '#main-footer .btn-kvkk-open');
+        if (!(await btnPrivacy.isVisible())) await page.locator('#btn-mobile-menu').click();
         await btnPrivacy.click();
 
         // Modal açılmalı ve Gizlilik metni görüntülenmeli
@@ -198,7 +210,8 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await expect(policyModal).toBeHidden();
 
         // Çerez Politikası butonuna tıkla
-        const btnCookies = page.locator('#main-footer .btn-cookies-open');
+        const btnCookies = page.locator(page.viewportSize().width <= 820 ? '.mobile-nav-footer-section .btn-cookies-open' : '#main-footer .btn-cookies-open');
+        if (!(await btnCookies.isVisible())) await page.locator('#btn-mobile-menu').click();
         await btnCookies.click();
         await expect(policyModal).toBeVisible();
         await expect(page.locator('#modal-title')).toContainText('Çerez');
@@ -209,7 +222,8 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await expect(policyModal).toBeHidden();
 
         // Kullanım Koşulları butonuna tıkla
-        const btnTerms = page.locator('#main-footer .btn-terms-open');
+        const btnTerms = page.locator(page.viewportSize().width <= 820 ? '.mobile-nav-footer-section .btn-terms-open' : '#main-footer .btn-terms-open');
+        if (!(await btnTerms.isVisible())) await page.locator('#btn-mobile-menu').click();
         await btnTerms.click();
         await expect(policyModal).toBeVisible();
         await expect(page.locator('#modal-title')).toContainText('Kullanım Koşulları');
@@ -265,13 +279,13 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await page.waitForFunction(() => {
             const dual = window.FenUpLab?.labState?.work?.dual;
             return dual && dual.t2.isFinished && !dual.t1.isFinished;
-        }, { timeout: 10000 });
+        }, undefined, { timeout: 60000 });
 
         // Ardından 10 N da hedefe ulaşmalı (t1 & t2 finish)
         await page.waitForFunction(() => {
             const dual = window.FenUpLab?.labState?.work?.dual;
             return dual && dual.t1.isFinished && dual.t2.isFinished;
-        }, { timeout: 15000 });
+        }, undefined, { timeout: 60000 });
 
         // Mod 1 MEB Formülsüz Sonuç Cümlesini Doğrula
         const pedText = page.locator('#work-pedagogical-text');
@@ -294,13 +308,13 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await page.waitForFunction(() => {
             const dual = window.FenUpLab?.labState?.work?.dual;
             return dual && dual.t1.isFinished && !dual.t2.isFinished;
-        }, { timeout: 10000 });
+        }, undefined, { timeout: 60000 });
 
         // Ardından 5 metre de hedefe ulaşmalı
         await page.waitForFunction(() => {
             const dual = window.FenUpLab?.labState?.work?.dual;
             return dual && dual.t1.isFinished && dual.t2.isFinished;
-        }, { timeout: 15000 });
+        }, undefined, { timeout: 60000 });
 
         // Mod 2 MEB Formülsüz Sonuç Cümlesini Doğrula
         await expect(pedText).toContainText('Sonuç: Uygulanan kuvvet aynıyken, cismin aldığı yol ne kadar fazlaysa yapılan fiziksel iş de o kadar fazla olur.');
@@ -517,8 +531,10 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
 
         // 1. Header Günlük Seri Göstergesi
         const headerStreak = page.locator('#header-streak-badge');
+        if (!(await headerStreak.isVisible())) await page.locator('#btn-mobile-menu').click();
         await expect(headerStreak).toBeVisible();
         await expect(page.locator('#header-streak-count')).toContainText(/\d+/);
+        if (await page.locator('#btn-mobile-menu').getAttribute('aria-expanded') === 'true') await page.locator('#btn-mobile-menu').click();
 
         // 2. Profil Modalını Aç ve Bileşenleri Doğrula
         await page.evaluate(() => {
@@ -582,6 +598,10 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
 
         // 3. Akıllı Tahta (ETAP) Karalama Tahtası Doğrulaması
         const btnToggleScratchpad = page.locator('#btn-toggle-scratchpad');
+        const phoneLayout = await page.evaluate(() => matchMedia('(max-width: 600px), (max-width: 900px) and (max-height: 520px)').matches);
+        if (phoneLayout) {
+            await expect(btnToggleScratchpad).toBeHidden();
+        } else {
         await expect(btnToggleScratchpad).toBeVisible();
 
         const scratchpadContainer = page.locator('#scratchpad-container');
@@ -613,6 +633,8 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await expect(closeBtn).toBeVisible();
         await closeBtn.click();
         await expect(scratchpadContainer).toBeHidden();
+
+        }
 
         // 4. Günlük Seri ve Rozet Fonksiyonlarının Doğrulanması
         const streakResult = await page.evaluate(() => {
@@ -704,6 +726,10 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
 
         // 5. Küresel Akıllı Tahta (ETAP) Yüzen Buton ve Modal Kontrolü
         const floatBtn = page.locator('#floating-smartboard-btn');
+        if (await page.evaluate(() => matchMedia('(max-width: 600px), (max-width: 900px) and (max-height: 520px)').matches)) {
+            await expect(floatBtn).toBeHidden();
+            return;
+        }
         await expect(floatBtn).toBeVisible();
 
         const smartboardModal = page.locator('#smartboard-modal');

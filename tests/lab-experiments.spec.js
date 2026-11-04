@@ -24,11 +24,11 @@ test.describe('FenUp X — A Grubu Laboratuvar Kitap Eşleşmesi ve Davranış D
     await expect(passMetric).toContainText('Henüz Denenmedi');
 
     // 5 adet kontrol butonunun varlığını doğrula
-    const btnCold = page.locator('#btn-grav-pass-cold');
-    const btnHeat = page.locator('#btn-grav-heat');
-    const btnHot = page.locator('#btn-grav-pass-hot');
-    const btnQuench = page.locator('#btn-grav-quench');
-    const btnQuenchedPass = page.locator('#btn-grav-pass-quenched');
+    const btnCold = page.locator('#pill-grav-pass-cold');
+    const btnHeat = page.locator('#pill-grav-heat');
+    const btnHot = page.locator('#pill-grav-pass-hot');
+    const btnQuench = page.locator('#pill-grav-quench');
+    const btnQuenchedPass = page.locator('#pill-grav-pass-quenched');
 
     await expect(btnCold).toBeVisible();
     await expect(btnHeat).toBeVisible();
@@ -110,7 +110,7 @@ test.describe('FenUp X — A Grubu Laboratuvar Kitap Eşleşmesi ve Davranış D
     await expect(pedText).toContainText('iletken bir köprü veya bağlantı bulunmadığı için');
 
     // Anahtar aç / kapat butonu
-    const btnSwitch = page.locator('#btn-cond-toggle-switch');
+    const btnSwitch = page.locator('#pill-cond-switch');
     await expect(btnSwitch).toBeVisible();
 
     // Anahtarı kapat (Uçlar hâlâ boşken)
@@ -119,7 +119,7 @@ test.describe('FenUp X — A Grubu Laboratuvar Kitap Eşleşmesi ve Davranış D
     await expect(bulbMetric).toContainText('Sönük');
 
     // Bakır Tel bağla (Anahtar kapalıyken) -> Ampul Yanmalı
-    const btnCopper = page.locator('#btn-cond-mat-copper');
+    const btnCopper = page.locator('#pill-cond-copper');
     await btnCopper.click();
     await expect(statusEl).toContainText('akımı iletir');
     await expect(bulbMetric).toContainText('Işık Veriyor');
@@ -134,19 +134,19 @@ test.describe('FenUp X — A Grubu Laboratuvar Kitap Eşleşmesi ve Davranış D
     await expect(bulbMetric).toContainText('Işık Veriyor');
 
     // Kuru Tahta bağla -> Ampul Sönmeli (Yalıtkan)
-    const btnWood = page.locator('#btn-cond-mat-wood');
+    const btnWood = page.locator('#pill-cond-wood');
     await btnWood.click();
     await expect(statusEl).toContainText('akımı iletmez');
     await expect(bulbMetric).toContainText('Sönük');
 
     // Tuzlu Su bağla -> Ampul Yanmalı (Sıvı İletken)
-    const btnSalt = page.locator('#btn-cond-mat-saltwater');
+    const btnSalt = page.locator('#pill-cond-saltwater');
     await btnSalt.click();
     await expect(statusEl).toContainText('akımı iletir');
     await expect(bulbMetric).toContainText('Işık Veriyor');
 
     // Şekerli Su bağla -> Ampul Sönmeli (Sıvı Yalıtkan)
-    const btnSugar = page.locator('#btn-cond-mat-sugarwater');
+    const btnSugar = page.locator('#pill-cond-sugarwater');
     await btnSugar.click();
     await expect(statusEl).toContainText('akımı iletmez');
     await expect(bulbMetric).toContainText('Sönük');

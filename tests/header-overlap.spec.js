@@ -73,10 +73,12 @@ test.describe('Üst Başlık ve Ana Sayfa Butonu Örtüşme & Tıklanabilirlik Z
 
     // Değerlendirmeyi tamamla ve özete geç
     for (let i = 0; i < 6; i++) {
+      await page.locator('#btn-eval-partial').click();
       await page.locator('.exam-criterion-item').first().click();
       await page.locator('#btn-eval-next-q').click();
     }
-    await page.locator('.exam-criterion-item').first().click();
+    await page.locator('#btn-eval-partial').click();
+      await page.locator('.exam-criterion-item').first().click();
     await page.locator('#btn-eval-to-summary').click();
 
     // Sonuç ekranındayız

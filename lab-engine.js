@@ -1406,7 +1406,15 @@ function setupLensControlsDOM() {
     if (btnRecord74) btnRecord74.addEventListener('click', recordMeasurement);
 }
 
+function cleanupExperimentTools() {
+    if (animFrameId) { cancelAnimationFrame(animFrameId); animFrameId = null; }
+    const bar = document.getElementById('dual-work-variables-bar');
+    if (bar) { bar.classList.add('is-hidden'); }
+    if (labState.work?.dual) labState.work.dual.isPlaying = false;
+}
+
 export function openLabView() {
+    cleanupExperimentTools();
     renderCatalog();
     const catalogView = document.getElementById('lab-catalog-view');
     const workspaceView = document.getElementById('lab-workspace-view');
@@ -1421,6 +1429,7 @@ export function openLabView() {
 }
 
 export function closeLabView() {
+    cleanupExperimentTools();
     clearLabToast();
     if (animFrameId) {
         cancelAnimationFrame(animFrameId);
@@ -1446,6 +1455,7 @@ export function closeLabView() {
 }
 
 export function openExperimentWorkspace(expId) {
+    cleanupExperimentTools();
     clearLabToast();
     const exp = EXPERIMENTS_DATABASE.find(e => e.id === expId);
     if (!exp) return;
@@ -1824,6 +1834,7 @@ export function openExperimentWorkspace(expId) {
 }
 
 export function closeExperimentWorkspace() {
+    cleanupExperimentTools();
     clearLabToast();
     if (animFrameId) {
         cancelAnimationFrame(animFrameId);
@@ -7237,7 +7248,9 @@ function updateExpansionDOMControls() {
 
 function updateExpansionMetricsDOM() {
     const ex = labState.expansion;
-    const isHot = (ex.sphereTemp > 80);
+    const isHot = ex.sphereTemp > 30;
+    const temperatureLabel = ex.sphereTemp <= 25 ? 'Oda Sıcaklığı' : (ex.step === 'quenching' ? 'Soğuyor (Hâlâ Sıcak)' : 'Sıcak');
+    const sizeLabel = ex.sphereRadius > ex.ringRadius ? 'Genleşmiş (Halkadan Büyük)' : (isHot ? 'Halkadan Küçük (Hâlâ Sıcak)' : 'Oda Sıcaklığındaki Boyut');
     const passes = (ex.sphereRadius <= ex.ringRadius);
 
     // Canvas Altı Metrik Şeridi
@@ -7246,9 +7259,9 @@ function updateExpansionMetricsDOM() {
     const elVol = document.getElementById('mbar-68-volume');
     const elStatus = document.getElementById('mbar-68-status');
 
-    if (elState) elState.textContent = isHot ? "Akkor Sıcak" : "Oda Sıcaklığı";
+    if (elState) elState.textContent = temperatureLabel;
     if (elTemp) elTemp.textContent = `${ex.sphereTemp.toFixed(0)}°C`;
-    if (elVol) elVol.textContent = isHot ? "Büyük (Genleşti)" : (ex.step === "quenching" ? "Küçük (Büzüldü)" : "Normal Boyut (Oda Sıcaklığı)");
+    if (elVol) elVol.textContent = sizeLabel;
 
     if (elStatus) {
         if (ex.step === "ready") {
@@ -7297,7 +7310,7 @@ function updateExpansionMetricsDOM() {
     const mPass = document.getElementById('metric-68-pass');
 
     if (mTemp) mTemp.textContent = `${ex.sphereTemp.toFixed(0)}°C`;
-    if (mVol) mVol.textContent = isHot ? "Büyük (Genleşti)" : (ex.step === "quenching" ? "Küçük (Büzüldü)" : "Normal Boyut (Oda Sıcaklığı)");
+    if (mVol) mVol.textContent = sizeLabel;
     if (mRing) mRing.textContent = "Sabit Çap";
     if (mPass) {
         if (ex.step === "ready") {

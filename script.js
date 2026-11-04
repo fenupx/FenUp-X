@@ -1306,6 +1306,7 @@ const navigation = (() => {
     function cleanLayers() {
         closeMobileMenu();
         document.querySelectorAll('.modal-overlay.is-open, .modal-overlay.active').forEach(el => {
+            if (el.id === 'modal-onboarding-grade') return;
             el.classList.add('is-hidden'); el.classList.remove('is-open', 'active');
             el.style.display = 'none'; el.setAttribute('aria-hidden', 'true');
         });
@@ -3544,6 +3545,7 @@ if (typeof window !== 'undefined') {
 }
 
 export const normalizeGrade = value => VALID_GRADES.includes(String(value ?? '').trim()) ? String(value).trim() : '';
+const isTeacherProfile = data => !!data && ['teacher', 'ogretmen', 'öğretmen'].includes(data.role);
 const isStudentProfile = data => !!data && ['student', 'ogrenci', 'öğrenci'].includes(data.role);
 let loadedProfile = null;
 let authRevision = 0;
@@ -3556,6 +3558,9 @@ export function checkMissingGradeOnboarding(user, userData) {
     modal.setAttribute('aria-hidden', 'false');
     const buttons = [...modal.querySelectorAll('.btn-onboarding-grade')];
     const status = modal.querySelector('[role="status"]');
+    const onboardingRevision = authRevision;
+    buttons.forEach(b => b.disabled = false);
+    status.textContent = '';
     let saving = false;
     buttons.forEach(btn => {
         btn.onclick = async () => {
@@ -3565,14 +3570,16 @@ export function checkMissingGradeOnboarding(user, userData) {
             buttons.forEach(b => b.disabled = true);
             status.textContent = 'Kaydediliyor…';
             try {
-                if (auth.currentUser?.uid !== user.uid) throw new Error('Oturum değişti. Yeniden giriş yapın.');
+                if (onboardingRevision !== authRevision || auth.currentUser?.uid !== user.uid) throw new Error('Oturum değişti. Yeniden giriş yapın.');
                 await updateDoc(doc(db, 'users', user.uid), { sinif: grade });
-                if (auth.currentUser?.uid !== user.uid) return;
+                if (onboardingRevision !== authRevision || auth.currentUser?.uid !== user.uid) return;
                 userData.sinif = grade;
-                localStorage.setItem('fenupx_user_grade', grade);
-                const cached = JSON.parse(localStorage.getItem('currentUser') || '{}');
-                cached.sinif = grade;
-                localStorage.setItem('currentUser', JSON.stringify(cached));
+                try {
+                    localStorage.setItem('fenupx_user_grade', grade);
+                    const cached = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                    cached.sinif = grade;
+                    localStorage.setItem('currentUser', JSON.stringify(cached));
+                } catch (_) { /* Server profile remains authoritative when browser storage is full. */ }
                 modal.classList.add('is-hidden');
                 modal.style.display = 'none';
                 modal.setAttribute('aria-hidden', 'true');
@@ -3583,7 +3590,7 @@ export function checkMissingGradeOnboarding(user, userData) {
                 status.textContent = 'Sınıf kaydedilemedi. Tekrar deneyebilir veya çıkış yapabilirsiniz.';
             } finally {
                 saving = false;
-                buttons.forEach(b => b.disabled = false);
+                if (onboardingRevision === authRevision) buttons.forEach(b => b.disabled = false);
             }
         };
     });
@@ -3648,15 +3655,14 @@ export function evaluateBadges() {
             const rawSummary = localStorage.getItem('fenupx_last_exam_summary');
             if (rawSummary) {
                 const sum = JSON.parse(rawSummary);
-                if (sum && typeof sum.score === 'number' && sum.score >= 85) {
+                if (sum && sum.completed === true && typeof sum.score === 'number' && sum.score >= 85) {
                     unlockBadge('badge_bilim_ustasi');
                 }
             }
             const examStateRaw = localStorage.getItem('fenupx_exam_pilot_v1');
             if (examStateRaw) {
                 const es = JSON.parse(examStateRaw);
-                if (es && es.attempt && (es.attempt.finished || es.attempt.scores)) {
-                    unlockBadge('badge_prova_ustasi');
+                if (es && es.attempt && (es.attempt.finished || es.attempt.status === 'completed')) {
                     if (es.attempt.scores) {
                         const totalSc = Object.values(es.attempt.scores).reduce((a, b) => a + (Number(b) || 0), 0);
                         if (totalSc >= 85) unlockBadge('badge_bilim_ustasi');
@@ -3859,9 +3865,9 @@ profileModal.innerHTML = `
         <div id="profile-admin-view" class="profile-admin-view is-hidden" style="display:none;">
             <div class="admin-profile-hero">
                 <div class="admin-profile-badge-icon">👑</div>
-                <h3 id="admin-display-fullname" style="color: #fbbf24; font-size: 1.3rem; margin: 4px 0;">Fen Bilimleri Öğretmeni / Yönetici</h3>
+                <h3 id="admin-display-fullname" style="color: #fbbf24; font-size: 1.3rem; margin: 4px 0;">Yönetici</h3>
+                <p id="admin-display-email" style="color:#cbd5e1; margin:4px 0; overflow-wrap:anywhere;"></p>
                 <p class="admin-title-badge">FenUp X Sistem Yöneticisi</p>
-                <p class="admin-school-badge"><i class="fas fa-school"></i> FenUp X Bilim Okulları · Yönetim</p>
                 <button type="button" id="btn-profile-goto-admin" class="f-btn f-btn-ana" style="margin-top: 15px; width: 100%;">
                     <i class="fas fa-tools"></i> 🛠️ Yönetim Paneline Git
                 </button>
@@ -4072,7 +4078,11 @@ if(avatarContainer) {
 onAuthStateChanged(auth, async (user) => {
     const revision = ++authRevision;
     loadedProfile = null;
-    document.body.classList.remove('account-admin');
+    const profileRoleLabel = document.getElementById('profile-display-role-tag');
+    if (profileRoleLabel) profileRoleLabel.textContent = user ? 'Yükleniyor…' : '';
+    const profileLevel = document.getElementById('profile-level-badge');
+    if (profileLevel && user) profileLevel.style.display = 'none';
+    document.body.classList.remove('account-admin', 'account-teacher');
     document.getElementById('btn-admin-panel')?.classList.add('is-hidden');
     const onboarding = document.getElementById('modal-onboarding-grade');
     if (onboarding) { onboarding.classList.add('is-hidden'); onboarding.style.display = 'none'; onboarding.setAttribute('aria-hidden', 'true'); }
@@ -4094,6 +4104,7 @@ onAuthStateChanged(auth, async (user) => {
             const userData = userSnap.data();
             loadedProfile = userData;
             document.body.classList.toggle("account-admin", userData.role === "admin");
+            document.body.classList.toggle("account-teacher", isTeacherProfile(userData));
             const userAvatar = userData.avatar || localStorage.getItem("fenupx_user_avatar") || kozmikAvatarlar[0].url;
             const fullAd = `${userData.name} ${userData.surname}`;
             
@@ -4105,7 +4116,7 @@ onAuthStateChanged(auth, async (user) => {
                 };
             }
             if(userDisplayName) userDisplayName.textContent = fullAd;
-            if(userDisplayRole) userDisplayRole.textContent = userData.role === 'admin' ? 'Sistem Yöneticisi' : 'Öğrenci';
+            if(userDisplayRole) userDisplayRole.textContent = userData.role === 'admin' ? 'Sistem Yöneticisi' : (isTeacherProfile(userData) ? 'Öğretmen' : (isStudentProfile(userData) ? 'Öğrenci' : 'Hesap'));
             
             const btnAP = document.getElementById('btn-admin-panel');
             if(userData.role === 'admin' && btnAP) {
@@ -4155,6 +4166,10 @@ onAuthStateChanged(auth, async (user) => {
             // V8.9.1: Profil Modalında Yönetici / Öğrenci Görünüm Ayrımı
             const profHeroName = document.getElementById('profile-display-fullname');
             if (profHeroName) profHeroName.textContent = fullAd;
+            const adminName = document.getElementById('admin-display-fullname');
+            const adminEmail = document.getElementById('admin-display-email');
+            if (adminName) adminName.textContent = fullAd;
+            if (adminEmail) adminEmail.textContent = user.email || userData.email || '';
             const profHeroRole = document.getElementById('profile-display-role-tag');
             const studentSecs = document.getElementById('profile-student-sections');
             const adminView = document.getElementById('profile-admin-view');
@@ -4176,9 +4191,9 @@ onAuthStateChanged(auth, async (user) => {
                     adminView.style.display = 'none';
                 }
                 if (studentSecs) studentSecs.style.display = isStudentProfile(userData) ? 'block' : 'none';
-                if (pLevelBadge) pLevelBadge.style.removeProperty('display');
+                if (pLevelBadge) pLevelBadge.style.display = isStudentProfile(userData) ? '' : 'none';
                 if (pStreakBadge) pStreakBadge.style.display = 'inline-flex';
-                if (profHeroRole) profHeroRole.textContent = `⭐ Fen Kâşifi · ${userGrade}. Sınıf`;
+                if (profHeroRole) profHeroRole.textContent = isStudentProfile(userData) ? `⭐ Fen Kâşifi${userGrade ? ` · ${userGrade}. Sınıf` : ''}` : (isTeacherProfile(userData) ? 'Öğretmen' : 'Hesap');
 
                 const karneTitle = document.querySelector('.profile-karne-section .profile-section-title-bar h4');
                 if (karneTitle) {
@@ -4513,6 +4528,7 @@ if(profileModal) {
 const btnSaveProf = document.getElementById('btn-save-profile');
 if(btnSaveProf) {
     btnSaveProf.onclick = async () => {
+        const profileRevision = authRevision;
         const user = auth.currentUser;
         const pName = document.getElementById('p-name');
         const pSur = document.getElementById('p-surname');
@@ -4528,9 +4544,9 @@ if(btnSaveProf) {
         const sinif = normalizeGrade(pGrade?.value);
         if (isStudentProfile(loadedProfile) && !sinif) return alert('Lütfen sınıfını seç.');
 
-        if(!name || !surname || !nickname) return alert("Ad, soyad ve yarışmacı adı alanları boş bırakılamaz.");
+        if(!name || !surname || (loadedProfile.role !== 'admin' && !nickname)) return alert("Ad, soyad ve yarışmacı adı alanları boş bırakılamaz.");
         
-        if(!uygunIsimMi(name) || !uygunIsimMi(surname) || !uygunIsimMi(nickname)) {
+        if(!uygunIsimMi(name) || !uygunIsimMi(surname) || (loadedProfile.role !== 'admin' && !uygunIsimMi(nickname))) {
             try {
                 await updateDoc(doc(db, "users", user.uid), { isBanned: true });
                 alert("Kullanıcı adınız veya profil bilgileriniz topluluk kurallarına aykırı tespit edildi. Sistem tarafından otomatik olarak ENGELLENDİNİZ! Uygun bir kullanıcı adı seçmeden engeliniz kaldırılmaz.");
@@ -4542,16 +4558,16 @@ if(btnSaveProf) {
         }
         
         try {
-            unlockBadge('badge_ilk_adim');
-            checkAndUpdateStreak();
+            if (isStudentProfile(loadedProfile)) { unlockBadge('badge_ilk_adim'); checkAndUpdateStreak(); }
             const profHeroName = document.getElementById('profile-display-fullname');
             if (profHeroName && name) profHeroName.textContent = `${name} ${surname}`;
-            await updateDoc(doc(db, "users", user.uid), { name, surname, nickname, avatar, ...(isStudentProfile(loadedProfile) ? { sinif } : {}) });
+            await updateDoc(doc(db, "users", user.uid), { name, surname, avatar, ...(loadedProfile.role !== 'admin' ? {nickname} : {}), ...(isStudentProfile(loadedProfile) ? { sinif } : {}) });
+            if (profileRevision !== authRevision) return;
             localStorage.setItem('fenupx_user_grade', sinif);
             try {
                 const rawCu = localStorage.getItem('currentUser');
                 const cu = rawCu ? JSON.parse(rawCu) : {};
-                cu.name = name; cu.surname = surname; cu.nickname = nickname; cu.avatar = avatar; cu.sinif = sinif;
+                cu.name = name; cu.surname = surname; cu.nickname = loadedProfile.role === 'admin' ? loadedProfile.nickname : nickname; cu.avatar = avatar; cu.sinif = sinif;
                 localStorage.setItem('currentUser', JSON.stringify(cu));
             } catch (_) {}
             alert("Profilin başarıyla güncellendi kaptan!");
@@ -4722,6 +4738,7 @@ if(btnStuSub) {
                 updateEmailVerifyBox(cred.user);
                 hideModal(authModal);
                 alert("Hesabınız oluşturuldu! E-posta adresinize bir doğrulama bağlantısı gönderdik. Hemen yarışmaya başlayabilirsiniz; puanlarınızın Şampiyonlar Ligi liderlik tablosuna kaydedilmesi için e-postanızı doğrulamanız yeterlidir.");
+                location.reload();
             }
         } catch(err) { 
             alert("İşlem Hatası: " + getAuthErrorMessage(err.code)); 
