@@ -1312,7 +1312,7 @@ const navigation = (() => {
     function cleanLayers() {
         closeMobileMenu();
         document.querySelectorAll('.modal-overlay.is-open, .modal-overlay.active').forEach(el => {
-            if (el.id === 'modal-onboarding-grade') return;
+            if (el.id === 'modal-onboarding-grade' && !document.body.classList.contains('account-admin')) return;
             el.classList.add('is-hidden'); el.classList.remove('is-open', 'active');
             el.style.display = 'none'; el.setAttribute('aria-hidden', 'true');
         });
@@ -3432,6 +3432,10 @@ export function updateStreakUI(count) {
     if (profileStreakCount) {
         profileStreakCount.textContent = count.toString();
     }
+    const summaryStreak = document.getElementById('profile-summary-streak');
+    if (summaryStreak) {
+        summaryStreak.textContent = `${count} Gün`;
+    }
 }
 
 // ==========================================================================
@@ -3591,13 +3595,14 @@ if (typeof window !== 'undefined') {
 }
 
 export const normalizeGrade = value => VALID_GRADES.includes(String(value ?? '').trim()) ? String(value).trim() : '';
-const isTeacherProfile = data => !!data && ['teacher', 'ogretmen', 'öğretmen'].includes(data.role);
-const isStudentProfile = data => !!data && ['student', 'ogrenci', 'öğrenci'].includes(data.role);
+export const isTeacherProfile = data => !!data && ['teacher', 'ogretmen', 'öğretmen'].includes(data.role);
+export const isStudentProfile = data => !!data && ['student', 'ogrenci', 'öğrenci'].includes(data.role);
+export const isAdminProfile = data => !!data && data.role === 'admin';
 let loadedProfile = null;
 let authRevision = 0;
 
 export function checkMissingGradeOnboarding(user, userData) {
-    if (!user || !isStudentProfile(userData) || normalizeGrade(userData.sinif)) return;
+    if (!user || !userData || isAdminProfile(userData) || !isStudentProfile(userData) || normalizeGrade(userData.sinif)) return;
     const modal = document.getElementById('modal-onboarding-grade');
     if (!modal) return;
     showModal(modal);
@@ -3770,7 +3775,11 @@ export function renderBadgesShowcase() {
         else if (count >= 6) { lvl = 3; lvlName = 'Kıdemli Kâşif'; }
         else if (count >= 3) { lvl = 2; lvlName = 'Uzay Kâşifi'; }
         levelBadge.textContent = `Seviye ${lvl} · ${lvlName}`;
+        const sumLvl = document.getElementById('profile-summary-level');
+        if (sumLvl) sumLvl.textContent = `Seviye ${lvl}`;
     }
+    const sumBadges = document.getElementById('profile-summary-badges');
+    if (sumBadges) sumBadges.textContent = `${earnedList.length} / 10 Kazanıldı`;
 }
 
 export function renderKarneSummary() {
@@ -3809,13 +3818,16 @@ export function renderKarneSummary() {
 
         const scoreEl = document.getElementById('karne-last-score');
         const dateEl = document.getElementById('karne-last-date');
+        const summaryExam = document.getElementById('profile-summary-exam');
         if (scoreEl) {
             if (lastSummary) {
-                scoreEl.innerHTML = `${lastSummary.score} <small>/ ${lastSummary.maxScore || 100} Puan</small>`;
-                if (dateEl) dateEl.textContent = `Tamamlanma: ${lastSummary.date || 'Son Prova'}`;
+                scoreEl.innerHTML = `${lastSummary.score} <small>/ ${lastSummary.maxScore || 100} (Öz Değerlendirme)</small>`;
+                if (dateEl) dateEl.textContent = `Öz değerlendirme: ${lastSummary.date || 'Son Prova'}`;
+                if (summaryExam) summaryExam.textContent = `${lastSummary.score} / ${lastSummary.maxScore || 100}`;
             } else {
                 scoreEl.textContent = '— / 100';
                 if (dateEl) dateEl.textContent = 'Henüz prova çözülmedi';
+                if (summaryExam) summaryExam.textContent = '— / 100';
             }
         }
 
@@ -3911,6 +3923,14 @@ profileModal.innerHTML = `
 
         <!-- Öğrenciye Özel Rozet ve Karne Bölümleri (Admin Girişinde Gizlenir) -->
         <div id="profile-student-sections" class="profile-student-sections">
+            <!-- 1.5 Kısa Gelişim Özeti -->
+            <div class="profile-progress-summary" id="profile-progress-summary">
+                <div class="progress-summary-pill"><span class="summary-pill-label">Seri</span><strong id="profile-summary-streak">1 Gün</strong></div>
+                <div class="progress-summary-pill"><span class="summary-pill-label">Seviye</span><strong id="profile-summary-level">Seviye 1</strong></div>
+                <div class="progress-summary-pill"><span class="summary-pill-label">Rozetler</span><strong id="profile-summary-badges">0 / 10</strong></div>
+                <div class="progress-summary-pill"><span class="summary-pill-label">Prova Öz Değerlendirmesi</span><strong id="profile-summary-exam">— / 100</strong></div>
+            </div>
+
             <!-- 2. ORTA KISIM: 10 ADET EVRENSEL KOZMİK BAŞARI ROZETİ VİTRİNİ (5x2 IZGARA) -->
             <div class="profile-badges-section">
                 <div class="profile-section-title-bar">
@@ -3922,33 +3942,38 @@ profileModal.innerHTML = `
                 </div>
             </div>
 
-            <!-- 3. ALT KISIM: KAZANIM DURUMU & ÇALIŞMA KARNESİ -->
-            <div class="profile-karne-section">
-                <div class="profile-section-title-bar">
-                    <h4><i class="fas fa-graduation-cap"></i> 7. Sınıf Eksik Kazanım Karnesi</h4>
-                    <span class="profile-karne-badge" id="profile-karne-status">Güncel Durum</span>
-                </div>
-                <div class="profile-karne-grid">
-                    <div class="karne-stat-card">
-                        <span class="stat-label">Son Yazılı Provası</span>
-                        <span class="stat-val" id="karne-last-score">— / 100</span>
-                        <small class="stat-sub" id="karne-last-date">Henüz prova çözülmedi</small>
-                    </div>
-                    <div class="karne-stat-card">
-                        <span class="stat-label">Güneş Sistemi & Uzay</span>
-                        <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-space" style="width: 0%;"></div></div>
-                        <small class="stat-sub" id="karne-sub-space">İnceleme: 0/6 Kart</small>
-                    </div>
-                    <div class="karne-stat-card">
-                        <span class="stat-label">Kuvvet, İş ve Enerji</span>
-                        <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-force" style="width: 0%;"></div></div>
-                        <small class="stat-sub" id="karne-sub-force">Kazanım: Başlangıç</small>
+            <!-- 3. ALT KISIM: KAZANIM DURUMU & ÇALIŞMA KARNESİ (Mobilde isteğe bağlı açılır) -->
+            <div class="profile-karne-section profile-karne-accordion" id="profile-karne-details">
+                <div class="profile-section-title-bar profile-karne-summary" id="profile-karne-summary-bar" role="button" tabindex="0" aria-expanded="true">
+                    <h4><i class="fas fa-graduation-cap"></i> <span id="profile-karne-title">7. Sınıf Eksik Kazanım Karnesi</span></h4>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span class="profile-karne-badge" id="profile-karne-status">Güncel Durum</span>
+                        <button type="button" class="btn-toggle-karne-details" id="btn-toggle-karne-details" aria-label="Ayrıntıları Göster/Gizle"><i class="fas fa-chevron-up"></i></button>
                     </div>
                 </div>
-                <div class="karne-outcome-details" id="karne-outcome-details">
-                    <div class="karne-outcome-item">
-                        <i class="fas fa-info-circle" style="color: var(--neon-blue);"></i> 
-                        <span>Kazanım eksiklerini tamamlamak için yazılı provasında öz değerlendirme yapabilirsin.</span>
+                <div class="profile-karne-content" id="profile-karne-content">
+                    <div class="profile-karne-grid">
+                        <div class="karne-stat-card">
+                            <span class="stat-label">Prova Öz Değerlendirmesi</span>
+                            <span class="stat-val" id="karne-last-score">— / 100</span>
+                            <small class="stat-sub" id="karne-last-date">Henüz prova çözülmedi</small>
+                        </div>
+                        <div class="karne-stat-card">
+                            <span class="stat-label">Güneş Sistemi & Uzay</span>
+                            <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-space" style="width: 0%;"></div></div>
+                            <small class="stat-sub" id="karne-sub-space">İnceleme: 0/6 Kart</small>
+                        </div>
+                        <div class="karne-stat-card">
+                            <span class="stat-label">Kuvvet, İş ve Enerji</span>
+                            <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-force" style="width: 0%;"></div></div>
+                            <small class="stat-sub" id="karne-sub-force">Kazanım: Başlangıç</small>
+                        </div>
+                    </div>
+                    <div class="karne-outcome-details" id="karne-outcome-details">
+                        <div class="karne-outcome-item">
+                            <i class="fas fa-info-circle" style="color: var(--neon-blue);"></i> 
+                            <span>Kazanım eksiklerini tamamlamak için yazılı provasında öz değerlendirme yapabilirsin.</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3985,7 +4010,7 @@ profileModal.innerHTML = `
                         <span class="tooltiptext"><i class="fas fa-exclamation-triangle" style="margin-right:5px;"></i> Kırıcı veya argo isim kullanan hesaplar tablodan kalıcı olarak silinir.</span>
                     </div>
                 </div>
-                <div class="auth-field-group">
+                <div class="auth-field-group profile-student-grade-section" id="profile-student-grade-group">
                     <label for="profile-grade" class="auth-label">Sınıfın</label>
                     <select id="profile-grade" class="fenupx-input auth-input" disabled aria-describedby="grade-correction-help">
                         <option value="5">5. Sınıf</option>
@@ -4023,6 +4048,21 @@ profileModal.innerHTML = `
     </div>
 `;
 document.body.appendChild(profileModal);
+
+const karneSummaryBar = document.getElementById('profile-karne-summary-bar');
+const karneDetails = document.getElementById('profile-karne-details');
+if (karneSummaryBar && karneDetails) {
+    const toggleKarne = (e) => {
+        if (e) e.preventDefault();
+        const isCollapsed = karneDetails.classList.toggle('is-collapsed');
+        karneSummaryBar.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+        const icon = karneSummaryBar.querySelector('#btn-toggle-karne-details i');
+        if (icon) {
+            icon.className = isCollapsed ? 'fas fa-chevron-down' : 'fas fa-chevron-up';
+        }
+    };
+    karneSummaryBar.onclick = toggleKarne;
+}
 
 const btnProfGotoAdmin = document.getElementById('btn-profile-goto-admin');
 if (btnProfGotoAdmin) {
@@ -4073,14 +4113,22 @@ onAuthStateChanged(auth, async (user) => {
     document.body.classList.remove('account-admin', 'account-teacher');
     document.getElementById('btn-admin-panel')?.classList.add('is-hidden');
     const onboarding = document.getElementById('modal-onboarding-grade');
-    if (onboarding) { onboarding.classList.add('is-hidden'); onboarding.style.display = 'none'; onboarding.setAttribute('aria-hidden', 'true'); }
+    if (onboarding) {
+        hideModal(onboarding);
+        onboarding.classList.add('is-hidden');
+        onboarding.style.display = 'none';
+        onboarding.setAttribute('aria-hidden', 'true');
+    }
     localStorage.removeItem('currentUser');
     localStorage.removeItem('fenupx_user_grade');
     document.getElementById('profile-student-sections')?.style.setProperty('display', user ? 'none' : 'block');
+    document.getElementById('profile-student-grade-group')?.style.setProperty('display', 'none');
     document.getElementById('profile-admin-view')?.style.setProperty('display', 'none');
     const streak = document.getElementById('header-streak-badge');
-    if (streak) streak.style.removeProperty('display');
-    if (streak) streak.innerHTML = '🔥 <span id="header-streak-count">0</span> Gün';
+    if (streak) {
+        streak.style.display = 'none';
+        streak.innerHTML = '🔥 <span id="header-streak-count">0</span> Gün';
+    }
     if (user) {
         const userRef = doc(db, "users", user.uid);
         let userSnap;
@@ -4138,19 +4186,15 @@ onAuthStateChanged(auth, async (user) => {
             const isAdmin = userData.role === 'admin';
 
             // V8.9.2: Sınıf bilgisi bulunmayan mevcut öğrenciler için tek seferlik onboarding penceresi
-            if (isStudentProfile(userData) && !userData.middleSchoolGraduated && !normalizeGrade(userData.sinif)) {
+            if (!isAdmin && isStudentProfile(userData) && !userData.middleSchoolGraduated && !normalizeGrade(userData.sinif)) {
                 checkMissingGradeOnboarding(user, userData);
             }
 
-            // V8.9.1: Header Rozet / Streak Yönetimi (Admin sade gösterim)
+            // Gelişim göstergeleri yalnızca profildedir; üst başlıkta gösterilmez.
             const hStreakBadge = document.getElementById('header-streak-badge');
             if (hStreakBadge) {
-                if (isAdmin) {
-                    hStreakBadge.style.display = 'none';
-                    hStreakBadge.classList.add('admin-streak-badge');
-                } else {
-                    hStreakBadge.style.removeProperty('display');
-                    hStreakBadge.classList.remove('admin-streak-badge');
+                hStreakBadge.style.display = 'none';
+                if (!isAdmin) {
                     updateStreakUI();
                 }
             }
@@ -4164,12 +4208,14 @@ onAuthStateChanged(auth, async (user) => {
             if (adminEmail) adminEmail.textContent = user.email || userData.email || '';
             const profHeroRole = document.getElementById('profile-display-role-tag');
             const studentSecs = document.getElementById('profile-student-sections');
+            const studentGradeGroup = document.getElementById('profile-student-grade-group');
             const adminView = document.getElementById('profile-admin-view');
             const pStreakBadge = document.querySelector('.profile-streak-badge');
             const pLevelBadge = document.getElementById('profile-level-badge');
 
             if (isAdmin) {
                 if (studentSecs) studentSecs.style.display = 'none';
+                if (studentGradeGroup) studentGradeGroup.style.display = 'none';
                 if (adminView) {
                     adminView.classList.remove('is-hidden');
                     adminView.style.display = 'block';
@@ -4183,13 +4229,14 @@ onAuthStateChanged(auth, async (user) => {
                     adminView.style.display = 'none';
                 }
                 if (studentSecs) studentSecs.style.display = isStudentProfile(userData) ? 'block' : 'none';
+                if (studentGradeGroup) studentGradeGroup.style.display = isStudentProfile(userData) ? '' : 'none';
                 if (pLevelBadge) pLevelBadge.style.display = isStudentProfile(userData) ? '' : 'none';
-                if (pStreakBadge) pStreakBadge.style.display = 'inline-flex';
+                if (pStreakBadge) pStreakBadge.style.display = isStudentProfile(userData) ? 'inline-flex' : 'none';
                 if (profHeroRole) profHeroRole.textContent = isStudentProfile(userData) ? `⭐ Fen Kâşifi${userGrade ? ` · ${userGrade}. Sınıf` : ''}` : (isTeacherProfile(userData) ? 'Öğretmen' : 'Hesap');
 
-                const karneTitle = document.querySelector('.profile-karne-section .profile-section-title-bar h4');
+                const karneTitle = document.getElementById('profile-karne-title') || document.querySelector('.profile-karne-section .profile-section-title-bar h4');
                 if (karneTitle) {
-                    karneTitle.innerHTML = `<i class="fas fa-graduation-cap"></i> ${userGrade}. Sınıf Eksik Kazanım Karnesi`;
+                    karneTitle.innerHTML = `<i class="fas fa-graduation-cap"></i> ${userGrade ? `${userGrade}. Sınıf ` : ''}Eksik Kazanım Karnesi`;
                 }
 
                 evaluateBadges();
@@ -4456,6 +4503,32 @@ function showDeleteError(msg) {
     }
 }
 
+function prepareProfileModalView() {
+    const isAdmin = loadedProfile?.role === 'admin';
+    const studentSecs = document.getElementById('profile-student-sections');
+    const studentGradeGroup = document.getElementById('profile-student-grade-group');
+    const adminView = document.getElementById('profile-admin-view');
+    const pStreak = document.querySelector('.profile-streak-badge');
+    const pLvl = document.getElementById('profile-level-badge');
+    if (isAdmin) {
+        if (studentSecs) studentSecs.style.display = 'none';
+        if (studentGradeGroup) studentGradeGroup.style.display = 'none';
+        if (adminView) { adminView.classList.remove('is-hidden'); adminView.style.display = 'block'; }
+        if (pStreak) pStreak.style.display = 'none';
+        if (pLvl) pLvl.style.display = 'none';
+    } else {
+        if (adminView) { adminView.classList.add('is-hidden'); adminView.style.display = 'none'; }
+        if (studentSecs) studentSecs.style.display = isStudentProfile(loadedProfile) ? 'block' : 'none';
+        if (studentGradeGroup) studentGradeGroup.style.display = isStudentProfile(loadedProfile) ? '' : 'none';
+        if (pStreak) pStreak.style.display = isStudentProfile(loadedProfile) ? 'inline-flex' : 'none';
+        if (pLvl) pLvl.style.display = isStudentProfile(loadedProfile) ? '' : 'none';
+        evaluateBadges();
+        updateStreakUI();
+        renderBadgesShowcase();
+        renderKarneSummary();
+    }
+}
+
 const btnOpenProfile = document.getElementById('btn-open-profile');
 if (btnOpenProfile) {
     btnOpenProfile.onclick = (e) => {
@@ -4463,10 +4536,7 @@ if (btnOpenProfile) {
         resetDeleteAccountBox();
         updateEmailVerifyBox(auth.currentUser);
         if(profileDropdown) profileDropdown.classList.add('is-hidden');
-        evaluateBadges();
-        updateStreakUI();
-        renderBadgesShowcase();
-        renderKarneSummary();
+        prepareProfileModalView();
         showModal(profileModal);
     };
 }
@@ -4478,10 +4548,7 @@ if (headerStreakBadge) {
         resetDeleteAccountBox();
         updateEmailVerifyBox(auth.currentUser);
         if(profileDropdown) profileDropdown.classList.add('is-hidden');
-        evaluateBadges();
-        updateStreakUI();
-        renderBadgesShowcase();
-        renderKarneSummary();
+        prepareProfileModalView();
         showModal(profileModal);
     };
 }
@@ -4493,10 +4560,7 @@ document.querySelectorAll('.dropdown-item').forEach(item => {
             resetDeleteAccountBox();
             updateEmailVerifyBox(auth.currentUser);
             if(profileDropdown) profileDropdown.classList.add('is-hidden');
-            evaluateBadges();
-            updateStreakUI();
-            renderBadgesShowcase();
-            renderKarneSummary();
+            prepareProfileModalView();
             showModal(profileModal);
         };
     }
@@ -5108,11 +5172,33 @@ async function toggleBanStatus(uid, banStatus) {
 
 const lbListEl = document.getElementById('global-lb-list');
 const lbTabBtns = document.querySelectorAll('.lb-tab-btn');
-let showLegacyCompetitionScores=false;
-if(COMPETITION_BACKEND_READY && lbListEl){
-    const historyButton=document.createElement('button');historyButton.type='button';historyButton.className='f-btn competition-history-toggle';historyButton.textContent='Önceki puan kayıtlarını göster';
-    historyButton.onclick=()=>{showLegacyCompetitionScores=!showLegacyCompetitionScores;historyButton.textContent=showLegacyCompetitionScores?'Yeni doğrulanan yarışmaları göster':'Önceki puan kayıtlarını göster';loadGlobalLeaderboard(document.querySelector('.lb-tab-btn.active')?.dataset.tab || 'weekly');};
-    lbListEl.before(historyButton);
+let showLegacyCompetitionScores = false;
+let lbHistoryControl = null;
+
+function updateLbHistoryButton() {
+    if (!lbHistoryControl) return;
+    if (showLegacyCompetitionScores) {
+        lbHistoryControl.innerHTML = '<i class="fas fa-arrow-left"></i> Güncel tabloya dön';
+        lbHistoryControl.setAttribute('aria-label', 'Güncel tabloya dön');
+    } else {
+        lbHistoryControl.innerHTML = '<i class="fas fa-clock-rotate-left"></i> Önceki puanlar';
+        lbHistoryControl.setAttribute('aria-label', 'Önceki puanlar');
+    }
+}
+
+if (COMPETITION_BACKEND_READY && lbListEl) {
+    lbHistoryControl = document.createElement('button');
+    lbHistoryControl.type = 'button';
+    lbHistoryControl.id = 'btn-lb-history-toggle';
+    lbHistoryControl.className = 'lb-history-link';
+    lbHistoryControl.innerHTML = '<i class="fas fa-clock-rotate-left"></i> Önceki puanlar';
+    lbHistoryControl.setAttribute('aria-label', 'Önceki puanlar');
+    lbHistoryControl.onclick = () => {
+        showLegacyCompetitionScores = !showLegacyCompetitionScores;
+        updateLbHistoryButton();
+        loadGlobalLeaderboard(document.querySelector('.lb-tab-btn.active')?.dataset.tab || 'weekly');
+    };
+    lbListEl.before(lbHistoryControl);
 }
 const lbGuestPromo = document.getElementById('btn-lb-signup');
 
@@ -5139,15 +5225,20 @@ async function loadGlobalLeaderboard(type = 'weekly') {
     lbListEl.innerHTML = '<p style="text-align:center; color:#aaa; margin-top:20px;">Liderler yükleniyor...</p>';
     
     const lbTitle = document.querySelector('#unit-leaderboard-side h2');
-    if(lbTitle && selectedGrade) lbTitle.innerHTML = `<i class="fas fa-trophy"></i> ${selectedGrade}. Sınıf Şampiyonlar Ligi`;
+    updateLbHistoryButton();
 
-    if (COMPETITION_BACKEND_READY && !showLegacyCompetitionScores) { await loadCohortLeaderboard(type); return; }
-    if (lbTitle && selectedGrade) lbTitle.textContent = `${selectedGrade}. Sınıf · Geçmiş puan kayıtları`;
+    const gradePrefix = selectedGrade ? `${selectedGrade}. Sınıf ` : '';
+    if (COMPETITION_BACKEND_READY && !showLegacyCompetitionScores) {
+        if(lbTitle) lbTitle.innerHTML = `<i class="fas fa-trophy"></i> ${gradePrefix}Şampiyonlar Ligi`;
+        await loadCohortLeaderboard(type);
+        return;
+    }
+    if (lbTitle) lbTitle.innerHTML = `<i class="fas fa-clock-rotate-left"></i> ${gradePrefix ? gradePrefix + '· ' : ''}Önceki Puanlar`;
     try {
-        const result=await competitionCall('legacyLeaderboard',{grade:String(selectedGrade),type});
+        const result=await competitionCall('legacyLeaderboard',{grade:String(selectedGrade || '5'),type});
         renderGlobalLeaderboard(result.users || [],type);
         document.getElementById('lb-user-rank')?.classList.add('is-hidden');
-    } catch(e) { lbListEl.textContent='Geçmiş puan kayıtları şu anda yüklenemedi.'; }
+    } catch(e) { lbListEl.textContent='Önceki puan kayıtları şu anda yüklenemedi.'; }
 
 }
 
@@ -5181,7 +5272,11 @@ function renderGlobalLeaderboard(users, type) {
     lbListEl.innerHTML = '';
     
     if (users.length === 0) {
-        lbListEl.innerHTML = '<p style="color:#aaa; text-align:center; margin-top:20px;">Henüz bu kategoride yarışmacı yok.</p>';
+        if (!showLegacyCompetitionScores) {
+            lbListEl.innerHTML = '<div class="lb-empty-notice" style="color:#aaa; text-align:center; margin-top:20px; padding:12px;"><p style="margin:0 0 6px 0;">Henüz bu kategoride yarışmacı yok.</p><p style="color:#38bdf8; font-size:0.85rem; margin:0;"><i class="fas fa-shield-alt"></i> Önceki puanlar sistemde güvenle korunmaktadır.</p></div>';
+        } else {
+            lbListEl.innerHTML = '<p style="color:#aaa; text-align:center; margin-top:20px;">Önceki puan kaydı bulunmuyor.</p>';
+        }
         return;
     }
 
@@ -5207,7 +5302,7 @@ function renderGlobalLeaderboard(users, type) {
         row.className = `global-lb-row rank-${i+1}`;
         row.innerHTML = `
             <div class="global-lb-rank">${i+1}</div>
-            <img src="${profileText(avatarUrl(u.avatar))}" class="global-lb-avatar">
+            <img src="${profileText(avatarUrl(u.avatar))}" class="global-lb-avatar" alt="Avatar">
             <div class="global-lb-info">
                 <h4 class="${nameClass}">${badgeStr}${profileText(u.nickname || 'Kozmik Kaptan')}</h4>
                 <p>Öğrenci</p>
@@ -5742,6 +5837,8 @@ if (typeof window !== 'undefined') {
     window.openSmartboard = openSmartboard;
     window.closeSmartboard = closeSmartboard;
     window.checkAnnualPromotion = checkAnnualPromotion;
+    window.renderGlobalLeaderboard = renderGlobalLeaderboard;
+    window.loadGlobalLeaderboard = loadGlobalLeaderboard;
 }
 
 if (document.readyState === 'loading') {

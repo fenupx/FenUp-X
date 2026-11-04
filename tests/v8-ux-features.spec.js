@@ -484,12 +484,9 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
     test('10. V8.9.0: Günlük Seri, 10 Kozmik Rozet Vitrini, Öğrenci Karnesi ve Akıllı Tahta Karalama Tahtası', async ({ page }) => {
         await page.goto('/');
 
-        // 1. Header Günlük Seri Göstergesi
+        // 1. Header ve Ana Sayfada Seri Sayacı Gizli Olmalı (Gelişim yalnız profildedir)
         const headerStreak = page.locator('#header-streak-badge');
-        if (!(await headerStreak.isVisible())) await page.locator('#btn-mobile-menu').click();
-        await expect(headerStreak).toBeVisible();
-        await expect(page.locator('#header-streak-count')).toContainText(/\d+/);
-        if (await page.locator('#btn-mobile-menu').getAttribute('aria-expanded') === 'true') await page.locator('#btn-mobile-menu').click();
+        await expect(headerStreak).toBeHidden();
 
         // 2. Profil Modalını Aç ve Bileşenleri Doğrula
         await page.evaluate(() => {
@@ -506,6 +503,11 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
 
         const profileModal = page.locator('#profile-modal');
         await expect(profileModal).toBeVisible();
+
+        // Gelişim Özeti ve Seri Profilde Görünür Olmalı
+        await expect(profileModal.locator('#profile-progress-summary')).toBeVisible();
+        await expect(profileModal.locator('.profile-streak-badge')).toBeVisible();
+        await expect(profileModal.locator('#profile-streak-count')).toContainText(/\d+/);
 
         // Seviye Halkası ve Avatar
         const levelRing = profileModal.locator('.profile-level-ring');
