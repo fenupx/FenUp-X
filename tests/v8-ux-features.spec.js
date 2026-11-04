@@ -653,9 +653,9 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
             return { p5, p6, p7 };
         });
 
-        expect(promotionResult.p5).toBe("6");
-        expect(promotionResult.p6).toBe("7");
-        expect(promotionResult.p7).toBe("8");
+        expect(promotionResult.p5).toBe("5");
+        expect(promotionResult.p6).toBe("6");
+        expect(promotionResult.p7).toBe("7");
 
         // 3. 10 Evrensel Kozmik Rozet Kataloğu Doğrulaması
         const badgesCheck = await page.evaluate(() => {
@@ -806,9 +806,10 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         });
 
         expect(onboardingResult.isOpen).toBe(true);
-        expect(onboardingResult.isClosedAfterClick).toBe(true);
-        expect(onboardingResult.savedSinif).toBe('8');
-        expect(onboardingResult.lsSinif).toBe('8');
+        expect(onboardingResult.isClosedAfterClick).toBe(false);
+        expect(onboardingResult.savedSinif).toBe('');
+        expect(onboardingResult.lsSinif).toBe(null);
+        await page.evaluate(() => { const m=document.getElementById('modal-onboarding-grade'); m.classList.add('is-hidden'); m.style.display='none'; });
 
         // 4. Yönetim Paneli Sınıf Sütunu ve Tek Tıkla Düzenleme
         const adminGradeColCheck = await page.evaluate(() => {
