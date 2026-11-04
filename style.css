@@ -957,6 +957,10 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     flex-direction: column;
     gap: 10px;
     transition: border-color 0.2s;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .admin-report-card.status-yeni {
@@ -1084,9 +1088,12 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
-    margin-top: 4px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .admin-rep-status-control, .admin-rep-notes-control {
@@ -1095,10 +1102,59 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     gap: 6px;
 }
 
+.admin-rep-status-control {
+    flex-shrink: 0;
+}
+
 .admin-rep-notes-control {
     flex: 1;
     min-width: 240px;
+    max-width: 100%;
+    box-sizing: border-box;
     justify-content: flex-end;
+}
+
+.admin-rep-notes-control .admin-rep-note-input {
+    flex: 1;
+    min-width: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.admin-rep-notes-control .btn-save-rep-note {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+@media (max-width: 640px) {
+    .admin-rep-footer {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .admin-rep-status-control {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .admin-rep-notes-control {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+@media (max-width: 440px) {
+    .admin-rep-notes-control {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .admin-rep-notes-control .btn-save-rep-note {
+        width: 100%;
+    }
 }
 
 /* =========================================================

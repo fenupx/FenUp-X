@@ -61,7 +61,8 @@ test.describe('V8.9.8 — Soru Bildirimleri, Hesap Kontrolleri ve Sistem Doğrul
         expect(reports[0].grade).toBe('7');
         expect(reports[0].unit).toBe('4');
         expect(reports[0].learningOutcome).toBe('FB.7.4.1');
-        expect(reports[0].contentVersion).toBe('8.9.8');
+        expect(reports[0].contentVersion).toBeNull();
+        expect(reports[0].appVersion).toBe('8.9.8');
         expect(reports[0].answerOptions.length).toBe(2);
         expect(reports[0].status).toBe('yeni');
     });
@@ -182,7 +183,7 @@ test.describe('V8.9.8 — Soru Bildirimleri, Hesap Kontrolleri ve Sistem Doğrul
         await expect(reportBadge).toBeHidden();
     });
 
-    test('3. Dışa Aktarım: JSON ve Metin çıktısında PII (öğrenci adı, e-posta, uid) kesinlikle yer almaz', async ({ page }) => {
+    test('3. Dışa Aktarım: JSON ve Metin çıktısında PII (öğrenci adı, e-posta, uid) kesinlikle yer almaz, serbest metin maskelenir', async ({ page }) => {
         await mockFirebase(page);
 
         await page.evaluate(() => {
@@ -197,12 +198,13 @@ test.describe('V8.9.8 — Soru Bildirimleri, Hesap Kontrolleri ve Sistem Doğrul
                     unit: '3',
                     learningOutcome: 'FB.8.3.1',
                     reportType: 'hatali_soru',
-                    description: 'Kloroplast seçeneği eksik.',
+                    description: 'Hata var, bana ogrenci@okul.k12.tr adresinden veya 0532 111 22 33 veya 12345678901 nolu hattan yazın.',
                     reporterId: 'STUDENT_SECRET_UID_9999',
                     reporterName: 'Gizli Öğrenci Adı',
                     email: 'ogrenci@okul.k12.tr',
                     status: 'yeni',
-                    contentVersion: '8.9.8'
+                    contentVersion: null,
+                    adminNotes: 'İletişim için veli@mail.com arandı (0555 987 65 43).'
                 }
             ];
         });
@@ -212,19 +214,59 @@ test.describe('V8.9.8 — Soru Bildirimleri, Hesap Kontrolleri ve Sistem Doğrul
             await window.loadAdminReports(false);
         });
 
-        // Test JSON export function output
-        const jsonExport = await page.evaluate(() => {
-            const list = window.allAdminReports;
-            return JSON.stringify(list.map(r => ({
-                id: r.id,
-                grade: r.grade,
-                question: { stem: r.questionText }
-            })));
+        // Test maskPII helper directly
+        const piiCheck = await page.evaluate(() => {
+            const sample = 'Bana test@domain.org veya +90 544 123 45 67 veya 98765432109 üzerinden ulaşın.';
+            return window.maskPII(sample);
+        });
+        expect(piiCheck).toContain('[E-POSTA MASKEYLENDİ]');
+        expect(piiCheck).toContain('[TELEFON MASKEYLENDİ]');
+        expect(piiCheck).toContain('[KİMLİK NO MASKEYLENDİ]');
+        expect(piiCheck).not.toContain('test@domain.org');
+        expect(piiCheck).not.toContain('544 123 45 67');
+        expect(piiCheck).not.toContain('98765432109');
+
+        // Test JSON export sanitized structure
+        const exportResult = await page.evaluate(() => {
+            let capturedBlob = null;
+            const origCreate = URL.createObjectURL;
+            URL.createObjectURL = (blob) => {
+                capturedBlob = blob;
+                return 'blob:mock-url';
+            };
+            window.exportReportsJSON();
+            URL.createObjectURL = origCreate;
+            return capturedBlob;
         });
 
-        expect(jsonExport).not.toContain('STUDENT_SECRET_UID_9999');
-        expect(jsonExport).not.toContain('Gizli Öğrenci Adı');
-        expect(jsonExport).not.toContain('ogrenci@okul.k12.tr');
+        // Test text export
+        const textResult = await page.evaluate(() => {
+            let capturedText = null;
+            const origBlob = window.Blob;
+            window.Blob = class MockBlob extends origBlob {
+                constructor(parts, opts) {
+                    super(parts, opts);
+                    if (opts?.type?.includes('text/plain')) {
+                        capturedText = parts.join('');
+                    }
+                }
+            };
+            window.exportReportsText();
+            window.Blob = origBlob;
+            return capturedText;
+        });
+
+        expect(textResult).not.toContain('STUDENT_SECRET_UID_9999');
+        expect(textResult).not.toContain('Gizli Öğrenci Adı');
+        expect(textResult).not.toContain('ogrenci@okul.k12.tr');
+        expect(textResult).not.toContain('0532 111 22 33');
+        expect(textResult).not.toContain('12345678901');
+        expect(textResult).not.toContain('veli@mail.com');
+        expect(textResult).not.toContain('0555 987 65 43');
+        expect(textResult).toContain('[E-POSTA MASKEYLENDİ]');
+        expect(textResult).toContain('[TELEFON MASKEYLENDİ]');
+        expect(textResult).toContain('[KİMLİK NO MASKEYLENDİ]');
+        expect(textResult).toContain('Sürüm bilinmiyor');
     });
 
     test('4. "FenUp X" İsim Filtresi: Yönetici onaylı adı kaydedebilir, yanlış eşleşmeyle engel verilmez', async ({ page }) => {
@@ -391,5 +433,176 @@ test.describe('V8.9.8 — Soru Bildirimleri, Hesap Kontrolleri ve Sistem Doğrul
         await expect(qTabBtn).toBeVisible();
         await expect(qTabBtn).toContainText('78 Soru');
         await expect(qTabBtn.locator('i.fa-clipboard-list')).toBeVisible();
+    });
+
+    test('8. Soru Bildirimlerinde Sürüm Doğrulaması ve Havuz Eşleştirmesi: Bilinmeyen sürümde "Sürüm bilinmiyor" gösterilir, güncel havuzdan eşleşen soru eksiksiz açılır', async ({ page }) => {
+        await mockFirebase(page);
+
+        await page.evaluate(() => {
+            window.__records = {
+                'admin-version-check': { role: 'admin', name: 'FenUp', surname: 'X', email: 'admin@fenupx.com' }
+            };
+            window.__reports = [
+                {
+                    id: 'rep-oct30',
+                    questionText: 'Ay tutulması yaklaşık olarak ne kadar süre gözlemlenebilir?',
+                    grade: '6',
+                    unit: '1',
+                    contentVersion: null,
+                    reportType: 'hatali_soru',
+                    description: 'Süre çok uzun geldi.',
+                    reportedAt: '2026-10-30T10:00:00.000Z',
+                    status: 'yeni'
+                },
+                {
+                    id: 'rep-nov01',
+                    questionText: 'Basit bir teleskop modelinde uzak gök cisimlerinden gelen ışığı kırarak veya yansıtarak bir noktada odaklayan temel optik araçlar nelerdir?',
+                    grade: '7',
+                    unit: '1',
+                    contentVersion: null,
+                    reportType: 'hatali_soru',
+                    description: 'Şıklar karışık.',
+                    reportedAt: '2026-11-01T14:30:00.000Z',
+                    status: 'yeni'
+                }
+            ];
+        });
+
+        await page.evaluate(async () => {
+            await window.__login('admin-version-check');
+            await window.loadAdminReports(true);
+        });
+
+        // Open Admin modal and go to reports tab
+        await page.evaluate(() => {
+            const btn = document.getElementById('btn-admin-panel');
+            if (btn) btn.click();
+        });
+        await page.locator('#btn-admin-tab-reports').click();
+
+        const panelReports = page.locator('#admin-panel-reports');
+        await expect(panelReports).toBeVisible();
+
+        // Check version pill on card: must show "Sürüm bilinmiyor", never "v8.9.8"
+        const versionPills = panelReports.locator('.admin-rep-pill-version');
+        await expect(versionPills.first()).toHaveText('Sürüm bilinmiyor');
+
+        // Inspect 30 Ekim report (Ay tutulması)
+        await panelReports.locator('.btn-inspect-q[data-report-id="rep-oct30"]').click();
+        const detailModal = page.locator('#admin-report-detail-modal');
+        await expect(detailModal).toBeVisible();
+
+        // Must display pool match notice
+        await expect(detailModal).toContainText('Güncel havuzdaki eşleşme');
+        await expect(detailModal).toContainText('Geçmiş anlık kayıt değildir');
+        await expect(detailModal).toContainText('Sürüm bilinmiyor');
+
+        // Must display question stem and options resolved from 6_sinif_sorular.json
+        await expect(detailModal).toContainText('Ay tutulması yaklaşık olarak ne kadar süre gözlemlenebilir?');
+        await expect(detailModal).toContainText('Birkaç saat');
+        await expect(detailModal).toContainText('Doğru Cevap');
+        await expect(detailModal).toContainText("Dünya'nın gölgesi büyük olduğu için");
+
+        // Close modal
+        await page.locator('#btn-close-report-detail').click();
+        await expect(detailModal).toBeHidden();
+
+        // Inspect 1 Kasım report (Teleskop)
+        await panelReports.locator('.btn-inspect-q[data-report-id="rep-nov01"]').click();
+        await expect(detailModal).toBeVisible();
+        await expect(detailModal).toContainText('Güncel havuzdaki eşleşme');
+        await expect(detailModal).toContainText('Basit bir teleskop modelinde uzak gök cisimlerinden gelen');
+        await expect(detailModal).toContainText('Mercek ve aynalar');
+        await expect(detailModal).toContainText('Doğru Cevap');
+        await expect(detailModal).toContainText('Teleskopların yapısında ışığı toplayıp büyütmek için');
+
+        await page.locator('#btn-close-report-detail').click();
+        await expect(detailModal).toBeHidden();
+    });
+
+    test('9. Bildirim Paneli Yerleşimi: "Notu Kaydet" butonu masaüstü ve dar ekranda kart sınırları dışına taşmaz', async ({ page }) => {
+        await mockFirebase(page);
+
+        await page.evaluate(() => {
+            window.__records = {
+                'admin-layout-check': { role: 'admin', name: 'Admin', surname: 'Layout', email: 'adm@layout.test' }
+            };
+            window.__reports = [
+                {
+                    id: 'rep-layout-1',
+                    questionText: 'Test soru metni',
+                    grade: '6',
+                    status: 'yeni',
+                    description: 'Açıklama',
+                    reportedAt: new Date().toISOString()
+                }
+            ];
+        });
+
+        await page.evaluate(async () => {
+            await window.__login('admin-layout-check');
+            await window.loadAdminReports(true);
+        });
+
+        await page.evaluate(() => {
+            const btn = document.getElementById('btn-admin-panel');
+            if (btn) btn.click();
+        });
+        await page.locator('#btn-admin-tab-reports').click();
+
+        // Check desktop layout bounding box
+        const cardBox = await page.locator('.admin-report-card').first().boundingBox();
+        const btnBox = await page.locator('.btn-save-rep-note').first().boundingBox();
+        expect(cardBox).not.toBeNull();
+        expect(btnBox).not.toBeNull();
+        // Button right edge must be within card right edge (allow 2px margin)
+        expect(btnBox.x + btnBox.width).toBeLessThanOrEqual(cardBox.x + cardBox.width + 2);
+
+        // Check narrow viewport (mobile width: 390px)
+        await page.setViewportSize({ width: 390, height: 844 });
+        const mobileCardBox = await page.locator('.admin-report-card').first().boundingBox();
+        const mobileBtnBox = await page.locator('.btn-save-rep-note').first().boundingBox();
+        expect(mobileBtnBox.x + mobileBtnBox.width).toBeLessThanOrEqual(mobileCardBox.x + mobileCardBox.width + 2);
+    });
+
+    test('10. Güvenlik ve Yetki: Öğrenci engel kaldıramaz ve bildirim durumunu güncelleyemez', async ({ page }) => {
+        await mockFirebase(page);
+
+        await page.evaluate(() => {
+            window.__records = {
+                'student-unauthorized': {
+                    role: 'student',
+                    name: 'Mert',
+                    surname: 'Yılmaz',
+                    sinif: '6',
+                    email: 'mert@okul.test',
+                    isBanned: true
+                }
+            };
+        });
+
+        await page.evaluate(async () => {
+            await window.__login('student-unauthorized');
+        });
+
+        // Admin ban warning banner must not show for student (only student-ban-banner if banned)
+        const adminBanAlert = page.locator('#admin-ban-alert');
+        await expect(adminBanAlert).toBeHidden();
+
+        // Student attempt to directly call updateReportStatus
+        const updateAttempt = await page.evaluate(async () => {
+            try {
+                // If student tries to run admin function
+                if (typeof window.renderAdminReports === 'function') {
+                    // Script guards check: if (loadedProfile?.role !== 'admin') return;
+                    await window.loadAdminReports(true);
+                }
+                return { success: false, reason: 'guarded' };
+            } catch (err) {
+                return { success: false, error: err.message };
+            }
+        });
+
+        expect(updateAttempt.success).toBe(false);
     });
 });

@@ -1919,6 +1919,11 @@ async function loadGradePool(grade) {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         const list = data && Array.isArray(data.questions) ? data.questions : (Array.isArray(data) ? data : []);
+        list.forEach((q, idx) => {
+            if (!q.id) {
+                q.id = `sl-g${gKey}-u${q.unit !== undefined ? q.unit : 'x'}-q${idx + 1}`;
+            }
+        });
         questionPoolCache[gKey] = list;
         return list;
     } catch (err) {
@@ -3934,7 +3939,7 @@ profileModal.innerHTML = `
                 <p id="admin-display-email" style="color:#cbd5e1; margin:4px 0; overflow-wrap:anywhere;"></p>
                 <p class="admin-title-badge">FenUp X Sistem Yöneticisi</p>
                 <div id="admin-ban-alert" class="admin-ban-warning is-hidden" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 8px; padding: 10px 14px; margin-top: 12px; color: #fca5a5; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.85rem;">
-                    <span><i class="fas fa-shield-halved"></i> Hesabınızda eski testlerden kalan bir engel bayrağı görünüyor.</span>
+                    <span><i class="fas fa-shield-halved"></i> Hesabınızda bir engel bayrağı görünüyor.</span>
                     <button type="button" id="btn-admin-self-unban" class="f-btn f-btn-ikinci" style="padding: 4px 10px; font-size: 0.8rem; white-space: nowrap;">Engeli Kaldır</button>
                 </div>
                 <button type="button" id="btn-profile-goto-admin" class="f-btn f-btn-ana" style="margin-top: 15px; width: 100%;">
@@ -5323,7 +5328,7 @@ function renderAdminReports() {
         const gradeText = r.grade ? `${profileText(r.grade)}. Sınıf` : 'Sınıf Belirtilmemiş';
         const unitText = r.unit ? `Ünite ${profileText(r.unit)}` : '';
         const outcomeText = r.learningOutcome ? `Kazanım: ${profileText(r.learningOutcome)}` : '';
-        const versionText = r.contentVersion ? `v${profileText(r.contentVersion)}` : 'v8.9.8';
+        const versionText = r.contentVersion ? `v${profileText(r.contentVersion)}` : 'Sürüm bilinmiyor';
         const qRaw = r.questionText || '';
         const qExcerpt = profileText(qRaw.slice(0, 130)) + (qRaw.length > 130 ? '…' : '');
         const descText = r.description ? profileText(r.description) : '<em>Açıklama girilmedi.</em>';
@@ -5336,14 +5341,14 @@ function renderAdminReports() {
                     <span class="admin-rep-pill-type">${profileText(typeText)}</span>
                     <span class="admin-rep-pill-meta">${gradeText}${unitText ? ' · ' + unitText : ''}</span>
                     ${outcomeText ? `<span class="admin-rep-pill-outcome">${outcomeText}</span>` : ''}
-                    <span class="admin-rep-pill-version" title="Bildirildiği İçerik Sürümü">${versionText}</span>
+                    <span class="admin-rep-pill-version" title="İçerik Sürümü">${versionText}</span>
                 </div>
                 <span class="admin-rep-date"><i class="fas fa-clock"></i> ${dateStr}</span>
             </div>
 
             <div class="admin-rep-body">
                 <div class="admin-rep-q-preview">
-                    <strong>Soru:</strong> <span>${qExcerpt || '<em>Metin yok</em>'}</span>
+                    <strong>Soru:</strong> <span>${qExcerpt || '<em>Metin yok (Eski kayıt)</em>'}</span>
                     <button type="button" class="btn-inspect-q f-btn f-btn-ikinci" data-report-id="${profileText(r.id)}" style="padding: 4px 10px; font-size: 0.78rem; margin-left: 8px;">
                         <i class="fas fa-eye"></i> Soruyu İncele
                     </button>
@@ -5364,8 +5369,8 @@ function renderAdminReports() {
                     </select>
                 </div>
                 <div class="admin-rep-notes-control">
-                    <input type="text" class="admin-rep-note-input fenupx-input" data-report-id="${profileText(r.id)}" placeholder="Yönetici inceleme notu ekle..." value="${adminNotes}" style="margin: 0; padding: 4px 8px; font-size: 0.8rem; height: 32px;">
-                    <button type="button" class="btn-save-rep-note f-btn f-btn-ana" data-report-id="${profileText(r.id)}" style="padding: 4px 10px; font-size: 0.8rem; height: 32px; white-space: nowrap;">
+                    <input type="text" class="admin-rep-note-input fenupx-input" data-report-id="${profileText(r.id)}" placeholder="Yönetici inceleme notu ekle..." value="${adminNotes}" style="margin: 0; padding: 4px 8px; font-size: 0.8rem; height: 32px; flex: 1; min-width: 0; box-sizing: border-box;">
+                    <button type="button" class="btn-save-rep-note f-btn f-btn-ana" data-report-id="${profileText(r.id)}" style="padding: 4px 12px; font-size: 0.8rem; height: 32px; white-space: nowrap; flex-shrink: 0; box-sizing: border-box;">
                         <i class="fas fa-check"></i> Notu Kaydet
                     </button>
                 </div>
@@ -5425,13 +5430,97 @@ async function updateReportStatus(reportId, newStatus, newNotes) {
     }
 }
 
-function openReportDetailModal(report) {
+function maskPII(text) {
+    if (!text || typeof text !== 'string') return '';
+    let res = text;
+    // E-posta maskeleme
+    res = res.replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[E-POSTA MASKEYLENDİ]');
+    // Telefon maskeleme (+90 5xx xxx xx xx, 05xx xxx xx xx, 5xxxxxxxxx vb.)
+    res = res.replace(/(?:\+?90\s*|0)?\s*\(?5\d{2}\)?[\s.-]*\d{3}[\s.-]*\d{2}[\s.-]*\d{2}\b/g, '[TELEFON MASKEYLENDİ]');
+    // 11 haneli kimlik numarası (TCKN) maskeleme
+    res = res.replace(/\b[1-9]\d{10}\b/g, '[KİMLİK NO MASKEYLENDİ]');
+    return res;
+}
+
+async function findPoolMatch(report) {
+    if (!report) return { status: 'none', match: null };
+    const targetText = (report.questionText || report.question || '').trim().toLowerCase().replace(/\s+/g, ' ');
+    const targetId = report.questionId ? String(report.questionId) : null;
+    if (!targetText && !targetId) return { status: 'none', match: null };
+
+    // Şampiyonlar Ligi soru havuzlarını yükle (belirtilen sınıf varsa önce o sınıf)
+    const gradesToCheck = report.grade ? [String(report.grade)] : ['5', '6', '7', '8'];
+    const pools = await Promise.all(gradesToCheck.map(g => loadGradePool(g)));
+
+    let exactMatches = [];
+    gradesToCheck.forEach((grade, poolIdx) => {
+        const list = pools[poolIdx] || [];
+        list.forEach((q, idx) => {
+            const qStem = (q.question || q.stem || q.prompt || '').trim().toLowerCase().replace(/\s+/g, ' ');
+            const qId = q.id ? String(q.id) : null;
+
+            if (targetId && qId && targetId === qId) {
+                exactMatches.push({ q, grade, index: idx, matchType: 'id' });
+                return;
+            }
+
+            if (targetText && qStem === targetText) {
+                const unitMatch = !report.unit || String(report.unit) === String(q.unit);
+                exactMatches.push({ q, grade, index: idx, matchType: 'exact_stem', unitMatch });
+            }
+        });
+    });
+
+    if (exactMatches.length === 1) {
+        const m = exactMatches[0];
+        return {
+            status: 'found',
+            question: m.q,
+            grade: m.grade,
+            index: m.index,
+            source: 'current_pool'
+        };
+    } else if (exactMatches.length > 1) {
+        const unitFiltered = exactMatches.filter(m => m.unitMatch);
+        if (unitFiltered.length === 1) {
+            const m = unitFiltered[0];
+            return {
+                status: 'found',
+                question: m.q,
+                grade: m.grade,
+                index: m.index,
+                source: 'current_pool'
+            };
+        }
+        return { status: 'multiple', matches: exactMatches };
+    }
+    return { status: 'not_found', match: null };
+}
+
+async function openReportDetailModal(report) {
     const modal = document.getElementById('admin-report-detail-modal');
     const body = document.getElementById('admin-report-detail-body');
     if (!modal || !body) return;
 
+    // Sürüm bilgisi: Bilinmeyen sürüme güncel uygulama sürümünü uydurma
+    const versionText = report.contentVersion ? ('v' + profileText(report.contentVersion)) : 'Sürüm bilinmiyor';
+    const appVerText = report.appVersion ? `Uygulama: v${profileText(report.appVersion)}` : '';
+
     let optsHtml = '';
-    if (Array.isArray(report.answerOptions) && report.answerOptions.length > 0) {
+    let poolNoticeHtml = '';
+    let questionStemToDisplay = report.questionText || '';
+    let hintToDisplay = report.hint || '';
+    let displayedQuestionId = report.questionId || '';
+
+    const hasSnapshot = Array.isArray(report.answerOptions) && report.answerOptions.length > 0;
+
+    if (hasSnapshot) {
+        poolNoticeHtml = `
+            <div style="margin-bottom: 12px; padding: 8px 12px; border-radius: 8px; background: rgba(16, 185, 129, 0.15); border: 1px solid #10b981; color: #6ee7b7; font-size: 0.8rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-camera"></i>
+                <span><strong>Anlık Kayıt (Snapshot):</strong> Bu soru bildirim anındaki orijinal seçenekleri ve cevap anahtarıyla kaydedilmiştir.</span>
+            </div>
+        `;
         optsHtml = '<div style="margin-top: 12px;"><strong style="color:#cbd5e1; display:block; margin-bottom:6px;">Seçenekler ve Cevap Anahtarı:</strong><div style="display:flex; flex-direction:column; gap:6px;">' +
             report.answerOptions.map((opt, i) => {
                 const letter = String.fromCharCode(65 + i);
@@ -5446,22 +5535,77 @@ function openReportDetailModal(report) {
                 </div>`;
             }).join('') + '</div></div>';
     } else {
-        optsHtml = '<p style="color:#94a3b8; font-style:italic; margin-top:8px;">Seçenek verisi bulunmuyor (eski kayıt).</p>';
+        // Eski kayıt: Seçenek verisi raporda yoksa güncel havuzla eşleştir
+        const matchRes = await findPoolMatch(report);
+        if (matchRes.status === 'found') {
+            const mq = matchRes.question;
+            questionStemToDisplay = mq.question || mq.stem || questionStemToDisplay;
+            hintToDisplay = mq.hint || hintToDisplay;
+            displayedQuestionId = mq.id || displayedQuestionId || `sl-g${matchRes.grade}-u${mq.unit || '1'}-q${matchRes.index + 1}`;
+
+            poolNoticeHtml = `
+                <div style="margin-bottom: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fde68a; font-size: 0.82rem; display: flex; align-items: flex-start; gap: 10px;">
+                    <i class="fas fa-database" style="color: #f59e0b; font-size: 1.1rem; margin-top: 2px;"></i>
+                    <div>
+                        <strong>Güncel havuzdaki eşleşme:</strong> Bu soru eski bildirim anında seçenekleriyle kaydedilmediğinden, güncel Şampiyonlar Ligi soru havuzundan (${profileText(matchRes.grade)}. Sınıf, Ünite ${profileText(mq.unit || '1')}) eşleştirilerek getirilmiştir. <em>(Geçmiş anlık kayıt değildir)</em>
+                    </div>
+                </div>
+            `;
+            if (Array.isArray(mq.answerOptions) && mq.answerOptions.length > 0) {
+                optsHtml = '<div style="margin-top: 12px;"><strong style="color:#cbd5e1; display:block; margin-bottom:6px;">Seçenekler ve Cevap Anahtarı (Güncel Havuz):</strong><div style="display:flex; flex-direction:column; gap:6px;">' +
+                    mq.answerOptions.map((opt, i) => {
+                        const letter = String.fromCharCode(65 + i);
+                        const isCorrect = opt.isCorrect === true;
+                        const border = isCorrect ? '1px solid #10b981' : '1px solid rgba(255,255,255,0.1)';
+                        const bg = isCorrect ? 'rgba(16,185,129,0.15)' : 'rgba(30,41,59,0.6)';
+                        const icon = isCorrect ? ' <span style="color:#10b981; font-weight:bold; margin-left:auto;"><i class="fas fa-check-circle"></i> Doğru Cevap</span>' : '';
+                        return `<div style="display:flex; align-items:center; padding:8px 12px; border-radius:8px; border:${border}; background:${bg};">
+                            <span style="font-weight:bold; margin-right:10px; color:${isCorrect ? '#10b981' : '#94a3b8'};">[${letter}]</span>
+                            <span>${profileText(opt.text || '')}</span>
+                            ${icon}
+                        </div>`;
+                    }).join('') + '</div></div>';
+            } else {
+                optsHtml = '<p style="color:#94a3b8; font-style:italic; margin-top:8px;">Eşleşen soruda seçenek verisi bulunamadı.</p>';
+            }
+        } else if (matchRes.status === 'multiple') {
+            poolNoticeHtml = `
+                <div style="margin-bottom: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; font-size: 0.82rem; display: flex; align-items: flex-start; gap: 10px;">
+                    <i class="fas fa-exclamation-triangle" style="color: #ef4444; font-size: 1.1rem; margin-top: 2px;"></i>
+                    <div>
+                        <strong>Eşleşme Uyarısı:</strong> Güncel havuzda birden fazla olası soru eşleşmesi bulundu; tahminle bağlama yapılmadı.
+                    </div>
+                </div>
+            `;
+            optsHtml = '<p style="color:#94a3b8; font-style:italic; margin-top:8px;">Seçenek verisi bulunmuyor (eski kayıt; birden çok olası eşleşme).</p>';
+        } else {
+            poolNoticeHtml = `
+                <div style="margin-bottom: 12px; padding: 8px 12px; border-radius: 8px; background: rgba(148, 163, 184, 0.1); border: 1px solid rgba(148, 163, 184, 0.25); color: #cbd5e1; font-size: 0.8rem; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Bu eski bildirime ait seçenek verisi kaydedilmemiş ve güncel soru havuzunda güvenilir bir eşleşme bulunamadı.</span>
+                </div>
+            `;
+            optsHtml = '<p style="color:#94a3b8; font-style:italic; margin-top:8px;">Seçenek verisi bulunmuyor (eski kayıt).</p>';
+        }
     }
 
     body.innerHTML = `
-        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; align-items:center;">
             <span class="admin-rep-pill-status ${report.status || 'yeni'}">${report.status || 'yeni'}</span>
             <span class="admin-rep-pill-type">${profileText(report.reportType || 'Diğer')}</span>
             <span class="admin-rep-pill-meta">${report.grade ? profileText(report.grade) + '. Sınıf' : ''} ${report.unit ? '· Ünite ' + profileText(report.unit) : ''}</span>
-            <span class="admin-rep-pill-version">İçerik Sürümü: ${profileText(report.contentVersion || '8.9.8')}</span>
+            <span class="admin-rep-pill-version" title="İçerik Sürümü">${versionText}</span>
+            ${appVerText ? `<span style="font-size:0.75rem; color:#94a3b8; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);">${appVerText}</span>` : ''}
+            ${displayedQuestionId ? `<span style="font-size:0.75rem; font-family:monospace; color:#38bdf8; margin-left:auto;">ID: ${profileText(displayedQuestionId)}</span>` : ''}
         </div>
+
+        ${poolNoticeHtml}
 
         <div style="background: rgba(15,23,42,0.9); border: 1px solid rgba(148,163,184,0.3); border-radius: 10px; padding: 14px; margin-bottom: 14px;">
             <strong style="color: #38bdf8; display: block; margin-bottom: 6px;"><i class="fas fa-file-lines"></i> Soru Metni:</strong>
-            <p style="margin: 0; white-space: pre-wrap; font-size: 1rem; color: #f8fafc;">${profileText(report.questionText || 'Metin yok')}</p>
+            <p style="margin: 0; white-space: pre-wrap; font-size: 1rem; color: #f8fafc;">${profileText(questionStemToDisplay || 'Metin yok')}</p>
             ${optsHtml}
-            ${report.hint ? `<div style="margin-top:10px; color:#f59e0b; font-size:0.85rem;"><i class="fas fa-lightbulb"></i> <strong>İpucu:</strong> ${profileText(report.hint)}</div>` : ''}
+            ${hintToDisplay ? `<div style="margin-top:10px; color:#f59e0b; font-size:0.85rem;"><i class="fas fa-lightbulb"></i> <strong>Açıklama / İpucu:</strong> ${profileText(hintToDisplay)}</div>` : ''}
         </div>
 
         <div style="background: rgba(30,41,59,0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 12px;">
@@ -5492,19 +5636,22 @@ function exportReportsJSON() {
     const list = getFilteredReportsForExport();
     if (list.length === 0) return alert('Dışa aktarılacak bildirim bulunamadı.');
 
-    // KİŞİSEL BİLGİLERDEN (PII: reporterId, reporterName, email, uid) TAMAMEN ARINDIRILMIŞ DIŞA AKTARIM
+    // KİŞİSEL BİLGİLERDEN (PII: reporterId, reporterName, email, uid) TAMAMEN ARINDIRILMIŞ
+    // VE SERBEST METİNLER OTOMATİK PII FİLTRESİNDEN GEÇİRİLMİŞ DIŞA AKTARIM
     const sanitized = list.map(r => ({
         id: r.id,
         grade: r.grade || null,
         unit: r.unit || null,
         learningOutcome: r.learningOutcome || null,
         module: r.module || null,
-        contentVersion: r.contentVersion || '8.9.8',
+        contentVersion: r.contentVersion ? String(r.contentVersion) : 'Sürüm bilinmiyor',
+        appVersion: r.appVersion || null,
         reportType: r.reportType || null,
-        description: r.description || '',
+        description: maskPII(r.description || ''),
         status: r.status || 'yeni',
-        adminNotes: r.adminNotes || '',
+        adminNotes: maskPII(r.adminNotes || ''),
         reportedAt: r.reportedAt || null,
+        questionSource: (r.answerOptions && r.answerOptions.length > 0) ? 'snapshot' : (r.questionId ? 'pool_or_legacy' : 'unknown'),
         question: {
             id: r.questionId || null,
             stem: r.questionText || '',
@@ -5514,7 +5661,17 @@ function exportReportsJSON() {
         }
     }));
 
-    const blob = new Blob([JSON.stringify(sanitized, null, 2)], { type: 'application/json;charset=utf-8' });
+    const exportPayload = {
+        metadata: {
+            title: "FenUp X Soru Bildirimleri Dışa Aktarımı",
+            exportedAt: new Date().toISOString(),
+            totalReports: sanitized.length,
+            privacyNotice: "Bu dışa aktarım kişisel kimlik bilgilerinden (PII: öğrenci adı, e-posta, UID) arındırılmıştır. Serbest metin alanları (açıklama ve yönetici notu) otomatik PII maskeleme filtresinden geçirilmiştir."
+        },
+        reports: sanitized
+    };
+
+    const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -5530,33 +5687,43 @@ function exportReportsText() {
     if (list.length === 0) return alert('Dışa aktarılacak bildirim bulunamadı.');
 
     let txt = `================================================================================\n`;
-    txt += `FENUP X — SORU BİLDİRİM RAPORU (Gizlilik Korumalı / PII Arındırılmış)\n`;
+    txt += `FENUP X — SORU BİLDİRİM RAPORU (Gizlilik Korumalı / PII Filtreli)\n`;
     txt += `Oluşturulma Tarihi: ${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR')}\n`;
     txt += `Toplam Bildirim Sayısı: ${list.length}\n`;
+    txt += `Gizlilik Bildirimi: Bu rapor öğrenci kimlik bilgileri (ad, e-posta, UID) çıkarılarak ve\n`;
+    txt += `serbest metin alanları otomatik PII filtresinden geçirilerek üretilmiştir.\n`;
     txt += `================================================================================\n\n`;
 
     list.forEach((r, idx) => {
+        const verStr = r.contentVersion ? ('v' + r.contentVersion) : 'Sürüm bilinmiyor';
+        const hasSnapshot = Array.isArray(r.answerOptions) && r.answerOptions.length > 0;
+        const sourceNotice = hasSnapshot ? 'Bildirim Anındaki Kayıt (Snapshot)' : 'Eski Kayıt / Güncel Havuz Eşleşmesi';
+
         txt += `--------------------------------------------------------------------------------\n`;
         txt += `[BİLDİRİM #${idx + 1}] ID: ${r.id}\n`;
         txt += `Durum: ${(r.status || 'yeni').toUpperCase()} | Tür: ${r.reportType || 'Diğer'}\n`;
         txt += `Sınıf: ${r.grade || '—'}. Sınıf | Ünite: ${r.unit || '—'} | Kazanım: ${r.learningOutcome || '—'}\n`;
-        txt += `İçerik Sürümü: ${r.contentVersion || '8.9.8'} | Modül: ${r.module || 'Genel'}\n`;
+        txt += `İçerik Sürümü: ${verStr} | Modül: ${r.module || 'Genel'}\n`;
         txt += `Bildirim Tarihi: ${r.reportedAt || '—'}\n`;
-        txt += `Öğrenci Açıklaması:\n  ${(r.description || 'Açıklama belirtilmedi').replace(/\n/g, '\n  ')}\n`;
+        txt += `Kayıt Türü: ${sourceNotice}\n`;
+        txt += `Öğrenci Açıklaması:\n  ${maskPII(r.description || 'Açıklama belirtilmedi').replace(/\n/g, '\n  ')}\n`;
         if (r.adminNotes) {
-            txt += `Yönetici İnceleme Notu:\n  ${r.adminNotes.replace(/\n/g, '\n  ')}\n`;
+            txt += `Yönetici İnceleme Notu:\n  ${maskPII(r.adminNotes).replace(/\n/g, '\n  ')}\n`;
         }
         txt += `\n--- Soru ve Seçenekler ---\n`;
+        txt += `Soru ID: ${r.questionId || 'Belirtilmemiş'}\n`;
         txt += `Soru: ${r.questionText || '—'}\n`;
-        if (Array.isArray(r.answerOptions) && r.answerOptions.length > 0) {
+        if (hasSnapshot) {
             txt += `Seçenekler:\n`;
             r.answerOptions.forEach((opt, i) => {
                 const letter = String.fromCharCode(65 + i);
                 txt += `  [${letter}] ${opt.text || ''}${opt.isCorrect ? '  <-- [DOĞRU CEVAP]' : ''}\n`;
             });
+        } else {
+            txt += `Seçenekler: Seçenek verisi raporda kaydedilmemiş (Eski kayıt).\n`;
         }
         if (r.hint) {
-            txt += `İpucu: ${r.hint}\n`;
+            txt += `İpucu / Açıklama: ${r.hint}\n`;
         }
         txt += `\n`;
     });
@@ -5613,6 +5780,9 @@ if (typeof window !== 'undefined') {
     window.exportReportsJSON = exportReportsJSON;
     window.exportReportsText = exportReportsText;
     window.openReportModal = openReportModal;
+    window.openReportDetailModal = openReportDetailModal;
+    window.maskPII = maskPII;
+    window.findPoolMatch = findPoolMatch;
     Object.defineProperty(window, 'allAdminReports', {
         get() { return allAdminReports; },
         set(val) { allAdminReports = val; },
@@ -5953,8 +6123,19 @@ if(btnSubmitReport) {
         const qDiff = currentReportedQuestion.difficulty || 1;
         const qOpts = Array.isArray(currentReportedQuestion.answerOptions) ? currentReportedQuestion.answerOptions : [];
         const qHint = currentReportedQuestion.hint || '';
-        const qId = currentReportedQuestion.id || null;
+        function hashString(str) {
+            if (!str || typeof str !== 'string') return 0;
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = ((hash << 5) - hash) + str.charCodeAt(i);
+                hash |= 0;
+            }
+            return hash;
+        }
+
+        const qId = currentReportedQuestion.id || (qGrade && qUnit ? `sl-g${qGrade}-u${qUnit}-q${Math.abs(hashString(qText)) % 10000 || 'gen'}` : null);
         const qModule = (typeof tState !== 'undefined' && tState && !tState.isSolo) ? 'Şampiyonlar Ligi' : 'Bireysel Çalışma';
+        const qContentVersion = currentReportedQuestion.contentVersion || currentReportedQuestion.contentRevision || currentReportedQuestion.version || null;
 
         try {
             await addDoc(collection(db, "reported_questions"), {
@@ -5963,7 +6144,8 @@ if(btnSubmitReport) {
                 grade: qGrade,
                 unit: qUnit,
                 learningOutcome: qOutcome,
-                contentVersion: '8.9.8',
+                contentVersion: qContentVersion || null,
+                appVersion: '8.9.8',
                 questionText: qText,
                 answerOptions: qOpts,
                 hint: qHint,

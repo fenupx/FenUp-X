@@ -4376,10 +4376,12 @@ export async function refreshAdminQuestionCount() {
     if (tab) tab.innerHTML = '<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (Yükleniyor…)';
     const ok = await loadData(CONTENT_REVISION, false, false);
     const active = resolvedDataCache.get(CONTENT_REVISION);
-    const count = (active?.allQuestions || active?.questions || []).length || 78;
-    if (tab) tab.innerHTML = ok && active
-        ? `<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (${count} Soru)`
-        : '<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (Yüklenemedi)';
+    const rawList = active?.allQuestions || active?.questions;
+    if (ok && Array.isArray(rawList)) {
+        if (tab) tab.innerHTML = `<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (${rawList.length} Soru)`;
+    } else {
+        if (tab) tab.innerHTML = '<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (Yüklenemedi)';
+    }
     return ok;
 }
 
@@ -4485,7 +4487,7 @@ function renderFilteredQuestions(questionsByGrade, bankSelect, container) {
 
     let count = $('admin-question-filter-count');
     if (!count) { count = document.createElement('p'); count.id = 'admin-question-filter-count'; count.setAttribute('role', 'status'); container.before(count); }
-    count.textContent = `Filtre sonucu: ${finalQuestions.length} soru`;
+    count.textContent = `Filtre sonucu: ${finalQuestions.length} soru (Toplam ${questionsByGrade.length} soru)`;
 
     if (finalQuestions.length === 0) {
         bankSelect.innerHTML = '<option value="">Bu filtrede soru bulunamadı</option>';
