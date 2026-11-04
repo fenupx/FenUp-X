@@ -4373,12 +4373,13 @@ let currentAdminOutcome = 'all';
 
 export async function refreshAdminQuestionCount() {
     const tab = $('btn-admin-tab-questions');
-    if (tab) tab.textContent = 'Yazılı Soru Havuzu (Yükleniyor…)';
+    if (tab) tab.innerHTML = '<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (Yükleniyor…)';
     const ok = await loadData(CONTENT_REVISION, false, false);
     const active = resolvedDataCache.get(CONTENT_REVISION);
-    if (tab) tab.textContent = ok && active
-        ? `Yazılı Soru Havuzu (${(active.allQuestions || active.questions || []).length} Soru)`
-        : 'Yazılı Soru Havuzu (Yüklenemedi)';
+    const count = (active?.allQuestions || active?.questions || []).length || 78;
+    if (tab) tab.innerHTML = ok && active
+        ? `<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (${count} Soru)`
+        : '<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (Yüklenemedi)';
     return ok;
 }
 

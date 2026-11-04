@@ -3160,9 +3160,13 @@ if(btnUyelik) {
 }
 
 function uygunIsimMi(metin) {
-    if(!metin || metin.length < 2) return false;
+    if(!metin || typeof metin !== 'string') return false;
+    const trimmed = metin.trim();
+    if(trimmed.length === 0) return false;
+    // 1 karakterli zararsız harfler/kısaltmalar (örn. "X") küfür filtresi değildir
+    if(trimmed.length === 1) return true;
 
-    let normalizedText = metin.toLowerCase();
+    let normalizedText = trimmed.toLowerCase();
     normalizedText = normalizedText.replace(/[1!|]/g, 'i').replace(/[ıİ]/g, 'i')
                  .replace(/[0]/g, 'o').replace(/[öÖ]/g, 'o')
                  .replace(/[3]/g, 'e').replace(/[4@]/g, 'a')
@@ -3181,7 +3185,7 @@ function uygunIsimMi(metin) {
         if(!k) continue;
         let squeezedWord = k.replace(/(.)\1+/g, '$1'); 
         
-        const istisnalar = ["sikke", "siklamen", "sokak", "soket"];
+        const istisnalar = ["sikke", "siklamen", "sokak", "soket", "yara", "yarar", "yarasa", "yaramaz", "yaralandi", "fenup", "fenupx", "fen", "up", "ks"];
         
         if(kokYasaklilar.test(squeezedWord) && !istisnalar.includes(squeezedWord)) return false;
         if(tamYasaklilar.test(squeezedWord)) return false;
@@ -3203,6 +3207,12 @@ function uygunIsimMi(metin) {
     if(bitisikTamYasak.test(squeezedBitisik)) return false;
 
     return true;
+}
+
+export function isReservedAdminName(metin) {
+    if (!metin || typeof metin !== 'string') return false;
+    const clean = metin.trim().toLowerCase().replace(/[^a-z0-9]/gi, '');
+    return /^(fenup|fenupx|admin|yonetici|yönetici|sistemyoneticisi|sistemyöneticisi)$/i.test(clean);
 }
 
 function getAuthErrorMessage(errCode) {
@@ -3365,14 +3375,19 @@ function getStreakData() {
 }
 
 function getTodayDateStr() {
-    const d = new Date();
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
+    try {
+        return new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul' }).format(new Date());
+    } catch (_) {
+        const d = new Date();
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+    }
 }
 
 export function checkAndUpdateStreak() {
+    if (loadedProfile && loadedProfile.role === 'admin') return { count: 0, lastDate: null };
     try {
         const today = getTodayDateStr();
         const stored = getStreakData();
@@ -3382,7 +3397,7 @@ export function checkAndUpdateStreak() {
         if (!lastDate) {
             count = 1;
         } else if (lastDate === today) {
-            // Bugün zaten kayıt yapıldıysa: Seri korunur.
+            // Bugün zaten kayıt yapıldıysa: Aynı takvim gününde seri artırılmaz, mevcut seri korunur.
         } else {
             const dToday = new Date(today + "T00:00:00");
             const dLast = new Date(lastDate + "T00:00:00");
@@ -3420,6 +3435,7 @@ export function checkAndUpdateStreak() {
 }
 
 export function updateStreakUI(count) {
+    if (loadedProfile && loadedProfile.role === 'admin') return;
     if (typeof count !== 'number') {
         const data = getStreakData();
         count = data.count || 1;
@@ -3536,6 +3552,7 @@ const BADGE_ALIASES = {
 };
 
 export function unlockBadge(badgeId) {
+    if (loadedProfile && loadedProfile.role === 'admin') return;
     try {
         const targetId = BADGE_ALIASES[badgeId] || badgeId;
         const earned = getEarnedBadges();
@@ -3665,6 +3682,7 @@ export function checkAnnualPromotion(user) {
 }
 
 export function evaluateBadges() {
+    if (loadedProfile && loadedProfile.role === 'admin') return;
     try {
         const cachedAv = localStorage.getItem('fenupx_user_avatar');
         if (cachedAv || (auth && auth.currentUser)) {
@@ -3915,6 +3933,10 @@ profileModal.innerHTML = `
                 <h3 id="admin-display-fullname" style="color: #fbbf24; font-size: 1.3rem; margin: 4px 0;">Yönetici</h3>
                 <p id="admin-display-email" style="color:#cbd5e1; margin:4px 0; overflow-wrap:anywhere;"></p>
                 <p class="admin-title-badge">FenUp X Sistem Yöneticisi</p>
+                <div id="admin-ban-alert" class="admin-ban-warning is-hidden" style="background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 8px; padding: 10px 14px; margin-top: 12px; color: #fca5a5; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.85rem;">
+                    <span><i class="fas fa-shield-halved"></i> Hesabınızda eski testlerden kalan bir engel bayrağı görünüyor.</span>
+                    <button type="button" id="btn-admin-self-unban" class="f-btn f-btn-ikinci" style="padding: 4px 10px; font-size: 0.8rem; white-space: nowrap;">Engeli Kaldır</button>
+                </div>
                 <button type="button" id="btn-profile-goto-admin" class="f-btn f-btn-ana" style="margin-top: 15px; width: 100%;">
                     <i class="fas fa-tools"></i> 🛠️ Yönetim Paneline Git
                 </button>
@@ -4078,6 +4100,21 @@ if (btnProfGotoAdmin) {
     };
 }
 
+const btnAdminSelfUnban = document.getElementById('btn-admin-self-unban');
+if (btnAdminSelfUnban) {
+    btnAdminSelfUnban.onclick = async () => {
+        if (!auth.currentUser || loadedProfile?.role !== 'admin') return;
+        try {
+            await updateDoc(doc(db, "users", auth.currentUser.uid), { isBanned: false });
+            if (loadedProfile) loadedProfile.isBanned = false;
+            document.getElementById('admin-ban-alert')?.classList.add('is-hidden');
+            alert("Hesap engel bayrağı başarıyla kaldırıldı.");
+        } catch (e) {
+            alert("Engel kaldırılamadı: " + e.message);
+        }
+    };
+}
+
 // Avatar changes are drafts until explicitly saved. Legacy values are never migrated in bulk.
 function currentAvatarValue(){return auth.currentUser ? (loadedProfile?.avatar || DEFAULT_AVATAR_ID) : (localStorage.getItem('fenupx_user_avatar') || DEFAULT_AVATAR_ID);}
 function displayCurrentAvatar(value){
@@ -4219,6 +4256,10 @@ onAuthStateChanged(auth, async (user) => {
                 if (adminView) {
                     adminView.classList.remove('is-hidden');
                     adminView.style.display = 'block';
+                }
+                const banAlert = document.getElementById('admin-ban-alert');
+                if (banAlert) {
+                    banAlert.classList.toggle('is-hidden', userData.isBanned !== true);
                 }
                 if (pStreakBadge) pStreakBadge.style.display = 'none';
                 if (pLevelBadge) pLevelBadge.style.display = 'none';
@@ -4619,17 +4660,22 @@ if(btnSaveProf) {
         const sinif = normalizeGrade(loadedProfile.sinif);
         if (isStudentProfile(loadedProfile) && !sinif) return alert('Lütfen sınıfını seç.');
 
-        if(!name || !surname || (loadedProfile.role !== 'admin' && !nickname)) return alert("Ad, soyad ve yarışmacı adı alanları boş bırakılamaz.");
-        
-        if(!uygunIsimMi(name) || !uygunIsimMi(surname) || (loadedProfile.role !== 'admin' && !uygunIsimMi(nickname))) {
-            try {
-                await updateDoc(doc(db, "users", user.uid), { isBanned: true });
-                alert("Kullanıcı adınız veya profil bilgileriniz topluluk kurallarına aykırı tespit edildi. Sistem tarafından otomatik olarak ENGELLENDİNİZ! Uygun bir kullanıcı adı seçmeden engeliniz kaldırılmaz.");
-                location.reload();
-            } catch(e) {
-                alert("Topluluk kurallarına aykırı kelime kullanımı tespit edildi!");
+        const isAdmin = loadedProfile.role === 'admin';
+        // Yönetici için ad zorunludur; soyad boş veya kısaltma ("X") olabilir. Öğrenci için ad, soyad ve yarışmacı adı zorunludur.
+        if (!name || (!isAdmin && !surname) || (!isAdmin && !nickname)) {
+            return alert("Ad, soyad ve yarışmacı adı alanları boş bırakılamaz.");
+        }
+
+        // Yönetici taklidi koruması: Sıradan kullanıcılar "FenUp", "FenUp X", "Admin" vb. isimleri alamaz
+        if (!isAdmin) {
+            if (isReservedAdminName(name) || (surname && isReservedAdminName(surname)) || isReservedAdminName(nickname)) {
+                return alert("Bu isim platform yönetimine ayrılmıştır. Lütfen kendi adınızı veya farklı bir yarışmacı adı belirleyin.");
             }
-            return;
+        }
+        
+        // Küfür/uygunsuz içerik denetimi
+        if (!uygunIsimMi(name) || (surname && !uygunIsimMi(surname)) || (!isAdmin && !uygunIsimMi(nickname))) {
+            return alert("Girdiğiniz ad, soyad veya yarışmacı adı topluluk kurallarına aykırı kelimeler içeriyor. Lütfen kurallara uygun bir isim belirleyin.");
         }
         
         try {
@@ -4800,6 +4846,7 @@ if(btnStuSub) {
                 
                 if(!fName || !lName || !nick || !passConfirm) return alert("Lütfen Ad, Soyad, Yarışmacı Adın ve Şifre Tekrarı alanlarını doldurun.");
                 if(pass !== passConfirm) return alert("Şifreler eşleşmiyor! Lütfen kontrol edin.");
+                if(isReservedAdminName(fName) || isReservedAdminName(lName) || isReservedAdminName(nick)) return alert("Bu isim platform yönetimine ayrılmıştır. Lütfen kendi adınızı veya farklı bir yarışmacı adı belirleyin.");
                 if(!uygunIsimMi(fName) || !uygunIsimMi(lName) || !uygunIsimMi(nick)) return alert("Uygunsuz kelime kullanımı tespit edildi. Sistem kuralları gereği üyeliğiniz reddedildi. Lütfen küfür veya argo içermeyen isimler kullanın.");
                 
                 const uGradeEl = document.getElementById('user-grade') || document.getElementById('reg-grade');
@@ -4894,44 +4941,41 @@ document.querySelectorAll('[data-user-grade-filter]').forEach(button => {
 
 const btnAdminTabUsers = document.getElementById('btn-admin-tab-users');
 const btnAdminTabQuestions = document.getElementById('btn-admin-tab-questions');
+const btnAdminTabReports = document.getElementById('btn-admin-tab-reports');
 const adminPanelUsers = document.getElementById('admin-panel-users');
 const adminPanelQuestions = document.getElementById('admin-panel-questions');
+const adminPanelReports = document.getElementById('admin-panel-reports');
 
 function switchAdminTab(tab) {
-    if (tab === 'users') {
-        if (adminPanelUsers) adminPanelUsers.style.display = 'flex';
-        if (adminPanelQuestions) adminPanelQuestions.style.display = 'none';
-        if (btnAdminTabUsers) {
-            btnAdminTabUsers.style.background = 'rgba(245,158,11,0.2)';
-            btnAdminTabUsers.style.color = '#f59e0b';
-            btnAdminTabUsers.style.borderColor = 'rgba(255,255,255,0.2)';
+    const tabConfigs = [
+        { id: 'users', btn: btnAdminTabUsers, panel: adminPanelUsers },
+        { id: 'questions', btn: btnAdminTabQuestions, panel: adminPanelQuestions },
+        { id: 'reports', btn: btnAdminTabReports, panel: adminPanelReports }
+    ];
+
+    tabConfigs.forEach(t => {
+        const isActive = t.id === tab;
+        if (t.panel) t.panel.style.display = isActive ? 'flex' : 'none';
+        if (t.btn) {
+            t.btn.classList.toggle('active', isActive);
+            t.btn.style.background = isActive ? 'rgba(245,158,11,0.2)' : 'rgba(30,41,59,0.8)';
+            t.btn.style.color = isActive ? '#f59e0b' : '#cbd5e1';
+            t.btn.style.borderColor = isActive ? 'rgba(255,255,255,0.2)' : 'rgba(255,255,255,0.1)';
         }
-        if (btnAdminTabQuestions) {
-            btnAdminTabQuestions.style.background = 'rgba(30,41,59,0.8)';
-            btnAdminTabQuestions.style.color = '#cbd5e1';
-            btnAdminTabQuestions.style.borderColor = 'rgba(255,255,255,0.1)';
-        }
-    } else {
-        if (adminPanelUsers) adminPanelUsers.style.display = 'none';
-        if (adminPanelQuestions) adminPanelQuestions.style.display = 'flex';
-        if (btnAdminTabQuestions) {
-            btnAdminTabQuestions.style.background = 'rgba(245,158,11,0.2)';
-            btnAdminTabQuestions.style.color = '#f59e0b';
-            btnAdminTabQuestions.style.borderColor = 'rgba(255,255,255,0.2)';
-        }
-        if (btnAdminTabUsers) {
-            btnAdminTabUsers.style.background = 'rgba(30,41,59,0.8)';
-            btnAdminTabUsers.style.color = '#cbd5e1';
-            btnAdminTabUsers.style.borderColor = 'rgba(255,255,255,0.1)';
-        }
+    });
+
+    if (tab === 'questions') {
         if (window.FenUpExam && typeof window.FenUpExam.renderAdminQuestionReview === 'function') {
             window.FenUpExam.renderAdminQuestionReview();
         }
+    } else if (tab === 'reports') {
+        loadAdminReports(true);
     }
 }
 
 if (btnAdminTabUsers) btnAdminTabUsers.onclick = () => switchAdminTab('users');
 if (btnAdminTabQuestions) btnAdminTabQuestions.onclick = () => switchAdminTab('questions');
+if (btnAdminTabReports) btnAdminTabReports.onclick = () => switchAdminTab('reports');
 
 if(btnAdminPanel) {
     btnAdminPanel.onclick = (e) => {
@@ -4940,6 +4984,7 @@ if(btnAdminPanel) {
         switchAdminTab('users');
         showModal(adminModal);
         loadAdminUsers();
+        loadAdminReports(false);
         window.FenUpExam?.refreshAdminQuestionCount();
     };
 }
@@ -5088,6 +5133,10 @@ function renderAdminUsers(filterText = '') {
         btn.onclick = () => {
             const newNick = prompt("Kullanıcı için yeni bir nickname belirleyin:", btn.dataset.nick);
             if(newNick && newNick.trim() !== "" && newNick !== btn.dataset.nick) {
+                if(isReservedAdminName(newNick.trim())) {
+                    alert("Öğrencilere yönetim veya platform adı ('FenUp', 'Admin') verilemez.");
+                    return;
+                }
                 if(!uygunIsimMi(newNick.trim())) {
                     alert("Uyarı: Admin olsanız bile bu isim filtreye takıldı. Lütfen daha uygun bir isim belirleyin.");
                     return;
@@ -5149,6 +5198,8 @@ if (typeof window !== 'undefined') {
     window.changeUserGrade = changeUserGrade;
     window.renderAdminUsers = renderAdminUsers;
     window.loadAdminUsers = loadAdminUsers;
+    window.uygunIsimMi = uygunIsimMi;
+    window.isReservedAdminName = isReservedAdminName;
 }
 
 async function toggleBanStatus(uid, banStatus) {
@@ -5170,6 +5221,404 @@ async function toggleBanStatus(uid, banStatus) {
     }
 }
 
+// ==========================================================================
+// V8.9.8: SORU BİLDİRİMLERİ YÖNETİMİ (Admin Soru İnceleme ve Raporlama)
+// ==========================================================================
+let allAdminReports = [];
+let adminReportStatusFilter = 'all';
+let adminReportGradeFilter = 'all';
+
+async function loadAdminReports(renderNow = true) {
+    if (loadedProfile?.role !== 'admin') return;
+    const reportList = document.getElementById('admin-report-list');
+    if (renderNow && reportList) {
+        reportList.innerHTML = '<p style="color:#aaa; text-align:center; margin-top:20px;">Bildirimler yükleniyor...</p>';
+    }
+    try {
+        let snap;
+        try {
+            snap = await getDocs(query(collection(db, "reported_questions"), orderBy("reportedAt", "desc"), limit(100)));
+        } catch (_) {
+            snap = await getDocs(collection(db, "reported_questions"));
+        }
+        allAdminReports = [];
+        if (snap && typeof snap.forEach === 'function') {
+            snap.forEach(docSnap => {
+                allAdminReports.push({ id: docSnap.id, ...docSnap.data() });
+            });
+        }
+        allAdminReports.sort((a, b) => {
+            const tA = new Date(a.reportedAt || 0).getTime();
+            const tB = new Date(b.reportedAt || 0).getTime();
+            return tB - tA;
+        });
+        updateAdminReportBadge();
+        if (renderNow) renderAdminReports();
+    } catch (err) {
+        console.error('Soru bildirimleri yüklenirken hata oluştu:', err);
+        if (renderNow && reportList) {
+            reportList.innerHTML = '<p style="color:#ef4444; text-align:center; margin-top:20px;">Bildirimler yüklenirken hata oluştu. Lütfen bağlantınızı kontrol edin.</p>';
+        }
+    }
+}
+
+function updateAdminReportBadge() {
+    const badge = document.getElementById('admin-report-badge');
+    if (!badge) return;
+    const newCount = allAdminReports.filter(r => (r.status || 'yeni') === 'yeni').length;
+    badge.textContent = String(newCount);
+    if (newCount > 0) {
+        badge.classList.remove('is-hidden');
+    } else {
+        badge.classList.add('is-hidden');
+    }
+}
+
+function renderAdminReports() {
+    const container = document.getElementById('admin-report-list');
+    if (!container) return;
+
+    const filtered = allAdminReports.filter(r => {
+        const status = r.status || 'yeni';
+        const grade = String(r.grade || '');
+        const matchStatus = adminReportStatusFilter === 'all' || status === adminReportStatusFilter;
+        const matchGrade = adminReportGradeFilter === 'all' || grade === adminReportGradeFilter;
+        return matchStatus && matchGrade;
+    });
+
+    if (filtered.length === 0) {
+        container.innerHTML = '<div style="color:#aaa; text-align:center; margin-top:30px; padding: 20px;"><i class="fas fa-check-circle" style="color:#10b981; font-size:2rem; display:block; margin-bottom:10px;"></i><p style="margin:0; font-size:1rem; color:#f8fafc;">Bu filtreye uygun soru bildirimi bulunmuyor.</p></div>';
+        return;
+    }
+
+    container.innerHTML = '';
+    const reportTypeLabels = {
+        'hatali_soru': 'Hatalı Soru Kökü',
+        'yanlis_sik': 'Yanlış Şıklar / Cevap',
+        'yazim_hatasi': 'Yazım / İmla Hatası',
+        'mufredat_disi': 'Müfredat Dışı Konu',
+        'diger': 'Diğer'
+    };
+    const statusLabels = {
+        'yeni': 'Yeni',
+        'inceleniyor': 'İnceleniyor',
+        'cozuldu': 'Çözüldü'
+    };
+
+    filtered.forEach(r => {
+        const card = document.createElement('div');
+        const status = r.status || 'yeni';
+        card.className = `admin-report-card status-${status}`;
+
+        let dateStr = 'Tarih yok';
+        if (r.reportedAt) {
+            try {
+                const d = typeof r.reportedAt.toDate === 'function' ? r.reportedAt.toDate() : new Date(r.reportedAt);
+                dateStr = d.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            } catch (_) { dateStr = String(r.reportedAt); }
+        }
+
+        const typeText = reportTypeLabels[r.reportType] || r.reportType || 'Diğer';
+        const statusText = statusLabels[status] || status;
+        const gradeText = r.grade ? `${profileText(r.grade)}. Sınıf` : 'Sınıf Belirtilmemiş';
+        const unitText = r.unit ? `Ünite ${profileText(r.unit)}` : '';
+        const outcomeText = r.learningOutcome ? `Kazanım: ${profileText(r.learningOutcome)}` : '';
+        const versionText = r.contentVersion ? `v${profileText(r.contentVersion)}` : 'v8.9.8';
+        const qRaw = r.questionText || '';
+        const qExcerpt = profileText(qRaw.slice(0, 130)) + (qRaw.length > 130 ? '…' : '');
+        const descText = r.description ? profileText(r.description) : '<em>Açıklama girilmedi.</em>';
+        const adminNotes = r.adminNotes ? profileText(r.adminNotes) : '';
+
+        card.innerHTML = `
+            <div class="admin-rep-card-header">
+                <div class="admin-rep-badges">
+                    <span class="admin-rep-pill-status ${status}">${statusText}</span>
+                    <span class="admin-rep-pill-type">${profileText(typeText)}</span>
+                    <span class="admin-rep-pill-meta">${gradeText}${unitText ? ' · ' + unitText : ''}</span>
+                    ${outcomeText ? `<span class="admin-rep-pill-outcome">${outcomeText}</span>` : ''}
+                    <span class="admin-rep-pill-version" title="Bildirildiği İçerik Sürümü">${versionText}</span>
+                </div>
+                <span class="admin-rep-date"><i class="fas fa-clock"></i> ${dateStr}</span>
+            </div>
+
+            <div class="admin-rep-body">
+                <div class="admin-rep-q-preview">
+                    <strong>Soru:</strong> <span>${qExcerpt || '<em>Metin yok</em>'}</span>
+                    <button type="button" class="btn-inspect-q f-btn f-btn-ikinci" data-report-id="${profileText(r.id)}" style="padding: 4px 10px; font-size: 0.78rem; margin-left: 8px;">
+                        <i class="fas fa-eye"></i> Soruyu İncele
+                    </button>
+                </div>
+                <div class="admin-rep-desc-box">
+                    <strong>Öğrenci Bildirim Açıklaması:</strong>
+                    <p class="admin-rep-desc-text">${descText}</p>
+                </div>
+            </div>
+
+            <div class="admin-rep-footer">
+                <div class="admin-rep-status-control">
+                    <label style="font-size: 0.8rem; color: #94a3b8; margin-right: 4px;">Durum:</label>
+                    <select class="admin-rep-select-status exam-select" data-report-id="${profileText(r.id)}" style="padding: 4px 8px; font-size: 0.8rem; min-height: 32px; background: #1e293b; color: #f8fafc; border-radius: 6px;">
+                        <option value="yeni" ${status === 'yeni' ? 'selected' : ''}>Yeni</option>
+                        <option value="inceleniyor" ${status === 'inceleniyor' ? 'selected' : ''}>İnceleniyor</option>
+                        <option value="cozuldu" ${status === 'cozuldu' ? 'selected' : ''}>Çözüldü</option>
+                    </select>
+                </div>
+                <div class="admin-rep-notes-control">
+                    <input type="text" class="admin-rep-note-input fenupx-input" data-report-id="${profileText(r.id)}" placeholder="Yönetici inceleme notu ekle..." value="${adminNotes}" style="margin: 0; padding: 4px 8px; font-size: 0.8rem; height: 32px;">
+                    <button type="button" class="btn-save-rep-note f-btn f-btn-ana" data-report-id="${profileText(r.id)}" style="padding: 4px 10px; font-size: 0.8rem; height: 32px; white-space: nowrap;">
+                        <i class="fas fa-check"></i> Notu Kaydet
+                    </button>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+
+    container.querySelectorAll('.btn-inspect-q').forEach(btn => {
+        btn.onclick = () => {
+            const rId = btn.dataset.reportId;
+            const rep = allAdminReports.find(x => x.id === rId);
+            if (rep) openReportDetailModal(rep);
+        };
+    });
+
+    container.querySelectorAll('.admin-rep-select-status').forEach(sel => {
+        sel.onchange = async () => {
+            const rId = sel.dataset.reportId;
+            const newStatus = sel.value;
+            await updateReportStatus(rId, newStatus, null);
+        };
+    });
+
+    container.querySelectorAll('.btn-save-rep-note').forEach(btn => {
+        btn.onclick = async () => {
+            const rId = btn.dataset.reportId;
+            const input = container.querySelector(`.admin-rep-note-input[data-report-id="${rId}"]`);
+            const statusSel = container.querySelector(`.admin-rep-select-status[data-report-id="${rId}"]`);
+            const note = input ? input.value.trim() : '';
+            const status = statusSel ? statusSel.value : 'yeni';
+            btn.disabled = true;
+            btn.textContent = 'Kaydediliyor…';
+            await updateReportStatus(rId, status, note);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check"></i> Notu Kaydet';
+        };
+    });
+}
+
+async function updateReportStatus(reportId, newStatus, newNotes) {
+    if (loadedProfile?.role !== 'admin') return;
+    const target = allAdminReports.find(r => r.id === reportId);
+    if (!target) return;
+    const updateData = { status: newStatus, updatedAt: new Date().toISOString() };
+    if (newNotes !== null) updateData.adminNotes = newNotes;
+
+    try {
+        await updateDoc(doc(db, "reported_questions", reportId), updateData);
+        target.status = newStatus;
+        if (newNotes !== null) target.adminNotes = newNotes;
+        updateAdminReportBadge();
+        renderAdminReports();
+    } catch (e) {
+        console.error('Bildirim güncellenemedi:', e);
+        alert('Bildirim güncellenirken hata oluştu: ' + e.message);
+    }
+}
+
+function openReportDetailModal(report) {
+    const modal = document.getElementById('admin-report-detail-modal');
+    const body = document.getElementById('admin-report-detail-body');
+    if (!modal || !body) return;
+
+    let optsHtml = '';
+    if (Array.isArray(report.answerOptions) && report.answerOptions.length > 0) {
+        optsHtml = '<div style="margin-top: 12px;"><strong style="color:#cbd5e1; display:block; margin-bottom:6px;">Seçenekler ve Cevap Anahtarı:</strong><div style="display:flex; flex-direction:column; gap:6px;">' +
+            report.answerOptions.map((opt, i) => {
+                const letter = String.fromCharCode(65 + i);
+                const isCorrect = opt.isCorrect === true;
+                const border = isCorrect ? '1px solid #10b981' : '1px solid rgba(255,255,255,0.1)';
+                const bg = isCorrect ? 'rgba(16,185,129,0.15)' : 'rgba(30,41,59,0.6)';
+                const icon = isCorrect ? ' <span style="color:#10b981; font-weight:bold; margin-left:auto;"><i class="fas fa-check-circle"></i> Doğru Cevap</span>' : '';
+                return `<div style="display:flex; align-items:center; padding:8px 12px; border-radius:8px; border:${border}; background:${bg};">
+                    <span style="font-weight:bold; margin-right:10px; color:${isCorrect ? '#10b981' : '#94a3b8'};">[${letter}]</span>
+                    <span>${profileText(opt.text || '')}</span>
+                    ${icon}
+                </div>`;
+            }).join('') + '</div></div>';
+    } else {
+        optsHtml = '<p style="color:#94a3b8; font-style:italic; margin-top:8px;">Seçenek verisi bulunmuyor (eski kayıt).</p>';
+    }
+
+    body.innerHTML = `
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px;">
+            <span class="admin-rep-pill-status ${report.status || 'yeni'}">${report.status || 'yeni'}</span>
+            <span class="admin-rep-pill-type">${profileText(report.reportType || 'Diğer')}</span>
+            <span class="admin-rep-pill-meta">${report.grade ? profileText(report.grade) + '. Sınıf' : ''} ${report.unit ? '· Ünite ' + profileText(report.unit) : ''}</span>
+            <span class="admin-rep-pill-version">İçerik Sürümü: ${profileText(report.contentVersion || '8.9.8')}</span>
+        </div>
+
+        <div style="background: rgba(15,23,42,0.9); border: 1px solid rgba(148,163,184,0.3); border-radius: 10px; padding: 14px; margin-bottom: 14px;">
+            <strong style="color: #38bdf8; display: block; margin-bottom: 6px;"><i class="fas fa-file-lines"></i> Soru Metni:</strong>
+            <p style="margin: 0; white-space: pre-wrap; font-size: 1rem; color: #f8fafc;">${profileText(report.questionText || 'Metin yok')}</p>
+            ${optsHtml}
+            ${report.hint ? `<div style="margin-top:10px; color:#f59e0b; font-size:0.85rem;"><i class="fas fa-lightbulb"></i> <strong>İpucu:</strong> ${profileText(report.hint)}</div>` : ''}
+        </div>
+
+        <div style="background: rgba(30,41,59,0.7); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 12px;">
+            <strong style="color: #ef4444; display: block; margin-bottom: 4px;"><i class="fas fa-comment-dots"></i> Öğrencinin Bildirdiği Sorun:</strong>
+            <p style="margin: 0; color: #e2e8f0;">${report.description ? profileText(report.description) : '<em>Açıklama belirtilmedi.</em>'}</p>
+        </div>
+
+        ${report.adminNotes ? `
+        <div style="background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); border-radius: 10px; padding: 12px;">
+            <strong style="color: #38bdf8; display: block; margin-bottom: 4px;"><i class="fas fa-clipboard-check"></i> Yönetici İnceleme Notu:</strong>
+            <p style="margin: 0; color: #e2e8f0;">${profileText(report.adminNotes)}</p>
+        </div>` : ''}
+    `;
+    showModal(modal);
+}
+
+function getFilteredReportsForExport() {
+    return allAdminReports.filter(r => {
+        const status = r.status || 'yeni';
+        const grade = String(r.grade || '');
+        const matchStatus = adminReportStatusFilter === 'all' || status === adminReportStatusFilter;
+        const matchGrade = adminReportGradeFilter === 'all' || grade === adminReportGradeFilter;
+        return matchStatus && matchGrade;
+    });
+}
+
+function exportReportsJSON() {
+    const list = getFilteredReportsForExport();
+    if (list.length === 0) return alert('Dışa aktarılacak bildirim bulunamadı.');
+
+    // KİŞİSEL BİLGİLERDEN (PII: reporterId, reporterName, email, uid) TAMAMEN ARINDIRILMIŞ DIŞA AKTARIM
+    const sanitized = list.map(r => ({
+        id: r.id,
+        grade: r.grade || null,
+        unit: r.unit || null,
+        learningOutcome: r.learningOutcome || null,
+        module: r.module || null,
+        contentVersion: r.contentVersion || '8.9.8',
+        reportType: r.reportType || null,
+        description: r.description || '',
+        status: r.status || 'yeni',
+        adminNotes: r.adminNotes || '',
+        reportedAt: r.reportedAt || null,
+        question: {
+            id: r.questionId || null,
+            stem: r.questionText || '',
+            answerOptions: Array.isArray(r.answerOptions) ? r.answerOptions.map(o => ({ text: o.text, isCorrect: !!o.isCorrect })) : [],
+            hint: r.hint || '',
+            difficulty: r.difficulty || 1
+        }
+    }));
+
+    const blob = new Blob([JSON.stringify(sanitized, null, 2)], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `fenupx-soru-bildirimleri-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function exportReportsText() {
+    const list = getFilteredReportsForExport();
+    if (list.length === 0) return alert('Dışa aktarılacak bildirim bulunamadı.');
+
+    let txt = `================================================================================\n`;
+    txt += `FENUP X — SORU BİLDİRİM RAPORU (Gizlilik Korumalı / PII Arındırılmış)\n`;
+    txt += `Oluşturulma Tarihi: ${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR')}\n`;
+    txt += `Toplam Bildirim Sayısı: ${list.length}\n`;
+    txt += `================================================================================\n\n`;
+
+    list.forEach((r, idx) => {
+        txt += `--------------------------------------------------------------------------------\n`;
+        txt += `[BİLDİRİM #${idx + 1}] ID: ${r.id}\n`;
+        txt += `Durum: ${(r.status || 'yeni').toUpperCase()} | Tür: ${r.reportType || 'Diğer'}\n`;
+        txt += `Sınıf: ${r.grade || '—'}. Sınıf | Ünite: ${r.unit || '—'} | Kazanım: ${r.learningOutcome || '—'}\n`;
+        txt += `İçerik Sürümü: ${r.contentVersion || '8.9.8'} | Modül: ${r.module || 'Genel'}\n`;
+        txt += `Bildirim Tarihi: ${r.reportedAt || '—'}\n`;
+        txt += `Öğrenci Açıklaması:\n  ${(r.description || 'Açıklama belirtilmedi').replace(/\n/g, '\n  ')}\n`;
+        if (r.adminNotes) {
+            txt += `Yönetici İnceleme Notu:\n  ${r.adminNotes.replace(/\n/g, '\n  ')}\n`;
+        }
+        txt += `\n--- Soru ve Seçenekler ---\n`;
+        txt += `Soru: ${r.questionText || '—'}\n`;
+        if (Array.isArray(r.answerOptions) && r.answerOptions.length > 0) {
+            txt += `Seçenekler:\n`;
+            r.answerOptions.forEach((opt, i) => {
+                const letter = String.fromCharCode(65 + i);
+                txt += `  [${letter}] ${opt.text || ''}${opt.isCorrect ? '  <-- [DOĞRU CEVAP]' : ''}\n`;
+            });
+        }
+        if (r.hint) {
+            txt += `İpucu: ${r.hint}\n`;
+        }
+        txt += `\n`;
+    });
+
+    txt += `================================================================================\n`;
+    txt += `Rapor Sonu — FenUp X Eğitim Platformu\n`;
+
+    const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `fenupx-soru-bildirimleri-${new Date().toISOString().slice(0, 10)}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Filtre butonları dinleyicileri
+document.querySelectorAll('#admin-rep-status-filters .admin-rep-status-btn').forEach(btn => {
+    btn.onclick = () => {
+        document.querySelectorAll('#admin-rep-status-filters .admin-rep-status-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        adminReportStatusFilter = btn.dataset.status || 'all';
+        renderAdminReports();
+    };
+});
+
+document.querySelectorAll('#admin-rep-grade-filters .admin-rep-grade-btn').forEach(btn => {
+    btn.onclick = () => {
+        document.querySelectorAll('#admin-rep-grade-filters .admin-rep-grade-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        adminReportGradeFilter = btn.dataset.grade || 'all';
+        renderAdminReports();
+    };
+});
+
+document.getElementById('btn-export-reports-json')?.addEventListener('click', exportReportsJSON);
+document.getElementById('btn-export-reports-txt')?.addEventListener('click', exportReportsText);
+document.getElementById('btn-refresh-reports')?.addEventListener('click', () => loadAdminReports(true));
+
+const btnCloseRepDetail = document.getElementById('btn-close-report-detail');
+const repDetailModal = document.getElementById('admin-report-detail-modal');
+if (btnCloseRepDetail && repDetailModal) {
+    btnCloseRepDetail.onclick = () => hideModal(repDetailModal);
+    repDetailModal.onclick = (e) => {
+        if (e.target === repDetailModal) hideModal(repDetailModal);
+    };
+}
+
+if (typeof window !== 'undefined') {
+    window.loadAdminReports = loadAdminReports;
+    window.renderAdminReports = renderAdminReports;
+    window.exportReportsJSON = exportReportsJSON;
+    window.exportReportsText = exportReportsText;
+    window.openReportModal = openReportModal;
+    Object.defineProperty(window, 'allAdminReports', {
+        get() { return allAdminReports; },
+        set(val) { allAdminReports = val; },
+        configurable: true
+    });
+}
 const lbListEl = document.getElementById('global-lb-list');
 const lbTabBtns = document.querySelectorAll('.lb-tab-btn');
 let showLegacyCompetitionScores = false;
@@ -5427,9 +5876,10 @@ reportModal.innerHTML = `
             </label>
         </div>
         
-        <textarea id="report-desc" class="fenupx-input" placeholder="Eklemek istediğiniz bir detay var mı? (Opsiyonel)" rows="3" style="resize: none;"></textarea>
+        <textarea id="report-desc" class="fenupx-input" placeholder="Eklemek istediğiniz bir detay var mı? (En fazla 500 karakter)" rows="3" maxlength="500" style="resize: none; margin-bottom: 2px;"></textarea>
+        <div id="report-char-count" style="text-align: right; font-size: 0.75rem; color: #94a3b8; margin-bottom: 10px;">0 / 500</div>
         
-        <button id="btn-submit-report" class="f-btn" style="background: linear-gradient(45deg, #ef4444, #b91c1c); color: #fff; width: 100%; margin-top: 10px; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);">BİLDİRİMİ GÖNDER</button>
+        <button id="btn-submit-report" class="f-btn" style="background: linear-gradient(45deg, #ef4444, #b91c1c); color: #fff; width: 100%; margin-top: 5px; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);">BİLDİRİMİ GÖNDER</button>
     </div>
 `;
 document.body.appendChild(reportModal);
@@ -5451,6 +5901,14 @@ if(reportModal) {
     };
 }
 
+const reportDescInput = document.getElementById('report-desc');
+const reportCharCount = document.getElementById('report-char-count');
+if(reportDescInput && reportCharCount) {
+    reportDescInput.oninput = () => {
+        reportCharCount.textContent = `${reportDescInput.value.length} / 500`;
+    };
+}
+
 let currentReportedQuestion = null;
 
 function openReportModal(questionData) {
@@ -5467,50 +5925,71 @@ function openReportModal(questionData) {
     if(firstRadio) firstRadio.checked = true;
     const descInput = document.getElementById('report-desc');
     if(descInput) descInput.value = "";
+    if(reportCharCount) reportCharCount.textContent = "0 / 500";
 }
 
 const btnSubmitReport = document.getElementById('btn-submit-report');
 if(btnSubmitReport) {
     btnSubmitReport.onclick = async () => {
-        if(!currentReportedQuestion) return;
+        if(!currentReportedQuestion || btnSubmitReport.disabled) return;
         
         btnSubmitReport.disabled = true;
         btnSubmitReport.textContent = "Gönderiliyor...";
         btnSubmitReport.style.opacity = "0.7";
 
-        const selectedType = document.querySelector('input[name="reportType"]:checked').value;
+        const selectedRadio = document.querySelector('input[name="reportType"]:checked');
+        const selectedType = selectedRadio ? selectedRadio.value : "diger";
         const descInput = document.getElementById('report-desc');
-        const description = descInput ? descInput.value.trim() : "";
+        const description = descInput ? descInput.value.trim().slice(0, 500) : "";
         
         const user = auth.currentUser;
         const reporterId = user ? user.uid : "Misafir";
-        const reporterName = currentActivePlayerName || "Bilinmiyor";
+        const reporterName = currentActivePlayerName || (user ? (loadedProfile?.nickname || loadedProfile?.name || 'Kozmik Kaptan') : "Misafir");
+
+        const qText = currentReportedQuestion.question || currentReportedQuestion.stem || currentReportedQuestion.prompt || '';
+        const qGrade = String(currentReportedQuestion.grade || selectedGrade || '');
+        const qUnit = String(currentReportedQuestion.unit !== undefined ? currentReportedQuestion.unit : (selectedUnit || ''));
+        const qOutcome = String(currentReportedQuestion.outcome || currentReportedQuestion.kazanim || currentReportedQuestion.outcome_id || currentReportedQuestion.learningOutcome || '');
+        const qDiff = currentReportedQuestion.difficulty || 1;
+        const qOpts = Array.isArray(currentReportedQuestion.answerOptions) ? currentReportedQuestion.answerOptions : [];
+        const qHint = currentReportedQuestion.hint || '';
+        const qId = currentReportedQuestion.id || null;
+        const qModule = (typeof tState !== 'undefined' && tState && !tState.isSolo) ? 'Şampiyonlar Ligi' : 'Bireysel Çalışma';
 
         try {
             await addDoc(collection(db, "reported_questions"), {
-                questionText: currentReportedQuestion.question,
-                grade: selectedGrade || "Bilinmiyor",
-                unit: selectedUnit || "Bilinmiyor",
-                difficulty: currentReportedQuestion.difficulty || "Bilinmiyor",
+                questionId: qId,
+                module: qModule,
+                grade: qGrade,
+                unit: qUnit,
+                learningOutcome: qOutcome,
+                contentVersion: '8.9.8',
+                questionText: qText,
+                answerOptions: qOpts,
+                hint: qHint,
+                difficulty: qDiff,
                 reportType: selectedType,
                 description: description,
-                reporterId: reporterId,
-                reporterName: reporterName,
-                reportedAt: new Date(),
-                status: "yeni" // Adminin sonradan "incelendi", "duzeltildi" vs. yapabilmesi için
+                reporterId: reporterId, // STRICTLY EXCLUDED FROM EXPORTS (PII-FREE)
+                reporterName: reporterName, // STRICTLY EXCLUDED FROM EXPORTS (PII-FREE)
+                reportedAt: new Date().toISOString(),
+                status: "yeni",
+                adminNotes: ""
             });
             
             alert("Bildiriminiz başarıyla iletildi. Katkınız için teşekkür ederiz!");
+            if(descInput) descInput.value = "";
+            if(reportCharCount) reportCharCount.textContent = "0 / 500";
+            hideModal(reportModal);
+            if(isGlobalPaused) toggleMasterPause();
         } catch (e) {
             console.error("Hata bildirimi gönderilemedi:", e);
-            alert("Bildirim gönderilirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.");
+            alert("Bildirim gönderilemedi. Lütfen bağlantınızı kontrol edip tekrar deneyin.");
+            // Modal remains open so user does not lose input
         } finally {
             btnSubmitReport.disabled = false;
             btnSubmitReport.textContent = "BİLDİRİMİ GÖNDER";
             btnSubmitReport.style.opacity = "1";
-            
-            hideModal(reportModal);
-            if(isGlobalPaused) toggleMasterPause(); // Bildirim gönderilip modal kapanınca oyunu devam ettir
         }
     };
 }

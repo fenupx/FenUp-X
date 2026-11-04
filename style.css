@@ -917,6 +917,190 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
 #admin-user-list::-webkit-scrollbar { width: 8px; }
 #admin-user-list::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.5); border-radius: 10px; }
 
+/* Soru Bildirimleri Yönetimi Stilleri */
+.admin-tab-badge {
+    background: #ef4444;
+    color: #fff;
+    font-size: 0.72rem;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-left: 6px;
+    display: inline-block;
+}
+
+.admin-rep-status-btn, .admin-rep-grade-btn {
+    padding: 5px 12px;
+    border-radius: 18px;
+    border: 1px solid rgba(148,163,184,0.25);
+    background: rgba(30,41,59,0.7);
+    color: #cbd5e1;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.admin-rep-status-btn.active, .admin-rep-grade-btn.active {
+    background: rgba(56, 189, 248, 0.25);
+    border-color: #38bdf8;
+    color: #38bdf8;
+    font-weight: bold;
+}
+
+.admin-report-card {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color 0.2s;
+}
+
+.admin-report-card.status-yeni {
+    border-left: 4px solid #ef4444;
+}
+
+.admin-report-card.status-inceleniyor {
+    border-left: 4px solid #f59e0b;
+}
+
+.admin-report-card.status-cozuldu {
+    border-left: 4px solid #10b981;
+}
+
+.admin-rep-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.admin-rep-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.admin-rep-pill-status {
+    font-size: 0.72rem;
+    font-weight: bold;
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+}
+
+.admin-rep-pill-status.yeni {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.admin-rep-pill-status.inceleniyor {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.admin-rep-pill-status.cozuldu {
+    background: rgba(16, 185, 129, 0.2);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.admin-rep-pill-type {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.admin-rep-pill-meta, .admin-rep-pill-outcome, .admin-rep-pill-version {
+    font-size: 0.72rem;
+    padding: 2px 7px;
+    border-radius: 6px;
+    background: rgba(51, 65, 85, 0.7);
+    color: #94a3b8;
+}
+
+.admin-rep-pill-version {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+}
+
+.admin-rep-date {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.admin-rep-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.admin-rep-q-preview {
+    font-size: 0.88rem;
+    color: #cbd5e1;
+    line-height: 1.4;
+    background: rgba(0,0,0,0.25);
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.admin-rep-desc-box {
+    font-size: 0.85rem;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px dashed rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+.admin-rep-desc-box strong {
+    color: #f87171;
+    font-size: 0.78rem;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.admin-rep-desc-text {
+    margin: 0;
+    color: #f1f5f9;
+}
+
+.admin-rep-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.admin-rep-status-control, .admin-rep-notes-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-rep-notes-control {
+    flex: 1;
+    min-width: 240px;
+    justify-content: flex-end;
+}
+
 /* =========================================================
    AKILLI TAHTA VE KISA EKRANLAR İÇİN RESPONSIVE OPTİMİZASYONU 
    ========================================================= */

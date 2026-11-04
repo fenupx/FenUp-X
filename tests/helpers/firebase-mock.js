@@ -1,7 +1,7 @@
 // Shared synthetic Firebase boundary; no production account writes.
 export async function mockFirebase(page, backendReady = true) {
     page.on('dialog', d => d.accept());
-    await page.addInitScript(() => { localStorage.setItem('fenupx_cookie_consent', 'accepted'); window.__records = JSON.parse(sessionStorage.getItem('__records') || '{}'); window.__writes = []; });
+    await page.addInitScript(() => { localStorage.setItem('fenupx_cookie_consent', 'accepted'); window.__records = JSON.parse(sessionStorage.getItem('__records') || '{}'); window.__writes = []; window.__reports = []; });
     await page.route('**/competition-config.js*', route => route.fulfill({contentType:'text/javascript',body:`export const COMPETITION_API_URL="https://score.example.invalid"; export const ANNUAL_PROMOTION_ENABLED=false; export const COMPETITION_BACKEND_READY=${backendReady}; export const competitionYear=()=>2026; export const competitionPeriods=()=>({weekId:"2026-W45",monthId:"2026-11"});`}));
     await page.route('https://score.example.invalid/rpc/**', async route => {
         const name=route.request().url().split('/').pop();
@@ -46,13 +46,41 @@ export async function mockFirebase(page, backendReady = true) {
             };`;
         if (url.includes('firebase-firestore')) body = `
             export const getFirestore = () => ({});
-            export const doc = (_, collection, uid) => ({ collection, uid });
+            export const doc = (_, collection, uid) => ({ collection, uid, _col: collection });
             export const getDoc = async ref => { const data = window.__records[ref.uid]; if (window.__delay) await new Promise(r => setTimeout(r, window.__delay)); return { exists: () => !!data, data: () => data }; };
-            export const updateDoc = async (ref, data) => { if (window.__fail) throw Error('test failure'); await new Promise(r => setTimeout(r, 50)); window.__writes.push({uid: ref.uid, data}); Object.assign(window.__records[ref.uid], data); sessionStorage.setItem('__records',JSON.stringify(window.__records)); };
+            export const updateDoc = async (ref, data) => {
+                if (window.__fail) throw Error('test failure');
+                await new Promise(r => setTimeout(r, 50));
+                window.__writes.push({uid: ref.uid, data});
+                if (ref.collection === 'reported_questions' || ref._col === 'reported_questions') {
+                    const rep = (window.__reports || []).find(r => r.id === ref.uid);
+                    if (rep) Object.assign(rep, data);
+                    return;
+                }
+                if (window.__records[ref.uid]) Object.assign(window.__records[ref.uid], data);
+                sessionStorage.setItem('__records',JSON.stringify(window.__records));
+            };
             export const setDoc = async (ref,data) => {window.__records[ref.uid]=data;sessionStorage.setItem('__records',JSON.stringify(window.__records));};
             export const collection = (_, name) => name;
-            export const getDocs = async () => ({ forEach: fn => Object.entries(window.__records).forEach(([id, data]) => fn({ id, data: () => data })) });
-            ${['deleteDoc','query','orderBy','limit','addDoc'].map(n => `export const ${n} = () => ({});`).join('\n')}`;
+            export const query = (col) => ({ _col: typeof col === 'string' ? col : col?._col });
+            export const orderBy = () => ({});
+            export const limit = () => ({});
+            export const deleteDoc = () => ({});
+            export const addDoc = async (col, data) => {
+                if (window.__fail) throw Error('test failure');
+                const id = 'rep-' + Math.random().toString(36).substr(2, 9);
+                const item = { id, ...data };
+                window.__reports = window.__reports || [];
+                window.__reports.push(item);
+                return { id };
+            };
+            export const getDocs = async (target) => {
+                const colName = typeof target === 'string' ? target : target?._col;
+                if (colName === 'reported_questions') {
+                    return { forEach: fn => (window.__reports || []).forEach(r => fn({ id: r.id, data: () => r })) };
+                }
+                return { forEach: fn => Object.entries(window.__records).forEach(([id, data]) => fn({ id, data: () => data })) };
+            };`;
         await route.fulfill({ contentType: 'text/javascript', body, headers: {'Access-Control-Allow-Origin':'*'} });
     });
     await page.goto('/');
