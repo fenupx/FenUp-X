@@ -4920,3 +4920,15 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     #admin-modal .modal-content { padding: 12px !important; }
 }
 #admin-user-list .admin-user-row { transition: background-color 0.2s; }
+
+/* Class correction stays within the existing responsive profile form. */
+#grade-correction-help, #grade-correction-status, .grade-request-notice, .competition-status,
+#admin-question-filter-count { min-width: 0; box-sizing: border-box; overflow-wrap: anywhere; }
+#grade-correction-help, #grade-correction-status, .grade-request-notice { color: #a8bdd4; font-size: .85rem; line-height: 1.5; }
+#btn-grade-correction { width: 100%; min-height: 48px; white-space: normal; overflow-wrap: anywhere; box-sizing: border-box; margin-top: 10px; }
+#profile-grade:disabled { opacity: 1; color: #cbd5e1; cursor: default; }
+@media (max-width: 768px) {
+    #grade-correction-choice, #btn-grade-correction { min-width: 0; max-width: 100%; }
+}
+
+.competition-status { padding: 12px; border: 1px solid #475569; border-radius: 10px; color: #cbd5e1; line-height: 1.5; }

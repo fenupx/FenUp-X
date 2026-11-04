@@ -36,3 +36,5 @@ blob-report/
 .playwright/
 downloads/
 tests/artifacts/
+server/*-debug.log
+server/.firebase/

@@ -847,9 +847,9 @@ function applyLoadedData(revision, incoming) {
     return true;
 }
 
-async function loadData(revision = CONTENT_REVISION, showError = true) {
+async function loadData(revision = CONTENT_REVISION, showError = true, apply = true) {
     const targetRev = CONTENT_PATHS[revision] ? revision : CONTENT_REVISION;
-    if (DATA && loadedRevision === targetRev) return true;
+    if (DATA && loadedRevision === targetRev && apply) return true;
     try {
         const base = CONTENT_PATHS[targetRev];
         if (!base) throw new Error(`Bilinmeyen içerik sürümü: ${targetRev}`);
@@ -996,7 +996,7 @@ async function loadData(revision = CONTENT_REVISION, showError = true) {
         }
         const incoming = await dataVersions.get(targetRev);
         resolvedDataCache.set(targetRev, incoming);
-        return applyLoadedData(targetRev, incoming);
+        return apply ? applyLoadedData(targetRev, incoming) : true;
     } catch (err) {
         console.error('Yazılı verisi yüklenemedi:', err);
         dataVersions.delete(revision);
@@ -4371,6 +4371,17 @@ function closePrintPreview() {
 let currentAdminGrade = 'all';
 let currentAdminOutcome = 'all';
 
+export async function refreshAdminQuestionCount() {
+    const tab = $('btn-admin-tab-questions');
+    if (tab) tab.textContent = 'Yazılı Soru Havuzu (Yükleniyor…)';
+    const ok = await loadData(CONTENT_REVISION, false, false);
+    const active = resolvedDataCache.get(CONTENT_REVISION);
+    if (tab) tab.textContent = ok && active
+        ? `Yazılı Soru Havuzu (${(active.allQuestions || active.questions || []).length} Soru)`
+        : 'Yazılı Soru Havuzu (Yüklenemedi)';
+    return ok;
+}
+
 export function renderAdminQuestionReview() {
     const bankSelect = $('admin-bank-select');
     const outcomeFilter = $('admin-filter-outcome');
@@ -4379,17 +4390,16 @@ export function renderAdminQuestionReview() {
     const tabBtn = $('btn-admin-tab-questions');
     if (!bankSelect || !container) return;
 
-    if (!DATA || !(DATA.allQuestions || DATA.questions)) {
-        container.innerHTML = '<p style="color:#aaa;"><i class="fas fa-spinner fa-spin"></i> Soru havuzu yükleniyor...</p>';
-        loadData('6').then(() => {
-            renderAdminQuestionReview();
-        }).catch(() => {
-            container.innerHTML = '<p style="color:#f87171;">Soru havuzu yüklenirken hata oluştu.</p>';
+    const active = resolvedDataCache.get(CONTENT_REVISION);
+    if (!active) {
+        container.textContent = 'Soru havuzu yükleniyor…';
+        refreshAdminQuestionCount().then(ok => {
+            if (ok) renderAdminQuestionReview();
+            else container.textContent = 'Soru havuzu yüklenemedi. Sekmeyi yeniden açarak deneyebilirsin.';
         });
         return;
     }
-
-    const rawAllQuestions = (DATA && (DATA.allQuestions || DATA.questions)) || QUESTIONS || [];
+    const rawAllQuestions = active.allQuestions || active.questions || [];
     const diffWeight = { 'easy': 1, 'medium': 2, 'hard': 3 };
     const allQuestions = [...rawAllQuestions].sort((a, b) => {
         const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
@@ -4407,7 +4417,7 @@ export function renderAdminQuestionReview() {
     }
     const descP = $('admin-questions-desc');
     if (descP) {
-        descP.textContent = `MEB Türkiye Yüzyılı Maarif Modeli ${allQuestions.length} soruluk soru havuzu, rubrikleri ve öğretmen inceleme durumları.`;
+        descP.textContent = `Toplam havuz: ${allQuestions.length} soru. MEB Türkiye Yüzyılı Maarif Modeli soru havuzu, rubrikleri ve öğretmen inceleme durumları.`;
     }
 
     if (allQuestions.length === 0) {
@@ -4457,13 +4467,10 @@ export function renderAdminQuestionReview() {
             currentAdminOutcome = 'all';
         }
 
-        if (!outcomeFilter.dataset.bound) {
-            outcomeFilter.dataset.bound = 'true';
-            outcomeFilter.onchange = () => {
-                currentAdminOutcome = outcomeFilter.value;
-                renderFilteredQuestions(questionsByGrade, bankSelect, container);
-            };
-        }
+        outcomeFilter.onchange = () => {
+            currentAdminOutcome = outcomeFilter.value;
+            renderFilteredQuestions(questionsByGrade, bankSelect, container);
+        };
     }
 
     renderFilteredQuestions(questionsByGrade, bankSelect, container);
@@ -4474,6 +4481,10 @@ function renderFilteredQuestions(questionsByGrade, bankSelect, container) {
     if (currentAdminOutcome !== 'all') {
         finalQuestions = questionsByGrade.filter(q => q.outcome_id === currentAdminOutcome);
     }
+
+    let count = $('admin-question-filter-count');
+    if (!count) { count = document.createElement('p'); count.id = 'admin-question-filter-count'; count.setAttribute('role', 'status'); container.before(count); }
+    count.textContent = `Filtre sonucu: ${finalQuestions.length} soru`;
 
     if (finalQuestions.length === 0) {
         bankSelect.innerHTML = '<option value="">Bu filtrede soru bulunamadı</option>';
@@ -5202,6 +5213,7 @@ if (typeof window !== 'undefined') {
         goToStep,
         renderStudy,
         renderAdminQuestionReview,
+        refreshAdminQuestionCount,
         openPrintPreview,
         closePrintPreview,
         downloadExamPdf,

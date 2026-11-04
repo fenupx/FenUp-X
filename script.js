@@ -1,3 +1,4 @@
+import { COMPETITION_BACKEND_READY, competitionYear, competitionPeriods } from './competition-config.js?v=8.9.4';
 /**
  * FenUp X — V8.5: Kırmızı El Yazılı Cevap Anahtarı PDF ve Adil Puanlamalı Çocuk Dostu Değerlendirme
  * Mod 1: "Kuvvetin İşe Etkisi (Yol Sabit)" - Bağımsız Değişken: Uygulanan Kuvvet, Kontrol Değişkeni: Alınan Yol ve Kütle
@@ -1865,6 +1866,9 @@ function showRulesScreen() {
                 <li style="margin-bottom: 15px;"><i class="fas fa-bolt" style="color:#9d50bb; margin-right:10px; width: 25px;"></i> <b>Düello Modu:</b> 10 soru sonunda puanı eşit olan lider takımlar varsa başlar! Her takımdan <b>sadece bir temsilci</b> akıllı tahtanın önüne gelir. Tahtadaki doğru şıkka <b>ilk dokunan temsilci, takımını şampiyon yapar!</b> Yanlış şıkka dokunan takım anında elenir.</li>
             </ul>`;
     }
+    if (activeMode === 'bireysel' && !COMPETITION_BACKEND_READY) {
+        content.insertAdjacentHTML('beforeend', '<p class="competition-status" role="status">Yeni liderlik puanı kaydı geçici olarak kapalı. Soruları antrenman için çözebilir, geçmiş puanlarını görüntüleyebilirsin.</p>');
+    }
 }
 
 const btnStartRules = document.getElementById('btn-start-from-rules');
@@ -2060,8 +2064,17 @@ function buildQuestionReviewHTML() {
 
 function getSettings(idx) { return idx < 4 ? { time: 40, points: 100 } : idx < 8 ? { time: 50, points: 200 } : { time: 60, points: 400 }; }
 
+// Authoritative competition writes use callable functions; browser role/class
+// checks are only UX. Never fall back to direct score writes on server errors.
+async function competitionCall(name, data) {
+    if (!COMPETITION_BACKEND_READY) throw Error('Güvenli yarışma sunucusu henüz etkinleştirilmedi.');
+    const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-functions.js');
+    return (await httpsCallable(getFunctions(app, 'europe-west1'), name)(data)).data;
+}
+
 async function startIndividual() {
     quizState.set = await fetchQuestions(selectedGrade, selectedUnit); if(quizState.set.length === 0) return;
+    quizState.submissionId = crypto.randomUUID();
     sessionMistakes = [];
     const qeRev = document.getElementById('quiz-end-review-container');
     if (qeRev) { qeRev.innerHTML = ""; qeRev.classList.add('is-hidden'); }
@@ -2221,81 +2234,17 @@ async function finishIndividual(msg) {
             alert("Yarışmayı tamamladın! Puanının Şampiyonlar Ligi liderlik tablosuna kaydedilmesi için e-posta adresini doğrulaman gerekiyor. Profil menüsünden doğrulama bağlantısını tekrar gönderebilirsin.");
         } else {
         try {
-            const userRef = doc(db, "users", user.uid);
-            const userSnap = await getDoc(userRef);
-            if (userSnap.exists()) {
-                const userData = userSnap.data();
-                const now = new Date();
-                const currentWeek = getWeekId(now);
-                const currentMonth = getMonthId(now);
-                const currentSeason = getSeasonId(now);
-                
-                const gradeSuffix = `_${selectedGrade}`;
-
-                // --- GÜNLÜK ÜNİTE BAZLI LİMİT SİSTEMİ ---
-                const todayStr = now.getFullYear() + "-" + (now.getMonth() + 1).toString().padStart(2, '0') + "-" + now.getDate().toString().padStart(2, '0');
-                const unitKey = `${selectedGrade}_${selectedUnit}`;
-
-                let dailyTracker = userData.dailyTracker || { date: todayStr, units: {} };
-                if (dailyTracker.date !== todayStr) {
-                    dailyTracker = { date: todayStr, units: {} };
-                }
-                if (!dailyTracker.units) dailyTracker.units = {};
-                if (!dailyTracker.units[unitKey]) dailyTracker.units[unitKey] = [];
-
-                let scoresArray = dailyTracker.units[unitKey];
-                let scoreDiff = 0;
-
-                if (scoresArray.length < 3) {
-                    scoresArray.push(quizState.score);
-                    scoreDiff = quizState.score;
-                } else {
-                    scoresArray.sort((a, b) => a - b);
-                    if (quizState.score > scoresArray[0]) {
-                        scoreDiff = quizState.score - scoresArray[0];
-                        scoresArray[0] = quizState.score;
-                    }
-                }
-
-                let updates = { dailyTracker: dailyTracker };
-
-                // V8.9.1: ADİL LİDERLİK TABLOSU İZOLASYONU (RANKING GUARD)
-                // Öğrenci farklı bir sınıfın sorularını antrenman için çözebilir;
-                // ancak yalnızca kendi kayıtlı olduğu sınıfın liderlik tablosuna puan yazılır:
-                const userGrade = userData.sinif ? String(userData.sinif) : null;
-                const isOwnGrade = !userGrade || String(selectedGrade) === userGrade;
-
-                if (scoreDiff > 0 && isOwnGrade) {
-                    updates.totalScore = (userData.totalScore || 0) + scoreDiff;
-                    updates[`totalScore${gradeSuffix}`] = (userData[`totalScore${gradeSuffix}`] || 0) + scoreDiff;
-
-                    if (userData[`lastWeekId${gradeSuffix}`] === currentWeek) {
-                        updates[`weeklyScore${gradeSuffix}`] = (userData[`weeklyScore${gradeSuffix}`] || 0) + scoreDiff;
-                    } else {
-                        updates[`weeklyScore${gradeSuffix}`] = scoreDiff;
-                        updates[`lastWeekId${gradeSuffix}`] = currentWeek;
-                    }
-
-                    if (userData[`lastMonthId${gradeSuffix}`] === currentMonth) {
-                        updates[`monthlyScore${gradeSuffix}`] = (userData[`monthlyScore${gradeSuffix}`] || 0) + scoreDiff;
-                    } else {
-                        updates[`monthlyScore${gradeSuffix}`] = scoreDiff;
-                        updates[`lastMonthId${gradeSuffix}`] = currentMonth;
-                    }
-
-                    if (userData[`lastSeasonId${gradeSuffix}`] === currentSeason) {
-                        updates[`seasonScore${gradeSuffix}`] = (userData[`seasonScore${gradeSuffix}`] || 0) + scoreDiff;
-                    } else {
-                        updates[`seasonScore${gradeSuffix}`] = scoreDiff;
-                        updates[`lastSeasonId${gradeSuffix}`] = currentSeason;
-                    }
-                } else if (scoreDiff > 0 && !isOwnGrade) {
-                    console.log(`[Ranking Guard] Öğrencinin sınıfı (${userGrade}), çözülen sınıf (${selectedGrade}) ile eşleşmediği için liderlik tablosuna puan yazılmadı. Yerel skor korundu.`);
-                }
-
-                await updateDoc(userRef, updates);
+            if (isStudentProfile(loadedProfile) && normalizeGrade(loadedProfile.sinif) === String(selectedGrade)) {
+                const result = await competitionCall('submitCompetitionResult', {
+                    grade: String(selectedGrade), unit: Number(selectedUnit), score: quizState.score,
+                    submissionId: quizState.submissionId
+                });
+                if (!result?.accepted) throw Error('Puan sunucu tarafından kabul edilmedi.');
             }
-        } catch (e) { console.error("Puan kaydedilemedi:", e); }
+        } catch (e) {
+            console.error('Puan sunucuda kaydedilemedi:', e);
+            alert('Çalışman tamamlandı. Güvenli puan servisi şu anda kaydı doğrulayamadı; bu sonuç liderlik tablosuna yazılmadı.');
+        }
         }
     }
 
@@ -3572,6 +3521,7 @@ export function checkMissingGradeOnboarding(user, userData) {
             try {
                 if (onboardingRevision !== authRevision || auth.currentUser?.uid !== user.uid) throw new Error('Oturum değişti. Yeniden giriş yapın.');
                 await updateDoc(doc(db, 'users', user.uid), { sinif: grade });
+                if (COMPETITION_BACKEND_READY) await competitionCall('initializeCompetition', {});
                 if (onboardingRevision !== authRevision || auth.currentUser?.uid !== user.uid) return;
                 userData.sinif = grade;
                 try {
@@ -3952,12 +3902,20 @@ profileModal.innerHTML = `
                 </div>
                 <div class="auth-field-group">
                     <label for="profile-grade" class="auth-label">Sınıfın</label>
-                    <select id="profile-grade" class="fenupx-input auth-input">
+                    <select id="profile-grade" class="fenupx-input auth-input" disabled aria-describedby="grade-correction-help">
                         <option value="5">5. Sınıf</option>
                         <option value="6">6. Sınıf</option>
-                        <option value="7" selected>7. Sınıf</option>
+                        <option value="7">7. Sınıf</option>
                         <option value="8">8. Sınıf</option>
+                        <option value="">Belirtilmemiş</option>
                     </select>
+                    <p id="grade-correction-help">Kayıtlı sınıfını yalnız yönetici düzeltebilir. Önceki puanlar yeni sınıfa taşınmaz.</p>
+                    <label for="grade-correction-choice" class="auth-label">Doğru sınıfın</label>
+                    <select id="grade-correction-choice" class="fenupx-input auth-input">
+                        <option value="">Sınıf seç</option><option value="5">5. Sınıf</option><option value="6">6. Sınıf</option><option value="7">7. Sınıf</option><option value="8">8. Sınıf</option>
+                    </select>
+                    <button id="btn-grade-correction" class="f-btn" type="button">Sınıf düzeltme talebi gönder</button>
+                    <p id="grade-correction-status" role="status"></p>
                 </div>
                 
                 <button id="btn-save-profile" class="f-btn f-btn-ana" style="width:100%; margin-top:5px;">GÜNCELLE</button>
@@ -4133,6 +4091,7 @@ onAuthStateChanged(auth, async (user) => {
 
             // V8.9.1: 1 Eylül Otomatik Sınıf Terfisi ve Sınıf Bilgisini Senkronize Et
             checkAnnualPromotion(userData);
+            if (COMPETITION_BACKEND_READY && isStudentProfile(userData) && normalizeGrade(userData.sinif)) competitionCall('initializeCompetition', {}).catch(e => console.warn('Yarışma sınıfı doğrulanamadı:', e.message));
             const userGrade = normalizeGrade(userData.sinif);
             localStorage.setItem('fenupx_user_grade', userGrade);
             try {
@@ -4141,12 +4100,17 @@ onAuthStateChanged(auth, async (user) => {
             } catch (_) {}
 
             const pGrade = document.getElementById('profile-grade');
-            if (pGrade && userData.sinif) pGrade.value = userData.sinif;
+            if (pGrade) pGrade.value = normalizeGrade(userData.sinif);
+            const correctionChoice = document.getElementById('grade-correction-choice');
+            const correctionStatus = document.getElementById('grade-correction-status');
+            const pendingCorrection = userData.gradeCorrectionRequest?.status === 'pending';
+            if (correctionChoice) correctionChoice.value = pendingCorrection ? normalizeGrade(userData.gradeCorrectionRequest.requestedGrade) : '';
+            if (correctionStatus) correctionStatus.textContent = pendingCorrection ? 'Sınıf düzeltme talebin yönetici incelemesinde.' : '';
 
             const isAdmin = userData.role === 'admin';
 
             // V8.9.2: Sınıf bilgisi bulunmayan mevcut öğrenciler için tek seferlik onboarding penceresi
-            if (isStudentProfile(userData) && !normalizeGrade(userData.sinif)) {
+            if (isStudentProfile(userData) && !userData.middleSchoolGraduated && !normalizeGrade(userData.sinif)) {
                 checkMissingGradeOnboarding(user, userData);
             }
 
@@ -4525,6 +4489,24 @@ if(profileModal) {
     };
 }
 
+const gradeCorrectionButton = document.getElementById('btn-grade-correction');
+if (gradeCorrectionButton) gradeCorrectionButton.onclick = async () => {
+    const user = auth.currentUser;
+    const revision = authRevision;
+    const grade = normalizeGrade(document.getElementById('grade-correction-choice')?.value);
+    const status = document.getElementById('grade-correction-status');
+    if (!user || !isStudentProfile(loadedProfile)) return;
+    if (!grade || grade === normalizeGrade(loadedProfile.sinif)) { status.textContent = 'Kayıtlı sınıfından farklı, doğru sınıfı seç.'; return; }
+    gradeCorrectionButton.disabled = true;
+    try {
+        await updateDoc(doc(db, 'users', user.uid), { gradeCorrectionRequest: { requestedGrade: grade, status: 'pending' } });
+        if (revision !== authRevision) return;
+        loadedProfile.gradeCorrectionRequest = { requestedGrade: grade, status: 'pending' };
+        status.textContent = 'Talebin yönetici incelemesine gönderildi. Kayıtlı sınıfın değişmedi.';
+    } catch (_) { if (revision === authRevision) status.textContent = 'Talep gönderilemedi. Daha sonra tekrar dene.'; }
+    finally { gradeCorrectionButton.disabled = false; }
+};
+
 const btnSaveProf = document.getElementById('btn-save-profile');
 if(btnSaveProf) {
     btnSaveProf.onclick = async () => {
@@ -4541,7 +4523,7 @@ if(btnSaveProf) {
         const nickname = pNick ? pNick.value.trim() : '';
         const avatar = pca ? pca.src : '';
         if (!user || !loadedProfile) return;
-        const sinif = normalizeGrade(pGrade?.value);
+        const sinif = normalizeGrade(loadedProfile.sinif);
         if (isStudentProfile(loadedProfile) && !sinif) return alert('Lütfen sınıfını seç.');
 
         if(!name || !surname || (loadedProfile.role !== 'admin' && !nickname)) return alert("Ad, soyad ve yarışmacı adı alanları boş bırakılamaz.");
@@ -4561,7 +4543,7 @@ if(btnSaveProf) {
             if (isStudentProfile(loadedProfile)) { unlockBadge('badge_ilk_adim'); checkAndUpdateStreak(); }
             const profHeroName = document.getElementById('profile-display-fullname');
             if (profHeroName && name) profHeroName.textContent = `${name} ${surname}`;
-            await updateDoc(doc(db, "users", user.uid), { name, surname, avatar, ...(loadedProfile.role !== 'admin' ? {nickname} : {}), ...(isStudentProfile(loadedProfile) ? { sinif } : {}) });
+            await updateDoc(doc(db, "users", user.uid), { name, surname, avatar, ...(loadedProfile.role !== 'admin' ? {nickname} : {}) });
             if (profileRevision !== authRevision) return;
             localStorage.setItem('fenupx_user_grade', sinif);
             try {
@@ -4676,8 +4658,15 @@ if (btnConfirmDelFinal) {
 
         try {
             btnConfirmDelFinal.textContent = 'Siliniyor...';
-            await deleteDoc(doc(db, "users", user.uid));
-            await deleteUser(user);
+            if (COMPETITION_BACKEND_READY) await competitionCall('deleteCompetitionAccount', {});
+            else {
+                const {runTransaction} = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js');
+                await runTransaction(db, async tx => {
+                    tx.set(doc(db, 'deletedProfiles', user.uid), {deleted:true});
+                    tx.delete(doc(db, 'users', user.uid));
+                });
+                await deleteUser(user);
+            }
             hideModal(profileModal);
             alert("Hesabınız, yarışmacı profiliniz ve tüm puan kayıtlarınız kalıcı olarak silindi.");
             location.reload();
@@ -4737,7 +4726,9 @@ if(btnStuSub) {
                 } catch (_) {}
                 updateEmailVerifyBox(cred.user);
                 hideModal(authModal);
-                alert("Hesabınız oluşturuldu! E-posta adresinize bir doğrulama bağlantısı gönderdik. Hemen yarışmaya başlayabilirsiniz; puanlarınızın Şampiyonlar Ligi liderlik tablosuna kaydedilmesi için e-postanızı doğrulamanız yeterlidir.");
+                alert(COMPETITION_BACKEND_READY
+                    ? 'Hesabın oluşturuldu! E-posta doğrulama bağlantısını gönderdik. Liderlik tablosuna puan kaydetmek için e-postanı doğrula.'
+                    : 'Hesabın oluşturuldu! E-posta doğrulama bağlantısını gönderdik. Çalışmalara başlayabilirsin. Yeni liderlik puanı kaydı şu anda geçici olarak kapalı.');
                 location.reload();
             }
         } catch(err) { 
@@ -4853,6 +4844,7 @@ if(btnAdminPanel) {
         switchAdminTab('users');
         showModal(adminModal);
         loadAdminUsers();
+        window.FenUpExam?.refreshAdminQuestionCount();
     };
 }
 
@@ -4921,15 +4913,19 @@ async function loadAdminUsers() {
     }
 }
 
+function profileText(value) {
+    return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
 function renderAdminUsers(filterText = '') {
     if(!adminUserList) return;
     adminUserList.innerHTML = '';
     const lowerFilter = filterText.toLowerCase();
     const sourceList = (window.allAdminUsers && Array.isArray(window.allAdminUsers) && window.allAdminUsers.length > 0) ? window.allAdminUsers : allAdminUsers;
     const filtered = sourceList.filter(u => (!adminClassFilter || (isStudentProfile(u) && normalizeGrade(u.sinif) === adminClassFilter)) && (
-        (u.name && u.name.toLowerCase().includes(lowerFilter)) || 
-        (u.nickname && u.nickname.toLowerCase().includes(lowerFilter)) ||
-        (u.email && u.email.toLowerCase().includes(lowerFilter))
+        (u.name && String(u.name).toLowerCase().includes(lowerFilter)) ||
+        (u.nickname && String(u.nickname).toLowerCase().includes(lowerFilter)) ||
+        (u.email && String(u.email).toLowerCase().includes(lowerFilter))
     ));
 
     if(filtered.length === 0) {
@@ -4948,17 +4944,18 @@ function renderAdminUsers(filterText = '') {
         row.className = `admin-user-row ${isBanned ? 'banned' : ''}`;
         row.innerHTML = `
             <div class="admin-user-info">
-                <img src="${u.avatar || kozmikAvatarlar[0].url}" class="admin-user-avatar" alt="${u.nickname || 'Avatar'}">
+                <img src="${profileText(u.avatar || kozmikAvatarlar[0].url)}" class="admin-user-avatar" alt="${profileText(u.nickname || 'Avatar')}">
                 <div class="admin-user-details">
-                    <h4>${u.nickname || 'İsimsiz Kaptan'}${onlineBadge}</h4>
-                    <p>${u.name || ''} ${u.surname || ''} | ${u.email || ''}</p>
+                    <h4>${profileText(u.nickname || 'İsimsiz Kaptan')}${onlineBadge}</h4>
+                    <p>${profileText(u.name || '')} ${profileText(u.surname || '')} | ${profileText(u.email || '')}</p>
                 </div>
             </div>
             ${isStudentProfile(u) ? `<div class="admin-user-grade-col">
                 <span class="admin-grade-badge" style="display: block; font-size: 0.75rem; color: #94a3b8; margin-bottom: 3px;">
                     <i class="fas fa-graduation-cap"></i> Sınıf: <strong style="color: #38bdf8;">${gradeText}</strong>
                 </span>
-                <select class="admin-grade-select" data-uid="${u.id}" aria-label="Sınıf Düzenle">
+                ${u.gradeCorrectionRequest?.status === 'pending' && normalizeGrade(u.gradeCorrectionRequest.requestedGrade) ? `<p class="grade-request-notice">Düzeltme talebi: ${normalizeGrade(u.gradeCorrectionRequest.requestedGrade)}. Sınıf · Onay için sınıfı seç. Eski puanlar taşınmaz.</p>` : ''}
+                <select class="admin-grade-select" data-uid="${profileText(u.id)}" aria-label="Sınıf Düzenle">
                     <option value="" ${!u.sinif ? 'selected' : ''}>Belirtilmemiş</option>
                     <option value="5" ${String(u.sinif) === '5' ? 'selected' : ''}>5. Sınıf</option>
                     <option value="6" ${String(u.sinif) === '6' ? 'selected' : ''}>6. Sınıf</option>
@@ -4970,10 +4967,10 @@ function renderAdminUsers(filterText = '') {
                 <i class="fas fa-star" style="color:#f59e0b;"></i> ${formatScore(u.totalScore || 0)} Puan
             </div>
             <div class="admin-actions">
-                <button class="btn-edit-nick" data-uid="${u.id}" data-nick="${u.nickname || ''}"><i class="fas fa-edit"></i> İsim Değiştir</button>
+                <button class="btn-edit-nick" data-uid="${profileText(u.id)}" data-nick="${profileText(u.nickname || '')}"><i class="fas fa-edit"></i> İsim Değiştir</button>
                 ${isBanned 
-                    ? `<button class="btn-unban" data-uid="${u.id}"><i class="fas fa-check-circle"></i> Engeli Kaldır</button>`
-                    : `<button class="btn-ban" data-uid="${u.id}"><i class="fas fa-ban"></i> Blokla</button>`
+                    ? `<button class="btn-unban" data-uid="${profileText(u.id)}"><i class="fas fa-check-circle"></i> Engeli Kaldır</button>`
+                    : `<button class="btn-ban" data-uid="${profileText(u.id)}"><i class="fas fa-ban"></i> Blokla</button>`
                 }
             </div>
         `;
@@ -5028,24 +5025,26 @@ async function changeUserNickname(uid, newNick) {
 
 export async function changeUserGrade(uid, newGrade) {
     const target = allAdminUsers.find(u => u.id === uid);
-    if (loadedProfile?.role !== 'admin' || !isStudentProfile(target) || (newGrade !== '' && !normalizeGrade(newGrade)) || pendingGradeWrites.has(uid)) return;
+    if (loadedProfile?.role !== 'admin' || !isStudentProfile(target) || !normalizeGrade(newGrade) || pendingGradeWrites.has(uid)) return;
     pendingGradeWrites.add(uid);
     try {
-        await updateDoc(doc(db, "users", uid), { sinif: newGrade });
+        if (COMPETITION_BACKEND_READY) await competitionCall('correctStudentClass', {uid, grade:newGrade});
+        else await updateDoc(doc(db, 'users', uid), {sinif:newGrade,gradeCorrectionRequest:{requestedGrade:newGrade,status:'approved'}});
         const userIndex = allAdminUsers.findIndex(u => u.id === uid);
         if(userIndex > -1) {
             allAdminUsers[userIndex].sinif = newGrade;
+            allAdminUsers[userIndex].gradeCorrectionRequest = {requestedGrade:newGrade,status:'approved'};
         }
         const asi = document.getElementById('admin-search-input');
         renderAdminUsers(asi ? asi.value : '');
         showBadgeEarnedToast({
             icon: "✅",
             title: "Sınıf Güncellendi",
-            desc: newGrade ? `Öğrencinin sınıfı ${newGrade}. Sınıf olarak güncellendi.` : "Öğrencinin sınıfı sıfırlandı.",
+            desc: newGrade ? `Öğrencinin sınıfı ${newGrade}. Sınıf olarak güncellendi. Eski puanlar yeni sınıfa taşınmadı.` : "Öğrencinin sınıfı sıfırlandı.",
             condition: "Yönetici İşlemi"
         });
     } catch(e) {
-        alert("Sınıf güncellenemedi. Önceki sınıf korundu.");
+        alert("Güvenli sınıf düzeltme servisi işlemi onaylamadı. Önceki sınıf korundu.");
         renderAdminUsers(adminSearchInput?.value || '');
     } finally { pendingGradeWrites.delete(uid); }
 }
@@ -5102,6 +5101,8 @@ async function loadGlobalLeaderboard(type = 'weekly') {
     const lbTitle = document.querySelector('#unit-leaderboard-side h2');
     if(lbTitle && selectedGrade) lbTitle.innerHTML = `<i class="fas fa-trophy"></i> ${selectedGrade}. Sınıf Şampiyonlar Ligi`;
 
+    if (COMPETITION_BACKEND_READY) { await loadCohortLeaderboard(type); return; }
+    if (lbTitle && selectedGrade) lbTitle.textContent = `${selectedGrade}. Sınıf · Geçmiş puan kayıtları`;
     const gradeSuffix = `_${selectedGrade}`;
     let field = `totalScore${gradeSuffix}`;
     const now = new Date();
@@ -5147,6 +5148,31 @@ async function loadGlobalLeaderboard(type = 'weekly') {
     }
 }
 
+async function loadCohortLeaderboard(type) {
+    const year = competitionYear();
+    const field = type === 'weekly' ? 'weeklyScore' : type === 'monthly' ? 'monthlyScore' : 'score';
+    try {
+        const path = `leaderboards/${year}/grades/${selectedGrade}/entries`;
+        const snap = await getDocs(query(collection(db, path), orderBy(field, 'desc'), limit(50)));
+        const now = new Date();
+        const periods = competitionPeriods(now);
+        const users = [];
+        snap.forEach(item => {
+            const data = item.data();
+            if (data.schoolYear !== year || data.grade !== String(selectedGrade) || data.isBanned) return;
+            if (type === 'weekly' && data.weekId !== periods.weekId) return;
+            if (type === 'monthly' && data.monthId !== periods.monthId) return;
+            if (data[field] > 0) users.push({...data, displayScore:data[field]});
+        });
+        renderGlobalLeaderboard(users, type);
+        const area = document.getElementById('lb-user-rank');
+        const text = document.getElementById('lb-user-rank-text');
+        const index = users.findIndex(u => u.uid === auth.currentUser?.uid);
+        if (area) area.classList.toggle('is-hidden', index < 0);
+        if (text && index >= 0) text.textContent = `${year}–${year+1} · ${selectedGrade}. Sınıf Sıran: ${index+1}. | Puanın: ${formatScore(users[index].displayScore)}`;
+    } catch (_) { lbListEl.textContent = 'Liderlik tablosu şu anda yüklenemedi.'; }
+}
+
 function renderGlobalLeaderboard(users, type) {
     if(!lbListEl) return;
     lbListEl.innerHTML = '';
@@ -5178,9 +5204,9 @@ function renderGlobalLeaderboard(users, type) {
         row.className = `global-lb-row rank-${i+1}`;
         row.innerHTML = `
             <div class="global-lb-rank">${i+1}</div>
-            <img src="${u.avatar || kozmikAvatarlar[0].url}" class="global-lb-avatar">
+            <img src="${profileText(u.avatar || kozmikAvatarlar[0].url)}" class="global-lb-avatar">
             <div class="global-lb-info">
-                <h4 class="${nameClass}">${badgeStr}${u.nickname || 'Kozmik Kaptan'}</h4>
+                <h4 class="${nameClass}">${badgeStr}${profileText(u.nickname || 'Kozmik Kaptan')}</h4>
                 <p>Öğrenci</p>
             </div>
             <div class="global-lb-score">${formatScore(u.displayScore)}</div>

@@ -1,9 +1,10 @@
 import { test, expect } from '@playwright/test';
 
 // In-memory Firebase boundary: these tests never write to production accounts.
-async function mockFirebase(page) {
+export async function mockFirebase(page, backendReady = true) {
     page.on('dialog', d => d.accept());
     await page.addInitScript(() => { localStorage.setItem('fenupx_cookie_consent', 'accepted'); window.__records = JSON.parse(sessionStorage.getItem('__records') || '{}'); window.__writes = []; });
+    await page.route('**/competition-config.js*', route => route.fulfill({contentType:'text/javascript',body:`export const COMPETITION_BACKEND_READY=${backendReady}; export const competitionYear=()=>2026; export const competitionPeriods=()=>({weekId:"2026-W45",monthId:"2026-11"});`}));
     await page.route('https://www.gstatic.com/firebasejs/**', async route => {
         const url = route.request().url();
         let body = '';
@@ -18,6 +19,18 @@ async function mockFirebase(page) {
             export class GoogleAuthProvider {};
             export const EmailAuthProvider = {};
             ${['signInWithEmailAndPassword','deleteUser','reauthenticateWithCredential','reauthenticateWithPopup','sendEmailVerification','sendPasswordResetEmail'].map(n => `export const ${n} = async () => ({});`).join('\n')}`;
+        if (url.includes('firebase-functions')) body = `
+            export const getFunctions = () => ({});
+            export const httpsCallable = (_, name) => async data => {
+                window.__calls = [...(window.__calls || []), {name,data}];
+                if (window.__fail) throw Error('test failure');
+                if (name === 'correctStudentClass') {
+                    if (window.__records[sessionStorage.getItem('__uid')]?.role !== 'admin') throw Error('admin-required');
+                    window.__records[data.uid].sinif=data.grade;
+                    window.__records[data.uid].gradeCorrectionRequest={requestedGrade:data.grade,status:'approved'};
+                }
+                return {data:{accepted:true,oldScoresTransferred:false}};
+            };`;
         if (url.includes('firebase-firestore')) body = `
             export const getFirestore = () => ({});
             export const doc = (_, collection, uid) => ({ collection, uid });
@@ -79,9 +92,9 @@ test('admin filter and grade write use student schema, preserve fields and rejec
     await page.locator('.admin-grade-select').selectOption('8');
     await expect(page.locator('.admin-user-row')).toHaveCount(0);
     expect(await page.evaluate(() => window.__records.s.totalScore)).toBe(120);
-    expect(await page.evaluate(() => window.__writes)).toEqual([{uid:'s',data:{sinif:'8'}}]);
+    expect(await page.evaluate(() => window.__calls)).toEqual([{name:'correctStudentClass',data:{uid:'s',grade:'8'}}]);
     await page.evaluate(async () => {await window.__login(null); await window.changeUserGrade('s','5');});
-    expect(await page.evaluate(() => window.__writes.length)).toBe(1);
+    expect(await page.evaluate(() => window.__calls.length)).toBe(1);
 });
 
 test('promotion remains inert for missing baseline, dates, repeated sessions and terminal grade', async ({page}) => {
@@ -168,15 +181,74 @@ test('first Google login requests an explicit grade and persists onboarding acro
     await expect(page.locator('#profile-grade')).toHaveValue('8');
 });
 
-test('profile edits persist all four grades and preserve existing score',async({page})=>{
+test('profile keeps class locked, ignores DOM tampering and sends correction request',async({page})=>{
     await mockFirebase(page);
     await page.evaluate(async()=>{window.__records.s={role:'student',name:'Deneme',surname:'Kullanıcı',nickname:'TestKaptan',sinif:'5',totalScore:120};await window.__login('s');});
-    for(const grade of ['5','6','7','8']) {
-        await page.evaluate(()=>{const m=document.getElementById('profile-modal');m.classList.remove('is-hidden');m.classList.add('is-open','active');m.style.display='flex';m.querySelector('details').open=true;});
-        await page.locator('#profile-grade').selectOption(grade);
-        await Promise.all([page.waitForEvent('load'),page.locator('#btn-save-profile').click()]);
-        await page.waitForFunction(()=>window.__login && document.getElementById('profile-grade')?.value===window.__records.s?.sinif);
-        expect(await page.evaluate(()=>window.__records.s.sinif)).toBe(grade);
-        expect(await page.evaluate(()=>window.__records.s.totalScore)).toBe(120);
-    }
+    await page.evaluate(()=>{const m=document.getElementById('profile-modal');m.classList.remove('is-hidden');m.classList.add('is-open','active');m.style.display='flex';m.querySelector('details').open=true;});
+    await expect(page.locator('#profile-grade')).toBeDisabled();
+    await page.locator('#grade-correction-choice').selectOption('8');
+    await page.locator('#btn-grade-correction').click();
+    await expect(page.locator('#grade-correction-status')).toContainText('Kayıtlı sınıfın değişmedi');
+    expect(await page.evaluate(()=>window.__records.s.sinif)).toBe('5');
+    await page.evaluate(()=>{document.getElementById('profile-grade').disabled=false;document.getElementById('profile-grade').value='8';});
+    await Promise.all([page.waitForEvent('load'),page.locator('#btn-save-profile').click()]);
+    await page.waitForFunction(()=>window.__login && document.getElementById('profile-grade')?.value==='5');
+    expect(await page.evaluate(()=>window.__records.s.totalScore)).toBe(120);
+});
+
+test('question count loads on initial admin opening, survives tabs/reopen/reload, separates filters',async({page})=>{
+    let injected=false;
+    await page.route('**/pilot_7_senaryo2.json',async route=>{
+        const response=await route.fetch();const data=await response.json();
+        data.questions.push({...data.questions[0],id:'counter-regression-extra'});injected=true;
+        await route.fulfill({response,json:data});
+    });
+    await mockFirebase(page);
+    await page.evaluate(async()=>{window.__records.a={role:'admin',name:'Test',surname:'Admin'};await window.__login('a');document.getElementById('btn-admin-panel').click();});
+    const tab=page.locator('#btn-admin-tab-questions');
+    await expect(tab).toContainText('79 Soru');expect(injected).toBe(true);
+    await tab.click();await expect(page.locator('#admin-question-filter-count')).toHaveText('Filtre sonucu: 79 soru');
+    await page.locator('#admin-grade-filters [data-grade="5"]').click();
+    await expect(page.locator('#admin-question-filter-count')).toHaveText('Filtre sonucu: 0 soru');
+    await expect(tab).toContainText('79 Soru');
+    await page.locator('#btn-close-admin').click();
+    await page.evaluate(()=>document.getElementById('btn-admin-panel').click());await expect(tab).toContainText('79 Soru');
+    await page.reload();await page.waitForFunction(()=>window.__login && !document.getElementById('btn-admin-panel').classList.contains('is-hidden'));
+    await page.evaluate(()=>document.getElementById('btn-admin-panel').click());await expect(tab).toContainText('79 Soru');
+});
+
+test('staged deployment approves correction through narrow Firestore update without transferring points',async({page})=>{
+    await mockFirebase(page,false);
+    await page.evaluate(async()=>{
+        window.__records={a:{role:'admin'},s:{role:'student',sinif:'6',name:'Test',nickname:'Captain',totalScore:120,gradeCorrectionRequest:{requestedGrade:'7',status:'pending'}}};
+        await window.__login('a');await window.loadAdminUsers();await window.changeUserGrade('s','7');
+    });
+    expect(await page.evaluate(()=>window.__records.s.sinif)).toBe('7');
+    expect(await page.evaluate(()=>window.__records.s.totalScore)).toBe(120);
+    expect(await page.evaluate(()=>window.__writes)).toEqual([{uid:'s',data:{sinif:'7',gradeCorrectionRequest:{requestedGrade:'7',status:'approved'}}}]);
+});
+
+test('failed question loading displays no stale count and allows explicit retry',async({page})=>{
+    let requests=0;
+    await page.route('**/pilot_7_senaryo2.json',route=>{requests++;return route.abort();});
+    await mockFirebase(page,false);
+    await page.evaluate(async()=>{window.__records.a={role:'admin'};await window.__login('a');document.getElementById('btn-admin-panel').click();});
+    await expect(page.locator('#btn-admin-tab-questions')).toContainText('Yüklenemedi');
+    await page.locator('#btn-admin-tab-questions').click();
+    await expect(page.locator('#admin-review-container')).toContainText('yeniden açarak');
+    const stopped=requests;await page.waitForTimeout(200);expect(requests).toBe(stopped);
+    await page.unroute('**/pilot_7_senaryo2.json');
+    await page.locator('#btn-admin-tab-questions').click();
+    await expect(page.locator('#btn-admin-tab-questions')).toContainText('78 Soru');
+});
+
+test('untrusted profile text cannot execute markup in administrator rows',async({page})=>{
+    await mockFirebase(page,false);
+    await page.evaluate(async()=>{
+        window.__records={a:{role:'admin'},s:{role:'student',sinif:'6',name:'<img src=x onerror="window.__profileInjection=1">',nickname:'<svg onload="window.__profileInjection=1">'}};
+        await window.__login('a');await window.loadAdminUsers();
+    });
+    await expect(page.locator('.admin-user-details h4')).toContainText('<svg onload=');
+    await expect(page.locator('.admin-user-details img, .admin-user-details svg')).toHaveCount(0);
+    expect(await page.evaluate(()=>window.__profileInjection)).toBeUndefined();
 });

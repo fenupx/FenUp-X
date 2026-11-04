@@ -1,0 +1,14 @@
+{
+  "name": "fenupx-server-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "firebase emulators:exec --config firebase.emulator.json --project demo-fenupx --only firestore 'node --test test/*.test.mjs'"
+  },
+  "devDependencies": {
+    "@firebase/rules-unit-testing": "6.0.0",
+    "firebase": "13.2.0",
+    "firebase-admin": "14.5.0",
+    "firebase-tools": "15.34.2"
+  }
+}

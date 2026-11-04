@@ -1,0 +1,61 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function self(uid) { return signedIn() && request.auth.uid == uid; }
+    function admin() { return signedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'; }
+    function grade(g) { return g in ['5','6','7','8']; }
+    function recordedGrade(g) { return g in ['5','6','7','8',5,6,7,8]; }
+    function correction() {
+      let r = request.resource.data.gradeCorrectionRequest;
+      return r is map && r.keys().hasOnly(['requestedGrade','status']) && grade(r.requestedGrade) && r.status == 'pending' && r.requestedGrade != resource.data.get('sinif','');
+    }
+    match /users/{uid} {
+      // Preserve the existing leaderboard read contract during the staged rollout.
+      allow read: if true;
+      allow create: if self(uid)
+        && !exists(/databases/$(database)/documents/competitionProfiles/$(uid))
+        && !exists(/databases/$(database)/documents/deletedProfiles/$(uid))
+        && request.resource.data.keys().hasOnly(['name','surname','nickname','email','role','sinif','totalScore','isBanned','avatar','createdAt'])
+        && request.resource.data.role == 'student'
+        && request.resource.data.totalScore == 0 && request.resource.data.isBanned == false
+        && (grade(request.resource.data.sinif) || request.resource.data.sinif == '');
+      allow update: if (self(uid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','surname','nickname','avatar','sinif','gradeCorrectionRequest'])
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['sinif'])
+          || (resource.data.role in ['student','ogrenci','öğrenci'] && !recordedGrade(resource.data.get('sinif','')) && grade(request.resource.data.sinif)
+            && !exists(/databases/$(database)/documents/competitionProfiles/$(uid))))
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['gradeCorrectionRequest']) || correction()))
+        || (admin()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['nickname','isBanned','sinif','gradeCorrectionRequest'])
+          && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['sinif']) || (resource.data.role in ['student','ogrenci','öğrenci'] && grade(request.resource.data.sinif)))
+          && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['gradeCorrectionRequest']) ||
+            (request.resource.data.gradeCorrectionRequest.keys().hasOnly(['requestedGrade','status']) && request.resource.data.gradeCorrectionRequest.status == 'approved' && request.resource.data.gradeCorrectionRequest.requestedGrade == request.resource.data.sinif)));
+
+      // Atomic deletion marker prevents delete/recreate from resetting the class lock.
+      allow delete: if self(uid) && existsAfter(/databases/$(database)/documents/deletedProfiles/$(uid));
+    }
+    match /deletedProfiles/{uid} {
+      allow create: if self(uid) && request.resource.data.keys().hasOnly(['deleted']) && request.resource.data.deleted == true && !existsAfter(/databases/$(database)/documents/users/$(uid));
+      allow read: if self(uid) || admin();
+      allow update, delete: if false;
+    }
+    match /competitionProfiles/{uid} {
+      allow read: if self(uid) || admin();
+      allow write: if false;
+      match /{path=**} { allow read, write: if false; }
+    }
+    match /leaderboards/{year}/grades/{gradeId}/entries/{uid} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /competitionAudit/{id} { allow read: if admin(); allow write: if false; }
+    match /reported_questions/{id} {
+      allow create: if true; // Preserve the existing guest question-report flow.
+      allow read, update, delete: if admin();
+    }
+    // This candidate intentionally denies unknown collections. Merge with a
+    // read-only export of production policy before deployment; never overwrite unseen rules.
+    match /{document=**} { allow read, write: if false; }
+  }
+}
