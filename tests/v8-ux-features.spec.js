@@ -327,7 +327,7 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await expect(page.locator('#dual-work-variables-bar')).toBeHidden();
     });
 
-    test('8. V8.3 & V8.6: Yönetim Paneli Sayaçları, Soru Filtresi ve 32 Kategorize Karakter Avatarı', async ({ page }) => {
+    test('8. V8.3 & V8.6: Yönetim Paneli Sayaçları, Soru Filtresi ve 36 Onaylı Karakter Avatarı', async ({ page }) => {
         await page.addInitScript(() => localStorage.setItem('fenupx_cookie_consent', 'accepted'));
         await page.goto('/');
 
@@ -344,67 +344,22 @@ test.describe('V8.0 UX ve Akordiyon Entegrasyonu Testleri', () => {
         await expect(gradeFilters).toBeAttached();
         await expect(outcomeFilter).toBeAttached();
 
-        // 2. 32 Kategorize Karakter Avatarı Entegrasyonunu Doğrula
-        const avatarItems = page.locator('#avatar-selector .avatar-item');
-        await expect(avatarItems).toHaveCount(32);
+        // The approved collection is lazy and commits only after explicit Save.
+        expect(await page.evaluate(async()=>{const {AVATARS}=await import('/avatar-catalog.js');return AVATARS.length;})).toBe(36);
+        await expect(page.locator('#avatar-selector .avatar-item')).toHaveCount(0);
+        await page.evaluate(()=>document.getElementById('btn-open-profile').click());
+        await page.locator('#btn-open-avatar-selector').click();
+        const dialog=page.locator('#avatar-selector-container');
+        for(const [cat,count] of [['ogrenciler',18],['bilim',6],['hayvanlar',6],['uzay',6]]){
+            await dialog.locator(`[data-category="${cat}"]`).click();
+            await expect(dialog.locator('.avatar-item')).toHaveCount(count);
+        }
+        await dialog.locator('.avatar-item').first().click();
+        expect(await page.evaluate(()=>localStorage.getItem('fenupx_user_avatar'))).toBeNull();
+        await dialog.locator('#avatar-picker-save').click();
+        await expect(dialog).toBeHidden();
+        expect(await page.evaluate(()=>localStorage.getItem('fenupx_user_avatar'))).toMatch(/^fenupx-v2-/);
 
-        // Profil modalını ve avatar seçiciyi görünür yap
-        await page.evaluate(() => {
-            const modal = document.getElementById('profile-modal');
-            if (modal) {
-                modal.classList.remove('is-hidden');
-                modal.classList.add('is-open', 'active');
-                modal.style.display = 'flex';
-            }
-            const asc = document.getElementById('avatar-selector-container');
-            if (asc) {
-                asc.classList.remove('is-hidden');
-                asc.style.display = 'block';
-            }
-        });
-
-        // Kategori sekmelerini kontrol et (V8.8: Robotlar, Hayvan Kâşifler, Öğrenciler, Bilim İnsanları)
-        const tabAll = page.locator('.avatar-tab-btn[data-category="all"]');
-        const tabRobotlar = page.locator('.avatar-tab-btn[data-category="robotlar"]');
-        const tabHayvanlar = page.locator('.avatar-tab-btn[data-category="hayvanlar"]');
-        const tabOgrenciler = page.locator('.avatar-tab-btn[data-category="ogrenciler"]');
-        const tabBilim = page.locator('.avatar-tab-btn[data-category="bilim"]');
-        await expect(tabAll).toBeVisible();
-        await expect(tabRobotlar).toBeVisible();
-        await expect(tabHayvanlar).toBeVisible();
-        await expect(tabOgrenciler).toBeVisible();
-        await expect(tabBilim).toBeVisible();
-
-        // Robotlar sekmesine tıklandığında yalnızca 8 robot avatarı görünür olmalı
-        await tabRobotlar.click();
-        const visibleRobotlar = page.locator('#avatar-selector .avatar-item:visible');
-        await expect(visibleRobotlar).toHaveCount(8);
-
-        // Hayvan Kâşifler sekmesine tıklandığında 8 hayvan avatarı görünür olmalı
-        await tabHayvanlar.click();
-        const visibleHayvanlar = page.locator('#avatar-selector .avatar-item:visible');
-        await expect(visibleHayvanlar).toHaveCount(8);
-
-        // Öğrenciler sekmesine tıklandığında yalnızca 8 öğrenci avatarı görünür olmalı
-        await tabOgrenciler.click();
-        const visibleOgrenciler = page.locator('#avatar-selector .avatar-item:visible');
-        await expect(visibleOgrenciler).toHaveCount(8);
-
-        // Bilim İnsanları sekmesine tıklandığında 8 bilim insanı görünür olmalı
-        await tabBilim.click();
-        const visibleBilim = page.locator('#avatar-selector .avatar-item:visible');
-        await expect(visibleBilim).toHaveCount(8);
-
-        // Tümü sekmesine dönüldüğünde 32 avatar görünür olmalı
-        await tabAll.click();
-        const visibleAll = page.locator('#avatar-selector .avatar-item:visible');
-        await expect(visibleAll).toHaveCount(32);
-
-        // Birinci avatarı tıkla ve localStorage kaydını doğrula
-        await avatarItems.nth(0).dispatchEvent('click');
-        const savedAvatar = await page.evaluate(() => localStorage.getItem('fenupx_user_avatar'));
-        expect(savedAvatar).toBeTruthy();
-        expect(savedAvatar).toContain('data:image/svg+xml');
     });
 
     test('9. V8.5: Kırmızı El Yazılı Cevap Anahtarı PDF Modu ve 3 Seviyeli Çocuk Dostu Değerlendirme', async ({ page }) => {

@@ -1,3 +1,5 @@
+import {AVATARS,DEFAULT_AVATAR_ID,avatarUrl} from './avatar-catalog.js?v=8.9.6';
+import {createAvatarPicker} from './avatar-picker.js?v=8.9.6';
 import { CompetitionRun } from './competition-run.js?v=8.9.5';
 import { COMPETITION_BACKEND_READY, COMPETITION_API_URL, competitionYear, competitionPeriods } from './competition-config.js?v=8.9.5';
 /**
@@ -190,7 +192,8 @@ const H = {
     `
 };
 
-const kozmikAvatarlar = [
+// Retained for compatibility verification of already stored SVG values.
+const legacyAvatarCatalog = [
     // --- 🤖 ROBOTLAR & AI DOSTLARI (8) ---
 {
         id: 'av_robot_astrobot',
@@ -1001,6 +1004,7 @@ const kozmikAvatarlar = [
         `)
     }
 ];
+const kozmikAvatarlar = AVATARS;
 
 function isimSor(prefill, callback) {
     const overlay = document.createElement('div');
@@ -3892,18 +3896,6 @@ profileModal.innerHTML = `
             </div>
         </div>
 
-        <!-- Avatar Seçici Paneli (32 Karakter, Kategori Sekmeleri - TESTLER İÇİN KORUNMALI) -->
-        <div id="avatar-selector-container" class="is-hidden" style="border: 1px solid rgba(0, 210, 255, 0.3); border-radius:15px; background: rgba(0,0,0,0.5); margin-bottom:15px; padding: 10px;">
-            <div class="avatar-tabs" id="avatar-category-tabs">
-                <button type="button" class="avatar-tab-btn active" data-category="all">Tümü (32)</button>
-                <button type="button" class="avatar-tab-btn" data-category="robotlar">🤖 Robotlar (8)</button>
-                <button type="button" class="avatar-tab-btn" data-category="hayvanlar">🐾 Hayvan Kâşifler (8)</button>
-                <button type="button" class="avatar-tab-btn" data-category="ogrenciler">👦👧 Öğrenciler (8)</button>
-                <button type="button" class="avatar-tab-btn" data-category="bilim">🔬 Bilim İnsanları (8)</button>
-            </div>
-            <div class="avatar-grid" id="avatar-selector"></div>
-        </div>
-
         <!-- Yönetici (Admin) Sade Görünümü (V8.9.1) -->
         <div id="profile-admin-view" class="profile-admin-view is-hidden" style="display:none;">
             <div class="admin-profile-hero">
@@ -4035,6 +4027,7 @@ document.body.appendChild(profileModal);
 const btnProfGotoAdmin = document.getElementById('btn-profile-goto-admin');
 if (btnProfGotoAdmin) {
     btnProfGotoAdmin.onclick = () => {
+        avatarPicker.close();
         resetDeleteAccountBox();
         hideModal(profileModal);
         const adminModal = document.getElementById('admin-modal');
@@ -4045,89 +4038,33 @@ if (btnProfGotoAdmin) {
     };
 }
 
-const btnOpenAvatar = document.getElementById('btn-open-avatar-selector');
-if(btnOpenAvatar) {
-    btnOpenAvatar.onclick = () => {
-        const asc = document.getElementById('avatar-selector-container');
-        if(asc) asc.classList.toggle('is-hidden');
-    };
+// Avatar changes are drafts until explicitly saved. Legacy values are never migrated in bulk.
+function currentAvatarValue(){return auth.currentUser ? (loadedProfile?.avatar || DEFAULT_AVATAR_ID) : (localStorage.getItem('fenupx_user_avatar') || DEFAULT_AVATAR_ID);}
+function displayCurrentAvatar(value){
+ const src=avatarUrl(value,192);const pca=document.getElementById('p-current-avatar');if(pca)pca.src=src;
+ document.querySelectorAll('.profile-img-header').forEach(img=>img.src=src);
 }
-
-const avatarContainer = document.getElementById('avatar-selector');
-if(avatarContainer) {
-    avatarContainer.innerHTML = '';
-    kozmikAvatarlar.forEach(av => {
-        const img = document.createElement('img');
-        img.src = av.url; 
-        img.className = "avatar-item"; 
-        img.dataset.url = av.url;
-        img.dataset.category = av.category;
-        img.alt = av.name || "Karakter Avatarı";
-        img.title = `${av.name}`;
-        img.onclick = () => {
-            document.querySelectorAll('.avatar-item').forEach(i => i.classList.remove('selected'));
-            img.classList.add('selected');
-            const pca = document.getElementById('p-current-avatar'); 
-            if(pca) pca.src = av.url;
-            const asc = document.getElementById('avatar-selector-container'); 
-            if(asc) asc.classList.add('is-hidden'); 
-
-            // V8.6: Sağ üstteki kullanıcı profil avatarı anında güncellensin ve localStorage'a kaydedilsin
-            try {
-                localStorage.setItem('fenupx_user_avatar', av.url);
-            } catch (_) {}
-
-            // V8.9: Avatar seçimi İlk Kâşif rozetini ve günlük seriyi tetikler
-            unlockBadge('badge_ilk_adim');
-            checkAndUpdateStreak();
-
-            const headerAvatar = document.querySelector('.profile-img-header');
-            if (headerAvatar) {
-                headerAvatar.src = av.url;
-            }
-
-            if (auth && auth.currentUser) {
-                try {
-                    updateDoc(doc(db, "users", auth.currentUser.uid), { avatar: av.url }).catch(() => {});
-                } catch (_) {}
-            }
-        };
-        avatarContainer.appendChild(img);
-    });
-
-    // V8.6: Kategori Sekmeleri tab filtreleme dinleyicileri
-    const avatarTabs = document.querySelectorAll('.avatar-tab-btn');
-    avatarTabs.forEach(tab => {
-        tab.addEventListener('click', (e) => {
-            e.stopPropagation();
-            avatarTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            const targetCat = tab.dataset.category;
-            const items = avatarContainer.querySelectorAll('.avatar-item');
-            items.forEach(item => {
-                if (targetCat === 'all' || item.dataset.category === targetCat) {
-                    item.style.display = 'inline-block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-    });
-
-    // Sayfa açıldığında önbellekte kayıtlı avatar varsa yükle
-    try {
-        const cachedAv = localStorage.getItem('fenupx_user_avatar');
-        if (cachedAv) {
-            const pca = document.getElementById('p-current-avatar');
-            if (pca) pca.src = cachedAv;
-            const matchItem = avatarContainer.querySelector(`.avatar-item[data-url="${cachedAv}"]`);
-            if (matchItem) matchItem.classList.add('selected');
-        }
-    } catch (_) {}
-}
+const avatarPicker=createAvatarPicker({
+ getValue:currentAvatarValue,
+ save:async id=>{
+  const user=auth.currentUser,revision=authRevision;
+  if(user){if(!loadedProfile)throw Error('profile-loading');await updateDoc(doc(db,'users',user.uid),{avatar:id});if(revision!==authRevision||auth.currentUser?.uid!==user.uid)throw Error('account-changed');loadedProfile.avatar=id;}
+  try{localStorage.setItem('fenupx_user_avatar',id);}catch{}
+  try{const cu=JSON.parse(localStorage.getItem('currentUser')||'{}');cu.avatar=id;localStorage.setItem('currentUser',JSON.stringify(cu));}catch{}
+ },
+ onSaved:id=>{displayCurrentAvatar(id);unlockBadge('badge_ilk_adim');checkAndUpdateStreak();if(auth.currentUser&&COMPETITION_BACKEND_READY)competitionCall('syncCompetitionDisplay',{}).then(()=>{if(selectedGrade)loadGlobalLeaderboard('weekly');}).catch(()=>{});}
+});
+const btnOpenAvatar=document.getElementById('btn-open-avatar-selector');if(btnOpenAvatar)btnOpenAvatar.onclick=()=>avatarPicker.open(btnOpenAvatar);
+// A cached old ID or SVG is resolved without writing to any account.
+displayCurrentAvatar(currentAvatarValue());
+document.addEventListener('error',event=>{
+ const img=event.target;if(!(img instanceof HTMLImageElement)||!img.matches('.profile-img-header,.profile-hero-img,.admin-user-avatar,.global-lb-avatar,.avatar-item img,#avatar-draft-preview')||img.dataset.avatarFallback)return;
+ img.dataset.avatarFallback='true';img.removeAttribute('srcset');img.src=avatarUrl(DEFAULT_AVATAR_ID);
+},true);
 
 onAuthStateChanged(auth, async (user) => {
     const revision = ++authRevision;
+    avatarPicker.close({force:true});
     loadedProfile = null;
     const profileRoleLabel = document.getElementById('profile-display-role-tag');
     if (profileRoleLabel) profileRoleLabel.textContent = user ? 'Yükleniyor…' : '';
@@ -4156,11 +4093,11 @@ onAuthStateChanged(auth, async (user) => {
             loadedProfile = userData;
             document.body.classList.toggle("account-admin", userData.role === "admin");
             document.body.classList.toggle("account-teacher", isTeacherProfile(userData));
-            const userAvatar = userData.avatar || localStorage.getItem("fenupx_user_avatar") || kozmikAvatarlar[0].url;
+            const userAvatar = avatarUrl(userData.avatar || DEFAULT_AVATAR_ID,192);
             const fullAd = `${userData.name} ${userData.surname}`;
             
             if(btnUyelik) {
-                btnUyelik.innerHTML = `<img src="${userAvatar}" class="profile-img-header"> ${userData.name}`;
+                btnUyelik.innerHTML = `<img src="${userAvatar}" class="profile-img-header" alt="Profil avatarı"> ${profileText(userData.name)}`;
                 btnUyelik.onclick = (e) => {
                     e.stopPropagation(); 
                     if(profileDropdown) profileDropdown.classList.toggle('is-hidden');
@@ -4178,9 +4115,7 @@ onAuthStateChanged(auth, async (user) => {
             const pSurname = document.getElementById('p-surname'); if(pSurname) pSurname.value = userData.surname;
             const pNick = document.getElementById('p-nickname'); if(pNick) pNick.value = userData.nickname || '';
             const pca = document.getElementById('p-current-avatar'); if(pca) pca.src = userAvatar;
-            document.querySelectorAll('.avatar-item').forEach(i => i.classList.remove('selected'));
-            const aItem = document.querySelector(`.avatar-item[data-url="${userAvatar}"]`);
-            if(aItem) aItem.classList.add('selected');
+
 
             // V8.9.1: 1 Eylül Otomatik Sınıf Terfisi ve Sınıf Bilgisini Senkronize Et
             checkAnnualPromotion(userData);
@@ -4569,6 +4504,7 @@ document.querySelectorAll('.dropdown-item').forEach(item => {
 
 const clProfile = document.getElementById('close-profile');
 if(clProfile) clProfile.onclick = () => {
+    avatarPicker.close();
     resetDeleteAccountBox();
     hideModal(profileModal);
 };
@@ -4614,7 +4550,7 @@ if(btnSaveProf) {
         const name = pName ? pName.value.trim() : '';
         const surname = pSur ? pSur.value.trim() : '';
         const nickname = pNick ? pNick.value.trim() : '';
-        const avatar = pca ? pca.src : '';
+        const avatar = loadedProfile?.avatar || DEFAULT_AVATAR_ID;
         if (!user || !loadedProfile) return;
         const sinif = normalizeGrade(loadedProfile.sinif);
         if (isStudentProfile(loadedProfile) && !sinif) return alert('Lütfen sınıfını seç.');
@@ -4813,7 +4749,7 @@ if(btnStuSub) {
                     console.warn("Doğrulama e-postası gönderilemedi:", verifyErr);
                 }
                 await setDoc(doc(db, "users", cred.user.uid), {
-                    name: fName, surname: lName, nickname: nick, email: email, role: "student", sinif: userSinif, totalScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
+                    name: fName, surname: lName, nickname: nick, email: email, role: "student", sinif: userSinif, totalScore: 0, isBanned: false, avatar: DEFAULT_AVATAR_ID, createdAt: new Date()
                 });
                 localStorage.setItem('fenupx_user_grade', userSinif);
                 try {
@@ -4855,7 +4791,7 @@ if(btnGoogleLog) {
                 const gSinif = '';
                 
                 await setDoc(doc(db, "users", result.user.uid), {
-                    name: firstName, surname: lastName, nickname: gName, email: result.user.email, role: "student", sinif: gSinif, totalScore: 0, isBanned: false, avatar: kozmikAvatarlar[0].url, createdAt: new Date()
+                    name: firstName, surname: lastName, nickname: gName, email: result.user.email, role: "student", sinif: gSinif, totalScore: 0, isBanned: false, avatar: DEFAULT_AVATAR_ID, createdAt: new Date()
                 });
                 localStorage.setItem('fenupx_user_grade', gSinif);
                 try {
@@ -5040,7 +4976,7 @@ function renderAdminUsers(filterText = '') {
         row.className = `admin-user-row ${isBanned ? 'banned' : ''}`;
         row.innerHTML = `
             <div class="admin-user-info">
-                <img src="${profileText(u.avatar || kozmikAvatarlar[0].url)}" class="admin-user-avatar" alt="${profileText(u.nickname || 'Avatar')}">
+                <img src="${profileText(avatarUrl(u.avatar))}" class="admin-user-avatar" alt="${profileText(u.nickname || 'Avatar')}">
                 <div class="admin-user-details">
                     <h4>${profileText(u.nickname || 'İsimsiz Kaptan')}${onlineBadge}</h4>
                     <p>${profileText(u.name || '')} ${profileText(u.surname || '')} | ${profileText(u.email || '')}</p>
@@ -5271,7 +5207,7 @@ function renderGlobalLeaderboard(users, type) {
         row.className = `global-lb-row rank-${i+1}`;
         row.innerHTML = `
             <div class="global-lb-rank">${i+1}</div>
-            <img src="${profileText(u.avatar || kozmikAvatarlar[0].url)}" class="global-lb-avatar">
+            <img src="${profileText(avatarUrl(u.avatar))}" class="global-lb-avatar">
             <div class="global-lb-info">
                 <h4 class="${nameClass}">${badgeStr}${profileText(u.nickname || 'Kozmik Kaptan')}</h4>
                 <p>Öğrenci</p>
