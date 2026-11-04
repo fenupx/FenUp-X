@@ -1,21 +1,33 @@
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { onCall, HttpsError } from 'firebase-functions/v2/https';
+import { setGlobalOptions } from 'firebase-functions/v2';
+import { startAttempt, actOnAttempt } from './attempts.mjs';
 import { onSchedule } from 'firebase-functions/v2/scheduler';
-import { ensureCohort, correctClass, promoteOne, submitScore } from './service.mjs';
+import { ensureCohort, correctClass, promoteOne, settleAttempt } from './service.mjs';
+setGlobalOptions({region:'europe-west1',minInstances:0,maxInstances:2,memory:'256MiB',cpu:1,concurrency:40,timeoutSeconds:30});
 initializeApp(); const db=getFirestore();
 const uid = request => { if (!request.auth) throw new HttpsError('unauthenticated','Giriş yapmalısın.'); return request.auth.uid; };
 const handler = fn => async request => { try { return await fn(request); } catch(e) { if(e instanceof HttpsError) throw e; console.error('Competition operation rejected:',e.message); throw new HttpsError('failed-precondition','İşlem sunucu tarafından kabul edilmedi.'); } };
 export const initializeCompetition = onCall({region:'europe-west1'},handler(r=>ensureCohort(db,uid(r))));
 export const correctStudentClass = onCall({region:'europe-west1'},handler(r=>correctClass(db,uid(r),r.data.uid,r.data.grade)));
-export const submitCompetitionResult = onCall({region:'europe-west1'},handler(async r=>{
+const verified = r => {
     const id=uid(r);
     if (!r.auth.token.email_verified && r.auth.token.firebase?.sign_in_provider !== 'google.com') throw new HttpsError('permission-denied','E-posta doğrulaması gerekli.');
-    await ensureCohort(db,id);
-    // Advance only an already baselined cohort using trusted server time.
-    await promoteOne(db,id);
-    return submitScore(db,id,r.data);
+    return id;
+};
+export const competitionAction = onCall(handler(async r=>{
+    const id=verified(r),data=r.data || {};
+    let result;
+    if(data.action==='start') {
+        if(Object.keys(data).some(k=>!['action','grade','unit','startId'].includes(k)))throw Error('unexpected-input');
+        await ensureCohort(db,id);await promoteOne(db,id);
+        result=await startAttempt(db,id,data);
+    } else result=await actOnAttempt(db,id,data);
+    if(result.done) result.settlement=await settleAttempt(db,id,{attemptId:result.attemptId});
+    return result;
 }));
+export const submitCompetitionResult = onCall(handler(r=>settleAttempt(db,verified(r),r.data)));
 export const annualSchoolPromotion = onSchedule({schedule:'0 0 1 9 *',timeZone:'Europe/Istanbul',region:'europe-west1'},async()=>{
     // Stable document-ID pagination; transaction per account is atomic and retry safe.
     let cursor;

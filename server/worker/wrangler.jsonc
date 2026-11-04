@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fenupx-score",
+  "account_id": "655c08fa43a3aa98159239fd4c27427e",
+  "main": "index.mjs",
+  "compatibility_date": "2026-11-04",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": {
+    "FIREBASE_PROJECT_ID": "fenup-x",
+    "FIREBASE_API_KEY": "AIzaSyCJlQQH64tsze59akzcnBMPRbH2HY7rCho",
+    "ALLOWED_ORIGINS": "https://fenupx.com,https://www.fenupx.com"
+  },
+  "env": {
+    "local": {
+      "vars": {"LOCAL_EMULATORS":"true","FIREBASE_PROJECT_ID":"demo-fenupx","FIREBASE_API_KEY":"demo-fenupx-key","ALLOWED_ORIGINS":"http://127.0.0.1:4173"}
+    }
+  }
+}

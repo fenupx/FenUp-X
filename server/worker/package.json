@@ -1,0 +1,1 @@
+{"name":"fenupx-score-worker","private":true,"type":"module","scripts":{"dev":"wrangler dev --local","check":"wrangler deploy --dry-run --outdir /tmp/fenup-worker-build"},"devDependencies":{"wrangler":"4.157.0"},"dependencies":{"firebase":"13.2.0"}}

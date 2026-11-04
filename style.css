@@ -4932,3 +4932,7 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
 }
 
 .competition-status { padding: 12px; border: 1px solid #475569; border-radius: 10px; color: #cbd5e1; line-height: 1.5; }
+
+.competition-history-toggle, #competition-save-status button { min-height:48px; min-width:48px; max-width:100%; box-sizing:border-box; white-space:normal; overflow-wrap:anywhere; }
+.competition-history-toggle { margin-bottom:12px; }
+#competition-save-status { min-width:0; box-sizing:border-box; overflow-wrap:anywhere; }

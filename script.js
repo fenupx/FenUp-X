@@ -1,4 +1,5 @@
-import { COMPETITION_BACKEND_READY, competitionYear, competitionPeriods } from './competition-config.js?v=8.9.4';
+import { CompetitionRun } from './competition-run.js?v=8.9.5';
+import { COMPETITION_BACKEND_READY, COMPETITION_API_URL, competitionYear, competitionPeriods } from './competition-config.js?v=8.9.5';
 /**
  * FenUp X — V8.5: Kırmızı El Yazılı Cevap Anahtarı PDF ve Adil Puanlamalı Çocuk Dostu Değerlendirme
  * Mod 1: "Kuvvetin İşe Etkisi (Yol Sabit)" - Bağımsız Değişken: Uygulanan Kuvvet, Kontrol Değişkeni: Alınan Yol ve Kütle
@@ -1486,7 +1487,11 @@ masterPauseBtn.title = "Sistemi Duraklat";
 
 if(topControls) topControls.prepend(masterPauseBtn);
 
-function toggleMasterPause() {
+async function toggleMasterPause() {
+    if(quizState.ranked && !quizState.ranked.state.done && !quizState.locked && quizState.ranked.state.question) {
+        try {await quizState.ranked.action(isGlobalPaused?'resume':'pause');applyRankedState();}
+        catch(e){showRankedRetry(()=>renderIndividual(),e);return;}
+    }
     isGlobalPaused = !isGlobalPaused;
     masterPauseBtn.innerHTML = isGlobalPaused ? '<i class="fas fa-play" style="color:#22c55e;"></i>' :'<i class="fas fa-pause"></i>';
     pauseOverlay.classList.toggle('is-hidden', !isGlobalPaused);
@@ -2064,17 +2069,98 @@ function buildQuestionReviewHTML() {
 
 function getSettings(idx) { return idx < 4 ? { time: 40, points: 100 } : idx < 8 ? { time: 50, points: 200 } : { time: 60, points: 400 }; }
 
-// Authoritative competition writes use callable functions; browser role/class
+// Authoritative competition writes use the trusted Worker; browser role/class
 // checks are only UX. Never fall back to direct score writes on server errors.
 async function competitionCall(name, data) {
-    if (!COMPETITION_BACKEND_READY) throw Error('Güvenli yarışma sunucusu henüz etkinleştirilmedi.');
-    const { getFunctions, httpsCallable } = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-functions.js');
-    return (await httpsCallable(getFunctions(app, 'europe-west1'), name)(data)).data;
+    if (!COMPETITION_BACKEND_READY || !COMPETITION_API_URL) throw Error('Güvenli yarışma sunucusu henüz etkinleştirilmedi.');
+    const user=auth.currentUser;
+    const headers={'Content-Type':'application/json'};
+    if(user)headers.Authorization=`Bearer ${await user.getIdToken()}`;
+    const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),30000);
+    let response;try{response=await fetch(COMPETITION_API_URL.replace(/\/$/,'')+'/rpc/'+encodeURIComponent(name),{method:'POST',headers,body:JSON.stringify(data),signal:controller.signal});}finally{clearTimeout(timeout);}
+    const body=await response.text();let parsed;try{parsed=JSON.parse(body);}catch{}
+    if(!response.ok || !parsed || parsed.error){
+        const error=Error(parsed?.error || (/1027/.test(body)?'quota-exceeded':'competition-unavailable'));
+        error.quota=response.status===429 || error.message==='quota-exceeded';throw error;
+    }
+    return parsed.result;
+}
+
+function rankedStatus(message='') {
+    let node=document.getElementById('competition-save-status');
+    if(!node){node=document.createElement('p');node.id='competition-save-status';node.className='competition-status';node.setAttribute('role','status');document.getElementById('quiz-question')?.after(node);}
+    node.textContent=message;return node;
+}
+function applyRankedState() {
+    const r=quizState.ranked.state;quizState.index=r.index;quizState.score=r.score;
+    if(r.index>=8)quizState.riskAcceptedForCurrent=!!r.question&&!r.needsRisk;
+    if(r.question)quizState.set[r.index]=r.question;
+    for(const kind of ['hint','fifty','pass']) {
+        const button=document.getElementById(`joker-${kind}`);
+        if(button&&r.jokers?.[kind]){button.classList.add('is-used');button.style.opacity='0.5';button.style.pointerEvents='none';}
+    }
+    const pause=document.getElementById('joker-pause');if(pause&&r.jokers?.pause&&!r.paused&&!isTimerPaused){pause.classList.add('is-used');pause.style.pointerEvents='none';}
+    const display=document.getElementById('quiz-score');if(display)display.textContent=r.score;
+}
+function showRankedRetry(retry, error) {
+    quizState.locked=true;clearInterval(quizState.timerInterval);
+    const node=rankedStatus(error?.quota?'Ücretsiz hizmet kotası doldu. Doğrulanmış kayıtların korunuyor; kota yenilenince yeniden dene. ':'Bağlantı tamamlanamadı. Son doğrulanmış yarışma kaydın korunuyor. ');
+    const button=document.createElement('button');button.type='button';button.className='f-btn';button.textContent='Yeniden dene';
+    button.onclick=async()=>{button.disabled=true;try{if(quizState.ranked.pending){await quizState.ranked.retry();applyRankedState();}if(quizState.ranked.state.paused&&quizState.ranked.state.question){await quizState.ranked.action('resume',{joker:true});await quizState.ranked.action('resume');}isGlobalPaused=false;pauseOverlay.classList.add('is-hidden');masterPauseBtn.innerHTML='<i class="fas fa-pause"></i>';node.textContent='';await retry();}catch{button.disabled=false;}};
+    node.append(button);
+}
+async function handleRankedAnswer(button) {
+    quizState.locked=true;clearInterval(quizState.timerInterval);rankedStatus('Cevabın doğrulanıyor…');
+    const index=quizState.index;
+    try {
+        const r=await quizState.ranked.action('answer',{optionId:button?.dataset.optionId ?? null});
+        const evaluation=r.evaluation;
+        const answeredQuestion=quizState.set[index];
+        if(answeredQuestion&&evaluation){answeredQuestion.answerOptions.forEach(o=>o.isCorrect=o.id===evaluation.correctOptionId);answeredQuestion.hint=evaluation.hint || '';}
+        applyRankedState();rankedStatus(r.done?'Puanın hesabına kaydedildi.':'Cevabın doğrulandı.');
+        if(!evaluation?.correct)recordSessionMistake(button?.querySelector('.answer-text')?.textContent || 'Süre doldu');
+        document.querySelectorAll('.answer-btn').forEach(b=>{
+            if(b.dataset.optionId===evaluation?.correctOptionId)b.classList.add('is-correct');
+        });
+        if(button && !evaluation?.correct)button.classList.add('is-wrong');
+        if(r.done){await finishIndividual(r.reason==='complete'?'TEBRİKLER ŞAMPİYON!':r.reason==='timeout'?'SÜRE BİTTİ, ELENDİN!':index>=8?'KARA DELİĞE YUTULDUN!':'YANLIŞ CEVAP, ELENDİN!');}
+        else {quizState.riskAcceptedForCurrent=false;setTimeout(()=>renderIndividual(),1500);}
+    } catch(e) {
+        showRankedRetry(async()=>{if(quizState.ranked.state.done)await finishIndividual('YARIŞMA TAMAMLANDI');else {applyRankedState();quizState.riskAcceptedForCurrent=false;await renderIndividual();}},e);
+    }
+}
+async function rankedJoker(kind,button) {
+    if(quizState.locked || isGlobalPaused || button.classList.contains('is-used'))return;
+    quizState.locked=true;
+    try {
+        const result=await quizState.ranked.action(kind);applyRankedState();
+        button.classList.add('is-used');button.style.opacity='0.5';button.style.pointerEvents='none';
+        if(kind==='hint'){const hint=document.getElementById('quiz-hint');hint.textContent=`💡 İpucu: ${result.hint}`;hint.classList.remove('is-hidden');}
+        if(kind==='fifty')document.querySelectorAll('.answer-btn').forEach(b=>{if(result.hiddenOptionIds.includes(b.dataset.optionId))b.classList.add('is-hidden');});
+        if(kind==='pass')await renderIndividual();
+        quizState.locked=false;
+    } catch(e) {showRankedRetry(()=>renderIndividual(),e);}
 }
 
 async function startIndividual() {
-    quizState.set = await fetchQuestions(selectedGrade, selectedUnit); if(quizState.set.length === 0) return;
-    quizState.submissionId = crypto.randomUUID();
+    quizState.ranked = null;quizState.localResultRecorded=false;
+    const user=auth.currentUser;
+    if(user&&!loadedProfile){alert('Profilin yükleniyor. Birazdan yeniden başlatabilirsin.');return;}
+    const verified=user && (user.emailVerified || (user.providerData||[]).some(p=>p.providerId==='google.com'));
+    if(COMPETITION_BACKEND_READY && verified && isStudentProfile(loadedProfile) && normalizeGrade(loadedProfile.sinif)===String(selectedGrade)) {
+        const revision=authRevision;
+        const run=new CompetitionRun(async(name,data)=>{
+            if(revision!==authRevision || auth.currentUser?.uid!==user.uid)throw Error('Hesap değişti.');
+            const result=await competitionCall(name,data);
+            if(revision!==authRevision)throw Error('Hesap değişti.');
+            return result;
+        },user.uid);
+        try { await run.start(String(selectedGrade),Number(selectedUnit));if(run.state.paused&&run.state.question){await run.action('resume',{joker:true});await run.action('resume');} }
+        catch(e) { alert('Yarışma sunucusu başlatılamadı. Yeniden deneyebilirsin.'); return; }
+        quizState.ranked=run;quizState.set=[];
+    } else {
+        quizState.set = await fetchQuestions(selectedGrade, selectedUnit); if(quizState.set.length === 0) return;
+    }
     sessionMistakes = [];
     const qeRev = document.getElementById('quiz-end-review-container');
     if (qeRev) { qeRev.innerHTML = ""; qeRev.classList.add('is-hidden'); }
@@ -2084,13 +2170,20 @@ async function startIndividual() {
     if(jPause) { jPause.classList.add('is-hidden'); jPause.innerHTML = "Zamanı Durdur"; }
     const qHint = document.getElementById('quiz-hint');
     if(qHint) qHint.classList.add('is-hidden');
-    switchScene(scenes.rules, scenes.quiz); renderIndividual();
+    switchScene(scenes.rules, scenes.quiz);
+    if(quizState.ranked){applyRankedState();if(quizState.ranked.state.done){await finishIndividual('KAYITLI YARIŞMA SONUCU');return;}}
+    rankedStatus(quizState.ranked?'Yarışma puanı sunucuda doğrulanacak.':'Antrenman: bu çalışma liderlik tablosuna puan yazmaz.');
+    renderIndividual();
 }
 
-function renderIndividual() {
+async function renderIndividual() {
     if(document.activeElement) document.activeElement.blur(); 
 
     if (quizState.index >= 8 && !quizState.riskAcceptedForCurrent) { showBlackHoleWarning(); return; }
+    if(quizState.ranked && !quizState.ranked.state.question) {
+        try { await quizState.ranked.action('open');applyRankedState(); }
+        catch(e) { showRankedRetry(()=>renderIndividual(),e);return; }
+    }
     const q = quizState.set[quizState.index]; const settings = getSettings(quizState.index);
     quizState.locked = false; isTimerPaused = false; 
     
@@ -2121,9 +2214,17 @@ function renderIndividual() {
         btn.classList.remove('is-correct', 'is-wrong', 'is-pending', 'is-hidden'); 
         const ansText = btn.querySelector('.answer-text');
         if(ansText && q.answerOptions[i]) ansText.textContent = q.answerOptions[i].text; 
-        if(q.answerOptions[i]) btn.dataset.correct = q.answerOptions[i].isCorrect; 
+        if(q.answerOptions[i]) {
+            if(quizState.ranked){delete btn.dataset.correct;btn.dataset.optionId=q.answerOptions[i].id;}
+            else btn.dataset.correct = q.answerOptions[i].isCorrect;
+        }
     });
-    startIndividualTimer(settings.time);
+    if(quizState.ranked){
+        const r=quizState.ranked.state;
+        if(r.hint!==null){const hint=document.getElementById('quiz-hint');hint.textContent=`💡 İpucu: ${r.hint}`;hint.classList.remove('is-hidden');}
+        document.querySelectorAll('.answer-btn').forEach(b=>{if(r.hiddenOptionIds?.includes(b.dataset.optionId))b.classList.add('is-hidden');});
+    }
+    startIndividualTimer(quizState.ranked ? quizState.ranked.state.seconds : settings.time);
 }
 
 function showBlackHoleWarning() {
@@ -2156,6 +2257,7 @@ function startIndividualTimer(time) {
         if(timeLeft <= 10 && timeLeft > 0 && tDisplay) { tDisplay.style.color = "#ef4444"; tDisplay.style.textShadow = "0 0 15px #ef4444"; }
         if(timeLeft <= 0) { 
             clearInterval(quizState.timerInterval); playSound(sfx.wrong); quizState.locked = true;
+            if(quizState.ranked){handleRankedAnswer(null);return;}
             recordSessionMistake("Süre Doldu (Boş Bırakıldı)");
             if (quizState.index >= 8) { quizState.score = Math.floor(quizState.score / 2); setTimeout(() => finishIndividual("KARA DELİĞE YUTULDUN!"), 2000); } else { setTimeout(() => finishIndividual("SÜRE BİTTİ, ELENDİN!"), 2000); } 
         }
@@ -2164,6 +2266,7 @@ function startIndividualTimer(time) {
 
 document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = function() {
     if(quizState.locked || isGlobalPaused) return;
+    if(quizState.ranked){handleRankedAnswer(this);return;}
     this.blur(); 
     
     quizState.locked = true; clearInterval(quizState.timerInterval); stopSound(sfx.bgm);
@@ -2220,34 +2323,16 @@ document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = function()
 async function finishIndividual(msg) {
     if(document.activeElement) document.activeElement.blur();
     
-    individualLeaderboard.push({ name: currentActivePlayerName, score: quizState.score, time: quizState.totalTimeSpent });
     
-    const user = auth.currentUser;
-    if (user && quizState.score > 0) {
-        const hasGoogleProv = (user.providerData || []).some(p => p.providerId === 'google.com');
-        if (!user.emailVerified && !hasGoogleProv) {
-            try { await user.reload(); } catch(e) {}
-        }
-        const currentUserAfterReload = auth.currentUser || user;
-        const isVerifiedNow = currentUserAfterReload.emailVerified === true || (currentUserAfterReload.providerData || []).some(p => p.providerId === 'google.com');
-        if (!isVerifiedNow) {
-            alert("Yarışmayı tamamladın! Puanının Şampiyonlar Ligi liderlik tablosuna kaydedilmesi için e-posta adresini doğrulaman gerekiyor. Profil menüsünden doğrulama bağlantısını tekrar gönderebilirsin.");
-        } else {
+    if(quizState.ranked) {
         try {
-            if (isStudentProfile(loadedProfile) && normalizeGrade(loadedProfile.sinif) === String(selectedGrade)) {
-                const result = await competitionCall('submitCompetitionResult', {
-                    grade: String(selectedGrade), unit: Number(selectedUnit), score: quizState.score,
-                    submissionId: quizState.submissionId
-                });
-                if (!result?.accepted) throw Error('Puan sunucu tarafından kabul edilmedi.');
-            }
-        } catch (e) {
-            console.error('Puan sunucuda kaydedilemedi:', e);
-            alert('Çalışman tamamlandı. Güvenli puan servisi şu anda kaydı doğrulayamadı; bu sonuç liderlik tablosuna yazılmadı.');
-        }
-        }
+            if(!quizState.ranked.state.done)await quizState.ranked.action('finish');
+            applyRankedState();
+            if(!quizState.ranked.state.settlement?.accepted)throw Error('Kayıt doğrulanamadı.');
+        } catch(e) { showRankedRetry(()=>finishIndividual(msg),e);return; }
     }
 
+    if(!quizState.localResultRecorded){individualLeaderboard.push({ name: currentActivePlayerName, score: quizState.score, time: quizState.totalTimeSpent });quizState.localResultRecorded=true;}
     const quizEndEl = document.getElementById('quiz-end'); 
     const sceneQuiz = document.getElementById('scene-quiz');
     if(sceneQuiz && quizEndEl) {
@@ -2304,22 +2389,30 @@ if(btnLbContinue) btnLbContinue.onclick = () => { switchScene(scenes.leaderboard
 
 const jokerHint = document.getElementById('joker-hint');
 if(jokerHint) {
-    jokerHint.onclick = function() { if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; this.blur(); this.classList.add('is-used'); this.style.opacity = "0.5"; this.style.pointerEvents = "none"; const qh = document.getElementById('quiz-hint'); if(qh) { qh.classList.remove('is-hidden'); qh.textContent = `💡 İpucu: ${quizState.set[quizState.index].hint}`; } };
+    jokerHint.onclick = function() { if(quizState.ranked){rankedJoker('hint',this);return;} if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; this.blur(); this.classList.add('is-used'); this.style.opacity = "0.5"; this.style.pointerEvents = "none"; const qh = document.getElementById('quiz-hint'); if(qh) { qh.classList.remove('is-hidden'); qh.textContent = `💡 İpucu: ${quizState.set[quizState.index].hint}`; } };
 }
 
 const jokerFifty = document.getElementById('joker-fifty');
 if(jokerFifty) {
-    jokerFifty.onclick = function() { if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; this.blur(); this.classList.add('is-used'); this.style.opacity = "0.5"; this.style.pointerEvents = "none"; let hidden = 0; document.querySelectorAll('.answer-btn').forEach(btn => { if(btn.dataset.correct === "false" && hidden < 2) { btn.classList.add('is-hidden'); hidden++; } }); };
+    jokerFifty.onclick = function() { if(quizState.ranked){rankedJoker('fifty',this);return;} if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; this.blur(); this.classList.add('is-used'); this.style.opacity = "0.5"; this.style.pointerEvents = "none"; let hidden = 0; document.querySelectorAll('.answer-btn').forEach(btn => { if(btn.dataset.correct === "false" && hidden < 2) { btn.classList.add('is-hidden'); hidden++; } }); };
 }
 
 const jokerPause = document.getElementById('joker-pause');
 if(jokerPause) {
-    jokerPause.onclick = function() { if(quizState.locked || isGlobalPaused) return; this.blur(); if(!isTimerPaused) { isTimerPaused = true; this.innerHTML = "Süreyi Başlat ▶"; this.style.background = "#22c55e"; this.classList.add('is-used'); this.classList.remove('joker-spawn-anim'); stopSound(sfx.bgm); } else { isTimerPaused = false; this.innerHTML = "Kullanıldı"; this.style.background = ""; this.style.opacity = "0.5"; this.style.pointerEvents = "none"; playSound(sfx.bgm); } };
+    jokerPause.onclick = async function() {
+        if(quizState.ranked){
+            if(quizState.locked || isGlobalPaused)return;
+            quizState.locked=true;
+            try {await quizState.ranked.action(isTimerPaused?'resume':'pause',{joker:true});applyRankedState();isTimerPaused=!isTimerPaused;this.textContent=isTimerPaused?'Süreyi Başlat ▶':'Kullanıldı';if(!isTimerPaused){this.classList.add('is-used');this.style.pointerEvents='none';startIndividualTimer(quizState.ranked.state.seconds);}quizState.locked=false;}
+            catch(e){showRankedRetry(()=>renderIndividual(),e);}return;
+        }
+        if(quizState.locked || isGlobalPaused) return; this.blur(); if(!isTimerPaused) { isTimerPaused = true; this.innerHTML = "Süreyi Başlat ▶"; this.style.background = "#22c55e"; this.classList.add('is-used'); this.classList.remove('joker-spawn-anim'); stopSound(sfx.bgm); } else { isTimerPaused = false; this.innerHTML = "Kullanıldı"; this.style.background = ""; this.style.opacity = "0.5"; this.style.pointerEvents = "none"; playSound(sfx.bgm); } };
 }
 
 const jokerPass = document.getElementById('joker-pass');
 if(jokerPass) {
     jokerPass.onclick = function() { 
+        if(quizState.ranked){rankedJoker('pass',this);return;}
         if(quizState.locked || isGlobalPaused || this.classList.contains('is-used')) return; 
         this.blur();
         const currentQ = quizState.set[quizState.index]; 
@@ -4544,6 +4637,7 @@ if(btnSaveProf) {
             const profHeroName = document.getElementById('profile-display-fullname');
             if (profHeroName && name) profHeroName.textContent = `${name} ${surname}`;
             await updateDoc(doc(db, "users", user.uid), { name, surname, avatar, ...(loadedProfile.role !== 'admin' ? {nickname} : {}) });
+            if(COMPETITION_BACKEND_READY)await competitionCall('syncCompetitionDisplay',{});
             if (profileRevision !== authRevision) return;
             localStorage.setItem('fenupx_user_grade', sinif);
             try {
@@ -4658,8 +4752,10 @@ if (btnConfirmDelFinal) {
 
         try {
             btnConfirmDelFinal.textContent = 'Siliniyor...';
-            if (COMPETITION_BACKEND_READY) await competitionCall('deleteCompetitionAccount', {});
-            else {
+            if(COMPETITION_BACKEND_READY){
+                let cleanup;do{cleanup=await competitionCall('deleteCompetitionData',{});}while(!cleanup.done);
+            }
+            {
                 const {runTransaction} = await import('https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js');
                 await runTransaction(db, async tx => {
                     tx.set(doc(db, 'deletedProfiles', user.uid), {deleted:true});
@@ -5013,6 +5109,7 @@ async function changeUserNickname(uid, newNick) {
     if (loadedProfile?.role !== 'admin' || pendingGradeWrites.has(uid)) return;
     try {
         await updateDoc(doc(db, "users", uid), { nickname: newNick });
+        if(COMPETITION_BACKEND_READY)await competitionCall('syncCompetitionDisplay',{uid});
         const userIndex = allAdminUsers.findIndex(u => u.id === uid);
         if(userIndex > -1) allAdminUsers[userIndex].nickname = newNick;
         const asi = document.getElementById('admin-search-input');
@@ -5061,6 +5158,7 @@ async function toggleBanStatus(uid, banStatus) {
     
     try {
         await updateDoc(doc(db, "users", uid), { isBanned: banStatus });
+        if(COMPETITION_BACKEND_READY)await competitionCall('syncCompetitionDisplay',{uid});
         const userIndex = allAdminUsers.findIndex(u => u.id === uid);
         if(userIndex > -1) {
             allAdminUsers[userIndex].isBanned = banStatus;
@@ -5074,6 +5172,12 @@ async function toggleBanStatus(uid, banStatus) {
 
 const lbListEl = document.getElementById('global-lb-list');
 const lbTabBtns = document.querySelectorAll('.lb-tab-btn');
+let showLegacyCompetitionScores=false;
+if(COMPETITION_BACKEND_READY && lbListEl){
+    const historyButton=document.createElement('button');historyButton.type='button';historyButton.className='f-btn competition-history-toggle';historyButton.textContent='Önceki puan kayıtlarını göster';
+    historyButton.onclick=()=>{showLegacyCompetitionScores=!showLegacyCompetitionScores;historyButton.textContent=showLegacyCompetitionScores?'Yeni doğrulanan yarışmaları göster':'Önceki puan kayıtlarını göster';loadGlobalLeaderboard(document.querySelector('.lb-tab-btn.active')?.dataset.tab || 'weekly');};
+    lbListEl.before(historyButton);
+}
 const lbGuestPromo = document.getElementById('btn-lb-signup');
 
 lbTabBtns.forEach(btn => {
@@ -5083,7 +5187,7 @@ lbTabBtns.forEach(btn => {
         
         const seasonNote = document.getElementById('season-reset-note');
         if (seasonNote) {
-            seasonNote.innerHTML = "* Puanlar 1 Eylül'de yeni eğitim yılıyla otomatik sıfırlanır.";
+            seasonNote.innerHTML = "* Puanlar kazanıldığı sınıf ve eğitim yılında korunur; yeni yılın tablosu ayrı tutulur.";
             if (btn.dataset.tab === 'alltime') seasonNote.classList.remove('is-hidden');
             else seasonNote.classList.add('is-hidden');
         }
@@ -5101,51 +5205,14 @@ async function loadGlobalLeaderboard(type = 'weekly') {
     const lbTitle = document.querySelector('#unit-leaderboard-side h2');
     if(lbTitle && selectedGrade) lbTitle.innerHTML = `<i class="fas fa-trophy"></i> ${selectedGrade}. Sınıf Şampiyonlar Ligi`;
 
-    if (COMPETITION_BACKEND_READY) { await loadCohortLeaderboard(type); return; }
+    if (COMPETITION_BACKEND_READY && !showLegacyCompetitionScores) { await loadCohortLeaderboard(type); return; }
     if (lbTitle && selectedGrade) lbTitle.textContent = `${selectedGrade}. Sınıf · Geçmiş puan kayıtları`;
-    const gradeSuffix = `_${selectedGrade}`;
-    let field = `totalScore${gradeSuffix}`;
-    const now = new Date();
-    
-    if (type === 'weekly') field = `weeklyScore${gradeSuffix}`;
-    else if (type === 'monthly') field = `monthlyScore${gradeSuffix}`;
-    else if (type === 'alltime') field = `seasonScore${gradeSuffix}`;
-
     try {
-        const usersRef = collection(db, "users");
-        const q = query(usersRef, orderBy(field, "desc"), limit(50));
-        const snap = await getDocs(q);
-        
-        const users = [];
-        const currentWeekId = getWeekId(now);
-        const currentMonthId = getMonthId(now);
-        const currentSeasonId = getSeasonId(now);
+        const result=await competitionCall('legacyLeaderboard',{grade:String(selectedGrade),type});
+        renderGlobalLeaderboard(result.users || [],type);
+        document.getElementById('lb-user-rank')?.classList.add('is-hidden');
+    } catch(e) { lbListEl.textContent='Geçmiş puan kayıtları şu anda yüklenemedi.'; }
 
-        snap.forEach(docSnap => {
-            const data = docSnap.data();
-            
-            if (data.role === 'student' && data.isBanned === false) {
-                let score = 0;
-                
-                if (type === 'weekly' && data[`lastWeekId${gradeSuffix}`] === currentWeekId) score = data[`weeklyScore${gradeSuffix}`] || 0;
-                else if (type === 'monthly' && data[`lastMonthId${gradeSuffix}`] === currentMonthId) score = data[`monthlyScore${gradeSuffix}`] || 0;
-                else if (type === 'alltime') {
-                    if (data[`lastSeasonId${gradeSuffix}`] === currentSeasonId) score = data[`seasonScore${gradeSuffix}`] || 0;
-                }
-
-                if (score > 0) {
-                    users.push({ ...data, displayScore: score });
-                }
-            }
-        });
-
-        renderGlobalLeaderboard(users, type);
-        updateUserGlobalRank(field, type);
-
-    } catch (e) {
-        console.error("Tablo yükleme hatası:", e);
-        lbListEl.innerHTML = '<p style="color:#ef4444; text-align:center;">Henüz bu sınıfa ait veri yok.</p>';
-    }
 }
 
 async function loadCohortLeaderboard(type) {

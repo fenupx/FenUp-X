@@ -41,16 +41,21 @@ export async function promoteOne(db, uid, now = new Date()) {
         return true;
     });
 }
-export async function submitScore(db, uid, input, now = new Date()) {
-    const {grade,unit,score,submissionId}=input || {};
-    if (!validGrade(grade) || !Number.isInteger(unit) || unit < 1 || unit > 10 || !Number.isInteger(score) || score < 0 || score > 4400 || !/^[a-zA-Z0-9-]{16,80}$/.test(submissionId || '')) throw Error('invalid-result');
+export async function settleAttempt(db, uid, input, now = new Date()) {
+    const {attemptId}=input || {};
+    if (Object.keys(input || {}).some(k=>k!=='attemptId') || !/^[a-zA-Z0-9-]{16,80}$/.test(attemptId || '')) throw Error('invalid-result');
+    const submissionId=attemptId;
     const year=schoolYear(now);
     return db.runTransaction(async tx => {
         const ur=db.doc(`users/${uid}`), cr=profileRef(db,uid);
+        const attempt=db.doc(`competitionProfiles/${uid}/attempts/${attemptId}`);
         const receipt=db.doc(`competitionProfiles/${uid}/receipts/${submissionId}`);
+        const [us,cs,rs,as]=await Promise.all([tx.get(ur),tx.get(cr),tx.get(receipt),tx.get(attempt)]);
+        if (!us.exists || !cs.exists || !as.exists || !as.data().done) throw Error('completed-attempt-required');
+        const {grade,unit,score,schoolYear:attemptYear}=as.data();
+        if (attemptYear!==year) throw Error('year-changed');
         const er=db.doc(`leaderboards/${year}/grades/${grade}/entries/${uid}`);
-        const [us,cs,rs,es]=await Promise.all([tx.get(ur),tx.get(cr),tx.get(receipt),tx.get(er)]);
-        if (!us.exists || !cs.exists) throw Error('class-required');
+        const es=await tx.get(er);
         requireCompetition(cs.data(),us.data(),grade,year);
         if(rs.exists) return {accepted:true,delta:0,duplicate:true};
         const day=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Istanbul',year:'numeric',month:'2-digit',day:'2-digit'}).format(now);
@@ -64,6 +69,8 @@ export async function submitScore(db, uid, input, now = new Date()) {
         const previous=es.data() || {};
         tx.set(er,{weeklyScore:(previous.weekId===weekId ? previous.weeklyScore || 0 : 0)+delta,monthlyScore:(previous.monthId===monthId ? previous.monthlyScore || 0 : 0)+delta,weekId,monthId,isBanned:false,uid,grade,schoolYear:year,nickname:us.data().nickname || '',avatar:us.data().avatar || '',score:(es.data()?.score || 0)+delta,daily,updatedAt:now},{merge:true});
         tx.create(receipt,{grade,schoolYear:year,unit,score,delta,at:now});
+        tx.update(attempt,{questionKeys:as.data().questions.map(q=>q.key),questions:[],responses:{},openedAt:null,pausedAt:null,pausedMs:0,compactedAt:now});
+        if (delta>0) tx.update(ur,{totalScore:(us.data().totalScore || 0)+delta,[`totalScore_${grade}`]:(us.data()[`totalScore_${grade}`] || 0)+delta});
         return {accepted:true,delta,grade,schoolYear:year};
     });
 }

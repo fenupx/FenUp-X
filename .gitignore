@@ -38,3 +38,13 @@ downloads/
 tests/artifacts/
 server/*-debug.log
 server/.firebase/
+
+/firebase-debug.log
+/firestore-debug.log
+/.firebase/
+server/functions/question-banks/
+server/functions/question-banks.mjs
+server/worker/.wrangler/
+server/worker/.dev.vars*
+server/worker/.env*
+server/worker/wrangler.local.jsonc

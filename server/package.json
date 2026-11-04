@@ -3,7 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "firebase emulators:exec --config firebase.emulator.json --project demo-fenupx --only firestore 'node --test test/*.test.mjs'"
+    "test": "firebase emulators:exec --config firebase.emulator.json --project demo-fenupx --only firestore 'node --test test/*.test.mjs'",
+    "pretest": "node prepare-question-banks.mjs",
+    "test:e2e": "firebase emulators:exec --config firebase.full-emulator.json --project demo-fenupx --only auth,firestore,functions 'node test/competition-e2e.mjs'",
+    "test:worker": "firebase emulators:exec --config firebase.full-emulator.json --project demo-fenupx --only auth,firestore 'node test/worker-e2e.mjs'"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "6.0.0",

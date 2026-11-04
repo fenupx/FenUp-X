@@ -1,6 +1,8 @@
-// Set true only after production rules are reviewed, deployed and callable
-// smoke tests pass. GitHub Pages publication alone does not enable Firebase.
-export const COMPETITION_BACKEND_READY = false;
+// Enable only after trusted Worker + Firestore rules pass a production test.
+// Free plans only; annual promotion deliberately stays disabled.
+export const COMPETITION_BACKEND_READY = true;
+export const COMPETITION_API_URL = 'https://fenupx-score.mistralx-rk.workers.dev';
+export const ANNUAL_PROMOTION_ENABLED = false;
 export function competitionYear(now = new Date()) {
     const p=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Istanbul',year:'numeric',month:'2-digit'}).formatToParts(now).filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
     return Number(p.year)-(Number(p.month)<9?1:0);

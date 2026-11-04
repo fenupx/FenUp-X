@@ -12,6 +12,7 @@ export function promote(profile, year) {
 }
 export function requireCompetition(profile, user, grade, year) {
     if (user.role !== 'student' && user.role !== 'ogrenci' && user.role !== 'öğrenci') throw new Error('student-required');
+    if (profile.deleting) throw new Error('account-deleting');
     if (user.isBanned || !validGrade(grade) || profile.graduated || profile.grade !== grade || profile.schoolYear !== year || String(user.sinif) !== profile.grade) throw new Error('cohort-mismatch');
 }
 
