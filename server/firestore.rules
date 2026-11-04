@@ -1,6 +1,38 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Trusted service identity is provisioned by the project owner in a private
+    // registry. A student cannot register or edit a service identity/role.
+    function scoreService() { return signedIn() && exists(/databases/$(database)/documents/internalServiceIdentities/$(request.auth.uid)) && get(/databases/$(database)/documents/internalServiceIdentities/$(request.auth.uid)).data.enabled == true; }
+    function boundedString(v,n) { return v is string && v.size() <= n; }
+    function validCohort(d) { return d.keys().hasOnly(['grade','schoolYear','graduated','initializedAt','correctedAt','deleting']) && grade(d.grade) && d.schoolYear is int && d.schoolYear >= 2025 && d.schoolYear <= 2100 && d.graduated is bool && d.get('deleting',false) is bool; }
+    function validScoreDelta(field) {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny([field]) ||
+        (request.resource.data[field] is int && resource.data.get(field,0) is int && request.resource.data[field] >= resource.data.get(field,0) && request.resource.data[field] <= resource.data.get(field,0)+4400);
+    }
+    function serviceProfileUpdate() {
+      return scoreService() && resource.data.role in ['student','ogrenci','öğrenci']
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['totalScore','totalScore_5','totalScore_6','totalScore_7','totalScore_8','sinif','gradeCorrectionRequest'])
+        && validScoreDelta('totalScore') && validScoreDelta('totalScore_5') && validScoreDelta('totalScore_6') && validScoreDelta('totalScore_7') && validScoreDelta('totalScore_8')
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['sinif']) || grade(request.resource.data.sinif));
+    }
+    function scoreList(a) { return a is list && a.size() <= 3 && (a.size()<1 || (a[0] is int && a[0]>=0 && a[0]<=4400)) && (a.size()<2 || (a[1] is int && a[1]>=0 && a[1]<=4400)) && (a.size()<3 || (a[2] is int && a[2]>=0 && a[2]<=4400)); }
+    function unitScores(m,k) { return !(k in m) || scoreList(m[k]); }
+    function validDaily(d) { return d is map && d.keys().hasOnly(['date','units']) && boundedString(d.date,10) && d.units is map && d.units.keys().hasOnly(['1','2','3','4','5','6','7','8','9','10']) && unitScores(d.units,'1') && unitScores(d.units,'2') && unitScores(d.units,'3') && unitScores(d.units,'4') && unitScores(d.units,'5') && unitScores(d.units,'6') && unitScores(d.units,'7') && unitScores(d.units,'8') && unitScores(d.units,'9') && unitScores(d.units,'10'); }
+    function validEntry(d,uid,g,y) {
+      return d.keys().hasOnly(['uid','grade','schoolYear','nickname','avatar','score','daily','updatedAt','weeklyScore','monthlyScore','weekId','monthId','isBanned'])
+        && d.uid==uid && d.grade==g && grade(g) && d.schoolYear is int && string(d.schoolYear)==y
+        && boundedString(d.nickname,100) && boundedString(d.avatar,30000) && d.isBanned is bool
+        && d.score is int && d.score>=0 && d.score<=1000000000000 && d.weeklyScore is int && d.weeklyScore>=0 && d.monthlyScore is int && d.monthlyScore>=0
+        && boundedString(d.weekId,12) && boundedString(d.monthId,7) && d.updatedAt is timestamp && validDaily(d.daily);
+    }
+    function validAttempt(d,uid,id) {
+      return d.keys().hasOnly(['id','uid','grade','unit','schoolYear','questions','index','score','done','openedAt','startedAt','pausedMs','pausedAt','questionToken','jokers','answers','reason','responses','pauses','hintToken','fiftyToken','hiddenOptions','questionKeys','compactedAt'])
+        && d.id==id && d.uid==uid && grade(d.grade) && d.unit is int && d.unit>=1 && d.unit<=10 && d.schoolYear is int && d.schoolYear>=2025 && d.schoolYear<=2100
+        && d.questions is list && d.questions.size()<=10 && d.answers is list && d.answers.size()<=10 && d.index is int && d.index>=0 && d.index<=10
+        && d.score is int && d.score>=0 && d.score<=4400 && d.done is bool && d.startedAt is timestamp && d.pausedMs is int && d.pausedMs>=0
+        && boundedString(d.questionToken,80) && d.jokers is map && d.jokers.size()<=4 && d.get('responses',{}) is map && d.get('responses',{}).size()<=80;
+    }
     function signedIn() { return request.auth != null; }
     function self(uid) { return signedIn() && request.auth.uid == uid; }
     function admin() { return signedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'; }
@@ -11,16 +43,17 @@ service cloud.firestore {
       return r is map && r.keys().hasOnly(['requestedGrade','status']) && grade(r.requestedGrade) && r.status == 'pending' && r.requestedGrade != resource.data.get('sinif','');
     }
     match /users/{uid} {
-      // Preserve the existing leaderboard read contract during the staged rollout.
-      allow read: if true;
+      // Private profiles stay owner/admin/service-only; public rankings contain no email/name.
+      allow read: if self(uid) || admin() || scoreService();
       allow create: if self(uid)
+        && !exists(/databases/$(database)/documents/internalServiceIdentities/$(uid))
         && !exists(/databases/$(database)/documents/competitionProfiles/$(uid))
         && !exists(/databases/$(database)/documents/deletedProfiles/$(uid))
         && request.resource.data.keys().hasOnly(['name','surname','nickname','email','role','sinif','totalScore','isBanned','avatar','createdAt'])
         && request.resource.data.role == 'student'
         && request.resource.data.totalScore == 0 && request.resource.data.isBanned == false
         && (grade(request.resource.data.sinif) || request.resource.data.sinif == '');
-      allow update: if (self(uid)
+      allow update: if serviceProfileUpdate() || (self(uid)
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['name','surname','nickname','avatar','sinif','gradeCorrectionRequest'])
         && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['sinif'])
           || (resource.data.role in ['student','ogrenci','öğrenci'] && !recordedGrade(resource.data.get('sinif','')) && grade(request.resource.data.sinif)
@@ -40,16 +73,36 @@ service cloud.firestore {
       allow read: if self(uid) || admin();
       allow update, delete: if false;
     }
+    match /internalServiceIdentities/{id} { allow read, write: if false; }
     match /competitionProfiles/{uid} {
-      allow read: if self(uid) || admin();
-      allow write: if false;
-      match /{path=**} { allow read, write: if false; }
+      allow read: if self(uid) || admin() || scoreService();
+      allow create, update: if scoreService() && validCohort(request.resource.data);
+      allow delete: if scoreService();
+      match /attempts/{id} {
+        allow read, delete: if scoreService();
+        allow create, update: if scoreService() && validAttempt(request.resource.data,uid,id);
+      }
+      match /receipts/{id} {
+        allow read, delete: if scoreService();
+        allow create: if scoreService() && request.resource.data.keys().hasOnly(['grade','schoolYear','unit','score','delta','at']) && grade(request.resource.data.grade) && request.resource.data.score is int && request.resource.data.score>=0 && request.resource.data.score<=4400 && request.resource.data.delta is int && request.resource.data.delta>=0 && request.resource.data.delta<=4400 && request.resource.data.at is timestamp;
+        allow update: if false;
+      }
+      match /limits/{id} {
+        allow read, delete: if scoreService();
+        allow create: if scoreService() && request.resource.data.keys().hasOnly(['starts']) && request.resource.data.starts==1;
+        allow update: if scoreService() && request.resource.data.keys().hasOnly(['starts']) && request.resource.data.starts is int && request.resource.data.starts==resource.data.starts+1 && request.resource.data.starts<=60;
+      }
     }
     match /leaderboards/{year}/grades/{gradeId}/entries/{uid} {
       allow read: if true;
-      allow write: if false;
+      allow create, update: if scoreService() && validEntry(request.resource.data,uid,gradeId,year);
+      allow delete: if scoreService();
     }
-    match /competitionAudit/{id} { allow read: if admin(); allow write: if false; }
+    match /competitionAudit/{id} {
+      allow read: if admin() || scoreService();
+      allow create: if scoreService() && request.resource.data.keys().hasOnly(['actor','uid','action','previousGrade','grade','schoolYear','at']) && boundedString(request.resource.data.actor,128) && boundedString(request.resource.data.uid,128) && request.resource.data.action=='class-correction' && grade(request.resource.data.grade) && request.resource.data.at is timestamp;
+      allow update, delete: if false;
+    }
     match /reported_questions/{id} {
       allow create: if true; // Preserve the existing guest question-report flow.
       allow read, update, delete: if admin();
