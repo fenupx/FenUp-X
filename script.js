@@ -3686,7 +3686,13 @@ export function getBadgeFamilyProgress() {
         nextCompHint = 'En yüksek aşamaya ulaştın!';
     } else if (distinctDays.size >= 3 && distinctUnits.size >= 3) {
         stageComp = 2;
-        nextCompHint = 'Aşama 3 için en az 5 farklı gün ve 4 farklı üniteye ulaş';
+        if (distinctDays.size < 5 && distinctUnits.size < 4) {
+            nextCompHint = `Aşama 3 için ${5 - distinctDays.size} gün ve ${4 - distinctUnits.size} ünite daha gerekli`;
+        } else if (distinctDays.size < 5) {
+            nextCompHint = `Aşama 3 için ${5 - distinctDays.size} farklı gün daha yarışma tamamla`;
+        } else {
+            nextCompHint = `Aşama 3 için ${4 - distinctUnits.size} farklı ünitede daha yarışma tamamla`;
+        }
     } else if (distinctDays.size >= 2 && distinctUnits.size >= 2) {
         stageComp = 1;
         nextCompHint = 'Aşama 2 için en az 3 farklı gün ve 3 farklı üniteye ulaş';
@@ -3697,7 +3703,13 @@ export function getBadgeFamilyProgress() {
     return {
         family_arastirmaci: { stage: stageLab, current: completedLabCount, nextHint: nextLabHint },
         family_kararli_kasif: { stage: stageExam, current: totalAttempts, nextHint: nextExamHint },
-        family_bilgi_yolcusu: { stage: stageComp, current: compActivityCount, nextHint: nextCompHint }
+        family_bilgi_yolcusu: { 
+            stage: stageComp, 
+            current: compActivityCount, 
+            distinctDays: distinctDays.size, 
+            distinctUnits: distinctUnits.size, 
+            nextHint: nextCompHint 
+        }
     };
 }
 
@@ -6634,6 +6646,8 @@ async function loadGlobalLeaderboard(type = 'weekly') {
     const userMap = new Map();
     const year = competitionYear();
     const field = type === 'weekly' ? 'weeklyScore' : type === 'monthly' ? 'monthlyScore' : 'score';
+    let cohortFailed = false;
+    let legacyFailed = false;
 
     // 1. Güncel cohort liderlik tablosu verilerini getir (Firebase Firestore)
     if (COMPETITION_BACKEND_READY) {
@@ -6665,42 +6679,52 @@ async function loadGlobalLeaderboard(type = 'weekly') {
             });
         } catch (e) {
             console.warn('Cohort verisi yüklenirken uyarı:', e);
+            cohortFailed = true;
         }
     }
 
     // 2. Her 3 sekme için de (weekly, monthly, alltime) legacy skorları çek ve birleştir
     try {
-        const legRes = await competitionCall('legacyLeaderboard', { grade: String(selectedGrade || '7'), type }).catch(() => null);
-        const legacyUsers = legRes?.users || [];
-        legacyUsers.forEach(lu => {
-            const legScore = Number(lu.displayScore) || 0;
-            if (legScore <= 0) return;
-            const normNick = (lu.nickname || '').trim().toLowerCase();
-            const mapKey = normNick || lu.uid || lu.id;
-            if (mapKey && userMap.has(mapKey)) {
-                const existing = userMap.get(mapKey);
-                existing.legacyScore = legScore;
-                // Haftalık, aylık ve alltime: Geçiş öncesi legacy puanı ile geçiş sonrası cohort puanı ayrı kazanımlardır, toplanır.
-                existing.displayScore = (existing.cohortScore || 0) + legScore;
-                if (!existing.avatar && lu.avatar) existing.avatar = lu.avatar;
-            } else if (mapKey) {
-                userMap.set(mapKey, {
-                    ...lu,
-                    nickname: lu.nickname || '',
-                    avatar: lu.avatar || '',
-                    cohortScore: 0,
-                    legacyScore: legScore,
-                    displayScore: legScore
-                });
-            }
+        const legRes = await competitionCall('legacyLeaderboard', { grade: String(selectedGrade || '7'), type }).catch(() => {
+            legacyFailed = true;
+            return null;
         });
+        if (legRes === null) {
+            legacyFailed = true;
+        } else {
+            const legacyUsers = legRes?.users || [];
+            legacyUsers.forEach(lu => {
+                const legScore = Number(lu.displayScore) || 0;
+                if (legScore <= 0) return;
+                const normNick = (lu.nickname || '').trim().toLowerCase();
+                const mapKey = normNick || lu.uid || lu.id;
+                if (mapKey && userMap.has(mapKey)) {
+                    const existing = userMap.get(mapKey);
+                    existing.legacyScore = legScore;
+                    // Haftalık, aylık ve alltime: Geçiş öncesi legacy puanı ile geçiş sonrası cohort puanı ayrı kazanımlardır, toplanır.
+                    existing.displayScore = (existing.cohortScore || 0) + legScore;
+                    if (!existing.avatar && lu.avatar) existing.avatar = lu.avatar;
+                } else if (mapKey) {
+                    userMap.set(mapKey, {
+                        ...lu,
+                        nickname: lu.nickname || '',
+                        avatar: lu.avatar || '',
+                        cohortScore: 0,
+                        legacyScore: legScore,
+                        displayScore: legScore
+                    });
+                }
+            });
+        }
     } catch (e) {
         console.warn('Geçmiş liderlik verisi yüklenirken uyarı:', e);
+        legacyFailed = true;
     }
 
+    const isPartialSync = cohortFailed || legacyFailed;
     const mergedUsers = Array.from(userMap.values());
     mergedUsers.sort((a, b) => b.displayScore - a.displayScore);
-    renderGlobalLeaderboard(mergedUsers, type);
+    renderGlobalLeaderboard(mergedUsers, type, isPartialSync);
 
     // Kullanıcının kendi sınıfındaki sırası
     const rankArea = document.getElementById('lb-user-rank');
@@ -6709,7 +6733,10 @@ async function loadGlobalLeaderboard(type = 'weekly') {
         const myUid = auth.currentUser.uid;
         const myNick = (loadedProfile?.nickname || auth.currentUser.displayName || '').trim().toLowerCase();
         const myIndex = mergedUsers.findIndex(u => (u.uid && u.uid === myUid) || (myNick && (u.nickname || '').trim().toLowerCase() === myNick));
-        if (myIndex >= 0 && mergedUsers[myIndex].displayScore > 0 && rankArea && rankText) {
+        if (isPartialSync && rankArea && rankText) {
+            rankArea.classList.remove('is-hidden');
+            rankText.innerHTML = `<i class="fas fa-sync fa-spin"></i> ${selectedGrade}. Sınıf Sıran: Sıralama güncelleniyor (Bağlantı bekleniyor)`;
+        } else if (myIndex >= 0 && mergedUsers[myIndex].displayScore > 0 && rankArea && rankText) {
             rankArea.classList.remove('is-hidden');
             rankText.innerHTML = `<i class="fas fa-medal"></i> ${selectedGrade}. Sınıf Sıran: ${myIndex + 1}. | Puanın: ${formatScore(mergedUsers[myIndex].displayScore)}`;
         } else if (rankArea && rankText) {
@@ -6721,9 +6748,17 @@ async function loadGlobalLeaderboard(type = 'weekly') {
     }
 }
 
-function renderGlobalLeaderboard(users, type) {
+function renderGlobalLeaderboard(users, type, isPartialSync = false) {
     if(!lbListEl) return;
     lbListEl.innerHTML = '';
+    
+    if (isPartialSync) {
+        const warnEl = document.createElement('div');
+        warnEl.className = 'lb-sync-warning';
+        warnEl.style.cssText = 'background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 8px; padding: 8px 12px; margin-bottom: 10px; font-size: 0.82rem; color: #f59e0b; display: flex; align-items: center; gap: 8px;';
+        warnEl.innerHTML = '<i class="fas fa-exclamation-triangle"></i> <span>Puan kaynaklarından birine ulaşılamadı. Sıralama geçici olarak eksik görüntülenebilir.</span>';
+        lbListEl.appendChild(warnEl);
+    }
     
     if (users.length === 0) {
         lbListEl.innerHTML = '<div class="lb-empty-notice" style="color:#aaa; text-align:center; margin-top:20px; padding:12px;"><p style="margin:0 0 6px 0;">Henüz bu kategoride yarışmacı yok.</p></div>';

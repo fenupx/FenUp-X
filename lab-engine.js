@@ -22940,9 +22940,26 @@ export function isExperimentCompleted(expId, measurements) {
             return (hasDark && hasLight) || uniqueKeys.size >= 2;
         }
         case "6.8": {
-            const hasPassed = measurements.some(m => (m.col4 && m.col4.includes("Geçti")) || (m.col3 && m.col3.includes("Geçti")));
-            const hasStuck = measurements.some(m => (m.col4 && (m.col4.includes("Takıldı") || m.col4.includes("Geçemedi"))) || (m.col3 && (m.col3.includes("Takıldı") || m.col3.includes("Geçemedi"))));
-            return hasPassed && hasStuck;
+            // Gravzant tamamlanma döngüsü (3 adım kronolojik sıra):
+            // 1. Soğuk geçiş (Geçti) -> 2. Isıtınca geçmeme (Takıldı) -> 3. Soğutunca yeniden geçiş (Geçti)
+            let step1Index = -1;
+            let step2Index = -1;
+            let step3Index = -1;
+            for (let i = 0; i < measurements.length; i++) {
+                const m = measurements[i];
+                const isPass = (m.col4 && m.col4.includes("Geçti")) || (m.col3 && m.col3.includes("Geçti"));
+                const isStuck = (m.col4 && (m.col4.includes("Takıldı") || m.col4.includes("Geçemedi"))) || 
+                                (m.col3 && (m.col3.includes("Takıldı") || m.col3.includes("Geçemedi")));
+                if (step1Index === -1 && isPass) {
+                    step1Index = i;
+                } else if (step1Index !== -1 && step2Index === -1 && isStuck) {
+                    step2Index = i;
+                } else if (step2Index !== -1 && step3Index === -1 && isPass) {
+                    step3Index = i;
+                    break;
+                }
+            }
+            return step1Index !== -1 && step2Index !== -1 && step3Index !== -1;
         }
         case "6.9": {
             const hasCond = measurements.some(m => (m.col3 && m.col3.includes("İletken")) || (m.col4 && m.col4.includes("Yanıyor")));
