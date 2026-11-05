@@ -5233,6 +5233,20 @@ let allAdminReports = [];
 let adminReportStatusFilter = 'all';
 let adminReportGradeFilter = 'all';
 
+const reportTypeLabels = {
+    'hatali_soru': 'Hatalı Soru Kökü',
+    'yanlis_sik': 'Yanlış Şıklar / Cevap',
+    'yazim_hatasi': 'Yazım / İmla Hatası',
+    'mufredat_disi': 'Müfredat Dışı Konu',
+    'diger': 'Diğer'
+};
+
+const statusLabels = {
+    'yeni': 'Yeni',
+    'inceleniyor': 'İnceleniyor',
+    'cozuldu': 'Çözüldü'
+};
+
 async function loadAdminReports(renderNow = true) {
     if (loadedProfile?.role !== 'admin') return;
     const reportList = document.getElementById('admin-report-list');
@@ -5297,18 +5311,6 @@ function renderAdminReports() {
     }
 
     container.innerHTML = '';
-    const reportTypeLabels = {
-        'hatali_soru': 'Hatalı Soru Kökü',
-        'yanlis_sik': 'Yanlış Şıklar / Cevap',
-        'yazim_hatasi': 'Yazım / İmla Hatası',
-        'mufredat_disi': 'Müfredat Dışı Konu',
-        'diger': 'Diğer'
-    };
-    const statusLabels = {
-        'yeni': 'Yeni',
-        'inceleniyor': 'İnceleniyor',
-        'cozuldu': 'Çözüldü'
-    };
 
     filtered.forEach(r => {
         const card = document.createElement('div');
@@ -5426,7 +5428,8 @@ async function updateReportStatus(reportId, newStatus, newNotes) {
         renderAdminReports();
     } catch (e) {
         console.error('Bildirim güncellenemedi:', e);
-        alert('Bildirim güncellenirken hata oluştu: ' + e.message);
+        alert('Bildirim güncellenirken hata oluştu: ' + (e.message || 'Yetki veya bağlantı hatası'));
+        renderAdminReports();
     }
 }
 
@@ -5471,6 +5474,22 @@ async function findPoolMatch(report) {
         });
     });
 
+    // Geriye dönük eşleştirme: Havuzdaki soru kökü revize edilmişse çekirdek ifade üzerinden eşleştir
+    if (exactMatches.length === 0 && targetText) {
+        gradesToCheck.forEach((grade, poolIdx) => {
+            const list = pools[poolIdx] || [];
+            list.forEach((q, idx) => {
+                const qStem = (q.question || q.stem || q.prompt || '').trim().toLowerCase().replace(/\s+/g, ' ');
+                const isCoreMatch = (targetText.includes('kırarak veya yansıtarak') && targetText.includes('odaklayan')) &&
+                                    (qStem.includes('kırarak veya yansıtarak') && qStem.includes('odaklayan'));
+                if (isCoreMatch) {
+                    const unitMatch = !report.unit || String(report.unit) === String(q.unit);
+                    exactMatches.push({ q, grade, index: idx, matchType: 'core_phrase', unitMatch });
+                }
+            });
+        });
+    }
+
     if (exactMatches.length === 1) {
         const m = exactMatches[0];
         return {
@@ -5505,6 +5524,8 @@ async function openReportDetailModal(report) {
     // Sürüm bilgisi: Bilinmeyen sürüme güncel uygulama sürümünü uydurma
     const versionText = report.contentVersion ? ('v' + profileText(report.contentVersion)) : 'Sürüm bilinmiyor';
     const appVerText = report.appVersion ? `Uygulama: v${profileText(report.appVersion)}` : '';
+    const curStatus = report.status || 'yeni';
+    const statusText = statusLabels[curStatus] || curStatus;
 
     let optsHtml = '';
     let poolNoticeHtml = '';
@@ -5541,7 +5562,14 @@ async function openReportDetailModal(report) {
             const mq = matchRes.question;
             questionStemToDisplay = mq.question || mq.stem || questionStemToDisplay;
             hintToDisplay = mq.hint || hintToDisplay;
-            displayedQuestionId = mq.id || displayedQuestionId || `sl-g${matchRes.grade}-u${mq.unit || '1'}-q${matchRes.index + 1}`;
+            // Soru havuzundaki indekslerin dizi sıralamasına dayalı olduğu ve kalıcı bir veritabanı ID'si oluşturmadığı dikkate alınır
+            if (mq.id) {
+                displayedQuestionId = mq.id;
+            } else if (report.questionId) {
+                displayedQuestionId = report.questionId;
+            } else {
+                displayedQuestionId = `Havuz Konumu: ${profileText(matchRes.grade)}. Sınıf, Ünite ${profileText(mq.unit || '1')} (Sıra: #${matchRes.index + 1} - Yerel ID Yok)`;
+            }
 
             poolNoticeHtml = `
                 <div style="margin-bottom: 12px; padding: 10px 14px; border-radius: 8px; background: rgba(245, 158, 11, 0.15); border: 1px solid #f59e0b; color: #fde68a; font-size: 0.82rem; display: flex; align-items: flex-start; gap: 10px;">
@@ -5591,12 +5619,12 @@ async function openReportDetailModal(report) {
 
     body.innerHTML = `
         <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; align-items:center;">
-            <span class="admin-rep-pill-status ${report.status || 'yeni'}">${report.status || 'yeni'}</span>
+            <span class="admin-rep-pill-status ${curStatus}">${statusText}</span>
             <span class="admin-rep-pill-type">${profileText(report.reportType || 'Diğer')}</span>
             <span class="admin-rep-pill-meta">${report.grade ? profileText(report.grade) + '. Sınıf' : ''} ${report.unit ? '· Ünite ' + profileText(report.unit) : ''}</span>
             <span class="admin-rep-pill-version" title="İçerik Sürümü">${versionText}</span>
             ${appVerText ? `<span style="font-size:0.75rem; color:#94a3b8; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);">${appVerText}</span>` : ''}
-            ${displayedQuestionId ? `<span style="font-size:0.75rem; font-family:monospace; color:#38bdf8; margin-left:auto;">ID: ${profileText(displayedQuestionId)}</span>` : ''}
+            ${displayedQuestionId ? `<span style="font-size:0.75rem; font-family:monospace; color:#38bdf8; margin-left:auto;">${displayedQuestionId.startsWith('Havuz Konumu') ? profileText(displayedQuestionId) : 'ID: ' + profileText(displayedQuestionId)}</span>` : ''}
         </div>
 
         ${poolNoticeHtml}
@@ -5604,6 +5632,10 @@ async function openReportDetailModal(report) {
         <div style="background: rgba(15,23,42,0.9); border: 1px solid rgba(148,163,184,0.3); border-radius: 10px; padding: 14px; margin-bottom: 14px;">
             <strong style="color: #38bdf8; display: block; margin-bottom: 6px;"><i class="fas fa-file-lines"></i> Soru Metni:</strong>
             <p style="margin: 0; white-space: pre-wrap; font-size: 1rem; color: #f8fafc;">${profileText(questionStemToDisplay || 'Metin yok')}</p>
+            ${(report.questionText && report.questionText.trim() !== questionStemToDisplay.trim()) ? `
+            <div style="margin-top:8px; padding-top:6px; border-top:1px dashed rgba(255,255,255,0.15); font-size:0.82rem; color:#94a3b8;">
+                <strong style="color:#cbd5e1;"><i class="fas fa-history"></i> Bildirim Anındaki Metin:</strong> <span>${profileText(report.questionText)}</span>
+            </div>` : ''}
             ${optsHtml}
             ${hintToDisplay ? `<div style="margin-top:10px; color:#f59e0b; font-size:0.85rem;"><i class="fas fa-lightbulb"></i> <strong>Açıklama / İpucu:</strong> ${profileText(hintToDisplay)}</div>` : ''}
         </div>
@@ -5613,11 +5645,10 @@ async function openReportDetailModal(report) {
             <p style="margin: 0; color: #e2e8f0;">${report.description ? profileText(report.description) : '<em>Açıklama belirtilmedi.</em>'}</p>
         </div>
 
-        ${report.adminNotes ? `
         <div style="background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.3); border-radius: 10px; padding: 12px;">
             <strong style="color: #38bdf8; display: block; margin-bottom: 4px;"><i class="fas fa-clipboard-check"></i> Yönetici İnceleme Notu:</strong>
-            <p style="margin: 0; color: #e2e8f0;">${profileText(report.adminNotes)}</p>
-        </div>` : ''}
+            <p style="margin: 0; color: #e2e8f0;">${report.adminNotes ? profileText(report.adminNotes) : '<em>Henüz bir inceleme notu eklenmedi.</em>'}</p>
+        </div>
     `;
     showModal(modal);
 }

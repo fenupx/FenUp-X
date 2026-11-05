@@ -511,10 +511,11 @@ test.describe('V8.9.8 — Soru Bildirimleri, Hesap Kontrolleri ve Sistem Doğrul
         await panelReports.locator('.btn-inspect-q[data-report-id="rep-nov01"]').click();
         await expect(detailModal).toBeVisible();
         await expect(detailModal).toContainText('Güncel havuzdaki eşleşme');
+        await expect(detailModal).toContainText('Optik teleskoplarda uzak gök cisimlerinden gelen');
         await expect(detailModal).toContainText('Basit bir teleskop modelinde uzak gök cisimlerinden gelen');
         await expect(detailModal).toContainText('Mercek ve aynalar');
         await expect(detailModal).toContainText('Doğru Cevap');
-        await expect(detailModal).toContainText('Teleskopların yapısında ışığı toplayıp büyütmek için');
+        await expect(detailModal).toContainText('Gök cisimlerinden gelen ışığı toplamak için ışığı kıran ya da yansıtan');
 
         await page.locator('#btn-close-report-detail').click();
         await expect(detailModal).toBeHidden();
@@ -604,5 +605,128 @@ test.describe('V8.9.8 — Soru Bildirimleri, Hesap Kontrolleri ve Sistem Doğrul
         });
 
         expect(updateAttempt.success).toBe(false);
+    });
+
+    test('11. Bildirim Akışı Doğrulaması: "İnceleniyor" ve "Çözüldü" filtreleri, durum ve not eşzamanlılığı, hata durumunda arayüz koruması', async ({ page }) => {
+        await mockFirebase(page);
+
+        await page.evaluate(() => {
+            window.__records = {
+                'admin-flow-spec': {
+                    role: 'admin',
+                    name: 'Admin',
+                    surname: 'Doğrulama',
+                    email: 'admin@flow.test'
+                }
+            };
+            window.__reports = [
+                {
+                    id: 'rep-flow-yeni',
+                    questionText: 'Ay tutulması yaklaşık olarak ne kadar süre gözlemlenebilir?',
+                    grade: '6',
+                    unit: '1',
+                    status: 'yeni',
+                    reportType: 'hatali_soru',
+                    description: 'Süre sorusu',
+                    reportedAt: '2026-10-30T10:00:00.000Z'
+                },
+                {
+                    id: 'rep-flow-inc',
+                    questionText: 'Optik teleskoplarda uzak gök cisimlerinden gelen ışığı kırarak veya yansıtarak bir noktada odaklayan temel araçlar aşağıdakilerden hangisidir?',
+                    grade: '7',
+                    unit: '1',
+                    status: 'inceleniyor',
+                    adminNotes: 'MEB ders kitabı s. 22-24 inceleniyor',
+                    reportType: 'hatali_soru',
+                    description: 'Teleskop sorusu',
+                    reportedAt: '2026-11-01T14:30:00.000Z'
+                },
+                {
+                    id: 'rep-flow-coz',
+                    questionText: 'Maddenin halleri nelerdir?',
+                    grade: '5',
+                    unit: '2',
+                    status: 'cozuldu',
+                    adminNotes: 'Soru metni güncellendi',
+                    reportType: 'yazim_hatasi',
+                    description: 'İmla düzeltildi',
+                    reportedAt: '2026-10-25T08:00:00.000Z'
+                }
+            ];
+        });
+
+        await page.evaluate(async () => {
+            await window.__login('admin-flow-spec');
+        });
+
+        // Open Admin modal
+        await page.evaluate(() => {
+            const btn = document.getElementById('btn-admin-panel');
+            if (btn) btn.click();
+        });
+        const tabReports = page.locator('#btn-admin-tab-reports');
+        await tabReports.click();
+
+        // 1. Badge must count ONLY 'yeni' (1 item)
+        const reportBadge = page.locator('#admin-report-badge');
+        await expect(reportBadge).toBeVisible();
+        await expect(reportBadge).toHaveText('1');
+
+        const panelReports = page.locator('#admin-panel-reports');
+
+        // 2. Filter by 'inceleniyor' -> only 1 report
+        await page.locator('#admin-rep-status-filters button[data-status="inceleniyor"]').click();
+        const incCards = panelReports.locator('.admin-report-card');
+        await expect(incCards).toHaveCount(1);
+        await expect(panelReports.locator('.admin-rep-pill-status')).toHaveText('İnceleniyor');
+
+        // Detail modal for 'inceleniyor' report
+        await panelReports.locator('.btn-inspect-q[data-report-id="rep-flow-inc"]').click();
+        const detailModal = page.locator('#admin-report-detail-modal');
+        await expect(detailModal).toBeVisible();
+        // Modal must show 'İnceleniyor' status label identically to card
+        await expect(detailModal.locator('.admin-rep-pill-status')).toHaveText('İnceleniyor');
+        // Modal must display the admin note
+        await expect(detailModal).toContainText('MEB ders kitabı s. 22-24 inceleniyor');
+        await page.locator('#btn-close-report-detail').click();
+        await expect(detailModal).toBeHidden();
+
+        // 3. Filter by 'cozuldu' -> only 1 report
+        await page.locator('#admin-rep-status-filters button[data-status="cozuldu"]').click();
+        await expect(panelReports.locator('.admin-report-card')).toHaveCount(1);
+        await expect(panelReports.locator('.admin-rep-pill-status')).toHaveText('Çözüldü');
+
+        // Detail modal for 'cozuldu' report
+        await panelReports.locator('.btn-inspect-q[data-report-id="rep-flow-coz"]').click();
+        await expect(detailModal).toBeVisible();
+        await expect(detailModal.locator('.admin-rep-pill-status')).toHaveText('Çözüldü');
+        await expect(detailModal).toContainText('Soru metni güncellendi');
+        await page.locator('#btn-close-report-detail').click();
+        await expect(detailModal).toBeHidden();
+
+        // 4. Modal for 'yeni' report (no note added yet)
+        await page.locator('#admin-rep-status-filters button[data-status="yeni"]').click();
+        await panelReports.locator('.btn-inspect-q[data-report-id="rep-flow-yeni"]').click();
+        await expect(detailModal).toBeVisible();
+        await expect(detailModal.locator('.admin-rep-pill-status')).toHaveText('Yeni');
+        await expect(detailModal).toContainText('Henüz bir inceleme notu eklenmedi.');
+        await page.locator('#btn-close-report-detail').click();
+        await expect(detailModal).toBeHidden();
+
+        // 5. Simulate failure on status update: verify UI revert and error dialog
+        await page.evaluate(() => { window.__fail = true; });
+        let alertTriggered = false;
+        page.on('dialog', d => {
+            alertTriggered = true;
+        });
+
+        const statusSelect = panelReports.locator('.admin-rep-select-status[data-report-id="rep-flow-yeni"]');
+        await statusSelect.selectOption('cozuldu');
+
+        // Due to failure and catch block renderAdminReports(), status reverts back to 'yeni'
+        await page.waitForTimeout(200);
+        expect(alertTriggered).toBe(true);
+        const revertedVal = await panelReports.locator('.admin-rep-select-status[data-report-id="rep-flow-yeni"]').inputValue();
+        expect(revertedVal).toBe('yeni');
     });
 });
