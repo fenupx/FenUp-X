@@ -346,10 +346,9 @@ test.describe('FenUp X — Bütünleşik “Çalışmalarım” Profili ve Öğr
         await expect(badgeCards.nth(1)).toContainText('Kararlı Kâşif');
         await expect(badgeCards.nth(2)).toContainText('Bilgi Yolcusu');
 
-        // Eski kazanılmış rozetler 'Önceki Başarılar' altında korunur
+        // V8.9.12: Mobil taşmayı önlemek için 'Önceki Başarılar' dikey sütunu DOM'dan kaldırıldı
         const legacyDetails = profileModal.locator('.profile-legacy-badges-details');
-        await expect(legacyDetails).toBeVisible();
-        await expect(legacyDetails).toContainText('Önceki Başarılar');
+        await expect(legacyDetails).toHaveCount(0);
 
         // Sayfa yenileme yapıldığında kazanılmamış rozetler otomatik verilmemelidir
         await page.reload();

@@ -3645,21 +3645,44 @@ export function getBadgeFamilyProgress() {
         }
     } catch (_) {}
 
-    // Tam döngü: Deneme -> Çalışma Kartı / İpucu İnceleme -> Yeni Deneme
-    // 7. sınıflar için yazılı provaları, 5-6. sınıflar için quiz provaları
+    // Tam döngü: Yazılı Provası -> Eksik Konu Kartlarını İnceleme -> Yeni Prova
+    if (completedExamsCount === 0) {
+        try {
+            const rawLast = localStorage.getItem('fenupx_last_exam_summary');
+            if (rawLast) {
+                const lastObj = JSON.parse(rawLast);
+                if (lastObj && (lastObj.completed || lastObj.score !== undefined)) {
+                    completedExamsCount = 1;
+                    if (lastObj.scenarioId) distinctScenarios.add(lastObj.scenarioId);
+                }
+            }
+        } catch (_) {}
+    }
     const totalAttempts = Math.max(completedExamsCount, compAttemptsCount);
     const totalUnitsOrScenarios = Math.max(distinctScenarios.size, compUnits.size);
     let stageExam = 0;
-    let nextExamHint = 'Aşama 1 için 1 deneme ve 1 tekrar kartı tamamla';
+    let stepLabel = '';
+    let stepProgress = 0;
+    let nextExamHint = '🎯 1 yazılı provasını tamamla, eksik konu kartlarını incele ve yeni bir provayla gelişimini göster.';
+
     if (totalUnitsOrScenarios >= 3 && viewedCardsCount >= 3 && totalAttempts >= 3) {
         stageExam = 3;
+        stepProgress = 100;
         nextExamHint = 'En yüksek aşamaya ulaştın!';
     } else if (totalAttempts >= 2 && viewedCardsCount >= 2) {
         stageExam = 2;
-        nextExamHint = 'Aşama 3 için 3 farklı senaryo/ünite ve tekrar kartı tamamla';
+        stepProgress = 67;
+        nextExamHint = '🎯 Aşama 3 için 3 farklı senaryo provasını ve tekrar kartlarını tamamla.';
     } else if (totalAttempts >= 1 && viewedCardsCount >= 1) {
         stageExam = 1;
-        nextExamHint = 'Aşama 2 için 2. denemeyi ve tekrar döngüsünü tamamla';
+        stepProgress = 33;
+        nextExamHint = '🎯 Aşama 2 için 2. yazılı provasını tamamla ve tekrar döngüsünü pekiştir.';
+    } else if (totalAttempts >= 1) {
+        // En az 1 prova tamamlanmış; Kararlı Kâşif 1. adım tamamlandı döngüsüne girer
+        stageExam = 0;
+        stepLabel = '1. Adım Tamamlandı';
+        stepProgress = 17;
+        nextExamHint = '🎯 1. Adım Tamamlandı (Yazılı provası yapıldı) → Sırada: Eksik konu kartlarını incele ve yeni bir provayla gelişimini göster.';
     }
 
     const distinctDays = new Set();
@@ -3702,7 +3725,13 @@ export function getBadgeFamilyProgress() {
 
     return {
         family_arastirmaci: { stage: stageLab, current: completedLabCount, nextHint: nextLabHint },
-        family_kararli_kasif: { stage: stageExam, current: totalAttempts, nextHint: nextExamHint },
+        family_kararli_kasif: { 
+            stage: stageExam, 
+            current: totalAttempts, 
+            stepLabel, 
+            stepProgress, 
+            nextHint: nextExamHint 
+        },
         family_bilgi_yolcusu: { 
             stage: stageComp, 
             current: compActivityCount, 
@@ -3953,11 +3982,11 @@ export function renderBadgesShowcase() {
     const grid = document.getElementById('cosmic-badges-grid');
     if (!grid) return;
     const prog = getBadgeFamilyProgress();
-    const earnedList = getEarnedBadges();
     const counter = document.getElementById('profile-badge-counter');
     if (counter) {
         const totalStages = Object.values(prog).reduce((s, p) => s + p.stage, 0);
-        counter.textContent = `${totalStages} / 9 Aşama Tamamlandı`;
+        const hasStep = Object.values(prog).some(p => !!p.stepLabel);
+        counter.textContent = `${totalStages} / 9 Aşama Tamamlandı${(totalStages === 0 && hasStep) ? ' · 1. Adım Başladı' : ''}`;
     }
 
     let html = `
@@ -3965,18 +3994,30 @@ export function renderBadgesShowcase() {
             ${BADGE_FAMILIES.map(fam => {
                 const fProg = prog[fam.id] || { stage: 0, nextHint: '' };
                 const curStageObj = fam.stages.find(s => s.stage === fProg.stage);
-                const stageName = curStageObj ? curStageObj.title : 'Başlangıç';
-                const percent = Math.round((fProg.stage / 3) * 100);
+                const nextStageObj = fam.stages.find(s => s.stage === (fProg.stage + 1)) || fam.stages[0];
+                const stageName = curStageObj ? curStageObj.title : `1. Aşama Hedefi: ${nextStageObj ? nextStageObj.title : 'Kâşif'}`;
+                const percent = fProg.stage > 0 ? Math.round((fProg.stage / 3) * 100) : (fProg.stepProgress || 0);
+
+                let tagClass = '';
+                let tagText = '0 / 3 Aşama';
+                if (fProg.stage > 0) {
+                    tagClass = 'active';
+                    tagText = `Aşama ${fProg.stage} / 3`;
+                } else if (fProg.stepLabel) {
+                    tagClass = 'active in-progress';
+                    tagText = fProg.stepLabel;
+                }
+
                 return `
-                    <div class="badge-family-card stage-${fProg.stage}">
+                    <div class="badge-family-card stage-${fProg.stage}${fProg.stepLabel ? ' has-step' : ''}">
                         <div class="badge-family-top">
                             <span class="badge-family-icon">${fam.icon}</span>
                             <div class="badge-family-header">
                                 <h5 class="badge-family-title">${fam.title}</h5>
                                 <span class="badge-family-module">${fam.module}</span>
                             </div>
-                            <span class="badge-stage-tag ${fProg.stage > 0 ? 'active' : ''}">
-                                ${fProg.stage > 0 ? `Aşama ${fProg.stage} / 3` : 'Henüz Başlanmadı'}
+                            <span class="badge-stage-tag ${tagClass}">
+                                ${tagText}
                             </span>
                         </div>
                         <div class="badge-family-level-name">${stageName}</div>
@@ -3992,30 +4033,7 @@ export function renderBadgesShowcase() {
         </div>
     `;
 
-    // Eski 10 Rozeti 'Önceki Başarılar' altında koru
-    if (earnedList.length > 0) {
-        html += `
-            <details class="profile-legacy-badges-details" style="margin-top: 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 12px; background: rgba(0,0,0,0.25);">
-                <summary style="font-size: 0.85rem; color: #94a3b8; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
-                    <span><i class="fas fa-medal"></i> Önceki Başarılar (${earnedList.length} Rozet Kayıtlı)</span>
-                    <i class="fas fa-chevron-down" style="font-size: 0.75rem;"></i>
-                </summary>
-                <div class="legacy-badges-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-top: 10px;">
-                    ${KOZMIK_ROZETLER.map(badge => {
-                        const isEarned = earnedList.includes(badge.id);
-                        if (!isEarned) return '';
-                        return `
-                            <div class="legacy-badge-item" style="text-align: center; padding: 6px; background: rgba(255,255,255,0.04); border-radius: 8px; font-size: 0.75rem;">
-                                <div style="font-size: 1.2rem;">${badge.icon}</div>
-                                <strong style="color: #f8fafc; display: block; font-size: 0.75rem; margin-top: 2px;">${badge.title}</strong>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            </details>
-        `;
-    }
-
+    // V8.9.12: 'Önceki Başarılar' dikey sütunu mobil taşmayı önlemek için DOM'dan kaldırıldı; localStorage verisi korundu.
     grid.innerHTML = html;
 }
 
@@ -4294,11 +4312,16 @@ function renderYaziliStudiesTab(attempts) {
         `;
         if (missedCards.length > 0) {
             missedCards.forEach(mc => {
+                const code = mc.outcome_id || 'Öğrenme Çıktısı';
+                let cardTitle = mc.title || 'Çalışma Kartı';
+                if (code === 'FB.7.1.1' || cardTitle === 'İki proje') {
+                    cardTitle = 'Uzay Araştırmaları';
+                }
                 html += `
                     <div class="studies-rec-item">
                         <div class="studies-rec-info">
-                            <span class="rec-outcome-code">${mc.outcome_id || 'Öğrenme Çıktısı'}</span>
-                            <span class="rec-card-title">${mc.title || 'Çalışma Kartı'}</span>
+                            <span class="rec-outcome-code">${code}</span>
+                            <span class="rec-card-title">${cardTitle}</span>
                         </div>
                         <button type="button" class="f-btn f-btn-ikinci btn-study-card" data-card-id="${mc.id || ''}" data-outcome-id="${mc.outcome_id || ''}" style="font-size:0.75rem; padding:5px 10px; white-space:nowrap;">
                             <i class="fas fa-book-reader"></i> Konuyu Çalış
@@ -4310,7 +4333,10 @@ function renderYaziliStudiesTab(attempts) {
             missingOutcomes.forEach((outStr) => {
                 const parts = outStr.split(':');
                 const code = parts[0]?.trim() || '';
-                const title = parts.slice(1).join(':').trim() || outStr;
+                let title = parts.slice(1).join(':').trim() || outStr;
+                if (code === 'FB.7.1.1' || title === 'İki proje') {
+                    title = 'Uzay Araştırmaları';
+                }
                 html += `
                     <div class="studies-rec-item">
                         <div class="studies-rec-info">
@@ -4678,7 +4704,7 @@ profileModal.innerHTML = `
             <div class="profile-hero-meta">
                 <h3 id="profile-display-fullname" class="profile-hero-name">Kâşif Öğrenci</h3>
                 <div class="profile-hero-sub">
-                    <span id="profile-display-role-tag" class="profile-role-badge">⭐ Fen Kâşifi · 7. Sınıf</span>
+                    <span id="profile-display-role-tag" class="profile-role-badge">🎓 7. Sınıf</span>
                     <span class="profile-streak-badge">🔥 <span id="profile-streak-count">1</span> Günlük Seri</span>
                 </div>
                 <button id="btn-open-avatar-selector" class="f-btn f-btn-ikinci" style="font-size:0.8rem; padding:5px 12px; margin-top:6px;">
@@ -5068,7 +5094,7 @@ onAuthStateChanged(auth, async (user) => {
                 if (studentGradeGroup) studentGradeGroup.style.display = isStudentProfile(userData) ? '' : 'none';
                 if (pLevelBadge) pLevelBadge.style.display = isStudentProfile(userData) ? '' : 'none';
                 if (pStreakBadge) pStreakBadge.style.display = isStudentProfile(userData) ? 'inline-flex' : 'none';
-                if (profHeroRole) profHeroRole.textContent = isStudentProfile(userData) ? `⭐ Fen Kâşifi${userGrade ? ` · ${userGrade}. Sınıf` : ''}` : (isTeacherProfile(userData) ? 'Öğretmen' : 'Hesap');
+                if (profHeroRole) profHeroRole.textContent = isStudentProfile(userData) ? (userGrade ? `🎓 ${userGrade}. Sınıf` : 'Öğrenci') : (isTeacherProfile(userData) ? 'Öğretmen' : 'Hesap');
 
                 const karneTitle = document.getElementById('profile-karne-title') || document.querySelector('.profile-karne-section .profile-section-title-bar h4');
                 if (karneTitle) {

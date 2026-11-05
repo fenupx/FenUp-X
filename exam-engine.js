@@ -3443,7 +3443,10 @@ function renderSummary() {
             .filter(q => (getQuestionScore(q.id, a) < (a.questionPoints?.[q.id] || 15)))
             .map(q => {
                 const outcomeObj = allOutcomes.find(o => o.id === q.outcome_id);
-                const title = outcomeObj ? (outcomeObj.short_title || outcomeObj.title) : (q.outcome_title || q.title);
+                let title = outcomeObj ? (outcomeObj.short_title || outcomeObj.title) : (q.outcome_title || q.title);
+                if (q.outcome_id === 'FB.7.1.1' || title === 'İki proje') {
+                    title = 'Uzay Araştırmaları';
+                }
                 return `${q.outcome_id}: ${title}`;
             });
         const summaryData = {

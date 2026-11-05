@@ -2710,7 +2710,7 @@
       "difficulty": "easy",
       "difficulty_status": "editorial_estimate",
       "type": "open_response",
-      "title": "İki proje",
+      "title": "Uzay Araştırmaları",
       "stem": "Bir kurum, uzak köylerdeki haberleşme için K projesini; tarım alanlarının görüntülenmesi için L projesini hazırlıyor. Bu iki proje için hangi uydu türleri seçilmelidir? Seçimlerinizi gerekçelendiriniz.",
       "sample_answer": "K haberleşme uydusu, L gözlem uydusu olmalıdır; ihtiyaçlar iletişim aktarımı ve yeryüzü görüntüsüdür.",
       "hint": "",

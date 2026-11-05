@@ -4259,21 +4259,10 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     font-weight: 700;
 }
 .cosmic-badges-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(2, auto);
-    gap: 10px;
+    display: block;
+    width: 100%;
     margin: 0;
-}
-@media (max-width: 600px) {
-    .cosmic-badges-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-@media (max-width: 420px) {
-    .cosmic-badges-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    box-sizing: border-box;
 }
 .cosmic-badge-item {
     position: relative;
@@ -5935,23 +5924,29 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
     margin: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .badge-families-container {
         grid-template-columns: 1fr;
         gap: 10px;
+        width: 100%;
     }
 }
 .badge-family-card {
     background: rgba(15, 23, 42, 0.65);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
-    padding: 12px 14px;
+    padding: 10px 12px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
     transition: all 0.25s ease;
     box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
 }
 .badge-family-card:hover {
     border-color: rgba(56, 189, 248, 0.4);
@@ -5970,13 +5965,20 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     background: linear-gradient(145deg, rgba(34, 197, 94, 0.12), rgba(15, 23, 42, 0.7));
     box-shadow: 0 0 14px rgba(34, 197, 94, 0.2);
 }
+.badge-family-card.has-step {
+    border-color: rgba(245, 158, 11, 0.35);
+    background: linear-gradient(145deg, rgba(245, 158, 11, 0.06), rgba(15, 23, 42, 0.7));
+}
+.badge-family-card.has-step .badge-family-prog-fill {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
 .badge-family-top {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 .badge-family-icon {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     line-height: 1;
 }
 .badge-family-header {
@@ -5984,7 +5986,7 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     min-width: 0;
 }
 .badge-family-title {
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-weight: 700;
     color: #f8fafc;
     margin: 0;
@@ -6008,6 +6010,11 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     color: #38bdf8;
     border: 1px solid rgba(56, 189, 248, 0.4);
 }
+.badge-stage-tag.active.in-progress {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.45);
+}
 .badge-family-card.stage-2 .badge-stage-tag.active {
     background: rgba(245, 158, 11, 0.2);
     color: #fbbf24;
@@ -6019,7 +6026,7 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     border-color: rgba(34, 197, 94, 0.4);
 }
 .badge-family-level-name {
-    font-size: 0.85rem;
+    font-size: 0.83rem;
     font-weight: 700;
     color: #e2e8f0;
 }
@@ -6049,6 +6056,37 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     font-size: 0.74rem;
     color: #94a3b8;
     line-height: 1.3;
+}
+@media (max-width: 480px) {
+    #profile-modal .modal-content {
+        width: 95% !important;
+        padding: 16px 12px !important;
+        box-sizing: border-box;
+        overflow-x: hidden;
+    }
+    .profile-hero-card {
+        padding: 12px 14px;
+        gap: 12px;
+    }
+    .profile-hero-name {
+        font-size: 1.15rem;
+    }
+    .profile-hero-sub {
+        gap: 6px;
+    }
+    .profile-role-badge,
+    .profile-streak-badge {
+        font-size: 0.72rem;
+        padding: 2px 8px;
+    }
+    .badge-families-container {
+        grid-template-columns: 1fr;
+        width: 100%;
+        gap: 8px;
+    }
+    .badge-family-card {
+        padding: 10px 10px;
+    }
 }
 @keyframes attentionPulse {
     0% { transform: scale(1); box-shadow: 0 0 0 rgba(245, 158, 11, 0); }
