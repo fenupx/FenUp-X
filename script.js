@@ -1391,6 +1391,9 @@ window.FenUpNavigation = navigation;
 function switchScene(from, to) {
     closeMobileMenu();
     if(!from || !to) return;
+    if (from.id === 'scene-quiz' && to.id !== 'scene-quiz') {
+        clearQuizTimersAndAudio();
+    }
     if (from.id === 'scene-yazili' && to.id !== 'scene-yazili' && window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
         window.FenUpExam.closeExamView();
     }
@@ -1530,6 +1533,7 @@ let activeMode = "", selectedGrade = null, selectedUnit = null;
 let usedQuestions = []; 
 
 function returnToHome() {
+    clearQuizTimersAndAudio();
     if (window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
         window.FenUpExam.closeExamView();
     }
@@ -2010,9 +2014,40 @@ async function fetchQuestions(grade, unit) {
     }
 }
 
-const quizState = { set: [], index: 0, score: 0, locked: false, timerInterval: null, totalTimeSpent: 0, riskAcceptedForCurrent: false, fullPool: [], currentTimeLeft: 0 };
+const quizState = { set: [], index: 0, score: 0, locked: false, timerInterval: null, totalTimeSpent: 0, riskAcceptedForCurrent: false, fullPool: [], currentTimeLeft: 0, _pendingTimers: [], generationId: 0, wrongSoundPlayed: false };
 let isTimerPaused = false;
 let sessionMistakes = [];
+
+function clearQuizTimersAndAudio() {
+    clearInterval(quizState.timerInterval);
+    quizState.timerInterval = null;
+    if (Array.isArray(quizState._pendingTimers)) {
+        quizState._pendingTimers.forEach(id => clearTimeout(id));
+        quizState._pendingTimers = [];
+    }
+    quizState.generationId = (quizState.generationId || 0) + 1;
+    quizState.wrongSoundPlayed = false;
+    stopSound(sfx.bgm);
+    stopSound(sfx.drum);
+    stopSound(sfx.tick);
+    rankedStatus('');
+}
+
+if (typeof window !== 'undefined') {
+    window.__quizState = quizState;
+    window.__startIndividual = startIndividual;
+    window.__handleRankedAnswer = handleRankedAnswer;
+    window.__finishIndividual = finishIndividual;
+    window.__clearQuizTimersAndAudio = clearQuizTimersAndAudio;
+    window.__setCompetitionMode = (grade, unit, mode) => {
+        selectedGrade = String(grade);
+        selectedUnit = Number(unit);
+        activeMode = mode;
+    };
+    window.__getSelectedGrade = () => selectedGrade;
+    window.__getSelectedUnit = () => selectedUnit;
+    window.__getActiveMode = () => activeMode;
+}
 
 function escapeReviewHtml(str) {
     return String(str || "")
@@ -2127,23 +2162,164 @@ function showRankedRetry(retry, error) {
     node.append(button);
 }
 async function handleRankedAnswer(button) {
-    quizState.locked=true;clearInterval(quizState.timerInterval);rankedStatus('Cevabın doğrulanıyor…');
-    const index=quizState.index;
-    try {
-        const r=await quizState.ranked.action('answer',{optionId:button?.dataset.optionId ?? null});
-        const evaluation=r.evaluation;
-        const answeredQuestion=quizState.set[index];
-        if(answeredQuestion&&evaluation){answeredQuestion.answerOptions.forEach(o=>o.isCorrect=o.id===evaluation.correctOptionId);answeredQuestion.hint=evaluation.hint || '';}
-        applyRankedState();rankedStatus(r.done?'Puanın hesabına kaydedildi.':'Cevabın doğrulandı.');
-        if(!evaluation?.correct)recordSessionMistake(button?.querySelector('.answer-text')?.textContent || 'Süre doldu');
-        document.querySelectorAll('.answer-btn').forEach(b=>{
-            if(b.dataset.optionId===evaluation?.correctOptionId)b.classList.add('is-correct');
+    if (quizState.locked || isGlobalPaused) return;
+    quizState.locked = true;
+    clearInterval(quizState.timerInterval);
+    quizState.timerInterval = null;
+    stopSound(sfx.bgm);
+
+    const isTimeout = !button;
+    const currentGeneration = quizState.generationId;
+    const currentIndex = quizState.index;
+    const currentQuestion = quizState.set[currentIndex];
+
+    if (!isTimeout) {
+        button.blur();
+        button.classList.add('is-pending');
+        playSound(sfx.drum);
+
+        const optionId = button.dataset.optionId ?? null;
+        const ansSpan = button.querySelector('.answer-text');
+        const ansRaw = ansSpan ? ansSpan.textContent.trim() : button.textContent.trim();
+        const chosenFormatted = button.dataset.choice ? `${button.dataset.choice}) ${ansRaw}` : ansRaw;
+
+        const tensionPromise = new Promise(resolve => {
+            const tid = setTimeout(resolve, 3500);
+            quizState._pendingTimers.push(tid);
         });
-        if(button && !evaluation?.correct)button.classList.add('is-wrong');
-        if(r.done){await finishIndividual(r.reason==='complete'?'TEBRİKLER ŞAMPİYON!':r.reason==='timeout'?'SÜRE BİTTİ, ELENDİN!':index>=8?'KARA DELİĞE YUTULDUN!':'YANLIŞ CEVAP, ELENDİN!');}
-        else {quizState.riskAcceptedForCurrent=false;setTimeout(()=>renderIndividual(),1500);}
-    } catch(e) {
-        showRankedRetry(async()=>{if(quizState.ranked.state.done)await finishIndividual('YARIŞMA TAMAMLANDI');else {applyRankedState();quizState.riskAcceptedForCurrent=false;await renderIndividual();}},e);
+        const serverPromise = quizState.ranked.action('answer', { optionId });
+
+        let serverResponse;
+        try {
+            [serverResponse] = await Promise.all([serverPromise, tensionPromise]);
+        } catch (e) {
+            stopSound(sfx.drum);
+            button.classList.remove('is-pending');
+            if (currentGeneration !== quizState.generationId) return;
+            showRankedRetry(async () => {
+                if (quizState.ranked.state.done) {
+                    await finishIndividual('YARIŞMA TAMAMLANDI');
+                } else {
+                    applyRankedState();
+                    quizState.riskAcceptedForCurrent = false;
+                    await renderIndividual();
+                }
+            }, e);
+            return;
+        }
+
+        stopSound(sfx.drum);
+        if (currentGeneration !== quizState.generationId || !quizState.ranked) return;
+
+        const evaluation = serverResponse.evaluation;
+        const isCorrect = !!evaluation?.correct;
+
+        if (currentQuestion && evaluation) {
+            currentQuestion.answerOptions.forEach(o => {
+                o.isCorrect = (o.id === evaluation.correctOptionId);
+            });
+            currentQuestion.hint = evaluation.hint || '';
+        }
+
+        if (isCorrect) {
+            button.classList.replace('is-pending', 'is-correct');
+            playSound(sfx.correct);
+            quizState.score = serverResponse.score;
+            const qScore = document.getElementById('quiz-score');
+            if (qScore) qScore.textContent = quizState.score;
+
+            if (typeof checkAndUpdateStreak === 'function') {
+                checkAndUpdateStreak();
+            }
+
+            await new Promise(resolve => {
+                const tid = setTimeout(resolve, 2500);
+                quizState._pendingTimers.push(tid);
+            });
+            if (currentGeneration !== quizState.generationId || !quizState.ranked) return;
+
+            if (serverResponse.done) {
+                await finishIndividual(serverResponse.reason === 'complete' ? 'TEBRİKLER ŞAMPİYON!' : 'YARIŞMA TAMAMLANDI');
+            } else {
+                applyRankedState();
+                quizState.riskAcceptedForCurrent = false;
+                await renderIndividual();
+            }
+        } else {
+            button.classList.replace('is-pending', 'is-wrong');
+            playSound(sfx.wrong);
+            quizState.wrongSoundPlayed = true;
+
+            document.querySelectorAll('.answer-btn').forEach(b => {
+                if (b.dataset.optionId === evaluation?.correctOptionId) {
+                    b.classList.add('is-correct');
+                }
+            });
+
+            recordSessionMistake(chosenFormatted);
+
+            await new Promise(resolve => {
+                const tid = setTimeout(resolve, 3000);
+                quizState._pendingTimers.push(tid);
+            });
+            if (currentGeneration !== quizState.generationId || !quizState.ranked) return;
+
+            if (currentIndex >= 8) {
+                await finishIndividual('KARA DELİĞE YUTULDUN!');
+            } else {
+                await finishIndividual('YANLIŞ CEVAP, ELENDİN!');
+            }
+        }
+    } else {
+        // Timeout handling (button === null)
+        playSound(sfx.wrong);
+        quizState.wrongSoundPlayed = true;
+        recordSessionMistake("Süre Doldu (Boş Bırakıldı)");
+
+        let serverResponse;
+        try {
+            serverResponse = await quizState.ranked.action('answer', { optionId: null });
+        } catch (e) {
+            if (currentGeneration !== quizState.generationId) return;
+            showRankedRetry(async () => {
+                if (quizState.ranked.state.done) {
+                    await finishIndividual('YARIŞMA TAMAMLANDI');
+                } else {
+                    applyRankedState();
+                    quizState.riskAcceptedForCurrent = false;
+                    await renderIndividual();
+                }
+            }, e);
+            return;
+        }
+
+        if (currentGeneration !== quizState.generationId || !quizState.ranked) return;
+
+        const evaluation = serverResponse.evaluation;
+        if (currentQuestion && evaluation) {
+            currentQuestion.answerOptions.forEach(o => {
+                o.isCorrect = (o.id === evaluation.correctOptionId);
+            });
+            currentQuestion.hint = evaluation.hint || '';
+        }
+
+        document.querySelectorAll('.answer-btn').forEach(b => {
+            if (b.dataset.optionId === evaluation?.correctOptionId) {
+                b.classList.add('is-correct');
+            }
+        });
+
+        await new Promise(resolve => {
+            const tid = setTimeout(resolve, 3000);
+            quizState._pendingTimers.push(tid);
+        });
+        if (currentGeneration !== quizState.generationId || !quizState.ranked) return;
+
+        if (currentIndex >= 8) {
+            await finishIndividual('KARA DELİĞE YUTULDUN!');
+        } else {
+            await finishIndividual('SÜRE BİTTİ, ELENDİN!');
+        }
     }
 }
 async function rankedJoker(kind,button) {
@@ -2160,6 +2336,7 @@ async function rankedJoker(kind,button) {
 }
 
 async function startIndividual() {
+    clearQuizTimersAndAudio();
     quizState.ranked = null;quizState.localResultRecorded=false;
     const user=auth.currentUser;
     if(user&&!loadedProfile){alert('Profilin yükleniyor. Birazdan yeniden başlatabilirsin.');return;}
@@ -2189,7 +2366,7 @@ async function startIndividual() {
     if(qHint) qHint.classList.add('is-hidden');
     switchScene(scenes.rules, scenes.quiz);
     if(quizState.ranked){applyRankedState();if(quizState.ranked.state.done){await finishIndividual('KAYITLI YARIŞMA SONUCU');return;}}
-    rankedStatus(quizState.ranked?'Yarışma puanı sunucuda doğrulanacak.':'Antrenman: bu çalışma liderlik tablosuna puan yazmaz.');
+    rankedStatus(quizState.ranked ? '' : 'Antrenman: bu çalışma liderlik tablosuna puan yazmaz.');
     renderIndividual();
 }
 
@@ -2202,7 +2379,8 @@ async function renderIndividual() {
         catch(e) { showRankedRetry(()=>renderIndividual(),e);return; }
     }
     const q = quizState.set[quizState.index]; const settings = getSettings(quizState.index);
-    quizState.locked = false; isTimerPaused = false; 
+    quizState.locked = false; isTimerPaused = false; quizState.wrongSoundPlayed = false;
+    rankedStatus('');
     
     const timerDisplay = document.getElementById('quiz-timer-display');
     if(timerDisplay) { timerDisplay.style.color = "#00d2ff"; timerDisplay.style.textShadow = "none"; }
@@ -2266,6 +2444,7 @@ function startIndividualTimer(time) {
     const tDisplay = document.getElementById('quiz-timer-display');
     if(tDisplay) tDisplay.textContent = timeLeft;
     clearInterval(quizState.timerInterval);
+    const currentGeneration = quizState.generationId;
     quizState.timerInterval = setInterval(() => {
         if(quizState.locked || isTimerPaused || isGlobalPaused) return; 
         quizState.totalTimeSpent++; timeLeft--; 
@@ -2273,10 +2452,20 @@ function startIndividualTimer(time) {
         if(tDisplay) tDisplay.textContent = timeLeft;
         if(timeLeft <= 10 && timeLeft > 0 && tDisplay) { tDisplay.style.color = "#ef4444"; tDisplay.style.textShadow = "0 0 15px #ef4444"; }
         if(timeLeft <= 0) { 
-            clearInterval(quizState.timerInterval); playSound(sfx.wrong); quizState.locked = true;
+            clearInterval(quizState.timerInterval);
+            quizState.timerInterval = null;
+            stopSound(sfx.bgm);
+            quizState.locked = true;
             if(quizState.ranked){handleRankedAnswer(null);return;}
+            playSound(sfx.wrong);
+            quizState.wrongSoundPlayed = true;
+            document.querySelectorAll('.answer-btn').forEach(b => { if(b.dataset.correct === "true") b.classList.add('is-correct'); });
             recordSessionMistake("Süre Doldu (Boş Bırakıldı)");
-            if (quizState.index >= 8) { quizState.score = Math.floor(quizState.score / 2); setTimeout(() => finishIndividual("KARA DELİĞE YUTULDUN!"), 2000); } else { setTimeout(() => finishIndividual("SÜRE BİTTİ, ELENDİN!"), 2000); } 
+            const tid = setTimeout(() => {
+                if (currentGeneration !== quizState.generationId) return;
+                if (quizState.index >= 8) { quizState.score = Math.floor(quizState.score / 2); finishIndividual("KARA DELİĞE YUTULDUN!"); } else { finishIndividual("SÜRE BİTTİ, ELENDİN!"); } 
+            }, 3000);
+            quizState._pendingTimers.push(tid);
         }
     }, 1000);
 }
@@ -2286,10 +2475,12 @@ document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = function()
     if(quizState.ranked){handleRankedAnswer(this);return;}
     this.blur(); 
     
-    quizState.locked = true; clearInterval(quizState.timerInterval); stopSound(sfx.bgm);
+    quizState.locked = true; clearInterval(quizState.timerInterval); quizState.timerInterval = null; stopSound(sfx.bgm);
     const isCorrect = this.dataset.correct === "true"; this.classList.add('is-pending'); playSound(sfx.drum);
+    const currentGeneration = quizState.generationId;
     
-    setTimeout(() => { 
+    const tid1 = setTimeout(() => { 
+        if (currentGeneration !== quizState.generationId) return;
         stopSound(sfx.drum);
         if(isCorrect) { 
             this.classList.replace('is-pending', 'is-correct'); playSound(sfx.correct); 
@@ -2300,7 +2491,8 @@ document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = function()
             const scDisplay = document.getElementById('quiz-score');
             if(scDisplay) scDisplay.textContent = quizState.score;
 
-            setTimeout(() => { 
+            const tid2 = setTimeout(() => { 
+                if (currentGeneration !== quizState.generationId) return;
                 // V8.9.1: Hızlı Kafa ve Kusursuz Seri Rozetleri
                 const curSettings = getSettings(quizState.index);
                 const timeSpent = curSettings.time - (quizState.currentTimeLeft || 0);
@@ -2323,18 +2515,23 @@ document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = function()
                 quizState.index++; quizState.riskAcceptedForCurrent = false; 
                 if(quizState.index < 10) renderIndividual(); else finishIndividual("TEBRİKLER ŞAMPİYON!"); 
             }, 2500); 
+            quizState._pendingTimers.push(tid2);
         } else { 
             this.classList.replace('is-pending', 'is-wrong'); playSound(sfx.wrong); 
+            quizState.wrongSoundPlayed = true;
             document.querySelectorAll('.answer-btn').forEach(b => { if(b.dataset.correct === "true") b.classList.add('is-correct'); }); 
             const ansSpan = this.querySelector('.answer-text');
             const ansRaw = ansSpan ? ansSpan.textContent.trim() : this.textContent.trim();
             const chosenFormatted = this.dataset.choice ? `${this.dataset.choice}) ${ansRaw}` : ansRaw;
             recordSessionMistake(chosenFormatted);
-            setTimeout(() => { 
+            const tid3 = setTimeout(() => { 
+                if (currentGeneration !== quizState.generationId) return;
                 if (quizState.index >= 8) { quizState.score = Math.floor(quizState.score / 2); finishIndividual("KARA DELİĞE YUTULDUN!"); } else { finishIndividual("YANLIŞ CEVAP, ELENDİN!"); } 
             }, 3000); 
+            quizState._pendingTimers.push(tid3);
         }
     }, 3500); 
+    quizState._pendingTimers.push(tid1);
 });
 
 export const COMPETITION_HISTORY_KEY = 'fenupx_competition_history';
@@ -2430,12 +2627,21 @@ async function finishIndividual(msg) {
         qeRev.classList.remove('is-hidden');
     }
     
-    if(msg.includes("ŞAMPİYON") || msg.includes("ÇEKİLDİN")) playSound(sfx.cheer); else playSound(sfx.wrong);
+    if(msg.includes("ŞAMPİYON") || msg.includes("ÇEKİLDİN")) {
+        playSound(sfx.cheer);
+    } else if(!quizState.wrongSoundPlayed) {
+        playSound(sfx.wrong);
+    }
+    clearInterval(quizState.timerInterval);
+    quizState.timerInterval = null;
+    stopSound(sfx.bgm);
+    stopSound(sfx.drum);
 }
 
 const btnBackDraw = document.getElementById('btn-back-draw');
 if(btnBackDraw) {
     btnBackDraw.onclick = () => { 
+        clearQuizTimersAndAudio();
         stopSound(sfx.cheer); stopSound(sfx.wrong); 
         const quizEndEl = document.getElementById('quiz-end'); if(quizEndEl) quizEndEl.classList.add('is-hidden'); 
         const sq = document.getElementById('scene-quiz');
@@ -2447,6 +2653,7 @@ if(btnBackDraw) {
 const btnShowLb = document.getElementById('btn-show-leaderboard');
 if(btnShowLb) {
     btnShowLb.onclick = () => { 
+        clearQuizTimersAndAudio();
         stopSound(sfx.cheer); stopSound(sfx.wrong); const qe = document.getElementById('quiz-end'); if(qe) qe.classList.add('is-hidden'); 
         individualLeaderboard.sort((a, b) => b.score - a.score); 
         const list = document.getElementById('leaderboard-list'); if(list) { list.innerHTML = ''; 
@@ -3866,10 +4073,7 @@ export function unlockBadge(badgeId) {
         if (updated) {
             localStorage.setItem('fenupx_badges', JSON.stringify(earned));
             renderBadgesShowcase();
-            const badge = KOZMIK_ROZETLER.find(b => b.id === targetId) || KOZMIK_ROZETLER.find(b => b.id === badgeId);
-            if (badge) {
-                showBadgeEarnedToast(badge);
-            }
+            // Eski Kozmik Rozet toast bildirimi devre dışı bırakıldı (V8.9.15)
         }
     } catch (e) {
         console.warn('Rozet kazanma hatası:', e);

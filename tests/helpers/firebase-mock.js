@@ -6,13 +6,103 @@ export async function mockFirebase(page, backendReady = true) {
     await page.route('https://score.example.invalid/rpc/**', async route => {
         const name=route.request().url().split('/').pop();
         const data=route.request().postDataJSON();
-        const result=await page.evaluate(({name,data})=>{
+        const result=await page.evaluate(async ({name,data})=>{
             window.__calls=[...(window.__calls||[]),{name,data}];
             if(window.__fail)return {error:'test-failure'};
+            if(window.__competitionDelay) await new Promise(r => setTimeout(r, window.__competitionDelay));
             if(name==='correctStudentClass'){
                 if(window.__records[sessionStorage.getItem('__uid')]?.role!=='admin')return {error:'admin-required'};
                 window.__records[data.uid].sinif=data.grade;
                 window.__records[data.uid].gradeCorrectionRequest={requestedGrade:data.grade,status:'approved'};
+            }
+            if(name==='competitionAction'){
+                if(window.__competitionFail)return {error:'competition-failed'};
+                window.__competitionAttempts = window.__competitionAttempts || {};
+                const act = data.action;
+                if(act === 'start') {
+                    const attemptId = data.startId || 'att-' + Math.random().toString(36).slice(2);
+                    const attempt = {
+                        attemptId,
+                        index: 0,
+                        score: 0,
+                        seconds: 40,
+                        done: false,
+                        reason: '',
+                        question: {
+                            question: 'Maddenin tanecikli yapısı nasıldır?',
+                            answerOptions: [
+                                { id: 'opt_a', text: 'Boşluklu ve Hareketli' },
+                                { id: 'opt_b', text: 'Hareketsiz ve Sabit' },
+                                { id: 'opt_c', text: 'Tek bir atomdan ibaret' },
+                                { id: 'opt_d', text: 'Sadece gazlarda vardır' }
+                            ],
+                            token: 'tok_0'
+                        },
+                        jokers: { hint: false, fifty: false, pass: false, pause: false }
+                    };
+                    window.__competitionAttempts[attemptId] = attempt;
+                    return { result: attempt };
+                }
+                const att = window.__competitionAttempts[data.attemptId] || {
+                    attemptId: data.attemptId,
+                    index: data.index || 0,
+                    score: 0,
+                    done: false,
+                    question: {
+                        question: 'Soru metni',
+                        answerOptions: [
+                            { id: 'opt_a', text: 'Seçenek A' },
+                            { id: 'opt_b', text: 'Seçenek B' },
+                            { id: 'opt_c', text: 'Seçenek C' },
+                            { id: 'opt_d', text: 'Seçenek D' }
+                        ],
+                        token: 'tok_' + (data.index || 0)
+                    }
+                };
+                if(act === 'open') return { result: att };
+                if(act === 'answer') {
+                    const isCorrect = data.optionId === 'opt_a';
+                    const earned = isCorrect ? 100 : 0;
+                    att.score = (att.score || 0) + earned;
+                    const evalObj = {
+                        correct: isCorrect,
+                        correctOptionId: 'opt_a',
+                        hint: 'Tanecikler arasında boşluk bulunur.',
+                        earned,
+                        score: att.score
+                    };
+                    if(!isCorrect) {
+                        att.done = true;
+                        att.reason = data.optionId === null ? 'timeout' : 'wrong';
+                        att.settlement = { accepted: true, delta: att.score };
+                    } else {
+                        att.index++;
+                        if(att.index >= 10 || data._forceDone) {
+                            att.done = true;
+                            att.reason = 'complete';
+                            att.question = null;
+                            att.settlement = { accepted: true, delta: att.score };
+                        } else {
+                            att.question = {
+                                question: `Soru ${att.index + 1} metni`,
+                                answerOptions: [
+                                    { id: 'opt_a', text: 'Doğru Seçenek A' },
+                                    { id: 'opt_b', text: 'Yanlış Seçenek B' },
+                                    { id: 'opt_c', text: 'Yanlış Seçenek C' },
+                                    { id: 'opt_d', text: 'Yanlış Seçenek D' }
+                                ],
+                                token: 'tok_' + att.index
+                            };
+                        }
+                    }
+                    return { result: { ...att, evaluation: evalObj } };
+                }
+                if(act === 'finish') {
+                    att.done = true;
+                    att.settlement = { accepted: true, delta: att.score };
+                    return { result: att };
+                }
+                return { result: att };
             }
             return {result:{accepted:true,oldScoresTransferred:false,users:Object.values(window.__records).map(u=>({...u,displayScore:u['seasonScore_'+data.grade]||0}))}};
         },{name,data});
