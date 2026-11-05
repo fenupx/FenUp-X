@@ -5153,6 +5153,16 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
 }
 
 .competition-status { padding: 12px; border: 1px solid #475569; border-radius: 10px; color: #cbd5e1; line-height: 1.5; }
+.competition-status:empty,
+#competition-save-status:empty,
+#competition-save-status.is-hidden {
+    display: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    outline: none !important;
+    pointer-events: none !important;
+}
 
 .competition-history-toggle,
 .lb-history-link,

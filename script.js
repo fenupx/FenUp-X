@@ -2039,6 +2039,8 @@ if (typeof window !== 'undefined') {
     window.__handleRankedAnswer = handleRankedAnswer;
     window.__finishIndividual = finishIndividual;
     window.__clearQuizTimersAndAudio = clearQuizTimersAndAudio;
+    window.__rankedStatus = rankedStatus;
+    window.__showRankedRetry = showRankedRetry;
     window.__setCompetitionMode = (grade, unit, mode) => {
         selectedGrade = String(grade);
         selectedUnit = Number(unit);
@@ -2139,9 +2141,26 @@ async function competitionCall(name, data) {
 }
 
 function rankedStatus(message='') {
-    let node=document.getElementById('competition-save-status');
-    if(!node){node=document.createElement('p');node.id='competition-save-status';node.className='competition-status';node.setAttribute('role','status');document.getElementById('quiz-question')?.after(node);}
-    node.textContent=message;return node;
+    let node = document.getElementById('competition-save-status');
+    if (!node) {
+        node = document.createElement('p');
+        node.id = 'competition-save-status';
+        node.className = 'competition-status is-hidden';
+        node.setAttribute('role', 'status');
+        node.setAttribute('aria-hidden', 'true');
+        document.getElementById('quiz-question')?.after(node);
+    }
+    const cleanMsg = typeof message === 'string' ? message.trim() : String(message || '').trim();
+    if (cleanMsg) {
+        node.textContent = typeof message === 'string' ? message : cleanMsg;
+        node.classList.remove('is-hidden');
+        node.removeAttribute('aria-hidden');
+    } else {
+        node.innerHTML = '';
+        node.classList.add('is-hidden');
+        node.setAttribute('aria-hidden', 'true');
+    }
+    return node;
 }
 function applyRankedState() {
     const r=quizState.ranked.state;quizState.index=r.index;quizState.score=r.score;
@@ -2158,7 +2177,7 @@ function showRankedRetry(retry, error) {
     quizState.locked=true;clearInterval(quizState.timerInterval);
     const node=rankedStatus(error?.quota?'Ücretsiz hizmet kotası doldu. Doğrulanmış kayıtların korunuyor; kota yenilenince yeniden dene. ':'Bağlantı tamamlanamadı. Son doğrulanmış yarışma kaydın korunuyor. ');
     const button=document.createElement('button');button.type='button';button.className='f-btn';button.textContent='Yeniden dene';
-    button.onclick=async()=>{button.disabled=true;try{if(quizState.ranked.pending){await quizState.ranked.retry();applyRankedState();}if(quizState.ranked.state.paused&&quizState.ranked.state.question){await quizState.ranked.action('resume',{joker:true});await quizState.ranked.action('resume');}isGlobalPaused=false;pauseOverlay.classList.add('is-hidden');masterPauseBtn.innerHTML='<i class="fas fa-pause"></i>';node.textContent='';await retry();}catch{button.disabled=false;}};
+    button.onclick=async()=>{button.disabled=true;try{if(quizState.ranked?.pending){await quizState.ranked.retry();applyRankedState();}if(quizState.ranked?.state?.paused&&quizState.ranked?.state?.question){await quizState.ranked.action('resume',{joker:true});await quizState.ranked.action('resume');}isGlobalPaused=false;pauseOverlay.classList.add('is-hidden');masterPauseBtn.innerHTML='<i class="fas fa-pause"></i>';rankedStatus('');await retry();}catch{button.disabled=false;}};
     node.append(button);
 }
 async function handleRankedAnswer(button) {
@@ -2564,6 +2583,7 @@ export function saveCompetitionMatch(matchRecord) {
 
 async function finishIndividual(msg) {
     if(document.activeElement) document.activeElement.blur();
+    rankedStatus('');
     
     
     if(quizState.ranked) {

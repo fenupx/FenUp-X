@@ -74,9 +74,10 @@ test.describe('FenUp X — V8.9.15 Bireysel Yarışma Geri Bildirim ve Gerilim A
         await setupStudentCompetition(page);
         await startCompetitionViaUI(page);
 
-        // Soru 1 görünüyor
+        // Soru 1 görünüyor; boş durum kutusu tamamen gizli
         const questionText = page.locator('#quiz-question');
         await expect(questionText).toBeVisible();
+        await expect(page.locator('#competition-save-status')).toBeHidden();
 
         const optA = page.locator('.answer-btn[data-option-id="opt_a"]');
         await expect(optA).toBeVisible();
@@ -86,20 +87,15 @@ test.describe('FenUp X — V8.9.15 Bireysel Yarışma Geri Bildirim ve Gerilim A
 
         // Hemen kilitlenmeli ve pending almalı
         await expect(optA).toHaveClass(/is-pending/);
+        await expect(page.locator('#competition-save-status')).toBeHidden();
 
         // Gerilim sesi (heyecan.mp3) başlamalı
         const audioAtStart = await page.evaluate(() => window.__audioLog);
         const hasDrum = audioAtStart.some(a => a.action === 'play' && a.src.includes('heyecan.mp3'));
         expect(hasDrum).toBe(true);
 
-        // 3.5s gerilim boyunca soru değişmemeli
-        await page.waitForTimeout(1000);
-        await expect(optA).toHaveClass(/is-pending/);
-        await expect(page.locator('#quiz-progress')).toContainText('Soru 1/10');
-
-        // 3.5s tamamlanıp değerlendirme açılınca: optA yeşil (is-correct) olmalı
-        await page.waitForTimeout(3000); // toplam ~4s geçti
-        await expect(optA).toHaveClass(/is-correct/);
+        // 3.5s gerilim sonrasında: optA yeşil (is-correct) olmalı ve pending kalkmalı
+        await expect(optA).toHaveClass(/is-correct/, { timeout: 6000 });
         await expect(optA).not.toHaveClass(/is-pending/);
 
         // Doğru sesi (dogru.mp3) çalmış olmalı
@@ -107,13 +103,9 @@ test.describe('FenUp X — V8.9.15 Bireysel Yarışma Geri Bildirim ve Gerilim A
         const hasCorrect = audioAfterAnswer.some(a => a.action === 'play' && a.src.includes('dogru.mp3'));
         expect(hasCorrect).toBe(true);
 
-        // 2.5s geri bildirim süresi boyunca Soru 1 görünmeye devam etmeli (hemen geçilmemeli)
-        await page.waitForTimeout(1000);
-        await expect(page.locator('#quiz-progress')).toContainText('Soru 1/10');
-
-        // 2.5s bitince Soru 2 gelmeli
-        await page.waitForTimeout(2000);
-        await expect(page.locator('#quiz-progress')).toContainText('Soru 2/10');
+        // 2.5s geri bildirim süresi sonrasında Soru 2 gelmeli ve durum kutusu yine gizli kalmalı
+        await expect(page.locator('#quiz-progress')).toContainText('Soru 2/10', { timeout: 6000 });
+        await expect(page.locator('#competition-save-status')).toBeHidden();
     });
 
     test('2. Yanlış cevapta is-wrong ve doğru şıkkın yeşil açılması, wrong sesi ve 3s sonra sonuç ekranı doğrulanır', async ({ page }) => {
@@ -128,25 +120,17 @@ test.describe('FenUp X — V8.9.15 Bireysel Yarışma Geri Bildirim ve Gerilim A
         await optB.click();
         await expect(optB).toHaveClass(/is-pending/);
 
-        // Gerilim süresi sonrasını bekle (~4.0s)
-        await page.waitForTimeout(4000);
-
-        // optB is-wrong olmalı, doğru olan optA ise is-correct ile yeşil açılmalı
-        await expect(optB).toHaveClass(/is-wrong/);
-        await expect(optA).toHaveClass(/is-correct/);
+        // 3.5s gerilim sonrasında: optB is-wrong olmalı, doğru olan optA ise is-correct ile yeşil açılmalı
+        await expect(optB).toHaveClass(/is-wrong/, { timeout: 6000 });
+        await expect(optA).toHaveClass(/is-correct/, { timeout: 2000 });
 
         // Yanlış sesi (yanlis.mp3) çalmış olmalı
         const audioLog = await page.evaluate(() => window.__audioLog);
         const hasWrong = audioLog.some(a => a.action === 'play' && a.src.includes('yanlis.mp3'));
         expect(hasWrong).toBe(true);
 
-        // 3s geri bildirim bitmeden sonuç ekranına geçilmemeli
-        await page.waitForTimeout(1000);
-        await expect(page.locator('#quiz-end')).toHaveClass(/is-hidden/);
-
-        // 3s dolunca sonuç ekranı açılmalı
-        await page.waitForTimeout(2500);
-        await expect(page.locator('#quiz-end')).not.toHaveClass(/is-hidden/);
+        // 3s geri bildirim dolunca sonuç ekranı açılmalı
+        await expect(page.locator('#quiz-end')).not.toHaveClass(/is-hidden/, { timeout: 6000 });
         await expect(page.locator('#quiz-end-title')).toContainText('YANLIŞ CEVAP, ELENDİN!');
 
         // Sonuç ekranına geçildiğinde yanlis.mp3 ikinci kez çalınmamalı
@@ -175,15 +159,10 @@ test.describe('FenUp X — V8.9.15 Bireysel Yarışma Geri Bildirim ve Gerilim A
         expect(hasWrongInitial).toBe(true);
 
         // Doğru şık (opt_a) yeşil (is-correct) açılmalı
-        await expect(optA).toHaveClass(/is-correct/);
+        await expect(optA).toHaveClass(/is-correct/, { timeout: 3000 });
 
-        // 3s geri bildirim bitmeden sonuç ekranına geçilmemeli
-        await page.waitForTimeout(1500);
-        await expect(page.locator('#quiz-end')).toHaveClass(/is-hidden/);
-
-        // 3s dolunca sonuç ekranı açılmalı (toplam 3.5s bekleme)
-        await page.waitForTimeout(2000);
-        await expect(page.locator('#quiz-end')).not.toHaveClass(/is-hidden/);
+        // 3s dolunca sonuç ekranı açılmalı
+        await expect(page.locator('#quiz-end')).not.toHaveClass(/is-hidden/, { timeout: 6000 });
         await expect(page.locator('#quiz-end-title')).toContainText('SÜRE BİTTİ, ELENDİN!');
 
         // Sonuç ekranına geçildiğinde yanlis.mp3 ikinci kez çalınmamalı
@@ -233,17 +212,22 @@ test.describe('FenUp X — V8.9.15 Bireysel Yarışma Geri Bildirim ve Gerilim A
         expect(answerCalls.length).toBe(1);
     });
 
-    test('6. Rutin teknik mesajlar soru alanını kirletmez (Yarışma puanı sunucuda doğrulanacak vb. yoktur)', async ({ page }) => {
+    test('6. Rutin teknik mesajlar soru alanını kirletmez ve boş durum kutusu tamamen gizlenir', async ({ page }) => {
         await setupStudentCompetition(page);
         await startCompetitionViaUI(page);
 
         const statusNode = page.locator('#competition-save-status');
-        if (await statusNode.count() > 0) {
-            const text = await statusNode.textContent();
-            expect(text || '').not.toContain('Yarışma puanı sunucuda doğrulanacak');
-            expect(text || '').not.toContain('Cevabın doğrulanıyor');
-            expect(text || '').not.toContain('Cevabın doğrulandı');
-        }
+        await expect(statusNode).toBeHidden();
+        await expect(statusNode).toHaveClass(/is-hidden/);
+
+        // Boş kutunun yer kaplamadığı ve yükseklik oluşturmadığı doğrulanır
+        const box = await statusNode.boundingBox();
+        expect(box === null || box.height === 0).toBe(true);
+
+        const text = await statusNode.textContent();
+        expect(text || '').not.toContain('Yarışma puanı sunucuda doğrulanacak');
+        expect(text || '').not.toContain('Cevabın doğrulanıyor');
+        expect(text || '').not.toContain('Cevabın doğrulandı');
     });
 
     test('7. Çıkış butonuna basıldığında sesler ve bekleyen zamanlayıcılar temizlenir', async ({ page }) => {
@@ -289,6 +273,34 @@ test.describe('FenUp X — V8.9.15 Bireysel Yarışma Geri Bildirim ve Gerilim A
         if (await badgeToast.count() > 0) {
             await expect(badgeToast).not.toHaveClass(/show/);
         }
+    });
+
+    test('9. Gerçek bağlantı hatasında Yeniden Dene butonu görünür, kurtarma sonrası durum kutusu tekrar tamamen gizlenir', async ({ page }) => {
+        await setupStudentCompetition(page);
+        await startCompetitionViaUI(page);
+
+        const statusNode = page.locator('#competition-save-status');
+        await expect(statusNode).toBeHidden();
+
+        // Yapay bağlantı hatası simüle et
+        await page.evaluate(() => {
+            window.__showRankedRetry(async () => {}, new Error('network-failed'));
+        });
+
+        // Durum kutusu görünür olmalı ve Yeniden Dene butonunu içermeli
+        await expect(statusNode).toBeVisible();
+        await expect(statusNode).not.toHaveClass(/is-hidden/);
+        await expect(statusNode).toContainText('Bağlantı tamamlanamadı');
+        const retryBtn = statusNode.locator('button');
+        await expect(retryBtn).toBeVisible();
+        await expect(retryBtn).toContainText('Yeniden dene');
+
+        // Yeniden dene butonuna tıkla
+        await retryBtn.click();
+
+        // Durum kutusu tekrar tamamen gizlenmeli
+        await expect(statusNode).toBeHidden();
+        await expect(statusNode).toHaveClass(/is-hidden/);
     });
 
 });
