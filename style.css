@@ -5890,7 +5890,17 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
         font-size: 0.8rem;
     }
     .studies-comp-stats-row {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 6px;
+    }
+    .comp-stat-box {
+        padding: 6px 4px;
+    }
+    .stat-sub-label {
+        font-size: 0.65rem;
+    }
+    .stat-sub-val {
+        font-size: 0.9rem;
     }
     .studies-card-header {
         flex-direction: column;

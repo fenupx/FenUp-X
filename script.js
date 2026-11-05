@@ -4410,34 +4410,83 @@ function renderCompetitionStudiesTab(compHistory) {
     if (!container) return;
 
     const userGrade = normalizeGrade(loadedProfile?.sinif) || selectedGrade || '7';
+    const now = new Date();
+    const periods = (typeof competitionPeriods === 'function') ? competitionPeriods(now) : { weekId: getWeekId(now), monthId: getMonthId(now) };
+
     const legacySeason = Number(loadedProfile && loadedProfile[`seasonScore_${userGrade}`]) || Number(loadedProfile?.seasonScore) || 0;
     const legacyTotal = Number(loadedProfile && loadedProfile[`totalScore_${userGrade}`]) || Number(loadedProfile?.totalScore) || 0;
     const cohortSeason = Number(loadedProfile?._cohortSeasonScore) || 0;
     const seasonScore = cohortSeason + legacySeason;
     const totalScore = Math.max(legacyTotal, seasonScore);
 
+    // Haftalık ve Aylık puan hesaplama
+    let weeklyScore = 0;
+    let monthlyScore = 0;
+    if (loadedProfile) {
+        // Haftalık Puan
+        const hasValidWeek = (loadedProfile[`lastWeekId_${userGrade}`] === periods.weekId) || (loadedProfile.lastWeekId === periods.weekId);
+        const legWeekly = hasValidWeek ? (Number(loadedProfile[`weeklyScore_${userGrade}`]) || Number(loadedProfile.weeklyScore) || 0) : 0;
+        const cohortWeekly = Number(loadedProfile._cohortWeeklyScore) || 0;
+        weeklyScore = cohortWeekly + legWeekly;
+        if (weeklyScore === 0) {
+            if (Number(loadedProfile[`weeklyScore_${userGrade}`]) > 0) weeklyScore = Number(loadedProfile[`weeklyScore_${userGrade}`]);
+            else if (Number(loadedProfile.weeklyScore) > 0) weeklyScore = Number(loadedProfile.weeklyScore);
+        }
+
+        // Aylık Puan
+        const hasValidMonth = (loadedProfile[`lastMonthId_${userGrade}`] === periods.monthId) || (loadedProfile.lastMonthId === periods.monthId);
+        const legMonthly = hasValidMonth ? (Number(loadedProfile[`monthlyScore_${userGrade}`]) || Number(loadedProfile.monthlyScore) || 0) : 0;
+        const cohortMonthly = Number(loadedProfile._cohortMonthlyScore) || 0;
+        monthlyScore = cohortMonthly + legMonthly;
+        if (monthlyScore === 0) {
+            if (Number(loadedProfile[`monthlyScore_${userGrade}`]) > 0) monthlyScore = Number(loadedProfile[`monthlyScore_${userGrade}`]);
+            else if (Number(loadedProfile.monthlyScore) > 0) monthlyScore = Number(loadedProfile.monthlyScore);
+        }
+    }
+
+    // Sıralama durumu (Görev 4.1)
+    let rankDisplay = 'Henüz Sıralama Yok';
+    const numericRank = Number(loadedProfile?._cachedRank) 
+        || Number(loadedProfile?.userRank) 
+        || Number(loadedProfile?.[`rank_${userGrade}`]) 
+        || Number(loadedProfile?.rank) 
+        || null;
+
+    if (numericRank && numericRank > 0) {
+        rankDisplay = `${numericRank}. Sırada`;
+    } else {
+        rankDisplay = 'Henüz Sıralama Yok';
+    }
+
     let html = `
         <div class="studies-card-group">
             <div class="studies-comp-summary-card">
                 <div class="studies-card-header">
                     <span class="studies-card-title"><i class="fas fa-trophy"></i> ${userGrade}. Sınıf Şampiyonlar Ligi</span>
-                    <span class="studies-score-tag">Bu Sezon: ${formatScore(seasonScore)} Puan</span>
+                    <span class="studies-score-tag"><i class="fas fa-calendar-alt"></i> 2026-2027 Sezonu</span>
                 </div>
-                <div class="studies-comp-stats-row" style="grid-template-columns: repeat(2, 1fr);">
+                <div class="studies-comp-stats-row" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="comp-stat-box">
+                        <span class="stat-sub-label">Haftalık Puan</span>
+                        <strong class="stat-sub-val">${formatScore(weeklyScore)}</strong>
+                    </div>
+                    <div class="comp-stat-box">
+                        <span class="stat-sub-label">Aylık Puan</span>
+                        <strong class="stat-sub-val">${formatScore(monthlyScore)}</strong>
+                    </div>
                     <div class="comp-stat-box">
                         <span class="stat-sub-label">Bu Sezon Puanın</span>
                         <strong class="stat-sub-val">${formatScore(seasonScore)}</strong>
                     </div>
-                    <div class="comp-stat-box">
-                        <span class="stat-sub-label">Tüm Zamanlar Puanın</span>
-                        <strong class="stat-sub-val">${formatScore(totalScore)}</strong>
-                    </div>
                 </div>
-                <div style="margin-top: 10px; padding: 8px 12px; background: rgba(56, 189, 248, 0.08); border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.2); display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem;">
+                <div style="margin-top: 4px; text-align: right; font-size: 0.72rem; color: #94a3b8;">
+                    Tüm Zamanlar: <strong style="color: #cbd5e1;">${formatScore(totalScore)}</strong> Puan
+                </div>
+                <div class="studies-comp-rank-bar" style="margin-top: 10px; padding: 8px 12px; background: rgba(56, 189, 248, 0.08); border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.2); display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem;">
                     <span style="color: #94a3b8;"><i class="fas fa-medal"></i> ${userGrade}. Sınıf Sıralaman:</span>
-                    <strong style="color: #38bdf8;">${seasonScore > 0 ? `${userGrade}. Sınıfta Sıralamada` : 'Henüz sıralama oluşmadı'}</strong>
+                    <strong style="color: #38bdf8;">${rankDisplay}</strong>
                 </div>
-                <div style="margin-top:10px; display:flex; gap:8px;">
+                <div class="studies-comp-actions-bar" style="margin-top:10px; display:flex; gap:8px;">
                     <button type="button" class="f-btn f-btn-ikinci btn-open-lb-from-prof" style="padding:6px 12px; font-size:0.8rem;">
                         <i class="fas fa-list-ol"></i> Liderlik Tablosunu Aç
                     </button>
@@ -4477,9 +4526,6 @@ function renderCompetitionStudiesTab(compHistory) {
             <div class="studies-empty-state" style="margin-top:10px;">
                 <i class="fas fa-info-circle studies-empty-icon" style="color:var(--neon-blue);"></i>
                 <p class="studies-empty-text">Detaylı yarışma geçmişi bu sürümden itibaren izlenmektedir. Liderlik puanlarınız hesabınızda korunmaktadır.</p>
-                <button type="button" class="f-btn f-btn-ana btn-start-quiz-from-prof" style="margin-top:10px; font-size:0.85rem; padding:8px 16px;">
-                    <i class="fas fa-play"></i> Yarışmaya Başla
-                </button>
             </div>
         `;
     }
@@ -4491,15 +4537,47 @@ function renderCompetitionStudiesTab(compHistory) {
     if (btnLb) {
         btnLb.onclick = () => {
             hideModal(profileModal);
-            const lbBtn = document.getElementById('btn-show-leaderboard');
-            if (lbBtn) lbBtn.click();
-            else {
-                const sq = document.getElementById('scene-quiz');
-                const sl = document.getElementById('scene-lobby');
-                if (sl) {
-                    if (sq) sq.classList.add('is-hidden');
-                    sl.classList.remove('is-hidden');
+            const targetGrade = normalizeGrade(loadedProfile?.sinif) || selectedGrade || '7';
+            selectedGrade = targetGrade;
+            activeMode = "bireysel";
+
+            if (typeof prefetchGradeQuestions === 'function') {
+                prefetchGradeQuestions(selectedGrade);
+            }
+            if (typeof updateUnitCards === 'function') {
+                updateUnitCards(selectedGrade);
+            }
+
+            if (typeof showScene === 'function') {
+                showScene('scene-unit');
+            } else {
+                const targetScene = document.getElementById('scene-unit');
+                const currentScene = document.querySelector('.scene:not(.is-hidden)');
+                if (typeof switchScene === 'function' && targetScene && currentScene) {
+                    switchScene(currentScene, targetScene);
+                } else if (targetScene) {
+                    document.querySelectorAll('.scene').forEach(s => s.classList.add('is-hidden'));
+                    targetScene.classList.remove('is-hidden');
                 }
+            }
+
+            const lbSide = document.getElementById('unit-leaderboard-side');
+            if (lbSide) {
+                lbSide.classList.remove('is-hidden');
+            }
+            if (typeof loadGlobalLeaderboard === 'function') {
+                loadGlobalLeaderboard('weekly');
+            }
+
+            const lbTarget = document.getElementById('unit-leaderboard-side') || document.getElementById('champions-league');
+            if (lbTarget) {
+                setTimeout(() => {
+                    try {
+                        lbTarget.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } catch (_) {
+                        lbTarget.scrollIntoView();
+                    }
+                }, 100);
             }
         };
     }
@@ -4508,8 +4586,27 @@ function renderCompetitionStudiesTab(compHistory) {
     if (btnStartQuiz) {
         btnStartQuiz.onclick = () => {
             hideModal(profileModal);
-            const btnOyun = document.getElementById('btn-oyun-modulu');
-            if (btnOyun) btnOyun.click();
+            const targetGrade = normalizeGrade(loadedProfile?.sinif) || selectedGrade || '7';
+            selectedGrade = targetGrade;
+            activeMode = "bireysel";
+            if (typeof prefetchGradeQuestions === 'function') prefetchGradeQuestions(selectedGrade);
+            if (typeof updateUnitCards === 'function') updateUnitCards(selectedGrade);
+
+            if (typeof showScene === 'function') {
+                showScene('scene-unit');
+            } else {
+                const btnOyun = document.getElementById('btn-oyun-modulu');
+                if (btnOyun) btnOyun.click();
+            }
+
+            const unitSelection = document.getElementById('unit-selection-side');
+            if (unitSelection) {
+                setTimeout(() => {
+                    try {
+                        unitSelection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } catch (_) {}
+                }, 100);
+            }
         };
     }
 }
@@ -4613,6 +4710,38 @@ function renderLabStudiesTab() {
             `;
         });
         html += `</div></div>`;
+
+        html += `
+            <details class="profile-all-labs-details" style="margin-top:12px; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:8px 12px; background:rgba(0,0,0,0.2);">
+                <summary style="font-size:0.85rem; color:#94a3b8; cursor:pointer; font-weight:600;"><i class="fas fa-list"></i> Tüm Deney Listesi (${exps.length} Deney)</summary>
+                <div class="studies-lab-grid" style="margin-top:8px;">
+                    ${exps.map(exp => {
+                        const prog = progressMap[exp.id] || { status: 'not_started', observationsCount: 0 };
+                        const isCompleted = prog.status === 'completed';
+                        const isInProgress = prog.status === 'in_progress';
+                        const statusBadge = isCompleted 
+                            ? `<span class="study-badge-completed"><i class="fas fa-check"></i> Tamamlandı</span>`
+                            : (isInProgress 
+                                ? `<span class="study-badge-in-progress"><i class="fas fa-spinner"></i> Devam Ediyor</span>` 
+                                : `<span class="study-badge-not-started">Başlanmadı</span>`);
+                        return `
+                            <div class="studies-lab-card ${isCompleted ? 'is-completed' : ''}" data-exp-id="${exp.id}">
+                                <div class="lab-card-top">
+                                    <span class="lab-exp-code">${exp.id} · ${exp.grade}. Sınıf</span>
+                                    ${statusBadge}
+                                </div>
+                                <h5 class="lab-card-title">${exp.title}</h5>
+                                <div class="lab-card-footer">
+                                    <button type="button" class="f-btn f-btn-ikinci btn-open-experiment" data-exp-id="${exp.id}" style="font-size:0.75rem; padding:4px 10px; margin-left:auto;">
+                                        <i class="fas fa-flask"></i> Aç
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </details>
+        `;
     } else {
         html += `
             <div class="studies-empty-state" style="margin-top:10px;">
@@ -4621,38 +4750,6 @@ function renderLabStudiesTab() {
             </div>
         `;
     }
-
-    html += `
-        <details class="profile-all-labs-details" style="margin-top:12px; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:8px 12px; background:rgba(0,0,0,0.2);">
-            <summary style="font-size:0.85rem; color:#94a3b8; cursor:pointer; font-weight:600;"><i class="fas fa-list"></i> Tüm Deney Listesi (${exps.length} Deney)</summary>
-            <div class="studies-lab-grid" style="margin-top:8px;">
-                ${exps.map(exp => {
-                    const prog = progressMap[exp.id] || { status: 'not_started', observationsCount: 0 };
-                    const isCompleted = prog.status === 'completed';
-                    const isInProgress = prog.status === 'in_progress';
-                    const statusBadge = isCompleted 
-                        ? `<span class="study-badge-completed"><i class="fas fa-check"></i> Tamamlandı</span>`
-                        : (isInProgress 
-                            ? `<span class="study-badge-in-progress"><i class="fas fa-spinner"></i> Devam Ediyor</span>` 
-                            : `<span class="study-badge-not-started">Başlanmadı</span>`);
-                    return `
-                        <div class="studies-lab-card ${isCompleted ? 'is-completed' : ''}" data-exp-id="${exp.id}">
-                            <div class="lab-card-top">
-                                <span class="lab-exp-code">${exp.id} · ${exp.grade}. Sınıf</span>
-                                ${statusBadge}
-                            </div>
-                            <h5 class="lab-card-title">${exp.title}</h5>
-                            <div class="lab-card-footer">
-                                <button type="button" class="f-btn f-btn-ikinci btn-open-experiment" data-exp-id="${exp.id}" style="font-size:0.75rem; padding:4px 10px; margin-left:auto;">
-                                    <i class="fas fa-flask"></i> Aç
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }).join('')}
-            </div>
-        </details>
-    `;
 
     html += `</div>`;
     container.innerHTML = html;
@@ -6765,9 +6862,11 @@ async function loadGlobalLeaderboard(type = 'weekly') {
         } else if (myIndex >= 0 && mergedUsers[myIndex].displayScore > 0 && rankArea && rankText) {
             rankArea.classList.remove('is-hidden');
             rankText.innerHTML = `<i class="fas fa-medal"></i> ${selectedGrade}. Sınıf Sıran: ${myIndex + 1}. | Puanın: ${formatScore(mergedUsers[myIndex].displayScore)}`;
+            if (loadedProfile) loadedProfile._cachedRank = myIndex + 1;
         } else if (rankArea && rankText) {
             rankArea.classList.remove('is-hidden');
             rankText.innerHTML = `<i class="fas fa-medal"></i> ${selectedGrade}. Sınıf Sıran: Henüz sıralama oluşmadı`;
+            if (loadedProfile) loadedProfile._cachedRank = null;
         }
     } else if (rankArea) {
         rankArea.classList.add('is-hidden');
