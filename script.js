@@ -1,7 +1,7 @@
 import {AVATARS,DEFAULT_AVATAR_ID,avatarUrl} from './avatar-catalog.js?v=8.9.6';
 import {createAvatarPicker} from './avatar-picker.js?v=8.9.6';
 import { CompetitionRun } from './competition-run.js?v=8.9.5';
-import { COMPETITION_BACKEND_READY, COMPETITION_API_URL, competitionYear, competitionPeriods } from './competition-config.js?v=8.9.5';
+import { COMPETITION_BACKEND_READY, COMPETITION_API_URL, competitionYear, competitionPeriods, competitionTimeframeBoundaries } from './competition-config.js?v=8.9.14';
 /**
  * FenUp X — V8.5: Kırmızı El Yazılı Cevap Anahtarı PDF ve Adil Puanlamalı Çocuk Dostu Değerlendirme
  * Mod 1: "Kuvvetin İşe Etkisi (Yol Sabit)" - Bağımsız Değişken: Uygulanan Kuvvet, Kontrol Değişkeni: Alınan Yol ve Kütle
@@ -1048,33 +1048,41 @@ function isimSor(prefill, callback) {
 
 // --- DİNAMİK PUAN FORMATLAYICI (SADECE LİDERLİK TABLOSUNDA ÇALIŞIR) ---
 function formatScore(num) {
-    if (num >= 1000000) return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
-    if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
-    return num.toString();
+    const val = Number(num) || 0;
+    if (val >= 1000000) return (val / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+    if (val >= 1000) return (val / 1000).toFixed(1).replace(/\.0$/, '') + 'K';
+    return val.toString();
 }
 
-// --- ZAMAN KONTROLLERİ VE 1 EYLÜL SIFIRLAMASI ---
-function getWeekId(date) {
-    const d = new Date(date);
-    d.setHours(0, 0, 0, 0);
-    d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-    const yearStart = new Date(d.getFullYear(), 0, 1);
-    const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
-    return `${d.getFullYear()}-W${weekNo}`;
-}
-
-function getMonthId(date) {
-    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-}
-
-function getSeasonId(date) {
-    const year = date.getFullYear();
-    const month = date.getMonth(); 
-    if (month >= 8) {
-        return `${year}-${year + 1}`;
-    } else {
-        return `${year - 1}-${year}`;
+// --- ZAMAN KONTROLLERİ VE 1 EYLÜL SIFIRLAMASI (Europe/Istanbul ve competition-config Esaslı) ---
+function getWeekId(date = new Date()) {
+    if (typeof competitionPeriods === 'function') {
+        return competitionPeriods(date).weekId;
     }
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(date).filter(p => p.type !== 'literal').map(p => [p.type, p.value]));
+    const d = new Date(Date.UTC(Number(p.year), Number(p.month) - 1, Number(p.day)));
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
+    const week = Math.ceil(((d - new Date(Date.UTC(d.getUTCFullYear(), 0, 1))) / 86400000 + 1) / 7);
+    return `${d.getUTCFullYear()}-W${week}`;
+}
+
+function getMonthId(date = new Date()) {
+    if (typeof competitionPeriods === 'function') {
+        return competitionPeriods(date).monthId;
+    }
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul', year: 'numeric', month: '2-digit' }).formatToParts(date).filter(p => p.type !== 'literal').map(p => [p.type, p.value]));
+    return `${p.year}-${p.month}`;
+}
+
+function getSeasonId(date = new Date()) {
+    if (typeof competitionYear === 'function') {
+        const y = competitionYear(date);
+        return `${y}-${y + 1}`;
+    }
+    const p = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul', year: 'numeric', month: '2-digit' }).formatToParts(date).filter(p => p.type !== 'literal').map(p => [p.type, p.value]));
+    const year = Number(p.year);
+    const month = Number(p.month);
+    return month >= 9 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
 }
 
 // --- 1. SES MOTORU ---
@@ -4223,20 +4231,37 @@ export function renderCalismalarim() {
 
     // C2) Şampiyonlar Ligi Detayları Render Et
     renderCompetitionStudiesTab(compHistory);
-    if (auth.currentUser && COMPETITION_BACKEND_READY && loadedProfile && loadedProfile._cohortSeasonScore === undefined) {
+    if (auth.currentUser && COMPETITION_BACKEND_READY && loadedProfile && loadedProfile._cohortSeasonScore === undefined && !loadedProfile._cohortLoaded && !loadedProfile._cohortError) {
         const year = competitionYear();
         const userGrade = normalizeGrade(loadedProfile?.sinif) || selectedGrade || '7';
         getDoc(doc(db, `leaderboards/${year}/grades/${userGrade}/entries/${auth.currentUser.uid}`)).then(snap => {
+            if (!loadedProfile) return;
             if (snap.exists()) {
-                const cScore = Number(snap.data()?.score) || 0;
-                if (loadedProfile && loadedProfile._cohortSeasonScore !== cScore) {
-                    loadedProfile._cohortSeasonScore = cScore;
-                    renderCompetitionStudiesTab(compHistory);
-                }
-            } else if (loadedProfile) {
+                const data = snap.data() || {};
+                loadedProfile._cohortSeasonScore = Number(data.score) || 0;
+                loadedProfile._cohortWeekId = data.weekId || null;
+                loadedProfile._cohortWeeklyScore = Number(data.weeklyScore) || 0;
+                loadedProfile._cohortMonthId = data.monthId || null;
+                loadedProfile._cohortMonthlyScore = Number(data.monthlyScore) || 0;
+                loadedProfile._cohortLoaded = true;
+                loadedProfile._cohortError = false;
+            } else {
                 loadedProfile._cohortSeasonScore = 0;
+                loadedProfile._cohortWeekId = null;
+                loadedProfile._cohortWeeklyScore = 0;
+                loadedProfile._cohortMonthId = null;
+                loadedProfile._cohortMonthlyScore = 0;
+                loadedProfile._cohortLoaded = true;
+                loadedProfile._cohortError = false;
             }
-        }).catch(() => {});
+            renderCompetitionStudiesTab(compHistory);
+        }).catch((err) => {
+            if (loadedProfile) {
+                loadedProfile._cohortError = true;
+                console.warn("Cohort verisi alınamadı:", err);
+                renderCompetitionStudiesTab(compHistory);
+            }
+        });
     }
 
     // C3) Sanal Laboratuvar Detayları Render Et
@@ -4409,39 +4434,233 @@ function renderCompetitionStudiesTab(compHistory) {
     const container = document.getElementById('lig-studies-content');
     if (!container) return;
 
+    // 0. Güvenilir veri kaynağı ve hata/eksiklik kontrolleri
+    const isGuest = !auth?.currentUser;
+    const isProfileLoadError = !!(loadedProfile?._loadError);
+    const isProfileMissing = !isGuest && !loadedProfile;
+
+    // Eğer oturum açmış kullanıcının profil belgesi yüklenememiş veya hata vermişse: 0 uydurma, '—' göster
+    if (isProfileLoadError || isProfileMissing) {
+        container.innerHTML = `
+            <div class="studies-card-group">
+                <div class="studies-comp-summary-card">
+                    <div class="studies-card-header">
+                        <span class="studies-card-title"><i class="fas fa-trophy"></i> Şampiyonlar Ligi</span>
+                        <span class="studies-score-tag" style="color: #ef4444;"><i class="fas fa-exclamation-circle"></i> Veri Yüklenemedi</span>
+                    </div>
+                    <div class="studies-comp-stats-row" style="grid-template-columns: repeat(3, 1fr);">
+                        <div class="comp-stat-box">
+                            <span class="stat-sub-label">Haftalık Puan</span>
+                            <strong class="stat-sub-val" style="color: #94a3b8;">—</strong>
+                        </div>
+                        <div class="comp-stat-box">
+                            <span class="stat-sub-label">Aylık Puan</span>
+                            <strong class="stat-sub-val" style="color: #94a3b8;">—</strong>
+                        </div>
+                        <div class="comp-stat-box highlight">
+                            <span class="stat-sub-label">Bu Sezon Puanın</span>
+                            <strong class="stat-sub-val" style="color: #94a3b8;">—</strong>
+                        </div>
+                    </div>
+                    <div style="margin-top: 6px; text-align: right; font-size: 0.75rem; color: #94a3b8;">
+                        <i class="fas fa-history"></i> Tüm Zamanlar: <strong style="color: #94a3b8;">—</strong> Puan
+                    </div>
+                    <div class="studies-comp-rank-bar" style="margin-top: 10px; padding: 8px 12px; background: rgba(239, 68, 68, 0.08); border-radius: 8px; border: 1px solid rgba(239, 68, 68, 0.2); display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem;">
+                        <span style="color: #94a3b8;"><i class="fas fa-exclamation-triangle"></i> Sıralama Durumu:</span>
+                        <strong style="color: #ef4444;">Erişim Hatası</strong>
+                    </div>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
     const userGrade = normalizeGrade(loadedProfile?.sinif) || selectedGrade || '7';
     const now = new Date();
     const periods = (typeof competitionPeriods === 'function') ? competitionPeriods(now) : { weekId: getWeekId(now), monthId: getMonthId(now) };
 
+    // Bütün dönem sınırları Europe/Istanbul ve sunucu zamanı esaslı dinamik hesaplanır
+    const timeBoundaries = (typeof competitionTimeframeBoundaries === 'function')
+        ? competitionTimeframeBoundaries(now)
+        : (() => {
+            const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Istanbul', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now).filter(p => p.type !== 'literal').map(p => [p.type, p.value]));
+            const yr = Number(parts.year);
+            const mo = Number(parts.month);
+            const dy = Number(parts.day);
+            const dIso = new Date(Date.UTC(yr, mo - 1, dy));
+            const dayOfWeek = dIso.getUTCDay();
+            const diffToMonday = (dayOfWeek === 0 ? -6 : 1) - dayOfWeek;
+            const mondayDay = dy + diffToMonday;
+            return {
+                mondayStartTimestamp: Date.UTC(yr, mo - 1, mondayDay) - (3 * 3600 * 1000),
+                monthStartTimestamp: Date.UTC(yr, mo - 1, 1) - (3 * 3600 * 1000)
+            };
+        })();
+
+    const mondayStartTimestamp = timeBoundaries.mondayStartTimestamp;
+    const monthStartTimestamp = timeBoundaries.monthStartTimestamp;
+
+    // 1. Bu Sezon Puanı (1 Eylül'den itibaren)
     const legacySeason = Number(loadedProfile && loadedProfile[`seasonScore_${userGrade}`]) || Number(loadedProfile?.seasonScore) || 0;
-    const legacyTotal = Number(loadedProfile && loadedProfile[`totalScore_${userGrade}`]) || Number(loadedProfile?.totalScore) || 0;
     const cohortSeason = Number(loadedProfile?._cohortSeasonScore) || 0;
     const seasonScore = cohortSeason + legacySeason;
-    const totalScore = Math.max(legacyTotal, seasonScore);
 
-    // Haftalık ve Aylık puan hesaplama
+    // 2. Haftalık Puan (Pazartesi 00:00 Europe/Istanbul'dan itibaren)
     let weeklyScore = 0;
-    let monthlyScore = 0;
-    if (loadedProfile) {
-        // Haftalık Puan
-        const hasValidWeek = (loadedProfile[`lastWeekId_${userGrade}`] === periods.weekId) || (loadedProfile.lastWeekId === periods.weekId);
-        const legWeekly = hasValidWeek ? (Number(loadedProfile[`weeklyScore_${userGrade}`]) || Number(loadedProfile.weeklyScore) || 0) : 0;
-        const cohortWeekly = Number(loadedProfile._cohortWeeklyScore) || 0;
-        weeklyScore = cohortWeekly + legWeekly;
-        if (weeklyScore === 0) {
-            if (Number(loadedProfile[`weeklyScore_${userGrade}`]) > 0) weeklyScore = Number(loadedProfile[`weeklyScore_${userGrade}`]);
-            else if (Number(loadedProfile.weeklyScore) > 0) weeklyScore = Number(loadedProfile.weeklyScore);
-        }
+    let weeklyVerified = false;
+    const userWeekId = loadedProfile ? (loadedProfile[`lastWeekId_${userGrade}`] || loadedProfile.lastWeekId) : null;
+    const legacyWeeklyRaw = loadedProfile ? (Number(loadedProfile[`weeklyScore_${userGrade}`]) || Number(loadedProfile.weeklyScore) || 0) : 0;
 
-        // Aylık Puan
-        const hasValidMonth = (loadedProfile[`lastMonthId_${userGrade}`] === periods.monthId) || (loadedProfile.lastMonthId === periods.monthId);
-        const legMonthly = hasValidMonth ? (Number(loadedProfile[`monthlyScore_${userGrade}`]) || Number(loadedProfile.monthlyScore) || 0) : 0;
-        const cohortMonthly = Number(loadedProfile._cohortMonthlyScore) || 0;
-        monthlyScore = cohortMonthly + legMonthly;
-        if (monthlyScore === 0) {
-            if (Number(loadedProfile[`monthlyScore_${userGrade}`]) > 0) monthlyScore = Number(loadedProfile[`monthlyScore_${userGrade}`]);
-            else if (Number(loadedProfile.monthlyScore) > 0) monthlyScore = Number(loadedProfile.monthlyScore);
+    let legacyWeekly = 0;
+    if (userWeekId) {
+        if (userWeekId === periods.weekId) {
+            legacyWeekly = legacyWeeklyRaw;
+        } else {
+            legacyWeekly = 0; // Eski/dönem dışı hafta kanıtlı olarak 0
         }
+        weeklyVerified = true;
+    }
+
+    let cohortWeekly = 0;
+    if (loadedProfile?._cohortLoaded) {
+        if (loadedProfile._cohortWeekId === periods.weekId) {
+            cohortWeekly = Number(loadedProfile._cohortWeeklyScore) || 0;
+        } else {
+            cohortWeekly = 0;
+        }
+        weeklyVerified = true;
+    }
+
+    if (!userWeekId && !loadedProfile?._cohortWeekId) {
+        if (Array.isArray(compHistory) && compHistory.length > 0) {
+            const thisWeekMatches = compHistory.filter(m => {
+                const t = m.timestamp || (m.date ? new Date(m.date).getTime() : 0);
+                return t >= mondayStartTimestamp;
+            });
+            weeklyScore = thisWeekMatches.reduce((acc, m) => acc + (Number(m.score) || 0), 0);
+            weeklyVerified = true;
+        } else if (legacyWeeklyRaw > 0 && legacyWeeklyRaw < seasonScore) {
+            weeklyScore = legacyWeeklyRaw;
+            weeklyVerified = true;
+        } else if (compHistory === null && !legacyWeeklyRaw) {
+            weeklyVerified = false;
+        } else {
+            weeklyScore = 0;
+            weeklyVerified = true;
+        }
+    } else {
+        weeklyScore = legacyWeekly + cohortWeekly;
+    }
+
+    // 3. Aylık Puan (Ayın 1'i 00:00 Europe/Istanbul'dan itibaren)
+    let monthlyScore = 0;
+    let monthlyVerified = false;
+    const userMonthId = loadedProfile ? (loadedProfile[`lastMonthId_${userGrade}`] || loadedProfile.lastMonthId) : null;
+    const legacyMonthlyRaw = loadedProfile ? (Number(loadedProfile[`monthlyScore_${userGrade}`]) || Number(loadedProfile.monthlyScore) || 0) : 0;
+
+    let legacyMonthly = 0;
+    if (userMonthId) {
+        if (userMonthId === periods.monthId) {
+            legacyMonthly = legacyMonthlyRaw;
+        } else {
+            legacyMonthly = 0;
+        }
+        monthlyVerified = true;
+    }
+
+    let cohortMonthly = 0;
+    if (loadedProfile?._cohortLoaded) {
+        if (loadedProfile._cohortMonthId === periods.monthId) {
+            cohortMonthly = Number(loadedProfile._cohortMonthlyScore) || 0;
+        } else {
+            cohortMonthly = 0;
+        }
+        monthlyVerified = true;
+    }
+
+    if (!userMonthId && !loadedProfile?._cohortMonthId) {
+        if (Array.isArray(compHistory) && compHistory.length > 0) {
+            const thisMonthMatches = compHistory.filter(m => {
+                const t = m.timestamp || (m.date ? new Date(m.date).getTime() : 0);
+                return t >= monthStartTimestamp;
+            });
+            monthlyScore = thisMonthMatches.reduce((acc, m) => acc + (Number(m.score) || 0), 0);
+            monthlyVerified = true;
+        } else if (legacyMonthlyRaw > 0 && legacyMonthlyRaw < seasonScore) {
+            monthlyScore = legacyMonthlyRaw;
+            monthlyVerified = true;
+        } else if (compHistory === null && !legacyMonthlyRaw) {
+            monthlyVerified = false;
+        } else {
+            monthlyScore = 0;
+            monthlyVerified = true;
+        }
+    } else {
+        monthlyScore = legacyMonthly + cohortMonthly;
+    }
+
+    // 4. Tüm Zamanlar Puanı (Kariyer / Önceki Sezonlar ve Sınıflar)
+    // Sınıf seviyeleri toplamı (5, 6, 7, 8)
+    let sumOfGrades = 0;
+    let otherGradesTotal = 0;
+    if (loadedProfile) {
+        ['5', '6', '7', '8'].forEach(g => {
+            const gScore = Number(loadedProfile[`totalScore_${g}`]) || Number(loadedProfile[`seasonScore_${g}`]) || 0;
+            sumOfGrades += gScore;
+            if (g !== String(userGrade)) {
+                otherGradesTotal += gScore;
+            }
+        });
+    }
+
+    // Doğrulanmış arşivlenmiş geçmiş sezon puanları
+    let archivedPastTotal = 0;
+    let hasPastArchives = false;
+    if (loadedProfile) {
+        const archives = [
+            loadedProfile.previousSeasonScores,
+            loadedProfile.pastSeasonScores,
+            loadedProfile.archivedScores,
+            loadedProfile.archivedSeasonScores
+        ];
+        archives.forEach(arch => {
+            if (arch && typeof arch === 'object') {
+                hasPastArchives = true;
+                if (Array.isArray(arch)) {
+                    archivedPastTotal += arch.reduce((acc, v) => acc + (Number(v) || 0), 0);
+                } else {
+                    archivedPastTotal += Object.values(arch).reduce((acc, v) => acc + (Number(v) || 0), 0);
+                }
+            } else if (typeof arch === 'number' && arch > 0) {
+                hasPastArchives = true;
+                archivedPastTotal += arch;
+            }
+        });
+    }
+
+    const explicitAllTime = Number(loadedProfile?.allTimeScore) || Number(loadedProfile?.careerScore) || 0;
+    const directTotal = Number(loadedProfile && loadedProfile[`totalScore_${userGrade}`]) || Number(loadedProfile?.totalScore) || 0;
+    const currentGradeTotal = Number(loadedProfile && loadedProfile[`totalScore_${userGrade}`]) || seasonScore;
+
+    // totalScore zaten neyi içeriyor?
+    // Eğer directTotal, sumOfGrades veya (seasonScore + otherGradesTotal) değerine eşit veya büyükse,
+    // o zaman directTotal zaten diğer sınıfları/sezonları içermektedir. Tekrar eklenmez!
+    let totalScore = seasonScore;
+
+    if (explicitAllTime > 0) {
+        totalScore = Math.max(totalScore, explicitAllTime);
+    }
+
+    if (directTotal > 0) {
+        totalScore = Math.max(totalScore, directTotal);
+    }
+
+    if (otherGradesTotal > 0) {
+        totalScore = Math.max(totalScore, currentGradeTotal + otherGradesTotal, sumOfGrades);
+    }
+
+    if (hasPastArchives && archivedPastTotal > 0) {
+        totalScore = Math.max(totalScore, seasonScore + archivedPastTotal);
     }
 
     // Sıralama durumu (Görev 4.1)
@@ -4458,6 +4677,11 @@ function renderCompetitionStudiesTab(compHistory) {
         rankDisplay = 'Henüz Sıralama Yok';
     }
 
+    const weeklyDisplay = weeklyVerified ? formatScore(weeklyScore) : '—';
+    const monthlyDisplay = monthlyVerified ? formatScore(monthlyScore) : '—';
+    const seasonDisplay = formatScore(seasonScore);
+    const totalDisplay = formatScore(totalScore);
+
     let html = `
         <div class="studies-card-group">
             <div class="studies-comp-summary-card">
@@ -4468,19 +4692,19 @@ function renderCompetitionStudiesTab(compHistory) {
                 <div class="studies-comp-stats-row" style="grid-template-columns: repeat(3, 1fr);">
                     <div class="comp-stat-box">
                         <span class="stat-sub-label">Haftalık Puan</span>
-                        <strong class="stat-sub-val">${formatScore(weeklyScore)}</strong>
+                        <strong class="stat-sub-val">${weeklyDisplay}</strong>
                     </div>
                     <div class="comp-stat-box">
                         <span class="stat-sub-label">Aylık Puan</span>
-                        <strong class="stat-sub-val">${formatScore(monthlyScore)}</strong>
+                        <strong class="stat-sub-val">${monthlyDisplay}</strong>
                     </div>
                     <div class="comp-stat-box">
                         <span class="stat-sub-label">Bu Sezon Puanın</span>
-                        <strong class="stat-sub-val">${formatScore(seasonScore)}</strong>
+                        <strong class="stat-sub-val">${seasonDisplay}</strong>
                     </div>
                 </div>
-                <div style="margin-top: 4px; text-align: right; font-size: 0.72rem; color: #94a3b8;">
-                    Tüm Zamanlar: <strong style="color: #cbd5e1;">${formatScore(totalScore)}</strong> Puan
+                <div style="margin-top: 6px; text-align: right; font-size: 0.75rem; color: #94a3b8;">
+                    <i class="fas fa-history"></i> Tüm Zamanlar: <strong style="color: #cbd5e1;">${totalDisplay}</strong> Puan
                 </div>
                 <div class="studies-comp-rank-bar" style="margin-top: 10px; padding: 8px 12px; background: rgba(56, 189, 248, 0.08); border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.2); display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem;">
                     <span style="color: #94a3b8;"><i class="fas fa-medal"></i> ${userGrade}. Sınıf Sıralaman:</span>

@@ -2,7 +2,7 @@
 export async function mockFirebase(page, backendReady = true) {
     page.on('dialog', d => d.accept());
     await page.addInitScript(() => { localStorage.setItem('fenupx_cookie_consent', 'accepted'); window.__records = JSON.parse(sessionStorage.getItem('__records') || '{}'); window.__writes = []; window.__reports = []; });
-    await page.route('**/competition-config.js*', route => route.fulfill({contentType:'text/javascript',body:`export const COMPETITION_API_URL="https://score.example.invalid"; export const ANNUAL_PROMOTION_ENABLED=false; export const COMPETITION_BACKEND_READY=${backendReady}; export const competitionYear=()=>2026; export const competitionPeriods=()=>({weekId:"2026-W45",monthId:"2026-11"});`}));
+    await page.route('**/competition-config.js*', route => route.fulfill({contentType:'text/javascript',body:`export const COMPETITION_API_URL="https://score.example.invalid"; export const ANNUAL_PROMOTION_ENABLED=false; export const COMPETITION_BACKEND_READY=${backendReady}; export const competitionYear=()=>2026; export const competitionPeriods=()=>({weekId:"2026-W45",monthId:"2026-11"}); export const competitionTimeframeBoundaries=()=>({mondayStartTimestamp:1762030800000,monthStartTimestamp:1761944400000,seasonStartTimestamp:1756674000000});`}));
     await page.route('https://score.example.invalid/rpc/**', async route => {
         const name=route.request().url().split('/').pop();
         const data=route.request().postDataJSON();
