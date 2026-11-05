@@ -2366,6 +2366,10 @@ async function finishIndividual(msg) {
             if(!quizState.ranked.state.done)await quizState.ranked.action('finish');
             applyRankedState();
             if(!quizState.ranked.state.settlement?.accepted)throw Error('Kayıt doğrulanamadı.');
+            const delta = Number(quizState.ranked.state.settlement.delta) || 0;
+            if (loadedProfile && delta > 0) {
+                loadedProfile._cohortSeasonScore = (loadedProfile._cohortSeasonScore || 0) + delta;
+            }
         } catch(e) { showRankedRetry(()=>finishIndividual(msg),e);return; }
     }
 
@@ -3565,9 +3569,9 @@ export const BADGE_FAMILIES = [
         module: 'Şampiyonlar Ligi',
         icon: '🏆',
         stages: [
-            { stage: 1, title: 'Lig Çırağı', target: 2, desc: 'En az 2 farklı günde veya 2 farklı ünitede yarışma tamamla.' },
-            { stage: 2, title: 'Lig Kâşifi', target: 3, desc: 'En az 3 farklı günde veya ünitede yarışma tamamla.' },
-            { stage: 3, title: 'Kozmik Şampiyon', target: 5, desc: 'En az 5 farklı günde veya ünitede yarışma tamamla.' }
+            { stage: 1, title: 'Lig Çırağı', target: 2, desc: 'En az 2 farklı günde ve 2 farklı ünitede yarışma tamamla.' },
+            { stage: 2, title: 'Lig Kâşifi', target: 3, desc: 'En az 3 farklı günde ve 3 farklı ünitede yarışma tamamla.' },
+            { stage: 3, title: 'Kozmik Şampiyon', target: 5, desc: 'En az 5 farklı günde ve en az 4 farklı ünitede yarışma tamamla.' }
         ]
     }
 ];
@@ -3578,8 +3582,10 @@ export function getBadgeFamilyProgress() {
         const raw = localStorage.getItem('fenupx_lab_progress');
         if (raw) {
             const pMap = JSON.parse(raw);
-            Object.values(pMap).forEach(item => {
-                if (item?.status === 'completed') completedLabCount++;
+            Object.entries(pMap).forEach(([expId, item]) => {
+                if (item?.status === 'completed' && item.verified !== false) {
+                    completedLabCount++;
+                }
             });
         }
     } catch (_) {}
@@ -3602,6 +3608,8 @@ export function getBadgeFamilyProgress() {
     let completedExamsCount = 0;
     const distinctScenarios = new Set();
     let viewedCardsCount = 0;
+    let compAttemptsCount = 0;
+    const compUnits = new Set();
     try {
         const rawHist = localStorage.getItem('fenupx_exam_attempts_history');
         if (rawHist) {
@@ -3620,19 +3628,38 @@ export function getBadgeFamilyProgress() {
             const arrC = JSON.parse(rawCards);
             if (Array.isArray(arrC)) viewedCardsCount = arrC.length;
         }
+        const rawSpace = localStorage.getItem('fenupx_viewed_space_cards');
+        if (rawSpace) {
+            const arrS = JSON.parse(rawSpace);
+            if (Array.isArray(arrS)) viewedCardsCount = Math.max(viewedCardsCount, arrS.length);
+        }
+        const rawComp = localStorage.getItem('fenupx_competition_history');
+        if (rawComp) {
+            const arrComp = JSON.parse(rawComp);
+            if (Array.isArray(arrComp)) {
+                compAttemptsCount = arrComp.length;
+                arrComp.forEach(m => {
+                    if (m.unit || m.unitId) compUnits.add(m.unit || m.unitId);
+                });
+            }
+        }
     } catch (_) {}
 
+    // Tam döngü: Deneme -> Çalışma Kartı / İpucu İnceleme -> Yeni Deneme
+    // 7. sınıflar için yazılı provaları, 5-6. sınıflar için quiz provaları
+    const totalAttempts = Math.max(completedExamsCount, compAttemptsCount);
+    const totalUnitsOrScenarios = Math.max(distinctScenarios.size, compUnits.size);
     let stageExam = 0;
-    let nextExamHint = 'Aşama 1 için 1 prova ve 1 tekrar kartı tamamla';
-    if (distinctScenarios.size >= 3 && viewedCardsCount >= 3) {
+    let nextExamHint = 'Aşama 1 için 1 deneme ve 1 tekrar kartı tamamla';
+    if (totalUnitsOrScenarios >= 3 && viewedCardsCount >= 3 && totalAttempts >= 3) {
         stageExam = 3;
         nextExamHint = 'En yüksek aşamaya ulaştın!';
-    } else if (completedExamsCount >= 2 && viewedCardsCount >= 2) {
+    } else if (totalAttempts >= 2 && viewedCardsCount >= 2) {
         stageExam = 2;
-        nextExamHint = 'Aşama 3 için 3 farklı senaryo ve tekrar kartı tamamla';
-    } else if (completedExamsCount >= 1 && viewedCardsCount >= 1) {
+        nextExamHint = 'Aşama 3 için 3 farklı senaryo/ünite ve tekrar kartı tamamla';
+    } else if (totalAttempts >= 1 && viewedCardsCount >= 1) {
         stageExam = 1;
-        nextExamHint = 'Aşama 2 için 2. provayı ve tekrar döngüsünü tamamla';
+        nextExamHint = 'Aşama 2 için 2. denemeyi ve tekrar döngüsünü tamamla';
     }
 
     const distinctDays = new Set();
@@ -3649,25 +3676,27 @@ export function getBadgeFamilyProgress() {
             }
         }
     } catch (_) {}
-    const compActivityCount = Math.max(distinctDays.size, distinctUnits.size);
+
+    // Kesin VE koşulu: Hem farklı gün sayısı hem farklı ünite sayısı
+    const compActivityCount = Math.min(distinctDays.size, distinctUnits.size);
     let stageComp = 0;
-    let nextCompHint = 'Aşama 1 için 2 farklı günde veya ünitede yarışma tamamla';
-    if (compActivityCount >= 5) {
+    let nextCompHint = 'Aşama 1 için 2 farklı günde ve 2 farklı ünitede yarışma tamamla';
+    if (distinctDays.size >= 5 && distinctUnits.size >= 4) {
         stageComp = 3;
         nextCompHint = 'En yüksek aşamaya ulaştın!';
-    } else if (compActivityCount >= 3) {
+    } else if (distinctDays.size >= 3 && distinctUnits.size >= 3) {
         stageComp = 2;
-        nextCompHint = `Aşama 3 için ${5 - compActivityCount} farklı gün/ünite daha`;
-    } else if (compActivityCount >= 2) {
+        nextCompHint = 'Aşama 3 için en az 5 farklı gün ve 4 farklı üniteye ulaş';
+    } else if (distinctDays.size >= 2 && distinctUnits.size >= 2) {
         stageComp = 1;
-        nextCompHint = `Aşama 2 için ${3 - compActivityCount} farklı gün/ünite daha`;
+        nextCompHint = 'Aşama 2 için en az 3 farklı gün ve 3 farklı üniteye ulaş';
     } else {
-        nextCompHint = `Aşama 1 için ${2 - compActivityCount} farklı gün/ünite daha`;
+        nextCompHint = 'Aşama 1 için en az 2 farklı gün ve 2 farklı ünitede yarışma tamamla';
     }
 
     return {
         family_arastirmaci: { stage: stageLab, current: completedLabCount, nextHint: nextLabHint },
-        family_kararli_kasif: { stage: stageExam, current: completedExamsCount, nextHint: nextExamHint },
+        family_kararli_kasif: { stage: stageExam, current: totalAttempts, nextHint: nextExamHint },
         family_bilgi_yolcusu: { stage: stageComp, current: compActivityCount, nextHint: nextCompHint }
     };
 }
@@ -4164,6 +4193,21 @@ export function renderCalismalarim() {
 
     // C2) Şampiyonlar Ligi Detayları Render Et
     renderCompetitionStudiesTab(compHistory);
+    if (auth.currentUser && COMPETITION_BACKEND_READY && loadedProfile && loadedProfile._cohortSeasonScore === undefined) {
+        const year = competitionYear();
+        const userGrade = normalizeGrade(loadedProfile?.sinif) || selectedGrade || '7';
+        getDoc(doc(db, `leaderboards/${year}/grades/${userGrade}/entries/${auth.currentUser.uid}`)).then(snap => {
+            if (snap.exists()) {
+                const cScore = Number(snap.data()?.score) || 0;
+                if (loadedProfile && loadedProfile._cohortSeasonScore !== cScore) {
+                    loadedProfile._cohortSeasonScore = cScore;
+                    renderCompetitionStudiesTab(compHistory);
+                }
+            } else if (loadedProfile) {
+                loadedProfile._cohortSeasonScore = 0;
+            }
+        }).catch(() => {});
+    }
 
     // C3) Sanal Laboratuvar Detayları Render Et
     renderLabStudiesTab();
@@ -4328,8 +4372,11 @@ function renderCompetitionStudiesTab(compHistory) {
     if (!container) return;
 
     const userGrade = normalizeGrade(loadedProfile?.sinif) || selectedGrade || '7';
-    const seasonScore = (loadedProfile && loadedProfile[`seasonScore_${userGrade}`]) || loadedProfile?.seasonScore || 0;
-    const totalScore = (loadedProfile && loadedProfile[`totalScore_${userGrade}`]) || loadedProfile?.totalScore || 0;
+    const legacySeason = Number(loadedProfile && loadedProfile[`seasonScore_${userGrade}`]) || Number(loadedProfile?.seasonScore) || 0;
+    const legacyTotal = Number(loadedProfile && loadedProfile[`totalScore_${userGrade}`]) || Number(loadedProfile?.totalScore) || 0;
+    const cohortSeason = Number(loadedProfile?._cohortSeasonScore) || 0;
+    const seasonScore = cohortSeason + legacySeason;
+    const totalScore = Math.max(legacyTotal, seasonScore);
 
     let html = `
         <div class="studies-card-group">
@@ -4939,6 +4986,15 @@ onAuthStateChanged(auth, async (user) => {
                 localStorage.setItem('currentUser', JSON.stringify(cu));
             } catch (_) {}
 
+            if (COMPETITION_BACKEND_READY && isStudentProfile(userData) && userGrade) {
+                const year = competitionYear();
+                getDoc(doc(db, `leaderboards/${year}/grades/${userGrade}/entries/${user.uid}`)).then(snap => {
+                    if (snap.exists() && loadedProfile) {
+                        loadedProfile._cohortSeasonScore = Number(snap.data()?.score) || 0;
+                    }
+                }).catch(() => {});
+            }
+
             const pGrade = document.getElementById('profile-grade');
             if (pGrade) pGrade.value = normalizeGrade(userData.sinif);
             const correctionChoice = document.getElementById('grade-correction-choice');
@@ -5421,6 +5477,7 @@ if(btnSaveProf) {
                 cu.name = name; cu.surname = surname; cu.nickname = loadedProfile.role === 'admin' ? loadedProfile.nickname : nickname; cu.avatar = avatar; cu.sinif = sinif;
                 localStorage.setItem('currentUser', JSON.stringify(cu));
             } catch (_) {}
+
             alert("Profilin başarıyla güncellendi kaptan!");
             location.reload();
         } catch(err) {
@@ -6593,9 +6650,15 @@ async function loadGlobalLeaderboard(type = 'weekly') {
                 const score = Number(data[field]) || 0;
                 if (score > 0) {
                     const uidKey = data.uid || item.id;
-                    userMap.set(uidKey, {
+                    const normNick = (data.nickname || '').trim().toLowerCase();
+                    const mapKey = normNick || uidKey;
+                    userMap.set(mapKey, {
                         ...data,
                         uid: uidKey,
+                        nickname: data.nickname || '',
+                        avatar: data.avatar || '',
+                        cohortScore: score,
+                        legacyScore: 0,
                         displayScore: score
                     });
                 }
@@ -6605,29 +6668,34 @@ async function loadGlobalLeaderboard(type = 'weekly') {
         }
     }
 
-    // 2. alltime görünümünde legacy skorları da çek ve birleştir (çifte sayım yapmadan: Math.max)
-    if (type === 'alltime') {
-        try {
-            const legRes = await competitionCall('legacyLeaderboard', { grade: String(selectedGrade || '7'), type: 'alltime' }).catch(() => null);
-            const legacyUsers = legRes?.users || [];
-            legacyUsers.forEach(lu => {
-                const uidKey = lu.uid || lu.id || lu.nickname;
-                const legScore = Number(lu.totalScore || lu.displayScore || lu.score) || 0;
-                if (userMap.has(uidKey)) {
-                    const existing = userMap.get(uidKey);
-                    // Çifte sayım önleme: en yüksek skoru koru
-                    existing.displayScore = Math.max(existing.displayScore || 0, legScore);
-                } else if (legScore > 0) {
-                    userMap.set(uidKey, {
-                        ...lu,
-                        uid: uidKey,
-                        displayScore: legScore
-                    });
-                }
-            });
-        } catch (e) {
-            console.warn('Geçmiş liderlik verisi yüklenirken uyarı:', e);
-        }
+    // 2. Her 3 sekme için de (weekly, monthly, alltime) legacy skorları çek ve birleştir
+    try {
+        const legRes = await competitionCall('legacyLeaderboard', { grade: String(selectedGrade || '7'), type }).catch(() => null);
+        const legacyUsers = legRes?.users || [];
+        legacyUsers.forEach(lu => {
+            const legScore = Number(lu.displayScore) || 0;
+            if (legScore <= 0) return;
+            const normNick = (lu.nickname || '').trim().toLowerCase();
+            const mapKey = normNick || lu.uid || lu.id;
+            if (mapKey && userMap.has(mapKey)) {
+                const existing = userMap.get(mapKey);
+                existing.legacyScore = legScore;
+                // Haftalık, aylık ve alltime: Geçiş öncesi legacy puanı ile geçiş sonrası cohort puanı ayrı kazanımlardır, toplanır.
+                existing.displayScore = (existing.cohortScore || 0) + legScore;
+                if (!existing.avatar && lu.avatar) existing.avatar = lu.avatar;
+            } else if (mapKey) {
+                userMap.set(mapKey, {
+                    ...lu,
+                    nickname: lu.nickname || '',
+                    avatar: lu.avatar || '',
+                    cohortScore: 0,
+                    legacyScore: legScore,
+                    displayScore: legScore
+                });
+            }
+        });
+    } catch (e) {
+        console.warn('Geçmiş liderlik verisi yüklenirken uyarı:', e);
     }
 
     const mergedUsers = Array.from(userMap.values());
@@ -6638,8 +6706,10 @@ async function loadGlobalLeaderboard(type = 'weekly') {
     const rankArea = document.getElementById('lb-user-rank');
     const rankText = document.getElementById('lb-user-rank-text');
     if (auth.currentUser) {
-        const myIndex = mergedUsers.findIndex(u => u.uid === auth.currentUser?.uid);
-        if (myIndex >= 0 && rankArea && rankText) {
+        const myUid = auth.currentUser.uid;
+        const myNick = (loadedProfile?.nickname || auth.currentUser.displayName || '').trim().toLowerCase();
+        const myIndex = mergedUsers.findIndex(u => (u.uid && u.uid === myUid) || (myNick && (u.nickname || '').trim().toLowerCase() === myNick));
+        if (myIndex >= 0 && mergedUsers[myIndex].displayScore > 0 && rankArea && rankText) {
             rankArea.classList.remove('is-hidden');
             rankText.innerHTML = `<i class="fas fa-medal"></i> ${selectedGrade}. Sınıf Sıran: ${myIndex + 1}. | Puanın: ${formatScore(mergedUsers[myIndex].displayScore)}`;
         } else if (rankArea && rankText) {

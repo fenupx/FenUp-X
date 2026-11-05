@@ -22768,20 +22768,43 @@ function recordMeasurement() {
         showLabToast(`Su Ayak İzi Gözlemi #${row.id} deftere kaydedildi!`);
     }
 
+    // V8.9.11: Yinelenen ölçüm (duplicate log) denetimi
+    const currentList = getActiveExperimentMeasurements(expId);
+    if (Array.isArray(currentList) && currentList.length > 0) {
+        const addedCount = expId === "7.6" ? 3 : 1;
+        const prevRows = currentList.slice(0, Math.max(0, currentList.length - addedCount));
+        const newRows = currentList.slice(Math.max(0, currentList.length - addedCount));
+        const dupRows = newRows.filter(nr => prevRows.some(pr =>
+            pr.col1 === nr.col1 && pr.col2 === nr.col2 && pr.col3 === nr.col3 && pr.col4 === nr.col4 && pr.col5 === nr.col5
+        ));
+        if (dupRows.length === newRows.length && prevRows.length > 0) {
+            currentList.splice(currentList.length - addedCount, addedCount);
+            showLabToast("Bu ölçüm durumu zaten defterinizde kayıtlı. Farklı bir değişken deneyin!");
+            renderMeasurementTable();
+            return;
+        } else if (dupRows.length > 0) {
+            dupRows.forEach(dr => {
+                const idx = currentList.lastIndexOf(dr);
+                if (idx >= 0) currentList.splice(idx, 1);
+            });
+        }
+    }
+
     renderMeasurementTable();
 
-    // V8.9.10: Deney tamamlama kaydı (en az 2 gözlem/aksiyon şartı)
+    // V8.9.11: Gerçek deney tamamlama koşulları (isExperimentCompleted)
     try {
         if (expId) {
             const currentMeasurements = getActiveExperimentMeasurements(expId);
             const count = currentMeasurements.length;
-            if (count >= 2) {
-                saveLabExperimentProgress(expId, 'completed', { observationsCount: count });
+            const completed = isExperimentCompleted(expId, currentMeasurements);
+            if (completed) {
+                saveLabExperimentProgress(expId, 'completed', { observationsCount: count, verified: true, forceStatus: true });
                 if (typeof window.checkAndUpdateStreak === 'function') {
                     window.checkAndUpdateStreak();
                 }
             } else {
-                saveLabExperimentProgress(expId, 'in_progress', { observationsCount: count });
+                saveLabExperimentProgress(expId, 'in_progress', { observationsCount: count, verified: false, forceStatus: true });
             }
         }
         let labObsCount = parseInt(localStorage.getItem('fenupx_lab_obs_count') || '0', 10) + 1;
@@ -22825,6 +22848,159 @@ export function getActiveExperimentMeasurements(expId) {
     if (expId === "7.9") return labState.foodPyramid.measurements;
     if (expId === "7.10") return labState.waterFootprint.measurements;
     return [];
+}
+
+// V8.9.11: 30 Deney İçin Pedagojik Tamamlanma Koşulları Doğrulayıcısı
+export function isExperimentCompleted(expId, measurements) {
+    if (!expId || !Array.isArray(measurements) || measurements.length < 2) return false;
+
+    const uniqueKeys = new Set(measurements.map(m => `${m.col1 || ''}||${m.col2 || ''}||${m.col3 || ''}||${m.col4 || ''}||${m.col5 || ''}`));
+    if (uniqueKeys.size < 2) return false;
+
+    switch (expId) {
+        // 5. Sınıf
+        case "5.1": {
+            const phases = new Set(measurements.map(m => m.col1));
+            return phases.size >= 2;
+        }
+        case "5.2": {
+            const forces = new Set(measurements.map(m => m.col2));
+            const springs = new Set(measurements.map(m => m.col1));
+            return forces.size >= 2 || springs.size >= 2;
+        }
+        case "5.3": {
+            const surfaces = new Set(measurements.map(m => m.col1));
+            return surfaces.size >= 2;
+        }
+        case "5.4": {
+            const passing = measurements.some(m => (m.col3 && m.col3.includes("Geçiyor")) || (m.col2 && (m.col2.includes("Düz") || m.col2.includes("Hizalı"))));
+            const blocked = measurements.some(m => (m.col3 && m.col3.includes("Engellendi")) || (m.col2 && (m.col2.includes("Kıvrık") || m.col2.includes("Hizasız"))));
+            return passing && blocked;
+        }
+        case "5.5": {
+            const screenDists = new Set(measurements.map(m => m.col2));
+            const diameters = new Set(measurements.map(m => m.col3));
+            return screenDists.size >= 2 || diameters.size >= 2;
+        }
+        case "5.6": {
+            const hasGas = measurements.some(m => m.col2 === "Gaz" || (m.col5 && m.col5.includes("Kolayca")));
+            const hasIncompressible = measurements.some(m => m.col2 === "Sıvı" || m.col2 === "Katı" || (m.col5 && m.col5.includes("Sıkıştırılamaz")));
+            return hasGas && hasIncompressible;
+        }
+        case "5.7": {
+            const temps = new Set(measurements.map(m => `${m.col1}-${m.col2}`));
+            return temps.size >= 2;
+        }
+        case "5.8": {
+            const phases = new Set(measurements.map(m => m.col1));
+            return phases.size >= 2;
+        }
+        case "5.9": {
+            const methods = new Set(measurements.map(m => m.col1));
+            return methods.size >= 2;
+        }
+        case "5.10": {
+            const states = new Set(measurements.map(m => `${m.col1}-${m.col2}-${m.col3}`));
+            return states.size >= 2;
+        }
+
+        // 6. Sınıf
+        case "6.1": {
+            const hasSolar = measurements.some(m => m.col1 && m.col1.includes("Güneş"));
+            const hasLunar = measurements.some(m => m.col1 && m.col1.includes("Ay"));
+            return hasSolar && hasLunar;
+        }
+        case "6.2": {
+            const hasBalanced = measurements.some(m => (m.col3 && m.col3.includes("0 N")) || (m.col4 && m.col4.includes("Dengelenmiş")));
+            const hasUnbalanced = measurements.some(m => (m.col3 && !m.col3.includes("0 N")) || (m.col4 && m.col4.includes("Dengelenmemiş")));
+            return (hasBalanced && hasUnbalanced) || uniqueKeys.size >= 2;
+        }
+        case "6.3": {
+            const speeds = new Set(measurements.map(m => m.col4 || m.col2));
+            return speeds.size >= 2;
+        }
+        case "6.4": {
+            const hasSpecular = measurements.some(m => m.col1 && m.col1.includes("Düzgün"));
+            const hasDiffuse = measurements.some(m => m.col1 && m.col1.includes("Dağınık"));
+            const angles = new Set(measurements.map(m => m.col2));
+            return (hasSpecular && hasDiffuse) || angles.size >= 2;
+        }
+        case "6.5": {
+            const liquids = new Set(measurements.map(m => m.col1));
+            return liquids.size >= 2;
+        }
+        case "6.6": {
+            const hasGerm = measurements.some(m => m.col3 && m.col3.includes("Çimlendi") && !m.col3.includes("Çimlenmedi"));
+            const hasNoGerm = measurements.some(m => m.col3 && m.col3.includes("Çimlenmedi"));
+            return hasGerm && hasNoGerm;
+        }
+        case "6.7": {
+            const hasDark = measurements.some(m => m.col1 && (m.col1.includes("Siyah") || m.col1.includes("Koyu")));
+            const hasLight = measurements.some(m => m.col1 && (m.col1.includes("Beyaz") || m.col1.includes("Açık")));
+            return (hasDark && hasLight) || uniqueKeys.size >= 2;
+        }
+        case "6.8": {
+            const hasPassed = measurements.some(m => (m.col4 && m.col4.includes("Geçti")) || (m.col3 && m.col3.includes("Geçti")));
+            const hasStuck = measurements.some(m => (m.col4 && (m.col4.includes("Takıldı") || m.col4.includes("Geçemedi"))) || (m.col3 && (m.col3.includes("Takıldı") || m.col3.includes("Geçemedi"))));
+            return hasPassed && hasStuck;
+        }
+        case "6.9": {
+            const hasCond = measurements.some(m => (m.col3 && m.col3.includes("İletken")) || (m.col4 && m.col4.includes("Yanıyor")));
+            const hasInsu = measurements.some(m => (m.col3 && m.col3.includes("Yalıtkan")) || (m.col4 && m.col4.includes("Yanmıyor")));
+            return hasCond && hasInsu;
+        }
+        case "6.10": {
+            const resistances = new Set(measurements.map(m => m.col4 || m.col1));
+            return resistances.size >= 2 || uniqueKeys.size >= 2;
+        }
+
+        // 7. Sınıf
+        case "7.1": {
+            const hasWork = measurements.some(m => m.col5 && m.col5.includes("İş Yapıldı"));
+            const hasNoWork = measurements.some(m => m.col5 && (m.col5.includes("İş Yok") || m.col5.includes("0.0 J")));
+            return hasWork && hasNoWork;
+        }
+        case "7.2": {
+            const heights = new Set(measurements.map(m => m.col3 || m.col4));
+            return heights.size >= 2;
+        }
+        case "7.3": {
+            const angles = new Set(measurements.map(m => m.col2 || m.col1));
+            return angles.size >= 2;
+        }
+        case "7.4": {
+            const hasThin = measurements.some(m => m.col1 && m.col1.includes("İnce Kenarlı"));
+            const hasThick = measurements.some(m => m.col1 && m.col1.includes("Kalın Kenarlı"));
+            return hasThin && hasThick;
+        }
+        case "7.5": {
+            const methods = new Set(measurements.map(m => m.col1));
+            return methods.size >= 2;
+        }
+        case "7.6": {
+            const beakers = new Set(measurements.map(m => m.col1));
+            return beakers.size >= 2;
+        }
+        case "7.7": {
+            const methods = new Set(measurements.map(m => m.col1 || m.col2));
+            return methods.size >= 2;
+        }
+        case "7.8": {
+            const hasOpen = measurements.some(m => (m.col5 && m.col5.includes("Açık")) || (m.col4 && m.col4 !== "0 (Nötr)" && !m.col4.includes("Nötr")));
+            const hasClosed = measurements.some(m => (m.col5 && m.col5.includes("Kapalı")) || (m.col1 && m.col1.includes("Topraklama")) || (m.col4 && m.col4.includes("Nötr")));
+            return hasOpen && hasClosed;
+        }
+        case "7.9": {
+            const tiers = new Set(measurements.map(m => m.col1));
+            return tiers.size >= 2;
+        }
+        case "7.10": {
+            const items = new Set(measurements.map(m => m.col1));
+            return items.size >= 2;
+        }
+        default:
+            return uniqueKeys.size >= 2;
+    }
 }
 
 function renderMeasurementTable() {
@@ -24221,8 +24397,8 @@ export function saveLabExperimentProgress(expId, status, extra = {}) {
     try {
         const progress = getLabProgress();
         const current = progress[expId] || { status: 'not_started', observationsCount: 0 };
-        // Tamamlanmış deneyin durumunu 'in_progress' olarak düşürme
-        const finalStatus = (current.status === 'completed' && status === 'in_progress') ? 'completed' : status;
+        // Tamamlanmış deneyin durumunu 'in_progress' olarak düşürme (forceStatus varsa zorunlu uygula)
+        const finalStatus = extra.forceStatus ? status : ((current.status === 'completed' && status === 'in_progress') ? 'completed' : status);
         const newObsCount = typeof extra.observationsCount === 'number'
             ? extra.observationsCount
             : (status === 'completed' ? (current.observationsCount || 0) + 1 : (current.observationsCount || 0));
@@ -24287,6 +24463,7 @@ if (typeof window !== "undefined") {
         saveLabExperimentProgress,
         markLabExperimentInProgress,
         getLabProgressSummary,
+        isExperimentCompleted,
         EXPERIMENTS_DATABASE,
         labState
     };
