@@ -2329,6 +2329,34 @@ document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = function()
     }, 3500); 
 });
 
+export const COMPETITION_HISTORY_KEY = 'fenupx_competition_history';
+
+export function getCompetitionHistory() {
+    try {
+        const raw = localStorage.getItem(COMPETITION_HISTORY_KEY);
+        if (raw) {
+            const arr = JSON.parse(raw);
+            if (Array.isArray(arr)) return arr;
+        }
+    } catch (_) {}
+    return [];
+}
+
+export function saveCompetitionMatch(matchRecord) {
+    if (!matchRecord || !matchRecord.id) return;
+    try {
+        let history = getCompetitionHistory();
+        const exists = history.some(m => m.id === matchRecord.id);
+        if (!exists) {
+            history.unshift(matchRecord);
+            if (history.length > 30) history = history.slice(0, 30);
+            localStorage.setItem(COMPETITION_HISTORY_KEY, JSON.stringify(history));
+        }
+    } catch (e) {
+        console.warn('saveCompetitionMatch hatası:', e);
+    }
+}
+
 async function finishIndividual(msg) {
     if(document.activeElement) document.activeElement.blur();
     
@@ -2342,6 +2370,33 @@ async function finishIndividual(msg) {
     }
 
     if(!quizState.localResultRecorded){individualLeaderboard.push({ name: currentActivePlayerName, score: quizState.score, time: quizState.totalTimeSpent });quizState.localResultRecorded=true;}
+
+    // V8.9.9: Yarışma maçını Çalışmalarım geçmişine kaydet
+    try {
+        const isRankedAccepted = !!(quizState.ranked?.state?.settlement?.accepted);
+        const playedGrade = selectedGrade || loadedProfile?.sinif || null;
+        let resultLabel = 'Tamamlandı';
+        if (msg.includes("ŞAMPİYON")) resultLabel = 'Şampiyon';
+        else if (msg.includes("ÇEKİLDİN")) resultLabel = 'Çekildi';
+
+        const matchRecord = {
+            id: 'comp_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7),
+            timestamp: Date.now(),
+            date: new Date().toLocaleDateString('tr-TR'),
+            grade: playedGrade ? `${playedGrade}. Sınıf` : 'Genel',
+            score: Number(quizState.score) || 0,
+            result: resultLabel,
+            isRanked: !!quizState.ranked,
+            serverAccepted: isRankedAccepted,
+            totalTimeSpent: quizState.totalTimeSpent || 0
+        };
+        saveCompetitionMatch(matchRecord);
+        if (typeof checkAndUpdateStreak === 'function') {
+            checkAndUpdateStreak();
+        }
+    } catch (e) {
+        console.warn('Yarışma maç kaydı hatası:', e);
+    }
     const quizEndEl = document.getElementById('quiz-end'); 
     const sceneQuiz = document.getElementById('scene-quiz');
     if(sceneQuiz && quizEndEl) {
@@ -3472,10 +3527,10 @@ export const KOZMIK_ROZETLER = [
     },
     {
         id: 'badge_bilim_ustasi',
-        title: 'Fen Dehası',
+        title: 'Bilim Ustası',
         icon: '💡',
-        desc: 'Kendi sınıfındaki herhangi bir yazılı provasında 85+ alan herkese.',
-        condition: 'Yazılı provasında 85 ve üzeri puan al'
+        desc: 'Yazılı provası öz değerlendirmesinde 85 ve üzeri puan alan kâşiflere.',
+        condition: 'Yazılı provasında 85 ve üzeri öz değerlendirme puanı'
     },
     {
         id: 'badge_laboratuvar',
@@ -3493,10 +3548,10 @@ export const KOZMIK_ROZETLER = [
     },
     {
         id: 'badge_kart_kasifi',
-        title: 'Bilgi Avcısı',
+        title: 'Bilgi Kâşifi',
         icon: '📚',
-        desc: 'Kendi sınıfının ünitelerindeki en az 10 çalışma kartını inceleyene.',
-        condition: 'En az 10 çalışma kartını incele'
+        desc: 'Yazılıya Hazırlık modülünde en az 10 farklı çalışma kartını inceleyen öğrencilere.',
+        condition: 'En az 10 farklı çalışma kartını incele'
     },
     {
         id: 'badge_seri_3',
@@ -3690,7 +3745,8 @@ export function evaluateBadges() {
     if (loadedProfile && loadedProfile.role === 'admin') return;
     try {
         const cachedAv = localStorage.getItem('fenupx_user_avatar');
-        if (cachedAv || (auth && auth.currentUser)) {
+        const userHasAvatar = !!(cachedAv || loadedProfile?.avatar);
+        if (userHasAvatar && isStudentProfile(loadedProfile)) {
             unlockBadge('badge_ilk_adim');
         }
 
@@ -3904,6 +3960,492 @@ window.evaluateBadges = evaluateBadges;
 window.renderBadgesShowcase = renderBadgesShowcase;
 window.renderKarneSummary = renderKarneSummary;
 
+// ==========================================================================
+// V8.9.9: BÜTÜNLEŞİK “ÇALIŞMALARIM” PROFİLİ VE ÖĞRENCİ GELİŞİM TAKİBİ
+// ==========================================================================
+
+export function renderCalismalarim() {
+    if (loadedProfile && loadedProfile.role === 'admin') return;
+
+    // 1. Yazılıya Hazırlık Provaları
+    let attempts = [];
+    if (window.FenUpExam && typeof window.FenUpExam.getExamAttemptsHistory === 'function') {
+        attempts = window.FenUpExam.getExamAttemptsHistory();
+    } else {
+        try {
+            const raw = localStorage.getItem('fenupx_exam_attempts_history');
+            if (raw) attempts = JSON.parse(raw);
+        } catch (_) {}
+        if (!attempts || attempts.length === 0) {
+            try {
+                const rawSum = localStorage.getItem('fenupx_last_exam_summary');
+                if (rawSum) {
+                    const sum = JSON.parse(rawSum);
+                    if (sum && (sum.completed || typeof sum.score === 'number')) {
+                        attempts = [{
+                            id: 'legacy_last_summary',
+                            date: sum.date || 'Son Prova',
+                            grade: '7',
+                            scenario: 'Senaryo 2',
+                            score: sum.score,
+                            maxScore: sum.maxScore || 100,
+                            missingOutcomes: Array.isArray(sum.missingOutcomes) ? sum.missingOutcomes : []
+                        }];
+                    }
+                }
+            } catch (_) {}
+        }
+    }
+    const mockCount = Array.isArray(attempts) ? attempts.length : 0;
+
+    // 2. Şampiyonlar Ligi Yarışmaları
+    const compHistory = getCompetitionHistory();
+    const compCount = Array.isArray(compHistory) ? compHistory.length : 0;
+
+    // 3. Sanal Laboratuvar Deneyleri
+    let labCompleted = 0;
+    let labInProgress = 0;
+    let labTotal = 30;
+    if (window.FenUpLab && typeof window.FenUpLab.getLabProgressSummary === 'function') {
+        const labSummary = window.FenUpLab.getLabProgressSummary();
+        labCompleted = labSummary.completed || 0;
+        labInProgress = labSummary.inProgress || 0;
+        labTotal = labSummary.total || 30;
+    } else {
+        try {
+            const raw = localStorage.getItem('fenupx_lab_progress');
+            if (raw) {
+                const map = JSON.parse(raw);
+                Object.values(map).forEach(v => {
+                    if (v.status === 'completed') labCompleted++;
+                    else if (v.status === 'in_progress') labInProgress++;
+                });
+            }
+        } catch (_) {}
+    }
+
+    // B) Sayaç Metnini Güncelle
+    const counterEl = document.getElementById('studies-summary-counter-text');
+    if (counterEl) {
+        counterEl.textContent = `${mockCount} prova · ${compCount} yarışma · ${labCompleted} deney`;
+    }
+
+    const hintEl = document.getElementById('studies-summary-hint');
+    if (hintEl) {
+        const isGuest = !auth?.currentUser;
+        if (isGuest) {
+            hintEl.innerHTML = `<span style="color:#38bdf8;">💡 Bu cihazdaki yerel çalışma kayıtları gösterilmektedir.</span>`;
+        } else if (mockCount === 0 && compCount === 0 && labCompleted === 0) {
+            hintEl.textContent = 'Çalışmalarına başladıkça tamamladığın provalar, yarışmalar ve deneyler burada toplanacak.';
+        } else {
+            hintEl.textContent = 'Yazılı provaları, yarışma katılımı ve laboratuvar etkinlik kayıtların güncel.';
+        }
+    }
+
+    // C1) Yazılıya Hazırlık Detayları Render Et
+    renderYaziliStudiesTab(attempts);
+
+    // C2) Şampiyonlar Ligi Detayları Render Et
+    renderCompetitionStudiesTab(compHistory);
+
+    // C3) Sanal Laboratuvar Detayları Render Et
+    renderLabStudiesTab();
+}
+
+function renderYaziliStudiesTab(attempts) {
+    const container = document.getElementById('yazili-studies-content');
+    if (!container) return;
+
+    if (!Array.isArray(attempts) || attempts.length === 0) {
+        container.innerHTML = `
+            <div class="studies-empty-state">
+                <i class="fas fa-file-signature studies-empty-icon"></i>
+                <p class="studies-empty-text">Henüz bir yazılı provası çözmedin. Seviyene uygun bir sınav provası seçip öz değerlendirmeni yapabilirsin.</p>
+                <button type="button" class="f-btn f-btn-ana btn-start-yazili-from-prof" style="margin-top:10px; font-size:0.85rem; padding:8px 16px;">
+                    <i class="fas fa-play"></i> Yazılıya Hazırlığa Başla
+                </button>
+            </div>
+        `;
+        const startBtn = container.querySelector('.btn-start-yazili-from-prof');
+        if (startBtn) {
+            startBtn.onclick = () => {
+                hideModal(profileModal);
+                if (window.FenUpExam && typeof window.FenUpExam.openExamView === 'function') {
+                    const sceneHome = (window.scenes && window.scenes.home) || document.getElementById('scene-home');
+                    const sceneYazili = document.getElementById('scene-yazili');
+                    if (typeof window.switchScene === 'function' && sceneYazili && sceneHome) {
+                        window.switchScene(sceneHome, sceneYazili);
+                    }
+                    window.FenUpExam.openExamView({ entry: true });
+                }
+            };
+        }
+        return;
+    }
+
+    const latest = attempts[0];
+    const scoreVal = typeof latest.score === 'number' ? latest.score : '—';
+    const missingOutcomes = Array.isArray(latest.missingOutcomes) ? latest.missingOutcomes : [];
+    const missedCards = Array.isArray(latest.missedCards) ? latest.missedCards : [];
+
+    let html = `
+        <div class="studies-card-group">
+            <div class="studies-exam-summary-card">
+                <div class="studies-card-header">
+                    <span class="studies-card-title"><i class="fas fa-clipboard-check"></i> Son Yazılı Provası</span>
+                    <span class="studies-score-tag">Öz Değerlendirme: ${scoreVal} / 100</span>
+                </div>
+                <div class="studies-card-meta">
+                    <span><i class="fas fa-calendar-alt"></i> ${latest.date || 'Son Çözülen'}</span>
+                    <span><i class="fas fa-graduation-cap"></i> ${latest.grade || '7'}. Sınıf · ${latest.scenario || 'Senaryo 2'}</span>
+                    <span class="studies-status-badge status-completed"><i class="fas fa-check"></i> Tamamlandı</span>
+                </div>
+                <div style="margin-top:10px;">
+                    <button type="button" class="f-btn f-btn-ikinci btn-open-exam-result" style="font-size:0.8rem; padding:6px 14px;">
+                        <i class="fas fa-eye"></i> Sonuçları ve Provayı İncele
+                    </button>
+                </div>
+            </div>
+    `;
+
+    // Tekrar Önerilen Konular
+    if (missingOutcomes.length > 0 || missedCards.length > 0) {
+        html += `
+            <div class="studies-recommendation-box">
+                <div class="studies-rec-header">
+                    <i class="fas fa-lightbulb" style="color: #f59e0b;"></i>
+                    <strong>Tekrar Önerilen Konular:</strong>
+                </div>
+                <p class="studies-rec-sub">Son provandaki öz değerlendirmene göre pekiştirmen önerilen konular:</p>
+                <div class="studies-rec-list">
+        `;
+        if (missedCards.length > 0) {
+            missedCards.forEach(mc => {
+                html += `
+                    <div class="studies-rec-item">
+                        <div class="studies-rec-info">
+                            <span class="rec-outcome-code">${mc.outcome_id || 'Öğrenme Çıktısı'}</span>
+                            <span class="rec-card-title">${mc.title || 'Çalışma Kartı'}</span>
+                        </div>
+                        <button type="button" class="f-btn f-btn-ikinci btn-study-card" data-card-id="${mc.id || ''}" data-outcome-id="${mc.outcome_id || ''}" style="font-size:0.75rem; padding:5px 10px; white-space:nowrap;">
+                            <i class="fas fa-book-reader"></i> Konuyu Çalış
+                        </button>
+                    </div>
+                `;
+            });
+        } else {
+            missingOutcomes.forEach((outStr) => {
+                const parts = outStr.split(':');
+                const code = parts[0]?.trim() || '';
+                const title = parts.slice(1).join(':').trim() || outStr;
+                html += `
+                    <div class="studies-rec-item">
+                        <div class="studies-rec-info">
+                            <span class="rec-outcome-code">${code}</span>
+                            <span class="rec-card-title">${title}</span>
+                        </div>
+                        <button type="button" class="f-btn f-btn-ikinci btn-study-card" data-outcome-id="${code}" style="font-size:0.75rem; padding:5px 10px; white-space:nowrap;">
+                            <i class="fas fa-book-reader"></i> Konuyu Çalış
+                        </button>
+                    </div>
+                `;
+            });
+        }
+        html += `
+                </div>
+            </div>
+        `;
+    } else {
+        html += `
+            <div class="studies-rec-success">
+                <i class="fas fa-check-circle" style="color: #22c55e;"></i>
+                <span>Tebrikler! Son provanda eksik öğrenme çıktısı bulunmuyor. Bilgilerini taze tutmak için çalışma kartlarını düzenli gözden geçirebilirsin.</span>
+            </div>
+        `;
+    }
+
+    if (attempts.length > 1) {
+        html += `
+            <div class="studies-prev-attempts">
+                <span style="font-size:0.8rem; color:#94a3b8; font-weight:600;"><i class="fas fa-history"></i> Önceki Provalar (${attempts.length}):</span>
+                <div class="studies-prev-list">
+        `;
+        attempts.slice(1, 4).forEach(att => {
+            html += `
+                <div class="studies-prev-item">
+                    <span>${att.date} · ${att.scenario || 'Senaryo'}</span>
+                    <span style="color:#38bdf8; font-weight:600;">Öz Değerlendirme: ${att.score}/100</span>
+                </div>
+            `;
+        });
+        html += `</div></div>`;
+    }
+
+    html += `</div>`;
+    container.innerHTML = html;
+
+    const btnOpenResult = container.querySelector('.btn-open-exam-result');
+    if (btnOpenResult) {
+        btnOpenResult.onclick = () => {
+            hideModal(profileModal);
+            if (window.FenUpExam && typeof window.FenUpExam.openExamAttemptFromProfile === 'function') {
+                window.FenUpExam.openExamAttemptFromProfile(latest.id);
+            }
+        };
+    }
+
+    container.querySelectorAll('.btn-study-card').forEach(btn => {
+        btn.onclick = () => {
+            const cardId = btn.dataset.cardId;
+            const outcomeId = btn.dataset.outcomeId;
+            hideModal(profileModal);
+            if (window.FenUpExam && typeof window.FenUpExam.openStudyCardFromProfile === 'function') {
+                window.FenUpExam.openStudyCardFromProfile(cardId, outcomeId);
+            }
+        };
+    });
+}
+
+function renderCompetitionStudiesTab(compHistory) {
+    const container = document.getElementById('lig-studies-content');
+    if (!container) return;
+
+    const userGrade = normalizeGrade(loadedProfile?.sinif) || selectedGrade || '7';
+    const seasonScore = (loadedProfile && loadedProfile[`seasonScore_${userGrade}`]) || loadedProfile?.seasonScore || 0;
+    const totalScore = (loadedProfile && loadedProfile[`totalScore_${userGrade}`]) || loadedProfile?.totalScore || 0;
+
+    let html = `
+        <div class="studies-card-group">
+            <div class="studies-comp-summary-card">
+                <div class="studies-card-header">
+                    <span class="studies-card-title"><i class="fas fa-trophy"></i> ${userGrade}. Sınıf Şampiyonlar Ligi Durumu</span>
+                    <span class="studies-score-tag">Sezon Puanı: ${seasonScore}</span>
+                </div>
+                <div class="studies-comp-stats-row">
+                    <div class="comp-stat-box">
+                        <span class="stat-sub-label">Sınıf Sezon Puanı</span>
+                        <strong class="stat-sub-val">${seasonScore}</strong>
+                    </div>
+                    <div class="comp-stat-box">
+                        <span class="stat-sub-label">Sınıf Toplam Puanı</span>
+                        <strong class="stat-sub-val">${totalScore}</strong>
+                    </div>
+                    <div class="comp-stat-box">
+                        <span class="stat-sub-label">Lig Sıralaması</span>
+                        <button type="button" class="f-btn f-btn-ikinci btn-open-lb-from-prof" style="padding:4px 8px; font-size:0.75rem;">
+                            <i class="fas fa-list-ol"></i> Tabloyu Aç
+                        </button>
+                    </div>
+                </div>
+            </div>
+    `;
+
+    if (!Array.isArray(compHistory) || compHistory.length === 0) {
+        html += `
+            <div class="studies-empty-state" style="margin-top:10px;">
+                <i class="fas fa-info-circle studies-empty-icon" style="color:var(--neon-blue);"></i>
+                <p class="studies-empty-text">Detaylı yarışma geçmişi bu sürümden itibaren izlenmektedir. Önceki sezon ve liderlik puanlarınız hesabınızda korunmaktadır.</p>
+                <button type="button" class="f-btn f-btn-ana btn-start-quiz-from-prof" style="margin-top:10px; font-size:0.85rem; padding:8px 16px;">
+                    <i class="fas fa-play"></i> Yarışmaya Başla
+                </button>
+            </div>
+        `;
+    } else {
+        html += `
+            <div class="studies-match-history-box">
+                <div class="studies-rec-header">
+                    <i class="fas fa-history" style="color: var(--neon-blue);"></i>
+                    <strong>Son Yarışmalar (${compHistory.length})</strong>
+                </div>
+                <div class="studies-match-list">
+        `;
+        compHistory.slice(0, 5).forEach(m => {
+            const isChamp = m.result === 'Şampiyon';
+            const serverTag = m.serverAccepted ? '<span class="status-verified-pill"><i class="fas fa-shield-alt"></i> Onaylı</span>' : '<span class="status-unverified-pill">Antrenman</span>';
+            html += `
+                <div class="studies-match-item">
+                    <div class="match-meta">
+                        <span class="match-date">${m.date || 'Tarih belirtilmedi'}</span>
+                        <span class="match-grade">${m.grade || `${userGrade}. Sınıf`}</span>
+                    </div>
+                    <div class="match-result-col">
+                        <span class="match-result ${isChamp ? 'result-champ' : ''}">${m.result || 'Tamamlandı'}</span>
+                        ${serverTag}
+                    </div>
+                    <span class="match-score">+${m.score || 0} Puan</span>
+                </div>
+            `;
+        });
+        html += `
+                </div>
+            </div>
+        `;
+    }
+
+    html += `</div>`;
+    container.innerHTML = html;
+
+    const btnLb = container.querySelector('.btn-open-lb-from-prof');
+    if (btnLb) {
+        btnLb.onclick = () => {
+            hideModal(profileModal);
+            const lbBtn = document.getElementById('btn-show-leaderboard');
+            if (lbBtn) lbBtn.click();
+            else {
+                const sq = document.getElementById('scene-quiz');
+                const sl = document.getElementById('scene-lobby');
+                if (sl) {
+                    if (sq) sq.classList.add('is-hidden');
+                    sl.classList.remove('is-hidden');
+                }
+            }
+        };
+    }
+
+    const btnStartQuiz = container.querySelector('.btn-start-quiz-from-prof');
+    if (btnStartQuiz) {
+        btnStartQuiz.onclick = () => {
+            hideModal(profileModal);
+            const btnOyun = document.getElementById('btn-oyun-modulu');
+            if (btnOyun) btnOyun.click();
+        };
+    }
+}
+
+let currentLabFilterGrade = 'all';
+
+function renderLabStudiesTab() {
+    const container = document.getElementById('lab-studies-content');
+    if (!container) return;
+
+    let exps = [];
+    if (window.FenUpLab && Array.isArray(window.FenUpLab.EXPERIMENTS_DATABASE)) {
+        exps = window.FenUpLab.EXPERIMENTS_DATABASE;
+    } else if (typeof EXPERIMENTS_DATABASE !== 'undefined' && Array.isArray(EXPERIMENTS_DATABASE)) {
+        exps = EXPERIMENTS_DATABASE;
+    }
+
+    let progressMap = {};
+    let completedCount = 0;
+    let inProgressCount = 0;
+    let notStartedCount = 0;
+
+    if (window.FenUpLab && typeof window.FenUpLab.getLabProgressSummary === 'function') {
+        const sum = window.FenUpLab.getLabProgressSummary();
+        progressMap = sum.progressMap || {};
+        completedCount = sum.completed || 0;
+        inProgressCount = sum.inProgress || 0;
+        notStartedCount = sum.notStarted || 0;
+    } else {
+        try {
+            const raw = localStorage.getItem('fenupx_lab_progress');
+            if (raw) progressMap = JSON.parse(raw);
+        } catch (_) {}
+        exps.forEach(e => {
+            const p = progressMap[e.id];
+            if (p?.status === 'completed') completedCount++;
+            else if (p?.status === 'in_progress') inProgressCount++;
+            else notStartedCount++;
+        });
+    }
+
+    let html = `
+        <div class="studies-card-group">
+            <div class="studies-lab-summary-card">
+                <div class="studies-card-header">
+                    <span class="studies-card-title"><i class="fas fa-flask"></i> Sanal Laboratuvar Envanteri</span>
+                    <span class="studies-score-tag">${completedCount} / ${exps.length || 30} Tamamlandı</span>
+                </div>
+                <div class="studies-lab-pills-row">
+                    <span class="lab-summary-pill pill-completed"><i class="fas fa-check-circle"></i> ${completedCount} Tamamlandı</span>
+                    <span class="lab-summary-pill pill-in-progress"><i class="fas fa-spinner fa-spin"></i> ${inProgressCount} Devam Ediyor</span>
+                    <span class="lab-summary-pill pill-not-started"><i class="fas fa-circle"></i> ${notStartedCount} Başlanmadı</span>
+                </div>
+                <p class="studies-lab-disclaimer">
+                    <i class="fas fa-info-circle"></i> Laboratuvarda gözlem veya ölçüm defterine kayıt yapıldığında deney tamamlanmış sayılır. Simülasyonu açmak veya ekrana dokunmak tek başına tamamlanma sayılmaz.
+                </p>
+            </div>
+
+            <!-- Sınıf Filtresi -->
+            <div class="studies-lab-filters" role="group" aria-label="Sınıf Filtresi">
+                <button type="button" class="lab-filter-btn ${currentLabFilterGrade === 'all' ? 'active' : ''}" data-grade="all">Tüm Sınıflar (${exps.length})</button>
+                <button type="button" class="lab-filter-btn ${currentLabFilterGrade === '5' ? 'active' : ''}" data-grade="5">5. Sınıf</button>
+                <button type="button" class="lab-filter-btn ${currentLabFilterGrade === '6' ? 'active' : ''}" data-grade="6">6. Sınıf</button>
+                <button type="button" class="lab-filter-btn ${currentLabFilterGrade === '7' ? 'active' : ''}" data-grade="7">7. Sınıf</button>
+            </div>
+
+            <!-- Deney Listesi -->
+            <div class="studies-lab-grid">
+    `;
+
+    const filteredExps = exps.filter(e => currentLabFilterGrade === 'all' || String(e.grade) === currentLabFilterGrade);
+
+    filteredExps.forEach(exp => {
+        const prog = progressMap[exp.id] || { status: 'not_started', observationsCount: 0 };
+        const isCompleted = prog.status === 'completed';
+        const isInProgress = prog.status === 'in_progress';
+        const statusBadge = isCompleted 
+            ? `<span class="study-badge-completed"><i class="fas fa-check"></i> Tamamlandı</span>`
+            : (isInProgress 
+                ? `<span class="study-badge-in-progress"><i class="fas fa-spinner"></i> Devam Ediyor</span>` 
+                : `<span class="study-badge-not-started">Başlanmadı</span>`);
+
+        const actionText = isCompleted ? 'Yeniden Aç' : (isInProgress ? 'Yeniden Aç' : 'Deneyi Başlat');
+        const obsText = prog.observationsCount > 0 ? `<span class="lab-obs-tag"><i class="fas fa-book"></i> ${prog.observationsCount} Gözlem</span>` : '';
+
+        html += `
+            <div class="studies-lab-card ${isCompleted ? 'is-completed' : ''}" data-exp-id="${exp.id}">
+                <div class="lab-card-top">
+                    <span class="lab-exp-code">${exp.id} · ${exp.code || `${exp.grade}. Sınıf`}</span>
+                    ${statusBadge}
+                </div>
+                <h5 class="lab-card-title">${exp.title}</h5>
+                <p class="lab-card-bookref"><i class="fas fa-book"></i> ${exp.bookRef || 'MEB Fen Bilimleri Maarif Kitabı'}</p>
+                <div class="lab-card-footer">
+                    ${obsText}
+                    <button type="button" class="f-btn f-btn-ikinci btn-open-experiment" data-exp-id="${exp.id}" style="font-size:0.75rem; padding:4px 10px; margin-left:auto;">
+                        <i class="fas fa-flask"></i> ${actionText}
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+
+    html += `
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = html;
+
+    container.querySelectorAll('.lab-filter-btn').forEach(btn => {
+        btn.onclick = () => {
+            currentLabFilterGrade = btn.dataset.grade;
+            renderLabStudiesTab();
+        };
+    });
+
+    container.querySelectorAll('.btn-open-experiment').forEach(btn => {
+        btn.onclick = () => {
+            const expId = btn.dataset.expId;
+            hideModal(profileModal);
+            if (window.FenUpLab && typeof window.FenUpLab.openExperimentWorkspace === 'function') {
+                const sceneHome = (window.scenes && window.scenes.home) || document.getElementById('scene-home');
+                const labView = document.getElementById('lab-view');
+                if (typeof window.switchScene === 'function' && labView && sceneHome) {
+                    window.switchScene(sceneHome, labView);
+                } else if (labView) {
+                    if (sceneHome) sceneHome.classList.add('is-hidden');
+                    labView.classList.remove('is-hidden');
+                }
+                window.FenUpLab.openExperimentWorkspace(expId);
+            }
+        };
+    });
+}
+
+window.renderCalismalarim = renderCalismalarim;
+
 const profileModal = document.createElement('div');
 profileModal.id = "profile-modal";
 profileModal.className = "modal-overlay is-hidden";
@@ -3911,7 +4453,7 @@ profileModal.innerHTML = `
     <div class="modal-content glass-panel" style="max-width: 620px; width: 92%; padding: 24px;">
         <button id="close-profile" class="close-btn" aria-label="Kapat"><i class="fas fa-times"></i></button>
 
-        <!-- 1. ÜST KISIM (Kullanıcı Kartı, 80x80 Avatar, Gradyan Seviye Halkası, Seri Rozeti) -->
+        <!-- A) TEMEL PROFİL VE AVATAR (80x80 Avatar, Gradyan Seviye Halkası, Seri Rozeti) -->
         <div class="profile-hero-card">
             <div class="profile-level-ring-container">
                 <div class="profile-level-ring">
@@ -3948,17 +4490,98 @@ profileModal.innerHTML = `
             </div>
         </div>
 
-        <!-- Öğrenciye Özel Rozet ve Karne Bölümleri (Admin Girişinde Gizlenir) -->
+        <!-- Öğrenciye Özel Gelişim, Çalışmalarım ve Rozet Bölümleri (Admin Girişinde Gizlenir) -->
         <div id="profile-student-sections" class="profile-student-sections">
-            <!-- 1.5 Kısa Gelişim Özeti -->
-            <div class="profile-progress-summary" id="profile-progress-summary">
-                <div class="progress-summary-pill"><span class="summary-pill-label">Seri</span><strong id="profile-summary-streak">1 Gün</strong></div>
-                <div class="progress-summary-pill"><span class="summary-pill-label">Seviye</span><strong id="profile-summary-level">Seviye 1</strong></div>
-                <div class="progress-summary-pill"><span class="summary-pill-label">Rozetler</span><strong id="profile-summary-badges">0 / 10</strong></div>
-                <div class="progress-summary-pill"><span class="summary-pill-label">Prova Öz Değerlendirmesi</span><strong id="profile-summary-exam">— / 100</strong></div>
+
+            <!-- B) “ÇALIŞMALARIM” ÖZETİ (Küçük Sayaçlar: "3 prova · 8 yarışma · 4 deney") -->
+            <div class="profile-studies-summary-card" id="profile-studies-summary">
+                <div class="studies-summary-header">
+                    <div class="studies-summary-title">
+                        <i class="fas fa-folder-open"></i> <span>Çalışmalarım</span>
+                    </div>
+                    <div class="studies-summary-counter" id="studies-summary-counter-text">
+                        0 prova · 0 yarışma · 0 deney
+                    </div>
+                </div>
+                <div class="studies-summary-hint" id="studies-summary-hint">
+                    Tamamlanan yazılı provaları, yarışmalar ve deney kayıtları
+                </div>
+                <!-- Kısa Gelişim Göstergeleri (Seri, Seviye, Rozetler, Prova Öz Değerlendirmesi) -->
+                <div class="profile-progress-summary" id="profile-progress-summary">
+                    <div class="progress-summary-pill"><span class="summary-pill-label">Seri</span><strong id="profile-summary-streak">1 Gün</strong></div>
+                    <div class="progress-summary-pill"><span class="summary-pill-label">Seviye</span><strong id="profile-summary-level">Seviye 1</strong></div>
+                    <div class="progress-summary-pill"><span class="summary-pill-label">Rozetler</span><strong id="profile-summary-badges">0 / 10</strong></div>
+                    <div class="progress-summary-pill"><span class="summary-pill-label">Prova Öz Değerlendirmesi</span><strong id="profile-summary-exam">— / 100</strong></div>
+                </div>
             </div>
 
-            <!-- 2. ORTA KISIM: 10 ADET EVRENSEL KOZMİK BAŞARI ROZETİ VİTRİNİ (5x2 IZGARA) -->
+            <!-- C) ÜÇ MODÜLE AİT AYRINTILAR (Sekmeler: Yazılıya Hazırlık, Şampiyonlar Ligi, Sanal Laboratuvar) -->
+            <div class="profile-studies-details-box" id="profile-studies-details">
+                <div class="studies-nav-tabs" role="tablist" aria-label="Çalışmalarım Modül Sekmeleri">
+                    <button type="button" class="studies-tab-btn active" role="tab" id="tab-btn-yazili" aria-selected="true" aria-controls="pane-study-yazili" data-tab="yazili">
+                        <i class="fas fa-file-signature"></i> <span>Yazılıya Hazırlık</span>
+                    </button>
+                    <button type="button" class="studies-tab-btn" role="tab" id="tab-btn-lig" aria-selected="false" aria-controls="pane-study-lig" data-tab="lig">
+                        <i class="fas fa-trophy"></i> <span>Şampiyonlar Ligi</span>
+                    </button>
+                    <button type="button" class="studies-tab-btn" role="tab" id="tab-btn-lab" aria-selected="false" aria-controls="pane-study-lab" data-tab="lab">
+                        <i class="fas fa-flask"></i> <span>Sanal Laboratuvar</span>
+                    </button>
+                </div>
+
+                <div class="studies-tab-panes">
+                    <!-- Sekme 1: Yazılıya Hazırlık -->
+                    <div class="studies-tab-pane active" id="pane-study-yazili" role="tabpanel" aria-labelledby="tab-btn-yazili">
+                        <div id="yazili-studies-content"></div>
+                        <div class="profile-karne-section profile-karne-accordion" id="profile-karne-details">
+                            <div class="profile-section-title-bar profile-karne-summary" id="profile-karne-summary-bar" role="button" tabindex="0" aria-expanded="true">
+                                <h4><i class="fas fa-graduation-cap"></i> <span id="profile-karne-title">7. Sınıf Eksik Kazanım Karnesi</span></h4>
+                                <div style="display:flex; align-items:center; gap:6px;">
+                                    <span class="profile-karne-badge" id="profile-karne-status">Detaylı İnceleme</span>
+                                    <button type="button" class="btn-toggle-karne-details" id="btn-toggle-karne-details" aria-label="Ayrıntıları Göster/Gizle"><i class="fas fa-chevron-up"></i></button>
+                                </div>
+                            </div>
+                            <div class="profile-karne-content" id="profile-karne-content">
+                                <div class="profile-karne-grid">
+                                    <div class="karne-stat-card">
+                                        <span class="stat-label">Prova Öz Değerlendirmesi</span>
+                                        <span class="stat-val" id="karne-last-score">— / 100</span>
+                                        <small class="stat-sub" id="karne-last-date">Henüz prova çözülmedi</small>
+                                    </div>
+                                    <div class="karne-stat-card">
+                                        <span class="stat-label">Güneş Sistemi & Uzay</span>
+                                        <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-space" style="width: 0%;"></div></div>
+                                        <small class="stat-sub" id="karne-sub-space">İnceleme: 0/6 Kart</small>
+                                    </div>
+                                    <div class="karne-stat-card">
+                                        <span class="stat-label">Kuvvet, İş ve Enerji</span>
+                                        <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-force" style="width: 0%;"></div></div>
+                                        <small class="stat-sub" id="karne-sub-force">Kazanım: Başlangıç</small>
+                                    </div>
+                                </div>
+                                <div class="karne-outcome-details" id="karne-outcome-details">
+                                    <div class="karne-outcome-item">
+                                        <i class="fas fa-info-circle" style="color: var(--neon-blue);"></i> 
+                                        <span>Kazanım eksiklerini tamamlamak için yazılı provasında öz değerlendirme yapabilirsin.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sekme 2: Şampiyonlar Ligi -->
+                    <div class="studies-tab-pane is-hidden" id="pane-study-lig" role="tabpanel" aria-labelledby="tab-btn-lig">
+                        <div id="lig-studies-content"></div>
+                    </div>
+
+                    <!-- Sekme 3: Sanal Laboratuvar -->
+                    <div class="studies-tab-pane is-hidden" id="pane-study-lab" role="tabpanel" aria-labelledby="tab-btn-lab">
+                        <div id="lab-studies-content"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- D) ROZETLER (10 ADET EVRENSEL KOZMİK BAŞARI ROZETİ VİTRİNİ) -->
             <div class="profile-badges-section">
                 <div class="profile-section-title-bar">
                     <h4><i class="fas fa-medal"></i> Kozmik Başarı Rozetleri</h4>
@@ -3968,45 +4591,9 @@ profileModal.innerHTML = `
                     <!-- 10 Rozet Dinamik Render Edilir -->
                 </div>
             </div>
-
-            <!-- 3. ALT KISIM: KAZANIM DURUMU & ÇALIŞMA KARNESİ (Mobilde isteğe bağlı açılır) -->
-            <div class="profile-karne-section profile-karne-accordion" id="profile-karne-details">
-                <div class="profile-section-title-bar profile-karne-summary" id="profile-karne-summary-bar" role="button" tabindex="0" aria-expanded="true">
-                    <h4><i class="fas fa-graduation-cap"></i> <span id="profile-karne-title">7. Sınıf Eksik Kazanım Karnesi</span></h4>
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <span class="profile-karne-badge" id="profile-karne-status">Güncel Durum</span>
-                        <button type="button" class="btn-toggle-karne-details" id="btn-toggle-karne-details" aria-label="Ayrıntıları Göster/Gizle"><i class="fas fa-chevron-up"></i></button>
-                    </div>
-                </div>
-                <div class="profile-karne-content" id="profile-karne-content">
-                    <div class="profile-karne-grid">
-                        <div class="karne-stat-card">
-                            <span class="stat-label">Prova Öz Değerlendirmesi</span>
-                            <span class="stat-val" id="karne-last-score">— / 100</span>
-                            <small class="stat-sub" id="karne-last-date">Henüz prova çözülmedi</small>
-                        </div>
-                        <div class="karne-stat-card">
-                            <span class="stat-label">Güneş Sistemi & Uzay</span>
-                            <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-space" style="width: 0%;"></div></div>
-                            <small class="stat-sub" id="karne-sub-space">İnceleme: 0/6 Kart</small>
-                        </div>
-                        <div class="karne-stat-card">
-                            <span class="stat-label">Kuvvet, İş ve Enerji</span>
-                            <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-force" style="width: 0%;"></div></div>
-                            <small class="stat-sub" id="karne-sub-force">Kazanım: Başlangıç</small>
-                        </div>
-                    </div>
-                    <div class="karne-outcome-details" id="karne-outcome-details">
-                        <div class="karne-outcome-item">
-                            <i class="fas fa-info-circle" style="color: var(--neon-blue);"></i> 
-                            <span>Kazanım eksiklerini tamamlamak için yazılı provasında öz değerlendirme yapabilirsin.</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <!-- Profil Bilgileri & Hesap Yönetimi (Akordiyon / Daraltılabilir Şık Bölüm) -->
+        <!-- E) HESAP AYARLARI (Akordiyon / Daraltılabilir Şık Bölüm) -->
         <details class="profile-settings-details">
             <summary class="profile-settings-summary"><i class="fas fa-cog"></i> Hesap ve Kimlik Bilgilerini Düzenle</summary>
             <div class="profile-settings-content">
@@ -4075,6 +4662,27 @@ profileModal.innerHTML = `
     </div>
 `;
 document.body.appendChild(profileModal);
+
+// Çalışmalarım sekme geçiş dinleyicileri
+const studiesTabBtns = profileModal.querySelectorAll('.studies-tab-btn');
+if (studiesTabBtns.length > 0) {
+    studiesTabBtns.forEach(btn => {
+        btn.onclick = (e) => {
+            if (e) e.preventDefault();
+            const tabKey = btn.dataset.tab;
+            studiesTabBtns.forEach(b => {
+                const isTarget = b === btn;
+                b.classList.toggle('active', isTarget);
+                b.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+            });
+            profileModal.querySelectorAll('.studies-tab-pane').forEach(p => {
+                const isMatch = p.id === `pane-study-${tabKey}`;
+                p.classList.toggle('active', isMatch);
+                p.classList.toggle('is-hidden', !isMatch);
+            });
+        };
+    });
+}
 
 const karneSummaryBar = document.getElementById('profile-karne-summary-bar');
 const karneDetails = document.getElementById('profile-karne-details');
@@ -4289,6 +4897,7 @@ onAuthStateChanged(auth, async (user) => {
                 updateStreakUI();
                 renderBadgesShowcase();
                 renderKarneSummary();
+                renderCalismalarim();
             }
 
             const lbg = document.getElementById('lb-guest-promo'); if(lbg) lbg.classList.add('is-hidden');
@@ -4572,6 +5181,7 @@ function prepareProfileModalView() {
         updateStreakUI();
         renderBadgesShowcase();
         renderKarneSummary();
+        renderCalismalarim();
     }
 }
 
@@ -6213,6 +6823,7 @@ try {
     evaluateBadges();
     renderBadgesShowcase();
     renderKarneSummary();
+    renderCalismalarim();
 } catch (_) {}
 
 // ==========================================================================

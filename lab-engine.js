@@ -1461,6 +1461,7 @@ export function openExperimentWorkspace(expId) {
     if (!exp) return;
 
     labState.activeExperimentId = expId;
+    markLabExperimentInProgress(expId);
 
     const catalogView = document.getElementById('lab-catalog-view');
     const workspaceView = document.getElementById('lab-workspace-view');
@@ -22760,8 +22761,11 @@ function recordMeasurement() {
 
     renderMeasurementTable();
 
-    // V8.9.0: Günlük seri güncelleme ve Sanal Simyacı rozeti
+    // V8.9.9: Deney tamamlama kaydı, günlük seri güncelleme ve Sanal Simyacı rozeti
     try {
+        if (expId) {
+            saveLabExperimentProgress(expId, 'completed');
+        }
         if (typeof window.checkAndUpdateStreak === 'function') {
             window.checkAndUpdateStreak();
         }
@@ -24148,6 +24152,73 @@ function drawProductIcon(ctx, x, y, prodKey) {
 }
 
 
+// ==========================================================================
+// V8.9.9: SANAL LABORATUVAR İLERLEME VE TAMAMLANMA İZLEME MOTORU
+// ==========================================================================
+export const LAB_PROGRESS_KEY = 'fenupx_lab_progress';
+
+export function getLabProgress() {
+    try {
+        const raw = localStorage.getItem(LAB_PROGRESS_KEY);
+        return raw ? JSON.parse(raw) : {};
+    } catch (_) {
+        return {};
+    }
+}
+
+export function saveLabExperimentProgress(expId, status, extra = {}) {
+    if (!expId) return;
+    try {
+        const progress = getLabProgress();
+        const current = progress[expId] || { status: 'not_started', observationsCount: 0 };
+        // Tamamlanmış deneyin durumunu 'in_progress' olarak düşürme
+        const finalStatus = (current.status === 'completed' && status === 'in_progress') ? 'completed' : status;
+        const newObsCount = typeof extra.observationsCount === 'number'
+            ? extra.observationsCount
+            : (status === 'completed' ? (current.observationsCount || 0) + 1 : (current.observationsCount || 0));
+
+        progress[expId] = {
+            ...current,
+            status: finalStatus,
+            observationsCount: newObsCount,
+            lastUpdated: Date.now(),
+            lastDateStr: new Date().toLocaleDateString('tr-TR'),
+            ...extra
+        };
+        localStorage.setItem(LAB_PROGRESS_KEY, JSON.stringify(progress));
+    } catch (e) {
+        console.warn('saveLabExperimentProgress hatası:', e);
+    }
+}
+
+export function markLabExperimentInProgress(expId) {
+    if (!expId) return;
+    const progress = getLabProgress();
+    if (!progress[expId] || progress[expId].status === 'not_started') {
+        saveLabExperimentProgress(expId, 'in_progress');
+    }
+}
+
+export function getLabProgressSummary() {
+    const progress = getLabProgress();
+    let completed = 0;
+    let inProgress = 0;
+    let notStarted = 0;
+    EXPERIMENTS_DATABASE.forEach(exp => {
+        const p = progress[exp.id];
+        if (p?.status === 'completed') completed++;
+        else if (p?.status === 'in_progress') inProgress++;
+        else notStarted++;
+    });
+    return {
+        total: EXPERIMENTS_DATABASE.length,
+        completed,
+        inProgress,
+        notStarted,
+        progressMap: progress
+    };
+}
+
 // Global Tarayıcı Erişimi
 if (typeof window !== "undefined") {
     window.FenUpLab = {
@@ -24162,6 +24233,10 @@ if (typeof window !== "undefined") {
         setWorkMode,
         toggleDualPlayPause,
         resetDualMotion,
+        getLabProgress,
+        saveLabExperimentProgress,
+        markLabExperimentInProgress,
+        getLabProgressSummary,
         EXPERIMENTS_DATABASE,
         labState
     };

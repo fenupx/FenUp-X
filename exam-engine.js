@@ -3438,6 +3438,37 @@ function renderSummary() {
     const sortedMissedCards = CARDS.filter(c => !!missedCardMap[c.id]).map(c => missedCardMap[c.id]);
     const returnCardIds = sortedMissedCards.map(item => item.card.id);
 
+    // V8.9.9: Prova sonucunu Çalışmalarım geçmişine kaydet
+    try {
+        const scNum = a.scenarioNumber || getActiveScenarioNumber();
+        const scTitle = formatScenarioTitle(scNum);
+        const missedCardsList = sortedMissedCards.map(item => ({
+            id: item.card?.id,
+            title: item.card?.title,
+            outcome_id: item.card?.outcome_id
+        }));
+
+        const attemptRecord = {
+            id: a.routeKey || ('attempt_' + (a.scenarioId || 'sc') + '_' + totalScore),
+            timestamp: Date.now(),
+            date: new Date().toLocaleDateString('tr-TR'),
+            grade: '7',
+            term: '1',
+            examNum: '1',
+            scenario: scTitle,
+            scenarioId: a.scenarioId || `senaryo-${scNum}`,
+            status: 'completed',
+            score: totalScore,
+            maxScore: 100,
+            evaluationType: 'Öz değerlendirme',
+            missingOutcomes: missingOutcomesList,
+            missedCards: missedCardsList
+        };
+        saveExamAttemptToHistory(attemptRecord);
+    } catch (e) {
+        console.warn('Prova geçmişi kaydetme hatası:', e);
+    }
+
     // Hero Skor Alanı
     const scoreValEl = $('summary-total-score');
     if (scoreValEl) {
@@ -5201,6 +5232,140 @@ export function closeExamView() {
     }
 }
 
+// ==========================================================================
+// V8.9.9: YAZILIYA HAZIRLIK PROVA GEÇMİŞİ VE PROFİL DERİN BAĞLANTI API'LERİ
+// ==========================================================================
+export const EXAM_ATTEMPTS_HISTORY_KEY = 'fenupx_exam_attempts_history';
+
+export function getExamAttemptsHistory() {
+    try {
+        const raw = localStorage.getItem(EXAM_ATTEMPTS_HISTORY_KEY);
+        if (raw) {
+            const arr = JSON.parse(raw);
+            if (Array.isArray(arr) && arr.length > 0) return arr;
+        }
+    } catch (_) {}
+
+    // Fallback: fenupx_last_exam_summary
+    try {
+        const rawSum = localStorage.getItem('fenupx_last_exam_summary');
+        if (rawSum) {
+            const sum = JSON.parse(rawSum);
+            if (sum && (sum.completed || typeof sum.score === 'number')) {
+                return [{
+                    id: 'legacy_last_summary',
+                    timestamp: Date.now(),
+                    date: sum.date || new Date().toLocaleDateString('tr-TR'),
+                    grade: '7',
+                    term: '1',
+                    examNum: '1',
+                    scenario: 'Senaryo 2',
+                    scenarioId: 'senaryo-2',
+                    status: 'completed',
+                    score: Number(sum.score) || 0,
+                    maxScore: Number(sum.maxScore) || 100,
+                    evaluationType: 'Öz değerlendirme',
+                    missingOutcomes: Array.isArray(sum.missingOutcomes) ? sum.missingOutcomes : [],
+                    missedCards: []
+                }];
+            }
+        }
+    } catch (_) {}
+
+    return [];
+}
+
+export function saveExamAttemptToHistory(attemptRecord) {
+    if (!attemptRecord || !attemptRecord.id) return;
+    try {
+        let history = [];
+        const raw = localStorage.getItem(EXAM_ATTEMPTS_HISTORY_KEY);
+        if (raw) {
+            const parsed = JSON.parse(raw);
+            if (Array.isArray(parsed)) history = parsed;
+        }
+
+        const existingIdx = history.findIndex(h => h.id === attemptRecord.id);
+        if (existingIdx !== -1) {
+            history[existingIdx] = { ...history[existingIdx], ...attemptRecord };
+        } else {
+            history.unshift(attemptRecord);
+        }
+
+        if (history.length > 20) {
+            history = history.slice(0, 20);
+        }
+
+        localStorage.setItem(EXAM_ATTEMPTS_HISTORY_KEY, JSON.stringify(history));
+    } catch (e) {
+        console.warn('saveExamAttemptToHistory hatası:', e);
+    }
+}
+
+export async function openStudyCardFromProfile(cardId, outcomeId) {
+    const profModal = document.getElementById('profile-modal');
+    if (profModal) profModal.classList.add('is-hidden');
+
+    const sceneYazili = $('scene-yazili');
+    const homeScene = (window.scenes && window.scenes.home) || $('scene-home');
+    if (sceneYazili) {
+        sceneYazili.removeAttribute('inert');
+        sceneYazili.removeAttribute('aria-hidden');
+        sceneYazili.classList.remove('is-hidden');
+    }
+    if (typeof localStorage !== 'undefined' && localStorage.getItem(STORAGE_KEY) !== lastSavedRaw) {
+        loadStateFromStorage();
+    }
+
+    const ok = await loadData(CONTENT_REVISION);
+    if (!ok) return;
+
+    let targetIdx = -1;
+    if (cardId && CARDS && CARDS.length > 0) {
+        targetIdx = CARDS.findIndex(c => c.id === cardId);
+    }
+    if (targetIdx === -1 && outcomeId && CARDS && CARDS.length > 0) {
+        targetIdx = CARDS.findIndex(c => c.outcome_id === outcomeId);
+    }
+    if (targetIdx === -1) targetIdx = 0;
+
+    state.hasSelectedScope = true;
+    state.currentStep = 'study';
+    state.studyMode = 'free';
+    state.returnToSummary = false;
+
+    if (typeof window.switchScene === 'function' && sceneYazili && homeScene) {
+        window.switchScene(homeScene, sceneYazili);
+    }
+
+    goToStep('study', { cardIdx: targetIdx });
+}
+
+export async function openExamAttemptFromProfile(attemptId) {
+    const profModal = document.getElementById('profile-modal');
+    if (profModal) profModal.classList.add('is-hidden');
+
+    const sceneYazili = $('scene-yazili');
+    const homeScene = (window.scenes && window.scenes.home) || $('scene-home');
+    if (sceneYazili) {
+        sceneYazili.removeAttribute('inert');
+        sceneYazili.removeAttribute('aria-hidden');
+        sceneYazili.classList.remove('is-hidden');
+    }
+    if (typeof localStorage !== 'undefined' && localStorage.getItem(STORAGE_KEY) !== lastSavedRaw) {
+        loadStateFromStorage();
+    }
+
+    const ok = await loadData(CONTENT_REVISION);
+    if (!ok) return;
+
+    state.hasSelectedScope = true;
+    if (typeof window.switchScene === 'function' && sceneYazili && homeScene) {
+        window.switchScene(homeScene, sceneYazili);
+    }
+    goToStep('summary');
+}
+
 // Global Window Erişimi
 if (typeof window !== 'undefined') {
     window.FenUpExam = {
@@ -5254,7 +5419,11 @@ if (typeof window !== 'undefined') {
         OUTCOME_ORDER,
         syncScenarioData,
         initScratchpad,
-        toggleScratchpad
+        toggleScratchpad,
+        getExamAttemptsHistory,
+        saveExamAttemptToHistory,
+        openStudyCardFromProfile,
+        openExamAttemptFromProfile
     };
 }
 

@@ -5078,10 +5078,10 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     outline: 3px solid #0284c7; outline-offset: 2px;
 }
 :is(#user-grade, #profile-grade, #google-user-grade, .admin-grade-select):disabled { color: #475569; opacity: 1; }
-.account-admin :is(#header-streak-badge, #profile-level-badge, .profile-streak-badge, #profile-student-sections, #profile-student-grade-group, .profile-student-grade-section, #profile-progress-summary) { display: none !important; }
+.account-admin :is(#header-streak-badge, #profile-level-badge, .profile-streak-badge, #profile-student-sections, #profile-student-grade-group, .profile-student-grade-section, #profile-progress-summary, #profile-studies-summary, #profile-studies-details) { display: none !important; }
 .account-admin #profile-grade { display: none !important; }
 .account-admin label[for="profile-grade"] { display: none !important; }
-.account-teacher :is(#profile-student-grade-group, .profile-student-grade-section, #profile-progress-summary) { display: none !important; }
+.account-teacher :is(#profile-student-grade-group, .profile-student-grade-section, #profile-progress-summary, #profile-studies-summary, #profile-studies-details) { display: none !important; }
 .account-admin .profile-level-ring { border: 2px solid #fbbf24; box-shadow: 0 0 14px rgba(245, 158, 11, 0.35); }
 .admin-user-class-filters { display: flex; gap: 6px; flex-shrink: 0; margin-bottom: 8px; }
 .admin-user-class-filters button { flex: 1; min-width: 0; min-height: 48px; background: #172033; color: #f8fafc; border: 1px solid #64748b; border-radius: 8px; }
@@ -5302,4 +5302,627 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
  .avatar-picker-preview{grid-column:2;grid-row:1;}.avatar-picker-preview strong{font-size:.85rem;}.avatar-picker-preview p{display:none;}
  .avatar-picker .avatar-tabs{grid-column:1/-1;grid-row:2;}.avatar-picker-grid{grid-column:1/-1;grid-row:3;}
  #avatar-picker-status{grid-column:1;grid-row:4;align-self:center;font-size:.75rem;}.avatar-picker-actions{grid-column:2/4;grid-row:4;border:0;padding:0;margin:0;}.avatar-picker-actions button{flex:1;padding:5px;}
+}
+
+/* ==========================================================================
+   V8.9.9 — BÜTÜNLEŞİK “ÇALIŞMALARIM” PROFİLİ VE ÖĞRENCİ GELİŞİM TAKİBİ STİLLERİ
+   ========================================================================== */
+
+/* B) Çalışmalarım Özet Kartı */
+.profile-studies-summary-card {
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.studies-summary-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+}
+
+.studies-summary-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #f8fafc;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.studies-summary-title i {
+    color: #38bdf8;
+}
+
+.studies-summary-counter {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.3px;
+}
+
+.studies-summary-hint {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+/* C) Üç Modüle Ait Ayrıntılar (Sekmeli Kutu) */
+.profile-studies-details-box {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    border-radius: 14px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+}
+
+.studies-nav-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 4px;
+    border-radius: 10px;
+}
+
+.studies-tab-btn {
+    flex: 1;
+    min-height: 42px;
+    padding: 8px 10px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: #94a3b8;
+    font-size: 0.84rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+}
+
+.studies-tab-btn:hover:not(.active) {
+    background: rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+}
+
+.studies-tab-btn.active {
+    background: rgba(56, 189, 248, 0.2);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
+    font-weight: 700;
+}
+
+.studies-tab-pane {
+    animation: promptGiris 0.25s ease-out;
+}
+
+.studies-tab-pane.is-hidden {
+    display: none !important;
+}
+
+/* Modül Kartları & Boş Durumlar */
+.studies-empty-state {
+    text-align: center;
+    padding: 20px 14px;
+    background: rgba(15, 23, 42, 0.45);
+    border-radius: 10px;
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    margin: 8px 0;
+}
+
+.studies-empty-icon {
+    font-size: 2rem;
+    color: #64748b;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.studies-empty-text {
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    margin: 0 0 8px 0;
+    line-height: 1.45;
+}
+
+.studies-exam-summary-card,
+.studies-comp-summary-card,
+.studies-lab-summary-card {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+}
+
+.studies-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.studies-card-title {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.studies-score-tag {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.studies-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.78rem;
+    color: #94a3b8;
+    align-items: center;
+}
+
+.studies-status-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.studies-status-badge.status-completed {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+/* Tekrar Önerilen Konular Kutusu */
+.studies-recommendation-box {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.28);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-top: 10px;
+}
+
+.studies-rec-header {
+    font-size: 0.85rem;
+    color: #fbbf24;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.studies-rec-sub {
+    font-size: 0.78rem;
+    color: #cbd5e1;
+    margin: 0 0 8px 0;
+}
+
+.studies-rec-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.studies-rec-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: rgba(15, 23, 42, 0.75);
+    border-radius: 8px;
+    padding: 7px 10px;
+    border: 1px solid rgba(245, 158, 11, 0.18);
+}
+
+.studies-rec-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.rec-outcome-code {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.15);
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.rec-card-title {
+    font-size: 0.82rem;
+    color: #e2e8f0;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.studies-rec-success {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #86efac;
+    background: rgba(34, 197, 94, 0.1);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    margin-top: 10px;
+    line-height: 1.4;
+}
+
+.studies-prev-attempts {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.studies-prev-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 6px;
+}
+
+.studies-prev-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.76rem;
+    color: #94a3b8;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+/* Şampiyonlar Ligi Kutusu */
+.studies-comp-stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.comp-stat-box {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+    justify-content: center;
+}
+
+.stat-sub-label {
+    font-size: 0.68rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.stat-sub-val {
+    font-size: 0.95rem;
+    color: #38bdf8;
+    font-weight: 700;
+}
+
+.studies-match-history-box {
+    margin-top: 10px;
+}
+
+.studies-match-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.studies-match-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: rgba(15, 23, 42, 0.65);
+    border-radius: 8px;
+    padding: 7px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.match-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.match-date {
+    font-size: 0.7rem;
+    color: #94a3b8;
+}
+
+.match-grade {
+    font-size: 0.8rem;
+    color: #f1f5f9;
+    font-weight: 600;
+}
+
+.match-result-col {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.match-result {
+    font-size: 0.78rem;
+    color: #e2e8f0;
+    font-weight: 600;
+}
+
+.match-result.result-champ {
+    color: #fbbf24;
+}
+
+.status-verified-pill {
+    font-size: 0.66rem;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 1px 5px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.status-unverified-pill {
+    font-size: 0.66rem;
+    color: #94a3b8;
+    background: rgba(148, 163, 184, 0.15);
+    padding: 1px 5px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.match-score {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #22c55e;
+    white-space: nowrap;
+}
+
+/* Sanal Laboratuvar Envanteri */
+.studies-lab-pills-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0;
+}
+
+.lab-summary-pill {
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.lab-summary-pill.pill-completed {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.lab-summary-pill.pill-in-progress {
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.lab-summary-pill.pill-not-started {
+    color: #94a3b8;
+    background: rgba(148, 163, 184, 0.15);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.studies-lab-disclaimer {
+    font-size: 0.73rem;
+    color: #94a3b8;
+    margin: 6px 0 0 0;
+    line-height: 1.35;
+}
+
+.studies-lab-filters {
+    display: flex;
+    gap: 6px;
+    margin: 10px 0;
+    overflow-x: auto;
+    padding-bottom: 2px;
+}
+
+.lab-filter-btn {
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 0.74rem;
+    color: #cbd5e1;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.15s;
+    touch-action: manipulation;
+}
+
+.lab-filter-btn.active {
+    background: rgba(56, 189, 248, 0.22);
+    border-color: rgba(56, 189, 248, 0.5);
+    color: #38bdf8;
+    font-weight: 700;
+}
+
+.studies-lab-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 4px;
+    overscroll-behavior: contain;
+}
+
+.studies-lab-card {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.studies-lab-card.is-completed {
+    border-color: rgba(34, 197, 94, 0.35);
+}
+
+.lab-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.lab-exp-code {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #38bdf8;
+}
+
+.study-badge-completed {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.15);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.study-badge-in-progress {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.15);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.study-badge-not-started {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    background: rgba(148, 163, 184, 0.15);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.lab-card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin: 2px 0;
+    line-height: 1.35;
+}
+
+.lab-card-bookref {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    margin: 0;
+}
+
+.lab-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+    gap: 8px;
+}
+
+.lab-obs-tag {
+    font-size: 0.72rem;
+    color: #a78bfa;
+    background: rgba(167, 139, 250, 0.15);
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+/* Mobil ve Dar Ekran Kırılımları (320px - 480px) */
+@media (max-width: 480px) {
+    .studies-nav-tabs {
+        flex-direction: column;
+        gap: 4px;
+    }
+    .studies-tab-btn {
+        min-height: 38px;
+        font-size: 0.8rem;
+    }
+    .studies-comp-stats-row {
+        grid-template-columns: 1fr;
+    }
+    .studies-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .studies-score-tag {
+        align-self: flex-start;
+    }
+    .studies-rec-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    .studies-rec-item button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    .studies-match-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
 }
