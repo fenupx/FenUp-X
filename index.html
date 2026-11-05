@@ -57,8 +57,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@500;600;700&family=Kalam:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8.9.9">
-    <link rel="stylesheet" href="exam.css?v=8.9.5">
+    <link rel="stylesheet" href="style.css?v=8.9.10">
+    <link rel="stylesheet" href="exam.css?v=8.9.10">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -162,7 +162,7 @@
             
             <h3 style="color: #fff; margin-top: 25px; font-size: 1.5rem;">Kapsam ve Eğitim Modüllerimiz</h3>
             <ul style="margin-left: 20px; margin-bottom: 15px;">
-                <li style="margin-bottom: 10px;"><strong>Açık Uçlu Yazılı Sınav Provaları (OYSS):</strong> 5, 6 ve 7. sınıflar için MEB konu-soru dağılım tablolarına tam eşitlenmiş resmi senaryolar, analitik değerlendirme rubrikleri ve anında eksik analizi.</li>
+                <li style="margin-bottom: 10px;"><strong>Açık Uçlu Yazılı Sınav Provaları (OYSS):</strong> 7. sınıf için MEB konu-soru dağılım tablolarına tam eşitlenmiş resmi senaryolar, analitik değerlendirme rubrikleri ve anında eksik analizi (5 ve 6. sınıf yazılı provaları hazırlık aşamasındadır).</li>
                 <li style="margin-bottom: 10px;"><strong>Kavram Yanılgısı Giderici Etkileşimli Çalışma Kartları:</strong> Öğrencilerin fen kavramlarındaki eksik ve hatalı öğrenmelerini hedef alan, kompakt görsel şemalarla zenginleştirilmiş çalışma istasyonu.</li>
                 <li style="margin-bottom: 10px;"><strong>Akıllı Tahta (ETAP) Sınıf Modu:</strong> Sınıflardaki Pardus akıllı tahtalarda en arka sıradan rahatça okunabilen optimize tipografi ve dokunmatik sunum deneyimi.</li>
                 <li style="margin-bottom: 10px;"><strong>Formülsüz Sade 2D Sanal Laboratuvarlar:</strong> MEB Maarif Modeli felsefesine tam uyumlu; formül ve matematiksel karmaşadan arındırılmış, bağımsız ve kontrol değişkenlerini yaşayarak öğreten çift düzenekli deneyler.</li>
@@ -2181,7 +2181,7 @@
                                 <div class="lab-slider-field" style="margin-bottom: 10px;">
                                     <div class="slider-header" style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:4px;">
                                         <span>Kemer Kanal Eğimi:</span>
-                                        <strong id="val-aqueduct-slope" style="color: #38bdf8;">%0.2 (İdeal Sinan Eğimi)</strong>
+                                        <strong id="val-aqueduct-slope" style="color: #38bdf8;">%0.2 (Dengeli Akış Eğimi)</strong>
                                     </div>
                                     <input type="range" id="slider-aqueduct-slope" min="1" max="10" value="2" step="1" class="fenupx-slider" style="width: 100%;">
                                     <small style="color: #94a3b8; font-size: 0.75rem;">Düşük eğim durulma sağlar; aşırı eğim aşınma ve taşmaya yol açar.</small>
@@ -4897,9 +4897,10 @@
                     <div class="auth-field-group">
                         <label for="user-grade" class="auth-label">Sınıfın</label>
                         <select id="user-grade" class="fenupx-input auth-input reg-grade" name="grade">
+                            <option value="" disabled selected>Sınıfını Seçin</option>
                             <option value="5">5. Sınıf</option>
                             <option value="6">6. Sınıf</option>
-                            <option value="7" selected>7. Sınıf</option>
+                            <option value="7">7. Sınıf</option>
                             <option value="8">8. Sınıf</option>
                         </select>
                     </div>
@@ -4956,9 +4957,10 @@
             <div class="auth-field-group">
                 <label for="google-user-grade" class="auth-label">Sınıfın</label>
                 <select id="google-user-grade" class="fenupx-input auth-input">
+                    <option value="" disabled selected>Sınıfını Seçin</option>
                     <option value="5">5. Sınıf</option>
                     <option value="6">6. Sınıf</option>
-                    <option value="7" selected>7. Sınıf</option>
+                    <option value="7">7. Sınıf</option>
                     <option value="8">8. Sınıf</option>
                 </select>
             </div>
@@ -5038,8 +5040,8 @@
     <script>
         window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.2';
     </script>
-    <script type="module" src="exam-engine.js?v=8.9.9"></script>
-    <script type="module" src="lab-engine.js?v=8.9.9"></script>
-    <script type="module" src="script.js?v=8.9.9"></script>
+    <script type="module" src="exam-engine.js?v=8.9.10"></script>
+    <script type="module" src="lab-engine.js?v=8.9.10"></script>
+    <script type="module" src="script.js?v=8.9.10"></script>
 </body>
 </html>

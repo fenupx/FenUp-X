@@ -69,7 +69,7 @@ export const EXPERIMENTS_DATABASE = [
         title: "Isı İletkenliği ve Yalıtım Simülatörü",
         code: "FB.5.5.5 - FB.5.5.6", bookRef: "2. Kitap, s. 86–94",
         active: true, // 🏆 AKTİF!
-        desc: "Farklı metallerin (bakır, alüminyum, demir) ısı iletim hızlarını ve binalarda yalıtım malzemelerinin enerji tasarrufundaki rolünü simüle edin."
+        desc: "Mumla tutturulmuş bilyelerin düşüşüyle metallerin (bakır, alüminyum, demir) ısı iletim hızlarını ve binalarda yalıtım modellerinin enerji tasarrufundaki rolünü simüle edin."
     },
     {
         id: "5.10", grade: 5, unit: 6, unitName: "Yaşamımızda Elektrik",
@@ -109,18 +109,11 @@ export const EXPERIMENTS_DATABASE = [
         desc: "Düzlem aynada gelen ve yansıyan ışın ile yüzey normali arasındaki gelme=yansıma (i=r) kanununu, düzgün/dağınık yansımayı ve çukur/tümsek aynalarda cisim mesafesine göre görüntü özelliklerini simüle edin."
     },
     {
-        id: "6.5", grade: 6, unit: 5, unitName: "Maddenin Doğası ve Yoğunluk",
-        title: "Yoğunluk (Özkütle) ve Yüzme-Batma",
-        code: "FB.6.5.3 - FB.6.5.4", bookRef: "2. Kitap, s. 38–59",
-        active: true, // 🏆 AKTİF!
-        desc: "Kütle ve hacim ölçümlerinden yoğunluğu (d = m/V) hesaplayarak su ve zeytinyağı katmanlaşmasını ve katı cisimlerin yüzme-batma hallerini gözlemleyin."
-    },
-    {
         id: "6.6", grade: 6, unit: 3, unitName: "Canlılarda Sistemler ve Yaşam",
         title: "Tohumun Çimlenmesine Etki Eden Faktörler",
         code: "FB.6.3.3", bookRef: "1. Kitap, s. 94–96",
         active: true, // 🏆 AKTİF!
-        desc: "Fasulye tohumlarının çimlenmesi için gerekli çevre şartlarını (su/nem, oksijen, uygun sıcaklık) test edin; karanlık ve aydınlık ortamlarda çimlenmeyi karşılaştırarak ışığın çimlenmeye etki etmediğini gözlemleyin."
+        desc: "Fasulye tohumlarının çimlenmesi için gerekli çevre şartlarını (su/nem, uygun sıcaklık) test edin; karanlık ve aydınlık ortamlarda çimlenmeyi karşılaştırarak tohumun çimlenmesi için ışığın gerekli olmadığını gözlemleyin."
     },
     {
         id: "6.7", grade: 6, unit: 4, unitName: "Işığın Yansıması ve Renkler",
@@ -135,6 +128,13 @@ export const EXPERIMENTS_DATABASE = [
         code: "FB.6.5.1", bookRef: "2. Kitap, s. 22–24",
         active: true, // 🏆 AKTİF!
         desc: "Gravzant halkası ve metal küre düzeneğinde küreyi ısıtıp genleşmesini (halkadan geçememe) ve soğuk suya daldırarak büzülmesini (halkadan tekrar geçme) gözlemleyin."
+    },
+    {
+        id: "6.5", grade: 6, unit: 5, unitName: "Maddenin Doğası ve Yoğunluk",
+        title: "Yoğunluk (Özkütle) ve Yüzme-Batma",
+        code: "FB.6.5.3 - FB.6.5.4", bookRef: "2. Kitap, s. 38–59",
+        active: true, // 🏆 AKTİF!
+        desc: "Kütle ve hacim ölçümlerinden yoğunluğu (d = m/V) hesaplayarak su ve zeytinyağı katmanlaşmasını ve katı cisimlerin yüzme-batma hallerini gözlemleyin."
     },
     {
         id: "6.9", grade: 6, unit: 6, unitName: "Elektriğin İletimi ve Direnç",
@@ -181,18 +181,18 @@ export const EXPERIMENTS_DATABASE = [
         desc: "İnce ve kalın kenarlı merceklerde ışınların toplanma/dağılma fiziğini, odak noktasını (F) ve cismin oluşan görüntüsünü (düz-büyük büyüteç veya ters-küçük) nitel olarak inceleyin."
     },
     {
-        id: "7.5", grade: 7, unit: 5, unitName: "Maddenin Doğasına Yolculuk",
-        title: "Karışımların Ayrılması Simülatörü (Ayırma Hunisi ve Ayrımsal Damıtma)",
-        code: "FB.7.5.10", bookRef: "2. Kitap, s. 90–101",
-        active: true, // 🏆 AKTİF!
-        desc: "Zeytinyağı-su heterojen karışımını ayırma hunisinde yoğunluk farkıyla, homojen alkol-su çözeltisini ayrımsal damıtmada kaynama noktası farkıyla ayırın."
-    },
-    {
         id: "7.6", grade: 7, unit: 5, unitName: "Maddenin Doğasına Yolculuk",
         title: "Çözünme Hızını Etkileyen Faktörler Simülatörü",
         code: "FB.7.5.9", bookRef: "2. Kitap, s. 78–89",
         active: true, // 🏆 AKTİF!
         desc: "Sıcaklık, temas yüzeyi (pudra/toz/küp şeker) ve karıştırmanın çözünme süresine etkisini 3 beherli kontrollü deney düzeneğinde eşzamanlı test edin."
+    },
+    {
+        id: "7.5", grade: 7, unit: 5, unitName: "Maddenin Doğasına Yolculuk",
+        title: "Karışımların Ayrılması Simülatörü (Ayırma Hunisi ve Ayrımsal Damıtma)",
+        code: "FB.7.5.10", bookRef: "2. Kitap, s. 90–101",
+        active: true, // 🏆 AKTİF!
+        desc: "Zeytinyağı-su heterojen karışımını ayırma hunisinde yoğunluk farkıyla, homojen alkol-su çözeltisini ayrımsal damıtmada kaynama noktası farkıyla ayırın."
     },
     {
         id: "7.7", grade: 7, unit: 6, unitName: "Elektriklenme",
@@ -20694,7 +20694,11 @@ function updateCompressibilityPhysics() {
     if (mbGap) mbGap.textContent = gapLabels[cp.state];
     if (mbComp) mbComp.textContent = compLabels[cp.state];
     if (mbStatus) {
-        if (cp.state === 'gas') mbStatus.textContent = "💨 Gazlar tanecikler arasındaki geniş boşluklar sebebiyle kolayca sıkışır (Hacim azaldı)";
+        if (cp.state === 'gas') {
+            mbStatus.textContent = cp.forcePercent > 0
+                ? "💨 Gazlar tanecikler arasındaki geniş boşluklar sebebiyle kolayca sıkışır (Hacim azaldı)"
+                : "💨 Gaz tanecikleri serbest hareket eder; piston itildiğinde sıkıştırılabilir";
+        }
         else if (cp.state === 'liquid') mbStatus.textContent = "💧 Sıvı tanecikleri birbiriyle temas halindedir; sıvı sıkıştırılamaz";
         else mbStatus.textContent = "🪨 Küçük taş tanecikleri çok sıkı dizilmiştir; katı maddeler sıkıştırılamaz";
     }
@@ -21312,8 +21316,13 @@ function updateWaterStatePhysics() {
     const pIcon = document.getElementById('waterstate-pedagogical-icon');
     if (pTitle && pText) {
         if (ws.phase === "solid") {
-            pTitle.textContent = "🧊 Katı Hâli (-10°C -> 0°C Buz Isınıyor)";
-            pText.textContent = "Buz ısıtıldıkça sıcaklığı yükselir. Taneciklerin titreşim enerjisi artar ve erime noktası olan 0°C'ye ulaşır.";
+            if (!ws.isHeating && ws.elapsedMinutes === 0) {
+                pTitle.textContent = "🧊 Katı Hâli (-10°C Başlangıç - Isıtıcı kapalı)";
+                pText.textContent = "Buz ısıtılmayı bekliyor. İspirto ocağını yakarak sıcaklık artışını ve erime sürecini başlatabilirsiniz.";
+            } else {
+                pTitle.textContent = "🧊 Katı Hâli (-10°C -> 0°C Buz Isınıyor)";
+                pText.textContent = "Buz ısıtıldıkça sıcaklığı yükselir. Taneciklerin titreşim enerjisi artar ve erime noktası olan 0°C'ye ulaşır.";
+            }
             if (pIcon) pIcon.innerHTML = '<i class="fas fa-snowflake" style="color: #38bdf8;"></i>';
         } else if (ws.phase === "melting") {
             pTitle.textContent = "🧊 Erime Hâli (0°C Sabit Sıcaklık Platosu)";
@@ -21895,7 +21904,7 @@ function updateTableHeader(expId) {
             <tr>
                 <th>#</th>
                 <th>Tutulma Türü</th>
-                <th>Gezegen Sıralaması</th>
+                <th>Gök Cisimlerinin Sıralaması</th>
                 <th>Ay Evresi</th>
                 <th>Gözlem Zamanı / Bölgesi</th>
                 <th>Gölge Tipi & Görsel Efekt</th>
@@ -22731,7 +22740,7 @@ function recordMeasurement() {
             col2 = `Eğim: %${fmt(aq.slope, 1)} · Debi: ${aq.flow} L/s`;
             col3 = `${aq.waterDelivered} L/s İletim`;
             col4 = aq.flood ? "Sel Tahliyesi (%99 Başarılı)" : "Sıfır Enerji / Yerçekimi";
-            col5 = aq.slope === 0.2 ? "Mimar Sinan İdeal Akışı" : "Hassas Eğim Ayarı";
+            col5 = aq.slope === 0.2 ? "Dengeli Akış Eğimi %0.2" : "Hassas Eğim Ayarı";
         } else if (wf.mode === "tech") {
             const tc = wf.tech;
             const domSaving = tc.aerator && tc.greywater ? 65 : (tc.aerator ? 50 : (tc.greywater ? 30 : 0));
@@ -22761,20 +22770,61 @@ function recordMeasurement() {
 
     renderMeasurementTable();
 
-    // V8.9.9: Deney tamamlama kaydı, günlük seri güncelleme ve Sanal Simyacı rozeti
+    // V8.9.10: Deney tamamlama kaydı (en az 2 gözlem/aksiyon şartı)
     try {
         if (expId) {
-            saveLabExperimentProgress(expId, 'completed');
-        }
-        if (typeof window.checkAndUpdateStreak === 'function') {
-            window.checkAndUpdateStreak();
+            const currentMeasurements = getActiveExperimentMeasurements(expId);
+            const count = currentMeasurements.length;
+            if (count >= 2) {
+                saveLabExperimentProgress(expId, 'completed', { observationsCount: count });
+                if (typeof window.checkAndUpdateStreak === 'function') {
+                    window.checkAndUpdateStreak();
+                }
+            } else {
+                saveLabExperimentProgress(expId, 'in_progress', { observationsCount: count });
+            }
         }
         let labObsCount = parseInt(localStorage.getItem('fenupx_lab_obs_count') || '0', 10) + 1;
         localStorage.setItem('fenupx_lab_obs_count', labObsCount.toString());
-        if (labObsCount >= 3 && typeof window.unlockBadge === 'function') {
-            window.unlockBadge('badge_laboratuvar');
+        if (typeof window.evaluateBadges === 'function') {
+            window.evaluateBadges();
         }
     } catch (_) {}
+}
+
+export function getActiveExperimentMeasurements(expId) {
+    if (!expId) return [];
+    if (expId === "5.1") return labState.moonPhases.measurements;
+    if (expId === "5.2") return labState.dynamometer.measurements;
+    if (expId === "5.3") return labState.friction.measurements;
+    if (expId === "5.4") return labState.lightRect.measurements;
+    if (expId === "5.5") return labState.shadow.measurements;
+    if (expId === "5.6") return labState.compressibility.measurements;
+    if (expId === "5.7") return labState.heatExchange.measurements;
+    if (expId === "5.8") return labState.waterState.measurements;
+    if (expId === "5.9") return labState.heatTransfer.measurements;
+    if (expId === "5.10") return labState.circuit.measurements;
+    if (expId === "6.1") return labState.eclipse.measurements;
+    if (expId === "6.2") return labState.tugOfWar.measurements;
+    if (expId === "6.3") return labState.motion.measurements;
+    if (expId === "6.4") return labState.reflection.measurements;
+    if (expId === "6.5") return labState.densityTower.measurements;
+    if (expId === "6.6") return labState.germination.measurements;
+    if (expId === "6.7") return labState.absorption.measurements;
+    if (expId === "6.8") return labState.expansion.measurements;
+    if (expId === "6.9") return labState.conductivity.measurements;
+    if (expId === "6.10") return labState.resistance.measurements;
+    if (expId === "7.1") return labState.work.measurements;
+    if (expId === "7.2") return labState.energy.measurements;
+    if (expId === "7.3") return labState.refraction.measurements;
+    if (expId === "7.4") return labState.lenses.measurements;
+    if (expId === "7.5") return labState.distillation.measurements;
+    if (expId === "7.6") return labState.dissolution.measurements;
+    if (expId === "7.7") return labState.electrostatics.measurements;
+    if (expId === "7.8") return labState.electroscope.measurements;
+    if (expId === "7.9") return labState.foodPyramid.measurements;
+    if (expId === "7.10") return labState.waterFootprint.measurements;
+    return [];
 }
 
 function renderMeasurementTable() {
@@ -23245,7 +23295,7 @@ function setAqueductSlope(val) {
     aq.waterDelivered = Math.round(aq.flow * (val >= 0.1 && val <= 0.4 ? 0.99 : Math.max(0.7, 1.0 - (val - 0.2) * 0.15)));
     const disp = document.getElementById('val-aqueduct-slope');
     if (disp) {
-        disp.textContent = `%${val.toFixed(1)} ${val === 0.2 ? '(İdeal Sinan Eğimi)' : (val > 0.4 ? '(Aşırı Eğim / Erozyon)' : '(Durgun Akış)')}`;
+        disp.textContent = `%${val.toFixed(1)} ${val === 0.2 ? '(Dengeli Akış Eğimi %0.2)' : (val > 0.4 ? '(Aşırı Eğim / Erozyon Riski)' : '(Durgun Akış)')}`;
     }
     updateWaterFootprintDOM();
 }

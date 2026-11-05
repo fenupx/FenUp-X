@@ -126,8 +126,12 @@ test.describe('Ölçüt Temelli Öz Değerlendirme ve Hedefli Konu Tekrarı', ()
     await expect(page.locator('.q-nav-btn[data-eval-q="0"]')).toHaveClass(/eval-completed/);
     await expect(page.locator('.eval-card .exam-qmeta')).toContainText('SORU 2 / 7');
 
-    // Soru 2: HİÇBİR ÖLÇÜTÜ İŞARETLEME (0 puan kaydetme testi)
+    // Soru 2: Seçim yapılmadan ilerlenmek istendiğinde uyarı gösterilmeli ve ilerlenmemeli
     await page.locator('#btn-eval-next-q').click();
+    await expect(page.locator('#eval-notice-box')).toBeVisible();
+
+    // Soru 2: Bilinçli olarak "Yapamadım / Boş Bıraktım (0 Puan)" seçimi yapılır
+    await page.locator('#btn-eval-zero').click();
 
     // Şimdi Soru 3'teyiz (2. buton da kaydedildi olarak mühürlenmeli)
     await expect(page.locator('.q-nav-btn[data-eval-q="1"]')).toHaveClass(/eval-completed/);

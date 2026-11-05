@@ -245,10 +245,11 @@ test.describe('FenUp X — Bütünleşik “Çalışmalarım” Profili ve Öğr
         await expect(ligPane).toBeVisible();
 
         // Boş geçmişte şeffaf bilgilendirme notu
-        await expect(ligPane.locator('.studies-empty-state')).toContainText('Detaylı yarışma geçmişi bu sürümden itibaren izlenmektedir. Önceki sezon ve liderlik puanlarınız hesabınızda korunmaktadır.');
+        await expect(ligPane.locator('.studies-empty-state')).toContainText('Detaylı yarışma geçmişi bu sürümden itibaren izlenmektedir.');
 
-        // Kendi sınıfının lig puanları korunmaktadır
-        await expect(ligPane.locator('.studies-comp-summary-card')).toContainText('Sezon Puanı: 150');
+        // Kendi sınıfının lig puanları korunmaktadır (Bu Sezon Puanın)
+        await expect(ligPane.locator('.studies-comp-summary-card')).toContainText('Bu Sezon Puanın');
+        await expect(ligPane.locator('.studies-comp-summary-card')).toContainText('150');
 
         // Şimdi maç geçmişi olan durumu sına
         await page.evaluate(() => {
@@ -277,7 +278,9 @@ test.describe('FenUp X — Bütünleşik “Çalışmalarım” Profili ve Öğr
         // Sayacın güncellendiğini kontrol et: 2 yarışma
         await expect(profileModal.locator('#studies-summary-counter-text')).toContainText('2 yarışma');
 
-        // Maç listesi ve onay durumu rozetleri
+        // Maç listesi akordiyonu açılır ve onay durumu rozetleri kontrol edilir
+        const matchDetails = ligPane.locator('.studies-match-history-details summary');
+        await matchDetails.click();
         const matchList = ligPane.locator('.studies-match-list');
         await expect(matchList).toBeVisible();
         await expect(matchList.locator('.studies-match-item')).toHaveCount(2);
@@ -285,11 +288,11 @@ test.describe('FenUp X — Bütünleşik “Çalışmalarım” Profili ve Öğr
         await expect(matchList.locator('.status-unverified-pill')).toHaveText('Antrenman');
     });
 
-    test('5. Sanal Laboratuvar Bölümü: 30 Deney Envanteri, Durum Geçişleri ve "Yeniden Aç" Buton Sözleşmesi', async ({ page }) => {
+    test('5. Sanal Laboratuvar Bölümü: Üzerinde Çalışılan Deneyler ve Tüm Deney Kataloğu', async ({ page }) => {
         await mockStudentEnvironment(page, {
             labProgress: {
                 '5.1': { status: 'completed', observationsCount: 2 },
-                '5.2': { status: 'in_progress', observationsCount: 0 }
+                '5.2': { status: 'in_progress', observationsCount: 1 }
             }
         });
 
@@ -301,37 +304,32 @@ test.describe('FenUp X — Bütünleşik “Çalışmalarım” Profili ve Öğr
         const labPane = profileModal.locator('#pane-study-lab');
         await expect(labPane).toBeVisible();
 
-        // 30 Deneyin tam envanteri mevcuttur
-        await expect(labPane.locator('.studies-lab-grid .studies-lab-card')).toHaveCount(30);
-
         // Sayaçlar: 1 Tamamlandı, 1 Devam Ediyor, 28 Başlanmadı
         await expect(labPane.locator('.pill-completed')).toContainText('1 Tamamlandı');
         await expect(labPane.locator('.pill-in-progress')).toContainText('1 Devam Ediyor');
         await expect(labPane.locator('.pill-not-started')).toContainText('28 Başlanmadı');
 
-        // Deney 5.1 (Tamamlandı) durumunu ve butonunu kontrol et: "Yeniden Aç"
-        const card51 = labPane.locator('.studies-lab-card[data-exp-id="5.1"]');
+        // Üzerinde çalışılan deneyler ilk sırada gösterilir (2 aktif deney)
+        const activeCards = labPane.locator('.studies-active-labs-box .studies-lab-card');
+        await expect(activeCards).toHaveCount(2);
+
+        // Deney 5.1 (Tamamlandı) durumunu ve butonunu kontrol et
+        const card51 = activeCards.filter({ hasText: '5.1' });
         await expect(card51.locator('.study-badge-completed')).toHaveText('Tamamlandı');
         await expect(card51.locator('.lab-obs-tag')).toHaveText('2 Gözlem');
-        await expect(card51.locator('.btn-open-experiment')).toHaveText('Yeniden Aç');
 
-        // Deney 5.2 (Devam Ediyor) durumunu ve butonunu kontrol et: "Yeniden Aç" (durum tam geri yüklenemediği için)
-        const card52 = labPane.locator('.studies-lab-card[data-exp-id="5.2"]');
+        // Deney 5.2 (Devam Ediyor) durumunu kontrol et
+        const card52 = activeCards.filter({ hasText: '5.2' });
         await expect(card52.locator('.study-badge-in-progress')).toHaveText('Devam Ediyor');
-        await expect(card52.locator('.btn-open-experiment')).toHaveText('Yeniden Aç');
 
-        // Deney 5.3 (Başlanmadı) butonunu kontrol et: "Deneyi Başlat"
-        const card53 = labPane.locator('.studies-lab-card[data-exp-id="5.3"]');
-        await expect(card53.locator('.study-badge-not-started')).toHaveText('Başlanmadı');
-        await expect(card53.locator('.btn-open-experiment')).toHaveText('Deneyi Başlat');
-
-        // Sınıf filtreleri: 7. sınıf filtresine basıldığında yalnız 10 adet 7. sınıf deneyi görünür
-        await labPane.locator('.lab-filter-btn[data-grade="7"]').click();
-        await expect(labPane.locator('.studies-lab-grid .studies-lab-card')).toHaveCount(10);
-        await expect(labPane.locator('.studies-lab-grid .studies-lab-card').first()).toContainText('7.1');
+        // Tüm Deney Listesi varsayılan olarak akordiyon altında düzenli tutulur
+        const allLabsDetails = labPane.locator('.profile-all-labs-details');
+        await expect(allLabsDetails).toBeVisible();
+        await allLabsDetails.locator('summary').click();
+        await expect(allLabsDetails.locator('.studies-lab-card')).toHaveCount(30);
     });
 
-    test('6. Rozet Denetimi: "Bilim Ustası" Sade Başlığı, Sayfa Yenilemede Dağıtılmama ve 10 Rozet Korunması', async ({ page }) => {
+    test('6. Rozet Denetimi: 3 Gelişen Rozet Ailesi ve Önceki Başarıların Korunması', async ({ page }) => {
         await mockStudentEnvironment(page, {
             badges: ['badge_ilk_adim']
         });
@@ -339,17 +337,19 @@ test.describe('FenUp X — Bütünleşik “Çalışmalarım” Profili ve Öğr
         await openProfileModal(page);
         const profileModal = page.locator('#profile-modal');
 
-        // Rozet vitrininde tam 10 rozet mevcuttur
-        const badgeCards = profileModal.locator('.cosmic-badges-grid .cosmic-badge-item');
-        await expect(badgeCards).toHaveCount(10);
+        // Rozet vitrininde 3 gelişen rozet ailesi gösterilir
+        const badgeCards = profileModal.locator('.cosmic-badges-grid .badge-family-card');
+        await expect(badgeCards).toHaveCount(3);
 
-        // badge_bilim_ustasi rozetinin adı "Bilim Ustası" olmalı; "Fen Dehası" veya "Dâhi" olmamalı
-        const bilimUstasiCard = badgeCards.filter({ hasText: 'badge_bilim_ustasi' }).or(badgeCards.filter({ hasText: 'Bilim Ustası' }));
-        await expect(bilimUstasiCard).toBeVisible();
-        const cardText = await bilimUstasiCard.textContent();
-        expect(cardText).toContain('Bilim Ustası');
-        expect(cardText).not.toContain('Dehası');
-        expect(cardText).not.toContain('Dahi');
+        // Rozet aileleri başlıkları
+        await expect(badgeCards.nth(0)).toContainText('Araştırmacı');
+        await expect(badgeCards.nth(1)).toContainText('Kararlı Kâşif');
+        await expect(badgeCards.nth(2)).toContainText('Bilgi Yolcusu');
+
+        // Eski kazanılmış rozetler 'Önceki Başarılar' altında korunur
+        const legacyDetails = profileModal.locator('.profile-legacy-badges-details');
+        await expect(legacyDetails).toBeVisible();
+        await expect(legacyDetails).toContainText('Önceki Başarılar');
 
         // Sayfa yenileme yapıldığında kazanılmamış rozetler otomatik verilmemelidir
         await page.reload();
@@ -394,12 +394,25 @@ test.describe('FenUp X — Bütünleşik “Çalışmalarım” Profili ve Öğr
 
             // Sanal lab sekmesine geçip taşma olmadığını doğrula
             await profileModal.locator('#tab-btn-lab').click();
-            const labCard = profileModal.locator('.studies-lab-card').first();
-            await expect(labCard).toBeVisible();
-            const cardBox = await labCard.boundingBox();
-            expect(cardBox).toBeTruthy();
-            if (cardBox && modalBox) {
-                expect(cardBox.width).toBeLessThanOrEqual(modalBox.width);
+            const labSummary = profileModal.locator('.studies-lab-summary-card');
+            await expect(labSummary).toBeVisible();
+            const sumBox = await labSummary.boundingBox();
+            expect(sumBox).toBeTruthy();
+            if (sumBox && modalBox) {
+                expect(sumBox.width).toBeLessThanOrEqual(modalBox.width);
+            }
+
+            // Deney listesi akordiyonu açıldığında kartların modal sınırlarında kaldığını doğrula
+            const allLabs = profileModal.locator('.profile-all-labs-details');
+            if (await allLabs.isVisible()) {
+                await allLabs.evaluate(el => el.open = true);
+                const labCard = allLabs.locator('.studies-lab-card').first();
+                await expect(labCard).toBeVisible();
+                const cardBox = await labCard.boundingBox();
+                expect(cardBox).toBeTruthy();
+                if (cardBox && modalBox) {
+                    expect(cardBox.width).toBeLessThanOrEqual(modalBox.width);
+                }
             }
         }
     });

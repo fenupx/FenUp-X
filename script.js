@@ -3025,11 +3025,21 @@ if(btnAcceptCookies) {
     };
 }
 
+let lastFocusedModalTrigger = null;
+
 function showModal(modal) {
     if (!modal) return;
+    lastFocusedModalTrigger = document.activeElement;
     modal.classList.remove('is-hidden');
     modal.classList.add('is-open', 'active');
     modal.style.display = 'flex';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-hidden', 'false');
+    const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (focusable) {
+        try { focusable.focus(); } catch (_) {}
+    }
 }
 
 function hideModal(modal) {
@@ -3037,6 +3047,10 @@ function hideModal(modal) {
     modal.classList.add('is-hidden');
     modal.classList.remove('is-open', 'active');
     modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+    if (lastFocusedModalTrigger && typeof lastFocusedModalTrigger.focus === 'function') {
+        try { lastFocusedModalTrigger.focus(); } catch (_) {}
+    }
 }
 
 const policyModal = document.getElementById('policy-modal');
@@ -3052,7 +3066,8 @@ const policies = {
         <p>Platformumuz 18 yaş altı ortaokul öğrencilerinin kullanımı için tasarlandığından çocuk mahremiyeti temel kırmızı çizgimizdir. Platformumuz <strong>minimum veri toplama</strong> prensibini benimser:</p>
         <ul style="margin-left: 20px;">
             <li style="margin-bottom: 8px;">Platformu kullanırken T.C. kimlik numarası, telefon numarası veya açık adres gibi hassas veriler KESİNLİKLE talep edilmez.</li>
-            <li style="margin-bottom: 8px;">Yazılı sınav provasında çözülen sorular, verilen cevaplar ve puan ilerlemeleri yalnızca öğrencinin kendi tarayıcısında (yerel depolama - <code>localStorage</code>) saklanır; merkezi bir sunucuya veya dış ortama aktarılmaz.</li>
+            <li style="margin-bottom: 8px;">Yazılı sınav provalarında çözülen sorular ve sanal laboratuvar gözlem defteri notları yalnızca öğrencinin bu cihazdaki tarayıcısında (yerel depolama - <code>localStorage</code>) saklanır; merkezi bir sunucuya aktarılmaz.</li>
+            <li style="margin-bottom: 8px;">Kayıtlı üye olarak katıldığınız Şampiyonlar Ligi turnuva puanları ve liderlik dereceleri ise, adil sıralama ve hesap güvenliği için sunucuya güvenli biçimde aktarılır ve hesabınızla senkronize edilir.</li>
         </ul>
         <h3 style="color:var(--neon-blue); margin-top:20px; margin-bottom:10px;">2. Veri Paylaşımı ve Ticari Yasak</h3>
         <p>Öğrencilere, velilere veya öğretmenlere ait hiçbir bilgi; reklam, tanıtım, pazarlama veya ticari amaçla üçüncü kişi, kurum veya kuruluşlarla ASLA paylaşılmaz, satılmaz veya devredilmez.</p>
@@ -3168,9 +3183,12 @@ if (btnFooterInfo && footerInfoDropdown) {
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-        if (policyModal && !policyModal.classList.contains('is-hidden')) {
-            hideModal(policyModal);
-        }
+        const openModals = document.querySelectorAll('.modal-overlay.is-open:not(.is-hidden), .modal-overlay:not(.is-hidden)');
+        openModals.forEach(m => {
+            if (m.id !== 'modal-onboarding-grade') {
+                hideModal(m);
+            }
+        });
     }
 });
 
@@ -3327,9 +3345,10 @@ if (studentPane) {
             <div class="auth-field-group">
                 <label for="user-grade" class="auth-label">Sınıfın</label>
                 <select id="user-grade" class="fenupx-input auth-input reg-grade" name="grade">
+                    <option value="" disabled selected>Sınıfını Seçin</option>
                     <option value="5">5. Sınıf</option>
                     <option value="6">6. Sınıf</option>
-                    <option value="7" selected>7. Sınıf</option>
+                    <option value="7">7. Sınıf</option>
                     <option value="8">8. Sınıf</option>
                 </select>
             </div>
@@ -3515,7 +3534,146 @@ export function updateStreakUI(count) {
 }
 
 // ==========================================================================
-// V8.9.1: 10 EVRENSEL KOZMİK BAŞARI ROZETİ TANIMI (TÜM SINIF DÜZEYLERİNE UYGUN)
+// V8.9.10: ÜÇ GELİŞEN ROZET AİLESİ (3 AİLE · 3'ER AŞAMA)
+// ==========================================================================
+export const BADGE_FAMILIES = [
+    {
+        id: 'family_arastirmaci',
+        title: 'Araştırmacı',
+        module: 'Sanal Laboratuvar',
+        icon: '🔬',
+        stages: [
+            { stage: 1, title: 'Gözlemci Kâşif', target: 2, unit: 'deney', desc: 'En az 2 farklı deneyi etkileşim ve ölçüm notuyla tamamla.' },
+            { stage: 2, title: 'Deney Uzmanı', target: 5, unit: 'deney', desc: 'En az 5 farklı deneyi tamamla.' },
+            { stage: 3, title: 'Bilim İnsanı', target: 10, unit: 'deney', desc: 'En az 10 farklı deneyi tamamla.' }
+        ]
+    },
+    {
+        id: 'family_kararli_kasif',
+        title: 'Kararlı Kâşif',
+        module: 'Yazılıya Hazırlık',
+        icon: '📖',
+        stages: [
+            { stage: 1, title: 'Hazırlık Yolcusu', desc: '1 yazılı provasını ve en az 1 tekrar kartını tamamla.' },
+            { stage: 2, title: 'Odaklı Çalışan', desc: 'En az 2 yazılı provasını değerlendirip tekrar döngüsünü tamamla.' },
+            { stage: 3, title: 'Sınav Ustası', desc: 'En az 3 farklı senaryo provasını ve ilişkili tekrar kartlarını tamamla.' }
+        ]
+    },
+    {
+        id: 'family_bilgi_yolcusu',
+        title: 'Bilgi Yolcusu',
+        module: 'Şampiyonlar Ligi',
+        icon: '🏆',
+        stages: [
+            { stage: 1, title: 'Lig Çırağı', target: 2, desc: 'En az 2 farklı günde veya 2 farklı ünitede yarışma tamamla.' },
+            { stage: 2, title: 'Lig Kâşifi', target: 3, desc: 'En az 3 farklı günde veya ünitede yarışma tamamla.' },
+            { stage: 3, title: 'Kozmik Şampiyon', target: 5, desc: 'En az 5 farklı günde veya ünitede yarışma tamamla.' }
+        ]
+    }
+];
+
+export function getBadgeFamilyProgress() {
+    let completedLabCount = 0;
+    try {
+        const raw = localStorage.getItem('fenupx_lab_progress');
+        if (raw) {
+            const pMap = JSON.parse(raw);
+            Object.values(pMap).forEach(item => {
+                if (item?.status === 'completed') completedLabCount++;
+            });
+        }
+    } catch (_) {}
+
+    let stageLab = 0;
+    let nextLabHint = 'Aşama 1 için 2 deney tamamla';
+    if (completedLabCount >= 10) {
+        stageLab = 3;
+        nextLabHint = 'En yüksek aşamaya ulaştın!';
+    } else if (completedLabCount >= 5) {
+        stageLab = 2;
+        nextLabHint = `Aşama 3 için ${10 - completedLabCount} deney daha tamamla`;
+    } else if (completedLabCount >= 2) {
+        stageLab = 1;
+        nextLabHint = `Aşama 2 için ${5 - completedLabCount} deney daha tamamla`;
+    } else {
+        nextLabHint = `Aşama 1 için ${2 - completedLabCount} deney daha tamamla`;
+    }
+
+    let completedExamsCount = 0;
+    const distinctScenarios = new Set();
+    let viewedCardsCount = 0;
+    try {
+        const rawHist = localStorage.getItem('fenupx_exam_attempts_history');
+        if (rawHist) {
+            const arr = JSON.parse(rawHist);
+            if (Array.isArray(arr)) {
+                arr.forEach(att => {
+                    if (att.status === 'completed' || att.finished) {
+                        completedExamsCount++;
+                        if (att.scenarioId || att.scenario) distinctScenarios.add(att.scenarioId || att.scenario);
+                    }
+                });
+            }
+        }
+        const rawCards = localStorage.getItem('fenupx_viewed_cards');
+        if (rawCards) {
+            const arrC = JSON.parse(rawCards);
+            if (Array.isArray(arrC)) viewedCardsCount = arrC.length;
+        }
+    } catch (_) {}
+
+    let stageExam = 0;
+    let nextExamHint = 'Aşama 1 için 1 prova ve 1 tekrar kartı tamamla';
+    if (distinctScenarios.size >= 3 && viewedCardsCount >= 3) {
+        stageExam = 3;
+        nextExamHint = 'En yüksek aşamaya ulaştın!';
+    } else if (completedExamsCount >= 2 && viewedCardsCount >= 2) {
+        stageExam = 2;
+        nextExamHint = 'Aşama 3 için 3 farklı senaryo ve tekrar kartı tamamla';
+    } else if (completedExamsCount >= 1 && viewedCardsCount >= 1) {
+        stageExam = 1;
+        nextExamHint = 'Aşama 2 için 2. provayı ve tekrar döngüsünü tamamla';
+    }
+
+    const distinctDays = new Set();
+    const distinctUnits = new Set();
+    try {
+        const rawComp = localStorage.getItem('fenupx_competition_history');
+        if (rawComp) {
+            const arr = JSON.parse(rawComp);
+            if (Array.isArray(arr)) {
+                arr.forEach(m => {
+                    if (m.date) distinctDays.add(m.date);
+                    if (m.unit || m.unitId) distinctUnits.add(m.unit || m.unitId);
+                });
+            }
+        }
+    } catch (_) {}
+    const compActivityCount = Math.max(distinctDays.size, distinctUnits.size);
+    let stageComp = 0;
+    let nextCompHint = 'Aşama 1 için 2 farklı günde veya ünitede yarışma tamamla';
+    if (compActivityCount >= 5) {
+        stageComp = 3;
+        nextCompHint = 'En yüksek aşamaya ulaştın!';
+    } else if (compActivityCount >= 3) {
+        stageComp = 2;
+        nextCompHint = `Aşama 3 için ${5 - compActivityCount} farklı gün/ünite daha`;
+    } else if (compActivityCount >= 2) {
+        stageComp = 1;
+        nextCompHint = `Aşama 2 için ${3 - compActivityCount} farklı gün/ünite daha`;
+    } else {
+        nextCompHint = `Aşama 1 için ${2 - compActivityCount} farklı gün/ünite daha`;
+    }
+
+    return {
+        family_arastirmaci: { stage: stageLab, current: completedLabCount, nextHint: nextLabHint },
+        family_kararli_kasif: { stage: stageExam, current: completedExamsCount, nextHint: nextExamHint },
+        family_bilgi_yolcusu: { stage: stageComp, current: compActivityCount, nextHint: nextCompHint }
+    };
+}
+
+// ==========================================================================
+// V8.9.1: 10 EVRENSEL KOZMİK BAŞARI ROZETİ TANIMI (Önceki Başarılar Uyumluluğu)
 // ==========================================================================
 export const KOZMIK_ROZETLER = [
     {
@@ -3744,75 +3902,7 @@ export function checkAnnualPromotion(user) {
 export function evaluateBadges() {
     if (loadedProfile && loadedProfile.role === 'admin') return;
     try {
-        const cachedAv = localStorage.getItem('fenupx_user_avatar');
-        const userHasAvatar = !!(cachedAv || loadedProfile?.avatar);
-        if (userHasAvatar && isStudentProfile(loadedProfile)) {
-            unlockBadge('badge_ilk_adim');
-        }
-
-        const streak = getStreakData();
-        if (streak.count >= 3) {
-            unlockBadge('badge_seri_3');
-            unlockBadge('badge_ates_serisi');
-        }
-        if (streak.count >= 7) {
-            unlockBadge('badge_seri_7');
-            unlockBadge('badge_super_seri');
-        }
-
-        const labCount = parseInt(localStorage.getItem('fenupx_lab_obs_count') || '0', 10);
-        if (labCount >= 3) unlockBadge('badge_laboratuvar');
-
-        // Çalışma kartları inceleme (badge_kart_kasifi)
-        try {
-            let totalViewed = 0;
-            const rawCards = localStorage.getItem('fenupx_viewed_cards');
-            if (rawCards) {
-                const arr = JSON.parse(rawCards);
-                if (Array.isArray(arr)) totalViewed = arr.length;
-            }
-            const rawSpace = localStorage.getItem('fenupx_viewed_space_cards');
-            if (rawSpace) {
-                const arrSpace = JSON.parse(rawSpace);
-                if (Array.isArray(arrSpace)) totalViewed = Math.max(totalViewed, arrSpace.length);
-            }
-            if (totalViewed >= 10 || totalViewed >= 6) {
-                unlockBadge('badge_kart_kasifi');
-            }
-        } catch (_) {}
-
-        // 85+ Yazılı Prova Skoru (badge_bilim_ustasi)
-        try {
-            const rawSummary = localStorage.getItem('fenupx_last_exam_summary');
-            if (rawSummary) {
-                const sum = JSON.parse(rawSummary);
-                if (sum && sum.completed === true && typeof sum.score === 'number' && sum.score >= 85) {
-                    unlockBadge('badge_bilim_ustasi');
-                }
-            }
-            const examStateRaw = localStorage.getItem('fenupx_exam_pilot_v1');
-            if (examStateRaw) {
-                const es = JSON.parse(examStateRaw);
-                if (es && es.attempt && (es.attempt.finished || es.attempt.status === 'completed')) {
-                    if (es.attempt.scores) {
-                        const totalSc = Object.values(es.attempt.scores).reduce((a, b) => a + (Number(b) || 0), 0);
-                        if (totalSc >= 85) unlockBadge('badge_bilim_ustasi');
-                    }
-                }
-            }
-        } catch (_) {}
-
-        // 500 Toplam Kâşif Puanı (badge_efsane)
-        try {
-            const rawCu = localStorage.getItem('currentUser');
-            if (rawCu) {
-                const cu = JSON.parse(rawCu);
-                if (cu && cu.totalScore >= 500) {
-                    unlockBadge('badge_efsane');
-                    unlockBadge('badge_fenup_efsanesi');
-                }
-            }
-        } catch (_) {}
+        renderBadgesShowcase();
     } catch (e) {
         console.warn('evaluateBadges hatası:', e);
     }
@@ -3821,44 +3911,71 @@ export function evaluateBadges() {
 export function renderBadgesShowcase() {
     const grid = document.getElementById('cosmic-badges-grid');
     if (!grid) return;
+    const prog = getBadgeFamilyProgress();
     const earnedList = getEarnedBadges();
     const counter = document.getElementById('profile-badge-counter');
     if (counter) {
-        counter.textContent = `${earnedList.length} / ${KOZMIK_ROZETLER.length} Kazanıldı`;
+        const totalStages = Object.values(prog).reduce((s, p) => s + p.stage, 0);
+        counter.textContent = `${totalStages} / 9 Aşama Tamamlandı`;
     }
 
-    grid.innerHTML = KOZMIK_ROZETLER.map(badge => {
-        const isEarned = earnedList.includes(badge.id);
-        return `
-            <div class="cosmic-badge-item ${isEarned ? 'earned' : 'locked'}" data-badge-id="${badge.id}" tabindex="0" role="button" aria-label="${badge.title}">
-                <div class="badge-icon-wrap">
-                    <span class="badge-emoji">${badge.icon}</span>
-                    ${!isEarned ? '<span class="badge-mini-lock"><i class="fas fa-lock"></i></span>' : '<span class="badge-sparkle">✨</span>'}
+    let html = `
+        <div class="badge-families-container">
+            ${BADGE_FAMILIES.map(fam => {
+                const fProg = prog[fam.id] || { stage: 0, nextHint: '' };
+                const curStageObj = fam.stages.find(s => s.stage === fProg.stage);
+                const stageName = curStageObj ? curStageObj.title : 'Başlangıç';
+                const percent = Math.round((fProg.stage / 3) * 100);
+                return `
+                    <div class="badge-family-card stage-${fProg.stage}">
+                        <div class="badge-family-top">
+                            <span class="badge-family-icon">${fam.icon}</span>
+                            <div class="badge-family-header">
+                                <h5 class="badge-family-title">${fam.title}</h5>
+                                <span class="badge-family-module">${fam.module}</span>
+                            </div>
+                            <span class="badge-stage-tag ${fProg.stage > 0 ? 'active' : ''}">
+                                ${fProg.stage > 0 ? `Aşama ${fProg.stage} / 3` : 'Henüz Başlanmadı'}
+                            </span>
+                        </div>
+                        <div class="badge-family-level-name">${stageName}</div>
+                        <div class="badge-family-prog-bar">
+                            <div class="badge-family-prog-fill" style="width: ${percent}%;"></div>
+                        </div>
+                        <div class="badge-family-next-hint">
+                            <i class="fas fa-bullseye"></i> ${fProg.nextHint}
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+
+    // Eski 10 Rozeti 'Önceki Başarılar' altında koru
+    if (earnedList.length > 0) {
+        html += `
+            <details class="profile-legacy-badges-details" style="margin-top: 14px; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 12px; background: rgba(0,0,0,0.25);">
+                <summary style="font-size: 0.85rem; color: #94a3b8; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+                    <span><i class="fas fa-medal"></i> Önceki Başarılar (${earnedList.length} Rozet Kayıtlı)</span>
+                    <i class="fas fa-chevron-down" style="font-size: 0.75rem;"></i>
+                </summary>
+                <div class="legacy-badges-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 8px; margin-top: 10px;">
+                    ${KOZMIK_ROZETLER.map(badge => {
+                        const isEarned = earnedList.includes(badge.id);
+                        if (!isEarned) return '';
+                        return `
+                            <div class="legacy-badge-item" style="text-align: center; padding: 6px; background: rgba(255,255,255,0.04); border-radius: 8px; font-size: 0.75rem;">
+                                <div style="font-size: 1.2rem;">${badge.icon}</div>
+                                <strong style="color: #f8fafc; display: block; font-size: 0.75rem; margin-top: 2px;">${badge.title}</strong>
+                            </div>
+                        `;
+                    }).join('')}
                 </div>
-                <div class="badge-item-title">${badge.title}</div>
-                <div class="badge-tooltip">
-                    <strong>${badge.icon} ${badge.title}</strong>
-                    <div>${badge.desc}</div>
-                    <span class="badge-condition">${isEarned ? '✅ Kazanıldı!' : '🔒 Şart: ' + badge.condition}</span>
-                </div>
-            </div>
+            </details>
         `;
-    }).join('');
-
-    const levelBadge = document.getElementById('profile-level-badge');
-    if (levelBadge) {
-        const count = earnedList.length;
-        let lvl = 1;
-        let lvlName = 'Çırak Kâşif';
-        if (count >= 9) { lvl = 4; lvlName = 'Kozmik Üstat'; }
-        else if (count >= 6) { lvl = 3; lvlName = 'Kıdemli Kâşif'; }
-        else if (count >= 3) { lvl = 2; lvlName = 'Uzay Kâşifi'; }
-        levelBadge.textContent = `Seviye ${lvl} · ${lvlName}`;
-        const sumLvl = document.getElementById('profile-summary-level');
-        if (sumLvl) sumLvl.textContent = `Seviye ${lvl}`;
     }
-    const sumBadges = document.getElementById('profile-summary-badges');
-    if (sumBadges) sumBadges.textContent = `${earnedList.length} / 10 Kazanıldı`;
+
+    grid.innerHTML = html;
 }
 
 export function renderKarneSummary() {
@@ -4166,19 +4283,19 @@ function renderYaziliStudiesTab(attempts) {
 
     if (attempts.length > 1) {
         html += `
-            <div class="studies-prev-attempts">
-                <span style="font-size:0.8rem; color:#94a3b8; font-weight:600;"><i class="fas fa-history"></i> Önceki Provalar (${attempts.length}):</span>
-                <div class="studies-prev-list">
+            <details class="studies-prev-attempts-details" style="margin-top:12px; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:8px 12px; background:rgba(0,0,0,0.2);">
+                <summary style="font-size:0.85rem; color:#94a3b8; cursor:pointer; font-weight:600;"><i class="fas fa-history"></i> Önceki Provalar (${attempts.length})</summary>
+                <div class="studies-prev-list" style="margin-top:8px;">
         `;
-        attempts.slice(1, 4).forEach(att => {
+        attempts.slice(1, 5).forEach(att => {
             html += `
-                <div class="studies-prev-item">
+                <div class="studies-prev-item" style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.8rem;">
                     <span>${att.date} · ${att.scenario || 'Senaryo'}</span>
-                    <span style="color:#38bdf8; font-weight:600;">Öz Değerlendirme: ${att.score}/100</span>
+                    <span style="color:#38bdf8; font-weight:600;">Öz değerlendirme: ${att.score}/100</span>
                 </div>
             `;
         });
-        html += `</div></div>`;
+        html += `</div></details>`;
     }
 
     html += `</div>`;
@@ -4218,46 +4335,39 @@ function renderCompetitionStudiesTab(compHistory) {
         <div class="studies-card-group">
             <div class="studies-comp-summary-card">
                 <div class="studies-card-header">
-                    <span class="studies-card-title"><i class="fas fa-trophy"></i> ${userGrade}. Sınıf Şampiyonlar Ligi Durumu</span>
-                    <span class="studies-score-tag">Sezon Puanı: ${seasonScore}</span>
+                    <span class="studies-card-title"><i class="fas fa-trophy"></i> ${userGrade}. Sınıf Şampiyonlar Ligi</span>
+                    <span class="studies-score-tag">Bu Sezon: ${formatScore(seasonScore)} Puan</span>
                 </div>
-                <div class="studies-comp-stats-row">
+                <div class="studies-comp-stats-row" style="grid-template-columns: repeat(2, 1fr);">
                     <div class="comp-stat-box">
-                        <span class="stat-sub-label">Sınıf Sezon Puanı</span>
-                        <strong class="stat-sub-val">${seasonScore}</strong>
+                        <span class="stat-sub-label">Bu Sezon Puanın</span>
+                        <strong class="stat-sub-val">${formatScore(seasonScore)}</strong>
                     </div>
                     <div class="comp-stat-box">
-                        <span class="stat-sub-label">Sınıf Toplam Puanı</span>
-                        <strong class="stat-sub-val">${totalScore}</strong>
+                        <span class="stat-sub-label">Tüm Zamanlar Puanın</span>
+                        <strong class="stat-sub-val">${formatScore(totalScore)}</strong>
                     </div>
-                    <div class="comp-stat-box">
-                        <span class="stat-sub-label">Lig Sıralaması</span>
-                        <button type="button" class="f-btn f-btn-ikinci btn-open-lb-from-prof" style="padding:4px 8px; font-size:0.75rem;">
-                            <i class="fas fa-list-ol"></i> Tabloyu Aç
-                        </button>
-                    </div>
+                </div>
+                <div style="margin-top: 10px; padding: 8px 12px; background: rgba(56, 189, 248, 0.08); border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.2); display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem;">
+                    <span style="color: #94a3b8;"><i class="fas fa-medal"></i> ${userGrade}. Sınıf Sıralaman:</span>
+                    <strong style="color: #38bdf8;">${seasonScore > 0 ? `${userGrade}. Sınıfta Sıralamada` : 'Henüz sıralama oluşmadı'}</strong>
+                </div>
+                <div style="margin-top:10px; display:flex; gap:8px;">
+                    <button type="button" class="f-btn f-btn-ikinci btn-open-lb-from-prof" style="padding:6px 12px; font-size:0.8rem;">
+                        <i class="fas fa-list-ol"></i> Liderlik Tablosunu Aç
+                    </button>
+                    <button type="button" class="f-btn f-btn-ana btn-start-quiz-from-prof" style="padding:6px 12px; font-size:0.8rem;">
+                        <i class="fas fa-play"></i> Yeni Yarışma
+                    </button>
                 </div>
             </div>
     `;
 
-    if (!Array.isArray(compHistory) || compHistory.length === 0) {
+    if (Array.isArray(compHistory) && compHistory.length > 0) {
         html += `
-            <div class="studies-empty-state" style="margin-top:10px;">
-                <i class="fas fa-info-circle studies-empty-icon" style="color:var(--neon-blue);"></i>
-                <p class="studies-empty-text">Detaylı yarışma geçmişi bu sürümden itibaren izlenmektedir. Önceki sezon ve liderlik puanlarınız hesabınızda korunmaktadır.</p>
-                <button type="button" class="f-btn f-btn-ana btn-start-quiz-from-prof" style="margin-top:10px; font-size:0.85rem; padding:8px 16px;">
-                    <i class="fas fa-play"></i> Yarışmaya Başla
-                </button>
-            </div>
-        `;
-    } else {
-        html += `
-            <div class="studies-match-history-box">
-                <div class="studies-rec-header">
-                    <i class="fas fa-history" style="color: var(--neon-blue);"></i>
-                    <strong>Son Yarışmalar (${compHistory.length})</strong>
-                </div>
-                <div class="studies-match-list">
+            <details class="studies-match-history-details" style="margin-top:12px; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:8px 12px; background:rgba(0,0,0,0.2);">
+                <summary style="font-size:0.85rem; color:#94a3b8; cursor:pointer; font-weight:600;"><i class="fas fa-history"></i> Son Yarışmalar (${compHistory.length})</summary>
+                <div class="studies-match-list" style="margin-top:8px;">
         `;
         compHistory.slice(0, 5).forEach(m => {
             const isChamp = m.result === 'Şampiyon';
@@ -4276,8 +4386,15 @@ function renderCompetitionStudiesTab(compHistory) {
                 </div>
             `;
         });
+        html += `</div></details>`;
+    } else {
         html += `
-                </div>
+            <div class="studies-empty-state" style="margin-top:10px;">
+                <i class="fas fa-info-circle studies-empty-icon" style="color:var(--neon-blue);"></i>
+                <p class="studies-empty-text">Detaylı yarışma geçmişi bu sürümden itibaren izlenmektedir. Liderlik puanlarınız hesabınızda korunmaktadır.</p>
+                <button type="button" class="f-btn f-btn-ana btn-start-quiz-from-prof" style="margin-top:10px; font-size:0.85rem; padding:8px 16px;">
+                    <i class="fas fa-play"></i> Yarışmaya Başla
+                </button>
             </div>
         `;
     }
@@ -4349,11 +4466,16 @@ function renderLabStudiesTab() {
         });
     }
 
+    const activeExps = exps.filter(e => {
+        const p = progressMap[e.id];
+        return p?.status === 'in_progress' || p?.status === 'completed';
+    });
+
     let html = `
         <div class="studies-card-group">
             <div class="studies-lab-summary-card">
                 <div class="studies-card-header">
-                    <span class="studies-card-title"><i class="fas fa-flask"></i> Sanal Laboratuvar Envanteri</span>
+                    <span class="studies-card-title"><i class="fas fa-flask"></i> Sanal Laboratuvar Çalışmaların</span>
                     <span class="studies-score-tag">${completedCount} / ${exps.length || 30} Tamamlandı</span>
                 </div>
                 <div class="studies-lab-pills-row">
@@ -4362,68 +4484,102 @@ function renderLabStudiesTab() {
                     <span class="lab-summary-pill pill-not-started"><i class="fas fa-circle"></i> ${notStartedCount} Başlanmadı</span>
                 </div>
                 <p class="studies-lab-disclaimer">
-                    <i class="fas fa-info-circle"></i> Laboratuvarda gözlem veya ölçüm defterine kayıt yapıldığında deney tamamlanmış sayılır. Simülasyonu açmak veya ekrana dokunmak tek başına tamamlanma sayılmaz.
+                    <i class="fas fa-info-circle"></i> Simülasyonda değişkenleri değiştirip en az 2 gözlem veya ölçüm kaydettiğinde deney tamamlanmış sayılır.
                 </p>
-            </div>
-
-            <!-- Sınıf Filtresi -->
-            <div class="studies-lab-filters" role="group" aria-label="Sınıf Filtresi">
-                <button type="button" class="lab-filter-btn ${currentLabFilterGrade === 'all' ? 'active' : ''}" data-grade="all">Tüm Sınıflar (${exps.length})</button>
-                <button type="button" class="lab-filter-btn ${currentLabFilterGrade === '5' ? 'active' : ''}" data-grade="5">5. Sınıf</button>
-                <button type="button" class="lab-filter-btn ${currentLabFilterGrade === '6' ? 'active' : ''}" data-grade="6">6. Sınıf</button>
-                <button type="button" class="lab-filter-btn ${currentLabFilterGrade === '7' ? 'active' : ''}" data-grade="7">7. Sınıf</button>
-            </div>
-
-            <!-- Deney Listesi -->
-            <div class="studies-lab-grid">
-    `;
-
-    const filteredExps = exps.filter(e => currentLabFilterGrade === 'all' || String(e.grade) === currentLabFilterGrade);
-
-    filteredExps.forEach(exp => {
-        const prog = progressMap[exp.id] || { status: 'not_started', observationsCount: 0 };
-        const isCompleted = prog.status === 'completed';
-        const isInProgress = prog.status === 'in_progress';
-        const statusBadge = isCompleted 
-            ? `<span class="study-badge-completed"><i class="fas fa-check"></i> Tamamlandı</span>`
-            : (isInProgress 
-                ? `<span class="study-badge-in-progress"><i class="fas fa-spinner"></i> Devam Ediyor</span>` 
-                : `<span class="study-badge-not-started">Başlanmadı</span>`);
-
-        const actionText = isCompleted ? 'Yeniden Aç' : (isInProgress ? 'Yeniden Aç' : 'Deneyi Başlat');
-        const obsText = prog.observationsCount > 0 ? `<span class="lab-obs-tag"><i class="fas fa-book"></i> ${prog.observationsCount} Gözlem</span>` : '';
-
-        html += `
-            <div class="studies-lab-card ${isCompleted ? 'is-completed' : ''}" data-exp-id="${exp.id}">
-                <div class="lab-card-top">
-                    <span class="lab-exp-code">${exp.id} · ${exp.code || `${exp.grade}. Sınıf`}</span>
-                    ${statusBadge}
-                </div>
-                <h5 class="lab-card-title">${exp.title}</h5>
-                <p class="lab-card-bookref"><i class="fas fa-book"></i> ${exp.bookRef || 'MEB Fen Bilimleri Maarif Kitabı'}</p>
-                <div class="lab-card-footer">
-                    ${obsText}
-                    <button type="button" class="f-btn f-btn-ikinci btn-open-experiment" data-exp-id="${exp.id}" style="font-size:0.75rem; padding:4px 10px; margin-left:auto;">
-                        <i class="fas fa-flask"></i> ${actionText}
+                <div style="margin-top:10px;">
+                    <button type="button" class="f-btn f-btn-ana btn-open-full-lab-catalog" style="font-size:0.8rem; padding:6px 14px;">
+                        <i class="fas fa-flask"></i> Tüm Deney Kataloğunu Aç (30 Deney)
                     </button>
                 </div>
             </div>
-        `;
-    });
-
-    html += `
-            </div>
-        </div>
     `;
 
+    if (activeExps.length > 0) {
+        html += `
+            <div class="studies-active-labs-box" style="margin-top:12px;">
+                <div class="studies-rec-header">
+                    <i class="fas fa-microscope" style="color:#38bdf8;"></i>
+                    <strong>Üzerinde Çalıştığın Deneyler (${activeExps.length}):</strong>
+                </div>
+                <div class="studies-lab-grid" style="margin-top:8px;">
+        `;
+        activeExps.slice(0, 6).forEach(exp => {
+            const prog = progressMap[exp.id] || { status: 'not_started', observationsCount: 0 };
+            const isCompleted = prog.status === 'completed';
+            const statusBadge = isCompleted 
+                ? `<span class="study-badge-completed"><i class="fas fa-check"></i> Tamamlandı</span>`
+                : `<span class="study-badge-in-progress"><i class="fas fa-spinner"></i> Devam Ediyor</span>`;
+            const obsText = prog.observationsCount > 0 ? `<span class="lab-obs-tag"><i class="fas fa-book"></i> ${prog.observationsCount} Gözlem</span>` : '';
+
+            html += `
+                <div class="studies-lab-card ${isCompleted ? 'is-completed' : ''}" data-exp-id="${exp.id}">
+                    <div class="lab-card-top">
+                        <span class="lab-exp-code">${exp.id} · ${exp.grade}. Sınıf</span>
+                        ${statusBadge}
+                    </div>
+                    <h5 class="lab-card-title">${exp.title}</h5>
+                    <div class="lab-card-footer">
+                        ${obsText}
+                        <button type="button" class="f-btn f-btn-ikinci btn-open-experiment" data-exp-id="${exp.id}" style="font-size:0.75rem; padding:4px 10px; margin-left:auto;">
+                            <i class="fas fa-flask"></i> ${isCompleted ? 'Tekrar Aç' : 'Devam Et'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        html += `</div></div>`;
+    } else {
+        html += `
+            <div class="studies-empty-state" style="margin-top:10px;">
+                <i class="fas fa-flask studies-empty-icon" style="color:var(--neon-blue);"></i>
+                <p class="studies-empty-text">Henüz laboratuvar çalışması kaydınız bulunmuyor. Bir deney açıp ölçüm defterine en az 2 gözlem kaydederek başlayabilirsiniz.</p>
+            </div>
+        `;
+    }
+
+    html += `
+        <details class="profile-all-labs-details" style="margin-top:12px; border:1px solid rgba(255,255,255,0.08); border-radius:10px; padding:8px 12px; background:rgba(0,0,0,0.2);">
+            <summary style="font-size:0.85rem; color:#94a3b8; cursor:pointer; font-weight:600;"><i class="fas fa-list"></i> Tüm Deney Listesi (${exps.length} Deney)</summary>
+            <div class="studies-lab-grid" style="margin-top:8px;">
+                ${exps.map(exp => {
+                    const prog = progressMap[exp.id] || { status: 'not_started', observationsCount: 0 };
+                    const isCompleted = prog.status === 'completed';
+                    const isInProgress = prog.status === 'in_progress';
+                    const statusBadge = isCompleted 
+                        ? `<span class="study-badge-completed"><i class="fas fa-check"></i> Tamamlandı</span>`
+                        : (isInProgress 
+                            ? `<span class="study-badge-in-progress"><i class="fas fa-spinner"></i> Devam Ediyor</span>` 
+                            : `<span class="study-badge-not-started">Başlanmadı</span>`);
+                    return `
+                        <div class="studies-lab-card ${isCompleted ? 'is-completed' : ''}" data-exp-id="${exp.id}">
+                            <div class="lab-card-top">
+                                <span class="lab-exp-code">${exp.id} · ${exp.grade}. Sınıf</span>
+                                ${statusBadge}
+                            </div>
+                            <h5 class="lab-card-title">${exp.title}</h5>
+                            <div class="lab-card-footer">
+                                <button type="button" class="f-btn f-btn-ikinci btn-open-experiment" data-exp-id="${exp.id}" style="font-size:0.75rem; padding:4px 10px; margin-left:auto;">
+                                    <i class="fas fa-flask"></i> Aç
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        </details>
+    `;
+
+    html += `</div>`;
     container.innerHTML = html;
 
-    container.querySelectorAll('.lab-filter-btn').forEach(btn => {
-        btn.onclick = () => {
-            currentLabFilterGrade = btn.dataset.grade;
-            renderLabStudiesTab();
+    const btnOpenFullCatalog = container.querySelector('.btn-open-full-lab-catalog');
+    if (btnOpenFullCatalog) {
+        btnOpenFullCatalog.onclick = () => {
+            hideModal(profileModal);
+            const btnLab = document.getElementById('btn-lab-modulu');
+            if (btnLab) btnLab.click();
         };
-    });
+    }
 
     container.querySelectorAll('.btn-open-experiment').forEach(btn => {
         btn.onclick = () => {
@@ -4453,13 +4609,12 @@ profileModal.innerHTML = `
     <div class="modal-content glass-panel" style="max-width: 620px; width: 92%; padding: 24px;">
         <button id="close-profile" class="close-btn" aria-label="Kapat"><i class="fas fa-times"></i></button>
 
-        <!-- A) TEMEL PROFİL VE AVATAR (80x80 Avatar, Gradyan Seviye Halkası, Seri Rozeti) -->
+        <!-- A) TEMEL PROFİL VE AVATAR (80x80 Avatar, Seri Rozeti) -->
         <div class="profile-hero-card">
             <div class="profile-level-ring-container">
                 <div class="profile-level-ring">
                     <img id="p-current-avatar" src="${kozmikAvatarlar[0].url}" alt="Öğrenci Avatarı" class="profile-hero-img">
                 </div>
-                <span class="profile-level-badge" id="profile-level-badge">Seviye 1</span>
             </div>
             <div class="profile-hero-meta">
                 <h3 id="profile-display-fullname" class="profile-hero-name">Kâşif Öğrenci</h3>
@@ -4506,13 +4661,6 @@ profileModal.innerHTML = `
                 <div class="studies-summary-hint" id="studies-summary-hint">
                     Tamamlanan yazılı provaları, yarışmalar ve deney kayıtları
                 </div>
-                <!-- Kısa Gelişim Göstergeleri (Seri, Seviye, Rozetler, Prova Öz Değerlendirmesi) -->
-                <div class="profile-progress-summary" id="profile-progress-summary">
-                    <div class="progress-summary-pill"><span class="summary-pill-label">Seri</span><strong id="profile-summary-streak">1 Gün</strong></div>
-                    <div class="progress-summary-pill"><span class="summary-pill-label">Seviye</span><strong id="profile-summary-level">Seviye 1</strong></div>
-                    <div class="progress-summary-pill"><span class="summary-pill-label">Rozetler</span><strong id="profile-summary-badges">0 / 10</strong></div>
-                    <div class="progress-summary-pill"><span class="summary-pill-label">Prova Öz Değerlendirmesi</span><strong id="profile-summary-exam">— / 100</strong></div>
-                </div>
             </div>
 
             <!-- C) ÜÇ MODÜLE AİT AYRINTILAR (Sekmeler: Yazılıya Hazırlık, Şampiyonlar Ligi, Sanal Laboratuvar) -->
@@ -4533,40 +4681,6 @@ profileModal.innerHTML = `
                     <!-- Sekme 1: Yazılıya Hazırlık -->
                     <div class="studies-tab-pane active" id="pane-study-yazili" role="tabpanel" aria-labelledby="tab-btn-yazili">
                         <div id="yazili-studies-content"></div>
-                        <div class="profile-karne-section profile-karne-accordion" id="profile-karne-details">
-                            <div class="profile-section-title-bar profile-karne-summary" id="profile-karne-summary-bar" role="button" tabindex="0" aria-expanded="true">
-                                <h4><i class="fas fa-graduation-cap"></i> <span id="profile-karne-title">7. Sınıf Eksik Kazanım Karnesi</span></h4>
-                                <div style="display:flex; align-items:center; gap:6px;">
-                                    <span class="profile-karne-badge" id="profile-karne-status">Detaylı İnceleme</span>
-                                    <button type="button" class="btn-toggle-karne-details" id="btn-toggle-karne-details" aria-label="Ayrıntıları Göster/Gizle"><i class="fas fa-chevron-up"></i></button>
-                                </div>
-                            </div>
-                            <div class="profile-karne-content" id="profile-karne-content">
-                                <div class="profile-karne-grid">
-                                    <div class="karne-stat-card">
-                                        <span class="stat-label">Prova Öz Değerlendirmesi</span>
-                                        <span class="stat-val" id="karne-last-score">— / 100</span>
-                                        <small class="stat-sub" id="karne-last-date">Henüz prova çözülmedi</small>
-                                    </div>
-                                    <div class="karne-stat-card">
-                                        <span class="stat-label">Güneş Sistemi & Uzay</span>
-                                        <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-space" style="width: 0%;"></div></div>
-                                        <small class="stat-sub" id="karne-sub-space">İnceleme: 0/6 Kart</small>
-                                    </div>
-                                    <div class="karne-stat-card">
-                                        <span class="stat-label">Kuvvet, İş ve Enerji</span>
-                                        <div class="karne-progress-bar"><div class="karne-progress-fill" id="karne-prog-force" style="width: 0%;"></div></div>
-                                        <small class="stat-sub" id="karne-sub-force">Kazanım: Başlangıç</small>
-                                    </div>
-                                </div>
-                                <div class="karne-outcome-details" id="karne-outcome-details">
-                                    <div class="karne-outcome-item">
-                                        <i class="fas fa-info-circle" style="color: var(--neon-blue);"></i> 
-                                        <span>Kazanım eksiklerini tamamlamak için yazılı provasında öz değerlendirme yapabilirsin.</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- Sekme 2: Şampiyonlar Ligi -->
@@ -4581,14 +4695,14 @@ profileModal.innerHTML = `
                 </div>
             </div>
 
-            <!-- D) ROZETLER (10 ADET EVRENSEL KOZMİK BAŞARI ROZETİ VİTRİNİ) -->
+            <!-- D) ROZETLER (3 GELİŞEN ROZET AİLESİ VİTRİNİ) -->
             <div class="profile-badges-section">
                 <div class="profile-section-title-bar">
-                    <h4><i class="fas fa-medal"></i> Kozmik Başarı Rozetleri</h4>
-                    <span class="profile-badge-counter" id="profile-badge-counter">0 / 10 Kazanıldı</span>
+                    <h4><i class="fas fa-medal"></i> Gelişen Başarı Rozetleri</h4>
+                    <span class="profile-badge-counter" id="profile-badge-counter">0 / 9 Aşama Tamamlandı</span>
                 </div>
                 <div class="cosmic-badges-grid" id="cosmic-badges-grid">
-                    <!-- 10 Rozet Dinamik Render Edilir -->
+                    <!-- 3 Rozet Ailesi ve Aşamaları Dinamik Render Edilir -->
                 </div>
             </div>
         </div>
@@ -6432,34 +6546,6 @@ if (typeof window !== 'undefined') {
 }
 const lbListEl = document.getElementById('global-lb-list');
 const lbTabBtns = document.querySelectorAll('.lb-tab-btn');
-let showLegacyCompetitionScores = false;
-let lbHistoryControl = null;
-
-function updateLbHistoryButton() {
-    if (!lbHistoryControl) return;
-    if (showLegacyCompetitionScores) {
-        lbHistoryControl.innerHTML = '<i class="fas fa-arrow-left"></i> Güncel tabloya dön';
-        lbHistoryControl.setAttribute('aria-label', 'Güncel tabloya dön');
-    } else {
-        lbHistoryControl.innerHTML = '<i class="fas fa-clock-rotate-left"></i> Önceki puanlar';
-        lbHistoryControl.setAttribute('aria-label', 'Önceki puanlar');
-    }
-}
-
-if (COMPETITION_BACKEND_READY && lbListEl) {
-    lbHistoryControl = document.createElement('button');
-    lbHistoryControl.type = 'button';
-    lbHistoryControl.id = 'btn-lb-history-toggle';
-    lbHistoryControl.className = 'lb-history-link';
-    lbHistoryControl.innerHTML = '<i class="fas fa-clock-rotate-left"></i> Önceki puanlar';
-    lbHistoryControl.setAttribute('aria-label', 'Önceki puanlar');
-    lbHistoryControl.onclick = () => {
-        showLegacyCompetitionScores = !showLegacyCompetitionScores;
-        updateLbHistoryButton();
-        loadGlobalLeaderboard(document.querySelector('.lb-tab-btn.active')?.dataset.tab || 'weekly');
-    };
-    lbListEl.before(lbHistoryControl);
-}
 const lbGuestPromo = document.getElementById('btn-lb-signup');
 
 lbTabBtns.forEach(btn => {
@@ -6485,46 +6571,84 @@ async function loadGlobalLeaderboard(type = 'weekly') {
     lbListEl.innerHTML = '<p style="text-align:center; color:#aaa; margin-top:20px;">Liderler yükleniyor...</p>';
     
     const lbTitle = document.querySelector('#unit-leaderboard-side h2');
-    updateLbHistoryButton();
-
     const gradePrefix = selectedGrade ? `${selectedGrade}. Sınıf ` : '';
-    if (COMPETITION_BACKEND_READY && !showLegacyCompetitionScores) {
-        if(lbTitle) lbTitle.innerHTML = `<i class="fas fa-trophy"></i> ${gradePrefix}Şampiyonlar Ligi`;
-        await loadCohortLeaderboard(type);
-        return;
-    }
-    if (lbTitle) lbTitle.innerHTML = `<i class="fas fa-clock-rotate-left"></i> ${gradePrefix ? gradePrefix + '· ' : ''}Önceki Puanlar`;
-    try {
-        const result=await competitionCall('legacyLeaderboard',{grade:String(selectedGrade || '5'),type});
-        renderGlobalLeaderboard(result.users || [],type);
-        document.getElementById('lb-user-rank')?.classList.add('is-hidden');
-    } catch(e) { lbListEl.textContent='Önceki puan kayıtları şu anda yüklenemedi.'; }
+    if(lbTitle) lbTitle.innerHTML = `<i class="fas fa-trophy"></i> ${gradePrefix}Şampiyonlar Ligi`;
 
-}
-
-async function loadCohortLeaderboard(type) {
+    const userMap = new Map();
     const year = competitionYear();
     const field = type === 'weekly' ? 'weeklyScore' : type === 'monthly' ? 'monthlyScore' : 'score';
-    try {
-        const path = `leaderboards/${year}/grades/${selectedGrade}/entries`;
-        const snap = await getDocs(query(collection(db, path), orderBy(field, 'desc'), limit(50)));
-        const now = new Date();
-        const periods = competitionPeriods(now);
-        const users = [];
-        snap.forEach(item => {
-            const data = item.data();
-            if (data.schoolYear !== year || data.grade !== String(selectedGrade) || data.isBanned) return;
-            if (type === 'weekly' && data.weekId !== periods.weekId) return;
-            if (type === 'monthly' && data.monthId !== periods.monthId) return;
-            if (data[field] > 0) users.push({...data, displayScore:data[field]});
-        });
-        renderGlobalLeaderboard(users, type);
-        const area = document.getElementById('lb-user-rank');
-        const text = document.getElementById('lb-user-rank-text');
-        const index = users.findIndex(u => u.uid === auth.currentUser?.uid);
-        if (area) area.classList.toggle('is-hidden', index < 0);
-        if (text && index >= 0) text.textContent = `${year}–${year+1} · ${selectedGrade}. Sınıf Sıran: ${index+1}. | Puanın: ${formatScore(users[index].displayScore)}`;
-    } catch (_) { lbListEl.textContent = 'Liderlik tablosu şu anda yüklenemedi.'; }
+
+    // 1. Güncel cohort liderlik tablosu verilerini getir (Firebase Firestore)
+    if (COMPETITION_BACKEND_READY) {
+        try {
+            const path = `leaderboards/${year}/grades/${selectedGrade}/entries`;
+            const snap = await getDocs(query(collection(db, path), orderBy(field, 'desc'), limit(50)));
+            const now = new Date();
+            const periods = competitionPeriods(now);
+            snap.forEach(item => {
+                const data = item.data();
+                if (data.schoolYear !== year || data.grade !== String(selectedGrade) || data.isBanned) return;
+                if (type === 'weekly' && data.weekId !== periods.weekId) return;
+                if (type === 'monthly' && data.monthId !== periods.monthId) return;
+                const score = Number(data[field]) || 0;
+                if (score > 0) {
+                    const uidKey = data.uid || item.id;
+                    userMap.set(uidKey, {
+                        ...data,
+                        uid: uidKey,
+                        displayScore: score
+                    });
+                }
+            });
+        } catch (e) {
+            console.warn('Cohort verisi yüklenirken uyarı:', e);
+        }
+    }
+
+    // 2. alltime görünümünde legacy skorları da çek ve birleştir (çifte sayım yapmadan: Math.max)
+    if (type === 'alltime') {
+        try {
+            const legRes = await competitionCall('legacyLeaderboard', { grade: String(selectedGrade || '7'), type: 'alltime' }).catch(() => null);
+            const legacyUsers = legRes?.users || [];
+            legacyUsers.forEach(lu => {
+                const uidKey = lu.uid || lu.id || lu.nickname;
+                const legScore = Number(lu.totalScore || lu.displayScore || lu.score) || 0;
+                if (userMap.has(uidKey)) {
+                    const existing = userMap.get(uidKey);
+                    // Çifte sayım önleme: en yüksek skoru koru
+                    existing.displayScore = Math.max(existing.displayScore || 0, legScore);
+                } else if (legScore > 0) {
+                    userMap.set(uidKey, {
+                        ...lu,
+                        uid: uidKey,
+                        displayScore: legScore
+                    });
+                }
+            });
+        } catch (e) {
+            console.warn('Geçmiş liderlik verisi yüklenirken uyarı:', e);
+        }
+    }
+
+    const mergedUsers = Array.from(userMap.values());
+    mergedUsers.sort((a, b) => b.displayScore - a.displayScore);
+    renderGlobalLeaderboard(mergedUsers, type);
+
+    // Kullanıcının kendi sınıfındaki sırası
+    const rankArea = document.getElementById('lb-user-rank');
+    const rankText = document.getElementById('lb-user-rank-text');
+    if (auth.currentUser) {
+        const myIndex = mergedUsers.findIndex(u => u.uid === auth.currentUser?.uid);
+        if (myIndex >= 0 && rankArea && rankText) {
+            rankArea.classList.remove('is-hidden');
+            rankText.innerHTML = `<i class="fas fa-medal"></i> ${selectedGrade}. Sınıf Sıran: ${myIndex + 1}. | Puanın: ${formatScore(mergedUsers[myIndex].displayScore)}`;
+        } else if (rankArea && rankText) {
+            rankArea.classList.remove('is-hidden');
+            rankText.innerHTML = `<i class="fas fa-medal"></i> ${selectedGrade}. Sınıf Sıran: Henüz sıralama oluşmadı`;
+        }
+    } else if (rankArea) {
+        rankArea.classList.add('is-hidden');
+    }
 }
 
 function renderGlobalLeaderboard(users, type) {
@@ -6532,11 +6656,7 @@ function renderGlobalLeaderboard(users, type) {
     lbListEl.innerHTML = '';
     
     if (users.length === 0) {
-        if (!showLegacyCompetitionScores) {
-            lbListEl.innerHTML = '<div class="lb-empty-notice" style="color:#aaa; text-align:center; margin-top:20px; padding:12px;"><p style="margin:0 0 6px 0;">Henüz bu kategoride yarışmacı yok.</p><p style="color:#38bdf8; font-size:0.85rem; margin:0;"><i class="fas fa-shield-alt"></i> Önceki puanlar sistemde güvenle korunmaktadır.</p></div>';
-        } else {
-            lbListEl.innerHTML = '<p style="color:#aaa; text-align:center; margin-top:20px;">Önceki puan kaydı bulunmuyor.</p>';
-        }
+        lbListEl.innerHTML = '<div class="lb-empty-notice" style="color:#aaa; text-align:center; margin-top:20px; padding:12px;"><p style="margin:0 0 6px 0;">Henüz bu kategoride yarışmacı yok.</p></div>';
         return;
     }
 
@@ -7142,6 +7262,8 @@ if (typeof window !== 'undefined') {
     window.checkAnnualPromotion = checkAnnualPromotion;
     window.renderGlobalLeaderboard = renderGlobalLeaderboard;
     window.loadGlobalLeaderboard = loadGlobalLeaderboard;
+    window.BADGE_FAMILIES = BADGE_FAMILIES;
+    window.getBadgeFamilyProgress = getBadgeFamilyProgress;
 }
 
 if (document.readyState === 'loading') {

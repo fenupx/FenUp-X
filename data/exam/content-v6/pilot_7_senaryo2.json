@@ -8407,7 +8407,7 @@
       "type": "open_response",
       "title": "Etkinlik planı",
       "stem": "Bir öğrenci yer değiştirmenin işe etkisini araştıracak. Tablodaki düzeneklerden hangi ikisini karşılaştırmalıdır? Seçimini sabit kalan ve değişen değişkenlerle açıklayınız.",
-      "sample_answer": "A ve C: kuvvet20N sabit, yol1m/3m farklı.",
+      "sample_answer": "Öğrenci A ve C düzeneklerini karşılaştırmalıdır. Çünkü bu düzeneklerde uygulanan kuvvet 20 N ile sabit tutulmuş, yer değiştirme (alınan yol) ise 1 m ve 3 m olarak farklı tutulmuştur.",
       "hint": "",
       "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler, açıklamalı çizim ve koşulları sağlayan geçerli alternatif çözümler kabul edilir. Anahtarla kelime eşleşmesi aranmaz.",
       "rubric": [
@@ -8899,7 +8899,7 @@
       "type": "open_response",
       "title": "Bir karşılaştırma deneyi",
       "stem": "Bir ekip, kutulara hareket yönünde sabit kuvvet uyguluyor: birinci denemede 10 N ile 1 m, ikinci denemede 30 N ile 3 m yer değiştirme sağlanıyor. Ekip, bu iki denemeyle yalnız kuvvetin işe etkisini belirlediğini söylüyor.\na) Bu değerlendirmedeki sorunu açıklayınız.\nb) Kuvvetin etkisini incelemeye uygun iki yeni düzenek öneriniz.\nc) Yeni düzeneklerdeki işleri gerekçesiyle karşılaştırınız.",
-      "sample_answer": "İki değişken birlikte değişmiş. Örn10N2m ve30N2m, yönler aynı;30N daha fazla iş yapar.",
+      "sample_answer": "a) Deneyde hem kuvvet hem de yer değiştirme aynı anda değiştirildiği için yalnız kuvvetin işe etkisi test edilemez ve kontrollü bir karşılaştırma yapılamaz.\nb) Yer değiştirme 2 m olarak sabit tutulmalı; birinci kutuya 10 N, ikinci kutuya ise 30 N kuvvet uygulanmalıdır.\nc) Yollar eşitken daha büyük kuvvet uygulanan 30 N'luk düzenekte daha fazla fiziksel iş yapılmış olur.",
       "hint": "",
       "accepted_alternatives": "Aynı bilimsel anlamı veren farklı ifadeler, açıklamalı çizim ve koşulları sağlayan geçerli alternatif çözümler kabul edilir. Anahtarla kelime eşleşmesi aranmaz.",
       "rubric": [

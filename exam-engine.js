@@ -1926,7 +1926,11 @@ function renderStudy(cardIndex) {
                 <div class="study-card-top-meta">
                     <div class="study-meta-left">
                         <span class="outcome-pill-code">${esc(c.outcome_id)}</span>
-                        <span class="study-counter-topic"><i class="fas fa-clone"></i> Kart ${cardNumInOutcome} / ${outcomeCards.length}</span>
+                        ${isReviewMode ? `
+                            <span class="study-counter-topic review-counter"><i class="fas fa-redo"></i> Tekrar Kartı ${state.reviewCardIds.indexOf(c.id) + 1} / ${state.reviewCardIds.length} <small style="opacity:0.75;">(Konuda ${cardNumInOutcome} / ${outcomeCards.length})</small></span>
+                        ` : `
+                            <span class="study-counter-topic"><i class="fas fa-clone"></i> Kart ${cardNumInOutcome} / ${outcomeCards.length}</span>
+                        `}
                     </div>
                     ${outcome ? `
                         <details class="study-outcome-expandable">
@@ -2835,10 +2839,10 @@ function renderEval() {
         a.questionStatuses = a.questionStatuses || {};
         const qStatus = a.questionStatuses[q.id] || null;
         const isEvaluated = !!(a.evaluatedQuestions && a.evaluatedQuestions[q.id]);
-        const isFullSelected = (qStatus === 'full' || (isEvaluated && currentQScore === qPoints && criteria.length > 0 && selectedIds.length === criteria.length));
-        const isZeroSelected = (qStatus === 'zero' || qStatus === 'empty' || qStatus === 'incorrect' || (isEvaluated && currentQScore === 0 && selectedIds.length === 0));
-        const isPartialSelected = (qStatus === 'partial' || (!isFullSelected && !isZeroSelected && currentQScore > 0));
-        const isPartialOpen = isPartialSelected;
+        const isFullSelected = isEvaluated && (qStatus === 'full' || (currentQScore === qPoints && criteria.length > 0 && selectedIds.length === criteria.length));
+        const isZeroSelected = isEvaluated && (qStatus === 'zero' || qStatus === 'empty' || qStatus === 'incorrect' || (currentQScore === 0 && selectedIds.length === 0));
+        const isPartialSelected = (qStatus === 'partial' || (isEvaluated && !isFullSelected && !isZeroSelected && currentQScore > 0));
+        const isPartialOpen = (qStatus === 'partial');
 
         const visual = questionVisualHtml(q);
 
@@ -2904,6 +2908,9 @@ function renderEval() {
                         <h4><i class="fas fa-balance-scale" style="color: #38bdf8;"></i> 3. Kendi Cevabını Değerlendir:</h4>
                         <p class="eval-decision-sub">Örnek cevabı incele ve kendi yanıtına en uygun seçeneği belirle:</p>
                     </div>
+                    <div id="eval-notice-box" class="eval-notice-box is-hidden" role="alert" style="display:none; margin: 10px 0; padding: 10px 14px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 8px; color: #fbbf24; font-size: 0.9rem; align-items: center; gap: 8px;">
+                        <i class="fas fa-exclamation-triangle"></i> <span id="eval-notice-text">Lütfen önce bu soru için bir değerlendirme seçin.</span>
+                    </div>
                     <div class="eval-main-decision-buttons" role="group" aria-label="Cevap değerlendirme seçenekleri">
                         <button type="button" id="btn-eval-full" class="eval-choice-btn btn-eval-full ${isFullSelected ? 'active' : ''}" title="Cevabın örnek açıklamayı tam karşılıyorsa">
                             <div class="choice-btn-icon"><i class="fas fa-check-circle"></i></div>
@@ -2968,18 +2975,16 @@ function renderEval() {
                 <div class="eval-score-live-box">
                     <div class="live-score-info">
                         <span class="live-score-label">Bu Sorudan Alınan Puan:</span>
-                        <span class="live-score-val" id="eval-current-q-score">${isZeroSelected ? 0 : (isFullSelected ? qPoints : currentQScore)} <small>/ ${qPoints} Puan</small></span>
+                        <span class="live-score-val" id="eval-current-q-score">${!isEvaluated ? '—' : (isZeroSelected ? 0 : (isFullSelected ? qPoints : currentQScore))} <small>/ ${qPoints} Puan</small></span>
                     </div>
                     <div class="live-eval-status">
-                        ${isZeroSelected
-                            ? '<span class="status-badge empty"><i class="fas fa-times-circle"></i> Yapamadım / Boş Bırakıldı (0 Puan)</span>'
-                            : (isFullSelected
-                                ? '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Tam Doğru Kaydedildi</span>'
-                                : (isPartialSelected
-                                    ? `<span class="status-badge saved" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border-color: rgba(245, 158, 11, 0.35);"><i class="fas fa-adjust"></i> Kısmi Puan (${currentQScore} Puan)</span>`
-                                    : (isEvaluated
-                                        ? '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Değerlendirme Kaydedildi</span>'
-                                        : '<span class="status-badge pending"><i class="fas fa-pencil-alt"></i> Kayıt Bekliyor</span>')))}
+                        ${!isEvaluated
+                            ? '<span class="status-badge pending"><i class="fas fa-pencil-alt"></i> Değerlendirme Bekliyor</span>'
+                            : (isZeroSelected
+                                ? '<span class="status-badge empty"><i class="fas fa-times-circle"></i> Yapamadım / Boş Bırakıldı (0 Puan)</span>'
+                                : (isFullSelected
+                                    ? '<span class="status-badge saved"><i class="fas fa-check-circle"></i> Tam Doğru Kaydedildi</span>'
+                                    : `<span class="status-badge saved" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border-color: rgba(245, 158, 11, 0.35);"><i class="fas fa-adjust"></i> Kısmi Puan (${currentQScore} Puan)</span>`))}
                     </div>
                 </div>
             </article>
@@ -3151,6 +3156,15 @@ function renderEval() {
                     const partialSumEl = $('partial-calc-score');
                     if (partialSumEl) partialSumEl.textContent = `${newScore} Puan`;
 
+                    if (currentSel.length > 0) {
+                        a.evaluatedQuestions = a.evaluatedQuestions || {};
+                        a.evaluatedQuestions[q.id] = true;
+                        a.scores = a.scores || {};
+                        a.scores[q.id] = newScore;
+                        const navBtn = navStrip?.querySelector(`[data-eval-q="${evalIdx}"]`);
+                        if (navBtn) navBtn.classList.add('eval-completed');
+                    }
+
                     saveState();
                 };
             });
@@ -3160,6 +3174,11 @@ function renderEval() {
                 btnConfirmPartial.onclick = () => {
                     const currentSel = a.selectedCriteria[q.id] || [];
                     const newScore = criteria.filter(c => currentSel.includes(c.id)).reduce((s, c) => s + c.points, 0);
+
+                    if (currentSel.length === 0) {
+                        const confirmZero = confirm("Hiçbir ölçüt seçmediniz. Bu soru için 0 puan kaydedilmesini onaylıyor musunuz?");
+                        if (!confirmZero) return;
+                    }
 
                     a.evaluatedQuestions = a.evaluatedQuestions || {};
                     a.evaluatedQuestions[q.id] = true;
@@ -3208,6 +3227,25 @@ function renderEval() {
         }
     }
 
+    // Değerlendirme Uyarı ve Odaklama Yardımcısı
+    const showEvalNotice = (msg) => {
+        const box = qContainer?.querySelector('#eval-notice-box') || $('eval-notice-box');
+        const txt = qContainer?.querySelector('#eval-notice-text') || $('eval-notice-text');
+        if (box && txt) {
+            txt.textContent = msg;
+            box.style.display = 'flex';
+            box.classList.remove('is-hidden');
+            box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            alert(msg);
+        }
+        const btns = qContainer?.querySelector('.eval-main-decision-buttons');
+        if (btns) {
+            btns.classList.add('eval-attention-pulse');
+            setTimeout(() => btns.classList.remove('eval-attention-pulse'), 1200);
+        }
+    };
+
     // İlerleme Metni
     const evaluatedCount = questions.filter(qu => !!(a.evaluatedQuestions && a.evaluatedQuestions[qu.id])).length;
     const progressEl = $('eval-progress-text');
@@ -3235,11 +3273,23 @@ function renderEval() {
             btnNext.innerHTML = '<span>Değerlendirmeyi Kaydet ve İlerle</span> <i class="fas fa-arrow-right"></i>';
             btnToSummary.style.display = 'none';
 
+            let isAdvancing = false;
             btnNext.onclick = () => {
-                a.evaluatedQuestions = a.evaluatedQuestions || {};
-                a.selectedCriteria = a.selectedCriteria || {};
-                a.evaluatedQuestions[q.id] = true;
-                a.selectedCriteria[q.id] = a.selectedCriteria[q.id] || [];
+                if (isAdvancing) return;
+                let isEval = !!(a.evaluatedQuestions && a.evaluatedQuestions[q.id]);
+                if (!isEval && a.selectedCriteria && (a.selectedCriteria[q.id] || []).length > 0) {
+                    a.evaluatedQuestions = a.evaluatedQuestions || {};
+                    a.evaluatedQuestions[q.id] = true;
+                    const cScore = criteria.filter(c => (a.selectedCriteria[q.id] || []).includes(c.id)).reduce((s, c) => s + c.points, 0);
+                    a.scores = a.scores || {};
+                    a.scores[q.id] = cScore;
+                    isEval = true;
+                }
+                if (!isEval) {
+                    showEvalNotice('Lütfen önce bu soru için öz değerlendirmenizi yapın (Tam Doğru, Kısmen Yaptım veya Yapamadım).');
+                    return;
+                }
+                isAdvancing = true;
                 a.evalQuestionIndex = evalIdx + 1;
                 saveState();
                 renderEval();
@@ -3257,20 +3307,29 @@ function renderEval() {
                     return;
                 }
 
-                a.evaluatedQuestions = a.evaluatedQuestions || {};
-                a.selectedCriteria = a.selectedCriteria || {};
-                a.evaluatedQuestions[q.id] = true;
-                a.selectedCriteria[q.id] = a.selectedCriteria[q.id] || [];
+                let isEval = !!(a.evaluatedQuestions && a.evaluatedQuestions[q.id]);
+                if (!isEval && a.selectedCriteria && (a.selectedCriteria[q.id] || []).length > 0) {
+                    a.evaluatedQuestions = a.evaluatedQuestions || {};
+                    a.evaluatedQuestions[q.id] = true;
+                    const cScore = criteria.filter(c => (a.selectedCriteria[q.id] || []).includes(c.id)).reduce((s, c) => s + c.points, 0);
+                    a.scores = a.scores || {};
+                    a.scores[q.id] = cScore;
+                    isEval = true;
+                }
+                if (!isEval) {
+                    showEvalNotice('Lütfen önce bu soru için öz değerlendirmenizi yapın.');
+                    return;
+                }
 
                 const missing = [];
                 questions.forEach((qu, i) => {
-                    if (!a.evaluatedQuestions[qu.id]) {
+                    if (!a.evaluatedQuestions || !a.evaluatedQuestions[qu.id]) {
                         missing.push(i + 1);
                     }
                 });
 
                 if (missing.length > 0) {
-                    alert(`Lütfen tüm sorular için öz değerlendirmeni kaydet.\nHenüz değerlendirilmeyen: Soru ${missing.join(', ')}`);
+                    showEvalNotice(`Tüm sorular değerlendirilmeden özet oluşturulamaz. Henüz değerlendirilmeyen: Soru ${missing.join(', ')}`);
                     a.evalQuestionIndex = missing[0] - 1;
                     saveState();
                     renderEval();
@@ -3310,6 +3369,20 @@ function renderSummary() {
 
     // Değerlendirme Modu Ayrımı: Yeni Ölçüt Temelli vs Eski 3 Seçenekli Kayıt
     const isLegacyEvaluation = (a.evaluationVersion !== 2 && a.evaluations && Object.keys(a.evaluations).length > 0 && (!a.criteriaMap || Object.keys(a.selectedCriteria || {}).length === 0));
+
+    // Eksik değerlendirilmiş provayı özete geçirme
+    const isQuestionEvaluated = (qu) => {
+        if (a.evaluatedQuestions && a.evaluatedQuestions[qu.id]) return true;
+        if (a.finished === true || a.status === 'completed') return true;
+        if (a.scores && a.scores[qu.id] !== undefined && a.scores[qu.id] !== null) return true;
+        return false;
+    };
+    const unevaluated = questions.filter(qu => !isQuestionEvaluated(qu));
+    if (unevaluated.length > 0 && !isLegacyEvaluation) {
+        a.evalQuestionIndex = questions.findIndex(qu => !isQuestionEvaluated(qu));
+        goToStep('eval');
+        return;
+    }
 
     let totalScore = 0;
     let fullyCorrectCount = 0;
@@ -3365,9 +3438,14 @@ function renderSummary() {
         }
     }
     try {
+        const allOutcomes = DATA?.allOutcomes || DATA?.outcomes || [];
         const missingOutcomesList = questions
             .filter(q => (getQuestionScore(q.id, a) < (a.questionPoints?.[q.id] || 15)))
-            .map(q => `${q.outcome_id}: ${q.title}`);
+            .map(q => {
+                const outcomeObj = allOutcomes.find(o => o.id === q.outcome_id);
+                const title = outcomeObj ? (outcomeObj.short_title || outcomeObj.title) : (q.outcome_title || q.title);
+                return `${q.outcome_id}: ${title}`;
+            });
         const summaryData = {
             score: totalScore,
             completed: !!(a.finished || a.status === 'completed'),
@@ -3440,31 +3518,35 @@ function renderSummary() {
 
     // V8.9.9: Prova sonucunu Çalışmalarım geçmişine kaydet
     try {
-        const scNum = a.scenarioNumber || getActiveScenarioNumber();
-        const scTitle = formatScenarioTitle(scNum);
-        const missedCardsList = sortedMissedCards.map(item => ({
-            id: item.card?.id,
-            title: item.card?.title,
-            outcome_id: item.card?.outcome_id
-        }));
+        if (!a.historySaved) {
+            a.historySaved = true;
+            const scNum = a.scenarioNumber || getActiveScenarioNumber();
+            const scTitle = formatScenarioTitle(scNum);
+            const missedCardsList = sortedMissedCards.map(item => ({
+                id: item.card?.id,
+                title: item.card?.title,
+                outcome_id: item.card?.outcome_id
+            }));
 
-        const attemptRecord = {
-            id: a.routeKey || ('attempt_' + (a.scenarioId || 'sc') + '_' + totalScore),
-            timestamp: Date.now(),
-            date: new Date().toLocaleDateString('tr-TR'),
-            grade: '7',
-            term: '1',
-            examNum: '1',
-            scenario: scTitle,
-            scenarioId: a.scenarioId || `senaryo-${scNum}`,
-            status: 'completed',
-            score: totalScore,
-            maxScore: 100,
-            evaluationType: 'Öz değerlendirme',
-            missingOutcomes: missingOutcomesList,
-            missedCards: missedCardsList
-        };
-        saveExamAttemptToHistory(attemptRecord);
+            const attemptRecord = {
+                id: a.routeKey || ('attempt_' + (a.scenarioId || 'sc') + '_' + (a.completedAt || Date.now())),
+                timestamp: Date.now(),
+                date: new Date().toLocaleDateString('tr-TR'),
+                grade: '7',
+                term: '1',
+                examNum: '1',
+                scenario: scTitle,
+                scenarioId: a.scenarioId || `senaryo-${scNum}`,
+                status: 'completed',
+                score: totalScore,
+                maxScore: 100,
+                evaluationType: 'Öz değerlendirme',
+                missingOutcomes: missingOutcomesList,
+                missedCards: missedCardsList
+            };
+            saveExamAttemptToHistory(attemptRecord);
+            saveState();
+        }
     } catch (e) {
         console.warn('Prova geçmişi kaydetme hatası:', e);
     }
@@ -4518,7 +4600,7 @@ function renderFilteredQuestions(questionsByGrade, bankSelect, container) {
 
     let count = $('admin-question-filter-count');
     if (!count) { count = document.createElement('p'); count.id = 'admin-question-filter-count'; count.setAttribute('role', 'status'); container.before(count); }
-    count.textContent = `Filtre sonucu: ${finalQuestions.length} soru (Toplam ${questionsByGrade.length} soru)`;
+    count.textContent = `Filtre sonucu: ${finalQuestions.length} soru`;
 
     if (finalQuestions.length === 0) {
         bankSelect.innerHTML = '<option value="">Bu filtrede soru bulunamadı</option>';
@@ -5048,11 +5130,15 @@ export function selectQuestions(profileName, history, run = 0) {
         };
     }
 
-    // Soruları rastgele sırala (Fisher-Yates)
-    for (let i = result.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [result[i], result[j]] = [result[j], result[i]];
-    }
+    // Soruları OUTCOME_ORDER ve müfredat sırasına göre düzenle
+    result.sort((a, b) => {
+        const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
+        const oB = OUTCOME_ORDER.indexOf(b.outcome_id);
+        const idxA = oA === -1 ? 999 : oA;
+        const idxB = oB === -1 ? 999 : oB;
+        if (idxA !== idxB) return idxA - idxB;
+        return (a.id || '').localeCompare(b.id || '');
+    });
 
     const conf = profiles[profileName];
     return {

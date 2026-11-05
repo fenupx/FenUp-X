@@ -68,11 +68,11 @@ test.describe('FenUp X — Arayüz Sadeleştirmesi ve Profil Düzeni', () => {
 
         await expect(profileModal).toBeVisible();
         await expect(profileModal.locator('#profile-student-sections')).toBeVisible();
-        await expect(profileModal.locator('#profile-progress-summary')).toBeVisible();
+        await expect(profileModal.locator('#profile-studies-summary')).toBeVisible();
+        await expect(profileModal.locator('#studies-summary-counter-text')).toBeVisible();
         await expect(profileModal.locator('#profile-student-grade-group')).toBeVisible();
         await expect(profileModal.locator('#p-nickname')).toBeVisible();
         await expect(profileModal.locator('.profile-badges-section')).toBeVisible();
-        await expect(profileModal.locator('.profile-karne-section')).toBeVisible();
         await expect(profileModal.locator('#profile-admin-view')).toBeHidden();
         await expect(profileModal.locator('#profile-display-role-tag')).toContainText('7. Sınıf');
     });
@@ -108,34 +108,19 @@ test.describe('FenUp X — Arayüz Sadeleştirmesi ve Profil Düzeni', () => {
         const profileModal = page.locator('#profile-modal');
         await expect(profileModal).toBeVisible();
 
-        // Kısa gelişim özeti (Seri, Seviye, Rozet, Prova Öz Değerlendirmesi)
-        const summary = profileModal.locator('#profile-progress-summary');
+        // Günlük seri yalnızca hero altında bir kez gösterilir
+        const streakBadge = profileModal.locator('.profile-streak-badge');
+        await expect(streakBadge).toBeVisible();
+        await expect(streakBadge).toContainText('Seri');
+
+        // Çalışmalarım tek satır sayaç
+        const summary = profileModal.locator('#profile-studies-summary');
         await expect(summary).toBeVisible();
-        await expect(summary.locator('#profile-summary-streak')).toBeVisible();
-        await expect(summary.locator('#profile-summary-level')).toBeVisible();
-        await expect(summary.locator('#profile-summary-badges')).toBeVisible();
-        await expect(summary.locator('#profile-summary-exam')).toBeVisible();
+        await expect(summary.locator('#studies-summary-counter-text')).toBeVisible();
 
-        // 10 Kozmik Rozet vitrini
-        const badgesGrid = profileModal.locator('#cosmic-badges-grid .cosmic-badge-item');
-        await expect(badgesGrid).toHaveCount(10);
-
-        // Prova öz değerlendirme puanı resmî sınav gibi sunulmaz
-        const karneSection = profileModal.locator('.profile-karne-section');
-        await expect(karneSection).toBeVisible();
-        await expect(karneSection.locator('.stat-label').first()).toHaveText('Prova Öz Değerlendirmesi');
-
-        // Ayrıntılar akordiyon ile mobilde/masaüstünde kapatılıp açılabilir
-        const accordion = profileModal.locator('#profile-karne-details');
-        const summaryBar = profileModal.locator('#profile-karne-summary-bar');
-        const karneContent = profileModal.locator('#profile-karne-content');
-        await expect(karneContent).toBeVisible();
-        await summaryBar.click();
-        await expect(accordion).toHaveClass(/is-collapsed/);
-        await expect(karneContent).toBeHidden();
-        await summaryBar.click();
-        await expect(accordion).not.toHaveClass(/is-collapsed/);
-        await expect(karneContent).toBeVisible();
+        // 3 Gelişen Rozet Ailesi Vitrini
+        const badgeCards = profileModal.locator('.cosmic-badges-grid .badge-family-card');
+        await expect(badgeCards).toHaveCount(3);
     });
 
     test('3. Liderlik Tablosu: Sade İkincil Kontrol, Geçmiş Puanlar ve Veri Güvenliği', async ({ page }) => {
@@ -157,36 +142,21 @@ test.describe('FenUp X — Arayüz Sadeleştirmesi ve Profil Düzeni', () => {
         const lbSide = page.locator('#unit-leaderboard-side');
         await expect(lbSide).toBeVisible();
 
-        // Büyük beyaz "Önceki puan kayıtlarını göster" düğmesi kaldırılmıştır
-        await expect(page.locator('.competition-history-toggle')).toBeHidden();
+        // "Önceki puanlar / Güncel tabloya dön" geçiş butonu tamamen kaldırılmıştır
+        await expect(page.locator('#btn-lb-history-toggle')).toHaveCount(0);
+        await expect(page.locator('.competition-history-toggle')).toHaveCount(0);
 
-        // Küçük siteyle uyumlu "Önceki puanlar" bağlantısı mevcuttur
-        const historyBtn = page.locator('#btn-lb-history-toggle');
-        await expect(historyBtn).toBeVisible();
-        await expect(historyBtn).toContainText('Önceki puanlar');
-
-        // Önceki puanlara tıklandığında başlık "Geçmiş sezon" değil, "Önceki Puanlar" olur
-        await historyBtn.click();
+        // Liderlik tablosu başlığı Şampiyonlar Ligi olarak doğrudan görüntülenir
         const lbTitle = lbSide.locator('h2');
-        await expect(lbTitle).toContainText('Önceki Puanlar');
-        await expect(lbTitle).not.toContainText('Geçmiş sezon');
-
-        // Geri dönüş butonu kısa ve anlaşılır olmalı: "Güncel tabloya dön" (sunucuda doğrulanmış vb. teknik jargon yok)
-        await expect(historyBtn).toContainText('Güncel tabloya dön');
-        await expect(historyBtn).not.toContainText('sunucuda doğrulanmış');
-
-        // Güncel tabloya geri dön
-        await historyBtn.click();
-        await expect(historyBtn).toContainText('Önceki puanlar');
         await expect(lbTitle).toContainText('Şampiyonlar Ligi');
 
-        // Boş kategori durumunda önceki puanların korunduğu belirtilir
+        // Boş kategori durumunda anlaşılır bilgilendirme gösterilir
         await page.evaluate(() => {
             if (typeof window.renderGlobalLeaderboard === 'function') {
                 window.renderGlobalLeaderboard([], 'weekly');
             }
         });
-        await expect(page.locator('#global-lb-list')).toContainText('Önceki puanlar sistemde güvenle korunmaktadır.');
+        await expect(page.locator('#global-lb-list')).toContainText('Henüz bu kategoride yarışmacı yok.');
     });
 
     test('4. Mobil Ekranlarda (320px, 375px, 390px, 430px) Liderlik Satırları ve Profil Taşmaz', async ({ page }) => {

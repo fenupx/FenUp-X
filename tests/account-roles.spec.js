@@ -199,7 +199,7 @@ test('first Google login requests an explicit grade and persists onboarding acro
 test('profile keeps class locked, ignores DOM tampering and sends correction request',async({page})=>{
     await mockFirebase(page);
     await page.evaluate(async()=>{window.__records.s={role:'student',name:'Deneme',surname:'Kullanıcı',nickname:'TestKaptan',sinif:'5',totalScore:120};await window.__login('s');});
-    await page.evaluate(()=>{const m=document.getElementById('profile-modal');m.classList.remove('is-hidden');m.classList.add('is-open','active');m.style.display='flex';m.querySelector('details').open=true;});
+    await page.evaluate(()=>{const m=document.getElementById('profile-modal');m.classList.remove('is-hidden');m.classList.add('is-open','active');m.style.display='flex';m.querySelectorAll('details').forEach(d=>d.open=true);});
     await expect(page.locator('#profile-grade')).toBeDisabled();
     await page.locator('#grade-correction-choice').selectOption('8');
     await page.locator('#btn-grade-correction').click();
