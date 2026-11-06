@@ -2811,7 +2811,7 @@ function renderEval() {
             const isEvaluated = !!(a.evaluatedQuestions && a.evaluatedQuestions[q.id]);
             const isCurrent = (i === evalIdx);
             return `
-                <button type="button" class="q-nav-btn ${isCurrent ? 'active' : ''} ${isEvaluated ? 'eval-completed' : ''}" data-eval-q="${i}" title="Soru ${i + 1} (${isEvaluated ? 'Değerlendirildi' : 'Bekliyor'})">
+                <button type="button" class="q-nav-btn ${isCurrent ? 'active' : ''} ${isEvaluated ? 'eval-completed' : ''}" data-eval-q="${i}" title="Soru ${i + 1} (${isEvaluated ? 'Değerlendirildi' : 'Bekliyor'})" aria-label="Soru ${i + 1}: ${isEvaluated ? 'Değerlendirildi' : 'Bekliyor'}">
                     ${i + 1}
                 </button>
             `;
@@ -2819,6 +2819,7 @@ function renderEval() {
 
         navStrip.querySelectorAll('[data-eval-q]').forEach(btn => {
             btn.onclick = () => {
+                if (typeof clearEvalNotice === 'function') clearEvalNotice();
                 a.evalQuestionIndex = Number(btn.dataset.evalQ);
                 saveState();
                 renderEval();
@@ -2827,13 +2828,47 @@ function renderEval() {
     }
 
     // Tek Soru Değerlendirme Konteyneri
+    const qContainer = $('eval-single-question-container');
+
+    // Değerlendirme Uyarı ve Odaklama Yardımcıları
+    const clearEvalNotice = () => {
+        const box = qContainer?.querySelector('#eval-notice-box') || $('eval-notice-box');
+        const txt = qContainer?.querySelector('#eval-notice-text') || $('eval-notice-text');
+        if (box) {
+            box.style.display = 'none';
+            box.classList.add('is-hidden');
+        }
+        if (txt) {
+            txt.textContent = '';
+        }
+    };
+
+    const showEvalNotice = (msg) => {
+        const box = qContainer?.querySelector('#eval-notice-box') || $('eval-notice-box');
+        const txt = qContainer?.querySelector('#eval-notice-text') || $('eval-notice-text');
+        if (box && txt) {
+            txt.textContent = msg;
+            box.style.display = 'flex';
+            box.classList.remove('is-hidden');
+            box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            alert(msg);
+        }
+        const btns = qContainer?.querySelector('.eval-main-decision-buttons');
+        if (btns) {
+            btns.classList.add('eval-attention-pulse');
+            setTimeout(() => btns.classList.remove('eval-attention-pulse'), 1200);
+        }
+    };
+
+    clearEvalNotice();
+
     const q = questions[evalIdx];
     const qPoints = a.questionPoints?.[q.id] || 15;
     const criteria = a.criteriaMap?.[q.id] || [];
     const selectedIds = a.selectedCriteria?.[q.id] || [];
     const isEvaluated = !!(a.evaluatedQuestions && a.evaluatedQuestions[q.id]);
     const currentQScore = criteria.filter(c => selectedIds.includes(c.id)).reduce((s, c) => s + c.points, 0);
-    const qContainer = $('eval-single-question-container');
 
     if (qContainer && q) {
         a.questionStatuses = a.questionStatuses || {};
@@ -3001,12 +3036,15 @@ function renderEval() {
             // 1. TAM DOĞRU YAPTIM
             if (btnFull) {
                 btnFull.onclick = () => {
+                    clearEvalNotice();
                     a.questionStatuses = a.questionStatuses || {};
                     a.questionStatuses[q.id] = 'full';
                     a.selectedCriteria = a.selectedCriteria || {};
                     a.selectedCriteria[q.id] = criteria.map(c => c.id);
                     a.evaluatedQuestions = a.evaluatedQuestions || {};
                     a.evaluatedQuestions[q.id] = true;
+                    a.scores = a.scores || {};
+                    a.scores[q.id] = qPoints;
 
                     btnFull.classList.add('active');
                     btnZero?.classList.remove('active');
@@ -3026,7 +3064,11 @@ function renderEval() {
                     }
 
                     const navBtn = navStrip?.querySelector(`[data-eval-q="${evalIdx}"]`);
-                    if (navBtn) navBtn.classList.add('eval-completed');
+                    if (navBtn) {
+                        navBtn.classList.add('eval-completed');
+                        navBtn.title = `Soru ${evalIdx + 1} (Değerlendirildi)`;
+                        navBtn.setAttribute('aria-label', `Soru ${evalIdx + 1}: Değerlendirildi`);
+                    }
 
                     const currentEvaluated = questions.filter(qu => !!(a.evaluatedQuestions && a.evaluatedQuestions[qu.id])).length;
                     const prgEl = $('eval-progress-text');
@@ -3059,12 +3101,15 @@ function renderEval() {
 
             // 2. YAPAMADIM / BOŞ BIRAKTIM (0 PUAN)
             const handleZeroStatus = () => {
+                clearEvalNotice();
                 a.questionStatuses = a.questionStatuses || {};
                 a.questionStatuses[q.id] = 'zero';
                 a.selectedCriteria = a.selectedCriteria || {};
                 a.selectedCriteria[q.id] = [];
                 a.evaluatedQuestions = a.evaluatedQuestions || {};
                 a.evaluatedQuestions[q.id] = true;
+                a.scores = a.scores || {};
+                a.scores[q.id] = 0;
 
                 btnZero?.classList.add('active');
                 btnFull?.classList.remove('active');
@@ -3084,7 +3129,11 @@ function renderEval() {
                 }
 
                 const navBtn = navStrip?.querySelector(`[data-eval-q="${evalIdx}"]`);
-                if (navBtn) navBtn.classList.add('eval-completed');
+                if (navBtn) {
+                    navBtn.classList.add('eval-completed');
+                    navBtn.title = `Soru ${evalIdx + 1} (Değerlendirildi)`;
+                    navBtn.setAttribute('aria-label', `Soru ${evalIdx + 1}: Değerlendirildi`);
+                }
 
                 const currentEvaluated = questions.filter(qu => !!(a.evaluatedQuestions && a.evaluatedQuestions[qu.id])).length;
                 const prgEl = $('eval-progress-text');
@@ -3156,14 +3205,31 @@ function renderEval() {
                     const partialSumEl = $('partial-calc-score');
                     if (partialSumEl) partialSumEl.textContent = `${newScore} Puan`;
 
+                    const navBtn = navStrip?.querySelector(`[data-eval-q="${evalIdx}"]`);
                     if (currentSel.length > 0) {
+                        clearEvalNotice();
                         a.evaluatedQuestions = a.evaluatedQuestions || {};
                         a.evaluatedQuestions[q.id] = true;
                         a.scores = a.scores || {};
                         a.scores[q.id] = newScore;
-                        const navBtn = navStrip?.querySelector(`[data-eval-q="${evalIdx}"]`);
-                        if (navBtn) navBtn.classList.add('eval-completed');
+                        if (navBtn) {
+                            navBtn.classList.add('eval-completed');
+                            navBtn.title = `Soru ${evalIdx + 1} (Değerlendirildi)`;
+                            navBtn.setAttribute('aria-label', `Soru ${evalIdx + 1}: Değerlendirildi`);
+                        }
+                    } else {
+                        if (a.evaluatedQuestions) delete a.evaluatedQuestions[q.id];
+                        if (a.scores) delete a.scores[q.id];
+                        if (navBtn) {
+                            navBtn.classList.remove('eval-completed');
+                            navBtn.title = `Soru ${evalIdx + 1} (Bekliyor)`;
+                            navBtn.setAttribute('aria-label', `Soru ${evalIdx + 1}: Bekliyor`);
+                        }
                     }
+
+                    const currentEvaluated = questions.filter(qu => !!(a.evaluatedQuestions && a.evaluatedQuestions[qu.id])).length;
+                    const prgEl = $('eval-progress-text');
+                    if (prgEl) prgEl.textContent = `${currentEvaluated} / ${questions.length} Değerlendirildi`;
 
                     saveState();
                 };
@@ -3172,6 +3238,7 @@ function renderEval() {
             // 4. PUANI ONAYLA VE DEVAM ET
             if (btnConfirmPartial) {
                 btnConfirmPartial.onclick = () => {
+                    clearEvalNotice();
                     const currentSel = a.selectedCriteria[q.id] || [];
                     const newScore = criteria.filter(c => currentSel.includes(c.id)).reduce((s, c) => s + c.points, 0);
 
@@ -3182,13 +3249,19 @@ function renderEval() {
 
                     a.evaluatedQuestions = a.evaluatedQuestions || {};
                     a.evaluatedQuestions[q.id] = true;
+                    a.scores = a.scores || {};
+                    a.scores[q.id] = newScore;
                     a.questionStatuses = a.questionStatuses || {};
                     if (newScore === qPoints) a.questionStatuses[q.id] = 'full';
                     else if (newScore > 0) a.questionStatuses[q.id] = 'partial';
                     else a.questionStatuses[q.id] = 'zero';
 
                     const navBtn = navStrip?.querySelector(`[data-eval-q="${evalIdx}"]`);
-                    if (navBtn) navBtn.classList.add('eval-completed');
+                    if (navBtn) {
+                        navBtn.classList.add('eval-completed');
+                        navBtn.title = `Soru ${evalIdx + 1} (Değerlendirildi)`;
+                        navBtn.setAttribute('aria-label', `Soru ${evalIdx + 1}: Değerlendirildi`);
+                    }
 
                     const currentEvaluated = questions.filter(qu => !!(a.evaluatedQuestions && a.evaluatedQuestions[qu.id])).length;
                     const prgEl = $('eval-progress-text');
@@ -3227,25 +3300,6 @@ function renderEval() {
         }
     }
 
-    // Değerlendirme Uyarı ve Odaklama Yardımcısı
-    const showEvalNotice = (msg) => {
-        const box = qContainer?.querySelector('#eval-notice-box') || $('eval-notice-box');
-        const txt = qContainer?.querySelector('#eval-notice-text') || $('eval-notice-text');
-        if (box && txt) {
-            txt.textContent = msg;
-            box.style.display = 'flex';
-            box.classList.remove('is-hidden');
-            box.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        } else {
-            alert(msg);
-        }
-        const btns = qContainer?.querySelector('.eval-main-decision-buttons');
-        if (btns) {
-            btns.classList.add('eval-attention-pulse');
-            setTimeout(() => btns.classList.remove('eval-attention-pulse'), 1200);
-        }
-    };
-
     // İlerleme Metni
     const evaluatedCount = questions.filter(qu => !!(a.evaluatedQuestions && a.evaluatedQuestions[qu.id])).length;
     const progressEl = $('eval-progress-text');
@@ -3257,6 +3311,7 @@ function renderEval() {
         btnPrev.disabled = (evalIdx === 0);
         btnPrev.onclick = () => {
             if (evalIdx > 0) {
+                clearEvalNotice();
                 a.evalQuestionIndex = evalIdx - 1;
                 saveState();
                 renderEval();

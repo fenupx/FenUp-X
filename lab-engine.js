@@ -1153,8 +1153,21 @@ function renderWorkspaceCurriculumAndCollapsibleVars(expId) {
 export function clearLabToast() {
     const toast = document.getElementById('lab-toast');
     if (toast) {
-        clearTimeout(toast._timeout);
+        if (toast._timeout) {
+            clearTimeout(toast._timeout);
+            toast._timeout = null;
+        }
         toast.classList.remove('show');
+        toast.setAttribute('aria-hidden', 'true');
+        if (toast._fadeTimeout) {
+            clearTimeout(toast._fadeTimeout);
+        }
+        toast._fadeTimeout = setTimeout(() => {
+            if (!toast.classList.contains('show')) {
+                toast.textContent = '';
+                toast.style.display = 'none';
+            }
+        }, 300);
     }
 }
 
@@ -1166,11 +1179,23 @@ export function showLabToast(message) {
         toast.className = 'lab-toast';
         document.body.appendChild(toast);
     }
+    if (toast._fadeTimeout) {
+        clearTimeout(toast._fadeTimeout);
+        toast._fadeTimeout = null;
+    }
+    if (toast._timeout) {
+        clearTimeout(toast._timeout);
+        toast._timeout = null;
+    }
+    toast.style.display = 'block';
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
+    toast.removeAttribute('aria-hidden');
     toast.textContent = message;
+    void toast.offsetWidth;
     toast.classList.add('show');
-    clearTimeout(toast._timeout);
     toast._timeout = setTimeout(() => {
-        toast.classList.remove('show');
+        clearLabToast();
     }, 4000);
 }
 
@@ -8865,6 +8890,7 @@ function setupWorkControlsDOM() {
                 work.progress = 0;
             }
             updateWorkPlayButton(work.isPlaying);
+            calculateWorkPhysics();
         });
     }
 
@@ -9455,6 +9481,7 @@ function resetWorkMotion() {
     work.progress = 0;
     work.currentDisplacement = 0;
     updateWorkPlayButton(false);
+    calculateWorkPhysics();
 }
 
 function resetWorkExperiment() {
@@ -9549,6 +9576,17 @@ function calculateWorkPhysics() {
                         if (title) title.textContent = "⏳ Hareket Halinde (İş Yapılıyor...)";
                         if (text) text.textContent = `Sandık kuvvet doğrultusunda ilerliyor. Şu ana kadar yapılan iş: ${(work.appliedWork * work.progress).toFixed(1)} J.`;
                     }
+                } else if (work.progress > 0 && work.progress < 1.0) {
+                    if (mJoule) {
+                        mJoule.textContent = `${(work.appliedWork * work.progress).toFixed(1)} J (Duraklatıldı)`;
+                        mJoule.style.color = "#fbbf24";
+                    }
+                    if (box) {
+                        box.className = "lab-pedagogical-card is-work";
+                        if (icon) icon.innerHTML = '<i class="fas fa-pause-circle" style="color: #fbbf24;"></i>';
+                        if (title) title.textContent = "⏸️ Duraklatıldı (Devam Etmek İçin Oynatın)";
+                        if (text) text.textContent = `Simülasyon duraklatıldı. Alınan yol: ${curD.toFixed(1)} m, yapılan iş: ${(work.appliedWork * work.progress).toFixed(1)} J.`;
+                    }
                 } else {
                     if (mJoule) {
                         mJoule.textContent = `${work.appliedWork.toFixed(1)} J (İş Yapıldı)`;
@@ -9618,6 +9656,17 @@ function calculateWorkPhysics() {
                     if (title) title.textContent = "⏳ Hareket Halinde (İş Yapılıyor...)";
                     if (text) text.textContent = `Sandık kuvvet doğrultusunda ilerliyor. Şu ana kadar ${(work.appliedWork * work.progress).toFixed(1)} J iş yapıldı.`;
                 }
+            } else if (work.progress > 0 && work.progress < 1.0) {
+                if (mJoule) {
+                    mJoule.textContent = `${(work.appliedWork * work.progress).toFixed(1)} J (Duraklatıldı)`;
+                    mJoule.style.color = "#fbbf24";
+                }
+                if (box) {
+                    box.className = "lab-pedagogical-card is-work";
+                    if (icon) icon.innerHTML = '<i class="fas fa-pause-circle" style="color: #fbbf24;"></i>';
+                    if (title) title.textContent = "⏸️ Duraklatıldı (Devam Etmek İçin Oynatın)";
+                    if (text) text.textContent = `Simülasyon duraklatıldı. Alınan yol: ${curD.toFixed(1)} m, yapılan iş: ${(work.appliedWork * work.progress).toFixed(1)} J.`;
+                }
             } else {
                 if (mJoule) {
                     mJoule.textContent = `${work.appliedWork.toFixed(1)} J (İş Yapıldı)`;
@@ -9667,6 +9716,17 @@ function calculateWorkPhysics() {
                     if (icon) icon.innerHTML = '<i class="fas fa-spinner fa-spin" style="color: #38bdf8;"></i>';
                     if (title) title.textContent = "⏳ Sandık Kaldırılıyor (İş Yapılıyor...)";
                     if (text) text.textContent = `Sandık yukarı yönde kaldırılıyor. Şu ana kadar ${(work.appliedWork * work.progress).toFixed(1)} J iş yapıldı.`;
+                }
+            } else if (work.progress > 0 && work.progress < 1.0) {
+                if (mJoule) {
+                    mJoule.textContent = `${(work.appliedWork * work.progress).toFixed(1)} J (Duraklatıldı)`;
+                    mJoule.style.color = "#fbbf24";
+                }
+                if (box) {
+                    box.className = "lab-pedagogical-card is-work";
+                    if (icon) icon.innerHTML = '<i class="fas fa-pause-circle" style="color: #fbbf24;"></i>';
+                    if (title) title.textContent = "⏸️ Duraklatıldı (Devam Etmek İçin Oynatın)";
+                    if (text) text.textContent = `Simülasyon duraklatıldı. Kaldırılan yükseklik: ${curD.toFixed(1)} m, yapılan iş: ${(work.appliedWork * work.progress).toFixed(1)} J.`;
                 }
             } else {
                 if (mJoule) {
@@ -22374,7 +22434,8 @@ function recordMeasurement() {
             cold_pass: "1. Soğukken Geçirme",
             heating: "2. Alevde Isıtma",
             hot_try: "3. Sıcakken Deneme",
-            quenching: "4. Soğuk Suda Soğutma"
+            quenching: "4. Soğuk Suda Soğutma",
+            quenched_pass: "5. Soğutma Sonrası Yeniden Deneme"
         };
         const passText = ex.isPassingThrough ? "✅ Halkadan Geçti" : "⛔ Takıldı, Geçemedi!";
         const inference = ex.isPassingThrough 
@@ -24481,6 +24542,8 @@ if (typeof window !== "undefined") {
         markLabExperimentInProgress,
         getLabProgressSummary,
         isExperimentCompleted,
+        showLabToast,
+        clearLabToast,
         EXPERIMENTS_DATABASE,
         labState
     };

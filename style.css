@@ -5941,7 +5941,7 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
    ========================================================================== */
 .badge-families-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr;
     gap: 12px;
     margin: 0;
     width: 100%;
@@ -5994,15 +5994,17 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
 }
 .badge-family-top {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     align-items: center;
-    gap: 8px;
+    gap: 8px 12px;
 }
 .badge-family-icon {
     font-size: 1.5rem;
     line-height: 1;
 }
 .badge-family-header {
-    flex: 1;
+    flex: 1 1 180px;
     min-width: 0;
 }
 .badge-family-title {
@@ -6024,6 +6026,8 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     background: rgba(148, 163, 184, 0.15);
     color: #94a3b8;
     white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: auto;
 }
 .badge-stage-tag.active {
     background: rgba(56, 189, 248, 0.2);
