@@ -169,6 +169,8 @@ let state = createDefaultState();
 
 let currentProfile = 'dengeli';
 let currentSolveMode = 'ekranda'; // 'ekranda' | 'kagitta'
+let currentTimerEnabled = false;
+let examTimerInterval = null;
 let setupPracticeNewMode = false;
 let activeFrame = null;
 let activeAnimationCleanup = null;
@@ -1028,6 +1030,9 @@ export function goToStep(step, options = {}) {
     const previousStep = state.currentStep;
     stopAnimation();
     closePrintPreview();
+    if (step !== 'practice') {
+        stopExamCountdown(true);
+    }
     const picker = $('practice-q-picker-dropdown');
     if (picker) picker.classList.add('is-hidden');
     const pickerButton = $('btn-practice-q-picker');
@@ -2172,12 +2177,160 @@ export function toggleStudyFullscreen() {
 }
 
 // 3b. AŞAMA: YAZILI PROVASI EKRANI (Kurulum & Tek Soru Akışı)
+function formatExamCountdown(seconds) {
+    const s = Math.max(0, Math.floor(Number(seconds) || 0));
+    const mm = String(Math.floor(s / 60)).padStart(2, '0');
+    const ss = String(s % 60).padStart(2, '0');
+    return `${mm}:${ss}`;
+}
+
+function stopExamCountdown(removeEl = false) {
+    if (examTimerInterval) {
+        clearInterval(examTimerInterval);
+        examTimerInterval = null;
+    }
+    if (removeEl && typeof document !== 'undefined') {
+        const el = $('exam-countdown');
+        if (el) el.remove();
+        const modal = $('exam-timeout-modal');
+        if (modal) modal.remove();
+    }
+}
+
+function updateExamCountdownUI(seconds) {
+    const el = $('exam-countdown');
+    if (!el) return;
+    const sec = Math.max(0, Math.floor(Number(seconds) || 0));
+    const valSpan = el.querySelector('#exam-countdown-value');
+    const formatted = formatExamCountdown(sec);
+    if (valSpan) valSpan.textContent = formatted;
+    else el.textContent = `⏱️ ${formatted}`;
+    el.classList.toggle('timer-warning', sec >= 60 && sec < 300);
+    el.classList.toggle('timer-danger', sec < 60);
+}
+
+function showExamTimeoutModal() {
+    if (typeof document === 'undefined') return;
+    let modal = $('exam-timeout-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'exam-timeout-modal';
+        modal.className = 'exam-timeout-modal-overlay';
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.innerHTML = `
+            <div class="exam-timeout-modal-card">
+                <p class="exam-timeout-modal-msg">⏰ Sınav süresi tamamlandı! Provayı tamamlayıp öz değerlendirmeye geçmek ister misin?</p>
+                <div class="exam-timeout-modal-actions">
+                    <button type="button" id="btn-exam-timeout-eval" class="exam-btn-primary">Öz Değerlendirmeye Geç</button>
+                    <button type="button" id="btn-exam-timeout-continue" class="exam-btn-secondary">Soruları İncelemeye Devam Et</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+    const btnGoEval = modal.querySelector('#btn-exam-timeout-eval');
+    if (btnGoEval) {
+        btnGoEval.onclick = () => {
+            const a = state.attempt;
+            if (a) {
+                const textarea = $('practice-text-ans');
+                const activeIdx = typeof a.activeQuestionIndex === 'number' ? a.activeQuestionIndex : 0;
+                const qId = a.ids?.[activeIdx];
+                if (textarea && qId) {
+                    a.answers[qId] = textarea.value;
+                }
+                a.status = 'evaluating';
+                a.evalQuestionIndex = 0;
+                saveState();
+            }
+            modal.remove();
+            goToStep('eval');
+        };
+    }
+    const btnContinue = modal.querySelector('#btn-exam-timeout-continue');
+    if (btnContinue) {
+        btnContinue.onclick = () => {
+            modal.remove();
+        };
+    }
+}
+
+function syncExamCountdown() {
+    const a = state.attempt;
+    if (!a || setupPracticeNewMode || state.currentStep !== 'practice' || a.solveMode === 'kagitta' || !a.timerEnabled) {
+        stopExamCountdown(true);
+        return;
+    }
+    const topBar = document.querySelector('#practice-active-box .practice-top-bar');
+    if (!topBar) return;
+    let countdownEl = $('exam-countdown');
+    if (!countdownEl) {
+        countdownEl = document.createElement('div');
+        countdownEl.id = 'exam-countdown';
+        countdownEl.className = 'exam-countdown-badge';
+        countdownEl.setAttribute('role', 'timer');
+        countdownEl.setAttribute('title', '40 Dakika Sınav Süresi');
+        countdownEl.innerHTML = `<i class="fas fa-stopwatch" aria-hidden="true"></i> <span id="exam-countdown-value">40:00</span>`;
+        const statusInfo = topBar.querySelector('.practice-status-info') || topBar;
+        statusInfo.appendChild(countdownEl);
+    }
+    if (typeof a.timerRemainingSec !== 'number' || Number.isNaN(a.timerRemainingSec)) {
+        a.timerRemainingSec = 40 * 60;
+    }
+    updateExamCountdownUI(a.timerRemainingSec);
+
+    if (a.timerRemainingSec <= 0) {
+        stopExamCountdown(false);
+        if (!a.timerExpiredPromptShown) {
+            a.timerExpiredPromptShown = true;
+            saveState();
+            showExamTimeoutModal();
+        }
+        return;
+    }
+
+    if (!examTimerInterval) {
+        examTimerInterval = setInterval(() => {
+            const cur = state.attempt;
+            if (!cur || setupPracticeNewMode || state.currentStep !== 'practice' || cur.solveMode === 'kagitta' || !cur.timerEnabled) {
+                stopExamCountdown(true);
+                return;
+            }
+            cur.timerRemainingSec = Math.max(0, (Number(cur.timerRemainingSec) || 0) - 1);
+            updateExamCountdownUI(cur.timerRemainingSec);
+            if (cur.timerRemainingSec % 10 === 0 || cur.timerRemainingSec <= 0) {
+                saveState();
+            }
+            if (cur.timerRemainingSec <= 0) {
+                stopExamCountdown(false);
+                if (!cur.timerExpiredPromptShown) {
+                    cur.timerExpiredPromptShown = true;
+                    saveState();
+                    showExamTimeoutModal();
+                }
+            }
+        }, 1000);
+    }
+}
+
+export function setExamTimerRemaining(seconds) {
+    if (!state.attempt) return;
+    state.attempt.timerRemainingSec = Math.max(0, Math.floor(Number(seconds) || 0));
+    if (state.attempt.timerRemainingSec > 0) {
+        state.attempt.timerExpiredPromptShown = false;
+    }
+    saveState();
+    syncExamCountdown();
+}
+
 function renderPractice() {
     const setupBox = $('practice-setup-box');
     const activeBox = $('practice-active-box');
 
     // Eğer aktif bir sınav oturumu yoksa veya kullanıcı "Yeni Prova" başlatmak istiyorsa kurulumu göster
     if (!state.attempt || setupPracticeNewMode) {
+        stopExamCountdown(true);
         if (setupBox) setupBox.style.display = 'block';
         if (activeBox) activeBox.style.display = 'none';
 
@@ -2214,6 +2367,15 @@ function renderPractice() {
         const btnModePaper = $('btn-mode-paper');
         const btnStartLabel = $('exam-start-practice-label');
         const setupSubtext = $('exam-setup-subtext');
+        const timerCheckbox = $('exam-timer-enabled');
+        const timerGroup = $('exam-timer-option-group');
+
+        if (timerCheckbox) {
+            timerCheckbox.checked = !!currentTimerEnabled;
+            timerCheckbox.onchange = () => {
+                currentTimerEnabled = !!timerCheckbox.checked;
+            };
+        }
 
         const updateSolveModeUI = (mode) => {
             currentSolveMode = mode;
@@ -2224,6 +2386,9 @@ function renderPractice() {
             }
             if (setupSubtext) {
                 setupSubtext.style.display = (mode === 'kagitta') ? 'block' : 'none';
+            }
+            if (timerGroup) {
+                timerGroup.style.display = (mode === 'kagitta') ? 'none' : 'block';
             }
         };
 
@@ -2439,6 +2604,7 @@ function renderPractice() {
     const qContainer = $('practice-single-question-container');
 
     if (a.solveMode === 'kagitta') {
+        stopExamCountdown(true);
         // Kâğıtta Çözüm Modu: Odaklanmış sade bilgilendirme kartı
         if (navStrip) navStrip.style.display = 'none';
         if (bottomBar) bottomBar.style.display = 'none';
@@ -2634,6 +2800,7 @@ function renderPractice() {
     }
 
     updateAnsweredCountText(questions);
+    syncExamCountdown();
 }
 
 function updateAnsweredCountText(questions) {
@@ -2688,6 +2855,9 @@ async function startNewPractice() {
         });
 
         const curScenario = getActiveScenario();
+        const timerCheckboxEl = $('exam-timer-enabled');
+        const isTimerEnabled = (currentSolveMode !== 'kagitta') && !!(timerCheckboxEl ? timerCheckboxEl.checked : currentTimerEnabled);
+        currentTimerEnabled = isTimerEnabled;
         state.attempt = {
             scenarioNumber: curScenario.scenario,
             scenarioId: curScenario.id,
@@ -2706,6 +2876,9 @@ async function startNewPractice() {
             profile: currentProfile,
             repeats: chosen.repeats,
             solveMode: currentSolveMode,
+            timerEnabled: isTimerEnabled,
+            timerRemainingSec: isTimerEnabled ? (40 * 60) : 0,
+            timerExpiredPromptShown: false,
             activeQuestionIndex: 0,
             evalQuestionIndex: 0,
             answers: {},
@@ -5352,6 +5525,7 @@ export async function openExamView(options = {}) {
 export function closeExamView() {
     saveProgress();
     stopAnimation();
+    stopExamCountdown(true);
     closePrintPreview();
     exitStudyFullscreen();
     state.currentStep = 'scope';
@@ -5535,6 +5709,7 @@ if (typeof window !== 'undefined') {
         getQuestionScore,
         reEvaluateWithCriteria,
         getPartialScore,
+        setExamTimerRemaining,
         SCORING_POLICY,
         toggleStudyPlan,
         applyStudyPlanState,

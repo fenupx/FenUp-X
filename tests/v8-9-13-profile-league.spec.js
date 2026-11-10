@@ -1,6 +1,7 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
 import { mockFirebase } from './helpers/firebase-mock.js';
+import { competitionPeriods } from '../competition-config.js';
 
 /**
  * FENUP X — V8.9.13 Profil Şampiyonlar Ligi ve Etkileşim Test Paketi
@@ -111,9 +112,12 @@ test.describe('FenUp X — V8.9.13 Profil Şampiyonlar Ligi ve Etkileşim Düzel
     });
 
     test('3. Puan Kartları 3 Sütunlu Kompakt Yapıda (Haftalık / Aylık / Sezonluk) Render Edilir, Mükerrer Başlık Yoktur', async ({ page }) => {
+        const currentPeriods = competitionPeriods(new Date());
         await mockStudentEnvironment(page, {
             userData: {
+                lastWeekId_7: currentPeriods.weekId,
                 weeklyScore_7: 450,
+                lastMonthId_7: currentPeriods.monthId,
                 monthlyScore_7: 2300,
                 seasonScore_7: 11700
             }

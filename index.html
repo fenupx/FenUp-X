@@ -57,8 +57,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@500;600;700&family=Kalam:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8.9.18">
-    <link rel="stylesheet" href="exam.css?v=8.9.18">
+    <link rel="stylesheet" href="style.css?v=8.9.19">
+    <link rel="stylesheet" href="exam.css?v=8.9.19">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -69,6 +69,7 @@
             <img src="fenupx-logo.png" alt="FenUp X Logo" class="site-logo-img" width="48" height="48">
             <span class="site-brand-text">FenUp <span class="brand-x">X</span></span>
         </a>
+        <button type="button" id="btn-global-sound-toggle" class="icon-btn global-sound-toggle-btn" title="Sesi Kapat / Aç" aria-label="Ses Efektlerini Kapat" aria-pressed="false"><i class="fas fa-volume-up"></i></button>
         <button type="button" id="btn-mobile-menu" class="text-btn is-hidden" aria-expanded="false" aria-controls="header-navigation">Menü <span aria-hidden="true">☰</span></button>
         <nav id="header-navigation" class="header-right" aria-label="Site gezinmesi">
             <button type="button" id="btn-header-home" class="text-btn header-home-btn" style="display: none;" aria-label="Ana Sayfaya Dön"><i class="fas fa-home"></i> <span>Ana Sayfa</span></button>
@@ -3422,7 +3423,7 @@
 
                     <!-- TAB 2: VERİ DEFTERİ VE ÖLÇÜM TABLOSU -->
                     <div class="lab-tab-pane is-hidden" id="pane-data">
-                        <div class="lab-panel-box">
+                        <div class="lab-panel-box" id="lab-notebook-panel">
                             <div class="lab-table-title-row">
                                 <h4 class="lab-box-heading"><i class="fas fa-table"></i> Gözlem ve Ölçüm Defteri</h4>
                                 <button id="btn-clear-table" class="lab-mini-btn danger"><i class="fas fa-trash-alt"></i> Temizle</button>
@@ -4417,6 +4418,13 @@
                     </div>
                 </div>
 
+                <!-- İsteğe Bağlı 40 Dakika Sınav Süresi (MEB Sınav Simülatörü) -->
+                <div class="exam-timer-option-group" id="exam-timer-option-group">
+                    <label class="exam-timer-toggle" for="exam-timer-enabled">
+                        <input type="checkbox" id="exam-timer-enabled"> ⏱️ 40 Dakika Sınav Süresi (MEB Sınav Simülatörü)
+                    </label>
+                </div>
+
                 <div class="exam-controls" style="margin-top: 24px; flex-direction: column; align-items: stretch; gap: 10px;">
                     <button id="exam-start-practice" class="exam-btn-primary" type="button" style="padding: 14px 28px; font-size: 1.1rem; width: 100%;">
                         <i class="fas fa-play"></i> <span id="exam-start-practice-label">Başla</span>
@@ -5042,8 +5050,8 @@
     <script>
         window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.2';
     </script>
-    <script type="module" src="exam-engine.js?v=8.9.18"></script>
-    <script type="module" src="lab-engine.js?v=8.9.18"></script>
-    <script type="module" src="script.js?v=8.9.18"></script>
+    <script type="module" src="exam-engine.js?v=8.9.19"></script>
+    <script type="module" src="lab-engine.js?v=8.9.19"></script>
+    <script type="module" src="script.js?v=8.9.19"></script>
 </body>
 </html>

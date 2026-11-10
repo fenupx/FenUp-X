@@ -1099,7 +1099,10 @@ sfx.bgm.loop = true;
 const topControls = document.querySelector('.top-controls');
 const volumeSlider = document.getElementById('volume-slider');
 const muteBtn = document.getElementById('mute-btn');
-let isMuted = false; 
+const globalSoundToggleBtn = document.getElementById('btn-global-sound-toggle');
+export let isMuted = (() => {
+    try { return localStorage.getItem('fenupx_sound_muted') === 'true'; } catch (_) { return false; }
+})();
 let globalVolume = 0.7;
 
 let audioUnlocked = false;
@@ -1115,22 +1118,6 @@ const unlockAudio = () => {
 document.body.addEventListener('click', unlockAudio, { once: true });
 document.body.addEventListener('touchstart', unlockAudio, { once: true });
 
-if (volumeSlider) {
-    volumeSlider.addEventListener('input', (e) => {
-        globalVolume = e.target.value / 100;
-        if (muteBtn) muteBtn.className = globalVolume === 0 ? "fas fa-volume-mute" : "fas fa-volume-up";
-        updateVolumes();
-    });
-}
-
-if (muteBtn) {
-    muteBtn.addEventListener('click', () => {
-        isMuted = !isMuted;
-        muteBtn.className = isMuted ? "fas fa-volume-mute" : "fas fa-volume-up";
-        updateVolumes();
-    });
-}
-
 function updateVolumes() {
     for (let key in sfx) {
         sfx[key].muted = isMuted;
@@ -1138,6 +1125,67 @@ function updateVolumes() {
         else { sfx[key].volume = isMuted ? 0 : globalVolume; }
     }
 }
+
+function syncGlobalSoundUI() {
+    if (typeof window !== 'undefined') window.isMuted = isMuted;
+    if (muteBtn) {
+        muteBtn.className = (isMuted || globalVolume === 0) ? "fas fa-volume-mute" : "fas fa-volume-up";
+    }
+    if (globalSoundToggleBtn) {
+        const icon = globalSoundToggleBtn.querySelector('i');
+        if (icon) {
+            icon.className = isMuted ? "fas fa-volume-mute" : "fas fa-volume-up";
+        } else {
+            globalSoundToggleBtn.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+        }
+        globalSoundToggleBtn.setAttribute('aria-pressed', isMuted ? 'true' : 'false');
+        globalSoundToggleBtn.setAttribute('aria-label', isMuted ? 'Ses Efektlerini Aç' : 'Ses Efektlerini Kapat');
+        globalSoundToggleBtn.classList.toggle('is-muted', isMuted);
+    }
+    updateVolumes();
+    if (isMuted) {
+        for (let key in sfx) {
+            try { if (!sfx[key].paused) sfx[key].pause(); } catch (e) {}
+        }
+    }
+}
+
+export function toggleGlobalSound(e) {
+    if (e && typeof e.preventDefault === 'function') {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    isMuted = !isMuted;
+    try {
+        localStorage.setItem('fenupx_sound_muted', isMuted ? 'true' : 'false');
+    } catch (_) {}
+    syncGlobalSoundUI();
+    return isMuted;
+}
+if (typeof window !== 'undefined') {
+    window.toggleGlobalSound = toggleGlobalSound;
+}
+
+if (volumeSlider) {
+    volumeSlider.addEventListener('input', (e) => {
+        globalVolume = e.target.value / 100;
+        syncGlobalSoundUI();
+    });
+}
+
+if (muteBtn) {
+    muteBtn.addEventListener('click', (e) => {
+        toggleGlobalSound(e);
+    });
+}
+
+if (globalSoundToggleBtn) {
+    globalSoundToggleBtn.addEventListener('click', (e) => {
+        toggleGlobalSound(e);
+    });
+}
+
+syncGlobalSoundUI();
 
 // --- EVRENSEL TAM EKRAN (FULLSCREEN API) VE İKON SENKRONİZASYONU (KURAL 7.3) ---
 function toggleGlobalFullscreen() {
@@ -1196,6 +1244,7 @@ if (globalFsBtn) {
 }
 
 function playSound(obj) { 
+    if (isMuted || (() => { try { return localStorage.getItem('fenupx_sound_muted') === 'true'; } catch (_) { return false; } })()) return;
     if(!obj) return;
     if (obj === sfx.bgm && !obj.paused) { updateVolumes(); return; }
     try { obj.currentTime = 0; } catch(e){}
@@ -2546,22 +2595,7 @@ document.querySelectorAll('.answer-btn').forEach(btn => btn.onclick = function()
 
             const tid2 = setTimeout(() => { 
                 if (currentGeneration !== quizState.generationId) return;
-                // V8.9.1: Hızlı Kafa ve Kusursuz Seri Rozetleri
-                const curSettings = getSettings(quizState.index);
-                const timeSpent = curSettings.time - (quizState.currentTimeLeft || 0);
-                if (timeSpent < 10) {
-                    unlockBadge('badge_hizli_kafa');
-                }
-                if (quizState.index >= 8) {
-                    unlockBadge('badge_karadelik');
-                }
-                if (quizState.score >= 500) {
-                    unlockBadge('badge_efsane');
-                    unlockBadge('badge_fenup_efsanesi');
-                }
-                if (quizState.index === 9) {
-                    unlockBadge('badge_kusursuz');
-                }
+                // V8.9.19: Eski 10'lu rozet (Işık Hızı / Kozmik Rozet) tetikleyicileri kaldırıldı; yalnız 3 Gelişen Rozet Ailesi geçerlidir.
                 if (typeof checkAndUpdateStreak === 'function') {
                     checkAndUpdateStreak();
                 }
@@ -3788,16 +3822,6 @@ export function checkAndUpdateStreak() {
         localStorage.setItem('fenupx_streak_data', JSON.stringify(updated));
         updateStreakUI(count);
 
-        // Rozet kontrolleri (V8.9.1: Evrensel Rozetler)
-        if (count >= 3) {
-            unlockBadge('badge_seri_3');
-            unlockBadge('badge_ates_serisi');
-        }
-        if (count >= 7) {
-            unlockBadge('badge_seri_7');
-            unlockBadge('badge_super_seri');
-        }
-
         return updated;
     } catch (e) {
         console.warn('Streak güncelleme hatası:', e);
@@ -4153,29 +4177,14 @@ export function unlockBadge(badgeId) {
     }
 }
 
-function showBadgeEarnedToast(badge) {
-    let toast = document.getElementById('fenupx-badge-toast');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.id = 'fenupx-badge-toast';
-        toast.className = 'fenupx-badge-toast';
-        document.body.appendChild(toast);
-    }
-    toast.innerHTML = `
-        <div class="badge-toast-content">
-            <span class="badge-toast-icon">${badge.icon}</span>
-            <div class="badge-toast-text">
-                <strong class="badge-toast-title">Kozmik Rozet Kazanıldı!</strong>
-                <span class="badge-toast-desc">${badge.title} · ${badge.condition}</span>
-            </div>
-            <span class="badge-toast-sparkle">✨</span>
-        </div>
-    `;
-    toast.classList.add('show');
-    clearTimeout(toast._timeout);
-    toast._timeout = setTimeout(() => {
+function showBadgeEarnedToast() {
+    // V8.9.19: Eski Kozmik Rozet toast bildirimleri tamamen devre dışı bırakıldı.
+    const toast = document.getElementById('fenupx-badge-toast');
+    if (toast) {
+        clearTimeout(toast._timeout);
         toast.classList.remove('show');
-    }, 4000);
+        toast.remove();
+    }
 }
 
 // V8.9.2: 4 Sınıf Düzeyi Desteği (5, 6, 7, 8)
@@ -4786,46 +4795,35 @@ function renderCompetitionStudiesTab(compHistory) {
     const cohortSeason = Number(loadedProfile?._cohortSeasonScore) || 0;
     const seasonScore = cohortSeason + legacySeason;
 
-    // 2. Haftalık Puan (Pazartesi 00:00 Europe/Istanbul'dan itibaren)
+    // 2. Haftalık Puan (Pazartesi 00:00 Europe/Istanbul'dan itibaren; geçerli weekId zorunludur)
     let weeklyScore = 0;
     let weeklyVerified = false;
-    const userWeekId = loadedProfile ? (loadedProfile[`lastWeekId_${userGrade}`] || loadedProfile.lastWeekId) : null;
+    const userWeekId = loadedProfile ? (loadedProfile[`lastWeekId_${userGrade}`] || loadedProfile.lastWeekId || loadedProfile[`weekId_${userGrade}`] || loadedProfile.weekId) : null;
     const legacyWeeklyRaw = loadedProfile ? (Number(loadedProfile[`weeklyScore_${userGrade}`]) || Number(loadedProfile.weeklyScore) || 0) : 0;
 
     let legacyWeekly = 0;
     if (userWeekId) {
-        if (userWeekId === periods.weekId) {
-            legacyWeekly = legacyWeeklyRaw;
-        } else {
-            legacyWeekly = 0; // Eski/dönem dışı hafta kanıtlı olarak 0
-        }
+        legacyWeekly = (userWeekId === periods.weekId) ? legacyWeeklyRaw : 0;
         weeklyVerified = true;
     }
 
     let cohortWeekly = 0;
     if (loadedProfile?._cohortLoaded) {
-        if (loadedProfile._cohortWeekId === periods.weekId) {
-            cohortWeekly = Number(loadedProfile._cohortWeeklyScore) || 0;
-        } else {
-            cohortWeekly = 0;
-        }
+        cohortWeekly = (loadedProfile._cohortWeekId === periods.weekId) ? (Number(loadedProfile._cohortWeeklyScore) || 0) : 0;
         weeklyVerified = true;
     }
 
     if (!userWeekId && !loadedProfile?._cohortWeekId) {
         if (Array.isArray(compHistory) && compHistory.length > 0) {
             const thisWeekMatches = compHistory.filter(m => {
+                if (m.weekId) return m.weekId === periods.weekId;
                 const t = m.timestamp || (m.date ? new Date(m.date).getTime() : 0);
-                return t >= mondayStartTimestamp;
+                return t >= mondayStartTimestamp && getWeekId(new Date(t)) === periods.weekId;
             });
             weeklyScore = thisWeekMatches.reduce((acc, m) => acc + (Number(m.score) || 0), 0);
             weeklyVerified = true;
-        } else if (legacyWeeklyRaw > 0 && legacyWeeklyRaw < seasonScore) {
-            weeklyScore = legacyWeeklyRaw;
-            weeklyVerified = true;
-        } else if (compHistory === null && !legacyWeeklyRaw) {
-            weeklyVerified = false;
         } else {
+            // Geçerli weekId doğrulaması olmayan eski puanlar kesin olarak 0 kabul edilir
             weeklyScore = 0;
             weeklyVerified = true;
         }
@@ -4833,46 +4831,35 @@ function renderCompetitionStudiesTab(compHistory) {
         weeklyScore = legacyWeekly + cohortWeekly;
     }
 
-    // 3. Aylık Puan (Ayın 1'i 00:00 Europe/Istanbul'dan itibaren)
+    // 3. Aylık Puan (Ayın 1'i 00:00 Europe/Istanbul'dan itibaren; geçerli monthId zorunludur)
     let monthlyScore = 0;
     let monthlyVerified = false;
-    const userMonthId = loadedProfile ? (loadedProfile[`lastMonthId_${userGrade}`] || loadedProfile.lastMonthId) : null;
+    const userMonthId = loadedProfile ? (loadedProfile[`lastMonthId_${userGrade}`] || loadedProfile.lastMonthId || loadedProfile[`monthId_${userGrade}`] || loadedProfile.monthId) : null;
     const legacyMonthlyRaw = loadedProfile ? (Number(loadedProfile[`monthlyScore_${userGrade}`]) || Number(loadedProfile.monthlyScore) || 0) : 0;
 
     let legacyMonthly = 0;
     if (userMonthId) {
-        if (userMonthId === periods.monthId) {
-            legacyMonthly = legacyMonthlyRaw;
-        } else {
-            legacyMonthly = 0;
-        }
+        legacyMonthly = (userMonthId === periods.monthId) ? legacyMonthlyRaw : 0;
         monthlyVerified = true;
     }
 
     let cohortMonthly = 0;
     if (loadedProfile?._cohortLoaded) {
-        if (loadedProfile._cohortMonthId === periods.monthId) {
-            cohortMonthly = Number(loadedProfile._cohortMonthlyScore) || 0;
-        } else {
-            cohortMonthly = 0;
-        }
+        cohortMonthly = (loadedProfile._cohortMonthId === periods.monthId) ? (Number(loadedProfile._cohortMonthlyScore) || 0) : 0;
         monthlyVerified = true;
     }
 
     if (!userMonthId && !loadedProfile?._cohortMonthId) {
         if (Array.isArray(compHistory) && compHistory.length > 0) {
             const thisMonthMatches = compHistory.filter(m => {
+                if (m.monthId) return m.monthId === periods.monthId;
                 const t = m.timestamp || (m.date ? new Date(m.date).getTime() : 0);
-                return t >= monthStartTimestamp;
+                return t >= monthStartTimestamp && getMonthId(new Date(t)) === periods.monthId;
             });
             monthlyScore = thisMonthMatches.reduce((acc, m) => acc + (Number(m.score) || 0), 0);
             monthlyVerified = true;
-        } else if (legacyMonthlyRaw > 0 && legacyMonthlyRaw < seasonScore) {
-            monthlyScore = legacyMonthlyRaw;
-            monthlyVerified = true;
-        } else if (compHistory === null && !legacyMonthlyRaw) {
-            monthlyVerified = false;
         } else {
+            // Geçerli monthId doğrulaması olmayan eski puanlar kesin olarak 0 kabul edilir
             monthlyScore = 0;
             monthlyVerified = true;
         }

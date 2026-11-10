@@ -1227,6 +1227,11 @@ function setupWorkspaceShellDOM() {
             document.querySelectorAll('.lab-tab-pane').forEach(pane => pane.classList.add('is-hidden'));
             const targetPane = document.getElementById(`pane-${tabKey}`);
             if (targetPane) targetPane.classList.remove('is-hidden');
+
+            const wsBody = document.querySelector('.lab-workspace-body');
+            const sidebar = document.getElementById('lab-sidebar-section');
+            if (wsBody) wsBody.classList.toggle('notebook-active', tabKey === 'data');
+            if (sidebar) sidebar.classList.toggle('notebook-active', tabKey === 'data');
         });
     });
 
@@ -1503,6 +1508,8 @@ export function openExperimentWorkspace(expId) {
     document.querySelectorAll('.lab-tab-pane').forEach(pane => pane.classList.add('is-hidden'));
     const paneVars = document.getElementById('pane-vars');
     if (paneVars) paneVars.classList.remove('is-hidden');
+    document.querySelector('.lab-workspace-body')?.classList.remove('notebook-active');
+    document.getElementById('lab-sidebar-section')?.classList.remove('notebook-active');
 
     // Başlık ve Rozetleri Güncelle
     const expBadge = document.getElementById('lab-exp-badge');
@@ -23163,12 +23170,12 @@ function renderMeasurementTable() {
     measurements.forEach(m => {
         html += `
             <tr>
-                <td><strong>${m.id}</strong></td>
-                <td><span class="lab-table-tag">${m.col1}</span></td>
-                <td><span class="lab-table-val inc">${m.col2}</span></td>
-                <td><span class="lab-table-val ref">${m.col3}</span></td>
-                <td><small>${m.col4}</small></td>
-                <td><strong>${m.col5}</strong></td>
+                <td class="col-idx"><strong>${m.id}</strong></td>
+                <td class="col-stage"><span class="lab-table-tag">${m.col1}</span></td>
+                <td class="col-val1"><span class="lab-table-val inc">${m.col2}</span></td>
+                <td class="col-val2"><span class="lab-table-val ref">${m.col3}</span></td>
+                <td class="col-status"><small>${m.col4}</small></td>
+                <td class="col-note"><strong>${m.col5}</strong></td>
             </tr>
         `;
     });
