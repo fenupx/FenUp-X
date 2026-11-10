@@ -1259,6 +1259,10 @@ function closeMobileMenu(restoreFocus = false) {
     if (headerNavigation && mobileHeaderQuery.matches) headerNavigation.classList.add('is-hidden');
     const dropdown = document.getElementById('profile-dropdown');
     if (dropdown) dropdown.classList.add('is-hidden');
+    const accountBtn = document.getElementById('btn-uyelik');
+    if (accountBtn && (accountBtn.dataset.loggedIn === 'true' || accountBtn.querySelector('.profile-img-header'))) {
+        accountBtn.setAttribute('aria-expanded', 'false');
+    }
     if (restoreFocus && mobileMenuButton) mobileMenuButton.focus();
 }
 function syncMobileHeader() {
@@ -1275,8 +1279,10 @@ if (mobileMenuButton && headerNavigation) {
     });
     headerNavigation.addEventListener('click', e => {
         const action = e.target.closest('button, a');
-        // Oturum açıkken hesap düğmesi mevcut alt panelini açar.
-        if (action && !(action.id === 'btn-uyelik' && action.querySelector('.profile-img-header'))) closeMobileMenu();
+        // Oturum açıkken hesap düğmesi alt panelini açar; Profilim tetikleyicisi ise kendi kapanışını ve odağını yönetir.
+        const isLoggedAccountToggle = action && action.id === 'btn-uyelik' && (action.dataset.loggedIn === 'true' || action.querySelector('.profile-img-header'));
+        const isProfileOpenAction = action && action.id === 'btn-open-profile';
+        if (action && !isLoggedAccountToggle && !isProfileOpenAction) closeMobileMenu();
     }, true);
     document.addEventListener('click', e => {
         if (!e.target.closest('.top-header')) closeMobileMenu();
@@ -1356,27 +1362,55 @@ const navigation = (() => {
         else apply(route);
         return true;
     }
+    function rejectNonSceneHash(candidate) {
+        const target = document.getElementById(candidate?.scene);
+        // Sadece geçerli bir .scene kimliğine geçildiğinde rota uygula; #profile / # gibi hash'ler aktif sahneyi sıfırlamaz.
+        if (!location.hash || location.hash === '#' || !target?.classList.contains('scene')) {
+            const activeRoute = snapshot();
+            history.replaceState({ fenupx: { v: 1, index, route: activeRoute } }, '', url(activeRoute));
+            return true;
+        }
+        return false;
+    }
     window.addEventListener('popstate', e => {
         const saved = e.state?.fenupx;
+        const urlCandidate = saved?.v === 1 ? null : readURL();
+        if (urlCandidate && rejectNonSceneHash(urlCandidate)) return;
         index = saved?.v === 1 ? safeIndex(saved.index) : 0;
-        const route = saved?.v === 1 ? saved.route : readURL();
+        const route = saved?.v === 1 ? saved.route : urlCandidate;
         if (route && route.scene === 'scene-yazili') {
             route.intent = 'popstate';
         }
         apply(route);
     });
     window.addEventListener('hashchange', () => {
-        if (location.hash !== url(history.state?.fenupx?.route || {})) apply(readURL());
+        const expectedHash = url(history.state?.fenupx?.route || {});
+        if (location.hash === expectedHash) return;
+        const candidate = readURL();
+        if (rejectNonSceneHash(candidate)) return;
+        apply(candidate);
     });
     window.addEventListener('load', () => {
         history.scrollRestoration = 'manual';
         const saved = history.state?.fenupx;
+        const currentSnap = snapshot();
+        const hasOpenModal = !!document.querySelector('.modal-overlay.is-open');
         let route = saved?.v === 1 ? saved.route : readURL();
         if (route?.scene === 'scene-yazili') {
             // Soğuk açılış / yenileme: Modül sözleşmesi gereği daima scope ekranından başla
             route = { scene: 'scene-yazili', step: 'scope', intent: 'reload' };
         }
         entries.set(index, route);
+        if (hasOpenModal || (!saved && !location.hash && currentSnap.scene !== 'scene-home')) {
+            record(true);
+            entries.set(index, snapshot());
+            return;
+        }
+        if (route.scene === 'scene-home' && currentSnap.scene === 'scene-home') {
+            record(true);
+            entries.set(index, snapshot());
+            return;
+        }
         apply(route);
     }, { once: true });
     window.addEventListener('pageshow', e => {
@@ -1420,12 +1454,12 @@ function switchScene(from, to) {
         btnHakkimizda.style.display = isHome ? "block" : "none";
         btnIletisim.style.display = isHome ? "block" : "none";
     }
+    const isQuiz = (to.id === "scene-quiz" || to.id === "scene-tournament-quiz");
     if(userProfileArea) {
-        userProfileArea.style.display = isHome ? "inline-block" : "none";
+        userProfileArea.style.display = isQuiz ? "none" : "inline-block";
     }
     if (mainFooter) mainFooter.classList.remove('hidden-footer');
 
-    const isQuiz = (to.id === "scene-quiz" || to.id === "scene-tournament-quiz");
     if (topControls) {
         if (isQuiz) {
             topControls.classList.remove('is-hidden');
@@ -3266,9 +3300,18 @@ if(btnAcceptCookies) {
 
 let lastFocusedModalTrigger = null;
 
-function showModal(modal) {
+function focusSafely(el) {
+    if (!el || typeof el.focus !== 'function') return;
+    try {
+        el.focus({ preventScroll: true });
+    } catch (_) {
+        try { el.focus(); } catch (_) {}
+    }
+}
+
+function showModal(modal, openerOverride = null) {
     if (!modal) return;
-    lastFocusedModalTrigger = document.activeElement;
+    lastFocusedModalTrigger = openerOverride || document.activeElement;
     modal.classList.remove('is-hidden');
     modal.classList.add('is-open', 'active');
     modal.style.display = 'flex';
@@ -3277,7 +3320,7 @@ function showModal(modal) {
     modal.setAttribute('aria-hidden', 'false');
     const focusable = modal.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
     if (focusable) {
-        try { focusable.focus(); } catch (_) {}
+        focusSafely(focusable);
     }
 }
 
@@ -3287,8 +3330,15 @@ function hideModal(modal) {
     modal.classList.remove('is-open', 'active');
     modal.style.display = 'none';
     modal.setAttribute('aria-hidden', 'true');
-    if (lastFocusedModalTrigger && typeof lastFocusedModalTrigger.focus === 'function') {
-        try { lastFocusedModalTrigger.focus(); } catch (_) {}
+    let focusTarget = lastFocusedModalTrigger;
+    if (focusTarget && (!focusTarget.isConnected || (focusTarget.offsetParent === null && getComputedStyle(focusTarget).position !== 'fixed'))) {
+        const fallbackBtn = (mobileHeaderQuery.matches && mobileMenuButton?.offsetParent !== null)
+            ? mobileMenuButton
+            : (btnUyelik && btnUyelik.offsetParent !== null ? btnUyelik : null);
+        focusTarget = fallbackBtn;
+    }
+    if (focusTarget) {
+        focusSafely(focusTarget);
     }
 }
 
@@ -3422,9 +3472,11 @@ if (btnFooterInfo && footerInfoDropdown) {
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+        if (document.querySelector('dialog[open]')) return;
         const openModals = document.querySelectorAll('.modal-overlay.is-open:not(.is-hidden), .modal-overlay:not(.is-hidden)');
         openModals.forEach(m => {
             if (m.id !== 'modal-onboarding-grade') {
+                if (m.id === 'profile-modal') resetDeleteAccountBox();
                 hideModal(m);
             }
         });
@@ -3468,7 +3520,8 @@ const authModal = document.getElementById('auth-modal');
 const btnCloseAuth = document.getElementById('btn-close-auth');
 
 if(btnUyelik) {
-    btnUyelik.onclick = () => { 
+    btnUyelik.onclick = (e) => { 
+        if (e) { e.preventDefault(); e.stopPropagation(); }
         const sq = document.getElementById('scene-quiz');
         const stq = document.getElementById('scene-tournament-quiz');
         if(isGlobalPaused === false && ((sq && !sq.classList.contains('is-hidden')) || (stq && !stq.classList.contains('is-hidden')))) { toggleMasterPause(); }
@@ -4511,10 +4564,14 @@ function renderYaziliStudiesTab(attempts) {
             startBtn.onclick = () => {
                 hideModal(profileModal);
                 if (window.FenUpExam && typeof window.FenUpExam.openExamView === 'function') {
-                    const sceneHome = (window.scenes && window.scenes.home) || document.getElementById('scene-home');
-                    const sceneYazili = document.getElementById('scene-yazili');
-                    if (typeof window.switchScene === 'function' && sceneYazili && sceneHome) {
-                        window.switchScene(sceneHome, sceneYazili);
+                    if (typeof window.showScene === 'function') {
+                        window.showScene('scene-yazili');
+                    } else {
+                        const sceneHome = (window.scenes && window.scenes.home) || document.getElementById('scene-home');
+                        const sceneYazili = document.getElementById('scene-yazili');
+                        if (typeof window.switchScene === 'function' && sceneYazili && sceneHome) {
+                            window.switchScene(sceneHome, sceneYazili);
+                        }
                     }
                     window.FenUpExam.openExamView({ entry: true });
                 }
@@ -5206,8 +5263,16 @@ function renderLabStudiesTab() {
     if (btnOpenFullCatalog) {
         btnOpenFullCatalog.onclick = () => {
             hideModal(profileModal);
-            const btnLab = document.getElementById('btn-lab-modulu');
-            if (btnLab) btnLab.click();
+            const labView = document.getElementById('lab-view');
+            if (typeof window.showScene === 'function' && labView) {
+                window.showScene('lab-view');
+                if (window.FenUpLab && typeof window.FenUpLab.openLabView === 'function') {
+                    window.FenUpLab.openLabView();
+                }
+            } else {
+                const btnLab = document.getElementById('btn-deney-modulu');
+                if (btnLab) btnLab.click();
+            }
         };
     }
 
@@ -5216,12 +5281,12 @@ function renderLabStudiesTab() {
             const expId = btn.dataset.expId;
             hideModal(profileModal);
             if (window.FenUpLab && typeof window.FenUpLab.openExperimentWorkspace === 'function') {
-                const sceneHome = (window.scenes && window.scenes.home) || document.getElementById('scene-home');
                 const labView = document.getElementById('lab-view');
-                if (typeof window.switchScene === 'function' && labView && sceneHome) {
-                    window.switchScene(sceneHome, labView);
+                if (typeof window.showScene === 'function' && labView) {
+                    window.showScene('lab-view');
                 } else if (labView) {
-                    if (sceneHome) sceneHome.classList.add('is-hidden');
+                    const currentScene = document.querySelector('.scene:not(.is-hidden)');
+                    if (currentScene && currentScene !== labView) currentScene.classList.add('is-hidden');
                     labView.classList.remove('is-hidden');
                 }
                 window.FenUpLab.openExperimentWorkspace(expId);
@@ -5237,7 +5302,7 @@ profileModal.id = "profile-modal";
 profileModal.className = "modal-overlay is-hidden";
 profileModal.innerHTML = `
     <div class="modal-content glass-panel" style="max-width: 620px; width: 92%; padding: 24px;">
-        <button id="close-profile" class="close-btn" aria-label="Kapat"><i class="fas fa-times"></i></button>
+        <button type="button" id="close-profile" class="close-btn" aria-label="Kapat"><i class="fas fa-times"></i></button>
 
         <!-- A) TEMEL PROFİL VE AVATAR (80x80 Avatar, Seri Rozeti) -->
         <div class="profile-hero-card">
@@ -5252,7 +5317,7 @@ profileModal.innerHTML = `
                     <span id="profile-display-role-tag" class="profile-role-badge">🎓 7. Sınıf</span>
                     <span class="profile-streak-badge">🔥 <span id="profile-streak-count">1</span> Günlük Seri</span>
                 </div>
-                <button id="btn-open-avatar-selector" class="f-btn f-btn-ikinci" style="font-size:0.8rem; padding:5px 12px; margin-top:6px;">
+                <button type="button" id="btn-open-avatar-selector" class="f-btn f-btn-ikinci" style="font-size:0.8rem; padding:5px 12px; margin-top:6px;">
                     <i class="fas fa-user-astronaut"></i> Avatarımı Değiştir
                 </button>
             </div>
@@ -5386,8 +5451,8 @@ profileModal.innerHTML = `
                     <p id="grade-correction-status" role="status"></p>
                 </div>
                 
-                <button id="btn-save-profile" class="f-btn f-btn-ana" style="width:100%; margin-top:5px;">GÜNCELLE</button>
-                <button id="btn-delete-account" class="f-btn btn-danger" style="width:100%; margin-top:15px; padding: 12px; font-size:1rem;">Hesabımı Kalıcı Olarak Sil</button>
+                <button type="button" id="btn-save-profile" class="f-btn f-btn-ana" style="width:100%; margin-top:5px;">GÜNCELLE</button>
+                <button type="button" id="btn-delete-account" class="f-btn btn-danger" style="width:100%; margin-top:15px; padding: 12px; font-size:1rem;">Hesabımı Kalıcı Olarak Sil</button>
                 <div id="delete-account-confirm-box" class="delete-confirm-box is-hidden">
                     <p class="delete-confirm-warning">Dikkat: Hesabınızı sildiğinizde yarışmacı profiliniz, tüm sınıf/sezon puanlarınız ve Şampiyonlar Ligi liderlik tablosu kayıtlarınız kalıcı olarak silinecektir. Bu işlem geri alınamaz.</p>
                     <div id="delete-password-group" class="delete-reauth-group is-hidden">
@@ -5539,10 +5604,21 @@ onAuthStateChanged(auth, async (user) => {
             const fullAd = `${userData.name} ${userData.surname}`;
             
             if(btnUyelik) {
+                btnUyelik.type = 'button';
+                btnUyelik.dataset.loggedIn = 'true';
+                btnUyelik.setAttribute('aria-haspopup', 'true');
+                btnUyelik.setAttribute('aria-expanded', 'false');
                 btnUyelik.innerHTML = `<img src="${userAvatar}" class="profile-img-header" alt="Profil avatarı"> ${profileText(userData.name)}`;
                 btnUyelik.onclick = (e) => {
-                    e.stopPropagation(); 
-                    if(profileDropdown) profileDropdown.classList.toggle('is-hidden');
+                    if (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }
+                    if(profileDropdown) {
+                        const willOpen = profileDropdown.classList.contains('is-hidden');
+                        profileDropdown.classList.toggle('is-hidden');
+                        btnUyelik.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+                    }
                 };
             }
             if(userDisplayName) userDisplayName.textContent = fullAd;
@@ -5676,8 +5752,13 @@ onAuthStateChanged(auth, async (user) => {
         }
     } else {
         if(btnUyelik) {
+            btnUyelik.type = 'button';
+            delete btnUyelik.dataset.loggedIn;
+            btnUyelik.removeAttribute('aria-haspopup');
+            btnUyelik.removeAttribute('aria-expanded');
             btnUyelik.innerHTML = `Giriş Yap / Üye Ol`;
-            btnUyelik.onclick = () => { 
+            btnUyelik.onclick = (e) => { 
+                if (e) { e.preventDefault(); e.stopPropagation(); }
                 const sq = document.getElementById('scene-quiz');
                 const stq = document.getElementById('scene-tournament-quiz');
                 if(isGlobalPaused === false && ((sq && !sq.classList.contains('is-hidden')) || (stq && !stq.classList.contains('is-hidden')))) { toggleMasterPause(); }
@@ -5698,6 +5779,7 @@ document.addEventListener('click', (e) => {
         if(btnUyelik && (e.target === btnUyelik || btnUyelik.contains(e.target))) return;
         if(profileDropdown.contains(e.target)) return;
         profileDropdown.classList.add('is-hidden');
+        if(btnUyelik) btnUyelik.setAttribute('aria-expanded', 'false');
     }
 });
 if(profileDropdown) {
@@ -5938,56 +6020,80 @@ function prepareProfileModalView() {
     }
 }
 
+function openProfileModal(e) {
+    if (e) {
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    }
+    const mobileOpen = mobileMenuButton && mobileMenuButton.getAttribute('aria-expanded') === 'true';
+    const opener = mobileOpen
+        ? mobileMenuButton
+        : ((btnUyelik && btnUyelik.offsetParent !== null) ? btnUyelik : document.activeElement);
+
+    resetDeleteAccountBox();
+    updateEmailVerifyBox(auth.currentUser);
+    if (profileDropdown) profileDropdown.classList.add('is-hidden');
+    if (btnUyelik) btnUyelik.setAttribute('aria-expanded', 'false');
+    if (typeof closeMobileMenu === 'function') closeMobileMenu(false);
+    prepareProfileModalView();
+    showModal(profileModal, opener);
+}
+if (typeof window !== 'undefined') {
+    window.openProfileModal = openProfileModal;
+}
+
 const btnOpenProfile = document.getElementById('btn-open-profile');
 if (btnOpenProfile) {
-    btnOpenProfile.onclick = (e) => {
-        e.stopPropagation();
-        resetDeleteAccountBox();
-        updateEmailVerifyBox(auth.currentUser);
-        if(profileDropdown) profileDropdown.classList.add('is-hidden');
-        prepareProfileModalView();
-        showModal(profileModal);
-    };
+    btnOpenProfile.onclick = openProfileModal;
 }
 
 const headerStreakBadge = document.getElementById('header-streak-badge');
 if (headerStreakBadge) {
-    headerStreakBadge.onclick = (e) => {
-        e.stopPropagation();
-        resetDeleteAccountBox();
-        updateEmailVerifyBox(auth.currentUser);
-        if(profileDropdown) profileDropdown.classList.add('is-hidden');
-        prepareProfileModalView();
-        showModal(profileModal);
-    };
+    headerStreakBadge.onclick = openProfileModal;
 }
 
 document.querySelectorAll('.dropdown-item').forEach(item => {
     if (item.textContent.includes("Profilim") && item !== btnOpenProfile) {
-        item.onclick = (e) => {
-            e.stopPropagation();
-            resetDeleteAccountBox();
-            updateEmailVerifyBox(auth.currentUser);
-            if(profileDropdown) profileDropdown.classList.add('is-hidden');
-            prepareProfileModalView();
-            showModal(profileModal);
-        };
+        item.onclick = openProfileModal;
     }
 });
 
-const clProfile = document.getElementById('close-profile');
-if(clProfile) clProfile.onclick = () => {
-    avatarPicker.close();
+function closeProfileModalSafely() {
+    const avatarDialog = document.getElementById('avatar-selector-container');
+    if (avatarDialog && avatarDialog.open) {
+        avatarPicker.close({ force: true });
+    }
     resetDeleteAccountBox();
     hideModal(profileModal);
-};
+}
 
-if(profileModal) {
-    profileModal.onclick = (e) => {
-        if(e.target === profileModal) {
-            resetDeleteAccountBox();
-            hideModal(profileModal);
+const clProfile = document.getElementById('close-profile');
+if (clProfile) {
+    clProfile.onclick = (e) => {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
         }
+        closeProfileModalSafely();
+    };
+}
+
+if (profileModal) {
+    let pointerStartedInsideContent = false;
+    profileModal.addEventListener('pointerdown', (e) => {
+        const contentEl = profileModal.querySelector('.modal-content');
+        pointerStartedInsideContent = !!(contentEl && (e.target === contentEl || contentEl.contains(e.target)));
+        if (e.target === profileModal) {
+            e.stopPropagation();
+        }
+    });
+    profileModal.onclick = (e) => {
+        e.stopPropagation();
+        if (e.target === profileModal && !pointerStartedInsideContent) {
+            e.preventDefault();
+            closeProfileModalSafely();
+        }
+        pointerStartedInsideContent = false;
     };
 }
 
