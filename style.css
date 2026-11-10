@@ -6122,59 +6122,8 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
 }
 
 /* ==========================================================================
-   V8.9.19: ÜST BAR SES DÜĞMESİ, 40 DK SINAV SAYACI & LAB ÖLÇÜM DEFTERİ CİLASI
+   V8.9.19–V8.9.20: 40 DK SINAV SAYACI & LAB ÖLÇÜM DEFTERİ CİLASI
    ========================================================================== */
-#btn-global-sound-toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 44px;
-    min-height: 44px;
-    padding: 8px 10px;
-    border-radius: 12px;
-    background: rgba(15, 23, 42, 0.78);
-    border: 1px solid rgba(0, 210, 255, 0.35);
-    color: var(--neon-blue);
-    font-size: 1.15rem;
-    cursor: pointer;
-    touch-action: manipulation;
-    transition: all 0.2s ease;
-    margin-left: auto;
-    margin-right: 12px;
-    flex-shrink: 0;
-}
-#btn-global-sound-toggle:hover {
-    background: rgba(0, 210, 255, 0.18);
-    box-shadow: 0 0 12px rgba(0, 210, 255, 0.35);
-}
-#btn-global-sound-toggle.is-muted {
-    color: #f87171;
-    border-color: rgba(248, 113, 113, 0.45);
-    background: rgba(239, 68, 68, 0.12);
-}
-@media (min-width: 821px) {
-    .top-header #header-navigation {
-        margin-left: 0;
-    }
-    .top-header #btn-global-sound-toggle {
-        order: 2;
-        margin-left: 12px;
-        margin-right: 0;
-    }
-    .top-header #header-navigation {
-        order: 1;
-        margin-left: auto;
-    }
-}
-@media (max-width: 820px) {
-    .top-header #btn-global-sound-toggle {
-        min-width: 44px;
-        min-height: 44px;
-        margin-left: auto;
-        margin-right: 6px;
-        padding: 6px 8px;
-    }
-}
 
 /* Yazılı Provası 40 Dakika Kronometre Seçeneği ve Yapışkan Sayaç */
 .exam-timer-option-group {

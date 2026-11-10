@@ -9,51 +9,19 @@ import { mockFirebase } from './helpers/firebase-mock.js';
 
 test.describe('FenUp X — V8.9.19 Teknik Cila ve Kullanıcı Deneyimi Doğrulaması', () => {
 
-    test('1. Üst bar ses butonuna (#btn-global-sound-toggle) tıklandığında isMuted değişir, localStorage ve sayfa yenilemede korunur', async ({ page }) => {
+    test('1. Üst barda #btn-global-sound-toggle butonu kaldırılmıştır; başlık sade hiyerarşisini korur (V8.9.20)', async ({ page }) => {
         await page.addInitScript(() => {
             localStorage.setItem('fenupx_cookie_consent', 'accepted');
         });
         await page.goto('/');
         await page.waitForLoadState('domcontentloaded');
 
-        const soundBtn = page.locator('#btn-global-sound-toggle');
-        await expect(soundBtn).toBeVisible();
-        await expect(soundBtn).toHaveAttribute('type', 'button');
-        await expect(soundBtn).toHaveAttribute('title', 'Sesi Kapat / Aç');
-        await expect(soundBtn.locator('i')).toHaveClass(/fa-volume-up/);
+        // Üst barda global ses butonu DOM'da bulunmamalı
+        await expect(page.locator('#btn-global-sound-toggle')).toHaveCount(0);
 
-        const initialState = await page.evaluate(() => ({
-            isMuted: window.isMuted,
-            stored: localStorage.getItem('fenupx_sound_muted')
-        }));
-        expect(initialState.isMuted).toBe(false);
-
-        // Sesi kapat
-        await soundBtn.click();
-        await expect(soundBtn.locator('i')).toHaveClass(/fa-volume-mute/);
-
-        const mutedState = await page.evaluate(() => ({
-            isMuted: window.isMuted,
-            stored: localStorage.getItem('fenupx_sound_muted')
-        }));
-        expect(mutedState.isMuted).toBe(true);
-        expect(mutedState.stored).toBe('true');
-
-        // Sayfayı yenilediğimizde localStorage'dan okunup kapalı başlamalı
-        await page.reload();
-        await page.waitForLoadState('domcontentloaded');
-        await expect(soundBtn.locator('i')).toHaveClass(/fa-volume-mute/);
-        expect(await page.evaluate(() => window.isMuted)).toBe(true);
-
-        // Tekrar tıklayınca ses açılmalı
-        await soundBtn.click();
-        await expect(soundBtn.locator('i')).toHaveClass(/fa-volume-up/);
-        const unmutedState = await page.evaluate(() => ({
-            isMuted: window.isMuted,
-            stored: localStorage.getItem('fenupx_sound_muted')
-        }));
-        expect(unmutedState.isMuted).toBe(false);
-        expect(unmutedState.stored).toBe('false');
+        // #site-logo-link, #btn-mobile-menu ve #header-navigation hiyerarşisi korunmalı
+        await expect(page.locator('.top-header #site-logo-link')).toBeVisible();
+        await expect(page.locator('.top-header #btn-mobile-menu + #header-navigation')).toHaveCount(1);
     });
 
     test('2. Yazılı provasında 40 dk süre seçildiğinde #exam-countdown DOMa eklenir, geri sayar, renk uyarısı ve süre bitimi modalı çalışır; Kâğıtta Çöz modunda devreye girmez', async ({ page }) => {

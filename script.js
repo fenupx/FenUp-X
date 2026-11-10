@@ -1099,10 +1099,7 @@ sfx.bgm.loop = true;
 const topControls = document.querySelector('.top-controls');
 const volumeSlider = document.getElementById('volume-slider');
 const muteBtn = document.getElementById('mute-btn');
-const globalSoundToggleBtn = document.getElementById('btn-global-sound-toggle');
-export let isMuted = (() => {
-    try { return localStorage.getItem('fenupx_sound_muted') === 'true'; } catch (_) { return false; }
-})();
+let isMuted = false;
 let globalVolume = 0.7;
 
 let audioUnlocked = false;
@@ -1126,66 +1123,22 @@ function updateVolumes() {
     }
 }
 
-function syncGlobalSoundUI() {
-    if (typeof window !== 'undefined') window.isMuted = isMuted;
-    if (muteBtn) {
-        muteBtn.className = (isMuted || globalVolume === 0) ? "fas fa-volume-mute" : "fas fa-volume-up";
-    }
-    if (globalSoundToggleBtn) {
-        const icon = globalSoundToggleBtn.querySelector('i');
-        if (icon) {
-            icon.className = isMuted ? "fas fa-volume-mute" : "fas fa-volume-up";
-        } else {
-            globalSoundToggleBtn.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
-        }
-        globalSoundToggleBtn.setAttribute('aria-pressed', isMuted ? 'true' : 'false');
-        globalSoundToggleBtn.setAttribute('aria-label', isMuted ? 'Ses Efektlerini Aç' : 'Ses Efektlerini Kapat');
-        globalSoundToggleBtn.classList.toggle('is-muted', isMuted);
-    }
-    updateVolumes();
-    if (isMuted) {
-        for (let key in sfx) {
-            try { if (!sfx[key].paused) sfx[key].pause(); } catch (e) {}
-        }
-    }
-}
-
-export function toggleGlobalSound(e) {
-    if (e && typeof e.preventDefault === 'function') {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-    isMuted = !isMuted;
-    try {
-        localStorage.setItem('fenupx_sound_muted', isMuted ? 'true' : 'false');
-    } catch (_) {}
-    syncGlobalSoundUI();
-    return isMuted;
-}
-if (typeof window !== 'undefined') {
-    window.toggleGlobalSound = toggleGlobalSound;
-}
-
 if (volumeSlider) {
     volumeSlider.addEventListener('input', (e) => {
         globalVolume = e.target.value / 100;
-        syncGlobalSoundUI();
+        isMuted = (globalVolume === 0);
+        if(muteBtn) muteBtn.className = isMuted ? "fas fa-volume-mute" : "fas fa-volume-up";
+        updateVolumes();
     });
 }
 
 if (muteBtn) {
-    muteBtn.addEventListener('click', (e) => {
-        toggleGlobalSound(e);
+    muteBtn.addEventListener('click', () => {
+        isMuted = !isMuted;
+        muteBtn.className = isMuted ? "fas fa-volume-mute" : "fas fa-volume-up";
+        updateVolumes();
     });
 }
-
-if (globalSoundToggleBtn) {
-    globalSoundToggleBtn.addEventListener('click', (e) => {
-        toggleGlobalSound(e);
-    });
-}
-
-syncGlobalSoundUI();
 
 // --- EVRENSEL TAM EKRAN (FULLSCREEN API) VE İKON SENKRONİZASYONU (KURAL 7.3) ---
 function toggleGlobalFullscreen() {
@@ -1244,7 +1197,6 @@ if (globalFsBtn) {
 }
 
 function playSound(obj) { 
-    if (isMuted || (() => { try { return localStorage.getItem('fenupx_sound_muted') === 'true'; } catch (_) { return false; } })()) return;
     if(!obj) return;
     if (obj === sfx.bgm && !obj.paused) { updateVolumes(); return; }
     try { obj.currentTime = 0; } catch(e){}
