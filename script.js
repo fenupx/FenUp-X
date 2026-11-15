@@ -1304,7 +1304,9 @@ const navigation = (() => {
     const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     const snapshot = () => {
         const scene = document.querySelector('.scene:not(.is-hidden)')?.id || 'scene-home';
-        return scene === 'scene-yazili' ? { scene, ...(window.FenUpExam?.getRoute() || { step: 'scope' }) } : { scene };
+        if (scene === 'scene-yazili') return { scene, ...(window.FenUpExam?.getRoute() || { step: 'scope' }) };
+        if (scene === 'lab-view') return { scene, ...(window.FenUpLab?.getRoute() || { step: 'welcome' }) };
+        return { scene };
     };
     const url = route => '#' + [route.scene, route.step, route.mode].filter(Boolean).join('/');
     const readURL = () => {
@@ -1346,7 +1348,7 @@ const navigation = (() => {
             else {
                 showScene(route.scene);
                 if (route.scene === 'scene-yazili') await window.FenUpExam?.openExamView({ route, intent: route.intent || 'popstate' });
-                if (route.scene === 'lab-view') window.FenUpLab?.openLabView();
+                if (route.scene === 'lab-view') window.FenUpLab?.openLabView({ route, intent: route.intent || 'popstate' });
             }
         } finally {
             replaying = false;
@@ -1431,6 +1433,9 @@ function switchScene(from, to) {
     }
     if (from.id === 'scene-yazili' && to.id !== 'scene-yazili' && window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
         window.FenUpExam.closeExamView();
+    }
+    if (from.id === 'lab-view' && to.id !== 'lab-view' && window.FenUpLab && typeof window.FenUpLab.cleanupOnLeave === "function") {
+        window.FenUpLab.cleanupOnLeave();
     }
     from.classList.add('is-hidden');
     to.classList.remove('is-hidden');
@@ -1635,10 +1640,10 @@ const btnDeneyModulu = document.getElementById('btn-deney-modulu');
 if(btnDeneyModulu) btnDeneyModulu.onclick = () => {
     const labView = document.getElementById('lab-view');
     if (labView) {
-        switchScene(scenes.home, labView);
         if (window.FenUpLab && typeof window.FenUpLab.openLabView === "function") {
-            window.FenUpLab.openLabView();
+            window.FenUpLab.openLabView({ entry: true });
         }
+        switchScene(scenes.home, labView);
     }
 };
 
@@ -1674,7 +1679,20 @@ document.querySelectorAll('.btn-back-home:not(#btn-exam-step-back)').forEach(btn
         returnToHome();
     }, true);
 });
-document.querySelectorAll('.btn-back-cross').forEach(btn => btn.onclick = () => navigation.backTo({ scene: scenes.crossroads.id }));
+document.querySelectorAll('.btn-back-cross').forEach(btn => {
+    btn.onclick = () => {
+        if (btn.closest('#scene-class')) {
+            const targetScene = activeMode === 'turnuva'
+                ? scenes.tournamentLobby.id
+                : activeMode === 'bireysel'
+                    ? scenes.lobby.id
+                    : scenes.crossroads.id;
+            navigation.backTo({ scene: targetScene });
+            return;
+        }
+        navigation.backTo({ scene: scenes.crossroads.id });
+    };
+});
 
 const btnBackClass = document.getElementById('btn-back-class');
 if(btnBackClass) btnBackClass.onclick = () => navigation.backTo({ scene: scenes.class.id });

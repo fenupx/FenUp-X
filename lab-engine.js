@@ -1027,18 +1027,25 @@ function renderWelcomeCounts() {
     });
 }
 
-function showWelcomeScreen() {
+function showWelcomeScreen(options = {}) {
     labState.catalogStep = "welcome";
+    labState.activeExperimentId = null;
     renderWelcomeCounts();
+    const catalogView = document.getElementById('lab-catalog-view');
+    const workspaceView = document.getElementById('lab-workspace-view');
     const welcomeEl = document.getElementById('lab-welcome-screen');
     const gradeCatalogEl = document.getElementById('lab-grade-catalog');
+    if (catalogView) catalogView.classList.remove('is-hidden');
+    if (workspaceView) workspaceView.classList.add('is-hidden');
     if (welcomeEl) welcomeEl.classList.remove('is-hidden');
     if (gradeCatalogEl) gradeCatalogEl.classList.add('is-hidden');
+    if (!options.skipRecord) window.FenUpNavigation?.record();
 }
 
-function enterGradeCatalog(grade) {
+function enterGradeCatalog(grade, options = {}) {
     labState.catalogStep = "grade";
     labState.currentGrade = grade;
+    labState.activeExperimentId = null;
     labState.currentUnitFilter = "all";
     labState.searchQuery = "";
     const searchInput = document.getElementById('lab-search-input');
@@ -1051,14 +1058,19 @@ function enterGradeCatalog(grade) {
     const titleEl = document.getElementById('lab-grade-catalog-title');
     if (titleEl) titleEl.innerHTML = `<i class="fas fa-flask"></i> ${grade}. Sınıf Laboratuvarı`;
 
+    const catalogView = document.getElementById('lab-catalog-view');
+    const workspaceView = document.getElementById('lab-workspace-view');
     const welcomeEl = document.getElementById('lab-welcome-screen');
     const gradeCatalogEl = document.getElementById('lab-grade-catalog');
+    if (catalogView) catalogView.classList.remove('is-hidden');
+    if (workspaceView) workspaceView.classList.add('is-hidden');
     if (welcomeEl) welcomeEl.classList.add('is-hidden');
     if (gradeCatalogEl) gradeCatalogEl.classList.remove('is-hidden');
 
     renderCatalog();
     const labView = document.getElementById('lab-view');
     if (labView) labView.scrollTop = 0;
+    if (!options.skipRecord) window.FenUpNavigation?.record();
 }
 
 function setupCatalogDOM() {
@@ -1075,7 +1087,10 @@ function setupCatalogDOM() {
     // Sınıflara Dön Butonu
     const btnBackWelcome = document.getElementById('btn-lab-back-welcome');
     if (btnBackWelcome) {
-        btnBackWelcome.addEventListener('click', () => showWelcomeScreen());
+        btnBackWelcome.addEventListener('click', () => {
+            if (window.FenUpNavigation?.backTo?.({ scene: 'lab-view', step: 'welcome' })) return;
+            showWelcomeScreen();
+        });
     }
 
     // Sınıf Seçici Butonları
@@ -1348,7 +1363,12 @@ export function showLabToast(message) {
 function setupWorkspaceShellDOM() {
     // 1. Geri Dön Butonları
     const btnBackCatalog = document.getElementById('btn-lab-back-catalog');
-    if (btnBackCatalog) btnBackCatalog.addEventListener('click', closeExperimentWorkspace);
+    if (btnBackCatalog) {
+        btnBackCatalog.addEventListener('click', () => {
+            if (window.FenUpNavigation?.backTo?.({ scene: 'lab-view', step: 'grade' })) return;
+            closeExperimentWorkspace();
+        });
+    }
 
     const btnLabBackHome = document.getElementById('btn-lab-back-home');
     if (btnLabBackHome) btnLabBackHome.addEventListener('click', closeLabView);
@@ -1591,22 +1611,17 @@ function cleanupExperimentTools() {
     if (labState.work?.dual) labState.work.dual.isPlaying = false;
 }
 
-export function openLabView() {
-    cleanupExperimentTools();
-    showWelcomeScreen();
-    const catalogView = document.getElementById('lab-catalog-view');
-    const workspaceView = document.getElementById('lab-workspace-view');
-    const labView = document.getElementById('lab-view');
-    if (catalogView) catalogView.classList.remove('is-hidden');
-    if (workspaceView) workspaceView.classList.add('is-hidden');
-    if (labView) {
-        labView.classList.remove('is-hidden');
-        labView.scrollTop = 0;
+export function getRoute() {
+    if (labState.activeExperimentId) {
+        return { step: 'exp', mode: String(labState.activeExperimentId) };
     }
-    window.scrollTo(0, 0);
+    if (labState.catalogStep === 'grade' && labState.currentGrade) {
+        return { step: 'grade', mode: String(labState.currentGrade) };
+    }
+    return { step: 'welcome' };
 }
 
-export function closeLabView() {
+export function cleanupOnLeave() {
     cleanupExperimentTools();
     clearLabToast();
     if (animFrameId) {
@@ -1614,6 +1629,50 @@ export function closeLabView() {
         animFrameId = null;
     }
     labState.activeExperimentId = null;
+}
+
+export function openLabView(options = {}) {
+    cleanupOnLeave();
+    const route = options?.route || null;
+    const labView = document.getElementById('lab-view');
+
+    if (route?.step === 'exp' && route?.mode) {
+        const exp = EXPERIMENTS_DATABASE.find(e => String(e.id) === String(route.mode));
+        if (exp) {
+            labState.currentGrade = exp.grade;
+            openExperimentWorkspace(exp.id, { skipRecord: true });
+            if (labView) {
+                labView.classList.remove('is-hidden');
+                labView.scrollTop = 0;
+            }
+            window.scrollTo(0, 0);
+            return;
+        }
+    }
+
+    if (route?.step === 'grade' && route?.mode) {
+        const grade = parseInt(route.mode, 10);
+        if ([5, 6, 7].includes(grade)) {
+            enterGradeCatalog(grade, { skipRecord: true });
+            if (labView) {
+                labView.classList.remove('is-hidden');
+                labView.scrollTop = 0;
+            }
+            window.scrollTo(0, 0);
+            return;
+        }
+    }
+
+    showWelcomeScreen({ skipRecord: true });
+    if (labView && !options?.entry) {
+        labView.classList.remove('is-hidden');
+        labView.scrollTop = 0;
+    }
+    if (!options?.entry) window.scrollTo(0, 0);
+}
+
+export function closeLabView() {
+    cleanupOnLeave();
 
     const labView = document.getElementById('lab-view');
     const catalogView = document.getElementById('lab-catalog-view');
@@ -1632,12 +1691,13 @@ export function closeLabView() {
     window.scrollTo(0, 0);
 }
 
-export function openExperimentWorkspace(expId) {
+export function openExperimentWorkspace(expId, options = {}) {
     cleanupExperimentTools();
     clearLabToast();
     const exp = EXPERIMENTS_DATABASE.find(e => e.id === expId);
     if (!exp) return;
 
+    labState.currentGrade = exp.grade;
     labState.activeExperimentId = expId;
     markLabExperimentInProgress(expId);
 
@@ -2039,23 +2099,18 @@ export function openExperimentWorkspace(expId) {
 
     // Canvas Fizik Motorunu Başlat
     initExperimentCanvas();
+    if (!options.skipRecord) window.FenUpNavigation?.record();
 }
 
-export function closeExperimentWorkspace() {
-    cleanupExperimentTools();
-    clearLabToast();
-    if (animFrameId) {
-        cancelAnimationFrame(animFrameId);
-        animFrameId = null;
-    }
-    labState.activeExperimentId = null;
+export function closeExperimentWorkspace(options = {}) {
+    cleanupOnLeave();
 
     const catalogView = document.getElementById('lab-catalog-view');
     const workspaceView = document.getElementById('lab-workspace-view');
     const labView = document.getElementById('lab-view');
     if (catalogView) catalogView.classList.remove('is-hidden');
     if (workspaceView) workspaceView.classList.add('is-hidden');
-    enterGradeCatalog(labState.currentGrade || 7);
+    enterGradeCatalog(labState.currentGrade || 7, options);
     if (labView) labView.scrollTop = 0;
     window.scrollTo(0, 0);
 }
@@ -25355,6 +25410,8 @@ function drawColorWheelSimulation() {
 if (typeof window !== "undefined") {
     window.FenUpLab = {
         initLabModule,
+        getRoute,
+        cleanupOnLeave,
         openLabView,
         closeLabView,
         openExperimentWorkspace,
