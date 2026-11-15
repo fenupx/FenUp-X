@@ -1,13 +1,24 @@
-# Approved FenUp X avatar collection v2
+# FenUp X Avatar Varlıkları
 
-36 approved illustrations:18 students(9girls/9boys),6 scientists,6 animal explorers,6 space/technology characters. All selectable for free. The six previously approved source samples are included; the revised g06 has uncovered hair. Originals and approval sheets remain in the private review directory, outside this repository.
+Bu klasördeki ilk 36 v2 avatar görseli (`96 × 96`, `192 × 192` ve `384 × 384` WebP) FenUp X öğrenci profilleri için telifsiz/yerel olarak üretilmiştir:
 
-`v2/*-{96,192,384}.webp` are optimized derivatives of the exact approved PNGs. These108 variants total1,058,956bytes; the catalogue loads only the active category, with lazy96/192px thumbnails. Large384px variants are available for future detail views and are not fetched at startup. No homepage showcase was added.
+- **Öğrenciler (18):** Çeşitli saç, ten, gözlük ve aksesuar stillerinde 5–8. sınıf öğrenci portreleri (`g01`–`g18`).
+- **Bilim İnsanları (6):** Galileo Galilei, Isaac Newton, Marie Curie, Nikola Tesla, Albert Einstein, Aziz Sancar.
+- **Hayvan Kâşifler (6):** Uzaylı kedi, laboratuvar tilkisi, teleskoplu baykuş, deniz kaşifi yunus, dağ kaşifi kızıl panda, gökdoğan.
+- **Uzay ve Teknoloji (6):** Astronot, keşif robotu, gezegen gezgini, uydu mühendisi, Ay mühendisi, uzay botanikçisi.
 
-`avatar-catalog.js` owns the36 permanent IDs and32 legacy aliases. Existing SVG data URLs embed their old ID in a gradient name and are resolved at display time. Unknown/broken values use the local approved default. There is no account migration.
+## Meşhur Sporcular Koleksiyonu (16 Avatar — `192 × 192` WebP)
 
-The36 extensionless `fenupx-v2-*` image aliases at the site root contain the matching192px WebP. They intentionally preserve already-open/cached old clients that treat the newly stored permanent ID as an image URL. Absolute URLs saved by such clients resolve back to the same new ID. Keep these aliases until old-client/cache compatibility is no longer required; they add245,148bytes and are not loaded by the new catalogue.
+`sporcular` kategorisindeki 16 görsel (`*-192.webp`) 10 futbolcu ve 6 voleybolcudan oluşur:
+- **Futbolcular (10):** Arda Güler, Cristiano Ronaldo, Erling Haaland, Hakan Çalhanoğlu, Kenan Yıldız, Kylian Mbappé, Lionel Messi, Mohamed Salah, Victor Osimhen (maskeli), Vinícius Júnior.
+- **Voleybolcular (6):** Ebrar Karakurt, Gizem Örge, Melissa Vargas, Paola Egonu, Tijana Bošković, Zehra Güneş.
 
-The old inline SVG generator remains in script.js for compatibility reference; it is not used by the new selector. No old source visuals or student records were deleted. The secure score service, Firestore Rules and score configuration are unchanged. Display synchronization uses the existing avatar/profile service call only.
+### Görsel Atfı (CC BY 4.0)
 
-Validation: `npx playwright test tests/avatar-collection.spec.js` exercises draft/cancel/save/reload, legacy resolution, responsive/touch/keyboard behavior, existing profile/leaderboard circles, and all144 optimized/compatibility URLs. `node tests/avatar-live.cjs --production` is an explicitly gated, owner-authenticated synthetic account check; it cleans only its own test data. It does not play a competition or change the score service.
+- **Görsel:** `lionel-messi-192.webp` (`fenupx-v2-lionel-messi` — *Lionel Messi, 2022 FIFA Dünya Kupası*)
+- **Yazar / Kaynak Kurum:** Tasnim News Agency
+- **Kaynak:** https://commons.wikimedia.org/wiki/File:Lionel-Messi-Argentina-2022-FIFA-World-Cup_(cropped).jpg
+- **Lisans:** Creative Commons Attribution 4.0 International (`CC BY 4.0`) — https://creativecommons.org/licenses/by/4.0/
+- **Değişiklik:** Baş ve omuz kadrajına kırpma, 192 × 192 yeniden boyutlandırma ve WebP dönüşümü.
+
+Eski `av_*` kimlikleri ve gömülü SVG veri adresleri `avatar-catalog.js` içindeki `LEGACY_AVATAR_IDS` eşlemesiyle bu koleksiyona yönlendirilir.

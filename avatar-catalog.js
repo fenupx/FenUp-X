@@ -179,6 +179,110 @@ const records = [
     "id": "fenupx-v2-space-botanist",
     "name": "Uzay botanikçisi",
     "category": "uzay"
+  },
+  {
+    "id": "fenupx-v2-arda-guler",
+    "name": "Arda Güler",
+    "category": "sporcular",
+    "sport": "football"
+  },
+  {
+    "id": "fenupx-v2-cristiano-ronaldo",
+    "name": "Cristiano Ronaldo",
+    "category": "sporcular",
+    "sport": "football"
+  },
+  {
+    "id": "fenupx-v2-ebrar-karakurt",
+    "name": "Ebrar Karakurt",
+    "category": "sporcular",
+    "sport": "volleyball"
+  },
+  {
+    "id": "fenupx-v2-erling-haaland",
+    "name": "Erling Haaland",
+    "category": "sporcular",
+    "sport": "football"
+  },
+  {
+    "id": "fenupx-v2-gizem-orge",
+    "name": "Gizem Örge",
+    "category": "sporcular",
+    "sport": "volleyball"
+  },
+  {
+    "id": "fenupx-v2-hakan-calhanoglu",
+    "name": "Hakan Çalhanoğlu",
+    "category": "sporcular",
+    "sport": "football"
+  },
+  {
+    "id": "fenupx-v2-kenan-yildiz",
+    "name": "Kenan Yıldız",
+    "category": "sporcular",
+    "sport": "football"
+  },
+  {
+    "id": "fenupx-v2-kylian-mbappe",
+    "name": "Kylian Mbappé",
+    "category": "sporcular",
+    "sport": "football"
+  },
+  {
+    "id": "fenupx-v2-lionel-messi",
+    "name": "Lionel Messi",
+    "category": "sporcular",
+    "sport": "football",
+    "credit": Object.freeze({
+      "title": "Lionel Messi, 2022 FIFA Dünya Kupası",
+      "author": "Tasnim News Agency",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Lionel-Messi-Argentina-2022-FIFA-World-Cup_(cropped).jpg",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "changes": "Baş ve omuz kadrajına kırpma, 192 × 192 yeniden boyutlandırma ve WebP dönüşümü."
+    })
+  },
+  {
+    "id": "fenupx-v2-melissa-vargas",
+    "name": "Melissa Vargas",
+    "category": "sporcular",
+    "sport": "volleyball"
+  },
+  {
+    "id": "fenupx-v2-mohamed-salah",
+    "name": "Mohamed Salah",
+    "category": "sporcular",
+    "sport": "football"
+  },
+  {
+    "id": "fenupx-v2-paola-egonu",
+    "name": "Paola Egonu",
+    "category": "sporcular",
+    "sport": "volleyball"
+  },
+  {
+    "id": "fenupx-v2-tijana-boskovic",
+    "name": "Tijana Bošković",
+    "category": "sporcular",
+    "sport": "volleyball"
+  },
+  {
+    "id": "fenupx-v2-victor-osimhen",
+    "name": "Victor Osimhen",
+    "category": "sporcular",
+    "sport": "football"
+  },
+  {
+    "id": "fenupx-v2-vinicius-junior",
+    "name": "Vinícius Júnior",
+    "category": "sporcular",
+    "sport": "football"
+  },
+  {
+    "id": "fenupx-v2-zehra-gunes",
+    "name": "Zehra Güneş",
+    "category": "sporcular",
+    "sport": "volleyball"
   }
 ];
 export const LEGACY_AVATAR_IDS = Object.freeze({
@@ -231,8 +335,10 @@ export function resolveAvatarId(value) {
  return filename&&byId.has('fenupx-v2-'+filename)?'fenupx-v2-'+filename:DEFAULT_AVATAR_ID;
 }
 export function avatarUrl(value,size=96) {
- const id=resolveAvatarId(value),width=[96,192,384].includes(size)?size:96;
+ const id=resolveAvatarId(value),rec=byId.get(id),width=rec?.category==='sporcular'?192:[96,192,384].includes(size)?size:96;
  return new URL(`./assets/avatars/v2/${id.replace('fenupx-v2-','')}-${width}.webp`,import.meta.url).href;
 }
 export const AVATARS = Object.freeze(records.map(a=>Object.freeze({...a,url:avatarUrl(a.id)})));
 export const avatarName = value => byId.get(resolveAvatarId(value)).name;
+export const avatarCredit = value => byId.get(resolveAvatarId(value))?.credit || null;
+export const AVATAR_CREDITS = Object.freeze(records.filter(a=>a.credit).map(a=>Object.freeze({id:a.id,name:a.name,...a.credit})));

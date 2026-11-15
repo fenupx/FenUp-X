@@ -1,5 +1,5 @@
-import {AVATARS,DEFAULT_AVATAR_ID,avatarUrl} from './avatar-catalog.js?v=8.9.6';
-import {createAvatarPicker} from './avatar-picker.js?v=8.9.6';
+import {AVATARS,DEFAULT_AVATAR_ID,avatarUrl} from './avatar-catalog.js?v=8.9.21';
+import {createAvatarPicker} from './avatar-picker.js?v=8.9.21';
 import { CompetitionRun } from './competition-run.js?v=8.9.5';
 import { COMPETITION_BACKEND_READY, COMPETITION_API_URL, competitionYear, competitionPeriods, competitionTimeframeBoundaries } from './competition-config.js?v=8.9.14';
 /**
