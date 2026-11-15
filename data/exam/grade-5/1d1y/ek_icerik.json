@@ -1,0 +1,3089 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-11-15",
+  "description": "FenUp X 5. Sınıf 1. Dönem 1. Yazılı Modülü (MEB TYMM / Ortak Kurallar v1.5 / 7A)",
+  "outcomes": [
+    {
+      "id": "FB.5.1.1",
+      "grade": 5,
+      "unit_id": "5-U01",
+      "unit_title": "Gökyüzündeki Komşularımız ve Biz",
+      "title": "FB.5.1.1. Güneş’in yapısı ve dönme hareketi ile ilgili bilgileri toplayabilme",
+      "short_title": "Gökyüzündeki Komşumuz: Güneş",
+      "intro_card_id": "FB511-V1-K00",
+      "card_ids": [
+        "FB511-V1-K00",
+        "FB511-V1-K01",
+        "FB511-V1-K02",
+        "FB511-V1-K03",
+        "FB511-V1-K04",
+        "FB511-V1-K05",
+        "FB511-V1-K06"
+      ],
+      "question_ids": [
+        "FB511-V1-E01",
+        "FB511-V1-E02",
+        "FB511-V1-E03",
+        "FB511-V1-M01",
+        "FB511-V1-M02",
+        "FB511-V1-H01"
+      ],
+      "source_alignment": {
+        "book": "FenUp X 5. Sınıf 1. Ünite Özeti (MEB TYMM Uyumlu)",
+        "book_printed_pages": null,
+        "curriculum_code": "FB.5.1.1"
+      }
+    },
+    {
+      "id": "FB.5.1.2",
+      "grade": 5,
+      "unit_id": "5-U01",
+      "unit_title": "Gökyüzündeki Komşularımız ve Biz",
+      "title": "FB.5.1.2. Ay’ın özellikleri, dönme ve dolanma hareketleri ile ilgili bilimsel çıkarım yapabilme",
+      "short_title": "Gökyüzündeki Komşumuz: Ay",
+      "intro_card_id": "FB512-V1-K00",
+      "card_ids": [
+        "FB512-V1-K00",
+        "FB512-V1-K01",
+        "FB512-V1-K02",
+        "FB512-V1-K03",
+        "FB512-V1-K04",
+        "FB512-V1-K05",
+        "FB512-V1-K06",
+        "FB512-V1-K07"
+      ],
+      "question_ids": [
+        "FB512-V1-E01",
+        "FB512-V1-E02",
+        "FB512-V1-E03",
+        "FB512-V1-E04",
+        "FB512-V1-E05",
+        "FB512-V1-E06",
+        "FB512-V1-M01",
+        "FB512-V1-M02",
+        "FB512-V1-M03",
+        "FB512-V1-M04",
+        "FB512-V1-H01",
+        "FB512-V1-H02"
+      ],
+      "source_alignment": {
+        "book": "FenUp X 5. Sınıf 1. Ünite Özeti (MEB TYMM Uyumlu)",
+        "book_printed_pages": null,
+        "curriculum_code": "FB.5.1.2"
+      }
+    },
+    {
+      "id": "FB.5.1.3",
+      "grade": 5,
+      "unit_id": "5-U01",
+      "unit_title": "Gökyüzündeki Komşularımız ve Biz",
+      "title": "FB.5.1.3. Ay’ın evrelerini temsil eden bilimsel model oluşturabilme",
+      "short_title": "Ay’ın Evreleri",
+      "intro_card_id": "FB513-V1-K00",
+      "card_ids": [
+        "FB513-V1-K00",
+        "FB513-V1-K01",
+        "FB513-V1-K02",
+        "FB513-V1-K03",
+        "FB513-V1-K04",
+        "FB513-V1-K05",
+        "FB513-V1-K06"
+      ],
+      "question_ids": [
+        "FB513-V1-E01",
+        "FB513-V1-E02",
+        "FB513-V1-E03",
+        "FB513-V1-E04",
+        "FB513-V1-E05",
+        "FB513-V1-E06",
+        "FB513-V1-M01",
+        "FB513-V1-M02",
+        "FB513-V1-M03",
+        "FB513-V1-M04",
+        "FB513-V1-H01",
+        "FB513-V1-H02"
+      ],
+      "source_alignment": {
+        "book": "FenUp X 5. Sınıf 1. Ünite Özeti (MEB TYMM Uyumlu)",
+        "book_printed_pages": null,
+        "curriculum_code": "FB.5.1.3"
+      }
+    },
+    {
+      "id": "FB.5.1.4",
+      "grade": 5,
+      "unit_id": "5-U01",
+      "unit_title": "Gökyüzündeki Komşularımız ve Biz",
+      "title": "FB.5.1.4. Güneş, Dünya ve Ay’ın birbirlerine göre hareketlerini ve hacimsel büyüklüklerini temsil eden bilimsel model oluşturabilme",
+      "short_title": "Güneş, Dünya ve Ay Modeli",
+      "intro_card_id": "FB514-V1-K00",
+      "card_ids": [
+        "FB514-V1-K00",
+        "FB514-V1-K01",
+        "FB514-V1-K02",
+        "FB514-V1-K03",
+        "FB514-V1-K04",
+        "FB514-V1-K05"
+      ],
+      "question_ids": [
+        "FB514-V1-E01",
+        "FB514-V1-E02",
+        "FB514-V1-E03",
+        "FB514-V1-E04",
+        "FB514-V1-E05",
+        "FB514-V1-E06",
+        "FB514-V1-M01",
+        "FB514-V1-M02",
+        "FB514-V1-M03",
+        "FB514-V1-M04",
+        "FB514-V1-H01",
+        "FB514-V1-H02"
+      ],
+      "source_alignment": {
+        "book": "FenUp X 5. Sınıf 1. Ünite Özeti (MEB TYMM Uyumlu)",
+        "book_printed_pages": null,
+        "curriculum_code": "FB.5.1.4"
+      }
+    },
+    {
+      "id": "FB.5.2.1",
+      "grade": 5,
+      "unit_id": "5-U02",
+      "unit_title": "Kuvveti Tanıyalım",
+      "title": "FB.5.2.1. Kuvveti büyüklüğü ile operasyonel tanımlayabilme",
+      "short_title": "Kuvvet ve Kuvvetin Ölçülmesi",
+      "intro_card_id": "FB521-V1-K00",
+      "card_ids": [
+        "FB521-V1-K00",
+        "FB521-V1-K01",
+        "FB521-V1-K02",
+        "FB521-V1-K03",
+        "FB521-V1-K04",
+        "FB521-V1-K05",
+        "FB521-V1-K06",
+        "FB521-V1-K07",
+        "FB521-V1-K08"
+      ],
+      "question_ids": [
+        "FB521-V1-E01",
+        "FB521-V1-E02",
+        "FB521-V1-E03",
+        "FB521-V1-E04",
+        "FB521-V1-E05",
+        "FB521-V1-E06",
+        "FB521-V1-M01",
+        "FB521-V1-M02",
+        "FB521-V1-M03",
+        "FB521-V1-M04",
+        "FB521-V1-H01",
+        "FB521-V1-H02"
+      ],
+      "source_alignment": {
+        "book": "FenUp X 5. Sınıf 2. Ünite Özeti (MEB TYMM Uyumlu)",
+        "book_printed_pages": null,
+        "curriculum_code": "FB.5.2.1"
+      }
+    }
+  ],
+  "cards": {
+    "FB511-V1-K00": {
+      "id": "FB511-V1-K00",
+      "outcome_id": "FB.5.1.1",
+      "sequence": 0,
+      "title": "Gökyüzündeki Komşumuz: Güneş",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [
+        "Güneş’in temel özellikleri ve yapısı",
+        "Güneş’in katmanlı oluşu ve iç sıcaklığı",
+        "Güneş lekeleri ve dönme hareketi",
+        "Gerçek boyut ve görünen boyut farkı",
+        "Güvenli Güneş gözlemi"
+      ],
+      "body": [],
+      "visual": null
+    },
+    "FB511-V1-K01": {
+      "id": "FB511-V1-K01",
+      "outcome_id": "FB.5.1.1",
+      "sequence": 1,
+      "title": "Güneş nasıl bir gök cismidir?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Güneş, Dünya’ya en yakın yıldızdır ve ışığını kendi üretir.",
+        "Dünya’mız için temel ısı ve ışık kaynağıdır; sıcak gazlardan oluşur ve şekli küreseldir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/gunes_only.png",
+        "alt": "Güneş",
+        "caption": "Güneş",
+        "fit": "contain"
+      }
+    },
+    "FB511-V1-K02": {
+      "id": "FB511-V1-K02",
+      "outcome_id": "FB.5.1.1",
+      "sequence": 2,
+      "title": "Güneş’in yapısı ve bilgi doğrulama",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Güneş katmanlı bir yapıya sahiptir; iç kısmı yüzeyinden çok daha sıcaktır.",
+        "Güneş araştırmasında önce soru belirlenir, güvenilir kaynaklar seçilir, bilgi doğrulanarak gözlem günlüğüne kaydedilir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-sun-layers-temp.svg",
+        "alt": "Güneş’in katmanlı yapısı ve iç sıcaklığı",
+        "caption": "Güneş’in Katmanlı Yapısı",
+        "fit": "contain"
+      }
+    },
+    "FB511-V1-K03": {
+      "id": "FB511-V1-K03",
+      "outcome_id": "FB.5.1.1",
+      "sequence": 3,
+      "title": "Güneş lekeleri nedir?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Özel filtreli teleskoplarla incelendiğinde Güneş yüzeyinde koyu renkli bölgeler görülür.",
+        "Güneş lekesi adı verilen bu bölgeler, çevresine göre daha soğuk olduğu için koyu görünür."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-sunspots-closeup.svg",
+        "alt": "Güneş lekeleri",
+        "caption": "Güneş Lekeleri",
+        "fit": "contain"
+      }
+    },
+    "FB511-V1-K04": {
+      "id": "FB511-V1-K04",
+      "outcome_id": "FB.5.1.1",
+      "sequence": 4,
+      "title": "Güneş’in dönme hareketi",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Aynı Güneş lekesinin günler içinde soldan sağa doğru yer değiştirdiği gözlenir.",
+        "Bu gözlem, Güneş’in kendi ekseni etrafında saat yönünün tersine döndüğünü kanıtlar."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-sun-spots-rotation.svg",
+        "alt": "Güneş lekelerinin soldan sağa yer değiştirmesi",
+        "caption": "Güneş’in Dönme Hareketi",
+        "fit": "contain"
+      }
+    },
+    "FB511-V1-K05": {
+      "id": "FB511-V1-K05",
+      "outcome_id": "FB.5.1.1",
+      "sequence": 5,
+      "title": "Gerçek boyut ve görünen boyut",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Güneş gerçekte Dünya’dan çok büyüktür; ancak Dünya’ya çok uzak olduğu için gökyüzünde küçük görünür.",
+        "Uzaklık cisimleri algıladığımız büyüklüğü etkiler; uzaktaki büyük bir cisim, yakındaki küçük bir cisimle benzer boyutta görünebilir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-apparent-size.svg",
+        "alt": "Görünen büyüklük ve uzaklık ilişkisi",
+        "caption": "Gerçek ve Görünen Boyut",
+        "fit": "contain"
+      }
+    },
+    "FB511-V1-K06": {
+      "id": "FB511-V1-K06",
+      "outcome_id": "FB.5.1.1",
+      "sequence": 6,
+      "title": "Güneş gözleminde güvenlik",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Güneş ışığı gözlere kalıcı zarar verebileceği için Güneş’e asla çıplak gözle, güneş gözlüğüyle, isli camla veya filtresiz dürbün/teleskopla bakılmamalıdır.",
+        "Gözlem mutlaka özel güneş filtresi bulunan araçlarla ve uzman eşliğinde yapılmalıdır."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-sun-safety-icons.svg",
+        "alt": "Güvenli ve tehlikeli Güneş gözlemi",
+        "caption": "Güvenli Güneş Gözlemi",
+        "fit": "contain"
+      }
+    },
+    "FB512-V1-K00": {
+      "id": "FB512-V1-K00",
+      "outcome_id": "FB.5.1.2",
+      "sequence": 0,
+      "title": "Gökyüzündeki Komşumuz: Ay",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [
+        "Ay’ın temel özellikleri ve Dünya’ya uzaklığı",
+        "Ay’ın Güneş ışığını yansıtması",
+        "Ay’ın yüzeyi, kraterler, düzlükler ve tepeler",
+        "Çok ince atmosfer, hava olayları ve sıcaklık farkı",
+        "Ay’ın üç hareketi ve hep aynı yüzünün görülmesi"
+      ],
+      "body": [],
+      "visual": null
+    },
+    "FB512-V1-K01": {
+      "id": "FB512-V1-K01",
+      "outcome_id": "FB.5.1.2",
+      "sequence": 1,
+      "title": "Ay’ın temel özellikleri",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ay, Dünya’nın tek doğal uydusudur ve Dünya’ya en yakın gök cismidir (ortalama uzaklığı ~384.400 km).",
+        "Şekli küreye benzer; gece de gündüz de görülebilir ve bazı bölgelerinde su bulunduğuna dair kanıtlar vardır."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-moon-earth-distance.svg",
+        "alt": "Dünya ve Ay arası uzaklık",
+        "caption": "Dünya’nın Doğal Uydusu",
+        "fit": "contain"
+      }
+    },
+    "FB512-V1-K02": {
+      "id": "FB512-V1-K02",
+      "outcome_id": "FB.5.1.2",
+      "sequence": 2,
+      "title": "Ay neden parlar?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ay kendi ışığını üreten bir ışık kaynağı değildir.",
+        "Güneş’ten aldığı ışığı Dünya’ya yansıttığı için gökyüzünde parlak görünür."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-moon-light-reflection.svg",
+        "alt": "Ay’ın Güneş ışığını yansıtması",
+        "caption": "Ay Işığı Yansıtır",
+        "fit": "contain"
+      }
+    },
+    "FB512-V1-K03": {
+      "id": "FB512-V1-K03",
+      "outcome_id": "FB.5.1.2",
+      "sequence": 3,
+      "title": "Ay’ın yüzeyi ve kraterler",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ay yüzeyinde kaya, taş, kum ve toz ile birlikte vadi, tepe ve geniş düzlükler bulunur; koyu alanlar düzlükleri, açık alanlar yüksek bölgeleri gösterir.",
+        "Çok ince atmosferi gök taşlarını engelleyemediği için yüzeye çarpan gök taşları krater adı verilen çukurları oluşturur."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-moon-craters.svg",
+        "alt": "Ay yüzeyi ve kraterler",
+        "caption": "Ay’ın Yüzeyi ve Kraterler",
+        "fit": "contain"
+      }
+    },
+    "FB512-V1-K04": {
+      "id": "FB512-V1-K04",
+      "outcome_id": "FB.5.1.2",
+      "sequence": 4,
+      "title": "Çok ince atmosfer ve hava olayları",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ay’ın atmosferi yok denecek kadar incedir; rüzgâr ve yağış gibi hava olayları görülmez.",
+        "Bu yüzden kraterler ve astronotların ayak izleri silinmeden kalır; ayrıca Ay’da ses iletilmez ve solunabilir hava yoktur."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-moon-atmosphere.svg",
+        "alt": "Ay’da hava olaylarının olmaması ve ayak izleri",
+        "caption": "Hava Olayları Yoktur",
+        "fit": "contain"
+      }
+    },
+    "FB512-V1-K05": {
+      "id": "FB512-V1-K05",
+      "outcome_id": "FB.5.1.2",
+      "sequence": 5,
+      "title": "Gece–gündüz sıcaklık farkı",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Atmosfer çok ince olduğu için Ay’da gündüz sıcaklıkları çok yükselir, gece sıcaklıkları ise aşırı düşer.",
+        "Bu büyük sıcaklık farkı yüzeydeki kayaları parçalayarak kum ve toz miktarını artırır."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-moon-temp-diff.svg",
+        "alt": "Ay’da gece gündüz sıcaklık farkı",
+        "caption": "Sıcaklık Farkı",
+        "fit": "contain"
+      }
+    },
+    "FB512-V1-K06": {
+      "id": "FB512-V1-K06",
+      "outcome_id": "FB.5.1.2",
+      "sequence": 6,
+      "title": "Ay’ın üç hareketi",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Dönme kendi ekseni etrafında, dolanma ise başka bir gök cismi etrafında yapılan harekettir.",
+        "Ay; kendi ekseni etrafında döner, Dünya çevresinde dolanır ve Dünya ile birlikte Güneş çevresinde dolanır (tümü saat yönünün tersine)."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-moon-3-motions.svg",
+        "alt": "Ay’ın üç hareketi",
+        "caption": "Ay’ın Hareketleri",
+        "fit": "contain"
+      }
+    },
+    "FB512-V1-K07": {
+      "id": "FB512-V1-K07",
+      "outcome_id": "FB.5.1.2",
+      "sequence": 7,
+      "title": "Neden hep aynı yüzünü görürüz?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ay’ın kendi ekseni etrafında bir tur dönme süresi ile Dünya çevresinde bir tur dolanma süresi eşittir (~27 gün 8 saat / ~27,3 gün).",
+        "Bu eşitlik nedeniyle Dünya’dan bakıldığında Ay’ın daima aynı yüzü görülür."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-moon-same-face.svg",
+        "alt": "Ay’ın dönme ve dolanma sürelerinin eşitliği",
+        "caption": "Hep Aynı Yüz Görülür",
+        "fit": "contain"
+      }
+    },
+    "FB513-V1-K00": {
+      "id": "FB513-V1-K00",
+      "outcome_id": "FB.5.1.3",
+      "sequence": 0,
+      "title": "Ay’ın Evreleri",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [
+        "Ay neden farklı şekillerde görünür?",
+        "Dört ana evre (Yeni Ay, İlk Dördün, Dolunay, Son Dördün)",
+        "Ara evreler (Hilal ve Şişkin Ay)",
+        "Sekiz evre döngüsü ve süreler (~1 hafta / ~29,5 gün)",
+        "Ay’ın evrelerini modelleme"
+      ],
+      "body": [],
+      "visual": null
+    },
+    "FB513-V1-K01": {
+      "id": "FB513-V1-K01",
+      "outcome_id": "FB.5.1.3",
+      "sequence": 1,
+      "title": "Ay neden farklı şekillerde görünür?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ay Dünya çevresinde dolanırken Güneş’e ve Dünya’ya göre konumu değişir; böylece aydınlık yarısının Dünya’dan görünen miktarı değişir.",
+        "Değişen Ay’ın gerçek şekli değildir; evreler Dünya’nın gölgesinin Ay’ı örtmesiyle de oluşmaz."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-moon-lit-half.svg",
+        "alt": "Ay’ın aydınlık yarısının görünen kısmının değişmesi",
+        "caption": "Evrelerin Oluşum Nedeni",
+        "fit": "contain"
+      }
+    },
+    "FB513-V1-K02": {
+      "id": "FB513-V1-K02",
+      "outcome_id": "FB.5.1.3",
+      "sequence": 2,
+      "title": "Dört ana evre",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Yeni Ay: Aydınlık yüzü Dünya’ya dönük değildir, görünmez. İlk Dördün: Sağ yarısı aydınlıktır ('D' harfine benzer).",
+        "Dolunay: Dünya’dan görülen diskin tamamı aydınlıktır. Son Dördün: Sol yarısı aydınlıktır ('ters D' harfine benzer)."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-moon-main-phases.svg",
+        "alt": "Ay’ın dört ana evresi",
+        "caption": "Dört Ana Evre",
+        "fit": "contain"
+      }
+    },
+    "FB513-V1-K03": {
+      "id": "FB513-V1-K03",
+      "outcome_id": "FB.5.1.3",
+      "sequence": 3,
+      "title": "Ara evreler: Hilal ve Şişkin Ay",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ana evreler arasında Hilal (ince yay görünümü) ve Şişkin Ay (yarımdan fazla aydınlık) ara evreleri görülür.",
+        "Türk bayrağındaki Ay şekli Hilal ara evresine benzer."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-moon-inter-phases.svg",
+        "alt": "Hilal ve Şişkin Ay ara evreleri",
+        "caption": "Ara Evreler",
+        "fit": "contain"
+      }
+    },
+    "FB513-V1-K04": {
+      "id": "FB513-V1-K04",
+      "outcome_id": "FB.5.1.3",
+      "sequence": 4,
+      "title": "Sekiz evre döngüsü",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ay’ın bir tam döngüsündeki sekiz görünüm sırasıyla: Yeni Ay → Hilal → İlk Dördün → Şişkin Ay → Dolunay → Şişkin Ay → Son Dördün → Hilal şeklindedir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-moon-8-phases.svg",
+        "alt": "Ay’ın sekiz evre döngüsü",
+        "caption": "Sekiz Evre Döngüsü",
+        "fit": "contain"
+      }
+    },
+    "FB513-V1-K05": {
+      "id": "FB513-V1-K05",
+      "outcome_id": "FB.5.1.3",
+      "sequence": 5,
+      "title": "Evre süreleri ve Hicri takvim",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ardışık iki ana evre arasında yaklaşık 1 hafta (7 gün) vardır.",
+        "Dünya da Güneş çevresinde ilerlediği için evre döngüsü ~29,5 gün sürer; Ramazan ve dinî bayramlar Ay takvimine (Hicri takvim) göre belirlenir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-moon-timing.svg",
+        "alt": "Ay’ın evre süreleri ve Hicri takvim",
+        "caption": "Evre Süreleri",
+        "fit": "contain"
+      }
+    },
+    "FB513-V1-K06": {
+      "id": "FB513-V1-K06",
+      "outcome_id": "FB.5.1.3",
+      "sequence": 6,
+      "title": "Ay’ın evrelerini modelleme",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Modelde sabit lamba Güneş’i, beyaz top Ay’ı, gözlemci ise Dünya’yı temsil eder; top gözlemci çevresinde saat yönünün tersine dolandırılır.",
+        "Gözlem günlüğüne tarih, saat ve görünüm çizilerek kaydedilir; modelde başın gölgesi topun üzerine düşürülmemelidir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-moon-phase-model.svg",
+        "alt": "Ay’ın evrelerini modelleme düzeneği",
+        "caption": "Evreleri Modelleme",
+        "fit": "contain"
+      }
+    },
+    "FB514-V1-K00": {
+      "id": "FB514-V1-K00",
+      "outcome_id": "FB.5.1.4",
+      "sequence": 0,
+      "title": "Güneş, Dünya ve Ay Modeli",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [
+        "Hacimsel büyüklük sıralaması (Güneş > Dünya > Ay)",
+        "Üç gök cisminin hareketleri ve süreleri",
+        "Ortak hareket yönü ve günlük görünüm",
+        "Bilimsel model oluşturma, yenileme ve sınırlılıklar"
+      ],
+      "body": [],
+      "visual": null
+    },
+    "FB514-V1-K01": {
+      "id": "FB514-V1-K01",
+      "outcome_id": "FB.5.1.4",
+      "sequence": 1,
+      "title": "Hacimsel büyüklük sıralaması",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Hacim bir cismin boşlukta kapladığı yerdir (cm³ veya m³ ile ölçülebilir). Hacimce sıralama: Güneş > Dünya > Ay şeklindedir.",
+        "Modelde en büyük küre Güneş’i (ör. karpuz), orta küre Dünya’yı (ör. portakal), en küçük küre Ay’ı (ör. nohut) temsil eder."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-sem-size-motion.svg",
+        "alt": "Güneş, Dünya ve Ay hacim sıralaması",
+        "caption": "Hacim Sıralaması",
+        "fit": "contain"
+      }
+    },
+    "FB514-V1-K02": {
+      "id": "FB514-V1-K02",
+      "outcome_id": "FB.5.1.4",
+      "sequence": 2,
+      "title": "Üç gök cisminin hareketleri ve süreleri",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Güneş kendi ekseninde döner. Dünya kendi ekseninde döner (24 saat) ve Güneş çevresinde dolanır (~365 gün 6 saat).",
+        "Ay kendi ekseninde döner ve Dünya çevresinde dolanır (~27 gün 8 saat); Dünya ile birlikte 1 yılda Güneş çevresinde dolanır."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-sem-3-motions.svg",
+        "alt": "Güneş, Dünya ve Ay’ın hareketleri",
+        "caption": "Hareketler ve Süreler",
+        "fit": "contain"
+      }
+    },
+    "FB514-V1-K03": {
+      "id": "FB514-V1-K03",
+      "outcome_id": "FB.5.1.4",
+      "sequence": 3,
+      "title": "Ortak hareket yönü ve günlük görünüm",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Kuzey kutbu tarafından üstten bakıldığında Güneş, Dünya ve Ay’ın tüm dönme ve dolanma hareketleri saat yönünün tersine (batıdan doğuya) doğrudur.",
+        "Güneş’in gün içinde doğudan doğup batıdan batıyor gibi görünmesi, Dünya’nın kendi ekseninde dönmesinden kaynaklanır."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-ccw-direction.svg",
+        "alt": "Saat yönünün tersine hareket yönleri",
+        "caption": "Ortak Hareket Yönü",
+        "fit": "contain"
+      }
+    },
+    "FB514-V1-K04": {
+      "id": "FB514-V1-K04",
+      "outcome_id": "FB.5.1.4",
+      "sequence": 4,
+      "title": "Bilimsel model oluşturma ve yenileme",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Doğru bir modelde hacim sırası, dönme–dolanma ayrımları ve saat yönünün tersi yönler eksiksiz gösterilmelidir.",
+        "Modelde hatalı bir yön veya yanlış büyüklük fark edildiğinde yeni bilimsel kanıtlara göre model yenilenmelidir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-model-good-bad.svg",
+        "alt": "Doğru ve hatalı model karşılaştırması",
+        "caption": "Modeli Kanıtla Yenileme",
+        "fit": "contain"
+      }
+    },
+    "FB514-V1-K05": {
+      "id": "FB514-V1-K05",
+      "outcome_id": "FB.5.1.4",
+      "sequence": 5,
+      "title": "Modelin güçlü yönleri ve sınırlılıkları",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Güçlü yön: Gök cisimlerinin küresel şeklini ve hacimce büyüklük sırasını (Güneş > Dünya > Ay) somut biçimde gösterir.",
+        "Sınırlılık: Gerçek mesafe ve hacim oranları masaüstüne birebir ölçeklenemez; durağan modellerde sürekli hareket izlenemez."
+      ],
+      "visual": null
+    },
+    "FB521-V1-K00": {
+      "id": "FB521-V1-K00",
+      "outcome_id": "FB.5.2.1",
+      "sequence": 0,
+      "title": "Kuvvet ve Kuvvetin Ölçülmesi",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [
+        "Kuvvet nedir? İtme ve çekme",
+        "Kuvvetin hareket ve yön etkileri",
+        "Şekil değiştirme ve esnek cisimler",
+        "Esneklik sınırı",
+        "Dinamometre, Newton birimi ve yay hassasiyeti",
+        "Ölçeği okuma ve uygun araç seçimi"
+      ],
+      "body": [],
+      "visual": null
+    },
+    "FB521-V1-K01": {
+      "id": "FB521-V1-K01",
+      "outcome_id": "FB.5.2.1",
+      "sequence": 1,
+      "title": "Kuvvet nedir?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Bir cisme uygulanan itme veya çekme etkisine kuvvet denir.",
+        "Kuvvetin bir yönü ve bir büyüklüğü vardır."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-push-pull-force.svg",
+        "alt": "İtme ve çekme kuvveti",
+        "caption": "İtme ve Çekme",
+        "fit": "contain"
+      }
+    },
+    "FB521-V1-K02": {
+      "id": "FB521-V1-K02",
+      "outcome_id": "FB.5.2.1",
+      "sequence": 2,
+      "title": "Kuvvetin hareket ve yön etkileri",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Kuvvet; duran cismi hareket ettirebilir, hareketli cismi hızlandırabilir, yavaşlatabilir, durdurabilir veya yönünü değiştirebilir.",
+        "Ancak duvarı itmek gibi bazı durumlarda kuvvet uygulansa da cisim yer değiştirmeyebilir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-force-motion-effects.svg",
+        "alt": "Kuvvetin hareket ve yön etkileri",
+        "caption": "Hareket ve Yön Etkileri",
+        "fit": "contain"
+      }
+    },
+    "FB521-V1-K03": {
+      "id": "FB521-V1-K03",
+      "outcome_id": "FB.5.2.1",
+      "sequence": 3,
+      "title": "Şekil değiştirme ve esnek cisimler",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Kuvvet cisimlerin şeklini değiştirebilir.",
+        "Kuvvetin etkisiyle şekli değişip kuvvet kalktığında eski şekline dönebilen cisimlere esnek cisimler denir (yay, sünger, paket lastiği)."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-elastic-objects.svg",
+        "alt": "Esnek cisimler: sünger, paket lastiği, yay",
+        "caption": "Esnek Cisimler",
+        "fit": "contain"
+      }
+    },
+    "FB521-V1-K04": {
+      "id": "FB521-V1-K04",
+      "outcome_id": "FB.5.2.1",
+      "sequence": 4,
+      "title": "Esneklik sınırı",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Her yayın dayanabileceği bir esneklik sınırı vardır.",
+        "Ölçebileceği en büyük değerden fazla kuvvet uygulanırsa yay kalıcı olarak bozulur ve eski hâline dönemez."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-elastic-limit.svg",
+        "alt": "Esneklik sınırı ve kalıcı bozulma",
+        "caption": "Esneklik Sınırı",
+        "fit": "contain"
+      }
+    },
+    "FB521-V1-K05": {
+      "id": "FB521-V1-K05",
+      "outcome_id": "FB.5.2.1",
+      "sequence": 5,
+      "title": "Dinamometre ve kuvvet birimi",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Kuvvetin büyüklüğü dinamometre (yaylı el kantarı) ile ölçülür ve içinde esnek bir yay bulunur.",
+        "Kuvvetin birimi Newton’dur (N); kütle birimi olan kilogram (kg) ile ifade edilmez."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-dynamometer-parts.svg",
+        "alt": "Dinamometrenin bölümleri",
+        "caption": "Dinamometre ve Newton",
+        "fit": "contain"
+      }
+    },
+    "FB521-V1-K06": {
+      "id": "FB521-V1-K06",
+      "outcome_id": "FB.5.2.1",
+      "sequence": 6,
+      "title": "Doğru ölçüm ve uzama ilişkisi",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ölçüm yapmadan önce dinamometrenin yüksüz göstergesi mutlaka 0 N çizgisinde olmalıdır.",
+        "Aynı dinamometrede esneklik sınırı içinde kuvvet arttıkça yayın uzama miktarı da aynı oranda artar."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-dynamometer-load-extension.svg",
+        "alt": "Kuvvet arttıkça uzamanın artması",
+        "caption": "Sıfır Kontrolü ve Uzama",
+        "fit": "contain"
+      }
+    },
+    "FB521-V1-K07": {
+      "id": "FB521-V1-K07",
+      "outcome_id": "FB.5.2.1",
+      "sequence": 7,
+      "title": "Yay kalınlığı, malzemesi ve hassasiyet",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Aynı malzemeden yapılmış yaylardan ince telli yay aynı yükte daha çok uzar; bu yüzden küçük kuvvetleri daha hassas ölçer.",
+        "Kalın telli yay büyük kuvvetleri ölçmeye uygundur. Yayın yapıldığı malzeme de uzama miktarını etkiler."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-spring-sensitivity.svg",
+        "alt": "İnce ve kalın telli yayların uzama farkı",
+        "caption": "Yay Kalınlığı ve Hassasiyet",
+        "fit": "contain"
+      }
+    },
+    "FB521-V1-K08": {
+      "id": "FB521-V1-K08",
+      "outcome_id": "FB.5.2.1",
+      "sequence": 8,
+      "title": "Ölçeği okuma ve araç seçimi",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ölçeği okurken çizgiler değil eşit aralıklar sayılır (0–20 N arası 10 aralık varsa 1 aralık = 2 N; 3 aralık = 6 N).",
+        "Uygun araç seçerken önce ölçüm sınırına bakılır; kuvveti ölçebilen araçlar arasında aralık değeri küçük olan daha hassas ölçüm yapar."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-dynamometer-scale.svg",
+        "alt": "Dinamometre ölçeğini okuma",
+        "caption": "Ölçek Okuma ve Seçim",
+        "fit": "contain"
+      }
+    }
+  },
+  "questions": {
+    "FB511-V1-E01": {
+      "id": "FB511-V1-E01",
+      "outcome_id": "FB.5.1.1",
+      "difficulty": "easy",
+      "title": "Güneş neden küçük görünür?",
+      "stem": "Güneş, Dünya’dan çok daha büyük bir yıldız olmasına rağmen gökyüzüne baktığımızda onu küçük bir daire gibi görürüz. Bu durumun temel bilimsel nedenini yazınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-apparent-size.svg",
+        "alt": "Gözlemciye yakın Ay ve çok uzak Güneş",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB511-V1-E01-R1",
+          "text": "Güneş’in Dünya’ya çok uzak olması nedeniyle gerçek boyutundan küçük göründüğünü belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB511-V1-K05"
+          ],
+          "scoring": {
+            "full": "Güneş Dünya’ya çok uzak olduğu için küçük görünür.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB511-V1-E02": {
+      "id": "FB511-V1-E02",
+      "outcome_id": "FB.5.1.1",
+      "difficulty": "easy",
+      "title": "Güneş gözleminde güvenlik",
+      "stem": "Bir öğrenci elindeki dürbünle doğrudan Güneş’i incelemek istiyor. Öğretmeni ise öğrenciyi uyararak durduruyor. Öğretmenin bu uyarısının nedenini ve güvenli Güneş gözleminin nasıl yapılması gerektiğini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB511-V1-E02-R1",
+          "text": "Güneş ışığının gözlere kalıcı zarar verebileceğini belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB511-V1-K06"
+          ],
+          "scoring": {
+            "full": "Gözlere kalıcı zarar verir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB511-V1-E02-R2",
+          "text": "Özel güneş filtresi takılmış araçlarla ve uzman eşliğinde gözlem yapılması gerektiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB511-V1-K06"
+          ],
+          "scoring": {
+            "full": "Özel güneş filtresi kullanılmalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB511-V1-E03": {
+      "id": "FB511-V1-E03",
+      "outcome_id": "FB.5.1.1",
+      "difficulty": "easy",
+      "title": "Güneş’in temel özellikleri",
+      "stem": "Bir bilgi kartı hazırlayan öğrenci Güneş’le ilgili aşağıdaki ifadeleri yazmıştır:\n• Işığını kendi üretir ve Dünya’ya en yakın yıldızdır.\n• Katı kayalardan oluşmuştur ve küreseldir.\n• Yüzeyi iç kısmından daha sıcaktır.\nBu ifadelerden hangileri doğrudur, hangileri yanlıştır? Yanlış olanları düzelterek yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB511-V1-E03-R1",
+          "text": "1. ifadenin doğru olduğunu; Güneş’in katı değil sıcak gazlardan oluştuğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB511-V1-K01"
+          ],
+          "scoring": {
+            "full": "1. doğru; Güneş sıcak gazlardan oluşur.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB511-V1-E03-R2",
+          "text": "Güneş’in iç kısmının yüzeyinden daha sıcak olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB511-V1-K02"
+          ],
+          "scoring": {
+            "full": "İç kısmı yüzeyinden daha sıcaktır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB511-V1-M01": {
+      "id": "FB511-V1-M01",
+      "outcome_id": "FB.5.1.1",
+      "difficulty": "medium",
+      "title": "Güneş lekelerinin yer değiştirmesi",
+      "stem": "Şemada özel filtreli teleskopla 1., 3. ve 5. günlerde gözlemlenen Güneş yüzeyindeki koyu renkli bir bölgenin konumunun zamanla değiştiği gösterilmiştir.\n1) Bu koyu renkli bölgelere verilen bilimsel adı yazınız.\n2) Bu gözlem Güneş’in hangi hareketi yaptığını ve hareketin yönünü nasıl kanıtlar?",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-sunspots-3days.svg",
+        "alt": "1., 3. ve 5. günlerde Güneş lekelerinin konum değişimi",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB511-V1-M01-R1",
+          "text": "Koyu renkli bölgelerin adının Güneş lekesi olduğunu yazar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB511-V1-K03"
+          ],
+          "scoring": {
+            "full": "Güneş lekesi.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB511-V1-M01-R2",
+          "text": "Lekelerin aynı yönde kaymasının Güneş’in kendi ekseni etrafında saat yönünün tersine döndüğünü kanıtladığını açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB511-V1-K04"
+          ],
+          "scoring": {
+            "full": "Kendi ekseni etrafında saat yönünün tersine döner.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB511-V1-M02": {
+      "id": "FB511-V1-M02",
+      "outcome_id": "FB.5.1.1",
+      "difficulty": "medium",
+      "title": "Güneş hakkında bilgi toplama ve doğrulama",
+      "stem": "Bir öğrenci Güneş’in yapısı ve dönme hareketi hakkında bir poster hazırlamak için internetteki bir blogda 'Güneş katmanlı değildir ve kendi etrafında dönmez' yazısını okuyor. Öğrencinin bu bilgiyi posterine eklemeden önce hangi güvenilir kaynaklarla karşılaştırarak doğrulaması gerekir ve doğrulama sonucu ne olmalıdır?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB511-V1-M02-R1",
+          "text": "Ders kitabı veya resmî/bilimsel kurum kaynaklarıyla karşılaştırarak bilgiyi doğrulaması gerektiğini belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB511-V1-K01",
+            "FB511-V1-K04"
+          ],
+          "scoring": {
+            "full": "Ders kitabı veya güvenilir bilim kaynaklarıyla doğrulanmalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB511-V1-M02-R2",
+          "text": "Bilginin yanlış olduğunu; Güneş’in katmanlı yapıda olduğunu ve kendi ekseni etrafında döndüğünü yazar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB511-V1-K01",
+            "FB511-V1-K04"
+          ],
+          "scoring": {
+            "full": "Güneş katmanlıdır ve kendi ekseni etrafında döner.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB511-V1-H01": {
+      "id": "FB511-V1-H01",
+      "outcome_id": "FB.5.1.1",
+      "difficulty": "hard",
+      "title": "Güneş ve Ay’ın ışık ve görünüm karşılaştırması",
+      "stem": "Gökyüzüne bakan iki öğrenciden Mert 'Güneş ve Ay gökyüzünde neredeyse aynı büyüklükte görünüyor, demek ki gerçek hacimleri eşittir ve ikisi de ışık üretir' diyor. Zeynep ise bu görüşe katılmıyor. Mert’in ifadesindeki iki bilimsel hatayı tespit ederek doğrularını gerekçesiyle yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB511-V1-H01-R1",
+          "text": "Güneş’in hacminin Ay’dan çok büyük olduğunu, Dünya’ya çok uzak olduğu için küçük/benzer boyutta göründüğünü açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB511-V1-K05"
+          ],
+          "scoring": {
+            "full": "Güneş çok büyük ama çok uzaktır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB511-V1-H01-R2",
+          "text": "Güneş’in kendi ışığını üreten bir yıldız olduğunu, Ay’ın ise ışık üretmeyip Güneş ışığını yansıttığını açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB511-V1-K01",
+            "FB512-V1-K01"
+          ],
+          "scoring": {
+            "full": "Güneş ışık üretir, Ay ışığı yansıtır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB512-V1-E01": {
+      "id": "FB512-V1-E01",
+      "outcome_id": "FB.5.1.2",
+      "difficulty": "easy",
+      "title": "Ay’ın ışık kaynağı olmaması",
+      "stem": "Ay kendi ışığını üretememesine rağmen gece gökyüzünde parlak bir şekilde görülür. Bu durumun nedenini açıklayınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-moon-reflection.svg",
+        "alt": "Güneş, Ay ve Dünya arasındaki ışık yolları",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB512-V1-E01-R1",
+          "text": "Ay’ın Güneş’ten aldığı ışığı yansıttığı için parlak göründüğünü belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB512-V1-K02"
+          ],
+          "scoring": {
+            "full": "Güneş ışığını yansıttığı için görünür.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB512-V1-E02": {
+      "id": "FB512-V1-E02",
+      "outcome_id": "FB.5.1.2",
+      "difficulty": "easy",
+      "title": "Krater nedir, nasıl oluşur?",
+      "stem": "Ay’ın yüzeyinde çok sayıda derin çukur bulunur. Bu çukurlara verilen bilimsel adı ve nasıl oluştuklarını yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB512-V1-E02-R1",
+          "text": "Çukurların adının krater olduğunu yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB512-V1-K03"
+          ],
+          "scoring": {
+            "full": "Krater.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB512-V1-E02-R2",
+          "text": "Ay’ın çok ince atmosferinden geçen gök taşlarının yüzeye çarpmasıyla oluştuğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB512-V1-K03"
+          ],
+          "scoring": {
+            "full": "Gök taşlarının çarpmasıyla oluşur.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB512-V1-E03": {
+      "id": "FB512-V1-E03",
+      "outcome_id": "FB.5.1.2",
+      "difficulty": "easy",
+      "title": "Ay’da ayak izleri neden silinmez?",
+      "stem": "Ay yüzeyine giden astronotların bıraktığı ayak izleri ve araç tekerlek izleri çok uzun süre bozulmadan kalabilmektedir. Bu durumun nedenini Ay’ın atmosfer ve hava olayı özellikleriyle açıklayınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-moon-footprint.svg",
+        "alt": "Ay yüzeyinde krater ve astronot ayak izleri",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB512-V1-E03-R1",
+          "text": "Ay’ın atmosferinin çok ince olduğunu ve rüzgâr, yağış gibi hava olaylarının görülmediğini açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB512-V1-K04"
+          ],
+          "scoring": {
+            "full": "Çok ince atmosferi vardır ve rüzgâr/yağış gibi hava olayları yoktur.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB512-V1-E04": {
+      "id": "FB512-V1-E04",
+      "outcome_id": "FB.5.1.2",
+      "difficulty": "easy",
+      "title": "Ay’ın yaptığı üç hareket",
+      "stem": "Ay’ın uzayda gerçekleştirdiği üç temel hareketi (dönme ve dolanma olarak) sırasıyla yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB512-V1-E04-R1",
+          "text": "Kendi ekseni etrafında dönmesini ve Dünya etrafında dolanmasını yazar.",
+          "points": 6,
+          "weight": 6,
+          "return_card_ids": [
+            "FB512-V1-K06"
+          ],
+          "scoring": {
+            "full": "Kendi etrafında döner, Dünya etrafında dolanır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB512-V1-E04-R2",
+          "text": "Dünya ile birlikte Güneş etrafında dolanmasını yazar.",
+          "points": 4,
+          "weight": 4,
+          "return_card_ids": [
+            "FB512-V1-K06"
+          ],
+          "scoring": {
+            "full": "Dünya ile Güneş etrafında dolanır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB512-V1-E05": {
+      "id": "FB512-V1-E05",
+      "outcome_id": "FB.5.1.2",
+      "difficulty": "easy",
+      "title": "Ay’ın gündüz görülmesi",
+      "stem": "Bir öğrenci 'Ay yalnızca gece görülebilen bir gök cismidir' diyor. Öğrencinin bu düşüncesi doğru mudur? Nedenini kısaca yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB512-V1-E05-R1",
+          "text": "Düşüncenin yanlış olduğunu, Ay’ın hem gece hem de gündüz görülebildiğini belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB512-V1-K01"
+          ],
+          "scoring": {
+            "full": "Yanlıştır; Ay gece de gündüz de görülebilir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB512-V1-E06": {
+      "id": "FB512-V1-E06",
+      "outcome_id": "FB.5.1.2",
+      "difficulty": "easy",
+      "title": "Ay’da gece-gündüz sıcaklık farkı",
+      "stem": "Ay’da gündüz sıcaklıkları çok yüksekken gece sıcaklıkları aşırı derecede düşer. Bu büyük sıcaklık farkının Ay yüzeyindeki kayalar üzerindeki etkisini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB512-V1-E06-R1",
+          "text": "Büyük sıcaklık farkının kayaları parçalayarak yüzeydeki toz miktarını artırdığını belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB512-V1-K05"
+          ],
+          "scoring": {
+            "full": "Kayaları parçalar ve tozu artırır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB512-V1-M01": {
+      "id": "FB512-V1-M01",
+      "outcome_id": "FB.5.1.2",
+      "difficulty": "medium",
+      "title": "Ay ve Dünya krater karşılaştırması",
+      "stem": "Uzaydaki gök taşları hem Dünya’ya hem Ay’a doğru yönelmektedir. Ancak Ay yüzeyinde binlerce bozulmamış krater bulunurken Dünya yüzeyinde bu kadar çok krater görülmez. Bu farkın iki bilimsel nedenini açıklayınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-moon-craters-meteor.svg",
+        "alt": "Dünya ve Ay’a yönelen gök taşları",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB512-V1-M01-R1",
+          "text": "Dünya’nın kalın atmosferinin çoğu gök taşını parçaladığını, Ay’ın çok ince atmosferinin ise gök taşlarını engelleyemediğini yazar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB512-V1-K03"
+          ],
+          "scoring": {
+            "full": "Ay’ın çok ince atmosferi gök taşlarını engelleyemez.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB512-V1-M01-R2",
+          "text": "Ay’da rüzgâr ve yağış gibi hava olayları olmadığı için oluşan kraterlerin aşınıp kaybolmadığını açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB512-V1-K04"
+          ],
+          "scoring": {
+            "full": "Ay’da hava olayları olmadığı için kraterler bozulmaz.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB512-V1-M02": {
+      "id": "FB512-V1-M02",
+      "outcome_id": "FB.5.1.2",
+      "difficulty": "medium",
+      "title": "Ay’ın hareket tablosunu tamamlama",
+      "stem": "Ay’ın hareketlerine ait aşağıdaki tabloda eksik bırakılan (I) ve (II) bilgilerini yazınız:\n• Kendi ekseninde dönmesi | Yön: Batıdan doğuya | Süre: (I)\n• Dünya etrafında dolanması | Yön: (II) | Süre: ~27 gün 8 saat\n• Dünya ile Güneş etrafında dolanması | Yön: Batıdan doğuya | Süre: 1 yıl",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB512-V1-M02-R1",
+          "text": "(I) için yaklaşık 27 gün 8 saat (veya ~27,3 gün) süresini yazar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB512-V1-K07"
+          ],
+          "scoring": {
+            "full": "(I): ~27 gün 8 saat.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB512-V1-M02-R2",
+          "text": "(II) için batıdan doğuya (saat yönünün tersine) yönünü yazar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB512-V1-K06"
+          ],
+          "scoring": {
+            "full": "(II): Batıdan doğuya / saat yönünün tersine.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB512-V1-M03": {
+      "id": "FB512-V1-M03",
+      "outcome_id": "FB.5.1.2",
+      "difficulty": "medium",
+      "title": "Hep aynı yüzün görülmesi",
+      "stem": "Dünya’dan Ay’a baktığımızda Ay’ın her zaman aynı yüzünü görürüz, arka yüzünü doğrudan göremeyiz. Ay’ın dönme ve dolanma hareketlerinin hangi özelliği bu duruma yol açar?",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-moon-same-face.svg",
+        "alt": "Ay’ın Dünya’ya dönük hep aynı yüzü",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB512-V1-M03-R1",
+          "text": "Ay’ın kendi ekseni etrafında dönme süresi ile Dünya çevresinde dolanma süresinin birbirine eşit (~27 gün 8 saat) olduğunu belirtir.",
+          "points": 15,
+          "weight": 15,
+          "return_card_ids": [
+            "FB512-V1-K07"
+          ],
+          "scoring": {
+            "full": "Dönme ve dolanma sürelerinin eşit olması.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB512-V1-M04": {
+      "id": "FB512-V1-M04",
+      "outcome_id": "FB.5.1.2",
+      "difficulty": "medium",
+      "title": "Doğal uydu ve yüzey özellikleri",
+      "stem": "Ay’la ilgili hazırlanan bir gözlem raporunda:\nI. İnsan yapımı olmayan, Dünya çevresinde dolanan tek doğal uydudur.\nII. Yüzeyindeki koyu alanlar genellikle yüksek dağları, açık alanlar ise düz vadileri gösterir.\nIII. Bazı bölgelerinde su bulunduğuna dair kanıtlar elde edilmiştir.\nBu ifadelerden hangileri doğrudur? Yanlış olan ifadeyi düzelterek yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB512-V1-M04-R1",
+          "text": "I ve III numaralı ifadelerin doğru olduğunu belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB512-V1-K01"
+          ],
+          "scoring": {
+            "full": "I ve III doğrudur.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB512-V1-M04-R2",
+          "text": "II numaralı ifadenin yanlış olduğunu; koyu alanların genellikle düzlükler, açık alanların ise yüksek ve engebeli bölgeler olduğunu yazar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB512-V1-K03"
+          ],
+          "scoring": {
+            "full": "Koyu alanlar düzlük, açık alanlar yüksek/engebeli bölgelerdir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB512-V1-H01": {
+      "id": "FB512-V1-H01",
+      "outcome_id": "FB.5.1.2",
+      "difficulty": "hard",
+      "title": "Ay’ın dönmediği yanılgısını çürütme",
+      "stem": "Bir öğrenci 'Dünya’dan baktığımızda Ay’ın hep aynı yüzünü gördüğümüze göre Ay kendi ekseni etrafında dönmüyor, yalnızca Dünya’nın etrafında dolanıyordur' iddiasında bulunuyor. Öğrencinin bu iddiasının neden hatalı olduğunu dönme ve dolanma süreleriyle açıklayınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-moon-same-face.svg",
+        "alt": "Ay’ın Dünya çevresindeki hareketi ve hep aynı yüzü",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB512-V1-H01-R1",
+          "text": "Ay’ın kendi ekseni etrafında döndüğünü, dönmeseydi dolanma sırasında Dünya’dan farklı yüzlerinin görüleceğini açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB512-V1-K07"
+          ],
+          "scoring": {
+            "full": "Ay kendi etrafında döner; dönmeseydi farklı yüzleri görünürdü.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB512-V1-H01-R2",
+          "text": "Kendi etrafında dönme süresi ile Dünya çevresinde dolanma süresinin eşit (~27 gün 8 saat) olması sebebiyle hep aynı yüzünün görüldüğünü gerekçelendirir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB512-V1-K07"
+          ],
+          "scoring": {
+            "full": "Dönme ve dolanma süreleri eşit olduğu için hep aynı yüzü görülür.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB512-V1-H02": {
+      "id": "FB512-V1-H02",
+      "outcome_id": "FB.5.1.2",
+      "difficulty": "hard",
+      "title": "Ay’da yaşam koşulları analizi",
+      "stem": "Bir bilim ekibi Ay yüzeyine kuracağı araştırma istasyonunda karşılaşacağı çevresel koşulları incelemektedir.\n1) Astronotların özel koruyucu kıyafet ve oksijen tüpü kullanma gerekliliğini Ay’ın atmosfer özellikleriyle açıklayınız.\n2) İstasyonun gök taşlarına ve sıcaklık değişimlerine karşı dayanıklı tasarlanmasının nedenini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB512-V1-H02-R1",
+          "text": "Ay’ın çok ince atmosfere sahip olması nedeniyle solunabilir hava/oksijen ve koruyucu atmosfer katmanının bulunmadığını açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB512-V1-K03",
+            "FB512-V1-K04"
+          ],
+          "scoring": {
+            "full": "Çok ince atmosferi vardır, nefes alınabilir hava yoktur.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB512-V1-H02-R2",
+          "text": "Gök taşlarının ince atmosferde parçalanmadan yüzeye düşmesi ve gece–gündüz sıcaklık farkının çok büyük olması nedeniyle dayanıklı tasarım gerektiğini açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB512-V1-K03",
+            "FB512-V1-K04"
+          ],
+          "scoring": {
+            "full": "Gök taşı çarpmaları ve büyük sıcaklık farkı nedeniyle dayanıklı olmalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB513-V1-E01": {
+      "id": "FB513-V1-E01",
+      "outcome_id": "FB.5.1.3",
+      "difficulty": "easy",
+      "title": "Ay’ın evreleri neden oluşur?",
+      "stem": "Ay kendi şeklini değiştirmediği hâlde Dünya’dan bakıldığında farklı şekillerde görünür. Ay’ın farklı evrelerde görünmesinin temel nedenini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB513-V1-E01-R1",
+          "text": "Ay Dünya çevresinde dolanırken Güneş’e ve Dünya’ya göre konumunun değişmesiyle aydınlık yarısının Dünya’dan görünen kısmının değiştiğini belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB513-V1-K01"
+          ],
+          "scoring": {
+            "full": "Dolanma sırasında aydınlık yüzün görünen miktarı değişir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB513-V1-E02": {
+      "id": "FB513-V1-E02",
+      "outcome_id": "FB.5.1.3",
+      "difficulty": "easy",
+      "title": "Dört ana evrenin adları",
+      "stem": "Ay’ın dört ana evresinin adlarını Yeni Ay’dan başlayarak sırasıyla yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB513-V1-E02-R1",
+          "text": "Sıralamayı Yeni Ay, İlk Dördün, Dolunay, Son Dördün şeklinde doğru yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB513-V1-K02"
+          ],
+          "scoring": {
+            "full": "Yeni Ay, İlk Dördün, Dolunay, Son Dördün.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB513-V1-E03": {
+      "id": "FB513-V1-E03",
+      "outcome_id": "FB.5.1.3",
+      "difficulty": "easy",
+      "title": "Modeldeki 1 ve 3 numaralı konumlar",
+      "stem": "Şemadaki modelde Güneş sol taraftadır. Ay’ın Dünya çevresindeki yörüngesinde işaretlenen 1 ve 3 numaralı konumlarda gözlenen ana evrelerin adlarını yazınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-moon-orbit-4pos.svg",
+        "alt": "Güneş, Dünya ve Ay’ın 1, 2, 3, 4 numaralı konumları",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB513-V1-E03-R1",
+          "text": "1 numaralı konumda Yeni Ay evresinin gözlendiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB513-V1-K02"
+          ],
+          "scoring": {
+            "full": "1: Yeni Ay.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB513-V1-E03-R2",
+          "text": "3 numaralı konumda Dolunay evresinin gözlendiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB513-V1-K02"
+          ],
+          "scoring": {
+            "full": "3: Dolunay.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB513-V1-E04": {
+      "id": "FB513-V1-E04",
+      "outcome_id": "FB.5.1.3",
+      "difficulty": "easy",
+      "title": "Ara evreleri tanıma",
+      "stem": "Ay’ın ana evreleri arasında görülen iki ara evrenin adını yazınız ve Türk bayrağındaki Ay şeklinin hangi ara evreye benzediğini belirtiniz.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB513-V1-E04-R1",
+          "text": "İki ara evrenin adının Hilal ve Şişkin Ay olduğunu yazar.",
+          "points": 6,
+          "weight": 6,
+          "return_card_ids": [
+            "FB513-V1-K03"
+          ],
+          "scoring": {
+            "full": "Hilal ve Şişkin Ay.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB513-V1-E04-R2",
+          "text": "Türk bayrağındaki şeklin Hilal evresine benzediğini belirtir.",
+          "points": 4,
+          "weight": 4,
+          "return_card_ids": [
+            "FB513-V1-K03"
+          ],
+          "scoring": {
+            "full": "Hilal.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB513-V1-E05": {
+      "id": "FB513-V1-E05",
+      "outcome_id": "FB.5.1.3",
+      "difficulty": "easy",
+      "title": "İki ana evre arasındaki süre",
+      "stem": "5 Ekim tarihinde gökyüzünde Ay’ın tamamının aydınlık göründüğü (Dolunay) evreyi gözlemleyen bir öğrenci, yaklaşık bir hafta sonra (12 Ekim’de) hangi ana evreyi gözlemler?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB513-V1-E05-R1",
+          "text": "Dolunay’dan yaklaşık bir hafta sonra Son Dördün evresinin gözleneceğini yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB513-V1-K02",
+            "FB513-V1-K05"
+          ],
+          "scoring": {
+            "full": "Son Dördün.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB513-V1-E06": {
+      "id": "FB513-V1-E06",
+      "outcome_id": "FB.5.1.3",
+      "difficulty": "easy",
+      "title": "Ana evreleri harflerle sıralama",
+      "stem": "Şemada A, B, C ve D harfleriyle karışık olarak verilen Ay’ın dört ana evresini Yeni Ay’dan başlayarak oluşum sırasına göre harfleriyle yazınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-moon-phases-order.svg",
+        "alt": "Karışık verilmiş dört ana evre A, B, C, D",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB513-V1-E06-R1",
+          "text": "Sıralamayı B (Yeni Ay) → D (İlk Dördün) → A (Dolunay) → C (Son Dördün) şeklinde doğru yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB513-V1-K02"
+          ],
+          "scoring": {
+            "full": "B → D → A → C.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB513-V1-M01": {
+      "id": "FB513-V1-M01",
+      "outcome_id": "FB.5.1.3",
+      "difficulty": "medium",
+      "title": "Yörünge konumları ve geçen süre",
+      "stem": "Şemadaki modelde Ay saat yönünün tersine dolanmaktadır.\n1) Ay 2 numaralı konumdayken Dünya’dan bakan gözlemci hangi ana evreyi görür ve bu evrede Ay’ın hangi yarısı aydınlıktır?\n2) Ay’ın 1 numaralı konumdan 3 numaralı konuma gelmesi ortalama kaç gün sürer?",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-moon-orbit-4pos.svg",
+        "alt": "Ay’ın Dünya çevresindeki 1, 2, 3, 4 konumları",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB513-V1-M01-R1",
+          "text": "2 numaralı konumda İlk Dördün evresinin görüldüğünü ve sağ yarısının ('D' harfi gibi) aydınlık olduğunu yazar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB513-V1-K02"
+          ],
+          "scoring": {
+            "full": "İlk Dördün, sağ yarısı aydınlık.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB513-V1-M01-R2",
+          "text": "1’den 3’e iki ana evre aralığı olduğu için ortalama 14–15 gün (yaklaşık 2 hafta) sürdüğünü belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB513-V1-K05"
+          ],
+          "scoring": {
+            "full": "Yaklaşık 14–15 gün (2 hafta).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB513-V1-M02": {
+      "id": "FB513-V1-M02",
+      "outcome_id": "FB.5.1.3",
+      "difficulty": "medium",
+      "title": "Gözlem takvimi tahmini",
+      "stem": "Ay gözlem günlüğü tutan Defne, 10 Kasım akşamı gökyüzünde Ay’ın sağ yarısının aydınlık ('D' harfi şeklinde) olduğunu çiziyor. Buna göre Defne’nin yaklaşık olarak 3 Kasım, 17 Kasım ve 24 Kasım tarihlerinde hangi ana evreleri görmesi beklenir?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB513-V1-M02-R1",
+          "text": "10 Kasım’ın İlk Dördün olduğunu belirleyerek 1 hafta önce (3 Kasım) Yeni Ay görüldüğünü yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB513-V1-K02",
+            "FB513-V1-K05"
+          ],
+          "scoring": {
+            "full": "3 Kasım: Yeni Ay.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB513-V1-M02-R2",
+          "text": "17 Kasım’da Dolunay, 24 Kasım’da Son Dördün görüleceğini yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB513-V1-K02",
+            "FB513-V1-K05"
+          ],
+          "scoring": {
+            "full": "17 Kasım: Dolunay, 24 Kasım: Son Dördün.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB513-V1-M03": {
+      "id": "FB513-V1-M03",
+      "outcome_id": "FB.5.1.3",
+      "difficulty": "medium",
+      "title": "27,3 gün ve 29,5 gün farkı",
+      "stem": "Ay Dünya etrafındaki bir tam dolanmasını yaklaşık 27 gün 8 saatte tamamlamasına rağmen, aynı evrenin (örneğin iki Dolunay arasının) yeniden görülmesi yaklaşık 29,5 gün sürer. Bu süre farkının nedenini açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB513-V1-M03-R1",
+          "text": "Ay Dünya etrafında dolanırken aynı anda Dünya’nın da Güneş çevresinde ilerlediğini belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB513-V1-K05"
+          ],
+          "scoring": {
+            "full": "Dünya da Güneş çevresinde ilerler.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB513-V1-M03-R2",
+          "text": "Bu yüzden Ay’ın aynı evreyi oluşturacak konuma gelebilmesi için biraz daha fazla dolanması gerektiğini açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB513-V1-K05"
+          ],
+          "scoring": {
+            "full": "Aynı hizaya yeniden gelmesi için fazladan süre gerekir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB513-V1-M04": {
+      "id": "FB513-V1-M04",
+      "outcome_id": "FB.5.1.3",
+      "difficulty": "medium",
+      "title": "Modelde yapılan gölge hatası",
+      "stem": "Şemadaki gibi Ay’ın evrelerini modellemek isteyen bir öğrenci karanlık bir odada sabit el fenerini açıyor, kendi başını Dünya olarak kabul edip elindeki beyaz topu (Ay) başının etrafında döndürüyor. Ancak el fenerinin tam karşısındaki konuma geldiğinde topun tamamen karanlık kaldığını görüyor.\n1) Öğrencinin modelde yaptığı hatayı belirtiniz.\n2) Gerçekte Ay’ın evrelerinin Dünya’nın gölgesiyle oluşup oluşmadığını açıklayınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-moon-model-shadow.svg",
+        "alt": "Ay’ın evreleri modelinde başın gölgesinin topa düşmesi",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB513-V1-M04-R1",
+          "text": "Öğrencinin başının gölgesini topun üzerine düşürdüğünü, topu biraz daha yukarıda tutması gerektiğini belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB513-V1-K06"
+          ],
+          "scoring": {
+            "full": "Başının gölgesini topa düşürmüştür.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB513-V1-M04-R2",
+          "text": "Gerçekte Ay’ın evrelerinin Dünya’nın gölgesiyle değil, Ay’ın aydınlık yarısının görünen kısmının değişmesiyle oluştuğunu açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB513-V1-K01"
+          ],
+          "scoring": {
+            "full": "Evreler Dünya’nın gölgesiyle oluşmaz.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB513-V1-H01": {
+      "id": "FB513-V1-H01",
+      "outcome_id": "FB.5.1.3",
+      "difficulty": "hard",
+      "title": "Sekiz evre dizisini ve ara evreleri tamamlama",
+      "stem": "Şemada Ay’ın bir tam döngüsündeki sekiz görünüm sırasıyla verilmiş ancak 2, 5 ve 6 numaralı evreler boş bırakılmıştır.\n1) Boş bırakılan 2, 5 ve 6 numaralı evrelerin adlarını yazınız.\n2) 2 ve 8 numaralı evrelerin adları aynı olmasına rağmen aydınlık kısımlarının hangi tarafta (sağ/sol) yer aldığını Türkiye’den gözleme göre karşılaştırınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-moon-8phases-blank.svg",
+        "alt": "2, 5 ve 6 numaralı evreleri boş bırakılmış 8 evre şeması",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB513-V1-H01-R1",
+          "text": "2: Hilal, 5: Dolunay, 6: Şişkin Ay olarak doğru tamamlar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB513-V1-K03"
+          ],
+          "scoring": {
+            "full": "2: Hilal, 5: Dolunay, 6: Şişkin Ay.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB513-V1-H01-R2",
+          "text": "Yeni Ay’dan İlk Dördün’e giderken (2. evre) sağ tarafın, Son Dördün’den Yeni Ay’a giderken (8. evre) ise sol tarafın aydınlık olduğunu belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB513-V1-K02",
+            "FB513-V1-K03"
+          ],
+          "scoring": {
+            "full": "2’de sağ taraf, 8’de sol taraf aydınlıktır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB513-V1-H02": {
+      "id": "FB513-V1-H02",
+      "outcome_id": "FB.5.1.3",
+      "difficulty": "hard",
+      "title": "4 numaralı konum ve Güneş konumu değişirse",
+      "stem": "Şemadaki modelde Ay saat yönünün tersine dolanmaktadır.\n1) 4 numaralı konumda gözlenen ana evrenin adını yazıp Dünya’dan bakıldığında hangi yarısının aydınlık göründüğünü belirtiniz.\n2) Eğer Güneş sol tarafta değil sağ tarafta olsaydı, 1 ve 3 numaralı konumlarda gözlenen evreler nasıl değişirdi?",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-moon-orbit-4pos.svg",
+        "alt": "Güneş, Dünya ve Ay’ın 1, 2, 3, 4 konumları",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB513-V1-H02-R1",
+          "text": "4 numaralı konumun Son Dördün olduğunu ve sol yarısının ('ters D' gibi) aydınlık göründüğünü yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB513-V1-K02"
+          ],
+          "scoring": {
+            "full": "4: Son Dördün, sol yarısı aydınlık.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB513-V1-H02-R2",
+          "text": "Güneş sağ tarafa alınırsa 1 numaralı konumun Dolunay, 3 numaralı konumun ise Yeni Ay olacağını açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB513-V1-K01",
+            "FB513-V1-K02"
+          ],
+          "scoring": {
+            "full": "1: Dolunay, 3: Yeni Ay olurdu.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB514-V1-E01": {
+      "id": "FB514-V1-E01",
+      "outcome_id": "FB.5.1.4",
+      "difficulty": "easy",
+      "title": "Hacimsel büyüklük sıralaması",
+      "stem": "Güneş, Dünya ve Ay’ı hacimsel büyüklüklerine göre büyükten küçüğe doğru sıralayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB514-V1-E01-R1",
+          "text": "Sıralamayı Güneş > Dünya > Ay şeklinde doğru yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB514-V1-K01"
+          ],
+          "scoring": {
+            "full": "Güneş > Dünya > Ay.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB514-V1-E02": {
+      "id": "FB514-V1-E02",
+      "outcome_id": "FB.5.1.4",
+      "difficulty": "easy",
+      "title": "Model malzemesi eşleştirme",
+      "stem": "Bir öğrenci Güneş, Dünya ve Ay’ın hacimsel büyüklüklerini göstermek için karpuz, portakal ve nohut tanesi kullanacaktır. Hangi malzemenin hangi gök cismini temsil etmesi gerektiğini yazınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-model-3-spheres.svg",
+        "alt": "Karpuz, portakal ve nohut modeli",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB514-V1-E02-R1",
+          "text": "Karpuz: Güneş, Portakal: Dünya, Nohut tanesi: Ay eşleştirmesini doğru yapar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB514-V1-K01"
+          ],
+          "scoring": {
+            "full": "Karpuz: Güneş, Portakal: Dünya, Nohut: Ay.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB514-V1-E03": {
+      "id": "FB514-V1-E03",
+      "outcome_id": "FB.5.1.4",
+      "difficulty": "easy",
+      "title": "Dönme ve dolanma yönü",
+      "stem": "Kuzey kutbu tarafından üstten bakıldığında Güneş, Dünya ve Ay’ın kendi eksenleri etrafındaki dönme ve dolanma hareketlerinin yönü nasıldır?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB514-V1-E03-R1",
+          "text": "Hepsinin saat yönünün tersine (batıdan doğuya doğru) hareket ettiğini yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB514-V1-K03"
+          ],
+          "scoring": {
+            "full": "Saat yönünün tersine (batıdan doğuya).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB514-V1-E04": {
+      "id": "FB514-V1-E04",
+      "outcome_id": "FB.5.1.4",
+      "difficulty": "easy",
+      "title": "Dünya’nın iki hareketi ve süreleri",
+      "stem": "Dünya’nın kendi ekseni etrafındaki bir tam dönüşü ile Güneş etrafındaki bir tam dolanmasının yaklaşık sürelerini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB514-V1-E04-R1",
+          "text": "Kendi ekseni etrafında dönmesinin 24 saat (1 gün) sürdüğünü yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB514-V1-K02"
+          ],
+          "scoring": {
+            "full": "24 saat (1 gün).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB514-V1-E04-R2",
+          "text": "Güneş etrafında dolanmasının yaklaşık 365 gün 6 saat (1 yıl) sürdüğünü yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB514-V1-K02"
+          ],
+          "scoring": {
+            "full": "365 gün 6 saat (1 yıl).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB514-V1-E05": {
+      "id": "FB514-V1-E05",
+      "outcome_id": "FB.5.1.4",
+      "difficulty": "easy",
+      "title": "Gün içinde Güneş’in yer değiştirmesi",
+      "stem": "Sabah doğudan doğuyor gibi gördüğümüz Güneş’i akşam batıdan batıyor gibi görürüz. Güneş’in gün içinde gökyüzünde yer değiştiriyor gibi görünmesinin nedeni hangi gök cisminin hangi hareketidir?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB514-V1-E05-R1",
+          "text": "Dünya’nın kendi ekseni etrafında (batıdan doğuya) dönme hareketi yapmasından kaynaklandığını belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB514-V1-K03"
+          ],
+          "scoring": {
+            "full": "Dünya’nın kendi ekseni etrafında dönmesi.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB514-V1-E06": {
+      "id": "FB514-V1-E06",
+      "outcome_id": "FB.5.1.4",
+      "difficulty": "easy",
+      "title": "Dönme ve dolanma farkı",
+      "stem": "Şemada 1, 2, 3 ve 4 numaralı hareketler gösterilmiştir. Bu hareketlerden hangileri dönme, hangileri dolanma hareketidir?",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-sem-directions.svg",
+        "alt": "Güneş, Dünya ve Ay’ın 1, 2, 3, 4 numaralı hareketleri",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB514-V1-E06-R1",
+          "text": "2 ve 4 numaralı hareketlerin dönme olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB512-V1-K06",
+            "FB514-V1-K02"
+          ],
+          "scoring": {
+            "full": "Dönme: 2 ve 4.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB514-V1-E06-R2",
+          "text": "1 ve 3 numaralı hareketlerin dolanma olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB512-V1-K06",
+            "FB514-V1-K02"
+          ],
+          "scoring": {
+            "full": "Dolanma: 1 ve 3.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB514-V1-M01": {
+      "id": "FB514-V1-M01",
+      "outcome_id": "FB.5.1.4",
+      "difficulty": "medium",
+      "title": "Canlandırma modelindeki hatayı bulma",
+      "stem": "Üç arkadaş okul bahçesinde Güneş, Dünya ve Ay’ın hareketlerini canlandırmaktadır:\n• Ali (Güneş): Olduğu yerde saat yönünün tersine dönüyor.\n• Deniz (Dünya): Ali’nin etrafında saat yönünün tersine dolanıyor ama kendi etrafında saat yönünde dönüyor.\n• Ece (Ay): Deniz’in etrafında saat yönünün tersine dolanıyor ve kendi etrafında saat yönünün tersine dönüyor.\nBu canlandırmadaki bilimsel hatayı tespit edip nasıl düzeltilmesi gerektiğini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB514-V1-M01-R1",
+          "text": "Deniz’in (Dünya) kendi etrafında saat yönünde dönmesinin hatalı olduğunu belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB514-V1-K03",
+            "FB514-V1-K04"
+          ],
+          "scoring": {
+            "full": "Deniz’in kendi etrafında saat yönünde dönmesi hatalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB514-V1-M01-R2",
+          "text": "Dünya’nın da kendi etrafında saat yönünün tersine dönmesi gerektiğini açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB514-V1-K03",
+            "FB514-V1-K04"
+          ],
+          "scoring": {
+            "full": "Saat yönünün tersine dönmelidir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB514-V1-M02": {
+      "id": "FB514-V1-M02",
+      "outcome_id": "FB.5.1.4",
+      "difficulty": "medium",
+      "title": "Hareketli model düzeneği tasarlama",
+      "stem": "Bir bilim şenliği için üç farklı boyutta top ve hareketli bağlantı çubukları kullanarak Güneş–Dünya–Ay modeli yapacaksınız. Üç gök cisminin hem kendi etraflarında dönmelerini hem de birbirleri etraflarında dolanmalarını sağlamak için bu topları ve çubukları nasıl konumlandırırsınız?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB514-V1-M02-R1",
+          "text": "En büyük topu (Güneş) merkeze, orta topu (Dünya) Güneş etrafında dönecek kola, en küçük topu (Ay) ise Dünya etrafında dönecek ikinci kola yerleştireceğini açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB514-V1-K01",
+            "FB514-V1-K02"
+          ],
+          "scoring": {
+            "full": "Güneş merkezde, Dünya Güneş’e bağlı kolda, Ay Dünya’ya bağlı kolda.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB514-V1-M02-R2",
+          "text": "Tüm topların kendi eksenleri etrafında saat yönünün tersine dönecek biçimde bağlanması gerektiğini belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB514-V1-K03"
+          ],
+          "scoring": {
+            "full": "Saat yönünün tersine dönme bağlantısı.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB514-V1-M03": {
+      "id": "FB514-V1-M03",
+      "outcome_id": "FB.5.1.4",
+      "difficulty": "medium",
+      "title": "Görünen boyut ve hacim yanılgısı",
+      "stem": "Bir öğrenci gökyüzüne bakıp 'Güneş ve Ay neredeyse aynı boyda görünüyor; o hâlde modelimde Güneş ve Ay için aynı boyutta iki pinpon topu kullanabilirim' diyor. Öğrencinin bu düşüncesini hacim ve uzaklık kavramlarıyla değerlendiriniz.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-apparent-size.svg",
+        "alt": "Uzaklık ve görünen boyut ilişkisi",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB514-V1-M03-R1",
+          "text": "Öğrencinin görüşünün yanlış olduğunu; benzer görünmenin hacimlerin eşit olduğu anlamına gelmediğini belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB514-V1-K01"
+          ],
+          "scoring": {
+            "full": "Benzer görünmek hacimlerin eşit olduğunu göstermez.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB514-V1-M03-R2",
+          "text": "Güneş’in hacminin Ay’dan çok büyük olduğunu, çok uzakta olduğu için benzer boyutta göründüğünü ve modelde çok daha büyük bir küreyle temsil edilmesi gerektiğini açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB514-V1-K01",
+            "FB511-V1-K05"
+          ],
+          "scoring": {
+            "full": "Güneş çok büyük ama uzaktır; modelde büyük küre kullanılmalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB514-V1-M04": {
+      "id": "FB514-V1-M04",
+      "outcome_id": "FB.5.1.4",
+      "difficulty": "medium",
+      "title": "Modeldeki hareket yönleri ve süreler",
+      "stem": "Şemadaki 1, 2, 3 ve 4 numaralı hareket oklarını inceleyerek:\n1) Tüm okların hangi yönde çizilmesi gerektiğini yazınız.\n2) Dünya 1 numaralı yörüngede bir tam turunu tamamladığında, Ay 3 numaralı yörüngede yaklaşık kaç tur atmış olur?",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-sem-directions.svg",
+        "alt": "Güneş, Dünya ve Ay hareket okları",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB514-V1-M04-R1",
+          "text": "1, 2, 3 ve 4 numaralı tüm okların saat yönünün tersine çizilmesi gerektiğini yazar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB514-V1-K03"
+          ],
+          "scoring": {
+            "full": "Tümü saat yönünün tersine.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB514-V1-M04-R2",
+          "text": "Dünya Güneş çevresinde 1 yılda (365 gün 6 saat) 1 tur atarken Ay’ın Dünya çevresinde yaklaşık 12–13 tur (her ~27,3 günde 1 tur) attığını belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB514-V1-K02"
+          ],
+          "scoring": {
+            "full": "Yaklaşık 12–13 tur (her ay yaklaşık 1 tur).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB514-V1-H01": {
+      "id": "FB514-V1-H01",
+      "outcome_id": "FB.5.1.4",
+      "difficulty": "hard",
+      "title": "Hatalı bilimsel modeli kanıtla yenileme",
+      "stem": "Bir öğrenci yaptığı Güneş–Dünya–Ay modelinde:\n• Basketbol topunu Dünya, tenis topunu Güneş, misketi Ay olarak seçmiştir.\n• Tenis topunu tamamen hareketsiz sabitlemiştir.\n• Misketi basketbol topu etrafında döndürürken kendi ekseni etrafında hiç döndürmemiştir.\nBu modeldeki üç bilimsel hatayı tespit edip her birinin nasıl düzeltilmesi gerektiğini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB514-V1-H01-R1",
+          "text": "Büyüklük eşleştirmesinin hatalı olduğunu; en büyük topun (basketbol) Güneş, orta topun (tenis) Dünya olması gerektiğini yazar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB514-V1-K01",
+            "FB514-V1-K04"
+          ],
+          "scoring": {
+            "full": "Basketbol topu Güneş, tenis topu Dünya olmalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB514-V1-H01-R2",
+          "text": "Güneş’in hareketsiz olmadığını, kendi ekseni etrafında saat yönünün tersine dönmesi gerektiğini belirtir.",
+          "points": 6,
+          "weight": 6,
+          "return_card_ids": [
+            "FB514-V1-K02",
+            "FB514-V1-K04"
+          ],
+          "scoring": {
+            "full": "Güneş kendi ekseninde dönmelidir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB514-V1-H01-R3",
+          "text": "Ay’ın (misket) Dünya etrafında dolanırken aynı sürede kendi ekseni etrafında da dönmesi gerektiğini açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB514-V1-K02",
+            "FB514-V1-K04"
+          ],
+          "scoring": {
+            "full": "Ay kendi ekseni etrafında da dönmelidir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB514-V1-H02": {
+      "id": "FB514-V1-H02",
+      "outcome_id": "FB.5.1.4",
+      "difficulty": "hard",
+      "title": "Modelin güçlü yönleri ve sınırlılıkları",
+      "stem": "Masa üzerinde büyük, orta ve küçük toplarla kurulan durağan bir Güneş–Dünya–Ay modelini bilimsel modelleme ilkelerine göre değerlendiriniz.\n1) Bu modelin gerçeği açıklamada başarılı olduğu iki özelliği yazınız.\n2) Bu modelin gerçeği tam olarak yansıtamadığı iki sınırlılığını açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB514-V1-H02-R1",
+          "text": "Üç gök cisminin küresel şeklini ve hacimsel büyüklük sıralamasını (Güneş > Dünya > Ay) somutlaştırmasını güçlü yön olarak yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB514-V1-K01",
+            "FB514-V1-K04"
+          ],
+          "scoring": {
+            "full": "Küresel şekil ve büyüklük sırasını gösterir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB514-V1-H02-R2",
+          "text": "Gerçek hacim ve uzaklık oranlarının masaüstüne sığdırılamamasını ve durağan modelde dönme/dolanma hareketlerinin sürekli izlenememesini sınırlılık olarak açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB514-V1-K05"
+          ],
+          "scoring": {
+            "full": "Gerçek uzaklık/ölçek oranları ve hareketler tam yansıtılamaz.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB521-V1-E01": {
+      "id": "FB521-V1-E01",
+      "outcome_id": "FB.5.2.1",
+      "difficulty": "easy",
+      "title": "Kuvvetin ölçüm aracı ve birimi",
+      "stem": "Bir öğrenci market poşetinin ağırlığını ölçmek için yaylı el kantarı kullanıyor ve sonucu defterine '6 kg' olarak yazıyor. Öğrencinin kullandığı aracın bilimsel adını yazarak defterdeki birim hatasını düzeltiniz.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB521-V1-E01-R1",
+          "text": "Kullanılan aracın dinamometre olduğunu yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB521-V1-K05"
+          ],
+          "scoring": {
+            "full": "Dinamometre.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB521-V1-E01-R2",
+          "text": "Kuvvet biriminin kg değil Newton (N) olduğunu belirterek sonucun '6 N' şeklinde düzeltilmesi gerektiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB521-V1-K05"
+          ],
+          "scoring": {
+            "full": "Birimi Newton (N)’dur: 6 N.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB521-V1-E02": {
+      "id": "FB521-V1-E02",
+      "outcome_id": "FB.5.2.1",
+      "difficulty": "easy",
+      "title": "Kuvvetin etkileri ve duvar örneği",
+      "stem": "Aşağıdaki günlük olaylarda kuvvetin hangi etkisinin gözlendiğini belirtiniz:\n1) İki el arasında sıkıştırılan süngerin büzülmesi\n2) Kalecinin kendisine doğru gelen topu tutması\n3) Bir çocuğun odanın duvarını tüm gücüyle itmesi",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB521-V1-E02-R1",
+          "text": "1. olayda şekil değiştirme, 2. olayda hareketli cismi durdurma etkisini yazar.",
+          "points": 6,
+          "weight": 6,
+          "return_card_ids": [
+            "FB521-V1-K02"
+          ],
+          "scoring": {
+            "full": "1: Şekil değiştirme, 2: Durdurma.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB521-V1-E02-R2",
+          "text": "3. olayda kuvvet uygulanmasına rağmen duvarın yer değiştirmediğini (hareket etmediğini) belirtir.",
+          "points": 4,
+          "weight": 4,
+          "return_card_ids": [
+            "FB521-V1-K02"
+          ],
+          "scoring": {
+            "full": "3: Cisim hareket etmeyebilir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB521-V1-E03": {
+      "id": "FB521-V1-E03",
+      "outcome_id": "FB.5.2.1",
+      "difficulty": "easy",
+      "title": "Esnek cisimler ve esneklik sınırı",
+      "stem": "Bir öğrenci elindeki sarmal yayı hafifçe çekip bıraktığında yayın eski hâline döndüğünü görüyor; ancak yayı çok güçlü biçimde çekip bıraktığında artık eski hâline dönmediğini gözlemliyor. Bu iki durumu 'esnek cisim' ve 'esneklik sınırı' kavramlarıyla açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB521-V1-E03-R1",
+          "text": "İlk durumda yayın kuvvet kalkınca eski şekline dönen esnek bir cisim olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB521-V1-K03"
+          ],
+          "scoring": {
+            "full": "Esnek cisim eski şekline döner.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB521-V1-E03-R2",
+          "text": "İkinci durumda yayın esneklik sınırı aşıldığı için kalıcı olarak bozulduğunu açıklar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB521-V1-K04"
+          ],
+          "scoring": {
+            "full": "Esneklik sınırı aşılmıştır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB521-V1-E04": {
+      "id": "FB521-V1-E04",
+      "outcome_id": "FB.5.2.1",
+      "difficulty": "easy",
+      "title": "Dinamometre ölçeğini okuma",
+      "stem": "Şemada 0 ile 30 N arasının 10 eşit aralığa bölündüğü bir dinamometre verilmiştir. Gösterge kırmızı okla işaretlenen konumda durduğuna göre:\n1) Dinamometrede bir aralık kaç N’dur?\n2) Ölçülen kuvvet kaç N’dur?",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-dynamometer-read.svg",
+        "alt": "0-30 N arası 10 eşit aralıklı dinamometre ölçeği",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB521-V1-E04-R1",
+          "text": "30 ÷ 10 = 3 N/aralık olarak bir aralığın değerini hesaplar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB521-V1-K08"
+          ],
+          "scoring": {
+            "full": "1 aralık = 3 N.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB521-V1-E04-R2",
+          "text": "Gösterge 4. aralıkta olduğu için 4 × 3 = 12 N olarak ölçümü okur.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB521-V1-K08"
+          ],
+          "scoring": {
+            "full": "Ölçülen kuvvet = 12 N.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB521-V1-E05": {
+      "id": "FB521-V1-E05",
+      "outcome_id": "FB.5.2.1",
+      "difficulty": "easy",
+      "title": "Ölçüm öncesi sıfır kontrolü",
+      "stem": "Şemadaki dinamometrenin kancasına henüz hiçbir yük asılmadığı hâlde göstergenin 0 N yerine 2 N çizgisinde durduğu görülüyor. Bu araçla doğrudan ölçüm yapılırsa nasıl bir sorunla karşılaşılır ve ölçüm öncesi ne yapılmalıdır?",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-dynamometer-zero-error.svg",
+        "alt": "Yüksüz durumda 2 N’u gösteren dinamometre",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB521-V1-E05-R1",
+          "text": "Yüksüz hâlde sıfırda olmayan aracın tüm ölçümleri 2 N fazla (hatalı) göstereceğini belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB521-V1-K06"
+          ],
+          "scoring": {
+            "full": "Ölçümler hatalı çıkar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB521-V1-E05-R2",
+          "text": "Ölçüm öncesi göstergenin 0 N çizgisinde olup olmadığını kontrol edip sıfırlaması gerektiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB521-V1-K06"
+          ],
+          "scoring": {
+            "full": "Önce gösterge sıfırlanmalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB521-V1-E06": {
+      "id": "FB521-V1-E06",
+      "outcome_id": "FB.5.2.1",
+      "difficulty": "easy",
+      "title": "Aynı dinamometrede uzama-kuvvet ilişkisi",
+      "stem": "Bir dinamometreye önce 4 N’luk bir taş asılıyor ve yay 2 cm uzuyor. Ardından aynı dinamometreye esneklik sınırı aşılmadan 8 N’luk bir cisim asılırsa yayın uzama miktarı nasıl değişir?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB521-V1-E06-R1",
+          "text": "Kuvvet iki katına çıktığı için yayın uzama miktarının da artarak 4 cm olacağını belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB521-V1-K06"
+          ],
+          "scoring": {
+            "full": "Uzama miktarı artar (4 cm olur).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB521-V1-M01": {
+      "id": "FB521-V1-M01",
+      "outcome_id": "FB.5.2.1",
+      "difficulty": "medium",
+      "title": "K, L, M dinamometrelerinden uygun olanı seçme",
+      "stem": "Şemada 10 eşit aralıklı K, L ve M dinamometrelerinin ölçebileceği en büyük kuvvet değerleri verilmiştir.\n1) 14 N’luk bir cismi en hassas şekilde ölçmek için hangi dinamometre seçilmelidir? Nedenini açıklayınız.\n2) 14 N’luk cisim K dinamometresine asılırsa ne olur?",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-three-dynamometers.svg",
+        "alt": "K (10 N), L (20 N) ve M (50 N) dinamometreleri",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB521-V1-M01-R1",
+          "text": "14 N’u L (2 N/aralık) ve M (5 N/aralık) ölçebileceği hâlde bir aralığı daha küçük olan L’nin daha hassas ölçüm yapacağını belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB521-V1-K08"
+          ],
+          "scoring": {
+            "full": "L seçilmelidir, çünkü bir aralığı daha küçüktür (2 N/aralık).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB521-V1-M01-R2",
+          "text": "K dinamometresinin en çok 10 N ölçebildiğini, 14 N asılırsa ölçüm sınırının aşılıp yayın esnekliğinin bozulabileceğini açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB521-V1-K03",
+            "FB521-V1-K08"
+          ],
+          "scoring": {
+            "full": "K’nin sınırı aşılır ve yayı bozulabilir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB521-V1-M02": {
+      "id": "FB521-V1-M02",
+      "outcome_id": "FB.5.2.1",
+      "difficulty": "medium",
+      "title": "Yay kalınlığı ve malzemesinin etkisi",
+      "stem": "Boyutları aynı olan iki dinamometreden birinin en çok 10 N, diğerinin ise en çok 50 N ölçebildiği görülüyor. Bu iki dinamometrenin ölçüm kapasitelerinin farklı olmasının yay özellikleriyle ilgili iki nedenini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB521-V1-M02-R1",
+          "text": "Yayların tel kalınlıklarının farklı olmasını (kalın telli yayın daha büyük kuvvet ölçmesini) yazar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB521-V1-K07"
+          ],
+          "scoring": {
+            "full": "Tel kalınlıkları farklı olabilir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB521-V1-M02-R2",
+          "text": "Yayların yapıldığı maddenin (malzemenin) farklı olmasını yazar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB521-V1-K07"
+          ],
+          "scoring": {
+            "full": "Yayların yapıldığı malzeme farklı olabilir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB521-V1-M03": {
+      "id": "FB521-V1-M03",
+      "outcome_id": "FB.5.2.1",
+      "difficulty": "medium",
+      "title": "Tablo üzerinden kuvvetin etkilerini analiz etme",
+      "stem": "Bir deneyde özdeş oyuncak vagonlarla şu gözlemler yapılıyor:\n• 1. Gözlem: Duran vagon ipinden çekilince harekete geçiyor.\n• 2. Gözlem: İlerleyen vagona hareket yönüne zıt yönde kuvvet uygulanınca vagon yavaşlayıp duruyor.\n• 3. Gözlem: Plastik oyun hamuru parmakla bastırılınca eziliyor.\nBir öğrenci 'Kuvvet yalnızca duran cisimleri hareket ettirir' diyor. Bu iddianın hatalı olduğunu hangi gözlemlerle ve kuvvetin hangi etkileriyle kanıtlarsınız?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB521-V1-M03-R1",
+          "text": "2. ve 3. gözlemlerin öğrencinin iddiasını çürüttüğünü belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB521-V1-K02"
+          ],
+          "scoring": {
+            "full": "2. ve 3. gözlemler.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB521-V1-M03-R2",
+          "text": "2. gözlemin kuvvetin yavaşlatma/durdurma etkisini, 3. gözlemin ise şekil değiştirme etkisini gösterdiğini açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB521-V1-K02"
+          ],
+          "scoring": {
+            "full": "2: yavaşlatma/durdurma, 3: şekil değiştirme.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB521-V1-M04": {
+      "id": "FB521-V1-M04",
+      "outcome_id": "FB.5.2.1",
+      "difficulty": "medium",
+      "title": "Farklı dinamometrelerde uzama karşılaştırması",
+      "stem": "Şemada gösterildiği gibi aynı çanta X dinamometresine asıldığında yay 6 cm, Y dinamometresine asıldığında ise yay 2 cm uzuyor. Her iki dinamometrenin de göstergesi aynı Newton değerini gösterdiğine göre, yayların farklı miktarda uzamasının nedenini açıklayınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-two-springs-load.svg",
+        "alt": "Aynı yükte 6 cm ve 2 cm uzayan X ve Y dinamometreleri",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB521-V1-M04-R1",
+          "text": "Çantanın ağırlığının (uyguladığı kuvvetin) değişmediğini belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB521-V1-K07"
+          ],
+          "scoring": {
+            "full": "Çantanın uyguladığı kuvvet aynıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB521-V1-M04-R2",
+          "text": "X dinamometresinin yayının daha ince telli veya daha kolay uzayan bir malzemeden yapılmış olabileceğini açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB521-V1-K07"
+          ],
+          "scoring": {
+            "full": "Yayların tel kalınlığı veya malzemesi farklıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB521-V1-H01": {
+      "id": "FB521-V1-H01",
+      "outcome_id": "FB.5.2.1",
+      "difficulty": "hard",
+      "title": "Basit dinamometre ölçeklendirme",
+      "stem": "Bir öğrenci esnek yay, karton ve kâğıt şerit kullanarak kendi dinamometresini yapıyor. Yüksüz durumdaki gösterge hizasını 0 N olarak işaretledikten sonra kancaya 6 N’luk bir yük astığında yayın 12 cm uzadığını ölçüyor.\n1) Bu dinamometrede 1 N’luk artış yayı kaç cm uzatır?\n2) Öğrenci kancaya 4 N’luk başka bir cisim asarsa gösterge 0 N çizgisinden kaç cm uzakta durur?\n3) Eğer 2 N asıldığında gösterge 4 cm yerine 6 cm’de durursa bunun olası bir nedenini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB521-V1-H01-R1",
+          "text": "12 ÷ 6 = 2 cm/N hesabıyla her 1 N’un yayı 2 cm uzattığını bulur.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB521-V1-K06",
+            "FB521-V1-K08"
+          ],
+          "scoring": {
+            "full": "1 N = 2 cm uzama.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB521-V1-H01-R2",
+          "text": "4 N’luk cisimde göstergenin 4 × 2 = 8 cm uzakta duracağını hesaplar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB521-V1-K06",
+            "FB521-V1-K08"
+          ],
+          "scoring": {
+            "full": "4 N = 8 cm.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB521-V1-H01-R3",
+          "text": "0 N çizgisinin kaymış olabileceğini, göstergenin kartona sürtüyor olabileceğini veya yayın esnekliğinin bozulduğunu belirtir.",
+          "points": 6,
+          "weight": 6,
+          "return_card_ids": [
+            "FB521-V1-K03",
+            "FB521-V1-K06"
+          ],
+          "scoring": {
+            "full": "Sıfır kayması, sürtünme veya yayın bozulması.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB521-V1-H02": {
+      "id": "FB521-V1-H02",
+      "outcome_id": "FB.5.2.1",
+      "difficulty": "hard",
+      "title": "Hatalı dinamometre seçimi ve hassasiyet analizi",
+      "stem": "Bir öğrenci laboratuvarda 3 N ve 5 N’luk iki küçük cismi ölçmek için Şema’daki M dinamometresini (en çok 50 N, 10 eşit aralıklı) seçiyor.\n1) Öğrenci M dinamometresini seçtiğinde neden hassas bir okuma yapamaz? Aralık değeriyle açıklayınız.\n2) Bu iki cismi en hassas biçimde ölçmek için K, L ve M araçlarından hangisini seçmelidir ve bu araçta 5 N’luk cisim kaçıncı aralıkta okunur?",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-three-dynamometers.svg",
+        "alt": "K (10 N), L (20 N) ve M (50 N) dinamometreleri",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB521-V1-H02-R1",
+          "text": "M dinamometresinde her aralığın 50 ÷ 10 = 5 N olduğunu, bu nedenle 3 N gibi küçük kuvvetlerin ara değerde kalıp hassas okunamayacağını açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB521-V1-K08"
+          ],
+          "scoring": {
+            "full": "M’de 1 aralık 5 N’dur, 3 N hassas okunamaz.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB521-V1-H02-R2",
+          "text": "K dinamometresinin (10 N, 1 N/aralık) seçilmesi gerektiğini ve 5 N’luk cismin 5. aralıkta okunacağını belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB521-V1-K08"
+          ],
+          "scoring": {
+            "full": "K seçilmelidir; 5 N, 5. aralıkta okunur.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    }
+  }
+}

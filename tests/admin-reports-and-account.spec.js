@@ -336,10 +336,10 @@ test.describe('V8.9.8 — Soru Bildirimleri, Hesap Kontrolleri ve Sistem Doğrul
         await page.locator('#btn-save-profile').click();
 
         // Must NOT ban account
-        const updatedRecord = await page.evaluate(() => window.__records['admin-hero']);
-        expect(updatedRecord.isBanned).toBe(false);
-        expect(updatedRecord.name).toBe('FenUp');
-        expect(updatedRecord.surname).toBe('X');
+        await expect.poll(async () => {
+            const rec = await page.evaluate(() => window.__records?.['admin-hero']);
+            return rec ? `${rec.isBanned}:${rec.name}:${rec.surname}` : '';
+        }).toBe('false:FenUp:X');
     });
 
     test('5. Öğrenci Yöneticiyi Taklit Edemez ("FenUp X" adı sıradan öğrenciye engellenir ama banlanmaz)', async ({ page }) => {
@@ -411,7 +411,7 @@ test.describe('V8.9.8 — Soru Bildirimleri, Hesap Kontrolleri ve Sistem Doğrul
         expect(streakData.count).toBe(5); // Not updated or corrupted by admin
     });
 
-    test('7. Yönetici Paneli: Yazılı Soru Havuzu aktif 78 soruyu tam ve ikonlu listeler', async ({ page }) => {
+    test('7. Yönetici Paneli: Yazılı Soru Havuzu aktif 216 soruyu (54 + 84 + 78) tam ve ikonlu listeler', async ({ page }) => {
         await mockFirebase(page);
 
         await page.evaluate(() => {
@@ -431,7 +431,7 @@ test.describe('V8.9.8 — Soru Bildirimleri, Hesap Kontrolleri ve Sistem Doğrul
 
         const qTabBtn = page.locator('#btn-admin-tab-questions');
         await expect(qTabBtn).toBeVisible();
-        await expect(qTabBtn).toContainText('78 Soru');
+        await expect(qTabBtn).toContainText('216 Soru');
         await expect(qTabBtn.locator('i.fa-clipboard-list')).toBeVisible();
     });
 

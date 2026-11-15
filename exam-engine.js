@@ -9,8 +9,10 @@
 'use strict';
 
 const CONTENT_REVISION = '6.0.1';
+const GRADE5_CONTENT_REVISION = 'grade5-1d1y';
 const GRADE6_CONTENT_REVISION = 'grade6-1d1y';
-export const CONTENT_V6_VERSION = '8.9.22';
+const ADMIN_POOL_REVISIONS = [GRADE5_CONTENT_REVISION, GRADE6_CONTENT_REVISION, CONTENT_REVISION];
+export const CONTENT_V6_VERSION = '8.9.23';
 if (typeof window !== 'undefined') {
     window.__FENUPX_CONTENT_V6_VERSION__ = CONTENT_V6_VERSION;
 }
@@ -40,6 +42,7 @@ if (typeof window !== 'undefined') {
 const CONTENT_PATHS = {
     '6.0.0': 'data/exam/content-v6/',
     '6.0.1': 'data/exam/content-v6/',
+    'grade5-1d1y': 'data/exam/grade-5/1d1y/',
     'grade6-1d1y': 'data/exam/grade-6/1d1y/'
 };
 let ASSET_BASE = 'data/exam/content-v6/';
@@ -51,6 +54,7 @@ const STORAGE_KEY = 'fenupx_exam_pilot_v1';
 const names = { easy: 'Kolay', medium: 'Orta', hard: 'Zor' };
 
 export const OUTCOME_ORDER = [
+    "FB.5.1.1", "FB.5.1.2", "FB.5.1.3", "FB.5.1.4", "FB.5.2.1",
     "FB.6.1.1", "FB.6.1.2", "FB.6.1.3", "FB.6.1.4",
     "FB.6.2.1", "FB.6.2.2", "FB.6.2.3", "FB.6.3.1",
     "FB.7.1.1", "FB.7.1.2", "FB.7.1.3", "FB.7.1.4", "FB.7.1.5", "FB.7.2.1", "FB.7.2.2"
@@ -177,11 +181,23 @@ function createDefaultState() {
 let state = createDefaultState();
 
 export function getActiveGrade() {
-    return String(state.selectedGrade || '7') === '6' ? '6' : '7';
+    const g = String(state.selectedGrade || '7');
+    if (g === '5' || g === '6') return g;
+    return '7';
 }
 
 export function getActiveContentRevision() {
-    return getActiveGrade() === '6' ? GRADE6_CONTENT_REVISION : CONTENT_REVISION;
+    const g = getActiveGrade();
+    if (g === '5') return GRADE5_CONTENT_REVISION;
+    if (g === '6') return GRADE6_CONTENT_REVISION;
+    return CONTENT_REVISION;
+}
+
+function revisionToGrade(rev, fallback = '7') {
+    if (rev === GRADE5_CONTENT_REVISION) return '5';
+    if (rev === GRADE6_CONTENT_REVISION) return '6';
+    if (rev === CONTENT_REVISION || rev === '6.0.0' || rev === '7.0.0') return '7';
+    return fallback;
 }
 
 let currentProfile = 'dengeli';
@@ -213,7 +229,7 @@ function loadStateFromStorage() {
         if (!raw) return;
         const parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object') {
-            state.selectedGrade = parsed.selectedGrade === '6' ? '6' : '7';
+            state.selectedGrade = (parsed.selectedGrade === '5' || parsed.selectedGrade === '6') ? parsed.selectedGrade : '7';
             state.selectedScenario = parsed.selectedScenario || '2';
             state.history = (parsed.history && typeof parsed.history === 'object') ? parsed.history : {};
             state.profileRuns = (parsed.profileRuns && typeof parsed.profileRuns === 'object') ? parsed.profileRuns : {};
@@ -713,6 +729,20 @@ export function getActiveScenario() {
         if (found) return found;
         return DATA.scenarios[0];
     }
+    if (getActiveGrade() === '5') {
+        return {
+            id: "5-2026-2027-D1-Y1-S1",
+            grade: 5,
+            scenario: 1,
+            question_count: 7,
+            allocation: [
+                { outcome_id: 'FB.5.1.2', count: 2 },
+                { outcome_id: 'FB.5.1.3', count: 2 },
+                { outcome_id: 'FB.5.1.4', count: 2 },
+                { outcome_id: 'FB.5.2.1', count: 1 }
+            ]
+        };
+    }
     if (getActiveGrade() === '6') {
         return {
             id: "6-2026-2027-D1-Y1-S1",
@@ -754,14 +784,14 @@ export function syncScenarioData() {
         });
     }
     const activeOutcomes = new Set((scenario?.allocation || []).map(a => a.outcome_id));
-    const isGrade6 = loadedRevision === GRADE6_CONTENT_REVISION || (scenario && scenario.grade === 6);
+    const isFullPoolGrade = loadedRevision === GRADE5_CONTENT_REVISION || loadedRevision === GRADE6_CONTENT_REVISION || (scenario && (scenario.grade === 5 || scenario.grade === 6));
 
     const allC = DATA.allCards || DATA.cards || [];
     const allQ = DATA.allQuestions || DATA.questions || [];
 
-    // Bölüm 7A: 6. sınıfta FB.6.1.2 ve FB.6.1.4 senaryo dağılımlarında 0 olsa da Bilgi İstasyonu ve havuzda erişilebilir tutulur
+    // Bölüm 7A: 5. sınıfta FB.5.1.1 ve 6. sınıfta FB.6.1.2 / FB.6.1.4 senaryo dağılımlarında 0 olsa da Bilgi İstasyonu ve havuzda erişilebilir tutulur
     CARDS = allC
-        .filter(c => isGrade6 || activeOutcomes.has(c.outcome_id))
+        .filter(c => isFullPoolGrade || activeOutcomes.has(c.outcome_id))
         .sort((a, b) => {
             const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
             const oB = OUTCOME_ORDER.indexOf(b.outcome_id);
@@ -770,7 +800,7 @@ export function syncScenarioData() {
             return (a.sequence || 0) - (b.sequence || 0);
         });
 
-    QUESTIONS = isGrade6 ? [...allQ] : allQ.filter(q => activeOutcomes.has(q.outcome_id));
+    QUESTIONS = isFullPoolGrade ? [...allQ] : allQ.filter(q => activeOutcomes.has(q.outcome_id));
     DATA.scenario = scenario;
     profiles = DATA.selection_policy?.scenario_profiles || {};
 }
@@ -896,9 +926,12 @@ async function loadData(revision = getActiveContentRevision(), showError = true,
         if (!base) throw new Error(`Bilinmeyen içerik sürümü: ${targetRev}`);
         if (!dataVersions.has(targetRev)) {
             dataVersions.set(targetRev, (async () => {
+                const isGrade5 = (targetRev === GRADE5_CONTENT_REVISION);
                 const isGrade6 = (targetRev === GRADE6_CONTENT_REVISION);
+                const isStandalonePackage = isGrade5 || isGrade6;
+                const pkgGradeNum = isGrade5 ? 5 : (isGrade6 ? 6 : 7);
                 let data = {};
-                if (isGrade6) {
+                if (isStandalonePackage) {
                     const ekRes = await fetch(base + 'ek_icerik.json?v=' + CONTENT_V6_VERSION);
                     if (!ekRes.ok) throw new Error(`HTTP ${ekRes.status}`);
                     const ekJson = await ekRes.json();
@@ -945,7 +978,7 @@ async function loadData(revision = getActiveContentRevision(), showError = true,
                             const alloc = rawAlloc.filter(x => (x.count || 0) > 0);
                             return {
                                 ...s,
-                                grade: isGrade6 ? 6 : (s.grade || 7),
+                                grade: isStandalonePackage ? pkgGradeNum : (s.grade || 7),
                                 scenario: scNum,
                                 question_count: s.question_count || s.total_questions || alloc.reduce((acc, x) => acc + (x.count || 0), 0) || 7,
                                 allocation: alloc,
@@ -971,7 +1004,7 @@ async function loadData(revision = getActiveContentRevision(), showError = true,
                         sequence: seq,
                         takeaway,
                         assetBase: base,
-                        grade: isGrade6 ? 6 : 7
+                        grade: pkgGradeNum
                     };
                 });
 
@@ -992,8 +1025,8 @@ async function loadData(revision = getActiveContentRevision(), showError = true,
                     if (Array.isArray(q.rubric)) {
                         rubricArr = q.rubric;
                     } else if (q.rubric && Array.isArray(q.rubric.criteria)) {
-                        const defaultCardId = isGrade6
-                            ? `${(q.outcome_id || 'FB.6.1.1').replace(/\./g, '')}-V1-K00`
+                        const defaultCardId = isStandalonePackage
+                            ? `${(q.outcome_id || (isGrade5 ? 'FB.5.1.1' : 'FB.6.1.1')).replace(/\./g, '')}-V1-K00`
                             : (q.outcome_id === 'FB.7.1.4' ? 'FB714-V7-K00' : (q.outcome_id === 'FB.7.1.2' ? 'FB712-V6-K00' : 'FB722-V7-K00'));
                         rubricArr = q.rubric.criteria.map((c, idx) => ({
                             id: c.id || `${q.id}-R${idx + 1}`,
@@ -1007,7 +1040,7 @@ async function loadData(revision = getActiveContentRevision(), showError = true,
                                 equivalent_wording_accepted: true,
                                 unasked_details_are_not_required: true
                             },
-                            content_revision: isGrade6 ? GRADE6_CONTENT_REVISION : '7.0.0'
+                            content_revision: isGrade5 ? GRADE5_CONTENT_REVISION : (isGrade6 ? GRADE6_CONTENT_REVISION : '7.0.0')
                         }));
                     }
                     const sampleAnswer = getQuestionSampleAnswer(q);
@@ -1022,11 +1055,11 @@ async function loadData(revision = getActiveContentRevision(), showError = true,
                         rubric: rubricArr,
                         return_card_ids: returnCardIds,
                         sample_answer: sampleAnswer,
-                        score_weight: q.score_weight || (isGrade6 ? (rubricPointsSum || (diff === 'hard' ? 20 : (diff === 'medium' ? 15 : 10))) : undefined),
-                        max_points: q.max_points || q.points || (isGrade6 ? (rubricPointsSum || 10) : 10),
+                        score_weight: q.score_weight || (isStandalonePackage ? (rubricPointsSum || (diff === 'hard' ? 20 : (diff === 'medium' ? 15 : 10))) : undefined),
+                        max_points: q.max_points || q.points || (isStandalonePackage ? (rubricPointsSum || 10) : 10),
                         assetBase: base,
-                        grade: isGrade6 ? 6 : 7,
-                        content_revision: isGrade6 ? GRADE6_CONTENT_REVISION : '7.0.0'
+                        grade: pkgGradeNum,
+                        content_revision: isGrade5 ? GRADE5_CONTENT_REVISION : (isGrade6 ? GRADE6_CONTENT_REVISION : '7.0.0')
                     };
                 });
 
@@ -1270,6 +1303,11 @@ function updateScopeAccordion() {
     if (!summaryEl) return;
     const scenario = getActiveScenario();
     const outcomeNames = {
+        'FB.5.1.1': 'Gökyüzündeki Komşumuz: Güneş',
+        'FB.5.1.2': 'Gökyüzündeki Komşumuz: Ay',
+        'FB.5.1.3': 'Ay\'ın Hareketleri ve Evreleri',
+        'FB.5.1.4': 'Güneş, Dünya ve Ay\'ın Birbirlerine Göre Hareketleri',
+        'FB.5.2.1': 'Kuvvet ve Kuvvetin Ölçülmesi',
         'FB.6.1.1': 'Güneş Sistemindeki Gezegenler',
         'FB.6.1.2': 'Güneş Sistemi Modeli',
         'FB.6.1.3': 'Güneş ve Ay Tutulmaları',
@@ -1315,10 +1353,10 @@ function updateScopeAccordion() {
 
 function syncScopeSelectOptions(selectScenario, grade) {
     if (!selectScenario) return;
-    const maxSc = grade === '6' ? 6 : 5;
+    const maxSc = grade === '5' ? 4 : (grade === '6' ? 6 : 5);
     let curVal = parseInt(state.selectedScenario, 10) || 2;
     if (curVal < 1 || curVal > maxSc) {
-        curVal = 2;
+        curVal = grade === '5' ? 1 : 2;
         state.selectedScenario = String(curVal);
     }
     const existingOpts = selectScenario.querySelectorAll('option');
@@ -1339,7 +1377,7 @@ function bindScopeContinue() {
         if (e) e.preventDefault();
         try {
             const selectGrade = $('exam-select-grade');
-            if (selectGrade && (selectGrade.value === '6' || selectGrade.value === '7')) {
+            if (selectGrade && (selectGrade.value === '5' || selectGrade.value === '6' || selectGrade.value === '7')) {
                 state.selectedGrade = selectGrade.value;
             }
             const selectScenario = $('exam-select-scenario');
@@ -1406,7 +1444,7 @@ function renderScope() {
     if (selectGrade) {
         selectGrade.value = getActiveGrade();
         selectGrade.onchange = async () => {
-            state.selectedGrade = selectGrade.value === '6' ? '6' : '7';
+            state.selectedGrade = (selectGrade.value === '5' || selectGrade.value === '6') ? selectGrade.value : '7';
             syncScopeSelectOptions(selectScenario, getActiveGrade());
             saveState();
             const rev = getActiveContentRevision();
@@ -1505,7 +1543,9 @@ function renderChoice() {
 
     const studyCountEl = $('choice-study-count');
     if (studyCountEl) {
-        const topicCount = activeGrade === '6' ? ((DATA?.allOutcomes || DATA?.outcomes || []).length || 8) : scenario.allocation.length;
+        const topicCount = (activeGrade === '5' || activeGrade === '6')
+            ? ((DATA?.allOutcomes || DATA?.outcomes || []).length || (activeGrade === '5' ? 5 : 8))
+            : scenario.allocation.length;
         studyCountEl.innerHTML = `<i class="fas fa-clone"></i> ${topicCount} konu · ${CARDS.length} bilgi kartı`;
     }
 
@@ -1584,7 +1624,7 @@ function renderChoice() {
                 const cardTitle = s.cardTitle || cardObj?.title || '';
                 const outcomeId = s.outcomeId || cardObj?.outcome_id || `Senaryo ${scNum}`;
 
-                const sGrade = sRev === GRADE6_CONTENT_REVISION ? '6' : '7';
+                const sGrade = revisionToGrade(sRev, '7');
                 if (iconEl) iconEl.innerHTML = '<i class="fas fa-book-open"></i>';
                 if (eyebrowEl) eyebrowEl.textContent = `${sGrade}. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${s.scenarioNumber || scNum} · Konu Çalışması`;
                 if (titleEl) titleEl.textContent = 'Devam Eden Konu Çalışması';
@@ -1594,7 +1634,7 @@ function renderChoice() {
                         : 'Önceki konu çalışmana kaldığın karttan devam edebilirsin.';
                 }
                 if (versionNoteEl) {
-                    if (sRev !== CONTENT_REVISION && sRev !== GRADE6_CONTENT_REVISION) {
+                    if (![CONTENT_REVISION, GRADE5_CONTENT_REVISION, GRADE6_CONTENT_REVISION].includes(sRev)) {
                         versionNoteEl.classList.remove('is-hidden');
                         versionNoteEl.style.display = 'block';
                         versionNoteEl.textContent = `Bu kayıt önceki içerik sürümüyle (${sRev}) kaldığın karttan sürdürülür. Yeni konu çalışması güncel V6 içeriğiyle başlar.`;
@@ -1631,7 +1671,7 @@ function renderChoice() {
                 const profileText = names[a.profile] || (a.profile === 'zorlayici' ? 'Zorlayıcı' : (a.profile === 'temel' ? 'Temel' : 'Dengeli'));
                 const modeText = a.solveMode === 'kagitta' ? 'Kâğıtta' : 'Ekranda';
 
-                const aGrade = aRev === GRADE6_CONTENT_REVISION ? '6' : '7';
+                const aGrade = revisionToGrade(aRev, '7');
                 if (iconEl) iconEl.innerHTML = '<i class="fas fa-file-signature"></i>';
                 if (eyebrowEl) eyebrowEl.textContent = `${aGrade}. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${a.scenarioNumber || scNum} · Yazılı Provası`;
 
@@ -1653,7 +1693,7 @@ function renderChoice() {
                 if (btnResumeLabel) btnResumeLabel.textContent = 'Devam Et';
 
                 if (versionNoteEl) {
-                    if (aRev !== CONTENT_REVISION && aRev !== GRADE6_CONTENT_REVISION) {
+                    if (![CONTENT_REVISION, GRADE5_CONTENT_REVISION, GRADE6_CONTENT_REVISION].includes(aRev)) {
                         versionNoteEl.classList.remove('is-hidden');
                         versionNoteEl.style.display = 'block';
                         versionNoteEl.textContent = `Bu kayıt önceki içerik sürümüyle (${aRev}) kaldığın yerden sürdürülür. Yeni prova güncel V6 içeriğini kullanır.`;
@@ -1933,10 +1973,10 @@ function renderStudy(cardIndex) {
             // Genel Konu Çalışma Modu: Senaryonun Öğrenme Çıktıları ("Çalışma Planın")
             const activeScenario = getActiveScenario();
             const activeOutcomeIds = new Set(activeScenario.allocation.map(a => a.outcome_id));
-            const isGrade6 = loadedRevision === GRADE6_CONTENT_REVISION || (activeScenario && activeScenario.grade === 6);
+            const isFullPoolGrade = loadedRevision === GRADE5_CONTENT_REVISION || loadedRevision === GRADE6_CONTENT_REVISION || (activeScenario && (activeScenario.grade === 5 || activeScenario.grade === 6));
             const allOutcomes = DATA.allOutcomes || DATA.outcomes || [];
             const scenarioOutcomes = allOutcomes
-                .filter(o => isGrade6 || activeOutcomeIds.has(o.id))
+                .filter(o => isFullPoolGrade || activeOutcomeIds.has(o.id))
                 .sort((a, b) => {
                     const oA = OUTCOME_ORDER.indexOf(a.id);
                     const oB = OUTCOME_ORDER.indexOf(b.id);
@@ -2483,6 +2523,11 @@ function renderPractice() {
             setupHeading.textContent = `${setupScenario.question_count} Soruluk Provanı Hazırla`;
         }
         const outcomeNamesMap = {
+            'FB.5.1.1': 'Güneş',
+            'FB.5.1.2': 'Ay',
+            'FB.5.1.3': 'Ay\'ın hareketleri ve evreleri',
+            'FB.5.1.4': 'Güneş, Dünya ve Ay\'ın hareketleri',
+            'FB.5.2.1': 'Kuvvet ve kuvvetin ölçülmesi',
             'FB.6.1.1': 'Gezegenler',
             'FB.6.1.2': 'Güneş sistemi modeli',
             'FB.6.1.3': 'Güneş ve Ay tutulmaları',
@@ -2673,6 +2718,11 @@ function renderPractice() {
                     const scNum = a.scenarioNumber || getActiveScenarioNumber();
                     const scObj = getActiveScenario();
                     const outcomeNames = {
+                        'FB.5.1.1': 'Güneş',
+                        'FB.5.1.2': 'Ay',
+                        'FB.5.1.3': 'Ay\'ın Hareketleri ve Evreleri',
+                        'FB.5.1.4': 'Güneş, Dünya ve Ay\'ın Hareketleri',
+                        'FB.5.2.1': 'Kuvvet ve Kuvvetin Ölçülmesi',
                         'FB.6.1.1': 'Gezegenler',
                         'FB.6.1.2': 'Güneş Sistemi Modeli',
                         'FB.6.1.3': 'Tutulmalar',
@@ -3919,7 +3969,7 @@ function renderSummary() {
                 outcome_id: item.card?.outcome_id
             }));
 
-            const attemptGrade = a.grade || (a.contentRevision === GRADE6_CONTENT_REVISION ? '6' : getActiveGrade());
+            const attemptGrade = a.grade || revisionToGrade(a.contentRevision, getActiveGrade());
             const attemptRecord = {
                 id: a.routeKey || ('attempt_' + (a.scenarioId || 'sc') + '_' + (a.completedAt || Date.now())),
                 timestamp: Date.now(),
@@ -3952,7 +4002,7 @@ function renderSummary() {
     const scoreSubEl = $('summary-score-sub');
     if (scoreSubEl) {
         const scNum = a.scenarioNumber || getActiveScenarioNumber();
-        const attemptGrade = a.grade || (a.contentRevision === GRADE6_CONTENT_REVISION ? '6' : getActiveGrade());
+        const attemptGrade = a.grade || revisionToGrade(a.contentRevision, getActiveGrade());
         let msg = `${attemptGrade}. Sınıf · 1. Dönem 1. Yazılı (${formatScenarioTitle(scNum)})`;
         if (sortedMissedCards.length === 0 || totalScore === 100) {
             msg = 'Tebrikler! Bu provada tüm bilimsel ölçütleri karşıladığını belirttin.';
@@ -4238,7 +4288,8 @@ export function formatSampleAnswerWithHighlights(rawText) {
         'Güneş tutulması', 'Ay tutulması', 'yeni ay evresi', 'yeni ay', 'dolunay evresi', 'dolunay', 'tam gölge', '5°',
         'bileşke kuvvet', 'net kuvvet', 'dengelenmiş kuvvetler', 'dengelenmiş', 'dengelenmemiş kuvvetler', 'dengelenmemiş', 'dengeleyici kuvvet',
         'uygulama noktası', 'doğrultu', 'yön', 'büyüklük', 'şiddet', 'Newton', 'sabit sürat', 'yer değiştirme', 'hız', 'm/s', 'km/h',
-        'eşeyli üreme', 'eşeysiz üreme', 'döllenme', 'zigot', 'embriyo', 'kalıtsal çeşitlilik', 'bölünerek üreme', 'tomurcuklanma', 'vejetatif üreme', 'rejenerasyon', 'yenilenme'
+        'eşeyli üreme', 'eşeysiz üreme', 'döllenme', 'zigot', 'embriyo', 'kalıtsal çeşitlilik', 'bölünerek üreme', 'tomurcuklanma', 'vejetatif üreme', 'rejenerasyon', 'yenilenme',
+        'Güneş lekeleri', 'dönme hareketi', 'dolanma hareketi', 'saat yönünün tersi', 'ana evre', 'ara evre', 'ilk dördün', 'son dördün', 'hilal', 'şişkin ay', 'hep aynı yüzü', 'esnek cisim', 'esneklik sınırı', 'kalıcı bozulma', 'bölme sayısı', 'ince yay', 'kalın yay', 'hassas ölçüm'
     ];
     keyTerms.sort((a, b) => b.length - a.length);
 
@@ -4381,7 +4432,7 @@ async function generateExamPdfBlob(questions, attempt, mode = 'blank') {
             margin: [0, 0, 10, 0]
         });
     }
-    const pdfGrade = attempt.grade || (attempt.contentRevision === GRADE6_CONTENT_REVISION ? '6' : getActiveGrade());
+    const pdfGrade = attempt.grade || revisionToGrade(attempt.contentRevision, getActiveGrade());
     headerCols.push({
         stack: [
             { text: isAnswers ? 'FenUp X — Örnek Cevap Anahtarı & Çözüm Rehberi' : 'FenUp X — Fen Bilimleri Yazılı Provası', fontSize: 13, bold: true, color: '#0f172a' },
@@ -4629,7 +4680,7 @@ async function downloadExamPdf(btnDownload = null) {
         const a = document.createElement('a');
         a.href = url;
         const scNum = state.attempt?.scenarioNumber || getActiveScenarioNumber();
-        const dlGrade = state.attempt?.grade || (state.attempt?.contentRevision === GRADE6_CONTENT_REVISION ? '6' : getActiveGrade());
+        const dlGrade = state.attempt?.grade || revisionToGrade(state.attempt?.contentRevision, getActiveGrade());
         const suffix = isAnswers ? '_CevapAnahtari' : '';
         a.download = `FenUpX_${dlGrade}Sinif_1Donem_1Yazili_Senaryo${scNum}${suffix}.pdf`;
         document.body.appendChild(a);
@@ -4683,7 +4734,7 @@ function openPrintPreview(triggerEl = null) {
     // Tetikleyen düğmeyi sakla (kapatınca odağı geri vermek için)
     lastPrintTriggerElement = triggerEl || (document.activeElement && document.activeElement !== document.body ? document.activeElement : $('btn-practice-preview-print'));
 
-    const printGrade = state.attempt.grade || (state.attempt.contentRevision === GRADE6_CONTENT_REVISION ? '6' : getActiveGrade());
+    const printGrade = state.attempt.grade || revisionToGrade(state.attempt.contentRevision, getActiveGrade());
     printEl.innerHTML = `
         <div class="print-header">
             <div class="print-brand-row">
@@ -4886,14 +4937,44 @@ function closePrintPreview() {
 let currentAdminGrade = 'all';
 let currentAdminOutcome = 'all';
 
+function getCombinedAdminPoolQuestions() {
+    const combined = [];
+    for (const rev of ADMIN_POOL_REVISIONS) {
+        const cached = resolvedDataCache.get(rev);
+        const list = cached?.allQuestions || cached?.questions;
+        if (Array.isArray(list)) {
+            combined.push(...list);
+        }
+    }
+    const diffWeight = { 'easy': 1, 'medium': 2, 'hard': 3 };
+    return combined.sort((a, b) => {
+        const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
+        const oB = OUTCOME_ORDER.indexOf(b.outcome_id);
+        const diffO = (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
+        if (diffO !== 0) return diffO;
+        const dA = diffWeight[a.difficulty] || 2;
+        const dB = diffWeight[b.difficulty] || 2;
+        if (dA !== dB) return dA - dB;
+        return (a.id || '').localeCompare(b.id || '');
+    });
+}
+
 export async function refreshAdminQuestionCount() {
     const tab = $('btn-admin-tab-questions');
     if (tab) tab.innerHTML = '<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (Yükleniyor…)';
-    const ok = await loadData(CONTENT_REVISION, false, false);
-    const active = resolvedDataCache.get(CONTENT_REVISION);
-    const rawList = active?.allQuestions || active?.questions;
-    if (ok && Array.isArray(rawList)) {
-        if (tab) tab.innerHTML = `<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (${rawList.length} Soru)`;
+    currentAdminGrade = 'all';
+    currentAdminOutcome = 'all';
+    const gradeButtons = document.querySelectorAll('#admin-grade-filters .admin-grade-btn');
+    if (gradeButtons && gradeButtons.length > 0) {
+        gradeButtons.forEach(btn => {
+            btn.classList.toggle('active', (btn.getAttribute('data-grade') || 'all') === 'all');
+        });
+    }
+    const results = await Promise.all(ADMIN_POOL_REVISIONS.map(rev => loadData(rev, false, false)));
+    const ok = results.every(Boolean);
+    const allQuestions = getCombinedAdminPoolQuestions();
+    if (ok && allQuestions.length > 0) {
+        if (tab) tab.innerHTML = `<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (${allQuestions.length} Soru)`;
     } else {
         if (tab) tab.innerHTML = '<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (Yüklenemedi)';
     }
@@ -4908,37 +4989,17 @@ export function renderAdminQuestionReview() {
     const tabBtn = $('btn-admin-tab-questions');
     if (!bankSelect || !container) return;
 
-    const targetAdminRev = currentAdminGrade === '6' ? GRADE6_CONTENT_REVISION : CONTENT_REVISION;
-    const active = resolvedDataCache.get(targetAdminRev);
-    if (!active) {
+    const allLoaded = ADMIN_POOL_REVISIONS.every(rev => resolvedDataCache.has(rev));
+    if (!allLoaded) {
         container.textContent = 'Soru havuzu yükleniyor…';
-        loadData(targetAdminRev, false, false).then(ok => {
-            if (ok) renderAdminQuestionReview();
+        Promise.all(ADMIN_POOL_REVISIONS.map(rev => loadData(rev, false, false))).then(results => {
+            if (results.every(Boolean)) renderAdminQuestionReview();
             else container.textContent = 'Soru havuzu yüklenemedi. Sekmeyi yeniden açarak deneyebilirsin.';
         });
         return;
     }
-    const rawAllQuestions = active.allQuestions || active.questions || [];
-    const diffWeight = { 'easy': 1, 'medium': 2, 'hard': 3 };
-    const allQuestions = [...rawAllQuestions].sort((a, b) => {
-        const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
-        const oB = OUTCOME_ORDER.indexOf(b.outcome_id);
-        const diffO = (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
-        if (diffO !== 0) return diffO;
-        const dA = diffWeight[a.difficulty] || 2;
-        const dB = diffWeight[b.difficulty] || 2;
-        if (dA !== dB) return dA - dB;
-        return (a.id || '').localeCompare(b.id || '');
-    });
 
-    if (tabBtn) {
-        tabBtn.innerHTML = `<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (${allQuestions.length} Soru)`;
-    }
-    const descP = $('admin-questions-desc');
-    if (descP) {
-        descP.textContent = `Toplam havuz: ${allQuestions.length} soru. MEB Türkiye Yüzyılı Maarif Modeli soru havuzu, rubrikleri ve öğretmen inceleme durumları.`;
-    }
-
+    const allQuestions = getCombinedAdminPoolQuestions();
     if (allQuestions.length === 0) {
         container.innerHTML = '<p style="color:#aaa;">Soru havuzu yükleniyor veya boş.</p>';
         return;
@@ -4947,6 +5008,7 @@ export function renderAdminQuestionReview() {
     // 1. Kademe: Sınıf Filtresi Butonlarını Dinle
     if (gradeButtons && gradeButtons.length > 0) {
         gradeButtons.forEach(btn => {
+            btn.classList.toggle('active', (btn.getAttribute('data-grade') || 'all') === currentAdminGrade);
             if (!btn.dataset.bound) {
                 btn.dataset.bound = 'true';
                 btn.onclick = () => {
@@ -4960,12 +5022,21 @@ export function renderAdminQuestionReview() {
         });
     }
 
-    // Sınıfa göre filtrele (Varsayılan olarak mevcut sorular 7. Sınıfa aittir)
-    let questionsByGrade = allQuestions.filter(q => {
+    // Sınıfa göre filtrele (Tümü seçiliyken aktif tüm sınıfların toplamı, tek sınıf seçildiğinde o sınıfın soruları)
+    const questionsByGrade = allQuestions.filter(q => {
         if (currentAdminGrade === 'all') return true;
         const qGrade = q.grade ? String(q.grade) : (q.outcome_id?.startsWith('FB.5.') ? '5' : q.outcome_id?.startsWith('FB.6.') ? '6' : q.outcome_id?.startsWith('FB.7.') ? '7' : q.outcome_id?.startsWith('FB.8.') ? '8' : '7');
         return qGrade === currentAdminGrade;
     });
+
+    const activePoolCount = currentAdminGrade === 'all' ? allQuestions.length : questionsByGrade.length;
+    if (tabBtn) {
+        tabBtn.innerHTML = `<i class="fas fa-clipboard-list"></i> Yazılı Soru Havuzu (${activePoolCount} Soru)`;
+    }
+    const descP = $('admin-questions-desc');
+    if (descP) {
+        descP.textContent = `Toplam havuz: ${activePoolCount} soru. MEB Türkiye Yüzyılı Maarif Modeli soru havuzu, rubrikleri ve öğretmen inceleme durumları.`;
+    }
 
     // 2. Kademe: Kazanım Filtresi Seçeneklerini Doldur
     if (outcomeFilter) {
@@ -5810,9 +5881,11 @@ export async function openStudyCardFromProfile(cardId, outcomeId) {
         loadStateFromStorage();
     }
 
-    const targetRev = (cardId && cardId.startsWith('FB6')) || (outcomeId && outcomeId.startsWith('FB.6.'))
-        ? GRADE6_CONTENT_REVISION
-        : getActiveContentRevision();
+    const targetRev = ((cardId && cardId.startsWith('FB5')) || (outcomeId && outcomeId.startsWith('FB.5.')))
+        ? GRADE5_CONTENT_REVISION
+        : (((cardId && cardId.startsWith('FB6')) || (outcomeId && outcomeId.startsWith('FB.6.')))
+            ? GRADE6_CONTENT_REVISION
+            : getActiveContentRevision());
     const ok = await loadData(targetRev);
     if (!ok) return;
 
@@ -5909,7 +5982,8 @@ if (typeof window !== 'undefined') {
         getPrintMode: () => currentPrintMode,
         getState: () => state,
         setGrade: async (grade) => {
-            state.selectedGrade = String(grade) === '6' ? '6' : '7';
+            const g = String(grade);
+            state.selectedGrade = (g === '5' || g === '6') ? g : '7';
             const rev = getActiveContentRevision();
             await loadData(rev, false, true);
             syncScenarioData();

@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
 export async function mockFirebase(page, backendReady = true) {
     page.on('dialog', d => d.accept());
     await page.addInitScript(() => { localStorage.setItem('fenupx_cookie_consent', 'accepted'); window.__records = JSON.parse(sessionStorage.getItem('__records') || '{}'); window.__writes = []; });
-    await page.route('**/competition-config.js*', route => route.fulfill({contentType:'text/javascript',body:`export const COMPETITION_API_URL="https://score.example.invalid"; export const ANNUAL_PROMOTION_ENABLED=false; export const COMPETITION_BACKEND_READY=${backendReady}; export const competitionYear=()=>2026; export const competitionPeriods=()=>({weekId:"2026-W45",monthId:"2026-11"});`}));
+    await page.route('**/competition-config.js*', route => route.fulfill({contentType:'text/javascript',body:`export const COMPETITION_API_URL="https://score.example.invalid"; export const ANNUAL_PROMOTION_ENABLED=false; export const COMPETITION_BACKEND_READY=${backendReady}; export const competitionYear=()=>2026; export const competitionPeriods=()=>({weekId:"2026-W45",monthId:"2026-11"}); export const competitionTimeframeBoundaries=()=>({weekStartIso:"2026-11-02T00:00:00.000Z",monthStartIso:"2026-11-01T00:00:00.000Z"});`}));
     await page.route('https://score.example.invalid/rpc/**', async route => {
         const name=route.request().url().split('/').pop();
         const data=route.request().postDataJSON();
@@ -221,15 +221,17 @@ test('question count loads on initial admin opening, survives tabs/reopen/reload
     await mockFirebase(page);
     await page.evaluate(async()=>{window.__records.a={role:'admin',name:'Test',surname:'Admin'};await window.__login('a');document.getElementById('btn-admin-panel').click();});
     const tab=page.locator('#btn-admin-tab-questions');
-    await expect(tab).toContainText('79 Soru');expect(injected).toBe(true);
-    await tab.click();await expect(page.locator('#admin-question-filter-count')).toHaveText('Filtre sonucu: 79 soru');
+    await expect(tab).toContainText('217 Soru');expect(injected).toBe(true);
+    await tab.click();await expect(page.locator('#admin-question-filter-count')).toHaveText('Filtre sonucu: 217 soru');
     await page.locator('#admin-grade-filters [data-grade="5"]').click();
+    await expect(page.locator('#admin-question-filter-count')).toHaveText('Filtre sonucu: 54 soru');
+    await expect(tab).toContainText('54 Soru');
+    await page.locator('#admin-grade-filters [data-grade="8"]').click();
     await expect(page.locator('#admin-question-filter-count')).toHaveText('Filtre sonucu: 0 soru');
-    await expect(tab).toContainText('79 Soru');
     await page.locator('#btn-close-admin').click();
-    await page.evaluate(()=>document.getElementById('btn-admin-panel').click());await expect(tab).toContainText('79 Soru');
+    await page.evaluate(()=>document.getElementById('btn-admin-panel').click());await expect(tab).toContainText('217 Soru');
     await page.reload();await page.waitForFunction(()=>window.__login && !document.getElementById('btn-admin-panel').classList.contains('is-hidden'));
-    await page.evaluate(()=>document.getElementById('btn-admin-panel').click());await expect(tab).toContainText('79 Soru');
+    await page.evaluate(()=>document.getElementById('btn-admin-panel').click());await expect(tab).toContainText('217 Soru');
 });
 
 test('staged deployment approves correction through narrow Firestore update without transferring points',async({page})=>{
@@ -254,7 +256,7 @@ test('failed question loading displays no stale count and allows explicit retry'
     const stopped=requests;await page.waitForTimeout(200);expect(requests).toBe(stopped);
     await page.unroute('**/pilot_7_senaryo2.json');
     await page.locator('#btn-admin-tab-questions').click();
-    await expect(page.locator('#btn-admin-tab-questions')).toContainText('78 Soru');
+    await expect(page.locator('#btn-admin-tab-questions')).toContainText('216 Soru');
 });
 
 test('untrusted profile text cannot execute markup in administrator rows',async({page})=>{

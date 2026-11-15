@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 212" width="560" height="212" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif">
+  <defs>
+    <marker id="a-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#0d9488"/></marker>
+    <marker id="a-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#38bdf8"/></marker>
+    <marker id="a-navy" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#1d4ed8"/></marker>
+    <marker id="a-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#ef4444"/></marker>
+    <marker id="a-coral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#e06d53"/></marker>
+    <marker id="a-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#fbbf24"/></marker>
+    <marker id="a-slate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#475569"/></marker>
+    <marker id="a-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#22c55e"/></marker>
+    <radialGradient id="g-sun-core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="35%" stop-color="#fef08a"/><stop offset="70%" stop-color="#f97316"/><stop offset="100%" stop-color="#c2410c"/></radialGradient>
+    <radialGradient id="g-ball" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#ffffff"/><stop offset="70%" stop-color="#cbd5e1"/><stop offset="100%" stop-color="#64748b"/></radialGradient>
+  </defs>
+  <rect width="560" height="212" fill="none"/>
+  
+  <rect x="65" y="10" width="430" height="192" rx="14" fill="#eef6f9" stroke="#b8d0db" stroke-width="1.8"/>
+  <text x="180" y="34" text-anchor="middle" font-size="14" font-weight="800" fill="#0f294a">X Dinamometresi</text>
+  <line x1="136" y1="48" x2="143" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="150" y1="48" x2="157" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="164" y1="48" x2="171" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="178" y1="48" x2="185" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="192" y1="48" x2="199" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="206" y1="48" x2="213" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="220" y1="48" x2="227" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="130" y1="48" x2="230" y2="48" stroke="#475569" stroke-width="2.6"/>
+  <polyline points="180.0,48.0 180.0,56.0 167.0,58.3 193.0,62.9 167.0,67.6 193.0,72.2 167.0,76.8 193.0,81.4 167.0,86.1 193.0,90.7 167.0,95.3 193.0,99.9 167.0,104.6 193.0,109.2 167.0,113.8 193.0,118.4 167.0,123.1 193.0,127.7 180.0,130.0 180.0,138.0" fill="none" stroke="#1d4e89" stroke-width="2.0" stroke-linejoin="miter" stroke-miterlimit="3"/>
+  <line x1="180" y1="136" x2="180" y2="144" stroke="#1e293b" stroke-width="2"/>
+    <rect x="152.0" y="144.0" width="56" height="24" rx="6" fill="#f3d088" stroke="#a67c37" stroke-width="1.8"/>
+    <text x="180" y="160.1" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f294a">Çanta</text>
+  <text x="180" y="190" text-anchor="middle" font-size="12.5" font-weight="800" fill="#0d9488">Uzama: 6 cm</text>
+
+  <text x="380" y="34" text-anchor="middle" font-size="14" font-weight="800" fill="#0f294a">Y Dinamometresi</text>
+  <line x1="336" y1="48" x2="343" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="350" y1="48" x2="357" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="364" y1="48" x2="371" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="378" y1="48" x2="385" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="392" y1="48" x2="399" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="406" y1="48" x2="413" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="420" y1="48" x2="427" y2="41" stroke="#64748b" stroke-width="1.5"/>
+<line x1="330" y1="48" x2="430" y2="48" stroke="#475569" stroke-width="2.6"/>
+  <polyline points="380.0,48.0 380.0,56.0 367.0,57.6 393.0,60.9 367.0,64.2 393.0,67.5 367.0,70.8 393.0,74.1 367.0,77.4 393.0,80.6 367.0,83.9 393.0,87.2 367.0,90.5 393.0,93.8 367.0,97.1 393.0,100.4 380.0,102.0 380.0,110.0" fill="none" stroke="#1d4e89" stroke-width="4.0" stroke-linejoin="miter" stroke-miterlimit="3"/>
+  <line x1="380" y1="108" x2="380" y2="116" stroke="#1e293b" stroke-width="2"/>
+    <rect x="352.0" y="116.0" width="56" height="24" rx="6" fill="#f3d088" stroke="#a67c37" stroke-width="1.8"/>
+    <text x="380" y="132.1" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f294a">Çanta</text>
+  <text x="380" y="190" text-anchor="middle" font-size="12.5" font-weight="800" fill="#0f3d6e">Uzama: 2 cm</text>
+
+</svg>

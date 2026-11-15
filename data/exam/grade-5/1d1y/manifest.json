@@ -1,0 +1,18 @@
+{
+  "package_id": "FenUpX_5_1D1Y_Icerik_Paketi_V1_0",
+  "version": "1.0.0",
+  "grade": 5,
+  "term": 1,
+  "exam": 1,
+  "curriculum": "MEB TYMM 2024 Fen Bilimleri",
+  "outcomes_count": 5,
+  "cards_count": 37,
+  "questions_count": 54,
+  "scenarios": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+  ],
+  "assets_count": 47
+}

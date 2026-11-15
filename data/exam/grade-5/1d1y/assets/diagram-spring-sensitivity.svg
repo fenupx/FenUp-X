@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 195" width="580" height="195" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif">
+  <defs>
+    <marker id="a-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#0d9488"/></marker>
+    <marker id="a-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#38bdf8"/></marker>
+    <marker id="a-navy" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#1d4ed8"/></marker>
+    <marker id="a-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#ef4444"/></marker>
+    <marker id="a-coral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#e06d53"/></marker>
+    <marker id="a-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#fbbf24"/></marker>
+    <marker id="a-slate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#475569"/></marker>
+    <marker id="a-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L10 5 L0 9 z" fill="#22c55e"/></marker>
+    <radialGradient id="g-sun-core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="35%" stop-color="#fef08a"/><stop offset="70%" stop-color="#f97316"/><stop offset="100%" stop-color="#c2410c"/></radialGradient>
+    <radialGradient id="g-ball" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#ffffff"/><stop offset="70%" stop-color="#cbd5e1"/><stop offset="100%" stop-color="#64748b"/></radialGradient>
+  </defs>
+  <rect width="580" height="195" fill="none"/>
+  
+  <rect x="20" y="10" width="260" height="175" rx="14" fill="#eef6f9" stroke="#b8d0db" stroke-width="1.8"/>
+  <text x="90" y="32" text-anchor="middle" font-size="13" font-weight="800" fill="#0f294a">İnce tel</text>
+  <line x1="56" y1="44" x2="63" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="70" y1="44" x2="77" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="84" y1="44" x2="91" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="98" y1="44" x2="105" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="112" y1="44" x2="119" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="50" y1="44" x2="130" y2="44" stroke="#475569" stroke-width="2.6"/>
+  <polyline points="90.0,44.0 90.0,52.0 78.0,54.4 102.0,59.1 78.0,63.9 102.0,68.6 78.0,73.4 102.0,78.1 78.0,82.9 102.0,87.6 78.0,92.4 102.0,97.1 78.0,101.9 102.0,106.6 78.0,111.4 102.0,116.1 78.0,120.9 102.0,125.6 90.0,128.0 90.0,136.0" fill="none" stroke="#1d4e89" stroke-width="1.8" stroke-linejoin="miter" stroke-miterlimit="3"/>
+  <line x1="90" y1="134" x2="90" y2="142" stroke="#1e293b" stroke-width="2"/>
+    <rect x="66.0" y="142.0" width="48" height="24" rx="6" fill="#f3d088" stroke="#a67c37" stroke-width="1.8"/>
+    <text x="90" y="158.1" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f294a">Yük</text>
+  <line x1="55" y1="92" x2="128" y2="92" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <line x1="125" y1="92" x2="125" y2="134" stroke="#0d9488" stroke-width="2.5" marker-end="url(#a-teal)"/>
+
+  <text x="210" y="32" text-anchor="middle" font-size="13" font-weight="800" fill="#0f294a">Kalın tel</text>
+  <line x1="176" y1="44" x2="183" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="190" y1="44" x2="197" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="204" y1="44" x2="211" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="218" y1="44" x2="225" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="232" y1="44" x2="239" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="170" y1="44" x2="250" y2="44" stroke="#475569" stroke-width="2.6"/>
+  <polyline points="210.0,44.0 210.0,52.0 198.0,53.9 222.0,57.6 198.0,61.3 222.0,65.0 198.0,68.7 222.0,72.4 198.0,76.1 222.0,79.9 198.0,83.6 222.0,87.3 198.0,91.0 222.0,94.7 198.0,98.4 222.0,102.1 210.0,104.0 210.0,112.0" fill="none" stroke="#1d4e89" stroke-width="4.2" stroke-linejoin="miter" stroke-miterlimit="3"/>
+  <line x1="210" y1="110" x2="210" y2="118" stroke="#1e293b" stroke-width="2"/>
+    <rect x="186.0" y="118.0" width="48" height="24" rx="6" fill="#f3d088" stroke="#a67c37" stroke-width="1.8"/>
+    <text x="210" y="134.1" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f294a">Yük</text>
+  <line x1="175" y1="92" x2="248" y2="92" stroke="#64748b" stroke-width="1.5" stroke-dasharray="3,3"/>
+  <line x1="245" y1="92" x2="245" y2="112" stroke="#0d9488" stroke-width="2.5" marker-end="url(#a-teal)"/>
+
+  <rect x="300" y="10" width="260" height="175" rx="14" fill="#eef6f9" stroke="#b8d0db" stroke-width="1.8"/>
+  <text x="370" y="32" text-anchor="middle" font-size="13" font-weight="800" fill="#0f294a">A malzemesi</text>
+  <line x1="336" y1="44" x2="343" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="350" y1="44" x2="357" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="364" y1="44" x2="371" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="378" y1="44" x2="385" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="392" y1="44" x2="399" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="330" y1="44" x2="410" y2="44" stroke="#475569" stroke-width="2.6"/>
+  <polyline points="370.0,44.0 370.0,52.0 358.0,53.6 382.0,56.9 358.0,60.1 382.0,63.4 358.0,66.6 382.0,69.9 358.0,73.1 382.0,76.4 358.0,79.6 382.0,82.9 358.0,86.1 382.0,89.4 358.0,92.6 382.0,95.9 358.0,99.1 382.0,102.4 370.0,104.0 370.0,112.0" fill="none" stroke="#1d4e89" stroke-width="2.4" stroke-linejoin="miter" stroke-miterlimit="3"/>
+  <line x1="370" y1="110" x2="370" y2="118" stroke="#1e293b" stroke-width="2"/>
+    <rect x="346.0" y="118.0" width="48" height="24" rx="6" fill="#f3d088" stroke="#a67c37" stroke-width="1.8"/>
+    <text x="370" y="134.1" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f294a">Yük</text>
+
+  <text x="490" y="32" text-anchor="middle" font-size="13" font-weight="800" fill="#0f294a">B malzemesi</text>
+  <line x1="456" y1="44" x2="463" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="470" y1="44" x2="477" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="484" y1="44" x2="491" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="498" y1="44" x2="505" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="512" y1="44" x2="519" y2="37" stroke="#64748b" stroke-width="1.5"/>
+<line x1="450" y1="44" x2="530" y2="44" stroke="#475569" stroke-width="2.6"/>
+  <polyline points="490.0,44.0 490.0,52.0 478.0,54.4 502.0,59.1 478.0,63.9 502.0,68.6 478.0,73.4 502.0,78.1 478.0,82.9 502.0,87.6 478.0,92.4 502.0,97.1 478.0,101.9 502.0,106.6 478.0,111.4 502.0,116.1 478.0,120.9 502.0,125.6 490.0,128.0 490.0,136.0" fill="none" stroke="#9a5b25" stroke-width="2.4" stroke-linejoin="miter" stroke-miterlimit="3"/>
+  <line x1="490" y1="134" x2="490" y2="142" stroke="#1e293b" stroke-width="2"/>
+    <rect x="466.0" y="142.0" width="48" height="24" rx="6" fill="#f3d088" stroke="#a67c37" stroke-width="1.8"/>
+    <text x="490" y="158.1" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f294a">Yük</text>
+
+</svg>
