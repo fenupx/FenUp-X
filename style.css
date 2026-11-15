@@ -263,7 +263,7 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
 
 @media (hover: hover) {
   .mode-btn:hover, .class-card:hover:not(.disabled), .unit-card:hover { 
-    background: var(--neon-blue); color: #000; border-color: #fff; transform: scale(1.08); 
+    background: var(--neon-blue); color: #000; border-color: #fff; transform: scale(1.03); 
   }
   .unit-card:hover .unit-card-num, .unit-card:hover .unit-card-title { color: #000; }
   .answer-btn:hover { border-color: var(--neon-blue); background: rgba(0, 210, 255, 0.1); transform:translateY(-5px); }
@@ -442,8 +442,11 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     transform: scale(0.98) !important; 
 }
 
-.is-pending { background: #f59e0b !important; border-color: #f59e0b !important; color: white !important; transform: scale(1.03); }
-.is-correct { background: #22c55e !important; border-color: #22c55e !important; color: white !important; transform: scale(1.05) !important; box-shadow: 0 0 20px #22c55e; }
+.is-pending { background: #f59e0b !important; border-color: #f59e0b !important; color: white !important; transform: scale(1.02); }
+.is-correct { background: #22c55e !important; border-color: #22c55e !important; color: white !important; transform: scale(1.02) !important; box-shadow: 0 0 20px #22c55e; }
+@media (max-width: 1024px) {
+  .is-pending, .is-correct { transform: none !important; }
+}
 .is-wrong { background: #ef4444 !important; border-color: #ef4444 !important; color: white !important; animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
 
 @keyframes shake {
@@ -3180,7 +3183,11 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     .metrics-pill,
     .lab-metric-badge {
         width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        white-space: normal !important;
         text-align: center;
+        justify-content: center;
         font-size: 0.75rem !important;
         padding: 6px 10px !important;
     }
@@ -3942,17 +3949,25 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
 
 /* Mobil Cihazlar & Dar Ekranlar */
 @media (max-width: 768px) {
+    .metrics-pill.status {
+        white-space: normal !important;
+        text-align: center;
+        justify-content: center;
+        max-width: 100%;
+        box-sizing: border-box;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
     .lab-work-mode-row {
-        overflow-x: auto;
+        overflow-x: visible;
         padding-bottom: 4px;
-        -webkit-overflow-scrolling: touch;
     }
     .lab-mode-switch-group {
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
     }
     .lab-mode-switch-group .lab-toggle-btn {
-        flex: 0 0 auto;
-        white-space: nowrap;
+        flex: 1 1 auto;
+        white-space: normal;
         font-size: 0.88rem;
     }
     .lab-canvas-variables-bar {
@@ -5121,8 +5136,8 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
 }
 @media (max-width: 600px) {
     #admin-modal h2 { font-size: 24px !important; }
-    #admin-modal .modal-content > div:has(> h2), #admin-modal .admin-tabs { margin-bottom: 4px !important; flex-shrink: 0; }
-    #admin-modal .admin-tab-btn { font-size: 12px; padding: 6px 8px !important; }
+    #admin-modal .modal-content > div:has(> h2), #admin-modal .admin-tabs { margin-bottom: 4px !important; flex-shrink: 0; gap: 6px !important; }
+    #admin-modal .admin-tab-btn { flex: 1 1 0; min-width: 0 !important; font-size: 11px; padding: 6px 6px !important; text-align: center; justify-content: center; box-sizing: border-box; }
     #admin-panel-users > div:has(> #admin-search-input) { margin-bottom: 8px !important; flex-shrink: 0; }
     #admin-users-stats .admin-stat-card * { font-size: 10px !important; line-height: 1.1; }
     #admin-user-list .admin-user-row { position: relative; grid-template-columns: 110px minmax(0, 1fr); }

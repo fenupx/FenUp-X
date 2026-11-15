@@ -1962,7 +1962,8 @@ async function loadGradePool(grade) {
         return questionPoolCache[gKey];
     }
     try {
-        const res = await fetch(`${gKey}_sinif_sorular.json`);
+        const v = (typeof window !== 'undefined' && window.__FENUPX_CONTENT_V6_VERSION__) || '8.9.25';
+        const res = await fetch(`${gKey}_sinif_sorular.json?v=${encodeURIComponent(v)}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         const list = data && Array.isArray(data.questions) ? data.questions : (Array.isArray(data) ? data : []);
@@ -2205,7 +2206,7 @@ function applyRankedState() {
         const button=document.getElementById(`joker-${kind}`);
         if(button&&r.jokers?.[kind]){button.classList.add('is-used');button.style.opacity='0.5';button.style.pointerEvents='none';}
     }
-    const pause=document.getElementById('joker-pause');if(pause&&r.jokers?.pause&&!r.paused&&!isTimerPaused){pause.classList.add('is-used');pause.style.pointerEvents='none';}
+    const pause=document.getElementById('joker-pause');if(pause&&r.jokers?.pause&&!r.paused){pause.classList.add('is-used');pause.innerHTML='Kullanıldı';pause.style.background='';pause.style.opacity='0.5';pause.style.pointerEvents='none';}
     const display=document.getElementById('quiz-score');if(display)display.textContent=r.score;
 }
 function showRankedRetry(retry, error) {
@@ -2452,7 +2453,7 @@ async function renderIndividual() {
     
     const pauseBtn = document.getElementById('joker-pause');
     if(pauseBtn) {
-        if (pauseBtn.classList.contains('is-used')) { pauseBtn.innerHTML = "Kullanıldı"; pauseBtn.style.background = ""; pauseBtn.style.opacity = "0.5"; pauseBtn.style.pointerEvents = "none"; } else if (quizState.index >= 4) { if (pauseBtn.classList.contains('is-hidden')) { pauseBtn.classList.remove('is-hidden'); pauseBtn.classList.add('joker-spawn-anim'); } }
+        if (pauseBtn.classList.contains('is-used') || quizState.ranked?.state?.jokers?.pause) { pauseBtn.classList.add('is-used'); pauseBtn.innerHTML = "Kullanıldı"; pauseBtn.style.background = ""; pauseBtn.style.opacity = "0.5"; pauseBtn.style.pointerEvents = "none"; } else if (quizState.index >= 4) { if (pauseBtn.classList.contains('is-hidden')) { pauseBtn.classList.remove('is-hidden'); pauseBtn.classList.add('joker-spawn-anim'); } }
     }
     
     const qHint2 = document.getElementById('quiz-hint');
@@ -2700,7 +2701,7 @@ if(btnShowLb) {
             individualLeaderboard.forEach((p, i) => { 
                 let rankColor = i === 0 ? "#f59e0b" : i === 1 ? "#9ca3af" : i === 2 ? "#b45309" : "rgba(255,255,255,0.1)"; 
                 let badge = i === 0 ? "🥇 Galaksi Fatihi" : i === 1 ? "🥈 Yıldız Kaşifi" : i === 2 ? "🥉 Cesur Astronot" : "☄️ Uzay Yolcusu"; 
-                list.innerHTML += `<div style="display: flex; justify-content: space-between; font-size: 1.6rem; margin: 10px 0; padding: 15px 25px; background: ${rankColor}; border-radius:15px; font-weight: bold; align-items: center;"><div style="display:flex; flex-direction:column;"><span>${i+1}. ${p.name}</span><span style="font-size: 1rem; color: ${i<3 ? '#000' : '#00d2ff'};">${badge}</span></div><div style="text-align: right; font-size: 1.6rem;"><span style="color: ${i<3 ? '#000' : '#fff'};">${p.score} Puan</span></div></div>`; 
+                list.innerHTML += `<div style="display: flex; justify-content: space-between; font-size: 1.6rem; margin: 10px 0; padding: 15px 25px; background: ${rankColor}; border-radius:15px; font-weight: bold; align-items: center;"><div style="display:flex; flex-direction:column;"><span>${i+1}. ${escapeReviewHtml(p.name)}</span><span style="font-size: 1rem; color: ${i<3 ? '#000' : '#00d2ff'};">${badge}</span></div><div style="text-align: right; font-size: 1.6rem;"><span style="color: ${i<3 ? '#000' : '#fff'};">${p.score} Puan</span></div></div>`; 
             }); 
         }
         switchScene(scenes.quiz, scenes.leaderboard); 
@@ -2726,7 +2727,7 @@ if(jokerPause) {
         if(quizState.ranked){
             if(quizState.locked || isGlobalPaused)return;
             quizState.locked=true;
-            try {await quizState.ranked.action(isTimerPaused?'resume':'pause',{joker:true});applyRankedState();isTimerPaused=!isTimerPaused;this.textContent=isTimerPaused?'Süreyi Başlat ▶':'Kullanıldı';if(!isTimerPaused){this.classList.add('is-used');this.style.pointerEvents='none';startIndividualTimer(quizState.ranked.state.seconds);}quizState.locked=false;}
+            try {await quizState.ranked.action(isTimerPaused?'resume':'pause',{joker:true});applyRankedState();isTimerPaused=!isTimerPaused;this.textContent=isTimerPaused?'Süreyi Başlat ▶':'Kullanıldı';if(isTimerPaused){this.style.background='#22c55e';this.classList.remove('joker-spawn-anim');}else{this.classList.add('is-used');this.style.background='';this.style.opacity='0.5';this.style.pointerEvents='none';startIndividualTimer(quizState.ranked.state.seconds);}quizState.locked=false;}
             catch(e){showRankedRetry(()=>renderIndividual(),e);}return;
         }
         if(quizState.locked || isGlobalPaused) return; this.blur(); if(!isTimerPaused) { isTimerPaused = true; this.innerHTML = "Süreyi Başlat ▶"; this.style.background = "#22c55e"; this.classList.add('is-used'); this.classList.remove('joker-spawn-anim'); stopSound(sfx.bgm); } else { isTimerPaused = false; this.innerHTML = "Kullanıldı"; this.style.background = ""; this.style.opacity = "0.5"; this.style.pointerEvents = "none"; playSound(sfx.bgm); } };
@@ -2763,6 +2764,16 @@ if(jokerPass) {
             this.classList.add('is-used'); 
             this.style.opacity = "0.5"; 
             this.style.pointerEvents = "none";
+            if (isTimerPaused) {
+                isTimerPaused = false;
+                const pauseBtn = document.getElementById('joker-pause');
+                if (pauseBtn && pauseBtn.classList.contains('is-used')) {
+                    pauseBtn.innerHTML = "Kullanıldı";
+                    pauseBtn.style.background = "";
+                    pauseBtn.style.opacity = "0.5";
+                    pauseBtn.style.pointerEvents = "none";
+                }
+            }
             renderIndividual(); 
         } else {
             alert("Havuzda değiştirilebilecek başka soru kalmadı!");
@@ -2882,7 +2893,7 @@ function revealTeamsForVoting() {
             card.className = `t-team-card tournament-group-card ${t.isEliminated ? 'eliminated' : ''} ${t.isOnFire ? 'on-fire' : ''}`;
             card.id = `t-card-${t.id}`;
             card.innerHTML = `
-                <h3>${t.name}</h3>
+                <h3>${escapeReviewHtml(t.name)}</h3>
                 <div class="t-score" id="t-score-${t.id}"></div>
                 <div class="t-answers active tournament-answers-group" id="t-ans-group-${t.id}">
                     <button class="t-ans-btn" data-tid="${t.id}" data-opt="A">A</button>
@@ -3048,7 +3059,7 @@ function showIntermediateLeaderboard() {
         let rankColor = index === 0 ? "#f59e0b" : index === 1 ? "#9ca3af" : index === 2 ? "#b45309" : "rgba(255,255,255,0.1)";
         list.innerHTML += `
             <div class="slide-up-anim" style="display: flex; justify-content: space-between; font-size: 1.8rem; margin: 10px 0; padding: 20px 30px; background: ${rankColor}; border-radius:15px; font-weight: bold; align-items: center; border-left: 10px solid var(--neon-blue);">
-                <span>${index + 1}. ${t.name} ${t.isOnFire ? '🔥' : ''}</span>
+                <span>${index + 1}. ${escapeReviewHtml(t.name)} ${t.isOnFire ? '🔥' : ''}</span>
                 <span style="color: ${index < 3 ? '#000' : 'var(--neon-blue)'};">${t.score} PUAN</span>
             </div>
         `;
@@ -3165,7 +3176,7 @@ function renderDuelQuestion() {
             const card = document.createElement('div');
             card.className = "t-team-card tournament-group-card"; card.id = `t-card-${t.id}`;
             card.innerHTML = `
-                <h3>${t.name}</h3>
+                <h3>${escapeReviewHtml(t.name)}</h3>
                 <div class="t-answers active tournament-answers-group" id="t-ans-group-${t.id}">
                     <button class="t-ans-btn" data-tid="${t.id}" data-opt="A">A</button>
                     <button class="t-ans-btn" data-tid="${t.id}" data-opt="B">B</button>
@@ -7281,7 +7292,7 @@ async function loadGlobalLeaderboard(type = 'weekly') {
                 if (score > 0) {
                     const uidKey = data.uid || item.id;
                     const normNick = (data.nickname || '').trim().toLowerCase();
-                    const mapKey = normNick || uidKey;
+                    const mapKey = uidKey || normNick;
                     userMap.set(mapKey, {
                         ...data,
                         uid: uidKey,
@@ -7312,10 +7323,19 @@ async function loadGlobalLeaderboard(type = 'weekly') {
             legacyUsers.forEach(lu => {
                 const legScore = Number(lu.displayScore) || 0;
                 if (legScore <= 0) return;
+                const legUid = lu.uid || lu.id;
                 const normNick = (lu.nickname || '').trim().toLowerCase();
-                const mapKey = normNick || lu.uid || lu.id;
-                if (mapKey && userMap.has(mapKey)) {
-                    const existing = userMap.get(mapKey);
+                const mapKey = legUid || normNick;
+                let existing = mapKey ? userMap.get(mapKey) : null;
+                if (!existing && !legUid && normNick) {
+                    for (const entry of userMap.values()) {
+                        if ((entry.nickname || '').trim().toLowerCase() === normNick && !entry.legacyScore) {
+                            existing = entry;
+                            break;
+                        }
+                    }
+                }
+                if (existing) {
                     existing.legacyScore = legScore;
                     // Haftalık, aylık ve alltime: Geçiş öncesi legacy puanı ile geçiş sonrası cohort puanı ayrı kazanımlardır, toplanır.
                     existing.displayScore = (existing.cohortScore || 0) + legScore;
@@ -7323,6 +7343,7 @@ async function loadGlobalLeaderboard(type = 'weekly') {
                 } else if (mapKey) {
                     userMap.set(mapKey, {
                         ...lu,
+                        uid: legUid || '',
                         nickname: lu.nickname || '',
                         avatar: lu.avatar || '',
                         cohortScore: 0,
