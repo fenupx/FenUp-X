@@ -314,6 +314,54 @@
     ]
   },
   {
+    "experiment_id": "5.11",
+    "grade": 5,
+    "unit": 3,
+    "output_codes": [
+      "FB.5.3.1"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/388",
+    "textbook_name": "Fen Bilimleri - 5 Ders Kitabı (1. Kitap)",
+    "textbook_pdf_pages": "95-102",
+    "textbook_printed_pages": "93-100",
+    "activity_title": "Mikroskopla Bitki ve Hayvan Hücresi Gözlemi",
+    "expected_observation": "Soğan zarı (bitki) hücresinin köşeli yapıda olup hücre duvarı taşıdığı; ağız içi epitel (hayvan) hücresinin yuvarlağımsı olup hücre duvarı taşımadığı; her ikisinde de hücre zarı, sitoplazma ve çekirdeğin bulunduğu gözlemlenir.",
+    "independent_variable": "İncelenen hücre örneği (bitki vs hayvan) ve mikroskop büyütme oranı",
+    "dependent_variable": "Gözlemlenen hücre şekli ve temel kısımlar",
+    "controlled_variables": ["Işık mikroskobu aydınlatması"],
+    "scope_exclusions": ["Endoplazmik retikulum, golgi ve lizozom gibi ayrıntılı organel görevleri 5. sınıfta verilmez"],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Bitki ve hayvan hücrelerinde ortak olarak bulunan üç temel kısım nedir?",
+      "Bitki hücresini şekil ve dış yapı bakımından hayvan hücresinden ayıran özellik nedir?"
+    ]
+  },
+  {
+    "experiment_id": "5.12",
+    "grade": 5,
+    "unit": 4,
+    "output_codes": [
+      "FB.5.4.2"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/399",
+    "textbook_name": "Fen Bilimleri - 5 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "28-33",
+    "textbook_printed_pages": "26-31",
+    "activity_title": "Maddelerin Işığı Geçirme Durumu (Saydam, Yarı Saydam, Opak)",
+    "expected_observation": "Cam gibi saydam maddelerin ışığı geçirerek arkadaki cismi net gösterdiği; yağlı kâğıt gibi yarı saydam maddelerin ışığı kısmen geçirip bulanık görüntü verdiği; tahta gibi opak maddelerin ise ışığı hiç geçirmeyip gölge oluşturduğu gözlemlenir.",
+    "independent_variable": "Işık önüne konulan maddenin cinsi",
+    "dependent_variable": "Işığın geçme oranı ve arkadaki cismin görünürlüğü",
+    "controlled_variables": ["Işık kaynağı şiddeti", "Cisim-perde mesafesi"],
+    "scope_exclusions": ["Işığın kırılma indisi hesaplamaları"],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Saydam, yarı saydam ve opak maddelere günlük yaşamdan birer örnek veriniz.",
+      "Tam gölge oluşabilmesi için ışığın önüne hangi tür madde konulmalıdır?"
+    ]
+  },
+  {
     "experiment_id": "6.1",
     "grade": 6,
     "unit": 1,
@@ -626,6 +674,31 @@
     ]
   },
   {
+    "experiment_id": "6.11",
+    "grade": 6,
+    "unit": 4,
+    "output_codes": [
+      "FB.6.4.5",
+      "FB.6.4.6"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/412",
+    "textbook_name": "Fen Bilimleri - 6 Ders Kitabı (1. Kitap)",
+    "textbook_pdf_pages": "166-174",
+    "textbook_printed_pages": "164-172",
+    "activity_title": "Newton Renk Çarkı ve Renkli Işık Altında Cisimlerin Görünümü",
+    "expected_observation": "Gökkuşağı renklerinden oluşan Newton çarkı hızla döndürüldüğünde beyaz renkte algılandığı; cisimlerin ise kendi rengindeki ışığı yansıtıp diğer renkleri soğurması nedeniyle farklı renkli ışıklar altında farklı (veya siyah) göründüğü gözlemlenir.",
+    "independent_variable": "Çarkın dönme hızı ve aydınlatan ışık kaynağının rengi",
+    "dependent_variable": "Algılanan renk",
+    "controlled_variables": ["Cisimlerin kendi yüzey rengi"],
+    "scope_exclusions": ["Işık dalga boyu (nm) ve frekans hesaplamaları"],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Newton renk çarkı hızlı döndürüldüğünde neden beyaz renkte görünür?",
+      "Kırmızı renkli bir elmaya mavi ışık tutulduğunda elma hangi renkte görünür? Neden?"
+    ]
+  },
+  {
     "experiment_id": "7.1",
     "grade": 7,
     "unit": 2,
@@ -761,13 +834,13 @@
     "textbook_name": "Fen Bilimleri - 7 Ders Kitabı (2. Kitap)",
     "textbook_pdf_pages": "91-95",
     "textbook_printed_pages": "90-94",
-    "activity_title": "Karışımların Ayrılması (Ayırma Hunisi ve Ayrımsal Damıtma)",
-    "expected_observation": "Zeytinyağı-su gibi birbirine karışmayan heterojen sıvıların ayırma hunisinde yoğunluk farkıyla alt katmanın musluktan akıtılarak ayrıldığı; alkol-su gibi homojen sıvı karışımların ise ayrımsal damıtma düzeneğinde kaynama noktası farkıyla buharlaşıp yoğuşturularak ayrıldığı gözlemlenir.",
-    "independent_variable": "Karışımın türü (heterojen emülsiyon vs homojen çözelti)",
-    "dependent_variable": "Kullanılan ayırma yöntemi (yoğunluk farkı / kaynama noktası farkı) ve ayrılan bileşenler",
+    "activity_title": "Karışımların Ayrılması (Ayırma Hunisi, Ayrımsal Damıtma ve Buharlaştırma)",
+    "expected_observation": "Zeytinyağı-su gibi birbirine karışmayan heterojen sıvıların ayırma hunisinde yoğunluk farkıyla ayrıldığı; alkol-su gibi homojen sıvı karışımların ayrımsal damıtma ile kaynama noktası farkından yararlanılarak ayrıldığı; tuzlu su gibi katı-sıvı çözeltilerden ise suyun buharlaştırılmasıyla tuz kristallerinin elde edildiği gözlemlenir.",
+    "independent_variable": "Karışımın türü (heterojen emülsiyon vs homojen sıvı-sıvı vs katı-sıvı çözelti)",
+    "dependent_variable": "Kullanılan ayırma yöntemi (yoğunluk farkı / kaynama noktası farkı / buharlaştırma) ve ayrılan bileşenler",
     "controlled_variables": [
       "Karışım hacimleri",
-      "Soğutucu kondenser devresi"
+      "Ortam basıncı"
     ],
     "scope_exclusions": [
       "Azeotropik karışım dersi",
@@ -775,8 +848,8 @@
     ],
     "verified_status": "verified",
     "evaluation_questions": [
-      "Zeytinyağı-su gibi heterojen sıvı-sıvı karışımlar ile etil alkol-su gibi homojen sıvı-sıvı karışımlar hangi yöntemlerle ayrılır?",
-      "Ayırma hunisinde ve ayrımsal damıtmada yararlanılan temel fiziksel özellik farkları nelerdir?"
+      "Zeytinyağı-su, etil alkol-su ve tuzlu su karışımları hangi yöntemlerle ayrılır?",
+      "Ayırma hunisinde, ayrımsal damıtmada ve buharlaştırmada yararlanılan temel özellikler nelerdir?"
     ]
   },
   {

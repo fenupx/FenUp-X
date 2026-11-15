@@ -57,8 +57,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@500;600;700&family=Kalam:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8.9.25">
-    <link rel="stylesheet" href="exam.css?v=8.9.25">
+    <link rel="stylesheet" href="style.css?v=8.9.26">
+    <link rel="stylesheet" href="exam.css?v=8.9.26">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -422,32 +422,94 @@
     <div id="lab-view" class="scene is-hidden glass-panel full-width lab-view-scene">
         <!-- 1. Laboratuvar Katalog Görünümü (#lab-catalog-view) -->
         <div id="lab-catalog-view" class="lab-subview is-hidden">
-            <div class="lab-nav-header">
-                <button id="btn-lab-back-home" class="back-link btn-back-home btn-lab-nav-home" aria-label="Ana Sayfaya Dön"><i class="fas fa-arrow-left"></i> <span>Ana Sayfa</span></button>
-                <div class="lab-title-group">
-                    <h2 class="lab-main-heading"><i class="fas fa-flask"></i> Sanal Bilim Laboratuvarı</h2>
-                    <p class="lab-subheading">Türkiye Yüzyılı Maarif Modeli fen etkinlikleri ve dokunmatik deney simülasyonları</p>
+            <!-- ADIM 1: Sade Sınıf Seçim Karşılaması -->
+            <div id="lab-welcome-screen" class="lab-welcome-screen">
+                <div class="lab-nav-header">
+                    <button id="btn-lab-back-home" class="back-link btn-back-home btn-lab-nav-home" aria-label="Ana Sayfaya Dön"><i class="fas fa-arrow-left"></i> <span>Ana Sayfa</span></button>
+                    <div class="lab-title-group">
+                        <h2 class="lab-main-heading"><i class="fas fa-flask"></i> Sanal Bilim Laboratuvarı</h2>
+                        <p class="lab-subheading">Sınıfını seç, ders kitabındaki etkinlikleri etkileşimli deneylerle adım adım keşfet.</p>
+                    </div>
+                    <div class="lab-header-spacer"></div>
                 </div>
-                <div class="lab-header-spacer"></div>
+
+                <div class="lab-welcome-grid">
+                    <button type="button" class="lab-welcome-card" data-grade="5">
+                        <div class="lab-welcome-icon"><i class="fas fa-atom"></i></div>
+                        <h3 class="lab-welcome-grade">5. Sınıf</h3>
+                        <p class="lab-welcome-meta" id="lab-welcome-meta-5">5 Ünite • 12 İnteraktif Deney</p>
+                        <span class="lab-welcome-cta">Deneylere Başla <i class="fas fa-arrow-right"></i></span>
+                    </button>
+                    <button type="button" class="lab-welcome-card" data-grade="6">
+                        <div class="lab-welcome-icon"><i class="fas fa-microscope"></i></div>
+                        <h3 class="lab-welcome-grade">6. Sınıf</h3>
+                        <p class="lab-welcome-meta" id="lab-welcome-meta-6">6 Ünite • 11 İnteraktif Deney</p>
+                        <span class="lab-welcome-cta">Deneylere Başla <i class="fas fa-arrow-right"></i></span>
+                    </button>
+                    <button type="button" class="lab-welcome-card" data-grade="7">
+                        <div class="lab-welcome-icon"><i class="fas fa-dna"></i></div>
+                        <h3 class="lab-welcome-grade">7. Sınıf</h3>
+                        <p class="lab-welcome-meta" id="lab-welcome-meta-7">5 Ünite • 10 İnteraktif Deney</p>
+                        <span class="lab-welcome-cta">Deneylere Başla <i class="fas fa-arrow-right"></i></span>
+                    </button>
+                    <div class="lab-welcome-card disabled" aria-disabled="true" title="Eylül 2027'de eklenecek">
+                        <div class="lab-welcome-icon"><i class="fas fa-lock"></i></div>
+                        <h3 class="lab-welcome-grade">8. Sınıf</h3>
+                        <p class="lab-welcome-meta">Yakında • Eylül 2027</p>
+                        <span class="lab-welcome-cta muted">Hazırlanıyor</span>
+                    </div>
+                </div>
+
+                <div class="lab-welcome-steps" aria-label="Kullanım Adımları">
+                    <span><strong>1.</strong> Sınıf Seç</span>
+                    <span class="step-dot" aria-hidden="true">•</span>
+                    <span><strong>2.</strong> Deneyi Başlat</span>
+                    <span class="step-dot" aria-hidden="true">•</span>
+                    <span><strong>3.</strong> Gözlem Kaydet</span>
+                </div>
             </div>
 
-            <!-- Sınıf Seçici: [ 5. Sınıf ] - [ 6. Sınıf ] - [ 7. Sınıf ] -->
-            <div class="lab-grade-selector">
-                <button class="lab-grade-btn" data-grade="5"><i class="fas fa-atom"></i> 5. Sınıf</button>
-                <button class="lab-grade-btn" data-grade="6"><i class="fas fa-microscope"></i> 6. Sınıf</button>
-                <button class="lab-grade-btn active" data-grade="7"><i class="fas fa-dna"></i> 7. Sınıf</button>
-            </div>
+            <!-- ADIM 2: Sınıf İçi Deney Kataloğu -->
+            <div id="lab-grade-catalog" class="lab-grade-catalog is-hidden">
+                <div class="lab-nav-header">
+                    <button id="btn-lab-back-welcome" class="back-link btn-lab-nav-welcome" aria-label="Sınıf Seçimine Dön"><i class="fas fa-arrow-left"></i> <span>Sınıflar</span></button>
+                    <div class="lab-title-group">
+                        <h2 class="lab-main-heading" id="lab-grade-catalog-title"><i class="fas fa-flask"></i> 7. Sınıf Laboratuvarı</h2>
+                        <p class="lab-subheading" id="lab-grade-catalog-sub">Üniteye göre seç veya deney ara</p>
+                    </div>
+                    <div class="lab-header-spacer"></div>
+                </div>
 
-            <!-- Ünite Filtresi (Yatay Kaydırılabilir Rozetler) -->
-            <div class="lab-unit-filter-container">
-                <div class="lab-unit-pills" id="lab-unit-pills">
+                <!-- Üst Araç Çubuğu: Sınıf Geçişi + Arama + Görünüm Anahtarı -->
+                <div class="lab-catalog-toolbar">
+                    <div class="lab-grade-selector">
+                        <button class="lab-grade-btn" data-grade="5"><i class="fas fa-atom"></i> 5. Sınıf</button>
+                        <button class="lab-grade-btn" data-grade="6"><i class="fas fa-microscope"></i> 6. Sınıf</button>
+                        <button class="lab-grade-btn active" data-grade="7"><i class="fas fa-dna"></i> 7. Sınıf</button>
+                    </div>
+                    <div class="lab-toolbar-controls">
+                        <div class="lab-search-box">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                            <input type="search" id="lab-search-input" placeholder="Deney veya konu ara..." aria-label="Deney veya konu ara">
+                        </div>
+                        <div class="lab-view-toggle" role="group" aria-label="Görünüm Modu">
+                            <button type="button" class="lab-view-btn active" id="btn-lab-view-unit" data-view="unit"><i class="fas fa-folder-open"></i> Üniteye Göre</button>
+                            <button type="button" class="lab-view-btn" id="btn-lab-view-flat" data-view="flat"><i class="fas fa-th-large"></i> Tüm Deneyler</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ünite Filtresi (Yatay Kaydırılabilir Rozetler) -->
+                <div class="lab-unit-filter-container" id="lab-unit-filter-container">
+                    <div class="lab-unit-pills" id="lab-unit-pills">
+                        <!-- Dinamik dolacak -->
+                    </div>
+                </div>
+
+                <!-- Deney Bölümleri / Kartları -->
+                <div class="lab-catalog-sections" id="lab-cards-grid">
                     <!-- Dinamik dolacak -->
                 </div>
-            </div>
-
-            <!-- Deney Kartları Grid Yapısı -->
-            <div class="lab-cards-grid" id="lab-cards-grid">
-                <!-- Dinamik dolacak -->
             </div>
         </div>
 
@@ -747,6 +809,30 @@
                         <div class="metrics-pill status" id="mbar-510-status">⚡ Pil sayısı arttıkça parlaklık artar; ampul sayısı arttıkça parlaklık azalır</div>
                     </div>
 
+                    <!-- Canvas Altı Responsive Metrik Şeridi (Deney 5.11 - Mikroskopla Hücre Gözlemi) -->
+                    <div id="metrics-bar-5-11" class="lab-canvas-metrics-bar is-hidden">
+                        <div class="metrics-pill" style="color: #10b981;"><i class="fas fa-microscope"></i> Numune: <strong id="mbar-511-specimen">Soğan Zarı (Bitki)</strong></div>
+                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-search-plus"></i> Büyütme: <strong id="mbar-511-zoom">40x</strong></div>
+                        <div class="metrics-pill" style="color: #facc15;"><i class="fas fa-eye"></i> Netlik: <strong id="mbar-511-focus">%100 (Net)</strong></div>
+                        <div class="metrics-pill status" id="mbar-511-status">🔬 Bitki hücresinde hücre duvarı ve köşeli yapı gözlemlenir</div>
+                    </div>
+
+                    <!-- Canvas Altı Responsive Metrik Şeridi (Deney 5.12 - Saydam, Yarı Saydam, Opak) -->
+                    <div id="metrics-bar-5-12" class="lab-canvas-metrics-bar is-hidden">
+                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-shield-alt"></i> Malzeme: <strong id="mbar-512-material">Pencere Camı</strong></div>
+                        <div class="metrics-pill" style="color: #facc15;"><i class="fas fa-sun"></i> Işık Geçirgenliği: <strong id="mbar-512-type">Saydam (Tam Geçer)</strong></div>
+                        <div class="metrics-pill" style="color: #cbd5e1;"><i class="fas fa-eye"></i> Arkadaki Cisim: <strong id="mbar-512-clarity">Net Görünür</strong></div>
+                        <div class="metrics-pill status" id="mbar-512-status">💡 Saydam maddeler ışığın tamamına yakınını geçirir</div>
+                    </div>
+
+                    <!-- Canvas Altı Responsive Metrik Şeridi (Deney 6.11 - Newton Renk Çarkı ve Renkli Işıklar) -->
+                    <div id="metrics-bar-6-11" class="lab-canvas-metrics-bar is-hidden">
+                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-palette"></i> Mod: <strong id="mbar-611-mode">Newton Renk Çarkı</strong></div>
+                        <div class="metrics-pill" style="color: #facc15;"><i class="fas fa-tachometer-alt"></i> Durum: <strong id="mbar-611-state">Durgun (7 Renk)</strong></div>
+                        <div class="metrics-pill" style="color: #10b981;"><i class="fas fa-eye"></i> Algılanan Renk: <strong id="mbar-611-perceived">Renkler Ayrı Görünür</strong></div>
+                        <div class="metrics-pill status" id="mbar-611-status">🌈 Çark hızlandıkça tüm renkler birleşip beyaz görünür</div>
+                    </div>
+
                     <!-- Canvas Altı Hızlı Dokunmatik Açı Kontrol Barı (Deney 7.3) -->
                     <div id="quick-controls-7-3" class="lab-canvas-quick-controls">
                         <button class="lab-btn-step" id="btn-angle-minus-5" title="-5 Derece">-5°</button>
@@ -897,8 +983,9 @@
                     <div id="quick-controls-7-5" class="lab-canvas-quick-controls is-hidden">
                         <div class="lab-quick-lens-row">
                             <div class="lab-toggle-btn-group" id="group-modes-7-5">
-                                <button class="lab-toggle-btn active" id="btn-mode-funnel" title="Ayırma Hunisi ile Yoğunluk Farkı"><i class="fas fa-filter"></i> 🧪 Ayırma Hunisi (Yoğunluk)</button>
-                                <button class="lab-toggle-btn" id="btn-mode-distill" title="Ayrımsal Damıtma ile Kaynama Noktası Farkı"><i class="fas fa-fire"></i> 🔥 Ayrımsal Damıtma (K.N. Farkı)</button>
+                                <button class="lab-toggle-btn active" id="btn-mode-funnel" title="Ayırma Hunisi ile Yoğunluk Farkı"><i class="fas fa-filter"></i> 🧪 Ayırma Hunisi</button>
+                                <button class="lab-toggle-btn" id="btn-mode-distill" title="Ayrımsal Damıtma ile Kaynama Noktası Farkı"><i class="fas fa-fire"></i> 🔥 Ayrımsal Damıtma</button>
+                                <button class="lab-toggle-btn" id="btn-mode-evap" title="Buharlaştırma ile Tuz-Su Ayrılması"><i class="fas fa-sun"></i> 🧂 Buharlaştırma (Tuz-Su)</button>
                             </div>
                             <div class="lab-toggle-btn-group" id="group-controls-funnel">
                                 <button class="lab-toggle-btn active" id="btn-funnel-valve" title="Musluğu Aç / Kapat"><i class="fas fa-faucet"></i> <span id="label-funnel-valve">Musluğu Aç</span></button>
@@ -907,6 +994,10 @@
                             <div class="lab-toggle-btn-group is-hidden" id="group-controls-distill">
                                 <button class="lab-toggle-btn active" id="btn-distill-heater" title="Isıtıcıyı Başlat / Durdur"><i class="fas fa-fire-alt"></i> <span id="label-distill-heater">Isıtıcıyı Başlat</span></button>
                                 <button class="lab-toggle-btn" id="btn-distill-reset" title="Düzeneği Sıfırla"><i class="fas fa-redo"></i> Düzeneği Sıfırla</button>
+                            </div>
+                            <div class="lab-toggle-btn-group is-hidden" id="group-controls-evap">
+                                <button class="lab-toggle-btn active" id="btn-evap-heater" title="Buharlaştırma Isıtıcısını Başlat / Durdur"><i class="fas fa-fire-alt"></i> <span id="label-evap-heater">Isıtıcıyı Başlat</span></button>
+                                <button class="lab-toggle-btn" id="btn-evap-reset" title="Buharlaştırma Kabını Sıfırla"><i class="fas fa-redo"></i> Düzeneği Sıfırla</button>
                             </div>
                         </div>
                     </div>
@@ -1365,6 +1456,61 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Canvas Altı Hızlı Kontroller (Deney 5.11 - Mikroskopla Hücre Gözlemi) -->
+                    <div id="quick-controls-5-11" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-511-plant" title="Soğan Zarı (Bitki Hücresi)">🌱 Bitki Hücresi</button>
+                                <button class="lab-toggle-btn" id="btn-511-animal" title="Ağız İçi Epitel (Hayvan Hücresi)">🧬 Hayvan Hücresi</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn" id="btn-511-zoom-10">10x</button>
+                                <button class="lab-toggle-btn active" id="btn-511-zoom-40">40x</button>
+                                <button class="lab-toggle-btn" id="btn-511-zoom-100">100x</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-511-labels" title="Yapı Etiketlerini Göster / Gizle"><i class="fas fa-tags"></i> Etiketler</button>
+                                <button class="lab-toggle-btn" id="btn-511-reset"><i class="fas fa-redo"></i> Sıfırla</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Altı Hızlı Kontroller (Deney 5.12 - Saydam, Yarı Saydam, Opak) -->
+                    <div id="quick-controls-5-12" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-512-transparent" title="Pencere Camı (Saydam)">🪟 Saydam (Cam)</button>
+                                <button class="lab-toggle-btn" id="btn-512-translucent" title="Yağlı Kâğıt / Buzlu Cam (Yarı Saydam)">📜 Yarı Saydam</button>
+                                <button class="lab-toggle-btn" id="btn-512-opaque" title="Tahta Levha (Opak)">🪵 Opak (Tahta)</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-512-light" title="El Fenerini Aç / Kapat"><i class="fas fa-lightbulb"></i> <span id="label-512-light">Fener: Açık</span></button>
+                                <button class="lab-toggle-btn" id="btn-512-reset"><i class="fas fa-redo"></i> Sıfırla</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Altı Hızlı Kontroller (Deney 6.11 - Newton Renk Çarkı ve Renkli Işıklar) -->
+                    <div id="quick-controls-6-11" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-611-mode-wheel" title="Newton Renk Çarkı">🎡 Newton Çarkı</button>
+                                <button class="lab-toggle-btn" id="btn-611-mode-filter" title="Renkli Işık Altında Cisimler">💡 Renkli Işıklar</button>
+                            </div>
+                            <div class="lab-toggle-btn-group" id="group-611-wheel-ctrl">
+                                <button class="lab-toggle-btn" id="btn-611-spin-toggle"><i class="fas fa-play"></i> <span id="label-611-spin">Çarkı Döndür</span></button>
+                                <button class="lab-toggle-btn" id="btn-611-speed-max">⚡ Tam Hız (Beyaz)</button>
+                                <button class="lab-toggle-btn" id="btn-611-reset"><i class="fas fa-redo"></i> Sıfırla</button>
+                            </div>
+                            <div class="lab-toggle-btn-group is-hidden" id="group-611-filter-ctrl">
+                                <button class="lab-toggle-btn active" id="btn-611-light-white">⚪ Beyaz Işık</button>
+                                <button class="lab-toggle-btn" id="btn-611-light-red">🔴 Kırmızı</button>
+                                <button class="lab-toggle-btn" id="btn-611-light-green">🟢 Yeşil</button>
+                                <button class="lab-toggle-btn" id="btn-611-light-blue">🔵 Mavi</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- SAĞ/ALT (%35): Kontrol Paneli & Veri Tablosu -->
@@ -1704,6 +1850,26 @@
                                     <div class="lab-stat-chip">
                                         <span class="chip-label">Balondaki Sıvı</span>
                                         <strong class="chip-val" id="metric-distill-flask-liquid" style="color: #a78bfa;">200.0 mL</strong>
+                                    </div>
+                                </div>
+
+                                <!-- Buharlaştırma Metrikleri -->
+                                <div class="lab-stats-grid is-hidden" id="stats-grid-evap">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Çözelti Sıcaklığı</span>
+                                        <strong class="chip-val" id="metric-evap-temp" style="color: #fb923c;">20.0 °C</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Buharlaşan Su</span>
+                                        <strong class="chip-val" id="metric-evap-water" style="color: #38bdf8;">0.0 mL</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Kalan Su</span>
+                                        <strong class="chip-val" id="metric-evap-remain" style="color: #2dd4bf;">100.0 mL</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Elde Edilen Tuz</span>
+                                        <strong class="chip-val" id="metric-evap-salt" style="color: #facc15;">0.0 g</strong>
                                     </div>
                                 </div>
 
@@ -3418,6 +3584,94 @@
                             </div>
                         </div>
 
+                        <!-- DENEY 5.11 DEĞİŞKENLERİ: MİKROSKOPLA HÜCRE GÖZLEMİ -->
+                        <div id="vars-container-5-11" class="is-hidden">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> İncelenen Hücre Türü (Bitki / Hayvan) ve Büyütme Oranı</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Gözlemlenen Temel Kısımlar (Hücre Duvarı, Zar, Sitoplazma, Çekirdek)</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Işık Mikroskobu Aydınlatması</div>
+                                </div>
+                            </div>
+                            <div class="lab-pedagogical-card is-work" id="cell-pedagogical-box" style="margin-top: 12px;">
+                                <div class="pedagogical-icon"><i class="fas fa-microscope"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="cell-pedagogical-title">🌱 Bitki Hücresi (Soğan Zarı)</strong>
+                                    <p id="cell-pedagogical-text">Köşeli yapıdadır ve hücre zarının dışında koruyucu hücre duvarı (çeper) bulunur. Hücre zarı, sitoplazma ve çekirdek tüm hücrelerde ortaktır.</p>
+                                </div>
+                            </div>
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Mikroskop İnce Ayar</h4>
+                                <label class="lab-field-label" for="slider-511-focus">Netlik (Vidalı Odak): <strong id="label-511-focus">%100</strong></label>
+                                <input type="range" id="slider-511-focus" min="20" max="100" value="100" step="5" style="width: 100%;">
+                                <button id="btn-record-data-5-11" class="action-btn lab-record-action-btn" style="margin-top: 14px;"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 5.12 DEĞİŞKENLERİ: SAYDAM, YARI SAYDAM, OPAK -->
+                        <div id="vars-container-5-12" class="is-hidden">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Işık Önüne Konulan Maddenin Cinsi (Cam, Yağlı Kâğıt, Tahta)</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Geçen Işık Miktarı ve Arkadaki Cismin Görünürlüğü</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Işık Kaynağı Şiddeti ve Mesafeler</div>
+                                </div>
+                            </div>
+                            <div class="lab-pedagogical-card is-work" id="trans-pedagogical-box" style="margin-top: 12px;">
+                                <div class="pedagogical-icon"><i class="fas fa-sun"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="trans-pedagogical-title">🪟 Saydam Madde (Pencere Camı)</strong>
+                                    <p id="trans-pedagogical-text">Üzerine düşen ışığın tamamına yakınını geçirir; arkasındaki cisimler net şekilde görülür ve gölge oluşmaz.</p>
+                                </div>
+                            </div>
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Işık Geçirgenliği Ölçümü</h4>
+                                <div class="lab-stats-grid">
+                                    <div class="lab-stat-chip"><span class="chip-label">Sınıflandırma</span><strong class="chip-val" id="metric-512-class" style="color:#38bdf8;">Saydam</strong></div>
+                                    <div class="lab-stat-chip"><span class="chip-label">Gölge Durumu</span><strong class="chip-val" id="metric-512-shadow" style="color:#10b981;">Gölge Oluşmaz</strong></div>
+                                </div>
+                                <button id="btn-record-data-5-12" class="action-btn lab-record-action-btn" style="margin-top: 14px;"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 6.11 DEĞİŞKENLERİ: NEWTON RENK ÇARKI VE RENKLİ IŞIKLAR -->
+                        <div id="vars-container-6-11" class="is-hidden">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Çarkın Dönme Hızı (Mod 1) / Aydınlatan Işık Rengi (Mod 2)</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Çarkın Algılanan Rengi / Cisimlerin Görünen Rengi</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Ortam Aydınlatması ve Cisimlerin Gerçek Renkleri</div>
+                                </div>
+                            </div>
+                            <div class="lab-pedagogical-card is-work" id="color-pedagogical-box" style="margin-top: 12px;">
+                                <div class="pedagogical-icon"><i class="fas fa-palette"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="color-pedagogical-title">🎡 Newton Renk Çarkı</strong>
+                                    <p id="color-pedagogical-text">Beyaz ışık prizmadan geçirildiğinde kırmızı, turuncu, sarı, yeşil, mavi ve mor renklere ayrılır. Çark hızla döndüğünde bu renkler gözümüzde birleşerek beyaz görünür.</p>
+                                </div>
+                            </div>
+                            <div class="lab-panel-box" id="box-611-wheel-params" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Çark Dönme Hızı</h4>
+                                <label class="lab-field-label" for="slider-611-speed">Dönme Hızı: <strong id="label-611-speed">0 dev/dk (Durgun)</strong></label>
+                                <input type="range" id="slider-611-speed" min="0" max="100" value="0" step="5" style="width: 100%;">
+                            </div>
+                            <div class="lab-panel-box is-hidden" id="box-611-object-params" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-cube"></i> Aydınlatılan Cisim Seçimi</h4>
+                                <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                                    <button class="lab-select-pill active" id="pill-611-obj-white">⬜ Beyaz Top</button>
+                                    <button class="lab-select-pill" id="pill-611-obj-red">🟥 Kırmızı Elma</button>
+                                    <button class="lab-select-pill" id="pill-611-obj-green">🟩 Yeşil Yaprak</button>
+                                    <button class="lab-select-pill" id="pill-611-obj-blue">🟦 Mavi Kitap</button>
+                                </div>
+                            </div>
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <button id="btn-record-data-6-11" class="action-btn lab-record-action-btn"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- TAB 2: VERİ DEFTERİ VE ÖLÇÜM TABLOSU -->
@@ -3569,8 +3823,12 @@
                                     <p>Alkol-su çözeltisi ısıtıldığında kaynama noktası daha düşük olan <strong>etil alkol (78 °C)</strong> suyla birlikte ancak çok daha yoğun biçimde buharlaşmaya başlar. Karışım saf bir madde olmadığı için ayırma süresince sıcaklık 78 °C'de tamamen sabit kalmaz; alkol oranı azaldıkça karışımın sıcaklığı yavaşça yükselir ve toplama kabında <strong>alkolce zengin damıtık sıvı</strong> elde edilir.</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>5. Günlük Hayat ve Endüstrideki Uygulamalar:</strong>
-                                    <p>Petrol rafinerilerinde ham petrolün benzin, mazot, gaz yağı ve asfalta ayrıştırılmasında <strong>ayrımsal damıtma</strong> kullanılır. Zeytinyağı fabrikalarında zeytin suyu ile yağın ayrılmasında <strong>yoğunluk farkı (dekantasyon/santrifüj)</strong> prensibinden faydalanılır.</p>
+                                    <strong>5. Buharlaştırma Yöntemi (Katı-Sıvı Homojen Karışım):</strong>
+                                    <p>Tuzlu su veya şekerli su gibi katı-sıvı homojen karışımlarda sıvının ısıtılarak buharlaştırılması sonucu kap dibinde katı madde (tuz kristalleri) elde edilir. Deniz suyundan tuz üretimi ve pekmez yapımı bu yönteme örnektir.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>6. Günlük Hayat ve Endüstrideki Uygulamalar:</strong>
+                                    <p>Petrol rafinerilerinde ham petrolün bileşenlerine ayrıştırılmasında <strong>ayrımsal damıtma</strong>, zeytinyağı üretiminde <strong>yoğunluk farkı</strong>, tuzlalarda ise <strong>buharlaştırma</strong> yönteminden faydalanılır.</p>
                                 </div>
                             </div>
                         </div>
@@ -3631,27 +3889,23 @@
 
                         <!-- DENEY 7.8 REHBERİ -->
                         <div id="guide-container-7-8" class="lab-panel-box is-hidden">
-                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Elektroskop ve Topraklama Bilimsel Rehberi</h4>
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Elektroskop Gözlem Rehberi</h4>
                             <div class="lab-guide-text">
                                 <div class="guide-item">
-                                    <strong>1. Elektroskop Nedir ve Nasıl Çalışır?</strong>
-                                    <p>Bir cismin elektrik yüklü olup olmadığını, yüklü ise hangi cins yükle (+ veya -) yüklendiğini anlamaya yarayan araca <strong>elektroskop</strong> denir. İletken bir topuz, iletken bir gövde ve hafif iki yapraktan oluşur; dış hava akımlarından etkilenmemesi için cam bir fanus içine alınmıştır.</p>
+                                    <strong>1. Elektroskop Ne İşe Yarar?</strong>
+                                    <p>Bir cismin elektrikle yüklü olup olmadığını ve yüklü ise yük cinsini (+ veya -) anlamaya yarayan gözlem aracına <strong>elektroskop</strong> denir. Yüksüz (nötr) durumda yaprakları kapalıdır; yüklendiğinde ise yaprakları açılır.</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>2. Nötr Elektroskoba Yüklü Cisim Yaklaştırma (Etki ile Elektriklenme):</strong>
-                                    <p>Nötr elektroskoba (-) yüklü çubuk yaklaştırılırsa, topuzdaki elektronlar yapraklara itilir. Topuz (+), yapraklar (-) yüklenir ve yapraklar birbirini iterek <strong>açılır</strong>. Çubuk uzaklaştırıldığında elektronlar geri döner ve yapraklar <strong>kapanır</strong>. Benzer şekilde (+) yüklü çubuk yaklaştırılırsa yapraklardan topuza elektron çekilir; yapraklar (+) yüklenerek açılır.</p>
+                                    <strong>2. Nötr Elektroskoba Cisim Yaklaştırma:</strong>
+                                    <p>Nötr elektroskoba yüklü bir çubuk yaklaştırıldığında yapraklar <strong>açılır</strong>; çubuk uzaklaştırıldığında yapraklar yeniden <strong>kapanır</strong>. Nötr bir çubuk yaklaştırıldığında ise yapraklarda hareket görülmez.</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>3. Dokunma ile Elektriklenme (Kalıcı Yükleme):</strong>
-                                    <p>Yüklü bir cisim elektroskop topuzuna dokundurulduğunda yük paylaşımı gerçekleşir. Cisim uzaklaştırılsa dahi elektroskop artık yüklü kalır ve yapraklar <strong>açık kalmaya devam eder</strong>.</p>
+                                    <strong>3. Yüklü Elektroskopla Yük Cinsi Ayırt Etme:</strong>
+                                    <p>Önceden yüklü elektroskoba <strong>aynı cins</strong> yüklü bir çubuk yaklaştırıldığında yapraklar biraz daha <strong>açılır</strong>. <strong>Zıt cins</strong> yüklü bir çubuk yaklaştırıldığında ise yapraklar birbirine yaklaşarak biraz <strong>kapanır</strong>.</p>
                                 </div>
                                 <div class="guide-item">
-                                    <strong>4. Yüklü Elektroskoba Cisim Yaklaştırma:</strong>
-                                    <p>Elektroskop ile yaklaştırılan cisim <strong>aynı cins</strong> yüklü ise yapraklar <strong>biraz daha açılır</strong>. Eğer cisim ile elektroskop <strong>zıt cins</strong> yüklü ise yapraklar <strong>biraz kapanır</strong> (yaklaştırılan cismin yükü çok fazlaysa yapraklar önce tamamen kapanıp sonra tekrar açılabilir).</p>
-                                </div>
-                                <div class="guide-item">
-                                    <strong>5. Topraklama (Nötrleme İlkesi):</strong>
-                                    <p>Yüklü bir iletkenin iletken bir telle veya elle toprağa bağlanmasına <strong>topraklama</strong> denir. Toprak sonsuz bir elektron deposudur: Pozitif yüklü cisim toprağa bağlandığında topraktan cisme elektron gelir; negatif yüklü cisim bağlandığında cisimden toprağa elektron akar. Her iki durumda da elektroskop <strong>nötrlenir ve yapraklar tamamen kapanır</strong>.</p>
+                                    <strong>4. Dokundurma ve Topraklama:</strong>
+                                    <p>Yüklü çubuk topuza dokundurulduğunda elektroskop kalıcı olarak yüklenir ve yapraklar açık kalır. <strong>Topraklama</strong> yapıldığında ise elektroskop nötrlenerek yapraklar tamamen kapanır.</p>
                                 </div>
                             </div>
                         </div>
@@ -4132,6 +4386,51 @@
                                     <strong>2. Ampul Parlaklığı Nasıl Değişir?</strong>
                                     <p>• <strong>Pil Sayısının Etkisi (Hipotez 1):</strong> Ampul sayısı sabit tutulup pil sayısı artırıldığında devreye verilen elektrik enerjisi artacağı için ampul parlaklığı <strong>artar</strong>.<br>
                                     • <strong>Ampul Sayısının Etkisi (Hipotez 2):</strong> Pil sayısı sabit tutulup ampul sayısı artırıldığında mevcut enerji ampuller arasında paylaşılacağı için her bir ampulün parlaklığı <strong>azalır</strong>.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 5.11 REHBERİ: MİKROSKOPLA HÜCRE GÖZLEMİ -->
+                        <div id="guide-container-5-11" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Hücre Gözlemi Rehberi (FB.5.3.1)</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Bitki ve Hayvan Hücresinin Temel Kısımları:</strong>
+                                    <p>Tüm bitki ve hayvan hücrelerinde <strong>hücre zarı</strong>, <strong>sitoplazma</strong> ve <strong>çekirdek</strong> ortak olarak bulunur.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Bitki ve Hayvan Hücresi Farkları:</strong>
+                                    <p>Bitki hücreleri köşeli bir şekle sahiptir ve dıştan <strong>hücre duvarı (çeperi)</strong> ile çevrilidir. Hayvan hücreleri ise genellikle yuvarlağımsıdır ve hücre duvarı bulundurmaz.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 5.12 REHBERİ: SAYDAM, YARI SAYDAM, OPAK -->
+                        <div id="guide-container-5-12" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Işık Geçirgenliği Rehberi (FB.5.4.2)</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Saydam Maddeler:</strong>
+                                    <p>Cam, su ve hava gibi ışığın tamamına yakınını geçiren maddelerdir. Arkasındaki cisimler net görülür.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Yarı Saydam ve Opak Maddeler:</strong>
+                                    <p>Buzlu cam ve yağlı kâğıt gibi ışığın bir kısmını geçiren maddeler <strong>yarı saydamdır</strong>. Tahta, taş ve metal gibi ışığı hiç geçirmeyen maddeler ise <strong>opak (saydam olmayan)</strong> maddelerdir ve tam gölge oluştururlar.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 6.11 REHBERİ: NEWTON RENK ÇARKI VE RENKLİ IŞIKLAR -->
+                        <div id="guide-container-6-11" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Işığın Renkleri Rehberi (FB.6.4.5 - FB.6.4.6)</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Beyaz Işığın Renkleri ve Newton Çarkı:</strong>
+                                    <p>Güneş ışığı (beyaz ışık) aslında farklı renklerdeki ışıkların birleşimidir. Üzerinde gökkuşağı renkleri bulunan Newton çarkı hızla döndürüldüğünde gözümüz bu renkleri birleştirerek <strong>beyaz</strong> algılar.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Cisimlerin Renkli Görünmesi:</strong>
+                                    <p>Beyaz cisimler üzerine düşen tüm ışıkları yansıtır; siyah cisimler ise ışığı soğurur. Kırmızı bir cisim yalnızca kırmızı ışığı yansıttığı için mavi ışık altında <strong>siyah</strong> görünür.</p>
                                 </div>
                             </div>
                         </div>
@@ -5049,10 +5348,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
     <script>
-        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.25';
+        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.26';
     </script>
-    <script type="module" src="exam-engine.js?v=8.9.25"></script>
-    <script type="module" src="lab-engine.js?v=8.9.25"></script>
-    <script type="module" src="script.js?v=8.9.25"></script>
+    <script type="module" src="exam-engine.js?v=8.9.26"></script>
+    <script type="module" src="lab-engine.js?v=8.9.26"></script>
+    <script type="module" src="script.js?v=8.9.26"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
  * Sıfır Dış Bağımlılık (Vanilla ES6+ & HTML5 Canvas 2D)
  */
 
-// --- 1. TÜM SINIFLAR İÇİN 26 DENEYLİK RESMİ MAARİF MODELİ KATALOĞU ---
+// --- 1. TÜM SINIFLAR İÇİN RESMİ MAARİF MODELİ VE DERS KİTABI DENEY KATALOĞU ---
 export const EXPERIMENTS_DATABASE = [
     // 5. SINIF (10 DENEY — TAMAMI AKTİF & MAARİF MÜFREDAT SENKRON)
     {
@@ -69,7 +69,7 @@ export const EXPERIMENTS_DATABASE = [
         title: "Isı İletkenliği ve Yalıtım Simülatörü",
         code: "FB.5.5.5 - FB.5.5.6", bookRef: "2. Kitap, s. 86–94",
         active: true, // 🏆 AKTİF!
-        desc: "Mumla tutturulmuş bilyelerin düşüşüyle metallerin (bakır, alüminyum, demir) ısı iletim hızlarını ve binalarda yalıtım modellerinin enerji tasarrufundaki rolünü simüle edin."
+        desc: "Metal, tahta ve plastik kaşıklarla ısı iletkenliğini ve yalıtkanlığı karşılaştırın; binalarda ısı yalıtımı modellerinin enerji tasarrufundaki rolünü simüle edin."
     },
     {
         id: "5.10", grade: 5, unit: 6, unitName: "Yaşamımızda Elektrik",
@@ -77,6 +77,20 @@ export const EXPERIMENTS_DATABASE = [
         code: "FB.5.6.3", bookRef: "2. Kitap, s. 121–127",
         active: true, // 🏆 AKTİF!
         desc: "Basit elektrik devresinde pil sayısı ve ampul sayısını bağımsız değişken olarak değiştirip ampul parlaklığındaki değişimi test edin."
+    },
+    {
+        id: "5.11", grade: 5, unit: 3, unitName: "Canlıların Yapısına Yolculuk",
+        title: "Mikroskopla Hücre Gözlemi (Bitki ve Hayvan Hücresi)",
+        code: "FB.5.3.1", bookRef: "1. Kitap, s. 95–102",
+        active: true,
+        desc: "Soğan zarı (bitki) ve ağız içi epitel (hayvan) hücrelerini farklı büyütme oranlarında inceleyerek hücre duvarı, zar, sitoplazma ve çekirdeği karşılaştırın."
+    },
+    {
+        id: "5.12", grade: 5, unit: 4, unitName: "Işığın Dünyası",
+        title: "Maddelerin Işığı Geçirme Durumu (Saydam, Yarı Saydam, Opak)",
+        code: "FB.5.4.2", bookRef: "2. Kitap, s. 28–33",
+        active: true,
+        desc: "Pencere camı, yağlı kâğıt ve tahta levhanın ışığı geçirme durumunu ve arkasındaki cismin görünürlüğünü el feneri düzeneğinde test edin."
     },
 
     // 6. SINIF (9 DENEY — İLK 5 DENEY AKTİF)
@@ -149,6 +163,13 @@ export const EXPERIMENTS_DATABASE = [
         code: "FB.6.6.2 - FB.6.6.3", bookRef: "2. Kitap, s. 78–89",
         active: true, // 🏆 AKTİF!
         desc: "İletken telin boyu (L), dik kesit alanı (S) ve cinsi (bakır, demir, nikel-krom) değiştikçe devredeki direnci ve ampul parlaklığını inceleyin; reosta sürgüsünü kaydırarak direnci canlı ayarlayın."
+    },
+    {
+        id: "6.11", grade: 6, unit: 4, unitName: "Işığın Yansıması ve Renkler",
+        title: "Newton Renk Çarkı ve Renkli Işık Altında Cisimler",
+        code: "FB.6.4.5 - FB.6.4.6", bookRef: "1. Kitap, s. 166–174",
+        active: true,
+        desc: "7 renkli Newton çarkını hızlandırarak beyaz ışığın renklerin birleşimi olduğunu gözlemleyin; kırmızı, yeşil ve mavi ışık altında cisimlerin görünümünü test edin."
     },
 
     // 7. SINIF (9 DENEY — TAMAMI AKTİF & MAARİF MÜFREDAT SENKRON)
@@ -234,8 +255,32 @@ const MEDIA_PROPERTIES = {
 
 // --- 3. SANAL LABORATUVAR DURUM YÖNETİMİ (STATE) ---
 export const labState = {
+    cellMicroscope: {
+        specimen: "plant",
+        zoom: 40,
+        focus: 100,
+        showLabels: true,
+        measurements: []
+    },
+    lightTransmission: {
+        material: "transparent",
+        lightOn: true,
+        measurements: []
+    },
+    colorWheel: {
+        mode: "wheel",
+        speed: 0,
+        angle: 0,
+        isSpinning: false,
+        lightColor: "white",
+        objectColor: "white",
+        measurements: []
+    },
     currentGrade: 7, // Varsayılan 7. sınıf
     currentUnitFilter: "all",
+    catalogStep: "welcome", // "welcome" | "grade"
+    viewMode: "unit", // "unit" | "flat"
+    searchQuery: "",
     activeExperimentId: null,
 
     // Deney 7.1 Fizik Durumu (Fiziksel Anlamda İş ve Enerji)
@@ -458,6 +503,18 @@ export const labState = {
             bubbles: [],
             condenserDrops: [],
             collectionDrops: []
+        },
+
+        // Mod 3: Buharlaştırma (Katı-Sıvı Homojen Karışım - Tuzlu Su)
+        evaporation: {
+            isHeating: false,
+            temp: 20.0,
+            waterVolume: 100.0,
+            evaporatedWater: 0.0,
+            saltMass: 20.0,
+            crystallizedSalt: 0.0,
+            bubbles: [],
+            steamParticles: []
         },
 
         measurements: []
@@ -959,29 +1016,147 @@ export function initLabModule() {
     loadLabCurriculumMap();
 }
 
+function renderWelcomeCounts() {
+    [5, 6, 7].forEach(grade => {
+        const exps = EXPERIMENTS_DATABASE.filter(e => e.grade === grade);
+        const unitCount = new Set(exps.map(e => e.unit)).size;
+        const el = document.getElementById(`lab-welcome-meta-${grade}`);
+        if (el) {
+            el.textContent = `${unitCount} Ünite • ${exps.length} İnteraktif Deney`;
+        }
+    });
+}
+
+function showWelcomeScreen() {
+    labState.catalogStep = "welcome";
+    renderWelcomeCounts();
+    const welcomeEl = document.getElementById('lab-welcome-screen');
+    const gradeCatalogEl = document.getElementById('lab-grade-catalog');
+    if (welcomeEl) welcomeEl.classList.remove('is-hidden');
+    if (gradeCatalogEl) gradeCatalogEl.classList.add('is-hidden');
+}
+
+function enterGradeCatalog(grade) {
+    labState.catalogStep = "grade";
+    labState.currentGrade = grade;
+    labState.currentUnitFilter = "all";
+    labState.searchQuery = "";
+    const searchInput = document.getElementById('lab-search-input');
+    if (searchInput) searchInput.value = "";
+
+    document.querySelectorAll('.lab-grade-btn').forEach(b => {
+        b.classList.toggle('active', parseInt(b.dataset.grade, 10) === grade);
+    });
+
+    const titleEl = document.getElementById('lab-grade-catalog-title');
+    if (titleEl) titleEl.innerHTML = `<i class="fas fa-flask"></i> ${grade}. Sınıf Laboratuvarı`;
+
+    const welcomeEl = document.getElementById('lab-welcome-screen');
+    const gradeCatalogEl = document.getElementById('lab-grade-catalog');
+    if (welcomeEl) welcomeEl.classList.add('is-hidden');
+    if (gradeCatalogEl) gradeCatalogEl.classList.remove('is-hidden');
+
+    renderCatalog();
+    const labView = document.getElementById('lab-view');
+    if (labView) labView.scrollTop = 0;
+}
+
 function setupCatalogDOM() {
+    renderWelcomeCounts();
+
+    // Karşılama Sınıf Kartları
+    document.querySelectorAll('.lab-welcome-card[data-grade]').forEach(card => {
+        card.addEventListener('click', () => {
+            const grade = parseInt(card.dataset.grade, 10);
+            if (!Number.isNaN(grade)) enterGradeCatalog(grade);
+        });
+    });
+
+    // Sınıflara Dön Butonu
+    const btnBackWelcome = document.getElementById('btn-lab-back-welcome');
+    if (btnBackWelcome) {
+        btnBackWelcome.addEventListener('click', () => showWelcomeScreen());
+    }
+
     // Sınıf Seçici Butonları
     document.querySelectorAll('.lab-grade-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const grade = parseInt(btn.dataset.grade, 10);
             if (grade === labState.currentGrade) return;
+            enterGradeCatalog(grade);
+        });
+    });
 
-            document.querySelectorAll('.lab-grade-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+    // Arama Kutusu
+    const searchInput = document.getElementById('lab-search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            labState.searchQuery = (e.target.value || "").trim().toLowerCase();
+            renderCatalog();
+        });
+    }
 
-            labState.currentGrade = grade;
-            labState.currentUnitFilter = "all";
+    // Görünüm Modu (Üniteye Göre / Tüm Deneyler)
+    document.querySelectorAll('.lab-view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const mode = btn.dataset.view || "unit";
+            if (mode === labState.viewMode) return;
+            labState.viewMode = mode;
+            document.querySelectorAll('.lab-view-btn').forEach(b => b.classList.toggle('active', b === btn));
             renderCatalog();
         });
     });
 }
 
+function buildExperimentCardHTML(exp) {
+    const cmap = labCurriculumMapCache ? labCurriculumMapCache[exp.id] : null;
+    const activityTitle = cmap?.activity_title ? `<div class="lab-card-detail-row"><strong>Kitap Etkinliği:</strong> ${cmap.activity_title}</div>` : '';
+    const scopeNote = cmap?.scope_exclusions && cmap.scope_exclusions.length
+        ? `<div class="lab-card-detail-row"><strong>Kapsam Sınırı:</strong> ${cmap.scope_exclusions.join(', ')}</div>`
+        : '';
+    const evalQuestions = cmap?.evaluation_questions && cmap.evaluation_questions.length
+        ? `<div class="lab-card-detail-row"><strong>Değerlendirme Soruları:</strong><ul class="lab-card-eval-list">${cmap.evaluation_questions.map(q => `<li>${q}</li>`).join('')}</ul></div>`
+        : '';
+    return `
+        <div class="lab-card pilot-active">
+            <div class="lab-card-header">
+                <span class="lab-card-grade-badge">${exp.grade}. Sınıf · ${exp.unit}. Ünite</span>
+            </div>
+            <h3 class="lab-card-title">${exp.title}</h3>
+            <p class="lab-card-desc">${exp.desc}</p>
+            <details class="lab-card-optional-details">
+                <summary class="lab-card-details-summary"><i class="fas fa-book-open"></i> Kaynak ve Öğrenme Çıktısı Ayrıntısı</summary>
+                <div class="lab-card-details-body">
+                    <div class="lab-card-detail-row"><strong>Öğrenme Çıktısı:</strong> ${exp.code}</div>
+                    <div class="lab-card-detail-row"><strong>MEB Ders Kitabı:</strong> ${exp.bookRef}</div>
+                    ${activityTitle}
+                    ${scopeNote}
+                    ${evalQuestions}
+                </div>
+            </details>
+            <div class="lab-card-footer">
+                <button class="action-btn lab-launch-btn" data-exp-id="${exp.id}"><i class="fas fa-flask"></i> Deneyi Aç</button>
+            </div>
+        </div>
+    `;
+}
+
 function renderCatalog() {
     const container = document.getElementById('lab-cards-grid');
     const pillsContainer = document.getElementById('lab-unit-pills');
+    const filterWrap = document.getElementById('lab-unit-filter-container');
     if (!container || !pillsContainer) return;
 
-    const gradeExps = EXPERIMENTS_DATABASE.filter(e => e.grade === labState.currentGrade);
+    const allGradeExps = EXPERIMENTS_DATABASE.filter(e => e.grade === labState.currentGrade);
+    const q = labState.searchQuery;
+    const gradeExps = q
+        ? allGradeExps.filter(e =>
+            e.title.toLowerCase().includes(q) ||
+            e.desc.toLowerCase().includes(q) ||
+            e.unitName.toLowerCase().includes(q) ||
+            e.code.toLowerCase().includes(q)
+        )
+        : allGradeExps;
 
     // 1. Üniteler Haritasını Çıkar
     const unitsMap = new Map();
@@ -991,7 +1166,7 @@ function renderCatalog() {
         }
     });
 
-    // 2. Üst Filtre Butonları (Tüm Deneyler + Ünite Butonları Sıralı)
+    // 2. Üst Filtre Butonları
     const sortedUnitNums = Array.from(unitsMap.keys()).sort((a, b) => a - b);
     let pillsHTML = `<button class="lab-pill-btn ${labState.currentUnitFilter === 'all' ? 'active' : ''}" data-unit="all"><i class="fas fa-layer-group"></i> Tüm Deneyler (${gradeExps.length} Deney)</button>`;
     sortedUnitNums.forEach(unitNum => {
@@ -1000,8 +1175,8 @@ function renderCatalog() {
         pillsHTML += `<button class="lab-pill-btn ${isActive ? 'active' : ''}" data-unit="${unitNum}">${unitNum}. Ünite (${count})</button>`;
     });
     pillsContainer.innerHTML = pillsHTML;
+    if (filterWrap) filterWrap.classList.toggle('is-hidden', labState.viewMode === 'flat');
 
-    // Rozet Tıklama Olayları (Filtreleme & Yumuşak Kaydırma)
     pillsContainer.querySelectorAll('.lab-pill-btn').forEach(pill => {
         pill.addEventListener('click', () => {
             const targetUnit = pill.dataset.unit;
@@ -1010,9 +1185,7 @@ function renderCatalog() {
 
             if (targetUnit !== "all") {
                 const targetEl = document.getElementById(`unit-section-${targetUnit}`);
-                if (targetEl) {
-                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
+                if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
             } else {
                 const labView = document.getElementById('lab-view');
                 if (labView) labView.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1020,76 +1193,48 @@ function renderCatalog() {
         });
     });
 
-    // 3. Deney Kartlarını Ünite Başlık Şeritleri Altında Grupla
-    let displayedUnits = Array.from(unitsMap.keys()).sort((a, b) => a - b);
-    if (labState.currentUnitFilter !== "all") {
-        const selected = parseInt(labState.currentUnitFilter, 10);
-        displayedUnits = displayedUnits.filter(u => u === selected);
-    }
-
-    if (displayedUnits.length === 0) {
-        container.innerHTML = `<div class="lab-empty-catalog"><i class="fas fa-flask"></i><p>Bu filtreye uygun deney bulunamadı.</p></div>`;
+    if (gradeExps.length === 0) {
+        container.innerHTML = `<div class="lab-empty-catalog"><i class="fas fa-flask"></i><p>Arama veya filtreye uygun deney bulunamadı.</p></div>`;
         return;
     }
 
+    // 3. Görünüm Modu: Düz Liste vs Üniteye Göre
     let fullHTML = "";
-    displayedUnits.forEach(unitNum => {
-        const unitName = unitsMap.get(unitNum);
-        const unitExps = gradeExps.filter(e => e.unit === unitNum);
-
+    if (labState.viewMode === "flat") {
         let cardsHTML = "";
-        unitExps.forEach(exp => {
-            const cmap = labCurriculumMapCache ? labCurriculumMapCache[exp.id] : null;
-            const activityTitle = cmap?.activity_title ? `<div class="lab-card-detail-row"><strong>Kitap Etkinliği:</strong> ${cmap.activity_title}</div>` : '';
-            const scopeNote = cmap?.scope_exclusions && cmap.scope_exclusions.length
-                ? `<div class="lab-card-detail-row"><strong>Kapsam Sınırı:</strong> ${cmap.scope_exclusions.join(', ')}</div>`
-                : '';
-            const evalQuestions = cmap?.evaluation_questions && cmap.evaluation_questions.length
-                ? `<div class="lab-card-detail-row"><strong>Değerlendirme Soruları:</strong><ul class="lab-card-eval-list">${cmap.evaluation_questions.map(q => `<li>${q}</li>`).join('')}</ul></div>`
-                : '';
-            cardsHTML += `
-                <div class="lab-card pilot-active">
-                    <div class="lab-card-header">
-                        <span class="lab-card-grade-badge">${exp.grade}. Sınıf · ${exp.unit}. Ünite</span>
-                    </div>
-                    <h3 class="lab-card-title">${exp.title}</h3>
-                    <p class="lab-card-desc">${exp.desc}</p>
-                    <details class="lab-card-optional-details">
-                        <summary class="lab-card-details-summary"><i class="fas fa-book-open"></i> Kaynak ve Öğrenme Çıktısı Ayrıntısı</summary>
-                        <div class="lab-card-details-body">
-                            <div class="lab-card-detail-row"><strong>Öğrenme Çıktısı:</strong> ${exp.code}</div>
-                            <div class="lab-card-detail-row"><strong>MEB Ders Kitabı:</strong> ${exp.bookRef}</div>
-                            ${activityTitle}
-                            ${scopeNote}
-                            ${evalQuestions}
+        gradeExps.forEach(exp => { cardsHTML += buildExperimentCardHTML(exp); });
+        fullHTML = `<div class="lab-cards-grid">${cardsHTML}</div>`;
+    } else {
+        let displayedUnits = sortedUnitNums;
+        if (labState.currentUnitFilter !== "all") {
+            const selected = parseInt(labState.currentUnitFilter, 10);
+            displayedUnits = displayedUnits.filter(u => u === selected);
+        }
+        displayedUnits.forEach(unitNum => {
+            const unitName = unitsMap.get(unitNum);
+            const unitExps = gradeExps.filter(e => e.unit === unitNum);
+            let cardsHTML = "";
+            unitExps.forEach(exp => { cardsHTML += buildExperimentCardHTML(exp); });
+
+            fullHTML += `
+                <div class="lab-unit-section" id="unit-section-${unitNum}">
+                    <div class="lab-unit-section-header">
+                        <div class="lab-unit-header-left">
+                            <span class="lab-unit-num-badge">📌 ${unitNum}. ÜNİTE</span>
+                            <h3 class="lab-unit-heading">${unitName}</h3>
                         </div>
-                    </details>
-                    <div class="lab-card-footer">
-                        <button class="action-btn lab-launch-btn" data-exp-id="${exp.id}"><i class="fas fa-flask"></i> Deneyi Aç</button>
+                        <span class="lab-unit-count-tag">${unitExps.length} Deney Simülasyonu</span>
+                    </div>
+                    <div class="lab-cards-grid">
+                        ${cardsHTML}
                     </div>
                 </div>
             `;
         });
-
-        fullHTML += `
-            <div class="lab-unit-section" id="unit-section-${unitNum}">
-                <div class="lab-unit-section-header">
-                    <div class="lab-unit-header-left">
-                        <span class="lab-unit-num-badge">📌 ${unitNum}. ÜNİTE</span>
-                        <h3 class="lab-unit-heading">${unitName}</h3>
-                    </div>
-                    <span class="lab-unit-count-tag">${unitExps.length} Deney Simülasyonu</span>
-                </div>
-                <div class="lab-cards-grid">
-                    ${cardsHTML}
-                </div>
-            </div>
-        `;
-    });
+    }
 
     container.innerHTML = fullHTML;
 
-    // Kart Butonları Olay Dinleyicileri
     container.querySelectorAll('.lab-launch-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             openExperimentWorkspace(btn.dataset.expId);
@@ -1320,6 +1465,9 @@ function setupWorkspaceShellDOM() {
     setupHeatExchangeControlsDOM();
     setupWaterStateControlsDOM();
     setupCircuitControlsDOM();
+    setupCellMicroscopeControlsDOM();
+    setupLightTransmissionControlsDOM();
+    setupColorWheelControlsDOM();
 
     // 13. 6. SINIF KONTROLLERİ (DENEY 6.1 - 6.10)
     setupEclipseControlsDOM();
@@ -1445,7 +1593,7 @@ function cleanupExperimentTools() {
 
 export function openLabView() {
     cleanupExperimentTools();
-    renderCatalog();
+    showWelcomeScreen();
     const catalogView = document.getElementById('lab-catalog-view');
     const workspaceView = document.getElementById('lab-workspace-view');
     const labView = document.getElementById('lab-view');
@@ -1530,6 +1678,8 @@ export function openExperimentWorkspace(expId) {
     const is58 = (expId === "5.8");
     const is59 = (expId === "5.9");
     const is510 = (expId === "5.10");
+    const is511 = (expId === "5.11");
+    const is512 = (expId === "5.12");
     const is61 = (expId === "6.1");
     const is62 = (expId === "6.2");
     const is63 = (expId === "6.3");
@@ -1540,6 +1690,7 @@ export function openExperimentWorkspace(expId) {
     const is68 = (expId === "6.8");
     const is69 = (expId === "6.9");
     const is610 = (expId === "6.10");
+    const is611 = (expId === "6.11");
     const is71 = (expId === "7.1");
     const is72 = (expId === "7.2");
     const is73 = (expId === "7.3");
@@ -1572,6 +1723,12 @@ export function openExperimentWorkspace(expId) {
     if (mbar58) mbar58.classList.toggle('is-hidden', !is58);
     if (mbar59) mbar59.classList.toggle('is-hidden', !is59);
     if (mbar510) mbar510.classList.toggle('is-hidden', !is510);
+    const mbar511 = document.getElementById('metrics-bar-5-11');
+    const mbar512 = document.getElementById('metrics-bar-5-12');
+    const mbar611 = document.getElementById('metrics-bar-6-11');
+    if (mbar511) mbar511.classList.toggle('is-hidden', !is511);
+    if (mbar512) mbar512.classList.toggle('is-hidden', !is512);
+    if (mbar611) mbar611.classList.toggle('is-hidden', !is611);
     const mbar61 = document.getElementById('metrics-bar-6-1');
     const mbar62 = document.getElementById('metrics-bar-6-2');
     const mbar63 = document.getElementById('metrics-bar-6-3');
@@ -1634,6 +1791,12 @@ export function openExperimentWorkspace(expId) {
     if (qc58) qc58.classList.toggle('is-hidden', !is58);
     if (qc59) qc59.classList.toggle('is-hidden', !is59);
     if (qc510) qc510.classList.toggle('is-hidden', !is510);
+    const qc511 = document.getElementById('quick-controls-5-11');
+    const qc512 = document.getElementById('quick-controls-5-12');
+    const qc611 = document.getElementById('quick-controls-6-11');
+    if (qc511) qc511.classList.toggle('is-hidden', !is511);
+    if (qc512) qc512.classList.toggle('is-hidden', !is512);
+    if (qc611) qc611.classList.toggle('is-hidden', !is611);
     const qc61 = document.getElementById('quick-controls-6-1');
     const qc62 = document.getElementById('quick-controls-6-2');
     const qc63 = document.getElementById('quick-controls-6-3');
@@ -1696,6 +1859,12 @@ export function openExperimentWorkspace(expId) {
     if (vars58) vars58.classList.toggle('is-hidden', !is58);
     if (vars59) vars59.classList.toggle('is-hidden', !is59);
     if (vars510) vars510.classList.toggle('is-hidden', !is510);
+    const vars511 = document.getElementById('vars-container-5-11');
+    const vars512 = document.getElementById('vars-container-5-12');
+    const vars611 = document.getElementById('vars-container-6-11');
+    if (vars511) vars511.classList.toggle('is-hidden', !is511);
+    if (vars512) vars512.classList.toggle('is-hidden', !is512);
+    if (vars611) vars611.classList.toggle('is-hidden', !is611);
     const vars61 = document.getElementById('vars-container-6-1');
     const vars62 = document.getElementById('vars-container-6-2');
     const vars63 = document.getElementById('vars-container-6-3');
@@ -1758,6 +1927,12 @@ export function openExperimentWorkspace(expId) {
     if (guide58) guide58.classList.toggle('is-hidden', !is58);
     if (guide59) guide59.classList.toggle('is-hidden', !is59);
     if (guide510) guide510.classList.toggle('is-hidden', !is510);
+    const guide511 = document.getElementById('guide-container-5-11');
+    const guide512 = document.getElementById('guide-container-5-12');
+    const guide611 = document.getElementById('guide-container-6-11');
+    if (guide511) guide511.classList.toggle('is-hidden', !is511);
+    if (guide512) guide512.classList.toggle('is-hidden', !is512);
+    if (guide611) guide611.classList.toggle('is-hidden', !is611);
     const guide61 = document.getElementById('guide-container-6-1');
     const guide62 = document.getElementById('guide-container-6-2');
     const guide63 = document.getElementById('guide-container-6-3');
@@ -1880,7 +2055,7 @@ export function closeExperimentWorkspace() {
     const labView = document.getElementById('lab-view');
     if (catalogView) catalogView.classList.remove('is-hidden');
     if (workspaceView) workspaceView.classList.add('is-hidden');
-    renderCatalog();
+    enterGradeCatalog(labState.currentGrade || 7);
     if (labView) labView.scrollTop = 0;
     window.scrollTo(0, 0);
 }
@@ -1906,6 +2081,12 @@ function resetCurrentExperiment() {
         resetHeatTransferExperiment();
     } else if (labState.activeExperimentId === "5.10") {
         resetCircuitExperiment();
+    } else if (labState.activeExperimentId === "5.11") {
+        resetCellMicroscopeExperiment();
+    } else if (labState.activeExperimentId === "5.12") {
+        resetLightTransmissionExperiment();
+    } else if (labState.activeExperimentId === "6.11") {
+        resetColorWheelExperiment();
     } else if (labState.activeExperimentId === "6.1") {
         resetEclipseExperiment();
     } else if (labState.activeExperimentId === "6.2") {
@@ -2041,6 +2222,12 @@ function initExperimentCanvas() {
         initHeatTransferState();
     } else if (labState.activeExperimentId === "5.10") {
         initCircuitState();
+    } else if (labState.activeExperimentId === "5.11") {
+        initCellMicroscopeState();
+    } else if (labState.activeExperimentId === "5.12") {
+        initLightTransmissionState();
+    } else if (labState.activeExperimentId === "6.11") {
+        initColorWheelState();
     } else if (labState.activeExperimentId === "6.1") {
         initEclipseState();
     } else if (labState.activeExperimentId === "6.2") {
@@ -2132,6 +2319,13 @@ function startRenderLoop() {
             } else if (labState.activeExperimentId === "5.10") {
                 updateCircuitPhysics();
                 drawCircuitSimulation();
+            } else if (labState.activeExperimentId === "5.11") {
+                drawCellMicroscopeSimulation();
+            } else if (labState.activeExperimentId === "5.12") {
+                drawLightTransmissionSimulation();
+            } else if (labState.activeExperimentId === "6.11") {
+                updateColorWheelPhysics();
+                drawColorWheelSimulation();
             } else if (labState.activeExperimentId === "6.1") {
                 updateEclipsePhysics();
                 drawEclipseSimulation();
@@ -11972,40 +12166,17 @@ function calculateOpticsPhysics() {
 
     const n1 = med1.n;
     const n2 = med2.n;
+    labState.optics.criticalAngle = null;
+    labState.optics.isTotalInternalReflection = false;
 
-    // Sınır Açısı (Critical Angle) Hesabı
-    let criticalAngle = null;
-    if (n1 > n2) {
-        criticalAngle = Math.asin(n2 / n1) * (180 / Math.PI);
-        labState.optics.criticalAngle = criticalAngle;
-    } else {
-        labState.optics.criticalAngle = null;
-    }
-
-    const rad1 = (incidentAngle * Math.PI) / 180;
-    const sinTheta2 = (n1 / n2) * Math.sin(rad1);
-
-    if (incidentAngle === 0) {
-        // Dik geliş (i = 0°): Doğrultu değişmez, kırılma açısı tam 0.0°
-        labState.optics.isTotalInternalReflection = false;
+    // 0°–40° aralığı TYMM FB.7.4.1 gereği tüm ortam çiftlerinde kırılma bölgesinde kalır (sınır açısı / tam yansıma dışı)
+    const clampedAngle = Math.max(0, Math.min(40, incidentAngle));
+    if (clampedAngle === 0) {
         labState.optics.refractedAngle = 0.0;
-    } else if (n1 > n2 && criticalAngle !== null) {
-        if (Math.abs(incidentAngle - criticalAngle) < 0.25) {
-            // Tam sınır açısı: Kırılan ışın yüzeyi sıyırır (r = 90.0°)
-            labState.optics.isTotalInternalReflection = false;
-            labState.optics.refractedAngle = 90.0;
-        } else if (incidentAngle > criticalAngle) {
-            // Sınır açısından büyük: Tam Yansıma (kırılan ışın yok)
-            labState.optics.isTotalInternalReflection = true;
-            labState.optics.refractedAngle = null;
-        } else {
-            labState.optics.isTotalInternalReflection = false;
-            const rad2 = Math.asin(Math.min(1.0, sinTheta2));
-            labState.optics.refractedAngle = rad2 * (180 / Math.PI);
-        }
     } else {
-        labState.optics.isTotalInternalReflection = false;
-        const rad2 = Math.asin(Math.min(1.0, sinTheta2));
+        const rad1 = (clampedAngle * Math.PI) / 180;
+        const sinTheta2 = Math.min(0.999, (n1 / n2) * Math.sin(rad1));
+        const rad2 = Math.asin(sinTheta2);
         labState.optics.refractedAngle = rad2 * (180 / Math.PI);
     }
 
@@ -12013,7 +12184,7 @@ function calculateOpticsPhysics() {
 }
 
 function updateOpticsHUDAndMetrics() {
-    const { medium1, medium2, incidentAngle, refractedAngle, isTotalInternalReflection, criticalAngle } = labState.optics;
+    const { medium1, medium2, incidentAngle, refractedAngle } = labState.optics;
     const med1 = MEDIA_PROPERTIES[medium1];
     const med2 = MEDIA_PROPERTIES[medium2];
 
@@ -12032,14 +12203,10 @@ function updateOpticsHUDAndMetrics() {
         behaviorText = "Yüzeye Dik (Kırılmaz, Sürat Değişir)";
         behaviorColor = "#f59e0b";
         if (hudRef) hudRef.textContent = `0.0°`;
-    } else if (isTotalInternalReflection) {
-        behaviorText = "⚡ TAM YANSIMA (Kırılma Yok!)";
-        behaviorColor = "#ef4444";
-        if (hudRef) hudRef.textContent = `Yok (Yansıdı)`;
-    } else if (refractedAngle === 90.0 || (criticalAngle && Math.abs(incidentAngle - criticalAngle) < 0.25)) {
-        behaviorText = "Sınır Açısı (Yüzeyi Sıyırır - 90.0°)";
-        behaviorColor = "#f59e0b";
-        if (hudRef) hudRef.textContent = `90.0°`;
+    } else if (med1.n === med2.n) {
+        behaviorText = "Aynı Yoğunluk (Doğrultu Değişmez)";
+        behaviorColor = "#94a3b8";
+        if (hudRef) hudRef.textContent = `${incidentAngle.toFixed(1)}°`;
     } else if (med1.n < med2.n) {
         behaviorText = "Normale Yaklaşır (Sürat Azalır)";
         behaviorColor = "#10b981";
@@ -12143,28 +12310,18 @@ function drawOpticsSimulation() {
     drawLaserBeam(ctx, laserX, laserY, originX, originY, "#ff1744", 3.5 * scale, 1.0);
     drawLaserDevice(ctx, laserX, laserY, originX, originY, scale);
 
-    // Yansıyan Işın
+    // Kısmi Yansıyan Işın (Referans)
     const reflectX = originX + Math.sin(rad1) * radius;
     const reflectY = originY - Math.cos(rad1) * radius;
-
-    if (isTotalInternalReflection) {
-        // %100 Yansıyan Işın (Eşit Açıyla, Tam Parlaklık)
-        drawLaserBeam(ctx, originX, originY, reflectX, reflectY, "#ff0055", 3.8 * scale, 1.0);
-    } else if (incidentAngle > 0) {
+    if (incidentAngle > 0) {
         drawLaserBeam(ctx, originX, originY, reflectX, reflectY, "rgba(255, 60, 100, 0.35)", 2 * scale, 0.4);
     }
 
     // Kırılan Işın
-    if (!isTotalInternalReflection && refractedAngle !== null) {
+    if (refractedAngle !== null) {
         const rad2 = (refractedAngle * Math.PI) / 180;
-        let refractX = originX + Math.sin(rad2) * radius;
-        let refractY = originY + Math.cos(rad2) * radius;
-
-        if (refractedAngle === 90.0) {
-            // Sınır açısında kırılan ışın ayırıcı yüzeyi milimetrik sıyırır
-            refractX = originX + radius;
-            refractY = originY;
-        }
+        const refractX = originX + Math.sin(rad2) * radius;
+        const refractY = originY + Math.cos(rad2) * radius;
 
         if (refractedAngle > 2) {
             ctx.beginPath();
@@ -13599,28 +13756,34 @@ function drawBeakerHeaderAndStopwatch(ctx, beaker, cx, topY) {
 // --- 8.6. DENEY 7.6: KARIŞIMLARIN AYRILMASI (AYIRMA HUNİSİ & BASİT DAMITMA) MOTORU ---
 
 function setupSeparationControlsDOM() {
-    // 1. Mod Geçiş Butonları (Ayırma Hunisi vs Basit Damıtma)
+    // 1. Mod Geçiş Butonları (Ayırma Hunisi / Ayrımsal Damıtma / Buharlaştırma)
     const btnFunnel = document.getElementById('btn-mode-funnel');
     const btnDistill = document.getElementById('btn-mode-distill');
+    const btnEvap = document.getElementById('btn-mode-evap');
 
     if (btnFunnel) btnFunnel.addEventListener('click', () => setSeparationMode("funnel"));
     if (btnDistill) btnDistill.addEventListener('click', () => setSeparationMode("distill"));
+    if (btnEvap) btnEvap.addEventListener('click', () => setSeparationMode("evap"));
 
     // 2. Ayırma Hunisi Kontrolleri
     const btnValve = document.getElementById('btn-funnel-valve');
     const btnRefill = document.getElementById('btn-funnel-refill');
-
     if (btnValve) btnValve.addEventListener('click', toggleFunnelValve);
     if (btnRefill) btnRefill.addEventListener('click', refillFunnel);
 
-    // 3. Basit Damıtma Kontrolleri
+    // 3. Ayrımsal Damıtma Kontrolleri
     const btnHeater = document.getElementById('btn-distill-heater');
     const btnResetDistill = document.getElementById('btn-distill-reset');
-
     if (btnHeater) btnHeater.addEventListener('click', toggleDistillHeater);
     if (btnResetDistill) btnResetDistill.addEventListener('click', resetDistillApparatus);
 
-    // 4. Veri Defterine Kaydet
+    // 4. Buharlaştırma (Tuz-Su) Kontrolleri
+    const btnEvapHeater = document.getElementById('btn-evap-heater');
+    const btnEvapReset = document.getElementById('btn-evap-reset');
+    if (btnEvapHeater) btnEvapHeater.addEventListener('click', toggleEvapHeater);
+    if (btnEvapReset) btnEvapReset.addEventListener('click', resetEvapApparatus);
+
+    // 5. Veri Defterine Kaydet
     const btnRecord75 = document.getElementById('btn-record-data-7-5');
     if (btnRecord75) btnRecord75.addEventListener('click', recordMeasurement);
 }
@@ -13628,26 +13791,30 @@ function setupSeparationControlsDOM() {
 function setSeparationMode(mode) {
     labState.separation.mode = mode;
     const isFunnel = (mode === "funnel");
+    const isDistill = (mode === "distill");
+    const isEvap = (mode === "evap");
 
-    // Buton aktiflikleri
     const btnFunnel = document.getElementById('btn-mode-funnel');
     const btnDistill = document.getElementById('btn-mode-distill');
+    const btnEvap = document.getElementById('btn-mode-evap');
     if (btnFunnel) btnFunnel.classList.toggle('active', isFunnel);
-    if (btnDistill) btnDistill.classList.toggle('active', !isFunnel);
+    if (btnDistill) btnDistill.classList.toggle('active', isDistill);
+    if (btnEvap) btnEvap.classList.toggle('active', isEvap);
 
-    // Hızlı kontrol grupları
     const grpFunnel = document.getElementById('group-controls-funnel');
     const grpDistill = document.getElementById('group-controls-distill');
+    const grpEvap = document.getElementById('group-controls-evap');
     if (grpFunnel) grpFunnel.classList.toggle('is-hidden', !isFunnel);
-    if (grpDistill) grpDistill.classList.toggle('is-hidden', isFunnel);
+    if (grpDistill) grpDistill.classList.toggle('is-hidden', !isDistill);
+    if (grpEvap) grpEvap.classList.toggle('is-hidden', !isEvap);
 
-    // Metrik panelleri
     const statsFunnel = document.getElementById('stats-grid-funnel');
     const statsDistill = document.getElementById('stats-grid-distill');
+    const statsEvap = document.getElementById('stats-grid-evap');
     if (statsFunnel) statsFunnel.classList.toggle('is-hidden', !isFunnel);
-    if (statsDistill) statsDistill.classList.toggle('is-hidden', isFunnel);
+    if (statsDistill) statsDistill.classList.toggle('is-hidden', !isDistill);
+    if (statsEvap) statsEvap.classList.toggle('is-hidden', !isEvap);
 
-    // Prensip rozeti
     const badge = document.getElementById('sep-principle-badge');
     const pIcon = document.getElementById('sep-principle-icon');
     const pTitle = document.getElementById('sep-principle-title');
@@ -13659,17 +13826,22 @@ function setSeparationMode(mode) {
             pIcon.innerHTML = '<i class="fas fa-filter"></i>';
             pTitle.textContent = "YOĞUNLUK FARKI (Heterojen Sıvı-Sıvı)";
             pDesc.textContent = "Birbirine karışmayan (emülsiyon) sıvılardan yoğunluğu büyük olan (Su, d=1.0 g/cm³) altta, yoğunluğu küçük olan (Zeytinyağı, d=0.9 g/cm³) üstte toplanır.";
-        } else {
+        } else if (isDistill) {
             badge.classList.add('distill-mode');
             pIcon.innerHTML = '<i class="fas fa-fire"></i>';
             pTitle.textContent = "KAYNAMA NOKTASI FARKI (Ayrımsal Damıtma)";
             pDesc.textContent = "Birbiri içinde homojen karışan (çözelti) sıvılardan kaynama noktası düşük olan (Etil Alkol, 78°C) önce yoğun biçimde buharlaşır ve soğutucuda yoğuşarak alkolce zengin sıvı olarak ayrılır.";
+        } else {
+            badge.classList.add('distill-mode');
+            pIcon.innerHTML = '<i class="fas fa-sun"></i>';
+            pTitle.textContent = "BUHARLAŞTIRMA (Katı-Sıvı Homojen Karışım)";
+            pDesc.textContent = "Tuzlu su gibi katı-sıvı çözeltilerde su ısıtılarak buharlaştırılır; çözünen katı (tuz) buharlaşamadığı için kap dibinde kristallenerek ayrılır.";
         }
     }
 
     updateSeparationPedagogicalBox();
     updateSeparationMetricsDOM();
-    showLabToast(isFunnel ? "🧪 Ayırma Hunisi (Yoğunluk Farkı) Modu Aktif" : "🔥 Ayrımsal Damıtma (Kaynama Noktası Farkı) Modu Aktif");
+    showLabToast(isFunnel ? "🧪 Ayırma Hunisi Modu Aktif" : (isDistill ? "🔥 Ayrımsal Damıtma Modu Aktif" : "🧂 Buharlaştırma (Tuz-Su) Modu Aktif"));
 }
 
 function toggleFunnelValve() {
@@ -13741,11 +13913,43 @@ function resetDistillApparatus() {
     showLabToast("🔄 Damıtma düzeneği sıfırlandı (20°C, 200 mL karışım)");
 }
 
+function toggleEvapHeater() {
+    const ev = labState.separation.evaporation;
+    ev.isHeating = !ev.isHeating;
+    const lbl = document.getElementById('label-evap-heater');
+    const btn = document.getElementById('btn-evap-heater');
+    if (lbl) lbl.textContent = ev.isHeating ? "Isıtıcıyı Durdur" : "Isıtıcıyı Başlat";
+    if (btn) btn.classList.toggle('active', ev.isHeating);
+    updateSeparationPedagogicalBox();
+    showLabToast(ev.isHeating ? "🔥 Buharlaştırma ısıtıcısı açıldı" : "❄️ Buharlaştırma ısıtıcısı kapatıldı");
+}
+
+function resetEvapApparatus() {
+    const ev = labState.separation.evaporation;
+    ev.isHeating = false;
+    ev.temp = 20.0;
+    ev.waterVolume = 100.0;
+    ev.evaporatedWater = 0.0;
+    ev.saltMass = 20.0;
+    ev.crystallizedSalt = 0.0;
+    ev.bubbles = [];
+    ev.steamParticles = [];
+    const lbl = document.getElementById('label-evap-heater');
+    const btn = document.getElementById('btn-evap-heater');
+    if (lbl) lbl.textContent = "Isıtıcıyı Başlat";
+    if (btn) btn.classList.remove('active');
+    updateSeparationPedagogicalBox();
+    updateSeparationMetricsDOM();
+    showLabToast("🔄 Tuzlu su buharlaştırma kabı sıfırlandı");
+}
+
 function resetSeparationExperiment() {
     if (labState.separation.mode === "funnel") {
         refillFunnel();
-    } else {
+    } else if (labState.separation.mode === "distill") {
         resetDistillApparatus();
+    } else {
+        resetEvapApparatus();
     }
 }
 
@@ -13805,7 +14009,7 @@ function updateSeparationPedagogicalBox() {
                 pText.textContent = "Zeytinyağı (0.9 g/cm³) üstte, su (1.0 g/cm³) alttadır. Musluğu açarak deneyi başlatın ve faz sınırı musluğa ulaştığında kapatın.";
             }
         }
-    } else {
+    } else if (sep.mode === "distill") {
         const d = sep.distillation;
         if (d.isHeating) {
             if (d.temp < 78.0) {
@@ -13837,6 +14041,26 @@ function updateSeparationPedagogicalBox() {
                 pText.textContent = "Homojen alkol-su karışımında kaynama noktası daha düşük olan etil alkol (78°C) sudan (100°C) önce yoğun biçimde buharlaşır. Ayrımsal damıtma yöntemiyle kaynama noktası farkından yararlanılarak alkolce zengin sıvı elde edilir.";
             }
         }
+    } else {
+        const ev = sep.evaporation;
+        if (ev.waterVolume <= 0.5) {
+            box.className = "lab-pedagogical-card is-work";
+            pIcon.innerHTML = '<i class="fas fa-award"></i>';
+            pTitle.textContent = "🏆 Buharlaştırma Tamamlandı: Tuz Kristalleri Elde Edildi!";
+            pText.textContent = "Çözeltideki su tamamen buharlaştı; kap tabanında 20.0 g saf tuz kristali kaldı. Katı-sıvı homojen karışımlar bu yöntemle ayrılır.";
+        } else if (ev.isHeating) {
+            box.className = "lab-pedagogical-card is-work";
+            pIcon.innerHTML = '<i class="fas fa-sun"></i>';
+            pTitle.textContent = ev.temp >= 98 ? `💨 Su Buharlaşıyor (${ev.temp.toFixed(1)}°C)` : `🔥 Çözelti Isınıyor (${ev.temp.toFixed(1)}°C)`;
+            pText.textContent = ev.temp >= 98
+                ? `Su buharlaşarak kaptan uzaklaşıyor, tuz ise kap dibinde birikmeye başlıyor (Kalan Su: ${ev.waterVolume.toFixed(1)} mL).`
+                : "Tuzlu su çözeltisi ısıtılıyor. Su kaynama sıcaklığına yaklaştıkça buharlaşma hızlanır.";
+        } else {
+            box.className = "lab-pedagogical-card is-work";
+            pIcon.innerHTML = '<i class="fas fa-sun"></i>';
+            pTitle.textContent = "🧂 Buharlaştırma (Tuzlu Su Çözeltisi)";
+            pText.textContent = "100 mL suda çözünmüş 20 g tuz bulunmaktadır. Isıtıcıyı başlatarak suyu buharlaştırın ve kap dibinde kalan tuz kristallerini gözlemleyin.";
+        }
     }
 }
 
@@ -13867,7 +14091,7 @@ function updateSeparationMetricsDOM() {
                 mFunnelEff.style.color = "#facc15";
             }
         }
-    } else {
+    } else if (sep.mode === "distill") {
         const d = sep.distillation;
         const mTemp = document.getElementById('metric-distill-temp');
         const mBoiling = document.getElementById('metric-distill-boiling');
@@ -13895,6 +14119,16 @@ function updateSeparationMetricsDOM() {
         }
         if (mAlcohol) mAlcohol.textContent = `${d.distilledAlcohol.toFixed(1)} mL`;
         if (mFlaskLiquid) mFlaskLiquid.textContent = `${(d.alcoholVolume + d.waterVolume).toFixed(1)} mL`;
+    } else {
+        const ev = sep.evaporation;
+        const mEvTemp = document.getElementById('metric-evap-temp');
+        const mEvWater = document.getElementById('metric-evap-water');
+        const mEvRemain = document.getElementById('metric-evap-remain');
+        const mEvSalt = document.getElementById('metric-evap-salt');
+        if (mEvTemp) mEvTemp.textContent = `${ev.temp.toFixed(1)} °C`;
+        if (mEvWater) mEvWater.textContent = `${ev.evaporatedWater.toFixed(1)} mL`;
+        if (mEvRemain) mEvRemain.textContent = `${ev.waterVolume.toFixed(1)} mL`;
+        if (mEvSalt) mEvSalt.textContent = `${ev.crystallizedSalt.toFixed(1)} g`;
     }
 
     // Metrik Şeridi (#metrics-bar-7-5) Güncellemesi
@@ -13923,7 +14157,7 @@ function updateSeparationMetricsDOM() {
                 mbStatus.style.color = "#facc15";
             }
         }
-    } else {
+    } else if (sep.mode === "distill") {
         const d = sep.distillation;
         if (mbMethod) mbMethod.textContent = "Ayrımsal Damıtma (K.N. Farkı)";
         if (mbSubstances) mbSubstances.textContent = `Karışım: ${d.temp.toFixed(1)}°C (Ref: Etanol 78°C / Su 100°C)`;
@@ -13940,6 +14174,23 @@ function updateSeparationMetricsDOM() {
                 mbStatus.style.color = "#fb923c";
             } else {
                 mbStatus.textContent = "💧 Kaynama noktaları farklı homojen sıvılar ayrımsal damıtmayla ayrılır";
+                mbStatus.style.color = "#facc15";
+            }
+        }
+    } else {
+        const ev = sep.evaporation;
+        if (mbMethod) mbMethod.textContent = "Buharlaştırma (Tuz-Su)";
+        if (mbSubstances) mbSubstances.textContent = "Tuz (20 g) + Su (100 mL)";
+        if (mbPhase) mbPhase.textContent = ev.waterVolume <= 0.5 ? "Tuz Kristallendi" : (ev.isHeating ? `Buharlaşıyor (${ev.temp.toFixed(1)}°C)` : "Durgun");
+        if (mbStatus) {
+            if (ev.waterVolume <= 0.5) {
+                mbStatus.textContent = "🏆 Başarılı: Su buharlaştı, kapta 20.0 g tuz kristali kaldı!";
+                mbStatus.style.color = "#34d399";
+            } else if (ev.isHeating) {
+                mbStatus.textContent = "💨 Su buharlaşıyor, dipte tuz kristalleri oluşuyor";
+                mbStatus.style.color = "#38bdf8";
+            } else {
+                mbStatus.textContent = "🧂 Katı-sıvı homojen çözeltiler buharlaştırma ile ayrılır";
                 mbStatus.style.color = "#facc15";
             }
         }
@@ -14017,7 +14268,7 @@ function updateSeparationPhysics() {
         updateSeparationPedagogicalBox();
     }
     // --- MOD 2: AYRIMSAL DAMITMA FİZİĞİ ---
-    else {
+    else if (sep.mode === "distill") {
         const d = sep.distillation;
 
         if (d.isHeating) {
@@ -14122,6 +14373,39 @@ function updateSeparationPhysics() {
         updateSeparationMetricsDOM();
         updateSeparationPedagogicalBox();
     }
+    // --- MOD 3: BUHARLAŞTIRMA (TUZ-SU) FİZİĞİ ---
+    else {
+        const ev = sep.evaporation;
+        if (ev.isHeating && ev.waterVolume > 0) {
+            if (ev.temp < 100.0) { ev.temp = Math.min(100.0, ev.temp + 0.55); }
+            if (ev.temp >= 92.0) {
+                const rate = ev.temp >= 99.0 ? 0.36 : 0.14;
+                ev.waterVolume = Math.max(0, ev.waterVolume - rate);
+                ev.evaporatedWater = 100.0 - ev.waterVolume;
+                ev.crystallizedSalt = ev.saltMass * (ev.evaporatedWater / 100.0);
+                if (Math.random() < 0.45) {
+                    ev.bubbles.push({ x: 355 + Math.random() * 90, y: 365, r: 2 + Math.random() * 2.5, vy: 1.5 + Math.random(), alpha: 0.8 });
+                }
+                if (Math.random() < 0.4) {
+                    ev.steamParticles.push({ x: 360 + Math.random() * 80, y: 295, vy: 1.1 + Math.random() * 0.8, r: 6 + Math.random() * 6, alpha: 0.55 });
+                }
+            }
+        } else if (!ev.isHeating && ev.temp > 20.0) {
+            ev.temp = Math.max(20.0, ev.temp - 0.2);
+        }
+        for (let i = ev.bubbles.length - 1; i >= 0; i--) {
+            const b = ev.bubbles[i];
+            b.y -= b.vy; b.alpha -= 0.025;
+            if (b.alpha <= 0 || b.y < 305) ev.bubbles.splice(i, 1);
+        }
+        for (let i = ev.steamParticles.length - 1; i >= 0; i--) {
+            const p = ev.steamParticles[i];
+            p.y -= p.vy; p.r += 0.15; p.alpha -= 0.01;
+            if (p.alpha <= 0 || p.y < 90) ev.steamParticles.splice(i, 1);
+        }
+        updateSeparationMetricsDOM();
+        updateSeparationPedagogicalBox();
+    }
 }
 
 // --- 8.6.1. SAF CANVAS 2D ÇİZİM MOTORU ---
@@ -14160,11 +14444,80 @@ function drawSeparationSimulation() {
     const sep = labState.separation;
     if (sep.mode === "funnel") {
         drawFunnelApparatus(ctx, sep.funnel);
-    } else {
+    } else if (sep.mode === "distill") {
         drawDistillationApparatus(ctx, sep.distillation);
+    } else {
+        drawEvaporationApparatus(ctx, sep.evaporation);
     }
 
     ctx.restore();
+}
+
+function drawEvaporationApparatus(ctx, ev) {
+    // Sacayak ve tel kafes
+    ctx.strokeStyle = '#64748b';
+    ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(330, 385); ctx.lineTo(470, 385); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(345, 385); ctx.lineTo(325, 440); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(455, 385); ctx.lineTo(475, 440); ctx.stroke();
+
+    // İspirto Ocağı
+    ctx.fillStyle = '#334155';
+    ctx.fillRect(375, 412, 50, 28);
+    ctx.fillStyle = '#475569';
+    ctx.fillRect(393, 402, 14, 10);
+    if (ev.isHeating) {
+        const flGrad = ctx.createRadialGradient(400, 396, 2, 400, 394, 18);
+        flGrad.addColorStop(0, '#fef08a');
+        flGrad.addColorStop(0.5, '#f97316');
+        flGrad.addColorStop(1, 'rgba(239,68,68,0)');
+        ctx.fillStyle = flGrad;
+        ctx.beginPath(); ctx.ellipse(400, 394, 11, 18, 0, 0, Math.PI * 2); ctx.fill();
+    }
+
+    // Beher / Buharlaştırma Kabı
+    ctx.fillStyle = 'rgba(148, 163, 184, 0.1)';
+    ctx.strokeStyle = 'rgba(226, 232, 240, 0.65)';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.roundRect(335, 255, 130, 128, [4, 4, 14, 14]); ctx.fill(); ctx.stroke();
+
+    // Kalan Tuzlu Su Seviyesi
+    const waterH = (ev.waterVolume / 100.0) * 90;
+    if (waterH > 1) {
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.38)';
+        ctx.fillRect(338, 380 - waterH, 124, waterH);
+    }
+
+    // Dipte Kristallenen Tuz Tanecikleri
+    const saltRatio = ev.crystallizedSalt / ev.saltMass;
+    if (saltRatio > 0.02) {
+        const saltH = Math.min(20, saltRatio * 20);
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.moveTo(340, 380);
+        ctx.quadraticCurveTo(400, 380 - saltH * 1.4, 460, 380);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    // Kabarcıklar ve Buhar
+    ev.bubbles.forEach(b => {
+        ctx.fillStyle = `rgba(224, 242, 254, ${b.alpha})`;
+        ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill();
+    });
+    ev.steamParticles.forEach(p => {
+        ctx.fillStyle = `rgba(226, 232, 240, ${p.alpha})`;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+    });
+
+    // Bilgi Etiketi
+    ctx.fillStyle = '#e2e8f0';
+    ctx.font = 'bold 14px Nunito, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Tuzlu Su Çözeltisi · ${ev.temp.toFixed(1)}°C`, 400, 235);
+    ctx.fillStyle = '#facc15';
+    ctx.font = '13px Nunito, sans-serif';
+    ctx.fillText(`Çöken Tuz: ${ev.crystallizedSalt.toFixed(1)} g / 20.0 g`, 400, 470);
 }
 
 // --- MOD 1: AYIRMA HUNİSİ ÇİZİM RUTİNLERİ ---
@@ -16504,18 +16857,14 @@ function updateElectroscopeMetricsDOM() {
             pText.textContent = `Dokunma sonucu iletken cisimler arasında doğrudan elektron aktarımı gerçekleşti. Çubuk uzaklaştırılsa dahi elektroskop yüklü kalır ve yapraklar açık kalmaya devam eder!`;
         } else if (es.rod.action === "approach") {
             pBox.className = "lab-pedagogical-card is-work";
-            if (es.rod.charge > 0) {
-                pIcon.innerHTML = '<i class="fas fa-compress-arrows-alt" style="color: #f87171;"></i>';
-                pTitle.textContent = "🧲 Etki ile Elektriklenme: (+) Cam Çubuk Yaklaştırıldı";
-                pText.textContent = "Pozitif yüklü cam çubuk, elektroskobun yapraklarındaki serbest elektronları (e⁻) topuza çeker. Topuz negatif (-), yapraklar pozitif (+) kutuplanır ve yapraklar açılır. 💡 Maarif Notu: Nötr elektroskobun yapraklarının açılması cismin elektrikle yüklü olduğunu kanıtlar; fakat yük cinsini (+ ya da -) tek başına belirlemez.";
-            } else if (es.rod.charge < 0) {
-                pIcon.innerHTML = '<i class="fas fa-compress-arrows-alt" style="color: #38bdf8;"></i>';
-                pTitle.textContent = "🧲 Etki ile Elektriklenme: (-) Ebonit Çubuk Yaklaştırıldı";
-                pText.textContent = "Negatif yüklü ebonit çubuk, topuzdaki serbest elektronları (e⁻) yapraklara doğru iter. Topuz pozitif (+), yapraklar negatif (-) kutuplanır ve yapraklar açılır. 💡 Maarif Notu: Nötr elektroskobun yapraklarının açılması cismin elektrikle yüklü olduğunu kanıtlar; fakat yük cinsini (+ ya da -) tek başına belirlemez.";
+            if (es.rod.charge !== 0) {
+                pIcon.innerHTML = `<i class="fas fa-compress-arrows-alt" style="color: ${es.rod.charge > 0 ? '#f87171' : '#38bdf8'};"></i>`;
+                pTitle.textContent = es.rod.charge > 0 ? "🔍 (+) Yüklü Cam Çubuk Yaklaştırıldı" : "🔍 (-) Yüklü Ebonit Çubuk Yaklaştırıldı";
+                pText.textContent = "Yüklü çubuk yaklaştırıldığında elektroskobun yaprakları açılır (yüklü elektroskopta ise aynı cins yükte daha çok açılır, zıt cins yükte biraz kapanır). 💡 Not: Nötr elektroskop cismin yüklü olduğunu gösterir, yük cinsini tek başına belirlemez.";
             } else {
                 pIcon.innerHTML = '<i class="fas fa-balance-scale" style="color: #94a3b8;"></i>';
                 pTitle.textContent = "⚖️ Nötr Çubuk Yaklaştırıldı";
-                pText.textContent = "Çubuk yüksüz (nötr) olduğu için elektroskopta elektron hareketi oluşmaz. Yapraklar mevcut durumunu korur.";
+                pText.textContent = "Çubuk yüksüz (nötr) olduğu için yaprakların açıklığı değişmez.";
             }
         } else {
             // Remove / Uzak
@@ -22299,11 +22648,11 @@ function recordMeasurement() {
         const ht = labState.heatTransfer;
         const row = {
             id: ht.measurements.length + 1,
-            col1: ht.mode === "metals" ? "Metallerde İletim" : "Binalarda Yalıtım",
-            col2: ht.rods[0].ballDropped ? `Bakır Düştü (${ht.rods[0].dropTime.toFixed(1)}s)` : `${ht.rods[0].temp.toFixed(0)}°C`,
-            col3: ht.rods[1].ballDropped ? `Alüminyum Düştü (${ht.rods[1].dropTime.toFixed(1)}s)` : `${ht.rods[1].temp.toFixed(0)}°C`,
-            col4: ht.rods[2].ballDropped ? `Demir Düştü (${ht.rods[2].dropTime.toFixed(1)}s)` : `${ht.rods[2].temp.toFixed(0)}°C`,
-            col5: "İletkenlik: Bakır > Alüminyum > Demir"
+            col1: ht.mode === "metals" ? "İletken ve Yalıtkan Kaşıklar" : "Binalarda Yalıtım",
+            col2: ht.rods[0].ballDropped ? `Metal Kaşık (${ht.rods[0].dropTime.toFixed(1)}s)` : `Metal: ${ht.rods[0].temp.toFixed(0)}°C`,
+            col3: `Tahta: ${ht.rods[1].temp.toFixed(0)}°C`,
+            col4: `Plastik: ${ht.rods[2].temp.toFixed(0)}°C`,
+            col5: "Metal kaşık iletken, tahta ve plastik kaşıklar yalıtkandır"
         };
         ht.measurements.push(row);
         showLabToast(`Isı İletimi Ölçümü #${row.id} deftere kaydedildi!`);
@@ -22319,6 +22668,61 @@ function recordMeasurement() {
         };
         cc.measurements.push(row);
         showLabToast(`Devre Parlaklığı Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "5.11") {
+        const cm = labState.cellMicroscope;
+        const isPlant = cm.specimen === "plant";
+        const row = {
+            id: cm.measurements.length + 1,
+            col1: isPlant ? "🌱 Soğan Zarı (Bitki)" : "🧬 Epitel (Hayvan)",
+            col2: `${cm.zoom}x (Netlik %${cm.focus})`,
+            col3: isPlant ? "Köşeli şekil + Hücre Duvarı" : "Yuvarlağımsı + Duvar Yok",
+            col4: "Zar, Sitoplazma, Çekirdek",
+            col5: isPlant ? "Bitki hücresinde hücre duvarı bulunur" : "Hayvan hücresinde hücre duvarı bulunmaz"
+        };
+        cm.measurements.push(row);
+        showLabToast(`Hücre Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "5.12") {
+        const lt = labState.lightTransmission;
+        const info = {
+            transparent: ["🪟 Pencere Camı", "Saydam", "Tam Geçer", "Net Görünür · Gölge Yok"],
+            translucent: ["📜 Yağlı Kâğıt", "Yarı Saydam", "Kısmen Geçer", "Bulanık Görünür · Hafif Gölge"],
+            opaque: ["🪵 Tahta Levha", "Opak (Saydam Olmayan)", "Hiç Geçmez", "Görünmez · Tam Gölge Oluşur"]
+        }[lt.material];
+        const row = {
+            id: lt.measurements.length + 1,
+            col1: info[0],
+            col2: lt.lightOn ? "Fener Açık" : "Fener Kapalı",
+            col3: info[1],
+            col4: info[2],
+            col5: info[3]
+        };
+        lt.measurements.push(row);
+        showLabToast(`Işık Geçirgenliği Gözlemi #${row.id} deftere kaydedildi!`);
+    } else if (expId === "6.11") {
+        const cw = labState.colorWheel;
+        if (cw.mode === "wheel") {
+            const row = {
+                id: cw.measurements.length + 1,
+                col1: "🎡 Newton Çarkı",
+                col2: `Hız: %${cw.speed}`,
+                col3: cw.speed >= 70 ? "Beyaz Algılanır" : (cw.speed > 0 ? "Karışık Bulanık" : "7 Renk Ayrı"),
+                col4: "Kırmızı-Turuncu-Sarı-Yeşil-Mavi-Mor",
+                col5: cw.speed >= 70 ? "Beyaz ışık tüm renklerin birleşimidir" : "Hız artırıldığında renkler beyaz birleşir"
+            };
+            cw.measurements.push(row);
+        } else {
+            const perceived = computePerceivedColor611(cw.lightColor, cw.objectColor);
+            const row = {
+                id: cw.measurements.length + 1,
+                col1: "💡 Renkli Işık",
+                col2: `Işık: ${cw.lightColor.toUpperCase()}`,
+                col3: `Cisim: ${cw.objectColor.toUpperCase()}`,
+                col4: `Görünen: ${perceived.label}`,
+                col5: perceived.note
+            };
+            cw.measurements.push(row);
+        }
+        showLabToast(`Renk Gözlemi #${cw.measurements.length} deftere kaydedildi!`);
     } else if (expId === "6.1") {
         const ec = labState.eclipse;
         const isSolar = ec.mode === "solar";
@@ -22349,7 +22753,7 @@ function recordMeasurement() {
         showLabToast(`Kuvvet Gözlemi #${row.id} deftere kaydedildi!`);
     } else if (expId === "6.3") {
         const m = labState.motion;
-        const isRoundTrip = (m.graphType === "vt");
+        const isRoundTrip = (m.graphMode === "vt");
         const maxDist = isRoundTrip ? m.trackLength * 2 : m.trackLength;
         const disp = isRoundTrip
             ? (m.distanceTraveled <= m.trackLength ? m.distanceTraveled : Math.max(0, maxDist - m.distanceTraveled))
@@ -22661,7 +23065,7 @@ function recordMeasurement() {
             };
             sep.measurements.push(row);
             showLabToast(`Ayırma Hunisi Gözlemi #${row.id} deftere kaydedildi!`);
-        } else {
+        } else if (sep.mode === "distill") {
             const d = sep.distillation;
             let resultStr = "";
             if (d.distilledAlcohol >= 98.0) {
@@ -22682,6 +23086,18 @@ function recordMeasurement() {
             };
             sep.measurements.push(row);
             showLabToast(`Damıtma Gözlemi #${row.id} deftere kaydedildi!`);
+        } else {
+            const ev = sep.evaporation;
+            const row = {
+                id: sep.measurements.length + 1,
+                col1: "🧂 Buharlaştırma",
+                col2: "Tuzlu Su (Katı-Sıvı Homojen)",
+                col3: "Buharlaşma (Sıvı uçar, katı kalır)",
+                col4: `Buharlaşan Su: ${fmt(ev.evaporatedWater)} mL`,
+                col5: `Çöken Tuz: ${fmt(ev.crystallizedSalt)} g (${fmt(ev.temp)}°C)`
+            };
+            sep.measurements.push(row);
+            showLabToast(`Buharlaştırma Gözlemi #${row.id} deftere kaydedildi!`);
         }
     } else if (expId === "7.6") {
         const dissolve = labState.dissolve;
@@ -22895,6 +23311,9 @@ export function getActiveExperimentMeasurements(expId) {
     if (expId === "5.8") return labState.waterState.measurements;
     if (expId === "5.9") return labState.heatTransfer.measurements;
     if (expId === "5.10") return labState.circuit.measurements;
+    if (expId === "5.11") return labState.cellMicroscope.measurements;
+    if (expId === "5.12") return labState.lightTransmission.measurements;
+    if (expId === "6.11") return labState.colorWheel.measurements;
     if (expId === "6.1") return labState.eclipse.measurements;
     if (expId === "6.2") return labState.tugOfWar.measurements;
     if (expId === "6.3") return labState.motion.measurements;
@@ -22907,11 +23326,11 @@ export function getActiveExperimentMeasurements(expId) {
     if (expId === "6.10") return labState.resistance.measurements;
     if (expId === "7.1") return labState.work.measurements;
     if (expId === "7.2") return labState.energy.measurements;
-    if (expId === "7.3") return labState.refraction.measurements;
-    if (expId === "7.4") return labState.lenses.measurements;
-    if (expId === "7.5") return labState.distillation.measurements;
-    if (expId === "7.6") return labState.dissolution.measurements;
-    if (expId === "7.7") return labState.electrostatics.measurements;
+    if (expId === "7.3") return labState.optics.measurements;
+    if (expId === "7.4") return labState.lens.measurements;
+    if (expId === "7.5") return labState.separation.measurements;
+    if (expId === "7.6") return labState.dissolve.measurements;
+    if (expId === "7.7") return labState.electro.measurements;
     if (expId === "7.8") return labState.electroscope.measurements;
     if (expId === "7.9") return labState.foodPyramid.measurements;
     if (expId === "7.10") return labState.waterFootprint.measurements;
@@ -23115,6 +23534,12 @@ function renderMeasurementTable() {
         measurements = labState.heatTransfer.measurements;
     } else if (expId === "5.10") {
         measurements = labState.circuit.measurements;
+    } else if (expId === "5.11") {
+        measurements = labState.cellMicroscope.measurements;
+    } else if (expId === "5.12") {
+        measurements = labState.lightTransmission.measurements;
+    } else if (expId === "6.11") {
+        measurements = labState.colorWheel.measurements;
     } else if (expId === "6.1") {
         measurements = labState.eclipse.measurements;
     } else if (expId === "6.2") {
@@ -23204,6 +23629,12 @@ function clearMeasurementTable(silent = false) {
         labState.heatTransfer.measurements = [];
     } else if (expId === "5.10") {
         labState.circuit.measurements = [];
+    } else if (expId === "5.11") {
+        labState.cellMicroscope.measurements = [];
+    } else if (expId === "5.12") {
+        labState.lightTransmission.measurements = [];
+    } else if (expId === "6.11") {
+        labState.colorWheel.measurements = [];
     } else if (expId === "6.1") {
         labState.eclipse.measurements = [];
     } else if (expId === "6.2") {
@@ -24528,6 +24959,396 @@ export function getLabProgressSummary() {
         notStarted,
         progressMap: progress
     };
+}
+
+// ============================================================================
+// YENİ DERS KİTABI DENEYLERİ: 5.11 (HÜCRE), 5.12 (SAYDAM/OPAK), 6.11 (RENKLER)
+// ============================================================================
+
+function setupCellMicroscopeControlsDOM() {
+    document.getElementById('btn-511-plant')?.addEventListener('click', () => { labState.cellMicroscope.specimen = "plant"; updateCellMicroscopeDOM(); });
+    document.getElementById('btn-511-animal')?.addEventListener('click', () => { labState.cellMicroscope.specimen = "animal"; updateCellMicroscopeDOM(); });
+    [10, 40, 100].forEach(z => {
+        document.getElementById(`btn-511-zoom-${z}`)?.addEventListener('click', () => { labState.cellMicroscope.zoom = z; updateCellMicroscopeDOM(); });
+    });
+    document.getElementById('btn-511-labels')?.addEventListener('click', () => { labState.cellMicroscope.showLabels = !labState.cellMicroscope.showLabels; updateCellMicroscopeDOM(); });
+    document.getElementById('btn-511-reset')?.addEventListener('click', resetCellMicroscopeExperiment);
+    document.getElementById('slider-511-focus')?.addEventListener('input', (e) => { labState.cellMicroscope.focus = parseInt(e.target.value, 10); updateCellMicroscopeDOM(); });
+    document.getElementById('btn-record-data-5-11')?.addEventListener('click', recordMeasurement);
+}
+function initCellMicroscopeState() { updateCellMicroscopeDOM(); }
+function resetCellMicroscopeExperiment() {
+    labState.cellMicroscope.specimen = "plant";
+    labState.cellMicroscope.zoom = 40;
+    labState.cellMicroscope.focus = 100;
+    labState.cellMicroscope.showLabels = true;
+    const s = document.getElementById('slider-511-focus'); if (s) s.value = 100;
+    updateCellMicroscopeDOM();
+    showLabToast("🔬 Mikroskop sıfırlandı (Soğan Zarı, 40x)");
+}
+function updateCellMicroscopeDOM() {
+    const cm = labState.cellMicroscope;
+    const isPlant = cm.specimen === "plant";
+    document.getElementById('btn-511-plant')?.classList.toggle('active', isPlant);
+    document.getElementById('btn-511-animal')?.classList.toggle('active', !isPlant);
+    [10, 40, 100].forEach(z => document.getElementById(`btn-511-zoom-${z}`)?.classList.toggle('active', cm.zoom === z));
+    document.getElementById('btn-511-labels')?.classList.toggle('active', cm.showLabels);
+    const lf = document.getElementById('label-511-focus'); if (lf) lf.textContent = `%${cm.focus}`;
+    const mSpec = document.getElementById('mbar-511-specimen'); if (mSpec) mSpec.textContent = isPlant ? "Soğan Zarı (Bitki)" : "Ağız İçi Epitel (Hayvan)";
+    const mZoom = document.getElementById('mbar-511-zoom'); if (mZoom) mZoom.textContent = `${cm.zoom}x`;
+    const mFoc = document.getElementById('mbar-511-focus'); if (mFoc) mFoc.textContent = cm.focus >= 80 ? `%${cm.focus} (Net)` : `%${cm.focus} (Bulanık)`;
+    const mStat = document.getElementById('mbar-511-status');
+    if (mStat) mStat.textContent = isPlant ? "🔬 Bitki hücresinde hücre duvarı ve köşeli yapı gözlemlenir" : "🧬 Hayvan hücresi yuvarlağımsıdır, hücre duvarı yoktur";
+    const pTitle = document.getElementById('cell-pedagogical-title');
+    const pText = document.getElementById('cell-pedagogical-text');
+    if (pTitle && pText) {
+        pTitle.textContent = isPlant ? "🌱 Bitki Hücresi (Soğan Zarı)" : "🧬 Hayvan Hücresi (Ağız İçi Epitel)";
+        pText.textContent = isPlant
+            ? "Köşeli yapıdadır ve hücre zarının dışında koruyucu hücre duvarı (çeper) bulunur. Hücre zarı, sitoplazma ve çekirdek tüm hücrelerde ortaktır."
+            : "Yuvarlağımsı şekildedir ve hücre duvarı yoktur. Hücre zarı, sitoplazma ve merkezde belirgin çekirdek gözlemlenir.";
+    }
+}
+function drawCellMicroscopeSimulation() {
+    if (!ctx || !canvas) return;
+    const W = canvas.width, H = canvas.height, scale = W / 800;
+    const cm = labState.cellMicroscope;
+    ctx.save();
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#060b18";
+    ctx.fillRect(0, 0, W, H);
+
+    const cx = 400 * scale, cy = 250 * scale, R = 210 * scale;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.clip();
+
+    const blurPx = Math.max(0, (100 - cm.focus) * 0.08);
+    ctx.filter = blurPx > 0 ? `blur(${blurPx.toFixed(1)}px)` : "none";
+
+    const bg = ctx.createRadialGradient(cx, cy, 20 * scale, cx, cy, R);
+    bg.addColorStop(0, cm.specimen === "plant" ? "#dcfce7" : "#fce7f3");
+    bg.addColorStop(1, cm.specimen === "plant" ? "#86efac" : "#fbcfe8");
+    ctx.fillStyle = bg;
+    ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
+
+    const zFactor = cm.zoom === 10 ? 0.65 : (cm.zoom === 40 ? 1.0 : 1.45);
+    if (cm.specimen === "plant") {
+        const cw = 135 * zFactor * scale, ch = 82 * zFactor * scale;
+        for (let row = -3; row <= 3; row++) {
+            for (let col = -3; col <= 3; col++) {
+                const ox = cx + col * cw + (row % 2 === 0 ? 0 : cw * 0.45) - cw / 2;
+                const oy = cy + row * ch - ch / 2;
+                ctx.fillStyle = "rgba(187, 247, 208, 0.72)";
+                ctx.strokeStyle = "#15803d";
+                ctx.lineWidth = 5 * scale;
+                ctx.strokeRect(ox, oy, cw - 4 * scale, ch - 4 * scale);
+                ctx.fillRect(ox, oy, cw - 4 * scale, ch - 4 * scale);
+                ctx.strokeStyle = "#22c55e";
+                ctx.lineWidth = 1.6 * scale;
+                ctx.strokeRect(ox + 5 * scale, oy + 5 * scale, cw - 14 * scale, ch - 14 * scale);
+                ctx.fillStyle = "#166534";
+                ctx.beginPath();
+                ctx.arc(ox + cw * 0.3, oy + ch * 0.5, 11 * zFactor * scale, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+    } else {
+        const positions = [
+            { x: 0, y: 0 }, { x: -120, y: -70 }, { x: 125, y: -60 },
+            { x: -115, y: 85 }, { x: 115, y: 80 }
+        ];
+        positions.forEach(p => {
+            const hx = cx + p.x * zFactor * scale, hy = cy + p.y * zFactor * scale;
+            const rx = 68 * zFactor * scale, ry = 52 * zFactor * scale;
+            ctx.fillStyle = "rgba(244, 114, 182, 0.35)";
+            ctx.strokeStyle = "#be185d";
+            ctx.lineWidth = 3 * scale;
+            ctx.beginPath();
+            ctx.ellipse(hx, hy, rx, ry, 0.25, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = "#831843";
+            ctx.beginPath();
+            ctx.arc(hx + 8 * scale, hy - 4 * scale, 14 * zFactor * scale, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+    ctx.filter = "none";
+    ctx.restore();
+
+    ctx.strokeStyle = "#38bdf8";
+    ctx.lineWidth = 6 * scale;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+
+    if (cm.showLabels && cm.focus >= 60) {
+        const labels = cm.specimen === "plant"
+            ? [
+                { t: "Hücre Duvarı (Çeper)", x: cx + 175 * scale, y: cy - 110 * scale },
+                { t: "Hücre Zarı", x: cx + 175 * scale, y: cy - 40 * scale },
+                { t: "Sitoplazma", x: cx + 175 * scale, y: cy + 30 * scale },
+                { t: "Çekirdek", x: cx + 175 * scale, y: cy + 100 * scale }
+              ]
+            : [
+                { t: "Hücre Zarı (Duvar Yok)", x: cx + 175 * scale, y: cy - 75 * scale },
+                { t: "Sitoplazma", x: cx + 175 * scale, y: cy + 5 * scale },
+                { t: "Çekirdek", x: cx + 175 * scale, y: cy + 85 * scale }
+              ];
+        ctx.font = `bold ${13 * scale}px Nunito, sans-serif`;
+        ctx.textAlign = "left";
+        labels.forEach(lb => {
+            ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+            ctx.strokeStyle = "#38bdf8";
+            ctx.lineWidth = 1.5 * scale;
+            ctx.beginPath(); ctx.roundRect(lb.x, lb.y - 14 * scale, 185 * scale, 28 * scale, 8 * scale); ctx.fill(); ctx.stroke();
+            ctx.fillStyle = "#f8fafc";
+            ctx.fillText(lb.t, lb.x + 10 * scale, lb.y + 5 * scale);
+        });
+    }
+    ctx.restore();
+}
+
+function setupLightTransmissionControlsDOM() {
+    document.getElementById('btn-512-transparent')?.addEventListener('click', () => { labState.lightTransmission.material = "transparent"; updateLightTransmissionDOM(); });
+    document.getElementById('btn-512-translucent')?.addEventListener('click', () => { labState.lightTransmission.material = "translucent"; updateLightTransmissionDOM(); });
+    document.getElementById('btn-512-opaque')?.addEventListener('click', () => { labState.lightTransmission.material = "opaque"; updateLightTransmissionDOM(); });
+    document.getElementById('btn-512-light')?.addEventListener('click', () => { labState.lightTransmission.lightOn = !labState.lightTransmission.lightOn; updateLightTransmissionDOM(); });
+    document.getElementById('btn-512-reset')?.addEventListener('click', resetLightTransmissionExperiment);
+    document.getElementById('btn-record-data-5-12')?.addEventListener('click', recordMeasurement);
+}
+function initLightTransmissionState() { updateLightTransmissionDOM(); }
+function resetLightTransmissionExperiment() {
+    labState.lightTransmission.material = "transparent";
+    labState.lightTransmission.lightOn = true;
+    updateLightTransmissionDOM();
+    showLabToast("🪟 Işık geçirgenliği düzeneği sıfırlandı");
+}
+function updateLightTransmissionDOM() {
+    const lt = labState.lightTransmission;
+    document.getElementById('btn-512-transparent')?.classList.toggle('active', lt.material === "transparent");
+    document.getElementById('btn-512-translucent')?.classList.toggle('active', lt.material === "translucent");
+    document.getElementById('btn-512-opaque')?.classList.toggle('active', lt.material === "opaque");
+    const btnL = document.getElementById('btn-512-light'); if (btnL) btnL.classList.toggle('active', lt.lightOn);
+    const lblL = document.getElementById('label-512-light'); if (lblL) lblL.textContent = lt.lightOn ? "Fener: Açık" : "Fener: Kapalı";
+
+    const map = {
+        transparent: { mat: "Pencere Camı", type: "Saydam (Tam Geçer)", clar: "Net Görünür", shadow: "Gölge Oluşmaz", stat: "💡 Saydam maddeler ışığın tamamına yakınını geçirir" },
+        translucent: { mat: "Yağlı Kâğıt", type: "Yarı Saydam (Kısmen)", clar: "Bulanık Görünür", shadow: "Hafif Gölge", stat: "📜 Yarı saydam maddeler ışığın bir kısmını geçirir" },
+        opaque: { mat: "Tahta Levha", type: "Opak (Geçirmez)", clar: "Görünmez", shadow: "Tam Gölge Oluşur", stat: "🪵 Opak maddeler ışığı geçirmez ve tam gölge oluşturur" }
+    }[lt.material];
+    const s = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    s('mbar-512-material', map.mat); s('mbar-512-type', map.type); s('mbar-512-clarity', lt.lightOn ? map.clar : "Karanlık"); s('mbar-512-status', map.stat);
+    s('metric-512-class', lt.material === "transparent" ? "Saydam" : (lt.material === "translucent" ? "Yarı Saydam" : "Opak"));
+    s('metric-512-shadow', lt.lightOn ? map.shadow : "Fener Kapalı");
+    s('trans-pedagogical-title', `${map.mat} (${lt.material === "transparent" ? "Saydam" : (lt.material === "translucent" ? "Yarı Saydam" : "Opak")})`);
+    s('trans-pedagogical-text', map.stat);
+}
+function drawLightTransmissionSimulation() {
+    if (!ctx || !canvas) return;
+    const W = canvas.width, H = canvas.height, scale = W / 800;
+    const lt = labState.lightTransmission;
+    ctx.save();
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#0b1120";
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.fillStyle = "#475569";
+    ctx.fillRect(60 * scale, 225 * scale, 80 * scale, 50 * scale);
+    ctx.fillStyle = lt.lightOn ? "#fde047" : "#334155";
+    ctx.fillRect(140 * scale, 218 * scale, 16 * scale, 64 * scale);
+
+    if (lt.lightOn) {
+        ctx.fillStyle = "rgba(253, 224, 71, 0.22)";
+        ctx.beginPath();
+        ctx.moveTo(156 * scale, 222 * scale);
+        ctx.lineTo(360 * scale, 160 * scale);
+        ctx.lineTo(360 * scale, 340 * scale);
+        ctx.lineTo(156 * scale, 278 * scale);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    if (lt.material === "transparent") {
+        ctx.fillStyle = "rgba(56, 189, 248, 0.18)";
+        ctx.strokeStyle = "#38bdf8";
+    } else if (lt.material === "translucent") {
+        ctx.fillStyle = "rgba(241, 245, 249, 0.55)";
+        ctx.strokeStyle = "#cbd5e1";
+    } else {
+        ctx.fillStyle = "#92400e";
+        ctx.strokeStyle = "#f59e0b";
+    }
+    ctx.lineWidth = 3 * scale;
+    ctx.fillRect(360 * scale, 130 * scale, 34 * scale, 240 * scale);
+    ctx.strokeRect(360 * scale, 130 * scale, 34 * scale, 240 * scale);
+
+    ctx.fillStyle = "#1e293b";
+    ctx.strokeStyle = "#64748b";
+    ctx.fillRect(650 * scale, 100 * scale, 24 * scale, 300 * scale);
+    ctx.strokeRect(650 * scale, 100 * scale, 24 * scale, 300 * scale);
+
+    if (lt.lightOn) {
+        if (lt.material === "transparent") {
+            ctx.fillStyle = "rgba(253, 224, 71, 0.2)";
+            ctx.beginPath(); ctx.moveTo(394 * scale, 160 * scale); ctx.lineTo(650 * scale, 125 * scale); ctx.lineTo(650 * scale, 375 * scale); ctx.lineTo(394 * scale, 340 * scale); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = "#fef08a";
+            ctx.fillRect(646 * scale, 135 * scale, 8 * scale, 230 * scale);
+        } else if (lt.material === "translucent") {
+            ctx.fillStyle = "rgba(253, 224, 71, 0.08)";
+            ctx.beginPath(); ctx.moveTo(394 * scale, 160 * scale); ctx.lineTo(650 * scale, 125 * scale); ctx.lineTo(650 * scale, 375 * scale); ctx.lineTo(394 * scale, 340 * scale); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = "rgba(254, 240, 138, 0.45)";
+            ctx.fillRect(646 * scale, 135 * scale, 8 * scale, 230 * scale);
+        } else {
+            ctx.fillStyle = "#020617";
+            ctx.fillRect(644 * scale, 135 * scale, 12 * scale, 230 * scale);
+        }
+    }
+
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = `bold ${15 * scale}px Nunito, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillText(lt.material === "transparent" ? "Pencere Camı (Saydam)" : (lt.material === "translucent" ? "Yağlı Kâğıt (Yarı Saydam)" : "Tahta Levha (Opak)"), 377 * scale, 405 * scale);
+    ctx.restore();
+}
+
+function computePerceivedColor611(light, obj) {
+    if (light === "white") {
+        const names = { white: ["Beyaz", "#f8fafc", "Beyaz cisim tüm renkleri yansıtır"], red: ["Kırmızı", "#ef4444", "Beyaz ışıktaki kırmızıyı yansıtır"], green: ["Yeşil", "#22c55e", "Beyaz ışıktaki yeşili yansıtır"], blue: ["Mavi", "#3b82f6", "Beyaz ışıktaki maviyi yansıtır"] };
+        const [label, hex, note] = names[obj]; return { label, hex, note };
+    }
+    if (obj === "white") {
+        const names = { red: ["Kırmızı", "#ef4444", "Beyaz cisim üzerine düşen kırmızı ışığı yansıtır"], green: ["Yeşil", "#22c55e", "Beyaz cisim üzerine düşen yeşil ışığı yansıtır"], blue: ["Mavi", "#3b82f6", "Beyaz cisim üzerine düşen mavi ışığı yansıtır"] };
+        const [label, hex, note] = names[light]; return { label, hex, note };
+    }
+    if (light === obj) {
+        const names = { red: ["Kırmızı", "#ef4444"], green: ["Yeşil", "#22c55e"], blue: ["Mavi", "#3b82f6"] };
+        return { label: names[obj][0], hex: names[obj][1], note: "Cisim kendi rengindeki ışığı yansıttığı için kendi renginde görünür" };
+    }
+    return { label: "Siyah", hex: "#0f172a", note: "Cisim bu renk ışığı soğurup yansıtmadığı için siyah görünür" };
+}
+function setupColorWheelControlsDOM() {
+    document.getElementById('btn-611-mode-wheel')?.addEventListener('click', () => setColorWheelMode("wheel"));
+    document.getElementById('btn-611-mode-filter')?.addEventListener('click', () => setColorWheelMode("filter"));
+    document.getElementById('btn-611-spin-toggle')?.addEventListener('click', () => {
+        const cw = labState.colorWheel;
+        cw.isSpinning = !cw.isSpinning;
+        if (cw.isSpinning && cw.speed === 0) cw.speed = 60;
+        if (!cw.isSpinning) cw.speed = 0;
+        const sl = document.getElementById('slider-611-speed'); if (sl) sl.value = cw.speed;
+        updateColorWheelDOM();
+    });
+    document.getElementById('btn-611-speed-max')?.addEventListener('click', () => {
+        labState.colorWheel.isSpinning = true; labState.colorWheel.speed = 100;
+        const sl = document.getElementById('slider-611-speed'); if (sl) sl.value = 100;
+        updateColorWheelDOM();
+    });
+    document.getElementById('btn-611-reset')?.addEventListener('click', resetColorWheelExperiment);
+    document.getElementById('slider-611-speed')?.addEventListener('input', (e) => {
+        labState.colorWheel.speed = parseInt(e.target.value, 10);
+        labState.colorWheel.isSpinning = labState.colorWheel.speed > 0;
+        updateColorWheelDOM();
+    });
+    ["white", "red", "green", "blue"].forEach(c => {
+        document.getElementById(`btn-611-light-${c}`)?.addEventListener('click', () => { labState.colorWheel.lightColor = c; updateColorWheelDOM(); });
+        document.getElementById(`pill-611-obj-${c}`)?.addEventListener('click', () => { labState.colorWheel.objectColor = c; updateColorWheelDOM(); });
+    });
+    document.getElementById('btn-record-data-6-11')?.addEventListener('click', recordMeasurement);
+}
+function setColorWheelMode(mode) {
+    labState.colorWheel.mode = mode;
+    updateColorWheelDOM();
+}
+function initColorWheelState() { updateColorWheelDOM(); }
+function resetColorWheelExperiment() {
+    const cw = labState.colorWheel;
+    cw.mode = "wheel"; cw.speed = 0; cw.angle = 0; cw.isSpinning = false; cw.lightColor = "white"; cw.objectColor = "white";
+    const sl = document.getElementById('slider-611-speed'); if (sl) sl.value = 0;
+    updateColorWheelDOM();
+    showLabToast("🌈 Newton Renk Çarkı sıfırlandı");
+}
+function updateColorWheelDOM() {
+    const cw = labState.colorWheel;
+    const isWheel = cw.mode === "wheel";
+    document.getElementById('btn-611-mode-wheel')?.classList.toggle('active', isWheel);
+    document.getElementById('btn-611-mode-filter')?.classList.toggle('active', !isWheel);
+    document.getElementById('group-611-wheel-ctrl')?.classList.toggle('is-hidden', !isWheel);
+    document.getElementById('group-611-filter-ctrl')?.classList.toggle('is-hidden', isWheel);
+    document.getElementById('box-611-wheel-params')?.classList.toggle('is-hidden', !isWheel);
+    document.getElementById('box-611-object-params')?.classList.toggle('is-hidden', isWheel);
+    ["white", "red", "green", "blue"].forEach(c => {
+        document.getElementById(`btn-611-light-${c}`)?.classList.toggle('active', cw.lightColor === c);
+        document.getElementById(`pill-611-obj-${c}`)?.classList.toggle('active', cw.objectColor === c);
+    });
+    const lblSpin = document.getElementById('label-611-spin'); if (lblSpin) lblSpin.textContent = cw.isSpinning ? "Durdur" : "Çarkı Döndür";
+    const lblSpd = document.getElementById('label-611-speed'); if (lblSpd) lblSpd.textContent = cw.speed === 0 ? "0 dev/dk (Durgun)" : `%${cw.speed} Hız`;
+
+    const s = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    if (isWheel) {
+        s('mbar-611-mode', "Newton Renk Çarkı");
+        s('mbar-611-state', cw.speed === 0 ? "Durgun (7 Renk)" : `Dönüyor (%${cw.speed})`);
+        s('mbar-611-perceived', cw.speed >= 70 ? "Beyaz Görünür" : "Renkler Ayrı Görünür");
+        s('mbar-611-status', "🌈 Çark hızlandıkça tüm renkler birleşip beyaz görünür");
+    } else {
+        const p = computePerceivedColor611(cw.lightColor, cw.objectColor);
+        s('mbar-611-mode', "Renkli Işıklar");
+        s('mbar-611-state', `${cw.lightColor.toUpperCase()} Işık`);
+        s('mbar-611-perceived', `${p.label} Görünür`);
+        s('mbar-611-status', p.note);
+    }
+}
+function updateColorWheelPhysics() {
+    const cw = labState.colorWheel;
+    if (cw.mode === "wheel" && cw.speed > 0) {
+        cw.angle += cw.speed * 0.008;
+    }
+}
+function drawColorWheelSimulation() {
+    if (!ctx || !canvas) return;
+    const W = canvas.width, H = canvas.height, scale = W / 800;
+    const cw = labState.colorWheel;
+    ctx.save();
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#0a0f1d";
+    ctx.fillRect(0, 0, W, H);
+
+    if (cw.mode === "wheel") {
+        const cx = 400 * scale, cy = 245 * scale, R = 165 * scale;
+        const colors = ["#ef4444", "#f97316", "#facc15", "#22c55e", "#3b82f6", "#6366f1", "#a855f7"];
+        const slice = (Math.PI * 2) / colors.length;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(cw.angle);
+        colors.forEach((col, i) => {
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.arc(0, 0, R, i * slice, (i + 1) * slice);
+            ctx.closePath();
+            ctx.fillStyle = col;
+            ctx.fill();
+        });
+        if (cw.speed >= 40) {
+            const whiteAlpha = Math.min(0.95, (cw.speed - 35) / 65);
+            ctx.fillStyle = `rgba(248, 250, 252, ${whiteAlpha.toFixed(2)})`;
+            ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.restore();
+        ctx.strokeStyle = "#cbd5e1"; ctx.lineWidth = 4 * scale;
+        ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+        ctx.fillStyle = "#f8fafc"; ctx.font = `bold ${15 * scale}px Nunito, sans-serif`; ctx.textAlign = "center";
+        ctx.fillText(cw.speed >= 70 ? "Gözümüzde BEYAZ olarak algılanır!" : "Hızı artırarak renklerin birleşmesini gözlemleyin", cx, 455 * scale);
+    } else {
+        const p = computePerceivedColor611(cw.lightColor, cw.objectColor);
+        const lightHex = { white: "rgba(248,250,252,0.28)", red: "rgba(239,68,68,0.28)", green: "rgba(34,197,94,0.28)", blue: "rgba(59,130,246,0.28)" }[cw.lightColor];
+        ctx.fillStyle = lightHex;
+        ctx.beginPath(); ctx.moveTo(350 * scale, 45 * scale); ctx.lineTo(450 * scale, 45 * scale); ctx.lineTo(540 * scale, 350 * scale); ctx.lineTo(260 * scale, 350 * scale); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = "#475569"; ctx.fillRect(350 * scale, 20 * scale, 100 * scale, 25 * scale);
+        ctx.fillStyle = p.hex;
+        ctx.strokeStyle = "#cbd5e1"; ctx.lineWidth = 3 * scale;
+        ctx.beginPath(); ctx.arc(400 * scale, 270 * scale, 75 * scale, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "#f8fafc"; ctx.font = `bold ${16 * scale}px Nunito, sans-serif`; ctx.textAlign = "center";
+        ctx.fillText(`Görünen Renk: ${p.label}`, 400 * scale, 410 * scale);
+    }
+    ctx.restore();
 }
 
 // Global Tarayıcı Erişimi

@@ -2642,6 +2642,209 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     font-weight: 700;
 }
 
+/* 2 Adımlı Sade Karşılama ve Katalog Araç Çubuğu */
+.lab-welcome-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 22px;
+    width: 100%;
+    padding-bottom: 10px;
+}
+.lab-welcome-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+    width: 100%;
+    margin-top: 8px;
+}
+.lab-welcome-card {
+    background: rgba(15, 23, 42, 0.82);
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    border-radius: 22px;
+    padding: 26px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.lab-welcome-card:not(.disabled):hover {
+    transform: translateY(-4px);
+    border-color: var(--neon-blue);
+    box-shadow: 0 10px 30px rgba(0, 210, 255, 0.22);
+}
+.lab-welcome-card.disabled {
+    opacity: 0.52;
+    cursor: not-allowed;
+    border-style: dashed;
+}
+.lab-welcome-icon {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    background: rgba(0, 210, 255, 0.12);
+    border: 1px solid rgba(0, 210, 255, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    color: var(--neon-blue);
+    margin-bottom: 4px;
+}
+.lab-welcome-card.disabled .lab-welcome-icon {
+    background: rgba(148, 163, 184, 0.1);
+    border-color: rgba(148, 163, 184, 0.25);
+    color: #94a3b8;
+}
+.lab-welcome-grade {
+    margin: 0;
+    font-size: 1.45rem;
+    font-weight: 800;
+}
+.lab-welcome-meta {
+    margin: 0;
+    font-size: 0.92rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+.lab-welcome-cta {
+    margin-top: 8px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(0, 210, 255, 0.14);
+    border: 1px solid rgba(0, 210, 255, 0.35);
+    color: var(--neon-blue);
+    font-size: 0.88rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.lab-welcome-cta.muted {
+    background: rgba(148, 163, 184, 0.12);
+    border-color: rgba(148, 163, 184, 0.25);
+    color: #94a3b8;
+}
+.lab-welcome-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: #94a3b8;
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.lab-welcome-steps strong {
+    color: var(--neon-blue);
+}
+.lab-welcome-steps .step-dot {
+    opacity: 0.45;
+}
+.lab-grade-catalog {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+}
+.lab-catalog-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+.lab-toolbar-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.lab-search-box {
+    flex: 1;
+    min-width: 220px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.lab-search-box i {
+    position: absolute;
+    left: 14px;
+    color: #94a3b8;
+    font-size: 0.95rem;
+    pointer-events: none;
+}
+.lab-search-box input {
+    width: 100%;
+    padding: 10px 14px 10px 38px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(15, 23, 42, 0.78);
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+.lab-search-box input:focus {
+    border-color: var(--neon-blue);
+}
+.lab-view-toggle {
+    display: inline-flex;
+    gap: 6px;
+    background: rgba(15, 23, 42, 0.75);
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.lab-view-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    padding: 8px 14px;
+    border-radius: 9px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+.lab-view-btn.active {
+    background: var(--neon-blue);
+    color: #030712;
+}
+.lab-catalog-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+}
+@media (max-width: 1024px) {
+    .lab-welcome-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (max-width: 600px) {
+    .lab-welcome-grid {
+        grid-template-columns: 1fr;
+    }
+    .lab-toolbar-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .lab-view-toggle {
+        justify-content: center;
+    }
+}
+
 /* Deney 7.4 Mercek Kontrolleri */
 .lab-quick-lens-row {
     display: flex;
