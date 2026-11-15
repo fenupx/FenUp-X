@@ -9,7 +9,8 @@
 'use strict';
 
 const CONTENT_REVISION = '6.0.1';
-export const CONTENT_V6_VERSION = '8.1.0';
+const GRADE6_CONTENT_REVISION = 'grade6-1d1y';
+export const CONTENT_V6_VERSION = '8.9.22';
 if (typeof window !== 'undefined') {
     window.__FENUPX_CONTENT_V6_VERSION__ = CONTENT_V6_VERSION;
 }
@@ -36,7 +37,11 @@ export function trackFenUpEvent(eventName, eventParams) {
 if (typeof window !== 'undefined') {
     window.trackFenUpEvent = trackFenUpEvent;
 }
-const CONTENT_PATHS = { '6.0.0': 'data/exam/content-v6/', '6.0.1': 'data/exam/content-v6/' };
+const CONTENT_PATHS = {
+    '6.0.0': 'data/exam/content-v6/',
+    '6.0.1': 'data/exam/content-v6/',
+    'grade6-1d1y': 'data/exam/grade-6/1d1y/'
+};
 let ASSET_BASE = 'data/exam/content-v6/';
 let loadedRevision = null;
 const dataVersions = new Map();
@@ -46,6 +51,8 @@ const STORAGE_KEY = 'fenupx_exam_pilot_v1';
 const names = { easy: 'Kolay', medium: 'Orta', hard: 'Zor' };
 
 export const OUTCOME_ORDER = [
+    "FB.6.1.1", "FB.6.1.2", "FB.6.1.3", "FB.6.1.4",
+    "FB.6.2.1", "FB.6.2.2", "FB.6.2.3", "FB.6.3.1",
     "FB.7.1.1", "FB.7.1.2", "FB.7.1.3", "FB.7.1.4", "FB.7.1.5", "FB.7.2.1", "FB.7.2.2"
 ];
 
@@ -99,12 +106,13 @@ export function clearSavedProgress(type = 'all') {
 }
 
 // --- V8.0 LIGHTBOX (GÖRSEL BÜYÜTME) API'LERİ ---
-export function openLightbox(src, alt = '', caption = '') {
+export function openLightbox(src, alt = '', caption = '', options = {}) {
     const modalEl = $('exam-lightbox-modal');
     const contentEl = $('exam-lightbox-content');
     const captionEl = $('exam-lightbox-caption');
     if (!modalEl || !contentEl) return;
 
+    contentEl.classList.toggle('lightbox-dark-bg', !!options.darkBg);
     contentEl.innerHTML = `<img src="${esc(src)}" alt="${esc(alt)}" class="exam-lightbox-img">`;
     if (captionEl) {
         captionEl.textContent = caption || alt || '';
@@ -145,6 +153,7 @@ export function closeLightbox() {
 
 function createDefaultState() {
     return {
+        selectedGrade: '7',
         selectedScenario: '2',
         history: {},
         attempt: null,
@@ -166,6 +175,14 @@ function createDefaultState() {
 }
 
 let state = createDefaultState();
+
+export function getActiveGrade() {
+    return String(state.selectedGrade || '7') === '6' ? '6' : '7';
+}
+
+export function getActiveContentRevision() {
+    return getActiveGrade() === '6' ? GRADE6_CONTENT_REVISION : CONTENT_REVISION;
+}
 
 let currentProfile = 'dengeli';
 let currentSolveMode = 'ekranda'; // 'ekranda' | 'kagitta'
@@ -196,6 +213,7 @@ function loadStateFromStorage() {
         if (!raw) return;
         const parsed = JSON.parse(raw);
         if (parsed && typeof parsed === 'object') {
+            state.selectedGrade = parsed.selectedGrade === '6' ? '6' : '7';
             state.selectedScenario = parsed.selectedScenario || '2';
             state.history = (parsed.history && typeof parsed.history === 'object') ? parsed.history : {};
             state.profileRuns = (parsed.profileRuns && typeof parsed.profileRuns === 'object') ? parsed.profileRuns : {};
@@ -406,8 +424,10 @@ export function questionVisualHtml(q, options = {}) {
     if (!q || !q.visual) return '';
     const v = q.visual;
     const isPrint = !!options.forPrint;
-    const boxClass = isPrint ? 'print-qimage' : 'exam-qimage-box';
+    const isWhiteBg = v.print_background === 'white';
+    const boxClass = (isPrint ? 'print-qimage' : 'exam-qimage-box') + (isWhiteBg ? ' print-bg-white' : '');
     const imgClass = isPrint ? '' : 'exam-qimage';
+    const qBase = q.assetBase || ASSET_BASE;
 
     if (v.kind === 'gallery' && Array.isArray(v.items) && v.items.length > 0) {
         const galleryClass = isPrint ? 'print-qgallery' : 'exam-qgallery';
@@ -416,7 +436,7 @@ export function questionVisualHtml(q, options = {}) {
                 ${!isPrint ? '<span class="exam-zoom-hint" title="Büyütmek için tıkla"><i class="fas fa-search-plus"></i> Büyüt</span>' : ''}
                 <div class="${galleryClass}">
                     ${v.items.map(it => {
-                        const itSrc = esc(ASSET_BASE + it.asset + '?v=' + CONTENT_V6_VERSION);
+                        const itSrc = esc(qBase + it.asset + '?v=' + CONTENT_V6_VERSION);
                         return `
                         <figure>
                             <img class="${imgClass}" src="${itSrc}" alt="${esc(it.alt || it.label || '')}" ${!isPrint ? `data-lightbox-src="${itSrc}" data-lightbox-alt="${esc(it.alt || it.label || '')}" data-lightbox-caption="${esc(it.label || '')}"` : ''}>
@@ -430,7 +450,7 @@ export function questionVisualHtml(q, options = {}) {
     }
 
     if (v.asset) {
-        const assetSrc = esc(ASSET_BASE + v.asset + '?v=' + CONTENT_V6_VERSION);
+        const assetSrc = esc(qBase + v.asset + '?v=' + CONTENT_V6_VERSION);
         return `
             <div class="${boxClass}">
                 ${!isPrint ? '<span class="exam-zoom-hint" title="Büyütmek için tıkla"><i class="fas fa-search-plus"></i> Büyüt</span>' : ''}
@@ -688,9 +708,26 @@ export function getActiveScenarioNumber() {
 
 export function getActiveScenario() {
     const scNum = getActiveScenarioNumber();
-    if (DATA && Array.isArray(DATA.scenarios)) {
+    if (DATA && Array.isArray(DATA.scenarios) && DATA.scenarios.length > 0) {
         const found = DATA.scenarios.find(s => s.scenario === scNum);
         if (found) return found;
+        return DATA.scenarios[0];
+    }
+    if (getActiveGrade() === '6') {
+        return {
+            id: "6-2026-2027-D1-Y1-S1",
+            grade: 6,
+            scenario: 1,
+            question_count: 8,
+            allocation: [
+                { outcome_id: 'FB.6.1.1', count: 2 },
+                { outcome_id: 'FB.6.1.3', count: 1 },
+                { outcome_id: 'FB.6.2.1', count: 2 },
+                { outcome_id: 'FB.6.2.2', count: 1 },
+                { outcome_id: 'FB.6.2.3', count: 1 },
+                { outcome_id: 'FB.6.3.1', count: 1 }
+            ]
+        };
     }
     return {
         id: "7-2026-2027-D1-Y1-S2",
@@ -716,13 +753,15 @@ export function syncScenarioData() {
             return (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
         });
     }
-    const activeOutcomes = new Set(scenario.allocation.map(a => a.outcome_id));
+    const activeOutcomes = new Set((scenario?.allocation || []).map(a => a.outcome_id));
+    const isGrade6 = loadedRevision === GRADE6_CONTENT_REVISION || (scenario && scenario.grade === 6);
 
     const allC = DATA.allCards || DATA.cards || [];
     const allQ = DATA.allQuestions || DATA.questions || [];
 
+    // Bölüm 7A: 6. sınıfta FB.6.1.2 ve FB.6.1.4 senaryo dağılımlarında 0 olsa da Bilgi İstasyonu ve havuzda erişilebilir tutulur
     CARDS = allC
-        .filter(c => activeOutcomes.has(c.outcome_id))
+        .filter(c => isGrade6 || activeOutcomes.has(c.outcome_id))
         .sort((a, b) => {
             const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
             const oB = OUTCOME_ORDER.indexOf(b.outcome_id);
@@ -731,7 +770,7 @@ export function syncScenarioData() {
             return (a.sequence || 0) - (b.sequence || 0);
         });
 
-    QUESTIONS = allQ.filter(q => activeOutcomes.has(q.outcome_id));
+    QUESTIONS = isGrade6 ? [...allQ] : allQ.filter(q => activeOutcomes.has(q.outcome_id));
     DATA.scenario = scenario;
     profiles = DATA.selection_policy?.scenario_profiles || {};
 }
@@ -849,35 +888,50 @@ function applyLoadedData(revision, incoming) {
     return true;
 }
 
-async function loadData(revision = CONTENT_REVISION, showError = true, apply = true) {
-    const targetRev = CONTENT_PATHS[revision] ? revision : CONTENT_REVISION;
+async function loadData(revision = getActiveContentRevision(), showError = true, apply = true) {
+    const targetRev = CONTENT_PATHS[revision] ? revision : getActiveContentRevision();
     if (DATA && loadedRevision === targetRev && apply) return true;
     try {
         const base = CONTENT_PATHS[targetRev];
         if (!base) throw new Error(`Bilinmeyen içerik sürümü: ${targetRev}`);
         if (!dataVersions.has(targetRev)) {
             dataVersions.set(targetRev, (async () => {
-                const res = await fetch(base + 'pilot_7_senaryo2.json');
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                const data = await res.json();
-
-                // Onaylı V6 havuzu korunur
-                data.v6Cards = [...(data.cards || [])];
-                data.v6Questions = [...(data.questions || [])];
-
-                try {
-                    const credits = await fetch(base + 'GORSEL_KAYNAKLARI.json');
-                    if (credits.ok) {
-                        data.visualCredits = await credits.json();
-                    }
-                } catch (_) {}
-
-                try {
+                const isGrade6 = (targetRev === GRADE6_CONTENT_REVISION);
+                let data = {};
+                if (isGrade6) {
                     const ekRes = await fetch(base + 'ek_icerik.json?v=' + CONTENT_V6_VERSION);
-                    if (ekRes.ok) {
-                        data.ekContent = await ekRes.json();
-                    }
-                } catch (_) {}
+                    if (!ekRes.ok) throw new Error(`HTTP ${ekRes.status}`);
+                    const ekJson = await ekRes.json();
+                    data = {
+                        ekContent: ekJson,
+                        outcomes: ekJson.outcomes || [],
+                        v6Cards: [],
+                        v6Questions: [],
+                        selection_policy: {}
+                    };
+                } else {
+                    const res = await fetch(base + 'pilot_7_senaryo2.json');
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    data = await res.json();
+
+                    // Onaylı V6 havuzu korunur
+                    data.v6Cards = [...(data.cards || [])];
+                    data.v6Questions = [...(data.questions || [])].map(q => ({ ...q, assetBase: base, grade: 7 }));
+
+                    try {
+                        const credits = await fetch(base + 'GORSEL_KAYNAKLARI.json');
+                        if (credits.ok) {
+                            data.visualCredits = await credits.json();
+                        }
+                    } catch (_) {}
+
+                    try {
+                        const ekRes = await fetch(base + 'ek_icerik.json?v=' + CONTENT_V6_VERSION);
+                        if (ekRes.ok) {
+                            data.ekContent = await ekRes.json();
+                        }
+                    } catch (_) {}
+                }
 
                 try {
                     const senRes = await fetch(base + 'senaryo_kayitlari.json?v=' + CONTENT_V6_VERSION);
@@ -887,11 +941,14 @@ async function loadData(revision = CONTENT_REVISION, showError = true, apply = t
                         data.scenarios = rawScenarios.map(s => {
                             const scNum = s.scenario || parseInt((s.code || s.title || "").replace(/\D+/g, ''), 10) || 1;
                             const title = `Senaryo ${scNum}`;
+                            const rawAlloc = s.allocation || s.distribution || [];
+                            const alloc = rawAlloc.filter(x => (x.count || 0) > 0);
                             return {
                                 ...s,
+                                grade: isGrade6 ? 6 : (s.grade || 7),
                                 scenario: scNum,
-                                question_count: s.question_count || s.total_questions || (Array.isArray(s.distribution) ? s.distribution.reduce((acc, x) => acc + (x.count || 0), 0) : 7),
-                                allocation: s.allocation || s.distribution || [],
+                                question_count: s.question_count || s.total_questions || alloc.reduce((acc, x) => acc + (x.count || 0), 0) || 7,
+                                allocation: alloc,
                                 title,
                                 short_title: title
                             };
@@ -908,9 +965,13 @@ async function loadData(revision = CONTENT_REVISION, showError = true, apply = t
                         const m = (c.id || '').match(/K(\d+)/i);
                         seq = m ? parseInt(m[1], 10) : 0;
                     }
+                    const takeaway = c.takeaway || (Array.isArray(c.body) && c.body[0]) || (Array.isArray(c.topics) && c.topics[0]) || '';
                     return {
                         ...c,
-                        sequence: seq
+                        sequence: seq,
+                        takeaway,
+                        assetBase: base,
+                        grade: isGrade6 ? 6 : 7
                     };
                 });
 
@@ -931,30 +992,41 @@ async function loadData(revision = CONTENT_REVISION, showError = true, apply = t
                     if (Array.isArray(q.rubric)) {
                         rubricArr = q.rubric;
                     } else if (q.rubric && Array.isArray(q.rubric.criteria)) {
+                        const defaultCardId = isGrade6
+                            ? `${(q.outcome_id || 'FB.6.1.1').replace(/\./g, '')}-V1-K00`
+                            : (q.outcome_id === 'FB.7.1.4' ? 'FB714-V7-K00' : (q.outcome_id === 'FB.7.1.2' ? 'FB712-V6-K00' : 'FB722-V7-K00'));
                         rubricArr = q.rubric.criteria.map((c, idx) => ({
                             id: c.id || `${q.id}-R${idx + 1}`,
                             text: c.text || c.description || '',
                             points: c.points || 5,
                             weight: c.weight || c.points || 5,
-                            return_card_ids: c.return_card_ids || (q.outcome_id === 'FB.7.1.4' ? ['FB714-V7-K00'] : (q.outcome_id === 'FB.7.1.2' ? ['FB712-V6-K00'] : ['FB722-V7-K00'])),
+                            return_card_ids: Array.isArray(c.return_card_ids) && c.return_card_ids.length > 0 ? c.return_card_ids : [defaultCardId],
                             scoring: c.scoring || {
                                 full: c.text || c.description || '',
                                 zero: 'Cevapta bu ölçüt karşılanmıyor.',
                                 equivalent_wording_accepted: true,
                                 unasked_details_are_not_required: true
                             },
-                            content_revision: '7.0.0'
+                            content_revision: isGrade6 ? GRADE6_CONTENT_REVISION : '7.0.0'
                         }));
                     }
                     const sampleAnswer = getQuestionSampleAnswer(q);
+                    const rubricPointsSum = rubricArr.reduce((s, r) => s + (Number(r.points) || 0), 0);
+                    const returnCardIds = Array.isArray(q.return_card_ids) && q.return_card_ids.length > 0
+                        ? q.return_card_ids
+                        : Array.from(new Set(rubricArr.flatMap(r => r.return_card_ids || [])));
                     return {
                         ...q,
                         stem,
                         difficulty: diff,
                         rubric: rubricArr,
+                        return_card_ids: returnCardIds,
                         sample_answer: sampleAnswer,
-                        max_points: q.max_points || q.points || 10,
-                        content_revision: '7.0.0'
+                        score_weight: q.score_weight || (isGrade6 ? (rubricPointsSum || (diff === 'hard' ? 20 : (diff === 'medium' ? 15 : 10))) : undefined),
+                        max_points: q.max_points || q.points || (isGrade6 ? (rubricPointsSum || 10) : 10),
+                        assetBase: base,
+                        grade: isGrade6 ? 6 : 7,
+                        content_revision: isGrade6 ? GRADE6_CONTENT_REVISION : '7.0.0'
                     };
                 });
 
@@ -1180,13 +1252,14 @@ function restoreExamRoute(route) {
     if (step === 'study') {
         state.returnToSummary = route?.mode === 'review' && !!a?.finished;
         state.studyMode = state.returnToSummary ? 'review' : 'free';
-        const studyRev = state.returnToSummary ? attemptRev : (state.activeStudyRevision || state.savedStudy?.contentRevision || CONTENT_REVISION);
+        const studyRev = state.returnToSummary ? attemptRev : (state.activeStudyRevision || state.savedStudy?.contentRevision || getActiveContentRevision());
         if (loadedRevision !== studyRev && resolvedDataCache.has(studyRev)) {
             applyLoadedData(studyRev, resolvedDataCache.get(studyRev));
         }
     } else if (['scope', 'choice', 'setup'].includes(step)) {
-        if (loadedRevision !== CONTENT_REVISION && resolvedDataCache.has(CONTENT_REVISION)) {
-            applyLoadedData(CONTENT_REVISION, resolvedDataCache.get(CONTENT_REVISION));
+        const activeRev = getActiveContentRevision();
+        if (loadedRevision !== activeRev && resolvedDataCache.has(activeRev)) {
+            applyLoadedData(activeRev, resolvedDataCache.get(activeRev));
         }
     }
     goToStep(step === 'setup' ? 'practice' : step, { restore: true });
@@ -1197,7 +1270,16 @@ function updateScopeAccordion() {
     if (!summaryEl) return;
     const scenario = getActiveScenario();
     const outcomeNames = {
+        'FB.6.1.1': 'Güneş Sistemindeki Gezegenler',
+        'FB.6.1.2': 'Güneş Sistemi Modeli',
+        'FB.6.1.3': 'Güneş ve Ay Tutulmaları',
+        'FB.6.1.4': 'Güneş ve Ay Tutulması Modelleri',
+        'FB.6.2.1': 'Bileşke Kuvvet',
+        'FB.6.2.2': 'Dengelenmiş ve Dengelenmemiş Kuvvetler',
+        'FB.6.2.3': 'Sürat ve Hız',
+        'FB.6.3.1': 'Eşeyli ve Eşeysiz Üreme',
         'FB.7.1.1': 'Uzay Araştırmaları',
+        'FB.7.1.2': 'Uzay Gözlem Araçları Modelleri',
         'FB.7.1.3': 'Uzay Kirliliği',
         'FB.7.1.4': 'Yıldızların Yaşamı',
         'FB.7.1.5': 'Yıldızlar, Galaksiler ve Evren',
@@ -1227,8 +1309,27 @@ function updateScopeAccordion() {
 
     const scopeBadge = $('exam-scope-badge');
     if (scopeBadge) {
-        scopeBadge.textContent = `7. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${scenario.scenario}`;
+        scopeBadge.textContent = `${getActiveGrade()}. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${scenario.scenario}`;
     }
+}
+
+function syncScopeSelectOptions(selectScenario, grade) {
+    if (!selectScenario) return;
+    const maxSc = grade === '6' ? 6 : 5;
+    let curVal = parseInt(state.selectedScenario, 10) || 2;
+    if (curVal < 1 || curVal > maxSc) {
+        curVal = 2;
+        state.selectedScenario = String(curVal);
+    }
+    const existingOpts = selectScenario.querySelectorAll('option');
+    if (existingOpts.length !== maxSc) {
+        let html = '';
+        for (let i = 1; i <= maxSc; i++) {
+            html += `<option value="${i}"${i === curVal ? ' selected' : ''}>Senaryo ${i}</option>`;
+        }
+        selectScenario.innerHTML = html;
+    }
+    selectScenario.value = String(curVal);
 }
 
 function bindScopeContinue() {
@@ -1237,15 +1338,20 @@ function bindScopeContinue() {
     btnContinue.onclick = async (e) => {
         if (e) e.preventDefault();
         try {
+            const selectGrade = $('exam-select-grade');
+            if (selectGrade && (selectGrade.value === '6' || selectGrade.value === '7')) {
+                state.selectedGrade = selectGrade.value;
+            }
             const selectScenario = $('exam-select-scenario');
             if (selectScenario) {
                 state.selectedScenario = selectScenario.value;
             }
-            if (!DATA || loadedRevision !== CONTENT_REVISION) {
+            const activeRev = getActiveContentRevision();
+            if (!DATA || loadedRevision !== activeRev) {
                 const origHtml = btnContinue.innerHTML;
                 btnContinue.disabled = true;
                 btnContinue.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Hazırlanıyor...';
-                const ok = await loadData(CONTENT_REVISION);
+                const ok = await loadData(activeRev);
                 btnContinue.disabled = false;
                 btnContinue.innerHTML = origHtml;
                 if (!ok) {
@@ -1262,6 +1368,7 @@ function bindScopeContinue() {
             const scId = activeSc ? `senaryo-${activeSc.scenario}` : `senaryo-${state.selectedScenario || '1'}`;
             const totalQ = activeSc ? (activeSc.question_count || 0) : 0;
             trackFenUpEvent('senaryo_secildi', {
+                grade: getActiveGrade(),
                 senaryo: scId,
                 total_questions: totalQ
             });
@@ -1278,16 +1385,39 @@ function bindScopeContinue() {
 
 // 1. AŞAMA: SENARYO VE KAPSAM SEÇİMİ
 function renderScope() {
-    if (loadedRevision !== CONTENT_REVISION && resolvedDataCache.has(CONTENT_REVISION)) {
-        applyLoadedData(CONTENT_REVISION, resolvedDataCache.get(CONTENT_REVISION));
+    const activeRev = getActiveContentRevision();
+    if (loadedRevision !== activeRev) {
+        if (resolvedDataCache.has(activeRev)) {
+            applyLoadedData(activeRev, resolvedDataCache.get(activeRev));
+        } else {
+            loadData(activeRev, false, true).then(ok => {
+                if (ok && state.currentStep === 'scope') {
+                    syncScenarioData();
+                    updateScopeAccordion();
+                }
+            });
+        }
     }
     syncScenarioData();
     bindScopeContinue();
-    updateScopeAccordion();
 
+    const selectGrade = $('exam-select-grade');
     const selectScenario = $('exam-select-scenario');
+    if (selectGrade) {
+        selectGrade.value = getActiveGrade();
+        selectGrade.onchange = async () => {
+            state.selectedGrade = selectGrade.value === '6' ? '6' : '7';
+            syncScopeSelectOptions(selectScenario, getActiveGrade());
+            saveState();
+            const rev = getActiveContentRevision();
+            await loadData(rev, false, true);
+            syncScenarioData();
+            updateScopeAccordion();
+        };
+    }
+
     if (selectScenario) {
-        selectScenario.value = String(getActiveScenarioNumber());
+        syncScopeSelectOptions(selectScenario, getActiveGrade());
         selectScenario.onchange = () => {
             state.selectedScenario = selectScenario.value;
             saveState();
@@ -1295,15 +1425,18 @@ function renderScope() {
             updateScopeAccordion();
         };
     }
+
+    updateScopeAccordion();
 }
 
 // 2. AŞAMA: HAZIRLIK TERCİHİ
 function renderChoice() {
-    if (loadedRevision !== CONTENT_REVISION) {
-        if (resolvedDataCache.has(CONTENT_REVISION)) {
-            applyLoadedData(CONTENT_REVISION, resolvedDataCache.get(CONTENT_REVISION));
+    const activeRev = getActiveContentRevision();
+    if (loadedRevision !== activeRev) {
+        if (resolvedDataCache.has(activeRev)) {
+            applyLoadedData(activeRev, resolvedDataCache.get(activeRev));
         } else {
-            loadData(CONTENT_REVISION, false).then(ok => {
+            loadData(activeRev, false).then(ok => {
                 if (ok && state.currentStep === 'choice') renderChoice();
             });
         }
@@ -1334,13 +1467,14 @@ function renderChoice() {
     const btnStudy = $('btn-choice-go-study');
     if (btnStudy) {
         btnStudy.onclick = async () => {
-            if (loadedRevision !== CONTENT_REVISION) {
-                const ok = await loadData(CONTENT_REVISION);
+            const targetRev = getActiveContentRevision();
+            if (loadedRevision !== targetRev) {
+                const ok = await loadData(targetRev);
                 if (!ok) return;
             }
             state.studyMode = 'free';
             state.returnToSummary = false;
-            state.activeStudyRevision = CONTENT_REVISION;
+            state.activeStudyRevision = targetRev;
             state.studySessionIsFresh = true;
             state.studyCardIdx = 0;
             goToStep('study');
@@ -1350,8 +1484,9 @@ function renderChoice() {
     const btnPractice = $('btn-choice-go-practice');
     if (btnPractice) {
         btnPractice.onclick = async () => {
-            if (loadedRevision !== CONTENT_REVISION) {
-                const ok = await loadData(CONTENT_REVISION);
+            const targetRev = getActiveContentRevision();
+            if (loadedRevision !== targetRev) {
+                const ok = await loadData(targetRev);
                 if (!ok) return;
             }
             setupPracticeNewMode = true;
@@ -1362,14 +1497,16 @@ function renderChoice() {
     // Dinamik konu ve soru sayaçları ve senaryo rozeti
     const scenario = getActiveScenario();
     const scNum = scenario.scenario;
+    const activeGrade = getActiveGrade();
     const choiceScopePill = document.querySelector('.exam-choice-scope-pill');
     if (choiceScopePill) {
-        choiceScopePill.innerHTML = `<i class="fas fa-check-circle"></i> 7. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${scNum}`;
+        choiceScopePill.innerHTML = `<i class="fas fa-check-circle"></i> ${activeGrade}. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${scNum}`;
     }
 
     const studyCountEl = $('choice-study-count');
     if (studyCountEl) {
-        studyCountEl.innerHTML = `<i class="fas fa-clone"></i> ${scenario.allocation.length} konu · ${CARDS.length} bilgi kartı`;
+        const topicCount = activeGrade === '6' ? ((DATA?.allOutcomes || DATA?.outcomes || []).length || 8) : scenario.allocation.length;
+        studyCountEl.innerHTML = `<i class="fas fa-clone"></i> ${topicCount} konu · ${CARDS.length} bilgi kartı`;
     }
 
     const practiceCountEl = $('choice-practice-count');
@@ -1447,8 +1584,9 @@ function renderChoice() {
                 const cardTitle = s.cardTitle || cardObj?.title || '';
                 const outcomeId = s.outcomeId || cardObj?.outcome_id || `Senaryo ${scNum}`;
 
+                const sGrade = sRev === GRADE6_CONTENT_REVISION ? '6' : '7';
                 if (iconEl) iconEl.innerHTML = '<i class="fas fa-book-open"></i>';
-                if (eyebrowEl) eyebrowEl.textContent = `7. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${s.scenarioNumber || scNum} · Konu Çalışması`;
+                if (eyebrowEl) eyebrowEl.textContent = `${sGrade}. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${s.scenarioNumber || scNum} · Konu Çalışması`;
                 if (titleEl) titleEl.textContent = 'Devam Eden Konu Çalışması';
                 if (descEl) {
                     descEl.textContent = cardTitle
@@ -1456,7 +1594,7 @@ function renderChoice() {
                         : 'Önceki konu çalışmana kaldığın karttan devam edebilirsin.';
                 }
                 if (versionNoteEl) {
-                    if (sRev !== CONTENT_REVISION) {
+                    if (sRev !== CONTENT_REVISION && sRev !== GRADE6_CONTENT_REVISION) {
                         versionNoteEl.classList.remove('is-hidden');
                         versionNoteEl.style.display = 'block';
                         versionNoteEl.textContent = `Bu kayıt önceki içerik sürümüyle (${sRev}) kaldığın karttan sürdürülür. Yeni konu çalışması güncel V6 içeriğiyle başlar.`;
@@ -1493,8 +1631,9 @@ function renderChoice() {
                 const profileText = names[a.profile] || (a.profile === 'zorlayici' ? 'Zorlayıcı' : (a.profile === 'temel' ? 'Temel' : 'Dengeli'));
                 const modeText = a.solveMode === 'kagitta' ? 'Kâğıtta' : 'Ekranda';
 
+                const aGrade = aRev === GRADE6_CONTENT_REVISION ? '6' : '7';
                 if (iconEl) iconEl.innerHTML = '<i class="fas fa-file-signature"></i>';
-                if (eyebrowEl) eyebrowEl.textContent = `7. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${a.scenarioNumber || scNum} · Yazılı Provası`;
+                if (eyebrowEl) eyebrowEl.textContent = `${aGrade}. Sınıf · 1. Dönem 1. Yazılı · Senaryo ${a.scenarioNumber || scNum} · Yazılı Provası`;
 
                 const isEvaluating = (a.status === 'evaluating' || evalCount > 0 || a.evalQuestionIndex > 0);
                 const targetStep = isEvaluating ? 'eval' : 'practice';
@@ -1514,7 +1653,7 @@ function renderChoice() {
                 if (btnResumeLabel) btnResumeLabel.textContent = 'Devam Et';
 
                 if (versionNoteEl) {
-                    if (aRev !== CONTENT_REVISION) {
+                    if (aRev !== CONTENT_REVISION && aRev !== GRADE6_CONTENT_REVISION) {
                         versionNoteEl.classList.remove('is-hidden');
                         versionNoteEl.style.display = 'block';
                         versionNoteEl.textContent = `Bu kayıt önceki içerik sürümüyle (${aRev}) kaldığın yerden sürdürülür. Yeni prova güncel V6 içeriğini kullanır.`;
@@ -1732,8 +1871,9 @@ function renderStudy(cardIndex) {
     const btnJumpPractice = $('btn-study-jump-practice');
     if (btnJumpPractice) {
         btnJumpPractice.onclick = async () => {
-            if (loadedRevision !== CONTENT_REVISION) {
-                const ok = await loadData(CONTENT_REVISION);
+            const activeRev = getActiveContentRevision();
+            if (loadedRevision !== activeRev) {
+                const ok = await loadData(activeRev);
                 if (!ok) return;
             }
             setupPracticeNewMode = true;
@@ -1793,9 +1933,10 @@ function renderStudy(cardIndex) {
             // Genel Konu Çalışma Modu: Senaryonun Öğrenme Çıktıları ("Çalışma Planın")
             const activeScenario = getActiveScenario();
             const activeOutcomeIds = new Set(activeScenario.allocation.map(a => a.outcome_id));
+            const isGrade6 = loadedRevision === GRADE6_CONTENT_REVISION || (activeScenario && activeScenario.grade === 6);
             const allOutcomes = DATA.allOutcomes || DATA.outcomes || [];
             const scenarioOutcomes = allOutcomes
-                .filter(o => activeOutcomeIds.has(o.id))
+                .filter(o => isGrade6 || activeOutcomeIds.has(o.id))
                 .sort((a, b) => {
                     const oA = OUTCOME_ORDER.indexOf(a.id);
                     const oB = OUTCOME_ORDER.indexOf(b.id);
@@ -2032,8 +2173,9 @@ function renderStudy(cardIndex) {
                 } else {
                     if (isLastCard) {
                         setupPracticeNewMode = true;
-                        if (loadedRevision !== CONTENT_REVISION) {
-                            loadData(CONTENT_REVISION).then(ok => {
+                        const activeRev = getActiveContentRevision();
+                        if (loadedRevision !== activeRev) {
+                            loadData(activeRev).then(ok => {
                                 if (ok) goToStep('practice');
                             });
                         } else {
@@ -2341,6 +2483,14 @@ function renderPractice() {
             setupHeading.textContent = `${setupScenario.question_count} Soruluk Provanı Hazırla`;
         }
         const outcomeNamesMap = {
+            'FB.6.1.1': 'Gezegenler',
+            'FB.6.1.2': 'Güneş sistemi modeli',
+            'FB.6.1.3': 'Güneş ve Ay tutulmaları',
+            'FB.6.1.4': 'Tutulma modelleri',
+            'FB.6.2.1': 'Bileşke kuvvet',
+            'FB.6.2.2': 'Dengelenmiş / dengelenmemiş kuvvetler',
+            'FB.6.2.3': 'Sürat ve hız',
+            'FB.6.3.1': 'Eşeyli ve eşeysiz üreme',
             'FB.7.1.1': 'Uzay araştırmaları',
             'FB.7.1.3': 'Uzay kirliliği',
             'FB.7.1.4': 'Yıldızların yaşamı',
@@ -2523,6 +2673,14 @@ function renderPractice() {
                     const scNum = a.scenarioNumber || getActiveScenarioNumber();
                     const scObj = getActiveScenario();
                     const outcomeNames = {
+                        'FB.6.1.1': 'Gezegenler',
+                        'FB.6.1.2': 'Güneş Sistemi Modeli',
+                        'FB.6.1.3': 'Tutulmalar',
+                        'FB.6.1.4': 'Tutulma Modelleri',
+                        'FB.6.2.1': 'Bileşke Kuvvet',
+                        'FB.6.2.2': 'Dengelenmiş Kuvvetler',
+                        'FB.6.2.3': 'Sürat ve Hız',
+                        'FB.6.3.1': 'Eşeyli ve Eşeysiz Üreme',
                         'FB.7.1.1': 'Uzay Araştırmaları',
                         'FB.7.1.3': 'Uzay Kirliliği',
                         'FB.7.1.4': 'Yıldızların Yaşamı',
@@ -2821,7 +2979,8 @@ async function startNewPractice() {
     startingPractice = true;
     const previousRevision = loadedRevision;
     try {
-        if (!await loadData(CONTENT_REVISION, false)) throw new Error('Yeni içerik yüklenemedi.');
+        const activeRev = getActiveContentRevision();
+        if (!await loadData(activeRev, false)) throw new Error('Yeni içerik yüklenemedi.');
         if (state.currentStep !== 'practice' || (!setupPracticeNewMode && state.attempt) || $('scene-yazili')?.classList.contains('is-hidden')) {
             if (previousRevision) await loadData(previousRevision);
             return;
@@ -2851,7 +3010,7 @@ async function startNewPractice() {
         const criteriaMap = {};
         chosen.questions.forEach(q => {
             const qPt = pointsMap[q.id] || 15;
-            criteriaMap[q.id] = distributeCriteriaPoints(q.rubric || [], qPt).map(c => ({...c, contentRevision: CONTENT_REVISION, rubricRevision: CONTENT_REVISION}));
+            criteriaMap[q.id] = distributeCriteriaPoints(q.rubric || [], qPt).map(c => ({...c, contentRevision: activeRev, rubricRevision: activeRev}));
         });
 
         const curScenario = getActiveScenario();
@@ -2859,10 +3018,11 @@ async function startNewPractice() {
         const isTimerEnabled = (currentSolveMode !== 'kagitta') && !!(timerCheckboxEl ? timerCheckboxEl.checked : currentTimerEnabled);
         currentTimerEnabled = isTimerEnabled;
         state.attempt = {
+            grade: getActiveGrade(),
             scenarioNumber: curScenario.scenario,
             scenarioId: curScenario.id,
-            contentRevision: CONTENT_REVISION,
-            rubricRevision: CONTENT_REVISION,
+            contentRevision: activeRev,
+            rubricRevision: activeRev,
             routeKey: crypto.randomUUID(),
             version: 2,
             scoringVersion: SCORING_POLICY.version,
@@ -3759,11 +3919,12 @@ function renderSummary() {
                 outcome_id: item.card?.outcome_id
             }));
 
+            const attemptGrade = a.grade || (a.contentRevision === GRADE6_CONTENT_REVISION ? '6' : getActiveGrade());
             const attemptRecord = {
                 id: a.routeKey || ('attempt_' + (a.scenarioId || 'sc') + '_' + (a.completedAt || Date.now())),
                 timestamp: Date.now(),
                 date: new Date().toLocaleDateString('tr-TR'),
-                grade: '7',
+                grade: String(attemptGrade),
                 term: '1',
                 examNum: '1',
                 scenario: scTitle,
@@ -3791,7 +3952,8 @@ function renderSummary() {
     const scoreSubEl = $('summary-score-sub');
     if (scoreSubEl) {
         const scNum = a.scenarioNumber || getActiveScenarioNumber();
-        let msg = `7. Sınıf · 1. Dönem 1. Yazılı (${formatScenarioTitle(scNum)})`;
+        const attemptGrade = a.grade || (a.contentRevision === GRADE6_CONTENT_REVISION ? '6' : getActiveGrade());
+        let msg = `${attemptGrade}. Sınıf · 1. Dönem 1. Yazılı (${formatScenarioTitle(scNum)})`;
         if (sortedMissedCards.length === 0 || totalScore === 100) {
             msg = 'Tebrikler! Bu provada tüm bilimsel ölçütleri karşıladığını belirttin.';
         } else if (totalScore >= 80) {
@@ -4028,8 +4190,9 @@ function renderSummary() {
 
     if (btnNewPractice) {
         btnNewPractice.onclick = async () => {
-            if (loadedRevision !== CONTENT_REVISION) {
-                const ok = await loadData(CONTENT_REVISION);
+            const activeRev = getActiveContentRevision();
+            if (loadedRevision !== activeRev) {
+                const ok = await loadData(activeRev);
                 if (!ok) return;
             }
             setupPracticeNewMode = true;
@@ -4070,7 +4233,12 @@ export function formatSampleAnswerWithHighlights(rawText) {
         'çarpışma riski', 'çarpışma', 'yörünge', 'görev sonu', 'atmosfer', 'uzaklaştırma', 'yakalama',
         'manevra', 'robot kol', 'hasar riski', 'Güneş Sistemi', 'Güneş', 'Dünya', 'Ay', 'değişken',
         'bağımsız değişken', 'bağımlı değişken', 'kontrol edilen değişken', 'sabit değişken', 'iş yapar', 'iş',
-        'mekanik enerji', 'joule', 'takoz', 'sarmal yay', 'yay', 'kum havuzu', 'yüzey sıcaklığı', 'ışıma enerjisi', 'yaşam süresi'
+        'mekanik enerji', 'joule', 'takoz', 'sarmal yay', 'yay', 'kum havuzu', 'yüzey sıcaklığı', 'ışıma enerjisi', 'yaşam süresi',
+        'iç gezegenler', 'iç gezegen', 'karasal', 'dış gezegenler', 'dış gezegen', 'gazsal', 'meteor', 'meteorit', 'asteroit kuşağı', 'asteroit',
+        'Güneş tutulması', 'Ay tutulması', 'yeni ay evresi', 'yeni ay', 'dolunay evresi', 'dolunay', 'tam gölge', '5°',
+        'bileşke kuvvet', 'net kuvvet', 'dengelenmiş kuvvetler', 'dengelenmiş', 'dengelenmemiş kuvvetler', 'dengelenmemiş', 'dengeleyici kuvvet',
+        'uygulama noktası', 'doğrultu', 'yön', 'büyüklük', 'şiddet', 'Newton', 'sabit sürat', 'yer değiştirme', 'hız', 'm/s', 'km/h',
+        'eşeyli üreme', 'eşeysiz üreme', 'döllenme', 'zigot', 'embriyo', 'kalıtsal çeşitlilik', 'bölünerek üreme', 'tomurcuklanma', 'vejetatif üreme', 'rejenerasyon', 'yenilenme'
     ];
     keyTerms.sort((a, b) => b.length - a.length);
 
@@ -4213,10 +4381,11 @@ async function generateExamPdfBlob(questions, attempt, mode = 'blank') {
             margin: [0, 0, 10, 0]
         });
     }
+    const pdfGrade = attempt.grade || (attempt.contentRevision === GRADE6_CONTENT_REVISION ? '6' : getActiveGrade());
     headerCols.push({
         stack: [
             { text: isAnswers ? 'FenUp X — Örnek Cevap Anahtarı & Çözüm Rehberi' : 'FenUp X — Fen Bilimleri Yazılı Provası', fontSize: 13, bold: true, color: '#0f172a' },
-            { text: isAnswers ? `7. Sınıf 1. Dönem 1. Yazılı Örnek Cevap Anahtarı (${formatScenarioTitle(scNum)})` : `7. Sınıf 1. Dönem 1. Yazılı Provası (${formatScenarioTitle(scNum)})`, fontSize: 9.5, color: '#475569', margin: [0, 2, 0, 0] }
+            { text: isAnswers ? `${pdfGrade}. Sınıf 1. Dönem 1. Yazılı Örnek Cevap Anahtarı (${formatScenarioTitle(scNum)})` : `${pdfGrade}. Sınıf 1. Dönem 1. Yazılı Provası (${formatScenarioTitle(scNum)})`, fontSize: 9.5, color: '#475569', margin: [0, 2, 0, 0] }
         ]
     });
 
@@ -4460,8 +4629,9 @@ async function downloadExamPdf(btnDownload = null) {
         const a = document.createElement('a');
         a.href = url;
         const scNum = state.attempt?.scenarioNumber || getActiveScenarioNumber();
+        const dlGrade = state.attempt?.grade || (state.attempt?.contentRevision === GRADE6_CONTENT_REVISION ? '6' : getActiveGrade());
         const suffix = isAnswers ? '_CevapAnahtari' : '';
-        a.download = `FenUpX_7Sinif_1Donem_1Yazili_Senaryo${scNum}${suffix}.pdf`;
+        a.download = `FenUpX_${dlGrade}Sinif_1Donem_1Yazili_Senaryo${scNum}${suffix}.pdf`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -4513,13 +4683,14 @@ function openPrintPreview(triggerEl = null) {
     // Tetikleyen düğmeyi sakla (kapatınca odağı geri vermek için)
     lastPrintTriggerElement = triggerEl || (document.activeElement && document.activeElement !== document.body ? document.activeElement : $('btn-practice-preview-print'));
 
+    const printGrade = state.attempt.grade || (state.attempt.contentRevision === GRADE6_CONTENT_REVISION ? '6' : getActiveGrade());
     printEl.innerHTML = `
         <div class="print-header">
             <div class="print-brand-row">
                 <img src="fenupx-logo.png" alt="FenUp X Logo" class="print-logo" width="44" height="44">
                 <div class="print-title-group">
                     <h1 class="print-school-title">FenUp X — Fen Bilimleri Yazılı Provası</h1>
-                    <h2 class="print-sub-title">7. Sınıf 1. Dönem 1. Yazılı Provası (${formatScenarioTitle(scNum)})</h2>
+                    <h2 class="print-sub-title">${printGrade}. Sınıf 1. Dönem 1. Yazılı Provası (${formatScenarioTitle(scNum)})</h2>
                 </div>
             </div>
             <div class="print-student-info-grid">
@@ -4580,7 +4751,7 @@ function openPrintPreview(triggerEl = null) {
             }).join('')}
         </div>
         <div class="print-sheet-footer">
-            <span>fenupx.com • 7. Sınıf Fen Bilimleri Yazılı Provası</span>
+            <span>fenupx.com • ${printGrade}. Sınıf Fen Bilimleri Yazılı Provası</span>
         </div>
     `;
 
@@ -4609,11 +4780,11 @@ function openPrintPreview(triggerEl = null) {
 
         if (isAnswers) {
             if (schoolTitle) schoolTitle.textContent = 'FenUp X — Örnek Cevap Anahtarı & Çözüm Rehberi';
-            if (subTitle) subTitle.textContent = `7. Sınıf 1. Dönem 1. Yazılı Cevap Anahtarı (${formatScenarioTitle(scNum)})`;
+            if (subTitle) subTitle.textContent = `${printGrade}. Sınıf 1. Dönem 1. Yazılı Cevap Anahtarı (${formatScenarioTitle(scNum)})`;
             if (modalSub) modalSub.textContent = `Örnek Cevap Anahtarı & Çözüm Rehberi — Senaryo ${scNum} standartlarında ${qs.length} açık uçlu soru. Toplam 100 puandır.`;
         } else {
             if (schoolTitle) schoolTitle.textContent = 'FenUp X — Fen Bilimleri Yazılı Provası';
-            if (subTitle) subTitle.textContent = `7. Sınıf 1. Dönem 1. Yazılı Provası (${formatScenarioTitle(scNum)})`;
+            if (subTitle) subTitle.textContent = `${printGrade}. Sınıf 1. Dönem 1. Yazılı Provası (${formatScenarioTitle(scNum)})`;
             if (modalSub) modalSub.textContent = `Senaryo ${scNum} standartlarında ${qs.length} açık uçlu soru. Toplam 100 puandır.`;
         }
     };
@@ -4737,10 +4908,11 @@ export function renderAdminQuestionReview() {
     const tabBtn = $('btn-admin-tab-questions');
     if (!bankSelect || !container) return;
 
-    const active = resolvedDataCache.get(CONTENT_REVISION);
+    const targetAdminRev = currentAdminGrade === '6' ? GRADE6_CONTENT_REVISION : CONTENT_REVISION;
+    const active = resolvedDataCache.get(targetAdminRev);
     if (!active) {
         container.textContent = 'Soru havuzu yükleniyor…';
-        refreshAdminQuestionCount().then(ok => {
+        loadData(targetAdminRev, false, false).then(ok => {
             if (ok) renderAdminQuestionReview();
             else container.textContent = 'Soru havuzu yüklenemedi. Sekmeyi yeniden açarak deneyebilirsin.';
         });
@@ -4875,9 +5047,11 @@ function renderFilteredQuestions(questionsByGrade, bankSelect, container) {
 }
 
 function displayAdminQuestion(q, container) {
+    const qBase = q.assetBase || ASSET_BASE;
+    const isWhiteBg = q.visual?.print_background === 'white';
     const visual = q.visual?.asset ? `
         <div style="margin: 12px 0; text-align:center;">
-            <img src="${esc(ASSET_BASE + q.visual.asset + '?v=' + CONTENT_V6_VERSION)}" alt="${esc(q.visual.alt || '')}" style="max-width:100%; max-height:240px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);">
+            <img src="${esc(qBase + q.visual.asset + '?v=' + CONTENT_V6_VERSION)}" alt="${esc(q.visual.alt || '')}" style="max-width:100%; max-height:240px; border-radius:8px; border:1px solid rgba(255,255,255,0.1);${isWhiteBg ? ' background:#ffffff; padding:8px;' : ''}">
         </div>
     ` : '';
 
@@ -5209,7 +5383,7 @@ export function getQuestionHistoryStats(q, history) {
 }
 
 export function getScenarioQuota(scenario, profileName, run = 0) {
-    if (scenario.scenario === 2 || scenario.scenario === 5) {
+    if ((scenario.grade || 7) === 7 && (scenario.scenario === 2 || scenario.scenario === 5)) {
         const conf = profiles[profileName];
         if (conf) {
             return conf.cycles ? conf.cycles[run % conf.cycles.length] : conf.allocation;
@@ -5391,8 +5565,9 @@ export function prepareModuleEntry() {
     state.returnToSummary = false;
     state.reviewingEval = false;
     state.studyMode = 'free';
-    if (loadedRevision !== CONTENT_REVISION && resolvedDataCache.has(CONTENT_REVISION)) {
-        applyLoadedData(CONTENT_REVISION, resolvedDataCache.get(CONTENT_REVISION));
+    const activeRev = getActiveContentRevision();
+    if (loadedRevision !== activeRev && resolvedDataCache.has(activeRev)) {
+        applyLoadedData(activeRev, resolvedDataCache.get(activeRev));
     }
 }
 
@@ -5407,7 +5582,7 @@ export async function openExamView(options = {}) {
         loadStateFromStorage();
     }
 
-    let targetRevision = CONTENT_REVISION;
+    let targetRevision = getActiveContentRevision();
     if (options.route) {
         const rStep = options.route.step;
         const a = state.attempt;
@@ -5418,7 +5593,7 @@ export async function openExamView(options = {}) {
             if (options.route.mode === 'review' && validRouteAttempt && a.finished) {
                 targetRevision = a.contentRevision || '1';
             } else {
-                targetRevision = state.activeStudyRevision || state.savedStudy?.contentRevision || CONTENT_REVISION;
+                targetRevision = state.activeStudyRevision || state.savedStudy?.contentRevision || getActiveContentRevision();
             }
         }
     }
@@ -5635,7 +5810,10 @@ export async function openStudyCardFromProfile(cardId, outcomeId) {
         loadStateFromStorage();
     }
 
-    const ok = await loadData(CONTENT_REVISION);
+    const targetRev = (cardId && cardId.startsWith('FB6')) || (outcomeId && outcomeId.startsWith('FB.6.'))
+        ? GRADE6_CONTENT_REVISION
+        : getActiveContentRevision();
+    const ok = await loadData(targetRev);
     if (!ok) return;
 
     let targetIdx = -1;
@@ -5674,7 +5852,8 @@ export async function openExamAttemptFromProfile(attemptId) {
         loadStateFromStorage();
     }
 
-    const ok = await loadData(CONTENT_REVISION);
+    const targetRev = state.attempt?.contentRevision || getActiveContentRevision();
+    const ok = await loadData(targetRev);
     if (!ok) return;
 
     state.hasSelectedScope = true;
@@ -5720,6 +5899,8 @@ if (typeof window !== 'undefined') {
         getScenarioQuota,
         getProfileTotals,
         getActiveScenario,
+        getActiveGrade,
+        getActiveContentRevision,
         getQuestionHistoryStats,
         questionVisualHtml,
         formatSampleAnswerWithHighlights,
@@ -5727,6 +5908,13 @@ if (typeof window !== 'undefined') {
         SAMPLE_ANSWERS_V7,
         getPrintMode: () => currentPrintMode,
         getState: () => state,
+        setGrade: async (grade) => {
+            state.selectedGrade = String(grade) === '6' ? '6' : '7';
+            const rev = getActiveContentRevision();
+            await loadData(rev, false, true);
+            syncScenarioData();
+            saveState();
+        },
         setScenario: (sc) => {
             state.selectedScenario = sc;
             syncScenarioData();
@@ -5993,9 +6181,10 @@ if (typeof document !== 'undefined') {
             const src = target.getAttribute('data-lightbox-src') || target.getAttribute('src');
             const alt = target.getAttribute('alt') || '';
             const caption = target.getAttribute('data-lightbox-caption') || target.closest('.exam-qimage-box')?.querySelector('.exam-qimage-caption')?.textContent || '';
+            const isCardVisual = !!target.closest('.exam-visualbox');
             if (src) {
                 e.preventDefault();
-                openLightbox(src, alt, caption);
+                openLightbox(src, alt, caption, { darkBg: isCardVisual });
             }
         }
     });

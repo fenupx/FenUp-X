@@ -1,0 +1,4687 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-11-15",
+  "description": "FenUp X 6. Sınıf 1. Dönem 1. Yazılı Modülü (MEB TYMM / Ortak Kurallar v1.5 / 7A)",
+  "outcomes": [
+    {
+      "id": "FB.6.1.1",
+      "grade": 6,
+      "unit_id": "6-U01",
+      "unit_title": "Güneş Sistemi ve Tutulmalar",
+      "title": "FB.6.1.1. Güneş sistemindeki gezegenleri niteliklerine göre sınıflandırabilme",
+      "short_title": "Güneş Sistemindeki Gezegenler",
+      "intro_card_id": "FB611-V1-K00",
+      "card_ids": [
+        "FB611-V1-K00",
+        "FB611-V1-K01",
+        "FB611-V1-K02",
+        "FB611-V1-K03",
+        "FB611-V1-K04",
+        "FB611-V1-K05",
+        "FB611-V1-K06"
+      ],
+      "question_ids": [
+        "FB611-V1-E01",
+        "FB611-V1-E02",
+        "FB611-V1-E03",
+        "FB611-V1-E04",
+        "FB611-V1-E05",
+        "FB611-V1-E06",
+        "FB611-V1-M01",
+        "FB611-V1-M02",
+        "FB611-V1-M03",
+        "FB611-V1-M04",
+        "FB611-V1-H01",
+        "FB611-V1-H02"
+      ],
+      "source_alignment": {
+        "book": "MEB 6. Sınıf Fen Bilimleri 1. Kitap",
+        "book_printed_pages": [
+          19,
+          28
+        ],
+        "curriculum_code": "FB.6.1.1"
+      }
+    },
+    {
+      "id": "FB.6.1.2",
+      "grade": 6,
+      "unit_id": "6-U01",
+      "unit_title": "Güneş Sistemi ve Tutulmalar",
+      "title": "FB.6.1.2. Güneş sistemi ile ilgili bilimsel model oluşturabilme",
+      "short_title": "Güneş Sistemi Modeli",
+      "intro_card_id": "FB612-V1-K00",
+      "card_ids": [
+        "FB612-V1-K00",
+        "FB612-V1-K01",
+        "FB612-V1-K02",
+        "FB612-V1-K03",
+        "FB612-V1-K04"
+      ],
+      "question_ids": [
+        "FB612-V1-E01",
+        "FB612-V1-E02",
+        "FB612-V1-E03",
+        "FB612-V1-M01",
+        "FB612-V1-M02",
+        "FB612-V1-H01"
+      ],
+      "source_alignment": {
+        "book": "MEB 6. Sınıf Fen Bilimleri 1. Kitap",
+        "book_printed_pages": [
+          19,
+          28
+        ],
+        "curriculum_code": "FB.6.1.2"
+      }
+    },
+    {
+      "id": "FB.6.1.3",
+      "grade": 6,
+      "unit_id": "6-U01",
+      "unit_title": "Güneş Sistemi ve Tutulmalar",
+      "title": "FB.6.1.3. Güneş ve Ay tutulması olayları ile ilgili bilimsel çıkarım yapabilme",
+      "short_title": "Güneş ve Ay Tutulmaları",
+      "intro_card_id": "FB613-V1-K00",
+      "card_ids": [
+        "FB613-V1-K00",
+        "FB613-V1-K01",
+        "FB613-V1-K02",
+        "FB613-V1-K03",
+        "FB613-V1-K04"
+      ],
+      "question_ids": [
+        "FB613-V1-E01",
+        "FB613-V1-E02",
+        "FB613-V1-E03",
+        "FB613-V1-E04",
+        "FB613-V1-E05",
+        "FB613-V1-E06",
+        "FB613-V1-M01",
+        "FB613-V1-M02",
+        "FB613-V1-M03",
+        "FB613-V1-M04",
+        "FB613-V1-H01",
+        "FB613-V1-H02"
+      ],
+      "source_alignment": {
+        "book": "MEB 6. Sınıf Fen Bilimleri 1. Kitap",
+        "book_printed_pages": [
+          29,
+          37
+        ],
+        "curriculum_code": "FB.6.1.3"
+      }
+    },
+    {
+      "id": "FB.6.1.4",
+      "grade": 6,
+      "unit_id": "6-U01",
+      "unit_title": "Güneş Sistemi ve Tutulmalar",
+      "title": "FB.6.1.4. Güneş ve Ay tutulması ile ilgili bilimsel model oluşturabilme",
+      "short_title": "Tutulma Modelleri",
+      "intro_card_id": "FB614-V1-K00",
+      "card_ids": [
+        "FB614-V1-K00",
+        "FB614-V1-K01",
+        "FB614-V1-K02",
+        "FB614-V1-K03",
+        "FB614-V1-K04"
+      ],
+      "question_ids": [
+        "FB614-V1-E01",
+        "FB614-V1-E02",
+        "FB614-V1-E03",
+        "FB614-V1-M01",
+        "FB614-V1-M02",
+        "FB614-V1-H01"
+      ],
+      "source_alignment": {
+        "book": "MEB 6. Sınıf Fen Bilimleri 1. Kitap",
+        "book_printed_pages": [
+          29,
+          37
+        ],
+        "curriculum_code": "FB.6.1.4"
+      }
+    },
+    {
+      "id": "FB.6.2.1",
+      "grade": 6,
+      "unit_id": "6-U02",
+      "unit_title": "Kuvvetin Etkisinde Hareket",
+      "title": "FB.6.2.1. Bir cisme etki eden aynı doğrultudaki kuvvetler arasındaki ilişkileri açıklayarak bileşke kuvveti yapılandırabilme",
+      "short_title": "Bileşke Kuvvet",
+      "intro_card_id": "FB621-V1-K00",
+      "card_ids": [
+        "FB621-V1-K00",
+        "FB621-V1-K01",
+        "FB621-V1-K02",
+        "FB621-V1-K03",
+        "FB621-V1-K04",
+        "FB621-V1-K05",
+        "FB621-V1-K06"
+      ],
+      "question_ids": [
+        "FB621-V1-E01",
+        "FB621-V1-E02",
+        "FB621-V1-E03",
+        "FB621-V1-E04",
+        "FB621-V1-E05",
+        "FB621-V1-E06",
+        "FB621-V1-M01",
+        "FB621-V1-M02",
+        "FB621-V1-M03",
+        "FB621-V1-M04",
+        "FB621-V1-H01",
+        "FB621-V1-H02"
+      ],
+      "source_alignment": {
+        "book": "FenUp X 6. Sınıf 2. Ünite Özeti (MEB TYMM Uyumlu)",
+        "book_printed_pages": null,
+        "curriculum_code": "FB.6.2.1"
+      }
+    },
+    {
+      "id": "FB.6.2.2",
+      "grade": 6,
+      "unit_id": "6-U02",
+      "unit_title": "Kuvvetin Etkisinde Hareket",
+      "title": "FB.6.2.2. Dengelenmiş ve dengelenmemiş kuvvetlerin etkisindeki bir cismin hareketine yönelik deney yapabilme",
+      "short_title": "Dengelenmiş ve Dengelenmemiş Kuvvetler",
+      "intro_card_id": "FB622-V1-K00",
+      "card_ids": [
+        "FB622-V1-K00",
+        "FB622-V1-K01",
+        "FB622-V1-K02",
+        "FB622-V1-K03",
+        "FB622-V1-K04",
+        "FB622-V1-K05"
+      ],
+      "question_ids": [
+        "FB622-V1-E01",
+        "FB622-V1-E02",
+        "FB622-V1-E03",
+        "FB622-V1-E04",
+        "FB622-V1-E05",
+        "FB622-V1-E06",
+        "FB622-V1-M01",
+        "FB622-V1-M02",
+        "FB622-V1-M03",
+        "FB622-V1-M04",
+        "FB622-V1-H01",
+        "FB622-V1-H02"
+      ],
+      "source_alignment": {
+        "book": "FenUp X 6. Sınıf 2. Ünite Özeti (MEB TYMM Uyumlu)",
+        "book_printed_pages": null,
+        "curriculum_code": "FB.6.2.2"
+      }
+    },
+    {
+      "id": "FB.6.2.3",
+      "grade": 6,
+      "unit_id": "6-U02",
+      "unit_title": "Kuvvetin Etkisinde Hareket",
+      "title": "FB.6.2.3. Sürat ve hız kavramlarını karşılaştırabilme",
+      "short_title": "Sürat ve Hız",
+      "intro_card_id": "FB623-V1-K00",
+      "card_ids": [
+        "FB623-V1-K00",
+        "FB623-V1-K01",
+        "FB623-V1-K02",
+        "FB623-V1-K03",
+        "FB623-V1-K04",
+        "FB623-V1-K05",
+        "FB623-V1-K06"
+      ],
+      "question_ids": [
+        "FB623-V1-E01",
+        "FB623-V1-E02",
+        "FB623-V1-E03",
+        "FB623-V1-E04",
+        "FB623-V1-E05",
+        "FB623-V1-E06",
+        "FB623-V1-M01",
+        "FB623-V1-M02",
+        "FB623-V1-M03",
+        "FB623-V1-M04",
+        "FB623-V1-H01",
+        "FB623-V1-H02"
+      ],
+      "source_alignment": {
+        "book": "FenUp X 6. Sınıf 2. Ünite Özeti (MEB TYMM Uyumlu)",
+        "book_printed_pages": null,
+        "curriculum_code": "FB.6.2.3"
+      }
+    },
+    {
+      "id": "FB.6.3.1",
+      "grade": 6,
+      "unit_id": "6-U03",
+      "unit_title": "Canlılarda Sistemler",
+      "title": "FB.6.3.1. Eşeyli ve eşeysiz üremeyi karşılaştırabilme",
+      "short_title": "Eşeyli ve Eşeysiz Üreme",
+      "intro_card_id": "FB631-V1-K00",
+      "card_ids": [
+        "FB631-V1-K00",
+        "FB631-V1-K01",
+        "FB631-V1-K02",
+        "FB631-V1-K03",
+        "FB631-V1-K04",
+        "FB631-V1-K05"
+      ],
+      "question_ids": [
+        "FB631-V1-E01",
+        "FB631-V1-E02",
+        "FB631-V1-E03",
+        "FB631-V1-E04",
+        "FB631-V1-E05",
+        "FB631-V1-E06",
+        "FB631-V1-M01",
+        "FB631-V1-M02",
+        "FB631-V1-M03",
+        "FB631-V1-M04",
+        "FB631-V1-H01",
+        "FB631-V1-H02"
+      ],
+      "source_alignment": {
+        "book": "FenUp X 6. Sınıf 3. Ünite Özeti (MEB TYMM Uyumlu)",
+        "book_printed_pages": null,
+        "curriculum_code": "FB.6.3.1"
+      }
+    }
+  ],
+  "cards": {
+    "FB611-V1-K00": {
+      "id": "FB611-V1-K00",
+      "outcome_id": "FB.6.1.1",
+      "sequence": 0,
+      "title": "Güneş Sistemindeki Gezegenler",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [
+        "Güneş’e yakınlık sırası ve asteroit kuşağı",
+        "Karasal (iç) ve gazsal (dış) gezegenler",
+        "Uydu ve halka özelliklerine göre sınıflandırma",
+        "Hacimce büyüklük sıralaması",
+        "Gök taşı, meteor ve meteorit"
+      ],
+      "body": [],
+      "visual": null
+    },
+    "FB611-V1-K01": {
+      "id": "FB611-V1-K01",
+      "outcome_id": "FB.6.1.1",
+      "sequence": 1,
+      "title": "Güneş çevresinde sekiz gezegen",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Güneş sisteminin merkezinde bir yıldız olan Güneş bulunur; sekiz gezegen kendi ekseni etrafında döner, Güneş çevresinde dolanır.",
+        "Güneş’e yakınlık sırası değişmez: Merkür → Venüs → Dünya → Mars → Jüpiter → Satürn → Uranüs → Neptün. Mars ile Jüpiter arasında asteroit kuşağı yer alır."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-solar-system-order.svg",
+        "alt": "Gezegenlerin Güneş’e yakınlık sırası",
+        "caption": "Güneş’e Yakınlık Sırası",
+        "fit": "contain"
+      }
+    },
+    "FB611-V1-K02": {
+      "id": "FB611-V1-K02",
+      "outcome_id": "FB.6.1.1",
+      "sequence": 2,
+      "title": "Karasal ve gazsal gezegenler",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "İlk dört gezegen (Merkür, Venüs, Dünya, Mars) karasal (iç) gezegendir; katı ve kayalık yapıdadır, halkaları yoktur.",
+        "Son dört gezegen (Jüpiter, Satürn, Uranüs, Neptün) gazsal (dış) gezegendir; tamamının uyduları ve halkaları vardır."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-inner-vs-outer-planets.svg",
+        "alt": "Karasal ve gazsal gezegenlerin karşılaştırması",
+        "caption": "Karasal ve Gazsal Gezegenler",
+        "fit": "contain"
+      }
+    },
+    "FB611-V1-K03": {
+      "id": "FB611-V1-K03",
+      "outcome_id": "FB.6.1.1",
+      "sequence": 3,
+      "title": "Uydu ve halka ölçütüne göre gruplama",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Bir gezegen seçilen ölçüte göre farklı gruplarda yer alabilir. Merkür ve Venüs’ün doğal uydusu yoktur; diğer altı gezegenin uydusu vardır.",
+        "Halka yalnız Satürn’e ait değildir; Jüpiter, Satürn, Uranüs ve Neptün’ün halkaları vardır, Satürn’ün halkaları daha belirgindir."
+      ],
+      "visual": null
+    },
+    "FB611-V1-K04": {
+      "id": "FB611-V1-K04",
+      "outcome_id": "FB.6.1.1",
+      "sequence": 4,
+      "title": "Gezegenlerin öne çıkan özellikleri",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Güneş’e en yakın gezegen Merkür’dür; en sıcak gezegen ise Venüs’tür. Dünya yaşamın varlığı bilinen tek gezegendir, Mars kızıl görünümüyle tanınır.",
+        "Jüpiter en büyük gezegendir. Uranüs hacimce 3. büyük gezegendir; Neptün Güneş’e en uzak ve hacimce 4. sıradaki gezegendir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/gezegen-portreleri.png",
+        "alt": "Sekiz gezegenin şeffaf arka planlı görünümü",
+        "caption": "Gezegen Portreleri",
+        "fit": "contain"
+      }
+    },
+    "FB611-V1-K05": {
+      "id": "FB611-V1-K05",
+      "outcome_id": "FB.6.1.1",
+      "sequence": 5,
+      "title": "Hacimce büyükten küçüğe sıralama",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Büyüklük sırası, Güneş’e yakınlık sırası değildir ve halkalar gövde boyutuna katılmaz.",
+        "Hacimce büyükten küçüğe: Jüpiter > Satürn > Uranüs > Neptün > Dünya > Venüs > Mars > Merkür. En büyük Jüpiter, en küçük Merkür’dür."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-planet-size-order.svg",
+        "alt": "Gezegenlerin hacimce büyükten küçüğe sıralaması",
+        "caption": "Hacimce Büyüklük Sıralaması",
+        "fit": "contain"
+      }
+    },
+    "FB611-V1-K06": {
+      "id": "FB611-V1-K06",
+      "outcome_id": "FB.6.1.1",
+      "sequence": 6,
+      "title": "Gök taşı, meteor ve meteorit",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Uzayda bulunan küçük kaya parçalarına gök taşı denir. Gök taşı Dünya atmosferine girdiğinde meteor olarak adlandırılır ve ışıklı bir iz oluşturur.",
+        "Atmosferde tamamen parçalanmayıp yeryüzüne ulaşabilen kaya parçasına meteorit denir; düştüğü yerde meteor çukuru oluşturabilir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-meteor-meteorite.svg",
+        "alt": "Gök taşı, meteor ve meteorit süreci",
+        "caption": "Asteroitten Meteorite",
+        "fit": "contain"
+      }
+    },
+    "FB612-V1-K00": {
+      "id": "FB612-V1-K00",
+      "outcome_id": "FB.6.1.2",
+      "sequence": 0,
+      "title": "Güneş Sistemi Modeli",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [
+        "Bilimsel modelin amacı",
+        "Modelde sıra ve niteliklerin yansıtılması",
+        "Kanıta göre model geliştirme",
+        "Ölçekli ve şematik modellerin sınırlılıkları"
+      ],
+      "body": [],
+      "visual": null
+    },
+    "FB612-V1-K01": {
+      "id": "FB612-V1-K01",
+      "outcome_id": "FB.6.1.2",
+      "sequence": 1,
+      "title": "Güneş sistemi modeli nasıl kurulur?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Çok büyük ve doğrudan gözlemlenmesi zor olan Güneş sistemini somutlaştırıp anlaşılır kılmak için bilimsel modeller oluşturulur.",
+        "Modelde önce sekiz gezegen doğru sıraya konur, ardından asteroit kuşağı Mars ile Jüpiter arasına yerleştirilir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/gunes-dunya-ay.png",
+        "alt": "Güneş, Dünya ve Ay görseli",
+        "caption": "Gök Cisimleri Temsili",
+        "fit": "contain"
+      }
+    },
+    "FB612-V1-K02": {
+      "id": "FB612-V1-K02",
+      "outcome_id": "FB.6.1.2",
+      "sequence": 2,
+      "title": "Özellikleri modele yansıtma",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Modelde karasal ve gazsal gezegenler ayırt edilmeli, halkalı gezegenler belirtilmelidir.",
+        "Büyüklük ilişkisi gösterilecekse hacim sıralaması bilimsel kaynakla karşılaştırılarak Jüpiter en büyük, Merkür en küçük seçilmelidir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-planet-size-order.svg",
+        "alt": "Büyüklük sıralaması modeli",
+        "caption": "Modelde Hacim İlişkisi",
+        "fit": "contain"
+      }
+    },
+    "FB612-V1-K03": {
+      "id": "FB612-V1-K03",
+      "outcome_id": "FB.6.1.2",
+      "sequence": 3,
+      "title": "Kanıta göre modeli düzeltme",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Bilimsel modeller yeni kanıtlar ve bilgiler doğrultusunda güncellenir ve geliştirilir.",
+        "Örneğin modelde halkayı yalnız Satürn’e eklediysen bu eksiktir; Jüpiter, Uranüs ve Neptün’ün de halkası olduğunu öğrenince modelini yenilemelisin."
+      ],
+      "visual": null
+    },
+    "FB612-V1-K04": {
+      "id": "FB612-V1-K04",
+      "outcome_id": "FB.6.1.2",
+      "sequence": 4,
+      "title": "Ölçekli model ve sınırlılıklar",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Gezegenler arası uzaklıklar gezegen çaplarına göre aşırı büyük olduğundan aynı kâğıtta hem boyut hem mesafe ölçeği korunamaz.",
+        "Ayrıca durağan masaüstü modellerde gezegenlerin dönme ve dolanma hareketleri doğrudan gösterilemez."
+      ],
+      "visual": null
+    },
+    "FB613-V1-K00": {
+      "id": "FB613-V1-K00",
+      "outcome_id": "FB.6.1.3",
+      "sequence": 0,
+      "title": "Güneş ve Ay Tutulmaları",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [
+        "Güneş tutulmasının oluşumu ve güvenlik",
+        "Ay tutulmasının oluşumu",
+        "İki tutulmanın karşılaştırılması",
+        "Tutulmaların her ay gerçekleşmeme nedeni"
+      ],
+      "body": [],
+      "visual": null
+    },
+    "FB613-V1-K01": {
+      "id": "FB613-V1-K01",
+      "outcome_id": "FB.6.1.3",
+      "sequence": 1,
+      "title": "Güneş tutulması nasıl oluşur?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Güneş – Ay – Dünya diziliminde Ay, Güneş ile Dünya arasına girer ve Ay’ın gölgesi Dünya’nın sınırlı bir bölümüne düşer.",
+        "Yeni ay evresinde ve gündüz gerçekleşebilir. Güneş’e çıplak gözle bakılmamalı, uygun güneş filtresi olan araçlarla gözlem yapılmalıdır."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-solar-eclipse.svg",
+        "alt": "Güneş tutulması dizilimi",
+        "caption": "Güneş Tutulması",
+        "fit": "contain"
+      }
+    },
+    "FB613-V1-K02": {
+      "id": "FB613-V1-K02",
+      "outcome_id": "FB.6.1.3",
+      "sequence": 2,
+      "title": "Ay tutulması nasıl oluşur?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Güneş – Dünya – Ay diziliminde Dünya, Güneş ile Ay arasına girer ve Ay, Dünya’nın gölgesinden geçer.",
+        "Dolunay evresinde ve gece, Ay’ın görülebildiği geniş bir bölgeden Güneş tutulmasına göre genellikle daha uzun süre izlenebilir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-lunar-eclipse.svg",
+        "alt": "Ay tutulması dizilimi",
+        "caption": "Ay Tutulması",
+        "fit": "contain"
+      }
+    },
+    "FB613-V1-K03": {
+      "id": "FB613-V1-K03",
+      "outcome_id": "FB.6.1.3",
+      "sequence": 3,
+      "title": "İki tutulmanın karşılaştırılması",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ortak yön: Işık doğrusal ilerler ve ışığı engelleyen cismin arkasında gölge oluşur; üç gök cismi aynı doğrultudadır.",
+        "Farklar: Güneş tutulması Yeni ay/gündüz/dar alan/kısa sürerken, Ay tutulması Dolunay/gece/geniş alan/daha uzun sürer."
+      ],
+      "visual": null
+    },
+    "FB613-V1-K04": {
+      "id": "FB613-V1-K04",
+      "outcome_id": "FB.6.1.3",
+      "sequence": 4,
+      "title": "Neden her ay tutulma görmeyiz?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ay’ın dolanma düzlemi, Dünya’nın Güneş çevresindeki dolanma düzlemiyle tam çakışmaz.",
+        "Bu yüzden her yeni ay ve dolunayda uygun hizalanma oluşmaz; evre tek başına tutulma için yeterli değildir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-orbital-tilt.svg",
+        "alt": "Ay ve Dünya dolanma düzlemleri",
+        "caption": "Dolanma Düzlemlerinin Eğikliği",
+        "fit": "contain"
+      }
+    },
+    "FB614-V1-K00": {
+      "id": "FB614-V1-K00",
+      "outcome_id": "FB.6.1.4",
+      "sequence": 0,
+      "title": "Tutulma Modelleri",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [
+        "Işık kaynağı ve toplarla modelleme",
+        "Güneş ve Ay tutulması model kurgusu",
+        "Gözlem, kayıt ve çıkarım",
+        "Tutulma modellerinin sınırlılıkları"
+      ],
+      "body": [],
+      "visual": null
+    },
+    "FB614-V1-K01": {
+      "id": "FB614-V1-K01",
+      "outcome_id": "FB.6.1.4",
+      "sequence": 1,
+      "title": "Tutulma modelinde malzemeler",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Tutulma modelinde ışık kaynağı (el feneri) Güneş’i, büyük top Dünya’yı, küçük top ise Ay’ı temsil eder.",
+        "Küçük top ışık kaynağı ile büyük top arasına konulduğunda büyük top üzerinde gölge oluşur ve Güneş tutulması modellenir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-solar-eclipse.svg",
+        "alt": "Güneş tutulması modeli",
+        "caption": "Güneş Tutulması Modeli",
+        "fit": "contain"
+      }
+    },
+    "FB614-V1-K02": {
+      "id": "FB614-V1-K02",
+      "outcome_id": "FB.6.1.4",
+      "sequence": 2,
+      "title": "Ay tutulması modelinde gözlem",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Büyük top ışık kaynağı ile küçük top arasına getirildiğinde küçük top büyük topun gölgesinde kalır; bu Ay tutulması modelidir.",
+        "Küçük topun gölgesinin büyük topta dar bir alan kaplaması, büyük topun ise küçük topu tamamen gölgede bırakması gerçek gözlemleri açıklar."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-lunar-eclipse.svg",
+        "alt": "Ay tutulması modeli",
+        "caption": "Ay Tutulması Modeli",
+        "fit": "contain"
+      }
+    },
+    "FB614-V1-K03": {
+      "id": "FB614-V1-K03",
+      "outcome_id": "FB.6.1.4",
+      "sequence": 3,
+      "title": "Gözlem, kayıt ve hizalanma çıkarımı",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Küçük top hizadan biraz yukarı veya aşağı uzaklaştırıldığında gölgenin hedefe düşmediği gözlemlenir.",
+        "Bu gözlemden, tutulma oluşması için doğru sıra kadar uygun hizalanmanın da gerekli olduğu çıkarımı yapılır."
+      ],
+      "visual": null
+    },
+    "FB614-V1-K04": {
+      "id": "FB614-V1-K04",
+      "outcome_id": "FB.6.1.4",
+      "sequence": 4,
+      "title": "Tutulma modelinin sınırlılıkları",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Masaüstü modellerde Güneş, Dünya ve Ay’ın gerçek büyüklük ve uzaklık oranları birebir korunamaz.",
+        "Küçük top aynı yatay düzlemde döndürülürse her turda tutulma oluşur; bu nedenle dolanma düzlemlerinin çakışmadığı dikkate alınmalıdır."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-orbital-tilt.svg",
+        "alt": "Modelde düzlem eğikliği",
+        "caption": "Model Sınırlılığı",
+        "fit": "contain"
+      }
+    },
+    "FB621-V1-K00": {
+      "id": "FB621-V1-K00",
+      "outcome_id": "FB.6.2.1",
+      "sequence": 0,
+      "title": "Bileşke Kuvvet",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [
+        "Kuvvetin dört temel özelliği",
+        "Bileşke (net) kuvvet tanımı",
+        "Aynı yönlü kuvvetlerin bileşkesi",
+        "Zıt yönlü kuvvetlerin bileşkesi",
+        "Üç kuvvetin bileşkesi ve dengeleyici kuvvet"
+      ],
+      "body": [],
+      "visual": null
+    },
+    "FB621-V1-K01": {
+      "id": "FB621-V1-K01",
+      "outcome_id": "FB.6.2.1",
+      "sequence": 1,
+      "title": "Kuvveti nasıl tarif ederiz?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Kuvvet cisimler arasındaki itme veya çekme etkisidir; F ile gösterilir, dinamometreyle ölçülür ve birimi newton’dur (N).",
+        "Bir kuvvetin dört özelliği vardır: Uygulama noktası (okun başladığı yer), Doğrultu (üzerinde bulunduğu çizgi), Yön (okun ucu) ve Büyüklük (okun uzunluğu)."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-force-elements.svg",
+        "alt": "Kuvvetin dört temel özelliği",
+        "caption": "Kuvvetin Dört Özelliği",
+        "fit": "contain"
+      }
+    },
+    "FB621-V1-K02": {
+      "id": "FB621-V1-K02",
+      "outcome_id": "FB.6.2.1",
+      "sequence": 2,
+      "title": "Bileşke kuvvet (net kuvvet)",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Birden fazla kuvvetin birlikte yaptığı etkiyi tek başına yapabilen kuvvete bileşke kuvvet denir ve R ile gösterilir.",
+        "6. sınıfta aynı doğrultu üzerindeki kuvvetlerin bileşkesini inceleriz."
+      ],
+      "visual": null
+    },
+    "FB621-V1-K03": {
+      "id": "FB621-V1-K03",
+      "outcome_id": "FB.6.2.1",
+      "sequence": 3,
+      "title": "Aynı ve zıt yönlü kuvvetler",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Aynı yönlü kuvvetlerin büyüklükleri toplanır; bileşke aynı yöndedir (örneğin 4 N doğu + 3 N doğu = 7 N doğu).",
+        "Zıt yönlü kuvvetlerde küçüğü büyükten çıkarırız; bileşke büyük kuvvetin yönündedir (örneğin 5 N doğu − 3 N batı = 2 N doğu)."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-net-force-same-opp.svg",
+        "alt": "Aynı ve zıt yönlü kuvvetlerin bileşkesi",
+        "caption": "Bileşke Kuvvet Hesabı",
+        "fit": "contain"
+      }
+    },
+    "FB621-V1-K04": {
+      "id": "FB621-V1-K04",
+      "outcome_id": "FB.6.2.1",
+      "sequence": 4,
+      "title": "Üç kuvvet varsa ne yapılır?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Önce aynı yöne bakan kuvvetleri kendi içinde toplarız; ardından iki yönün toplamlarının farkını alırız.",
+        "Bileşke büyük toplamın yönündedir. İki yönün toplamları eşitse R = 0 N olur ve yön oku çizilmez."
+      ],
+      "visual": null
+    },
+    "FB621-V1-K05": {
+      "id": "FB621-V1-K05",
+      "outcome_id": "FB.6.2.1",
+      "sequence": 5,
+      "title": "Dengeleyici kuvvet nedir?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Var olan sıfırdan farklı bileşkeyi sıfıra indirmek için eklenen kuvvete dengeleyici kuvvet denir.",
+        "Dengeleyici kuvvet, bileşkeyle aynı büyüklükte ve aynı doğrultuda, fakat zıt yöndedir (eklendiğinde yeni bileşke 0 N olur)."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-balancing-force.svg",
+        "alt": "Dengeleyici kuvvetin bileşkeyi sıfırlaması",
+        "caption": "Dengeleyici Kuvvet",
+        "fit": "contain"
+      }
+    },
+    "FB621-V1-K06": {
+      "id": "FB621-V1-K06",
+      "outcome_id": "FB.6.2.1",
+      "sequence": 6,
+      "title": "Dengeleyiciden bileşkeyi bulma",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Bir cismin dengelenmesi için gereken dengeleyici kuvvet biliniyorsa önceki bileşke kuvvet de bulunabilir.",
+        "Örneğin dengeleyici kuvvet 4 N kuzeye doğruysa, önceki bileşke kuvvet 4 N güneye doğrudur."
+      ],
+      "visual": null
+    },
+    "FB622-V1-K00": {
+      "id": "FB622-V1-K00",
+      "outcome_id": "FB.6.2.2",
+      "sequence": 0,
+      "title": "Dengelenmiş ve Dengelenmemiş Kuvvetler",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [
+        "Dengelenmiş kuvvetler (R = 0 N)",
+        "Dengelenmemiş kuvvetler (R ≠ 0 N)",
+        "Oyuncak araba ve dinamometre deneyi",
+        "Deney değişkenleri ve kontrollü deney"
+      ],
+      "body": [],
+      "visual": null
+    },
+    "FB622-V1-K01": {
+      "id": "FB622-V1-K01",
+      "outcome_id": "FB.6.2.2",
+      "sequence": 1,
+      "title": "Dengelenmiş kuvvetler (R = 0 N)",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Bir cisme etki eden kuvvetlerin bileşkesi sıfırsa (R = 0 N) bu kuvvetlere dengelenmiş kuvvetler denir.",
+        "Cismin hareket durumu değişmez: Başlangıçta duruyorsa durgun kalır; hareket ediyorsa aynı yönde ve aynı süratle ilerlemeye devam eder."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-balanced-unbalanced.svg",
+        "alt": "Dengelenmiş ve dengelenmemiş kuvvetler",
+        "caption": "Dengelenmiş ve Dengelenmemiş Kuvvetler",
+        "fit": "contain"
+      }
+    },
+    "FB622-V1-K02": {
+      "id": "FB622-V1-K02",
+      "outcome_id": "FB.6.2.2",
+      "sequence": 2,
+      "title": "Dengelenmemiş kuvvetler (R ≠ 0 N)",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Bileşke kuvvet sıfırdan farklıysa cisim dengelenmemiş kuvvetlerin etkisindedir; duran cisim bileşke yönünde harekete geçer.",
+        "Hareketli cisimde bileşke hareketle aynı yöndeyse cisim süratlenir; zıt yöndeyse yavaşlar (etki sürerse durup ters yöne gidebilir)."
+      ],
+      "visual": null
+    },
+    "FB622-V1-K03": {
+      "id": "FB622-V1-K03",
+      "outcome_id": "FB.6.2.2",
+      "sequence": 3,
+      "title": "Deney: Araba ne zaman hareket eder?",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Düz masada oyuncak arabaya iki dinamometre bağlanıp zıt ve eşit kuvvetler (2 N – 2 N) uygulanırsa R = 0 N olur ve araba durgun kalır.",
+        "Zıt ve farklı kuvvetlerde (2 N sola, 4 N sağa) veya aynı yönlü kuvvetlerde bileşke sıfırdan farklı olduğu için araba harekete geçer."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-dynamometer-experiment.svg",
+        "alt": "Oyuncak araba ve iki dinamometre düzeneği",
+        "caption": "Dinamometre Deneyi",
+        "fit": "contain"
+      }
+    },
+    "FB622-V1-K04": {
+      "id": "FB622-V1-K04",
+      "outcome_id": "FB.6.2.2",
+      "sequence": 4,
+      "title": "Kendi deneyini tasarla: Değişkenler",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Kontrollü deneyde araştırmacının bilerek değiştirdiği özellik (örneğin bir taraftaki çekme kuvveti) bağımsız değişkendir.",
+        "Buna bağlı olarak gözlemlenen sonuç (arabanın harekete geçip geçmediği ve yönü) bağımlı değişkendir."
+      ],
+      "visual": null
+    },
+    "FB622-V1-K05": {
+      "id": "FB622-V1-K05",
+      "outcome_id": "FB.6.2.2",
+      "sequence": 5,
+      "title": "Sabit tutulan (kontrol) değişkenler",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Sonucun güvenilir olması için tek bir değişken değiştirilir; diğer koşullar aynı tutulur.",
+        "Araba, masa zemini, iplerin doğrultusu ve başlangıç konumu deney boyunca sabit tutulan değişkenlerdir."
+      ],
+      "visual": null
+    },
+    "FB623-V1-K00": {
+      "id": "FB623-V1-K00",
+      "outcome_id": "FB.6.2.3",
+      "sequence": 0,
+      "title": "Sürat ve Hız",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [
+        "Alınan yol ve yer değiştirme farkı",
+        "Sürat ve hız kavramları",
+        "Ortak birimler (m/s ve km/h)",
+        "Sabit süratli ve sabit hızlı hareket",
+        "Virajlı yolda sürat ve hız"
+      ],
+      "body": [],
+      "visual": null
+    },
+    "FB623-V1-K01": {
+      "id": "FB623-V1-K01",
+      "outcome_id": "FB.6.2.3",
+      "sequence": 1,
+      "title": "Alınan yol ve yer değiştirme",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Alınan yol, izlenen güzergâhın toplam uzunluğudur ve yön bilgisi içermez.",
+        "Yer değiştirme ise başlangıçtan bitişe çizilen düz okun uzunluğu ve yönüdür. Başlangıç noktasına dönüldüğünde yer değiştirme sıfırdır."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-distance-vs-displacement.svg",
+        "alt": "Alınan yol ve yer değiştirme karşılaştırması",
+        "caption": "Yol ve Yer Değiştirme",
+        "fit": "contain"
+      }
+    },
+    "FB623-V1-K02": {
+      "id": "FB623-V1-K02",
+      "outcome_id": "FB.6.2.3",
+      "sequence": 2,
+      "title": "Sürat ve hız kavramları",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Sürat birim zamanda alınan yoldur ve yön bilgisi içermez (örneğin 4 m/s).",
+        "Hız birim zamandaki yer değiştirmedir; büyüklüğü ve yönü vardır (örneğin 4 m/s doğuya)."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-speed-vs-velocity.svg",
+        "alt": "Aynı süratte zıt yönlü araçların hız farkı",
+        "caption": "Sürat ve Hız",
+        "fit": "contain"
+      }
+    },
+    "FB623-V1-K03": {
+      "id": "FB623-V1-K03",
+      "outcome_id": "FB.6.2.3",
+      "sequence": 3,
+      "title": "Ortak özellikler ve temel farklar",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Ortak özellikler: İkisi de hareketi zamana göre anlatır, bir büyüklükle ifade edilir ve ortak birimleri m/s ile km/h’dir.",
+        "Temel fark: Sürat alınan yola bağlı olup yönsüzdür; hız yer değiştirmeye bağlı olup yönlüdür."
+      ],
+      "visual": null
+    },
+    "FB623-V1-K04": {
+      "id": "FB623-V1-K04",
+      "outcome_id": "FB.6.2.3",
+      "sequence": 4,
+      "title": "Parkurda ortalama sürat ve hız",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Aynı başlangıç ve bitiş noktaları arasında dolambaçlı rota izleyen kişinin aldığı yol düz rotadan büyüktür; ancak yer değiştirmeleri eşittir.",
+        "Süre ve yer değiştirme aynıysa ortalama hızlar eşittir; aynı sürede daha çok yol alanın ortalama sürati daha büyüktür."
+      ],
+      "visual": null
+    },
+    "FB623-V1-K05": {
+      "id": "FB623-V1-K05",
+      "outcome_id": "FB.6.2.3",
+      "sequence": 5,
+      "title": "Sabit süratli ve sabit hızlı hareket",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Sabit süratli harekette eşit sürelerde eşit uzunlukta yol alınır.",
+        "Sabit hızlı harekette ise eşit sürelerde aynı yönde ve eşit miktarda yer değiştirilir."
+      ],
+      "visual": null
+    },
+    "FB623-V1-K06": {
+      "id": "FB623-V1-K06",
+      "outcome_id": "FB.6.2.3",
+      "sequence": 6,
+      "title": "Virajlı yolda sürat ve hız",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Virajı 40 km/h sabit gösterge değeriyle dönen bir otobüste eşit sürede alınan yol değişmediği için sürat sabit kalır.",
+        "Ancak viraj boyunca aracın hareket yönü değiştiği için hızı değişir (sabit hızlı değildir)."
+      ],
+      "visual": null
+    },
+    "FB631-V1-K00": {
+      "id": "FB631-V1-K00",
+      "outcome_id": "FB.6.3.1",
+      "sequence": 0,
+      "title": "Eşeyli ve Eşeysiz Üreme",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [
+        "Üreme kavramı ve amacı",
+        "Eşeyli ve eşeysiz üremenin karşılaştırılması",
+        "Vejetatif ve bölünme ile üreme",
+        "Tomurcuklanma ve rejenerasyon",
+        "Üreme ve onarım (yenilenme) farkı"
+      ],
+      "body": [],
+      "visual": null
+    },
+    "FB631-V1-K01": {
+      "id": "FB631-V1-K01",
+      "outcome_id": "FB.6.3.1",
+      "sequence": 1,
+      "title": "Üreme nedir? Eşeyli ve eşeysiz üreme",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Canlıların neslin devamını sağlamak için kendilerine benzer yeni bireyler oluşturmasına üreme denir.",
+        "Eşeyli üremede sperm ve yumurta döllenme ile birleşir, yavrular kalıtsal çeşitlilik gösterebilir. Eşeysiz üremede döllenme yoktur; yavrular ana canlıyla aynı kalıtsal özelliktedir."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-sexual-vs-asexual.svg",
+        "alt": "Eşeyli ve eşeysiz üreme karşılaştırması",
+        "caption": "Eşeyli ve Eşeysiz Üreme",
+        "fit": "contain"
+      }
+    },
+    "FB631-V1-K02": {
+      "id": "FB631-V1-K02",
+      "outcome_id": "FB.6.3.1",
+      "sequence": 2,
+      "title": "Bitkide eşeyli ve eşeysiz üreme ayrımı",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Her iki üreme biçimi de yeni birey oluşmasını sağlar.",
+        "Çiçekli bitkide döllenmeyle oluşan tohumdan yeni bitki yetişmesi eşeyli üremeye; patatesin gözünden yeni bitki gelişmesi ise eşeysiz üremeye örnektir."
+      ],
+      "visual": null
+    },
+    "FB631-V1-K03": {
+      "id": "FB631-V1-K03",
+      "outcome_id": "FB.6.3.1",
+      "sequence": 3,
+      "title": "Vejetatif ve bölünme ile üreme",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Vejetatif üreme: Bitkilerin gövde, dal veya yumru gibi kısımlarından yeni bitki gelişmesidir (çilek, gül, kavak, söğüt, patates).",
+        "Bölünme ile üreme: Tek hücreli canlıların bölünerek yeni bireyler oluşturmasıdır (amip, öglena, bakteri, paramesyum)."
+      ],
+      "visual": {
+        "kind": "image",
+        "asset": "assets/diagram-asexual-types.svg",
+        "alt": "Eşeysiz üreme çeşitleri",
+        "caption": "Eşeysiz Üreme Çeşitleri",
+        "fit": "contain"
+      }
+    },
+    "FB631-V1-K04": {
+      "id": "FB631-V1-K04",
+      "outcome_id": "FB.6.3.1",
+      "sequence": 4,
+      "title": "Tomurcuklanma ve rejenerasyon",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Tomurcuklanma: Ana canlı üzerindeki çıkıntının (tomurcuk) büyüyerek yeni birey oluşturmasıdır (hidra, maya mantarı).",
+        "Rejenerasyonla üreme: Canlıdan ayrılan bazı parçaların yeni birey oluşturmasıdır (planarya, bazı denizyıldızları)."
+      ],
+      "visual": null
+    },
+    "FB631-V1-K05": {
+      "id": "FB631-V1-K05",
+      "outcome_id": "FB.6.3.1",
+      "sequence": 5,
+      "title": "Üreme ile onarım farkını ayırt et",
+      "eyebrow": "ÖĞRENME ÇIKTISI · KONU ÖZETİ",
+      "topics": [],
+      "body": [
+        "Bir yaranın iyileşmesi veya kopan bir organın tamamlanması her zaman üreme sayılmaz.",
+        "Kertenkelenin kopan kuyruğunu yenilemesi yalnızca onarımdır (birey sayısı artmaz); planaryanın ayrılan parçasından yeni birey oluşması ise üremedir."
+      ],
+      "visual": null
+    }
+  },
+  "questions": {
+    "FB611-V1-E01": {
+      "id": "FB611-V1-E01",
+      "outcome_id": "FB.6.1.1",
+      "difficulty": "easy",
+      "title": "İç ve dış gezegenlerin ayrımı",
+      "stem": "Şemada Güneş sistemindeki gezegenler Güneş’e yakınlık sırasına göre dizilmiştir. Buna göre görseldeki karasal (iç) gezegenler ile gazsal (dış) gezegenlerin adlarını ayrı ayrı yazınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-planet-groups.svg",
+        "alt": "Güneş sistemindeki gezegenler şeması",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB611-V1-E01-R1",
+          "text": "İç gezegenleri Merkür, Venüs, Dünya ve Mars olarak doğru yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB611-V1-K02"
+          ],
+          "scoring": {
+            "full": "Merkür, Venüs, Dünya, Mars.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB611-V1-E01-R2",
+          "text": "Dış gezegenleri Jüpiter, Satürn, Uranüs ve Neptün olarak doğru yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB611-V1-K02"
+          ],
+          "scoring": {
+            "full": "Jüpiter, Satürn, Uranüs, Neptün.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB611-V1-E02": {
+      "id": "FB611-V1-E02",
+      "outcome_id": "FB.6.1.1",
+      "difficulty": "easy",
+      "title": "Asteroit kuşağının yeri",
+      "stem": "Şemada Güneş’e yakınlık sırasına göre dizilen gezegenler arasında yer alan X Kuşağı’nın bilimsel adını ve hangi iki gezegen arasında bulunduğunu yazınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-planet-groups.svg",
+        "alt": "Güneş sistemindeki gezegenler ve X Kuşağı",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB611-V1-E02-R1",
+          "text": "X Kuşağı’nın adının Asteroit Kuşağı olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB611-V1-K01"
+          ],
+          "scoring": {
+            "full": "Asteroit Kuşağı.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB611-V1-E02-R2",
+          "text": "Mars ile Jüpiter gezegenleri arasında yer aldığını yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB611-V1-K01"
+          ],
+          "scoring": {
+            "full": "Mars ile Jüpiter arasında.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB611-V1-E03": {
+      "id": "FB611-V1-E03",
+      "outcome_id": "FB.6.1.1",
+      "difficulty": "easy",
+      "title": "En büyük ve en küçük gezegen",
+      "stem": "Güneş sistemindeki gezegenler büyüklük bakımından birbirinden farklıdır. Hacimce en büyük ve en küçük gezegenin adını yazarak her ikisinin hangi gruba (iç/dış) ait olduğunu belirtiniz.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB611-V1-E03-R1",
+          "text": "En büyük gezegenin Jüpiter olduğunu ve dış (gazsal) gezegen grubunda yer aldığını yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB611-V1-K02",
+            "FB611-V1-K03"
+          ],
+          "scoring": {
+            "full": "Jüpiter (dış/gazsal).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB611-V1-E03-R2",
+          "text": "En küçük gezegenin Merkür olduğunu ve iç (karasal) gezegen grubunda yer aldığını yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB611-V1-K02",
+            "FB611-V1-K03"
+          ],
+          "scoring": {
+            "full": "Merkür (iç/karasal).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB611-V1-E04": {
+      "id": "FB611-V1-E04",
+      "outcome_id": "FB.6.1.1",
+      "difficulty": "easy",
+      "title": "Halka özelliği",
+      "stem": "Güneş sistemindeki gezegenlerden hangilerinin halkası yoktur, hangilerinin halkası vardır? Grup adlarıyla birlikte açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB611-V1-E04-R1",
+          "text": "İç (karasal) gezegenlerin (Merkür, Venüs, Dünya, Mars) hiçbirinin halkası olmadığını belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB611-V1-K02"
+          ],
+          "scoring": {
+            "full": "İç gezegenlerin halkası yoktur.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB611-V1-E04-R2",
+          "text": "Dış (gazsal) gezegenlerin (Jüpiter, Satürn, Uranüs, Neptün) tamamının halkası olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB611-V1-K02"
+          ],
+          "scoring": {
+            "full": "Tüm dış gezegenlerin halkası vardır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB611-V1-E05": {
+      "id": "FB611-V1-E05",
+      "outcome_id": "FB.6.1.1",
+      "difficulty": "easy",
+      "title": "Meteor ve meteorit farkı",
+      "stem": "Uzayda dolaşan bir gök taşının Dünya atmosferine girmesiyle gözlenen ışık izine ve yeryüzüne ulaşmayı başaran kaya parçasına verilen bilimsel adları yazınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-meteor-stages.svg",
+        "alt": "Gök taşının 1, 2 ve 3 numaralı aşamaları",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB611-V1-E05-R1",
+          "text": "Atmosferde yanarak oluşturduğu ışık izine meteor dendiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB611-V1-K05"
+          ],
+          "scoring": {
+            "full": "Meteor.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB611-V1-E05-R2",
+          "text": "Yeryüzüne ulaşan kaya parçasına meteorit dendiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB611-V1-K05"
+          ],
+          "scoring": {
+            "full": "Meteorit.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB611-V1-E06": {
+      "id": "FB611-V1-E06",
+      "outcome_id": "FB.6.1.1",
+      "difficulty": "easy",
+      "title": "Gezegenlerin ayırt edici özellikleri",
+      "stem": "Aşağıdaki tanımlara karşılık gelen gezegenlerin adlarını yazınız:\n1) Yüzeyinin kızıl görünümü nedeniyle Kızıl Gezegen olarak bilinir.\n2) Güneş’e en uzak gezegendir.\n3) İç gezegenlerin en büyüğüdür.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB611-V1-E06-R1",
+          "text": "1. tanım için Mars cevabını yazar.",
+          "points": 3,
+          "weight": 3,
+          "return_card_ids": [
+            "FB611-V1-K04"
+          ],
+          "scoring": {
+            "full": "Mars.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB611-V1-E06-R2",
+          "text": "2. tanım için Neptün cevabını yazar.",
+          "points": 3,
+          "weight": 3,
+          "return_card_ids": [
+            "FB611-V1-K04"
+          ],
+          "scoring": {
+            "full": "Neptün.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB611-V1-E06-R3",
+          "text": "3. tanım için Dünya cevabını yazar.",
+          "points": 4,
+          "weight": 4,
+          "return_card_ids": [
+            "FB611-V1-K03"
+          ],
+          "scoring": {
+            "full": "Dünya.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB611-V1-M01": {
+      "id": "FB611-V1-M01",
+      "outcome_id": "FB.6.1.1",
+      "difficulty": "medium",
+      "title": "Büyüklük sıralaması",
+      "stem": "Güneş sistemindeki tüm gezegenleri hacimce büyükten küçüğe doğru sırasıyla yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB611-V1-M01-R1",
+          "text": "Dış gezegenleri büyükten küçüğe Jüpiter > Satürn > Uranüs > Neptün şeklinde doğru sıralar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB611-V1-K03"
+          ],
+          "scoring": {
+            "full": "Jüpiter, Satürn, Uranüs, Neptün.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB611-V1-M01-R2",
+          "text": "İç gezegenleri büyükten küçüğe Dünya > Venüs > Mars > Merkür şeklinde doğru sıralar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB611-V1-K03"
+          ],
+          "scoring": {
+            "full": "Dünya, Venüs, Mars, Merkür.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB611-V1-M02": {
+      "id": "FB611-V1-M02",
+      "outcome_id": "FB.6.1.1",
+      "difficulty": "medium",
+      "title": "Şematik gezegen grupları analizi",
+      "stem": "Şemada A’dan H’ye harflendirilmiş gezegenler Güneş’e yakınlık sırasına göre dizilmiştir. Buna göre:\n1) C ve F harfleriyle gösterilen gezegenlerin adlarını yazınız.\n2) A, B, C, D gezegenleri ile E, F, G, H gezegenlerinin ortak iki yapısal farkını belirtiniz.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-planet-groups.svg",
+        "alt": "A-H harfleriyle dizilmiş gezegenler",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB611-V1-M02-R1",
+          "text": "C’nin Dünya, F’nin Satürn olduğunu doğru yazar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB611-V1-K01"
+          ],
+          "scoring": {
+            "full": "C: Dünya, F: Satürn.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB611-V1-M02-R2",
+          "text": "Karasal/gazsal yapı, halka varlığı veya boyut farkından ikisini doğru açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB611-V1-K02"
+          ],
+          "scoring": {
+            "full": "İç gezegenler kayalık ve halkasızdır; dış gezegenler gazsaldır ve halkalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB611-V1-M03": {
+      "id": "FB611-V1-M03",
+      "outcome_id": "FB.6.1.1",
+      "difficulty": "medium",
+      "title": "Gök taşı ve yıldız kayması yanılgısı",
+      "stem": "Gökyüzünü izleyen bir öğrenci parlak bir ışık çizgisi görünce 'Az önce bir yıldız yerinden kopup dünyaya düştü' demiştir. Öğrencinin bu ifadesindeki bilimsel hatayı açıklayarak olayın gerçekte ne olduğunu yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB611-V1-M03-R1",
+          "text": "Görülen olayın bir yıldızın düşmesi olmadığını belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB611-V1-K05"
+          ],
+          "scoring": {
+            "full": "Yıldız düşmesi değildir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB611-V1-M03-R2",
+          "text": "Gök taşının Dünya atmosferine girip sürtünmeyle yanması sonucu oluşan meteor olayı olduğunu açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB611-V1-K05"
+          ],
+          "scoring": {
+            "full": "Atmosferde yanan gök taşı (meteor) olayıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB611-V1-M04": {
+      "id": "FB611-V1-M04",
+      "outcome_id": "FB.6.1.1",
+      "difficulty": "medium",
+      "title": "Tablo verilerinden gezegen gruplama",
+      "stem": "Bir gözlemci Güneş sistemindeki P, R, S ve T gezegenlerine ait özellikleri aşağıdaki gibi not etmiştir:\n• P: Yüzeyi kayalık | Doğal uydusu yok | Güneş’e 2. sırada\n• R: Gazsal yapıda | Belirgin halkalı | Hacimce 2. büyük\n• S: Yüzeyi kayalık | Kızıl görünümlü | Asteroit kuşağının hemen içinde\n• T: Gazsal yapıda | Halkalı | Güneş’e en uzak\nBuna göre P, R, S ve T gezegenlerinin adlarını ve hangi gezegen grubunda (karasal/gazsal) yer aldıklarını yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB611-V1-M04-R1",
+          "text": "P: Venüs (karasal) ve S: Mars (karasal) eşleştirmesini doğru yapar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB611-V1-K02",
+            "FB611-V1-K04"
+          ],
+          "scoring": {
+            "full": "P: Venüs (karasal), S: Mars (karasal).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB611-V1-M04-R2",
+          "text": "R: Satürn (gazsal) ve T: Neptün (gazsal) eşleştirmesini doğru yapar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB611-V1-K02",
+            "FB611-V1-K04",
+            "FB611-V1-K05"
+          ],
+          "scoring": {
+            "full": "R: Satürn (gazsal), T: Neptün (gazsal).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB611-V1-H01": {
+      "id": "FB611-V1-H01",
+      "outcome_id": "FB.6.1.1",
+      "difficulty": "hard",
+      "title": "Karşılaştırmalı gezegen analizi",
+      "stem": "Bir bilim insanı Satürn, Dünya ve Mars’ı yapı, büyüklük ve Güneş’e konum bakımından karşılaştırmak istemektedir.\n1) Bu üç gezegeni hacimce büyükten küçüğe doğru sıralayınız.\n2) Hangisinin halkalı ve gazsal yapıda olduğunu, hangilerinin asteroit kuşağının iç tarafında kaldığını gerekçesiyle açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB611-V1-H01-R1",
+          "text": "Üç gezegeni büyükten küçüğe Satürn > Dünya > Mars şeklinde doğru sıralar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB611-V1-K03"
+          ],
+          "scoring": {
+            "full": "Satürn > Dünya > Mars.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB611-V1-H01-R2",
+          "text": "Satürn’ün halkalı ve gazsal dış gezegen olduğunu; Dünya ve Mars’ın asteroit kuşağının (Mars-Jüpiter arası) iç tarafında kalan karasal gezegenler olduğunu açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB611-V1-K01",
+            "FB611-V1-K02"
+          ],
+          "scoring": {
+            "full": "Satürn dış/gazsal ve halkalıdır; Dünya ve Mars iç/karasaldır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB611-V1-H02": {
+      "id": "FB611-V1-H02",
+      "outcome_id": "FB.6.1.1",
+      "difficulty": "hard",
+      "title": "Gök taşı, meteor ve meteorit süreci",
+      "stem": "Uzayda ilerleyen bir gök taşı Dünya’ya yaklaşarak atmosfere giriyor.\n1) Bu gök taşının uzayda, atmosfer içinde ve yer kabuğuna çarptıktan sonraki aşamalarda aldığı adları sırasıyla yazınız.\n2) Atmosferin yeryüzünü gök taşlarına karşı korumasındaki rolünü sürtünme etkisiyle ilişkilendirerek açıklayınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-meteor-stages.svg",
+        "alt": "Gök taşının uzay, atmosfer ve yeryüzü aşamaları",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB611-V1-H02-R1",
+          "text": "Üç aşamayı sırasıyla gök taşı → meteor → meteorit şeklinde doğru yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB611-V1-K05"
+          ],
+          "scoring": {
+            "full": "Gök taşı, meteor, meteorit.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB611-V1-H02-R2",
+          "text": "Atmosferdeki sürtünme nedeniyle gök taşlarının ısınarak çoğunlukla yanıp parçalandığını, böylece yeryüzüne ulaşanların azaldığını veya küçüldüğünü açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB611-V1-K05"
+          ],
+          "scoring": {
+            "full": "Atmosfer sürtünmeyle yakıp parçalar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB612-V1-E01": {
+      "id": "FB612-V1-E01",
+      "outcome_id": "FB.6.1.2",
+      "difficulty": "easy",
+      "title": "Bilimsel modelin amacı",
+      "stem": "Fen bilimleri dersinde Güneş sistemini doğrudan sınıfa getiremediğimiz için çeşitli malzemelerle modeller hazırlarız. Güneş sistemi modeli oluşturmanın temel amacını yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB612-V1-E01-R1",
+          "text": "Çok büyük veya doğrudan gözlemlenmesi zor olan Güneş sistemini daha anlaşılır ve somut hâle getirmek için kullanıldığını belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB612-V1-K01"
+          ],
+          "scoring": {
+            "full": "Büyük/uzak yapıyı somutlaştırıp anlaşılır kılmak.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB612-V1-E02": {
+      "id": "FB612-V1-E02",
+      "outcome_id": "FB.6.1.2",
+      "difficulty": "easy",
+      "title": "Şematik modeldeki not",
+      "stem": "Şemada gösterilen Güneş sistemi modelinin altında 'Boyutlar ve uzaklıklar ölçekli değildir' uyarısı yer almaktadır. Bu modelin yalnızca gezegenlerin hangi özelliklerini doğru göstermek amacıyla hazırlandığını yazınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-planet-groups.svg",
+        "alt": "Ölçeksiz şematik Güneş sistemi modeli",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB612-V1-E02-R1",
+          "text": "Gezegenlerin Güneş’e olan yakınlık sırasını ve iç-dış gezegen ayrımını (veya asteroit kuşağının yerini) göstermek için hazırlandığını belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB612-V1-K02",
+            "FB612-V1-K03"
+          ],
+          "scoring": {
+            "full": "Güneş’e yakınlık sırasını ve gruplandırmayı gösterir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB612-V1-E03": {
+      "id": "FB612-V1-E03",
+      "outcome_id": "FB.6.1.2",
+      "difficulty": "easy",
+      "title": "Modelde malzeme seçimi",
+      "stem": "Bir öğrenci oyun hamurlarıyla Güneş sisteminin büyüklük modelini yapacaktır. Elindeki en büyük hamuru ve en küçük hamuru hangi gök cisimleri (veya gezegenler) için kullanması gerekir?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB612-V1-E03-R1",
+          "text": "En büyük hamuru Güneş için (veya gezegenler arasında Jüpiter için) kullanması gerektiğini belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB611-V1-K03",
+            "FB612-V1-K02"
+          ],
+          "scoring": {
+            "full": "En büyük: Güneş (gezegenlerde Jüpiter).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB612-V1-E03-R2",
+          "text": "En küçük hamuru Merkür için kullanması gerektiğini belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB611-V1-K03",
+            "FB612-V1-K02"
+          ],
+          "scoring": {
+            "full": "En küçük: Merkür.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB612-V1-M01": {
+      "id": "FB612-V1-M01",
+      "outcome_id": "FB.6.1.2",
+      "difficulty": "medium",
+      "title": "Ölçekli ve şematik model karşılaştırması",
+      "stem": "Bir afişte tüm gezegenler eşit çapta çizilmiş ancak Güneş’ten itibaren doğru sırayla dizilmiştir. Başka bir afişte ise Jüpiter büyük, Merkür çok küçük çizilmiştir.\n1) İlk afişteki modelin sağladığı yararı ve eksikliğini yazınız.\n2) İkinci afişin büyüklük ilişkisi açısından farkını belirtiniz.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB612-V1-M01-R1",
+          "text": "İlk afişin gezegen sırasını göstermede yararlı olduğunu ancak gezegen boyutlarını gerçekçi yansıtmadığını belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB612-V1-K02",
+            "FB612-V1-K03"
+          ],
+          "scoring": {
+            "full": "Sırayı gösterir ama boyut farkını göstermez.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB612-V1-M01-R2",
+          "text": "İkinci afişin gezegenler arasındaki büyüklük (hacim) farklarını doğru biçimde kıyaslamaya imkân verdiğini açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB612-V1-K02"
+          ],
+          "scoring": {
+            "full": "Büyüklük sıralamasını gösterir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB612-V1-M02": {
+      "id": "FB612-V1-M02",
+      "outcome_id": "FB.6.1.2",
+      "difficulty": "medium",
+      "title": "Modelde uzaklık ve boyut sorunu",
+      "stem": "Bir öğrenci A4 kâğıdı üzerine hem gezegenlerin gerçek çap oranlarını hem de Güneş’e olan gerçek uzaklık oranlarını aynı ölçekle çizmek istiyor ancak bunu başaramıyor. Bu durumun bilimsel nedenini açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB612-V1-M02-R1",
+          "text": "Gezegenler arası uzaklıkların gezegen çaplarına göre aşırı büyük olduğunu belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB612-V1-K02"
+          ],
+          "scoring": {
+            "full": "Uzaklıklar boyutlara göre çok büyüktür.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB612-V1-M02-R2",
+          "text": "Uzaklıklar kâğıda sığdırılacak kadar küçültülürse gezegenlerin nokta kadar kalıp görünmeyeceğini açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB612-V1-K02"
+          ],
+          "scoring": {
+            "full": "Aynı ölçekte gezegenler görünmeyecek kadar küçülür.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB612-V1-H01": {
+      "id": "FB612-V1-H01",
+      "outcome_id": "FB.6.1.2",
+      "difficulty": "hard",
+      "title": "Güneş sistemi modelinin güçlü ve sınırlı yönleri",
+      "stem": "Bir öğrenci karton, strafor toplar ve tel kullanarak üç boyutlu durağan bir Güneş sistemi modeli hazırlamıştır.\n1) Bu modelin bilimsel açıdan güçlü olduğu iki yönü yazınız.\n2) Bu modelin gerçeği yansıtmada sınırlı kaldığı iki yönü gerekçesiyle açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB612-V1-H01-R1",
+          "text": "Güçlü yön olarak gezegen sırasını, iç-dış ayrımını veya büyüklük farkını üç boyutlu/somut biçimde göstermesini yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB612-V1-K03"
+          ],
+          "scoring": {
+            "full": "Sıralama, gruplama ve büyüklük ilişkisini somutlaştırır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB612-V1-H01-R2",
+          "text": "Sınırlılık olarak gerçek uzaklık ölçeğinin korunamamasını, durağan olduğu için dönme/dolanma hareketini gösterememesini veya yörünge eğikliğinin eksik kalmasını açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB612-V1-K02",
+            "FB612-V1-K03"
+          ],
+          "scoring": {
+            "full": "Gerçek uzaklık oranı, hareket ve yörünge eğikliği tam yansıtılamaz.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB613-V1-E01": {
+      "id": "FB613-V1-E01",
+      "outcome_id": "FB.6.1.3",
+      "difficulty": "easy",
+      "title": "Tutulma konumlarını tanıma",
+      "stem": "Şemada Güneş ve Dünya ile aynı doğrultuda verilen Ay’ın iki farklı konumu gösterilmiştir. Ay’ın 1. konumda ve 2. konumda bulunması hâlinde gerçekleşen tutulma türlerinin adlarını yazınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-eclipse-positions.svg",
+        "alt": "Güneş, Dünya ve Ay’ın 1 ve 2 numaralı konumları",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB613-V1-E01-R1",
+          "text": "1. konumda (Güneş – Ay – Dünya) Güneş tutulması gerçekleştiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB613-V1-K01"
+          ],
+          "scoring": {
+            "full": "1. konum: Güneş tutulması.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB613-V1-E01-R2",
+          "text": "2. konumda (Güneş – Dünya – Ay) Ay tutulması gerçekleştiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB613-V1-K02"
+          ],
+          "scoring": {
+            "full": "2. konum: Ay tutulması.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB613-V1-E02": {
+      "id": "FB613-V1-E02",
+      "outcome_id": "FB.6.1.3",
+      "difficulty": "easy",
+      "title": "Tutulma evreleri",
+      "stem": "Güneş tutulması ve Ay tutulması gerçekleşirken Ay’ın hangi ana evrelerde bulunduğunu ayrı ayrı yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB613-V1-E02-R1",
+          "text": "Güneş tutulmasının Yeni Ay evresinde gerçekleştiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB613-V1-K01"
+          ],
+          "scoring": {
+            "full": "Güneş tutulması: Yeni Ay.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB613-V1-E02-R2",
+          "text": "Ay tutulmasının Dolunay evresinde gerçekleştiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB613-V1-K02"
+          ],
+          "scoring": {
+            "full": "Ay tutulması: Dolunay.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB613-V1-E03": {
+      "id": "FB613-V1-E03",
+      "outcome_id": "FB.6.1.3",
+      "difficulty": "easy",
+      "title": "Gölgeyi oluşturan gök cismi",
+      "stem": "Şemadaki 1. konum ve 2. konumda gerçekleşen tutulmalarda gölgesi diğer gök cisminin üzerine düşen gök cismini her iki durum için ayrı ayrı belirtiniz.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-eclipse-positions.svg",
+        "alt": "Tutulma konumları",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB613-V1-E03-R1",
+          "text": "1. konumda (Güneş tutulması) Ay’ın gölgesinin Dünya üzerine düştüğünü belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB613-V1-K01"
+          ],
+          "scoring": {
+            "full": "1. konumda Ay’ın gölgesi Dünya’ya düşer.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB613-V1-E03-R2",
+          "text": "2. konumda (Ay tutulması) Dünya’nın gölgesinin Ay üzerine düştüğünü belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB613-V1-K02"
+          ],
+          "scoring": {
+            "full": "2. konumda Dünya’nın gölgesi Ay’a düşer.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB613-V1-E04": {
+      "id": "FB613-V1-E04",
+      "outcome_id": "FB.6.1.3",
+      "difficulty": "easy",
+      "title": "Tutulmaların gözlendiği zaman dilimi",
+      "stem": "Güneş tutulması ve Ay tutulması olaylarının Dünya’dan gündüz mü yoksa gece mi gözlemlendiğini her iki tutulma için yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB613-V1-E04-R1",
+          "text": "Güneş tutulmasının gündüz saatlerinde gözlemlendiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB613-V1-K01",
+            "FB613-V1-K03"
+          ],
+          "scoring": {
+            "full": "Güneş tutulması: Gündüz.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB613-V1-E04-R2",
+          "text": "Ay tutulmasının gece saatlerinde gözlemlendiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB613-V1-K02",
+            "FB613-V1-K03"
+          ],
+          "scoring": {
+            "full": "Ay tutulması: Gece.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB613-V1-E05": {
+      "id": "FB613-V1-E05",
+      "outcome_id": "FB.6.1.3",
+      "difficulty": "easy",
+      "title": "Tutulmaların temel fiziksel nedeni",
+      "stem": "Güneş ve Ay tutulmalarını inceleyen bir öğrenci her iki olayda da bir gök cisminin gölgesinin diğerinin üzerine düştüğünü fark ediyor. Bu gölge olaylarının gerçekleşmesini sağlayan ışığın temel yayılma özelliğini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB613-V1-E05-R1",
+          "text": "Işığın doğrusal (doğrular boyunca) yayılması sonucu gölge oluştuğunu belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB613-V1-K03"
+          ],
+          "scoring": {
+            "full": "Işığın doğrusal yayılması ve gölge oluşumu.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB613-V1-E06": {
+      "id": "FB613-V1-E06",
+      "outcome_id": "FB.6.1.3",
+      "difficulty": "easy",
+      "title": "Tutulma gözlem güvenliği",
+      "stem": "Güneş tutulmasını doğrudan çıplak gözle izlemek neden tehlikelidir ve güvenli gözlem için ne yapılmalıdır?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB613-V1-E06-R1",
+          "text": "Güneş ışınlarının gözlere kalıcı zarar verebileceğini belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB613-V1-K01"
+          ],
+          "scoring": {
+            "full": "Göz sağlığına zarar verir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB613-V1-E06-R2",
+          "text": "Özel tutulma gözlüğü veya uygun güneş filtresi kullanılması gerektiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB613-V1-K01"
+          ],
+          "scoring": {
+            "full": "Özel filtreli tutulma gözlüğü kullanılmalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB613-V1-M01": {
+      "id": "FB613-V1-M01",
+      "outcome_id": "FB.6.1.3",
+      "difficulty": "medium",
+      "title": "Tutulma gözlem alanı ve süresi",
+      "stem": "Güneş tutulması Dünya üzerinde dar bir bölgeden ve kısa süre gözlenebilirken, Ay tutulması geniş bir bölgeden ve daha uzun süre gözlemlenir. Bu farkın nedenini gölge oluşturan gök cisimlerinin büyüklüğüyle ilişkilendirerek açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB613-V1-M01-R1",
+          "text": "Ay’ın Dünya’dan küçük olması nedeniyle gölgesinin Dünya üzerinde yalnızca dar bir alana düştüğünü açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB613-V1-K01",
+            "FB613-V1-K03"
+          ],
+          "scoring": {
+            "full": "Ay küçük olduğu için gölgesi Dünya’da dar bir alanı kaplar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB613-V1-M01-R2",
+          "text": "Dünya’nın Ay’dan büyük olması nedeniyle gölgesinin Ay’ı tamamen kaplayıp gece yarım küreden genişçe ve daha uzun süre izlendiğini açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB613-V1-K02",
+            "FB613-V1-K03"
+          ],
+          "scoring": {
+            "full": "Dünya büyük olduğu için gölgesi Ay’ı daha uzun süre örter.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB613-V1-M02": {
+      "id": "FB613-V1-M02",
+      "outcome_id": "FB.6.1.3",
+      "difficulty": "medium",
+      "title": "Neden her ay tutulma olmaz?",
+      "stem": "Ay her ay bir kez Yeni Ay ve bir kez Dolunay evresinden geçmesine rağmen her ay Güneş veya Ay tutulması gerçekleşmez. Bu durumun bilimsel nedenini açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB613-V1-M02-R1",
+          "text": "Ay’ın Dünya etrafındaki dolanma düzlemi ile Dünya’nın Güneş etrafındaki dolanma düzleminin çakışmadığını (farklı düzlemlerde olduğunu) belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB613-V1-K04"
+          ],
+          "scoring": {
+            "full": "Yörünge düzlemleri çakışmaz (aynı düzlemde değildir).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB613-V1-M02-R2",
+          "text": "Bu nedenle her Yeni Ay ve Dolunay’da üç gök cisminin aynı doğrultuya gelip gölgenin diğerinin üzerine düşmediğini açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB613-V1-K04"
+          ],
+          "scoring": {
+            "full": "Her evrede aynı doğrultuda dizilmedikleri için gölge düşmez.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB613-V1-M03": {
+      "id": "FB613-V1-M03",
+      "outcome_id": "FB.6.1.3",
+      "difficulty": "medium",
+      "title": "Tutulmaların benzerlik ve farklılıkları",
+      "stem": "Güneş tutulması ile Ay tutulmasını karşılaştırarak bir ortak özelliğini ve iki farklı özelliğini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB613-V1-M03-R1",
+          "text": "Ortak özellik olarak ikisinin de ışığın doğrusal yayılmasıyla oluşan gölge olayı olduğunu veya üç cismin aynı doğrultuda dizildiğini belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB613-V1-K03"
+          ],
+          "scoring": {
+            "full": "Gölge olayıdır / aynı doğrultudadır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB613-V1-M03-R2",
+          "text": "İki farklı özelliği (evre: Yeni Ay/Dolunay, zaman: gündüz/gece, alan: dar/geniş veya süre: kısa/uzun) doğru yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB613-V1-K03"
+          ],
+          "scoring": {
+            "full": "Evre, gece/gündüz, alan veya süre farklarından ikisini yazar.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB613-V1-M04": {
+      "id": "FB613-V1-M04",
+      "outcome_id": "FB.6.1.3",
+      "difficulty": "medium",
+      "title": "Konum ve evre eşleştirme çıkarımı",
+      "stem": "Bir gözlemci gece gökyüzüne baktığında Dolunay evresindeki Ay’ın giderek karardığını gözlemliyor.\n1) Bu olayın hangi tutulma olduğunu yazınız.\n2) Bu anda Güneş, Dünya ve Ay’ın dizilim sırasını belirtiniz.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB613-V1-M04-R1",
+          "text": "Olayın Ay tutulması olduğunu belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB613-V1-K02"
+          ],
+          "scoring": {
+            "full": "Ay tutulması.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB613-V1-M04-R2",
+          "text": "Dizilim sırasının Güneş – Dünya – Ay (Dünya ortada) olduğunu yazar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB613-V1-K02"
+          ],
+          "scoring": {
+            "full": "Güneş – Dünya – Ay.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB613-V1-H01": {
+      "id": "FB613-V1-H01",
+      "outcome_id": "FB.6.1.3",
+      "difficulty": "hard",
+      "title": "Tutulma senaryosu değerlendirmesi",
+      "stem": "Bir öğrenci 'Ay tutulması sırasında Dünya üzerindeki herkes aynı anda bu tutulmayı izleyebilir ve bu olay her Dolunay evresinde mutlaka gerçekleşir' demiştir. Öğrencinin ifadesindeki iki bilimsel hatayı tespit edip doğrularını gerekçesiyle yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB613-V1-H01-R1",
+          "text": "Dünya üzerindeki herkesin değil, yalnızca o anda geceyi yaşayan o anda geceyi yaşayan bölgedeki insanların izleyebileceğini açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB613-V1-K02",
+            "FB613-V1-K03"
+          ],
+          "scoring": {
+            "full": "Yalnızca geceyi yaşayan yarım küreden izlenir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB613-V1-H01-R2",
+          "text": "Ay’ın dolanma düzlemi Dünya’nın dolanma düzlemine göre tam çakışmadığı için her Dolunay’da tutulma gerçekleşmediğini açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB613-V1-K04"
+          ],
+          "scoring": {
+            "full": "Yörünge düzlemi eğikliği nedeniyle her Dolunay’da olmaz.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB613-V1-H02": {
+      "id": "FB613-V1-H02",
+      "outcome_id": "FB.6.1.3",
+      "difficulty": "hard",
+      "title": "Şemadan bilimsel çıkarım",
+      "stem": "Şemada verilen 1. konum ve 2. konumları inceleyerek:\n1) İki konumda gerçekleşen tutulmaların Ay’ın hangi evrelerinde ve hangi zaman dilimlerinde (gece/gündüz) gerçekleştiğini karşılaştırınız.\n2) Dünya’nın Güneş’ten büyük olması durumunda Güneş tutulmasının gözlem alanında nasıl bir değişiklik beklenebileceğini gölge oluşumuyla yorumlayınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-eclipse-positions.svg",
+        "alt": "1 ve 2 numaralı tutulma konumları",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB613-V1-H02-R1",
+          "text": "1. konumda Yeni Ay ve gündüz; 2. konumda Dolunay ve gece olduğunu doğru karşılaştırır.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB613-V1-K01",
+            "FB613-V1-K02"
+          ],
+          "scoring": {
+            "full": "1: Yeni Ay/gündüz, 2: Dolunay/gece.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB613-V1-H02-R2",
+          "text": "1. konumda Ay’ın gölgesinin Dünya’ya düştüğünü; Ay’ın Dünya’ya göre çok küçük olması nedeniyle gölgenin dar bir alana düştüğünü, cisimlerin boyut oranının gölge alanını belirlediğini yorumlar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB613-V1-K01",
+            "FB613-V1-K03"
+          ],
+          "scoring": {
+            "full": "Gölgeyi oluşturan cismin boyutu gölge alanını belirler.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB614-V1-E01": {
+      "id": "FB614-V1-E01",
+      "outcome_id": "FB.6.1.4",
+      "difficulty": "easy",
+      "title": "Tutulma modelinde malzemeler",
+      "stem": "Bir öğrenci el feneri, büyük futbol topu ve küçük pinpon topu kullanarak tutulma modeli kuracaktır. Bu malzemelerin Güneş, Dünya ve Ay’dan hangilerini temsil ettiğini eşleştiriniz.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-eclipse-model-tools.svg",
+        "alt": "El feneri, büyük top ve küçük top",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB614-V1-E01-R1",
+          "text": "El feneri: Güneş, Büyük top: Dünya, Küçük top: Ay eşleştirmesini doğru yapar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB614-V1-K01"
+          ],
+          "scoring": {
+            "full": "El feneri: Güneş, Futbol topu: Dünya, Pinpon topu: Ay.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB614-V1-E02": {
+      "id": "FB614-V1-E02",
+      "outcome_id": "FB.6.1.4",
+      "difficulty": "easy",
+      "title": "Modelde Güneş tutulması dizilimi",
+      "stem": "El feneri, pinpon topu ve futbol topuyla Güneş tutulmasını modellemek isteyen bir öğrenci bu üç malzemeyi masaya hangi sırayla yerleştirmelidir?",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-eclipse-model-tools.svg",
+        "alt": "Tutulma modeli malzemeleri",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB614-V1-E02-R1",
+          "text": "Dizilimi El feneri – Pinpon topu – Futbol topu şeklinde doğru yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB614-V1-K01"
+          ],
+          "scoring": {
+            "full": "El feneri – Pinpon topu – Futbol topu.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB614-V1-E03": {
+      "id": "FB614-V1-E03",
+      "outcome_id": "FB.6.1.4",
+      "difficulty": "easy",
+      "title": "Modelde Ay tutulması gözlemi",
+      "stem": "El fenerinin önüne önce futbol topunu, arkasına da pinpon topunu koyan bir öğrenci pinpon topunun tamamen karanlıkta kaldığını görüyor. Bu düzenek hangi tutulmayı temsil etmektedir?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB614-V1-E03-R1",
+          "text": "Bu düzeneğin Ay tutulmasını temsil ettiğini yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB614-V1-K01",
+            "FB614-V1-K02"
+          ],
+          "scoring": {
+            "full": "Ay tutulması.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB614-V1-M01": {
+      "id": "FB614-V1-M01",
+      "outcome_id": "FB.6.1.4",
+      "difficulty": "medium",
+      "title": "Modelde gölge alanı ve küre boyutu",
+      "stem": "Bir öğrenci Güneş tutulmasını modellemek için el feneri, Dünya için futbol topu ve Ay için büyükçe bir voleybol topu kullanıyor. Arkadaşı ise gerçekte Dünya üzerinde çok dar bir alanda gözlenen Güneş tutulmasının bu modelde neden çok geniş bir gölge oluşturduğunu soruyor. Öğrencinin modelini gerçeğe uygun hâle getirmek için hangi değişikliği yapması gerektiğini gerekçesiyle yazınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-eclipse-model-tools.svg",
+        "alt": "Tutulma modeli malzemeleri",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB614-V1-M01-R1",
+          "text": "Ay’ı temsil eden voleybol topunun daha küçük bir topla (örneğin pinpon topuyla) değiştirilmesi gerektiğini belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB614-V1-K01",
+            "FB614-V1-K02"
+          ],
+          "scoring": {
+            "full": "Ay’ı temsil eden küre küçültülmelidir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB614-V1-M01-R2",
+          "text": "Gerçekte Ay Dünya’dan küçük olduğu için gölgesinin Dünya üzerinde dar bir alanı kapladığını açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB614-V1-K02"
+          ],
+          "scoring": {
+            "full": "Ay küçük olduğu için gölgesi dar alanda oluşur.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB614-V1-M02": {
+      "id": "FB614-V1-M02",
+      "outcome_id": "FB.6.1.4",
+      "difficulty": "medium",
+      "title": "Tutulma modelinde yapılan hata",
+      "stem": "Bir öğrenci Ay tutulması modeli kurarken el feneri ile futbol topunun arasına pinpon topunu koymuş ve 'Pinpon topunun üzerine gölge düştü' demiştir. Öğrencinin model kurulumundaki hatasını ve nasıl düzeltmesi gerektiğini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB614-V1-M02-R1",
+          "text": "Pinpon topunun (Ay) ortaya konulmasının Güneş tutulması modeli olduğunu, bu durumda gölgenin futbol topuna (Dünya) düşeceğini belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB614-V1-K01"
+          ],
+          "scoring": {
+            "full": "Ortada pinpon topu varsa Güneş tutulması olur.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB614-V1-M02-R2",
+          "text": "Ay tutulması için futbol topunun (Dünya) el feneri ile pinpon topunun arasına alınması gerektiğini yazar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB614-V1-K01"
+          ],
+          "scoring": {
+            "full": "Futbol topu ortaya alınmalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB614-V1-H01": {
+      "id": "FB614-V1-H01",
+      "outcome_id": "FB.6.1.4",
+      "difficulty": "hard",
+      "title": "Tutulma modelinin geliştirilmesi",
+      "stem": "Bir öğrenci masa üzerinde el feneri, büyük top ve küçük topu aynı yatay hizada tutarak küçük topu büyük topun etrafında döndürüyor. Her turda tutulma gerçekleştiğini görünce 'Gerçekte de her ay tutulma olur' sonucuna varıyor.\n1) Öğrencinin modelinden çıkardığı hatalı sonucu gerçek gök bilimi verisiyle düzeltiniz.\n2) Modelin gerçeğe daha uygun olması için küçük topun hareket düzleminde nasıl bir değişiklik yapılmalıdır?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB614-V1-H01-R1",
+          "text": "Gerçekte her ay tutulma olmadığını, çünkü Ay ve Dünya’nın dolanma düzlemlerinin çakışmadığını (~5° eğik olduğunu) belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB613-V1-K04",
+            "FB614-V1-K03"
+          ],
+          "scoring": {
+            "full": "Yörünge düzlemleri ~5° eğik olduğu için her ay tutulma olmaz.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB614-V1-H01-R2",
+          "text": "Modelde küçük topun dolanma düzleminin yatay düzleme göre hafifçe eğik tutulması gerektiğini açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB614-V1-K03"
+          ],
+          "scoring": {
+            "full": "Küçük topun yörünge düzlemi eğik tutulmalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB621-V1-E01": {
+      "id": "FB621-V1-E01",
+      "outcome_id": "FB.6.2.1",
+      "difficulty": "easy",
+      "title": "Kuvvetin dört özelliği",
+      "stem": "Bir cisme etki eden kuvveti okla gösterirken kullandığımız dört temel özelliği yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB621-V1-E01-R1",
+          "text": "Uygulama noktası ve doğrultu özelliklerini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB621-V1-K01"
+          ],
+          "scoring": {
+            "full": "Uygulama noktası, doğrultu.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB621-V1-E01-R2",
+          "text": "Yön ve büyüklük (şiddet) özelliklerini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB621-V1-K01"
+          ],
+          "scoring": {
+            "full": "Yön, büyüklük.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB621-V1-E02": {
+      "id": "FB621-V1-E02",
+      "outcome_id": "FB.6.2.1",
+      "difficulty": "easy",
+      "title": "Aynı yönlü iki kuvvetin bileşkesi",
+      "stem": "Sürtünmesiz yatay düzlemde duran bir sandığa doğu yönünde 4 N ve aynı doğrultuda yine doğu yönünde 6 N büyüklüğünde iki kuvvet uygulanmaktadır. Bileşke kuvvetin büyüklüğünü, doğrultusunu ve yönünü yazınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-force-same-dir.svg",
+        "alt": "Doğu yönünde 4 N ve 6 N kuvvetler",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB621-V1-E02-R1",
+          "text": "Bileşke kuvvetin büyüklüğünü 4 N + 6 N = 10 N olarak doğru hesaplar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB621-V1-K03"
+          ],
+          "scoring": {
+            "full": "10 N.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB621-V1-E02-R2",
+          "text": "Doğrultusunu doğu-batı, yönünü doğu olarak yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB621-V1-K01",
+            "FB621-V1-K03"
+          ],
+          "scoring": {
+            "full": "Doğu-batı doğrultusu, doğu yönü.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB621-V1-E03": {
+      "id": "FB621-V1-E03",
+      "outcome_id": "FB.6.2.1",
+      "difficulty": "easy",
+      "title": "Zıt yönlü iki kuvvetin bileşkesi",
+      "stem": "Bir masanın üzerindeki kutuya kuzey yönünde 9 N, güney yönünde ise 4 N büyüklüğünde iki kuvvet aynı anda etki etmektedir. Kutuya etki eden bileşke kuvvetin büyüklüğünü ve yönünü bulunuz.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB621-V1-E03-R1",
+          "text": "Zıt yönlü kuvvetleri çıkararak bileşke büyüklüğünü 9 N − 4 N = 5 N bulur.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB621-V1-K03"
+          ],
+          "scoring": {
+            "full": "5 N.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB621-V1-E03-R2",
+          "text": "Bileşke kuvvetin yönünü büyük kuvvetin yönü olan kuzey olarak belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB621-V1-K03"
+          ],
+          "scoring": {
+            "full": "Kuzey yönünde.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB621-V1-E04": {
+      "id": "FB621-V1-E04",
+      "outcome_id": "FB.6.2.1",
+      "difficulty": "easy",
+      "title": "Kuvvet birimi ve ölçüm aracı",
+      "stem": "Kuvvetin hangi araçla ölçüldüğünü, hangi harfle gösterildiğini ve uluslararası biriminin ne olduğunu yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB621-V1-E04-R1",
+          "text": "Kuvvetin dinamometre ile ölçüldüğünü belirtir.",
+          "points": 4,
+          "weight": 4,
+          "return_card_ids": [
+            "FB621-V1-K01"
+          ],
+          "scoring": {
+            "full": "Dinamometre.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB621-V1-E04-R2",
+          "text": "F harfi ile gösterildiğini ve biriminin Newton (N) olduğunu yazar.",
+          "points": 6,
+          "weight": 6,
+          "return_card_ids": [
+            "FB621-V1-K01"
+          ],
+          "scoring": {
+            "full": "F ile gösterilir, birimi Newton (N).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB621-V1-E05": {
+      "id": "FB621-V1-E05",
+      "outcome_id": "FB.6.2.1",
+      "difficulty": "easy",
+      "title": "Dengeleyici kuvvet tanımı",
+      "stem": "Bir cisme etki eden kuvvetlerin bileşkesi doğu yönünde 7 N olarak hesaplanmıştır. Bu cismi dengelemek için uygulanması gereken dengeleyici kuvvetin büyüklüğünü, doğrultusunu ve yönünü yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB621-V1-E05-R1",
+          "text": "Dengeleyici kuvvetin büyüklüğünün 7 N olduğunu yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB621-V1-K05"
+          ],
+          "scoring": {
+            "full": "7 N.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB621-V1-E05-R2",
+          "text": "Doğrultusunun doğu-batı, yönünün ise bileşkeye zıt olan batı yönü olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB621-V1-K05"
+          ],
+          "scoring": {
+            "full": "Doğu-batı doğrultusunda, batı yönünde.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB621-V1-E06": {
+      "id": "FB621-V1-E06",
+      "outcome_id": "FB.6.2.1",
+      "difficulty": "easy",
+      "title": "Doğrultu ve yön farkı",
+      "stem": "Doğu yönünde 5 N ve batı yönünde 3 N kuvvetlerin 'doğrultu' ve 'yön' özelliklerini karşılaştırarak açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB621-V1-E06-R1",
+          "text": "İki kuvvetin aynı doğrultuda (doğu-batı doğrultusu) olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB621-V1-K01"
+          ],
+          "scoring": {
+            "full": "Doğrultuları aynıdır (doğu-batı).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB621-V1-E06-R2",
+          "text": "Yönlerinin birbirine zıt (biri doğu, diğeri batı) olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB621-V1-K01"
+          ],
+          "scoring": {
+            "full": "Yönleri zıttır (doğu ve batı).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB621-V1-M01": {
+      "id": "FB621-V1-M01",
+      "outcome_id": "FB.6.2.1",
+      "difficulty": "medium",
+      "title": "Üç kuvvetin bileşkesi (Doğu-Batı)",
+      "stem": "Şemada kutuya aynı doğrultuda etki eden F₁ = 8 N, F₂ = 2 N ve F₃ = 3 N kuvvetleri gösterilmiştir.\n1) Kutuya etki eden bileşke kuvvetin büyüklüğünü ve yönünü hesaplayınız.\n2) Bu kutuyu dengelemek için uygulanması gereken dengeleyici kuvveti belirtiniz.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-force-arrows-1.svg",
+        "alt": "Kutuya etki eden F1=8N, F2=2N doğu ve F3=3N batı kuvvetleri",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB621-V1-M01-R1",
+          "text": "Doğu yönlü kuvvetleri toplayıp (8 + 2 = 10 N) batı yönlü kuvveti çıkararak (10 − 3 = 7 N) bileşkeyi doğu yönünde 7 N bulur.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB621-V1-K04"
+          ],
+          "scoring": {
+            "full": "R = 7 N doğu.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB621-V1-M01-R2",
+          "text": "Dengeleyici kuvvetin batı yönünde 7 N olması gerektiğini yazar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB621-V1-K05"
+          ],
+          "scoring": {
+            "full": "Dengeleyici: 7 N batı.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB621-V1-M02": {
+      "id": "FB621-V1-M02",
+      "outcome_id": "FB.6.2.1",
+      "difficulty": "medium",
+      "title": "Üç kuvvetin bileşkesi (Kuzey-Güney)",
+      "stem": "Şemada cisme etki eden F₁ = 10 N, F₂ = 4 N ve F₃ = 2 N kuvvetleri verilmiştir. Cisme etki eden bileşke kuvvetin büyüklüğünü, doğrultusunu ve yönünü işlem basamaklarını göstererek bulunuz.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-force-arrows-2.svg",
+        "alt": "Cisme etki eden F1=10N kuzey, F2=4N güney ve F3=2N güney kuvvetleri",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB621-V1-M02-R1",
+          "text": "Güney yönlü kuvvetleri toplar (4 N + 2 N = 6 N) ve kuzey yönlü 10 N kuvvetten çıkararak 4 N bulur.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB621-V1-K04"
+          ],
+          "scoring": {
+            "full": "10 − (4 + 2) = 4 N.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB621-V1-M02-R2",
+          "text": "Doğrultuyu kuzey-güney, yönü kuzey olarak belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB621-V1-K04"
+          ],
+          "scoring": {
+            "full": "Kuzey-güney doğrultusunda, kuzey yönünde.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB621-V1-M03": {
+      "id": "FB621-V1-M03",
+      "outcome_id": "FB.6.2.1",
+      "difficulty": "medium",
+      "title": "Dengeleyiciden bileşkeyi bulma",
+      "stem": "Bir cisme etki eden kuvvetleri dengelemek için kuzey yönünde 6 N büyüklüğünde bir dengeleyici kuvvet uygulanması gerektiği belirlenmiştir. Dengeleyici kuvvet uygulanmadan önce cisme etki eden bileşke kuvvetin büyüklüğünü, doğrultusunu ve yönünü açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB621-V1-M03-R1",
+          "text": "Önceki bileşke kuvvetin büyüklüğünün 6 N olduğunu belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB621-V1-K05"
+          ],
+          "scoring": {
+            "full": "6 N.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB621-V1-M03-R2",
+          "text": "Doğrultusunun kuzey-güney ve yönünün dengeleyiciye zıt olan güney yönü olduğunu açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB621-V1-K05"
+          ],
+          "scoring": {
+            "full": "Kuzey-güney doğrultusunda, güney yönünde.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB621-V1-M04": {
+      "id": "FB621-V1-M04",
+      "outcome_id": "FB.6.2.1",
+      "difficulty": "medium",
+      "title": "Sandık ve sürtünme kuvveti",
+      "stem": "Şemada yatay zemindeki bir sandığı 1. işçi doğu yönünde 25 N, 2. işçi ise doğu yönünde 15 N kuvvetle itmektedir. Sandık ile zemin arasında batı yönünde 12 N büyüklüğünde sürtünme kuvveti oluştuğuna göre, sandığa etki eden bileşke kuvvetin büyüklüğünü, doğrultusunu ve yönünü işlem basamaklarıyla bulunuz.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-sled-friction.svg",
+        "alt": "Sandığa etki eden itme kuvvetleri ve sürtünme",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB621-V1-M04-R1",
+          "text": "Doğu yönündeki kuvvetleri toplar (25 N + 15 N = 40 N) ve batı yönündeki 12 N sürtünme kuvvetini çıkararak 28 N bulur.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB621-V1-K03",
+            "FB621-V1-K04"
+          ],
+          "scoring": {
+            "full": "25 + 15 − 12 = 28 N.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB621-V1-M04-R2",
+          "text": "Bileşke kuvvetin doğu–batı doğrultusunda ve doğu yönünde olduğunu belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB621-V1-K01",
+            "FB621-V1-K04"
+          ],
+          "scoring": {
+            "full": "Doğu–batı doğrultusu, doğu yönünde.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB621-V1-H01": {
+      "id": "FB621-V1-H01",
+      "outcome_id": "FB.6.2.1",
+      "difficulty": "hard",
+      "title": "Bilinmeyen kuvveti hesaplama",
+      "stem": "Doğu-batı doğrultusunda hareket eden bir cisme doğu yönünde 12 N ve 5 N’luk iki kuvvet, batı yönünde ise büyüklüğü bilinmeyen bir F kuvveti etki etmektedir. Cisim üzerindeki bileşke kuvvetin doğu yönünde 6 N olduğu bilindiğine göre:\n1) F kuvvetinin büyüklüğünü hesaplayınız.\n2) Bileşke kuvvetin batı yönünde 3 N olması için F kuvveti kaç N olmalıdır?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB621-V1-H01-R1",
+          "text": "Doğu toplamı 17 N olduğundan, bileşkenin doğuya 6 N olması için batı yönündeki F kuvvetini 17 − 6 = 11 N olarak hesaplar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB621-V1-K04"
+          ],
+          "scoring": {
+            "full": "F = 11 N.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB621-V1-H01-R2",
+          "text": "Bileşkenin batı yönünde 3 N olması için batı kuvvetinin doğu toplamından 3 N büyük olması gerektiğinden F = 17 + 3 = 20 N olduğunu bulur.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB621-V1-K04"
+          ],
+          "scoring": {
+            "full": "F = 20 N.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB621-V1-H02": {
+      "id": "FB621-V1-H02",
+      "outcome_id": "FB.6.2.1",
+      "difficulty": "hard",
+      "title": "Kuvvet okları ve ölçekli yorum",
+      "stem": "Şemada kutuya etki eden F₁ = 8 N, F₂ = 2 N ve F₃ = 3 N kuvvetleri verilmiştir.\n1) Kutuya batı yönünde 4 N’luk yeni bir F₄ kuvveti eklenirse yeni bileşke kuvvetin büyüklüğü ve yönü ne olur?\n2) Yeni durumda kutuyu dengelemek için hangi yöne kaç N’luk kuvvet eklenmelidir?",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-force-arrows-1.svg",
+        "alt": "Kutuya etki eden F1, F2, F3 kuvvetleri",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB621-V1-H02-R1",
+          "text": "Doğuya 10 N, batıya 3 + 4 = 7 N olduğundan yeni bileşkenin doğu yönünde 3 N olduğunu hesaplar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB621-V1-K04"
+          ],
+          "scoring": {
+            "full": "Yeni bileşke: 3 N doğu.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB621-V1-H02-R2",
+          "text": "Yeni bileşkeyi sıfırlamak için batı yönünde 3 N’luk dengeleyici kuvvet eklenmesi gerektiğini belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB621-V1-K05"
+          ],
+          "scoring": {
+            "full": "Dengeleyici: 3 N batı.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB622-V1-E01": {
+      "id": "FB622-V1-E01",
+      "outcome_id": "FB.6.2.2",
+      "difficulty": "easy",
+      "title": "Kareli zeminde dengelenmiş kuvvet seçimi",
+      "stem": "Sürtünmesiz yatay düzlemde sabit süratle ilerlemekte olan M cismine kareli zeminde gösterilen kuvvetlerden (1 birim kare = 1 N) hangi ikisi aynı anda uygulanırsa cisim sabit süratle hareketine devam eder? Nedenini açıklayınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-grid-forces.svg",
+        "alt": "Kareli zeminde F1, F2, F3, F4 kuvvetleri ve M cismi",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB622-V1-E01-R1",
+          "text": "F₁ (3 N doğu) ve F₃ (3 N batı) kuvvetlerinin birlikte uygulanması gerektiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB622-V1-K01"
+          ],
+          "scoring": {
+            "full": "F1 ve F3.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB622-V1-E01-R2",
+          "text": "İki kuvvet eşit büyüklükte ve zıt yönlü olduğu için bileşkenin 0 N (dengelenmiş) olacağını ve cismin sabit süratle devam edeceğini açıklar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB622-V1-K01"
+          ],
+          "scoring": {
+            "full": "R = 0 N olduğu için sabit süratle gider.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB622-V1-E02": {
+      "id": "FB622-V1-E02",
+      "outcome_id": "FB.6.2.2",
+      "difficulty": "easy",
+      "title": "Hareketli cisimde dengelenmiş kuvvetler",
+      "stem": "Düz bir yolda doğu yönünde sabit 10 m/s süratle ilerleyen bir araca etki eden kuvvetlerin bileşkesi sıfır (R = 0 N) olursa aracın hareketinde nasıl bir değişim gözlenir?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB622-V1-E02-R1",
+          "text": "Aracın aynı yönde (doğu) ve aynı süratle (10 m/s, sabit süratle) hareketine devam edeceğini yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB622-V1-K01"
+          ],
+          "scoring": {
+            "full": "Aynı yönde sabit süratle ilerlemeye devam eder.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB622-V1-E03": {
+      "id": "FB622-V1-E03",
+      "outcome_id": "FB.6.2.2",
+      "difficulty": "easy",
+      "title": "Dinamometre deneyinde bileşke ve yön",
+      "stem": "Şemadaki oyuncak araba başlangıçta durgun hâldedir. Sol dinamometrede 3 N, sağ dinamometrede 7 N okunduğuna göre araba hangi kuvvetlerin (dengelenmiş/dengelenmemiş) etkisindedir ve hangi yöne harekete geçer?",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-dynamometer-car.svg",
+        "alt": "Sol dinamometre 3 N, sağ dinamometre 7 N olan oyuncak araba düzeneği",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB622-V1-E03-R1",
+          "text": "Bileşke kuvvet doğuya 4 N (sıfırdan farklı) olduğu için dengelenmemiş kuvvetler etkisinde olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB622-V1-K02",
+            "FB622-V1-K03"
+          ],
+          "scoring": {
+            "full": "Dengelenmemiş kuvvetler (R = 4 N).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB622-V1-E03-R2",
+          "text": "Arabanın sağa (doğu yönünde) harekete geçeceğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB622-V1-K02",
+            "FB622-V1-K03"
+          ],
+          "scoring": {
+            "full": "Doğu/sağ yönünde harekete geçer.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB622-V1-E04": {
+      "id": "FB622-V1-E04",
+      "outcome_id": "FB.6.2.2",
+      "difficulty": "easy",
+      "title": "Hareket yönüyle aynı yönde bileşke",
+      "stem": "Doğu yönünde ilerlemekte olan bir bisiklete hareket yönüyle aynı yönde (doğu yönünde) sıfırdan farklı bir bileşke kuvvet etki ederse bisikletin sürati nasıl değişir?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB622-V1-E04-R1",
+          "text": "Bisikletin süratinin artacağını (hızlanacağını) belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB622-V1-K02"
+          ],
+          "scoring": {
+            "full": "Sürati artar / hızlanır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB622-V1-E05": {
+      "id": "FB622-V1-E05",
+      "outcome_id": "FB.6.2.2",
+      "difficulty": "easy",
+      "title": "Hareket yönüne zıt bileşke",
+      "stem": "Doğu yönünde ilerleyen bir oyuncak arabaya hareket yönüne zıt yönde (batı yönünde) sıfırdan farklı bir bileşke kuvvet uygulanırsa aracın hareketinde ilk olarak ne gözlenir?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB622-V1-E05-R1",
+          "text": "Aracın yavaşlayacağını (süratinin azalacağını) belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB622-V1-K02"
+          ],
+          "scoring": {
+            "full": "Yavaşlar / sürati azalır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB622-V1-E06": {
+      "id": "FB622-V1-E06",
+      "outcome_id": "FB.6.2.2",
+      "difficulty": "easy",
+      "title": "Günlük hareket durumlarını sınıflandırma",
+      "stem": "Aşağıdaki numaralı hareket durumlarını inceleyiniz:\n1. Duvarda asılı duran saat\n2. Düz otoyolda sabit süratle giden otobüs\n3. Kırmızı ışığa yaklaşarak yavaşlayan otomobil\n4. Pistte hızlanarak kalkışa geçen uçak\nBu durumlardan hangilerinin dengelenmiş, hangilerinin dengelenmemiş kuvvetlerin etkisinde olduğunu numaralarıyla yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB622-V1-E06-R1",
+          "text": "Dengelenmiş kuvvetlerin etkisinde olanları 1 ve 2 olarak doğru ayırır.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB622-V1-K01"
+          ],
+          "scoring": {
+            "full": "Dengelenmiş: 1 ve 2.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB622-V1-E06-R2",
+          "text": "Dengelenmemiş kuvvetlerin etkisinde olanları 3 ve 4 olarak doğru ayırır.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB622-V1-K02"
+          ],
+          "scoring": {
+            "full": "Dengelenmemiş: 3 ve 4.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB622-V1-M01": {
+      "id": "FB622-V1-M01",
+      "outcome_id": "FB.6.2.2",
+      "difficulty": "medium",
+      "title": "Deney değişkenlerini belirleme",
+      "stem": "Bir öğrenci sürtünmesiz düz masadaki oyuncak arabayı zıt yönlü iki dinamometre ile çekerek deney yapıyor. 1. denemede sola 2 N, sağa 2 N uygulayıp arabanın durduğunu; 2. denemede sola 2 N, sağa 5 N uygulayıp arabanın sağa hareket ettiğini gözlemliyor. Bu deneyin bağımsız, bağımlı ve sabit tutulan (kontrol) değişkenlerini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB622-V1-M01-R1",
+          "text": "Bağımsız değişkenin sağ taraftan uygulanan çekme kuvveti (veya kuvvet büyüklüğü) olduğunu yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB622-V1-K04"
+          ],
+          "scoring": {
+            "full": "Bağımsız: Sağ çekme kuvveti.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB622-V1-M01-R2",
+          "text": "Bağımlı değişkenin arabanın hareket durumu ve yönü olduğunu yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB622-V1-K04"
+          ],
+          "scoring": {
+            "full": "Bağımlı: Arabanın hareket durumu.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB622-V1-M01-R3",
+          "text": "Sabit tutulan değişkenlere araba, zemin ve sol taraftaki kuvvetten (2 N) en az ikisini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB622-V1-K04"
+          ],
+          "scoring": {
+            "full": "Kontrol: Araba, zemin, sol kuvvet.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB622-V1-M02": {
+      "id": "FB622-V1-M02",
+      "outcome_id": "FB.6.2.2",
+      "difficulty": "medium",
+      "title": "Dinamometre deney tablosu yorumlama",
+      "stem": "Şemadaki oyuncak araba düzeneğinde sol dinamometre 3 N iken sağ dinamometre 7 N değerini göstermektedir. Arabanın başlangıçta durgun olduğu bilindiğine göre:\n1) Arabayı tekrar durgun (dengelenmiş) hâle getirmek için sağ dinamometredeki kuvvet sabit tutularak sol dinamometredeki kuvvet nasıl değiştirilmelidir?\n2) Gözleminizi bileşke kuvvetle gerekçelendiriniz.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-dynamometer-car.svg",
+        "alt": "Oyuncak araba dinamometre düzeneği",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB622-V1-M02-R1",
+          "text": "Sol dinamometredeki kuvvetin 4 N artırılarak 7 N yapılması gerektiğini hesaplar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB622-V1-K01",
+            "FB622-V1-K03"
+          ],
+          "scoring": {
+            "full": "Sol kuvvet 7 N yapılmalıdır (4 N artırılmalı).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB622-V1-M02-R2",
+          "text": "Bu durumda zıt yönlü kuvvetler eşitlenip bileşke kuvvet R = 0 N olacağından arabanın dengelenmiş kuvvet etkisinde durgun kalacağını açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB622-V1-K01"
+          ],
+          "scoring": {
+            "full": "R = 0 N olacağı için durgun kalır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB622-V1-M03": {
+      "id": "FB622-V1-M03",
+      "outcome_id": "FB.6.2.2",
+      "difficulty": "medium",
+      "title": "Deney tasarımı ve tahmin",
+      "stem": "Zıt yönlü eşit kuvvetler altında duran bir oyuncak arabanın, kuvvetlerden biri artırıldığında nasıl hareket edeceğini araştırmak için kuracağınız deney düzeneğinde hangi malzemeleri kullanırsınız ve deneye başlamadan önce ne tahmin edersiniz?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB622-V1-M03-R1",
+          "text": "Düz masa, oyuncak araba, ip ve iki adet dinamometre kullanacağını belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB622-V1-K03"
+          ],
+          "scoring": {
+            "full": "Düz masa, oyuncak araba, ip, 2 dinamometre.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB622-V1-M03-R2",
+          "text": "Kuvvetlerden biri artırıldığında bileşkenin sıfırdan farklı olacağını ve arabanın büyük kuvvetin yönünde harekete geçeceğini tahmin eder.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB622-V1-K02",
+            "FB622-V1-K03"
+          ],
+          "scoring": {
+            "full": "Büyük kuvvet yönünde harekete geçeceğini tahmin eder.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB622-V1-M04": {
+      "id": "FB622-V1-M04",
+      "outcome_id": "FB.6.2.2",
+      "difficulty": "medium",
+      "title": "Sabit sürat kavramı ve denge ilişkisi",
+      "stem": "Bir öğrenci 'Eğer bir araba hareket ediyorsa ona mutlaka sıfırdan farklı bir net kuvvet etki ediyordur; net kuvvet sıfır olsa araba dururdu' iddiasında bulunuyor. Bu iddianın doğru olup olmadığını gerekçesiyle değerlendiriniz.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB622-V1-M04-R1",
+          "text": "Öğrencinin iddiasının yanlış olduğunu belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB622-V1-K01"
+          ],
+          "scoring": {
+            "full": "İddia yanlıştır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB622-V1-M04-R2",
+          "text": "Başlangıçta hareket hâlinde olan bir araca etki eden net kuvvet sıfır (R = 0) olduğunda aracın durmayacağını, aynı yönde sabit süratle hareketine devam edeceğini açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB622-V1-K01"
+          ],
+          "scoring": {
+            "full": "Hareket hâlindeki cisim R=0 iken sabit süratle yoluna devam eder.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB622-V1-H01": {
+      "id": "FB622-V1-H01",
+      "outcome_id": "FB.6.2.2",
+      "difficulty": "hard",
+      "title": "Aşama aşama hareket analizi",
+      "stem": "Sürtünmesiz yatay düzlemde başlangıçta durmakta olan bir kutuya:\n• 0–4 saniye arasında doğuya 8 N, batıya 3 N kuvvet uygulanıyor.\n• 4–8 saniye arasında ise batı yönündeki kuvvet 8 N’a çıkarılıyor.\nKutunun 0–4 s ve 4–8 s aralıklarındaki hareket durumunu bileşke kuvvet ve denge kavramlarıyla açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB622-V1-H01-R1",
+          "text": "0–4 s aralığında R = 5 N doğu (dengelenmemiş) olduğu için kutunun doğu yönünde harekete geçip hızlanacağını belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB622-V1-K02"
+          ],
+          "scoring": {
+            "full": "0–4 s: R=5 N doğu, dengelenmemiş, doğuya hızlanır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB622-V1-H01-R2",
+          "text": "4–8 s aralığında kuvvetlerin 8 N–8 N eşitlenerek R = 0 N (dengelenmiş) olacağını ve kutunun 4. saniyedeki süratiyle doğuya sabit süratli hareket edeceğini açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB622-V1-K01"
+          ],
+          "scoring": {
+            "full": "4–8 s: R=0 N, dengelenmiş, sabit süratle doğuya devam eder.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB622-V1-H02": {
+      "id": "FB622-V1-H02",
+      "outcome_id": "FB.6.2.2",
+      "difficulty": "hard",
+      "title": "Kontrollü deney değerlendirme ve hata tespiti",
+      "stem": "Bir öğrenci zıt yönlü kuvvetlerin harekete etkisini incelemek için 1. denemede oyuncak arabayı tahta masa üzerinde 3 N sola ve 5 N sağa çekiyor. 2. denemede ise arabayı halı üzerine alıp 3 N sola ve 7 N sağa çekiyor. Öğrencinin deney tasarımındaki bilimsel hatayı tespit edip deneyin geçerli olması için nasıl düzeltilmesi gerektiğini açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB622-V1-H02-R1",
+          "text": "İki denemede hem sağ çekiş kuvvetinin hem de zemin türünün (tahta ve halı) aynı anda değiştirildiğini, kontrollü deneyde yalnızca bir bağımsız değişken olması gerektiğini belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB622-V1-K04"
+          ],
+          "scoring": {
+            "full": "İki değişken aynı anda değiştirilmiştir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB622-V1-H02-R2",
+          "text": "Her iki denemenin de aynı zemin üzerinde (sadece tahta masa veya sadece halı) yapılması gerektiğini açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB622-V1-K04"
+          ],
+          "scoring": {
+            "full": "Zemin sabit tutulmalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB623-V1-E01": {
+      "id": "FB623-V1-E01",
+      "outcome_id": "FB.6.2.3",
+      "difficulty": "easy",
+      "title": "Alınan yol ve yer değiştirme tanımı",
+      "stem": "Bir hareketlinin izlediği güzergâh boyunca ölçtüğü uzunluk ile başlangıçtan bitişe çizilen en kısa yönlü uzaklığın bilimsel adlarını yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB623-V1-E01-R1",
+          "text": "İzlenen güzergâhın toplam uzunluğuna alınan yol dendiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB623-V1-K01"
+          ],
+          "scoring": {
+            "full": "Alınan yol.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB623-V1-E01-R2",
+          "text": "Başlangıçtan bitişe çizilen yönlü en kısa mesafeye yer değiştirme dendiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB623-V1-K01"
+          ],
+          "scoring": {
+            "full": "Yer değiştirme.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB623-V1-E02": {
+      "id": "FB623-V1-E02",
+      "outcome_id": "FB.6.2.3",
+      "difficulty": "easy",
+      "title": "Sürat ve hız birimleri",
+      "stem": "Sürat ve hız kavramlarını ifade ederken kullandığımız iki ortak birimi yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB623-V1-E02-R1",
+          "text": "Metre/saniye (m/s) birimini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB623-V1-K02",
+            "FB623-V1-K03"
+          ],
+          "scoring": {
+            "full": "m/s.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB623-V1-E02-R2",
+          "text": "Kilometre/saat (km/h) birimini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB623-V1-K02",
+            "FB623-V1-K03"
+          ],
+          "scoring": {
+            "full": "km/h.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB623-V1-E03": {
+      "id": "FB623-V1-E03",
+      "outcome_id": "FB.6.2.3",
+      "difficulty": "easy",
+      "title": "Başlangıç noktasına dönüş",
+      "stem": "Evinden okula düz bir yoldan 300 m yürüyüp aynı yoldan tekrar evine dönen bir öğrencinin toplam aldığı yolu ve toplam yer değiştirmesini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB623-V1-E03-R1",
+          "text": "Alınan yolu 300 m + 300 m = 600 m olarak hesaplar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB623-V1-K01"
+          ],
+          "scoring": {
+            "full": "Alınan yol: 600 m.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB623-V1-E03-R2",
+          "text": "Başlangıç noktasına döndüğü için yer değiştirmesinin 0 m olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB623-V1-K01"
+          ],
+          "scoring": {
+            "full": "Yer değiştirme: 0 m.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB623-V1-E04": {
+      "id": "FB623-V1-E04",
+      "outcome_id": "FB.6.2.3",
+      "difficulty": "easy",
+      "title": "Sürat ve hız hesaplama",
+      "stem": "Doğrusal bir yolda doğu yönünde 10 saniyede 80 metre ilerleyen bir bisikletlinin süratini ve hızını belirtiniz.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB623-V1-E04-R1",
+          "text": "Süratini 80 / 10 = 8 m/s olarak hesaplar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB623-V1-K02"
+          ],
+          "scoring": {
+            "full": "Sürat: 8 m/s.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB623-V1-E04-R2",
+          "text": "Hızını yön bilgisiyle birlikte doğu yönünde 8 m/s olarak yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB623-V1-K02"
+          ],
+          "scoring": {
+            "full": "Hız: 8 m/s doğuya.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB623-V1-E05": {
+      "id": "FB623-V1-E05",
+      "outcome_id": "FB.6.2.3",
+      "difficulty": "easy",
+      "title": "Aynı süratte zıt yönlü araçlar",
+      "stem": "Düz bir yolda mavi araç doğu yönünde her saniye 5 m, kırmızı araç ise batı yönünde her saniye 5 m yol almaktadır. Bu iki aracın süratleri ve hızları eşit midir? Açıklayınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-two-cars-speed.svg",
+        "alt": "Zıt yönlerde 5 m/s ile giden mavi ve kırmızı araç",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB623-V1-E05-R1",
+          "text": "Her iki aracın da süratinin 5 m/s ve birbirine eşit olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB623-V1-K02"
+          ],
+          "scoring": {
+            "full": "Süratleri eşittir (5 m/s).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB623-V1-E05-R2",
+          "text": "Hareket yönleri zıt olduğu için hızlarının farklı olduğunu (5 m/s doğu ve 5 m/s batı) açıklar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB623-V1-K02"
+          ],
+          "scoring": {
+            "full": "Yönleri zıt olduğu için hızları farklıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB623-V1-E06": {
+      "id": "FB623-V1-E06",
+      "outcome_id": "FB.6.2.3",
+      "difficulty": "easy",
+      "title": "Sürat ve hızın benzerliği ve farkı",
+      "stem": "Sürat ve hız kavramlarının bir benzerliğini ve bir temel farklılığını yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB623-V1-E06-R1",
+          "text": "Benzerlik olarak ikisinin de birim zamanda gerçekleşen hareketi tanımladığını veya ortak birimlerinin (m/s, km/h) aynı olduğunu yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB623-V1-K03"
+          ],
+          "scoring": {
+            "full": "İkisi de zamana bağlıdır ve birimleri aynıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB623-V1-E06-R2",
+          "text": "Farklılık olarak süratin alınan yola bağlı ve yönsüz; hızın yer değiştirmeye bağlı ve yönlü olduğunu yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB623-V1-K03"
+          ],
+          "scoring": {
+            "full": "Sürat yönsüz, hız yönlüdür.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB623-V1-M01": {
+      "id": "FB623-V1-M01",
+      "outcome_id": "FB.6.2.3",
+      "difficulty": "medium",
+      "title": "İki farklı rota karşılaştırması",
+      "stem": "Şemada A noktasından B noktasına aynı anda yürümeye başlayan iki öğrenciden 1. öğrenci uzun olan 1. rotayı, 2. öğrenci ise düz 2. rotayı kullanarak ikisi de aynı anda 20 saniyede B noktasına ulaşıyor.\n1) İki öğrencinin aldıkları yolları ve yer değiştirmelerini karşılaştırınız.\n2) Ortalama sürat ve ortalama hızlarını hesaplayıp karşılaştırınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-track-path.svg",
+        "alt": "A ve B noktaları arasında 1. ve 2. rota",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB623-V1-M01-R1",
+          "text": "1. öğrencinin aldığı yolun 60 m, 2. öğrencinin aldığı yolun 40 m olduğunu; her ikisinin yer değiştirmesinin doğu yönünde 40 m ve eşit olduğunu bulur.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB623-V1-K01"
+          ],
+          "scoring": {
+            "full": "Yollar 60 m ve 40 m; yer değiştirmeler eşit 40 m doğu.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB623-V1-M01-R2",
+          "text": "1. öğrencinin süratinin 3 m/s, 2. öğrencinin süratinin 2 m/s olduğunu; ortalama hızlarının ise her ikisi için doğu yönünde 2 m/s ve eşit olduğunu hesaplar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB623-V1-K02"
+          ],
+          "scoring": {
+            "full": "Süratler 3 m/s ve 2 m/s; hızlar eşit 2 m/s doğu.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB623-V1-M02": {
+      "id": "FB623-V1-M02",
+      "outcome_id": "FB.6.2.3",
+      "difficulty": "medium",
+      "title": "Virajlı yolda otobüsün hareketi",
+      "stem": "Şemada doğu yönünde ilerlerken virajı dönüp güney yönüne geçen bir aracın sürat göstergesi yol boyunca sabit 40 km/h göstermektedir. Bu aracın süratinin ve hızının sabit olup olmadığını gerekçesiyle açıklayınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-curved-road.svg",
+        "alt": "Virajlı yolda 40 km/h ile dönen araç",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB623-V1-M02-R1",
+          "text": "Gösterge hep 40 km/h gösterdiği ve eşit sürede eşit yol alındığı için süratinin sabit olduğunu belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB623-V1-K04",
+            "FB623-V1-K05"
+          ],
+          "scoring": {
+            "full": "Sürati sabittir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB623-V1-M02-R2",
+          "text": "Virajda yönü doğudan güneye değiştiği için hızının sabit olmadığını (değiştiğini) açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB623-V1-K04",
+            "FB623-V1-K05"
+          ],
+          "scoring": {
+            "full": "Yönü değiştiği için hızı değişir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB623-V1-M03": {
+      "id": "FB623-V1-M03",
+      "outcome_id": "FB.6.2.3",
+      "difficulty": "medium",
+      "title": "Sabit süratli ve sabit hızlı hareket farkı",
+      "stem": "'Sabit süratli her hareket, sabit hızlı hareket midir?' sorusunu bir örnekle açıklayarak yanıtlayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB623-V1-M03-R1",
+          "text": "Sabit süratli her hareketin sabit hızlı hareket olmadığını belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB623-V1-K04",
+            "FB623-V1-K05"
+          ],
+          "scoring": {
+            "full": "Hayır, değildir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB623-V1-M03-R2",
+          "text": "Virajı sabit 40 km/h ile dönen araç veya dairesel pistte koşan atlet örneğini vererek yön değiştiği için hızın değiştiğini açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB623-V1-K05"
+          ],
+          "scoring": {
+            "full": "Dönemeçte yön değiştiği için hız sabit kalmaz.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB623-V1-M04": {
+      "id": "FB623-V1-M04",
+      "outcome_id": "FB.6.2.3",
+      "difficulty": "medium",
+      "title": "Günlük kavram karmaşasını düzeltme",
+      "stem": "Bir haber spikeri 'Otomobil batıya doğru 90 km/h süratle ilerliyordu' cümlesini kullanmıştır. Bu cümledeki bilimsel kavram kullanımını sürat ve hız tanımlarına göre değerlendirip düzeltiniz.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB623-V1-M04-R1",
+          "text": "Cümlede 'batıya doğru' şeklinde yön bilgisi verildiğini tespit eder.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB623-V1-K02"
+          ],
+          "scoring": {
+            "full": "Yön bilgisi (batıya doğru) verilmiştir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB623-V1-M04-R2",
+          "text": "Yön bilgisi içeren kavramın sürat değil hız olduğunu belirterek cümlenin 'batıya doğru 90 km/h hızla' şeklinde düzeltilmesi gerektiğini yazar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB623-V1-K02"
+          ],
+          "scoring": {
+            "full": "Sürat yerine hız kelimesi kullanılmalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB623-V1-H01": {
+      "id": "FB623-V1-H01",
+      "outcome_id": "FB.6.2.3",
+      "difficulty": "hard",
+      "title": "Çok aşamalı parkur analizi",
+      "stem": "Bir koşucu başlangıç noktasından önce doğu yönünde 120 m koşuyor, ardından hiç durmadan geri dönüp batı yönünde 40 m daha koşarak toplam 20 saniyede duruyor.\n1) Koşucunun aldığı toplam yolu ve toplam yer değiştirmesini hesaplayınız.\n2) Koşucunun ortalama süratini ve ortalama hızını (yönüyle birlikte) hesaplayarak neden farklı değerler çıktığını açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB623-V1-H01-R1",
+          "text": "Alınan yolu 120 + 40 = 160 m; yer değiştirmeyi doğu yönünde 120 − 40 = 80 m olarak hesaplar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB623-V1-K01"
+          ],
+          "scoring": {
+            "full": "Yol: 160 m, Yer değiştirme: 80 m doğu.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB623-V1-H01-R2",
+          "text": "Ortalama sürati 160/20 = 8 m/s, ortalama hızı doğu yönünde 80/20 = 4 m/s bulur ve farkın yer değiştirme ile alınan yol farkından kaynaklandığını açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB623-V1-K02"
+          ],
+          "scoring": {
+            "full": "Sürat: 8 m/s, Hız: 4 m/s doğu.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB623-V1-H02": {
+      "id": "FB623-V1-H02",
+      "outcome_id": "FB.6.2.3",
+      "difficulty": "hard",
+      "title": "Sabit süratli ve sabit hızlı hareket karşılaştırması",
+      "stem": "A aracı düz bir otoyolda kuzey yönünde her saniye 10 m yol almaktadır. B aracı ise çembersel bir pistte her saniye 10 m yol almaktadır.\n1) İki aracın 10 saniye boyunca süratlerinin sabit olup olmadığını değerlendiriniz.\n2) Hangi aracın sabit hızlı hareket yaptığını, diğerinin neden sabit hızlı sayılamayacağını gerekçelendiriniz.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB623-V1-H02-R1",
+          "text": "Her iki araç da eşit sürelerde eşit yol (10 m/s) aldığı için ikisinin de süratinin sabit (10 m/s) olduğunu belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB623-V1-K04"
+          ],
+          "scoring": {
+            "full": "Her iki aracın da sürati sabittir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB623-V1-H02-R2",
+          "text": "A aracının yönü hep kuzey kaldığı için sabit hızlı olduğunu; B aracının çembersel pistte yönü sürekli değiştiği için sabit hızlı olmadığını açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB623-V1-K04",
+            "FB623-V1-K05"
+          ],
+          "scoring": {
+            "full": "A sabit hızlıdır; B yön değiştirdiği için hızı değişir.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB631-V1-E01": {
+      "id": "FB631-V1-E01",
+      "outcome_id": "FB.6.3.1",
+      "difficulty": "easy",
+      "title": "Üremenin amacı ve temel çeşitleri",
+      "stem": "Canlılarda üremenin temel amacını ve üremenin iki ana çeşidini yazınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB631-V1-E01-R1",
+          "text": "Üremenin amacının canlıların kendilerine benzer yeni bireyler oluşturarak neslin devamını sağlamak olduğunu belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB631-V1-K01"
+          ],
+          "scoring": {
+            "full": "Neslin devamını sağlamak.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB631-V1-E01-R2",
+          "text": "Üremenin iki ana çeşidinin eşeyli üreme ve eşeysiz üreme olduğunu yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB631-V1-K01"
+          ],
+          "scoring": {
+            "full": "Eşeyli ve eşeysiz üreme.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB631-V1-E02": {
+      "id": "FB631-V1-E02",
+      "outcome_id": "FB.6.3.1",
+      "difficulty": "easy",
+      "title": "Eşeyli üreme ve döllenme",
+      "stem": "Eşeyli üremede yeni bir bireyin oluşabilmesi için hangi hücrelerin birleşmesi gerekir ve bu birleşme olayına ne ad verilir?",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB631-V1-E02-R1",
+          "text": "Sperm ve yumurta (eşey hücreleri) hücrelerinin birleştiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB631-V1-K01"
+          ],
+          "scoring": {
+            "full": "Sperm ve yumurta (eşey hücreleri).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB631-V1-E02-R2",
+          "text": "Bu birleşme olayına döllenme dendiğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB631-V1-K01"
+          ],
+          "scoring": {
+            "full": "Döllenme.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB631-V1-E03": {
+      "id": "FB631-V1-E03",
+      "outcome_id": "FB.6.3.1",
+      "difficulty": "easy",
+      "title": "Eşeysiz üreme çeşitleri",
+      "stem": "Eşeysiz üremenin dört temel çeşidini yazarak her birine birer canlı örneği veriniz.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB631-V1-E03-R1",
+          "text": "Vejetatif üreme (ör. çilek/patates/gül) ve bölünme ile üremeyi (ör. amip/bakteri/öglena) doğru yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB631-V1-K02"
+          ],
+          "scoring": {
+            "full": "Vejetatif (çilek), bölünme (amip).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB631-V1-E03-R2",
+          "text": "Tomurcuklanma (ör. hidra/maya mantarı) ve rejenerasyonla üremeyi (ör. planarya/denizyıldızı) doğru yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB631-V1-K03"
+          ],
+          "scoring": {
+            "full": "Tomurcuklanma (hidra), rejenerasyon (planarya).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB631-V1-E04": {
+      "id": "FB631-V1-E04",
+      "outcome_id": "FB.6.3.1",
+      "difficulty": "easy",
+      "title": "Kalıtsal çeşitlilik farkı",
+      "stem": "Eşeyli ve eşeysiz üreme sonucunda oluşan yavruların ana canlıyla kalıtsal benzerlik veya farklılık durumunu karşılaştırınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB631-V1-E04-R1",
+          "text": "Eşeyli üremede oluşan yavruların ana canlıdan ve birbirinden kalıtsal farklılıklar gösterebileceğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB631-V1-K01"
+          ],
+          "scoring": {
+            "full": "Eşeyli üremede kalıtsal farklılık vardır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB631-V1-E04-R2",
+          "text": "Eşeysiz üremede oluşan yavruların genellikle ana canlıyla aynı kalıtsal özellikleri taşıdığını belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB631-V1-K01"
+          ],
+          "scoring": {
+            "full": "Eşeysiz üremede ana canlıyla aynıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB631-V1-E05": {
+      "id": "FB631-V1-E05",
+      "outcome_id": "FB.6.3.1",
+      "difficulty": "easy",
+      "title": "Bitkide eşeyli ve eşeysiz üreme örneği",
+      "stem": "Bir bahçede fasulye bitkisinin tohumundan yeni bir fasulye bitkisi yetişirken, patatesin yumrusundaki gözlerden yeni bir patates bitkisi gelişmektedir. Bu iki olayın hangi üreme çeşidine örnek olduğunu belirtiniz.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB631-V1-E05-R1",
+          "text": "Tohumla yetişen fasulyenin eşeyli üremeye örnek olduğunu yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB631-V1-K01"
+          ],
+          "scoring": {
+            "full": "Fasulye tohumu: Eşeyli üreme.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB631-V1-E05-R2",
+          "text": "Patatesin gözünden yetişen bitkinin eşeysiz (vejetatif) üremeye örnek olduğunu yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB631-V1-K02"
+          ],
+          "scoring": {
+            "full": "Patates gözü: Eşeysiz (vejetatif) üreme.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB631-V1-E06": {
+      "id": "FB631-V1-E06",
+      "outcome_id": "FB.6.3.1",
+      "difficulty": "easy",
+      "title": "Bölünme ve tomurcuklanma farkı",
+      "stem": "Amip ve maya mantarının eşeysiz üreme biçimlerinin adlarını yazınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-amoeba-yeast.svg",
+        "alt": "Amip ve maya mantarının üreme şeması",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB631-V1-E06-R1",
+          "text": "Amibin bölünme ile ürediğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB631-V1-K02"
+          ],
+          "scoring": {
+            "full": "Amip: Bölünme.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB631-V1-E06-R2",
+          "text": "Maya mantarının tomurcuklanma ile ürediğini yazar.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB631-V1-K03"
+          ],
+          "scoring": {
+            "full": "Maya mantarı: Tomurcuklanma.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB631-V1-M01": {
+      "id": "FB631-V1-M01",
+      "outcome_id": "FB.6.3.1",
+      "difficulty": "medium",
+      "title": "Planarya ve kertenkele karşılaştırması",
+      "stem": "Şemada 1. durumda planaryanın kesilmesiyle iki tam birey oluştuğu, 2. durumda ise kertenkelenin kopan kuyruğunu yenilediği gösterilmiştir. Bu iki olaydan hangisinin üreme, hangisinin yalnızca onarım (yenilenme) olduğunu gerekçesiyle açıklayınız.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-planaria-vs-lizard.svg",
+        "alt": "Planarya ve kertenkele yenilenme şeması",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB631-V1-M01-R1",
+          "text": "1. durumun (planarya) rejenerasyonla üreme olduğunu, çünkü birey sayısının arttığını belirtir.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB631-V1-K03",
+            "FB631-V1-K04"
+          ],
+          "scoring": {
+            "full": "Planarya: Üreme (birey sayısı artar).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB631-V1-M01-R2",
+          "text": "2. durumun (kertenkele) yalnızca onarım/yenilenme olduğunu, çünkü kopan parçadan yeni bir kertenkele oluşmadığını açıklar.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB631-V1-K04"
+          ],
+          "scoring": {
+            "full": "Kertenkele: Onarım (yeni birey oluşmaz).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB631-V1-M02": {
+      "id": "FB631-V1-M02",
+      "outcome_id": "FB.6.3.1",
+      "difficulty": "medium",
+      "title": "Üreme özelliklerini sınıflandırma",
+      "stem": "Bir öğrenci üreme biçimlerini karşılaştırmak için aşağıdaki numaralı bilgi kartlarını hazırlamıştır:\nI. Döllenme olayı gerçekleşir.\nII. Canlıların nesillerini devam ettirmesini sağlar.\nIII. Yavrular genellikle ana canlıyla aynı kalıtsal özellikleri taşır.\nIV. Oluşan yavrular kalıtsal farklılıklar gösterebilir.\nV. Eşey hücreleri birleşmeden tek canlıdan yeni birey oluşur.\nBu bilgi kartlarının numaralarını eşeyli üreme, eşeysiz üreme ve ortak özellikler başlıkları altında gruplandırınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB631-V1-M02-R1",
+          "text": "Eşeyli üreme: I ve IV; Ortak özellik: II olarak doğru gruplandırır.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB631-V1-K01"
+          ],
+          "scoring": {
+            "full": "Eşeyli: I, IV; Ortak: II.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB631-V1-M02-R2",
+          "text": "Eşeysiz üreme: III ve V olarak doğru gruplandırır.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB631-V1-K01"
+          ],
+          "scoring": {
+            "full": "Eşeysiz: III, V.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB631-V1-M03": {
+      "id": "FB631-V1-M03",
+      "outcome_id": "FB.6.3.1",
+      "difficulty": "medium",
+      "title": "Çilek yetiştiriciliği senaryosu",
+      "stem": "Bir çiftçi elindeki çok tatlı meyve veren çilek bitkisinin özelliklerini hiç değiştirmeden aynı özellikte çok sayıda yeni çilek fidesi elde etmek istiyor. Çiftçinin tohumla mı yoksa sürünücü gövde ile mi çoğaltma yapması gerekir? Nedenini üreme çeşitleriyle açıklayınız.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB631-V1-M03-R1",
+          "text": "Çiftçinin sürünücü gövde (vejetatif/eşeysiz üreme) yöntemini seçmesi gerektiğini belirtir.",
+          "points": 7,
+          "weight": 7,
+          "return_card_ids": [
+            "FB631-V1-K01",
+            "FB631-V1-K02"
+          ],
+          "scoring": {
+            "full": "Sürünücü gövde (vejetatif üreme).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB631-V1-M03-R2",
+          "text": "Eşeysiz üremede yavruların ana canlıyla aynı kalıtsal özellikleri koruduğunu; tohumun ise eşeyli üreme ürünü olup kalıtsal farklılık oluşturabileceğini açıklar.",
+          "points": 8,
+          "weight": 8,
+          "return_card_ids": [
+            "FB631-V1-K01",
+            "FB631-V1-K02"
+          ],
+          "scoring": {
+            "full": "Eşeysiz üreme kalıtsal özellikleri aynen korur.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB631-V1-M04": {
+      "id": "FB631-V1-M04",
+      "outcome_id": "FB.6.3.1",
+      "difficulty": "medium",
+      "title": "Örnek canlıları eşleştirme",
+      "stem": "Aşağıdaki canlıların üreme şekillerini eşeyli veya eşeysiz (çeşidiyle birlikte) olarak yazınız:\n1) Serçe\n2) Hidra\n3) Gül (dalından köklendirme)",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB631-V1-M04-R1",
+          "text": "Serçe: Eşeyli üreme olarak belirtir.",
+          "points": 5,
+          "weight": 5,
+          "return_card_ids": [
+            "FB631-V1-K01"
+          ],
+          "scoring": {
+            "full": "Serçe: Eşeyli üreme.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB631-V1-M04-R2",
+          "text": "Hidra: Eşeysiz üreme (tomurcuklanma) ve Gül dalı: Eşeysiz üreme (vejetatif üreme) olarak belirtir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB631-V1-K02",
+            "FB631-V1-K03"
+          ],
+          "scoring": {
+            "full": "Hidra: Tomurcuklanma, Gül: Vejetatif.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB631-V1-H01": {
+      "id": "FB631-V1-H01",
+      "outcome_id": "FB.6.3.1",
+      "difficulty": "hard",
+      "title": "Aynı bitkide iki farklı üreme yolu",
+      "stem": "Bir öğrenci bahçedeki çilek bitkisinin hem çiçeğindeki döllenme sonucu oluşan tohumdan hem de toprağa değen sürünücü gövdesinden yeni çilek bitkileri yetiştiğini gözlemliyor.\n1) Tohumla ve sürünücü gövdeyle gerçekleşen üreme biçimlerinin adlarını ve döllenme durumlarını yazınız.\n2) Bu iki yöntemle oluşan yeni çilek bitkilerinin ana bitkiyle kalıtsal benzerlik veya farklılık durumunu karşılaştırarak gerekçelendiriniz.",
+      "visual": null,
+      "rubric": [
+        {
+          "id": "FB631-V1-H01-R1",
+          "text": "Tohumla üremenin eşeyli üreme (döllenme var), sürünücü gövdeyle üremenin ise eşeysiz/vejetatif üreme (döllenme yok) olduğunu yazar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB631-V1-K01",
+            "FB631-V1-K02",
+            "FB631-V1-K03"
+          ],
+          "scoring": {
+            "full": "Tohum: eşeyli (döllenme var); Sürünücü gövde: eşeysiz/vejetatif (döllenme yok).",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB631-V1-H01-R2",
+          "text": "Tohumla oluşan bitkilerde kalıtsal farklılıklar görülebileceğini, sürünücü gövdeden oluşan bitkilerin ise ana bitkiyle aynı kalıtsal özellikleri taşıyacağını gerekçelendirir.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB631-V1-K01"
+          ],
+          "scoring": {
+            "full": "Eşeyli üremede kalıtsal farklılık görülebilir; eşeysiz üremede ana canlıyla aynıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    },
+    "FB631-V1-H02": {
+      "id": "FB631-V1-H02",
+      "outcome_id": "FB.6.3.1",
+      "difficulty": "hard",
+      "title": "Üreme ve yenilenme kavram yanılgısı analizi",
+      "stem": "Bir öğrenci Şema 1 ve Şema 2’yi inceledikten sonra 'Her iki canlıda da kopan parça tamamlandığı için ikisi de rejenerasyonla üreme yapmıştır' demiştir. Öğrencinin bu yorumundaki hatayı birey sayısı ve yeni birey oluşumu ölçütlerine göre düzeltiniz.",
+      "visual": {
+        "kind": "image",
+        "asset": "assets/question-planaria-vs-lizard.svg",
+        "alt": "Planarya ve kertenkele yenilenme şeması",
+        "fit": "contain",
+        "print_background": "white"
+      },
+      "rubric": [
+        {
+          "id": "FB631-V1-H02-R1",
+          "text": "Her yenilenmenin üreme olmadığını, üreme için birey sayısının artması (ayrılan parçadan yeni bir birey oluşması) gerektiğini vurgular.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB631-V1-K04"
+          ],
+          "scoring": {
+            "full": "Üreme için yeni birey oluşmalı ve birey sayısı artmalıdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        },
+        {
+          "id": "FB631-V1-H02-R2",
+          "text": "Planaryada birey sayısı ikiye çıktığı için üreme gerçekleştiğini; kertenkelede ise kopan kuyruktan yeni bir kertenkele oluşmadığı, sadece eksik organ onarıldığı için üreme olmadığını açıklar.",
+          "points": 10,
+          "weight": 10,
+          "return_card_ids": [
+            "FB631-V1-K04"
+          ],
+          "scoring": {
+            "full": "Planarya üreme, kertenkele onarımdır.",
+            "zero": "Karşılanmıyor.",
+            "equivalent_wording_accepted": true,
+            "unasked_details_are_not_required": true
+          },
+          "content_revision": "1.0.0"
+        }
+      ]
+    }
+  }
+}

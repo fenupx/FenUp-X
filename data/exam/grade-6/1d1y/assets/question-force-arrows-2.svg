@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 210" width="560" height="210" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif">
+  <defs>
+    <radialGradient id="g-sun" cx="38%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#fef08a"/><stop offset="45%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#c2410c"/>
+    </radialGradient>
+    <radialGradient id="g-earth" cx="35%" cy="30%" r="68%">
+      <stop offset="0%" stop-color="#7dd3fc"/><stop offset="55%" stop-color="#0284c7"/><stop offset="100%" stop-color="#1e3a8a"/>
+    </radialGradient>
+    <radialGradient id="g-mars" cx="35%" cy="30%" r="68%">
+      <stop offset="0%" stop-color="#fca5a5"/><stop offset="55%" stop-color="#dc2626"/><stop offset="100%" stop-color="#7f1d1d"/>
+    </radialGradient>
+    <radialGradient id="g-jup" cx="35%" cy="30%" r="68%">
+      <stop offset="0%" stop-color="#fed7aa"/><stop offset="55%" stop-color="#d97706"/><stop offset="100%" stop-color="#78350f"/>
+    </radialGradient>
+    <radialGradient id="g-moon" cx="35%" cy="30%" r="68%">
+      <stop offset="0%" stop-color="#f1f5f9"/><stop offset="60%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#475569"/>
+    </radialGradient>
+    <linearGradient id="g-crate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e9c496"/><stop offset="100%" stop-color="#c8965a"/>
+    </linearGradient>
+    <marker id="a-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1 L10 5 L0 9 z" fill="#14b8a6"/>
+    </marker>
+    <marker id="a-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1 L10 5 L0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="a-navy" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1 L10 5 L0 9 z" fill="#1d4ed8"/>
+    </marker>
+    <marker id="a-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1 L10 5 L0 9 z" fill="#ef4444"/>
+    </marker>
+    <marker id="a-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1 L10 5 L0 9 z" fill="#f59e0b"/>
+    </marker>
+    <marker id="a-slate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1 L10 5 L0 9 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="560" height="210" fill="none"/>
+  
+  
+    <g>
+      <polygon points="230,82 240,74 300,74 290,82" fill="#f3d5ad" stroke="#92602a" stroke-width="1.5"/>
+      <polygon points="290,82 300,74 300,118 290,126" fill="#b57e42" stroke="#92602a" stroke-width="1.5"/>
+      <rect x="230" y="82" width="60" height="44" rx="3" fill="url(#g-crate)" stroke="#92602a" stroke-width="1.8"/>
+      <rect x="235" y="87" width="50" height="34" fill="none" stroke="#92602a" stroke-width="1.2" opacity="0.7"/>
+      <line x1="235" y1="121" x2="285" y2="87" stroke="#92602a" stroke-width="2" opacity="0.7"/>
+    </g>
+  <line x1="260" y1="78" x2="260" y2="16" stroke="#0d9488" stroke-width="3.5" marker-end="url(#a-teal)"/>
+  <text x="312" y="48" font-size="12" font-weight="700" fill="#0f766e">F₁ = 10 N</text>
+  <line x1="248" y1="126" x2="248" y2="180" stroke="#dc2626" stroke-width="3.5" marker-end="url(#a-red)"/>
+  <text x="195" y="162" font-size="12" font-weight="700" fill="#b91c1c">F₂ = 4 N</text>
+  <line x1="272" y1="126" x2="272" y2="162" stroke="#1d4ed8" stroke-width="3.5" marker-end="url(#a-navy)"/>
+  <text x="316" y="155" font-size="12" font-weight="700" fill="#1d4ed8">F₃ = 2 N</text>
+  
+    <g transform="translate(470,105)">
+      <circle cx="0" cy="0" r="18" fill="none" stroke="#475569" stroke-width="1.4" opacity="0.7"/>
+      <line x1="0" y1="-15" x2="0" y2="15" stroke="#475569" stroke-width="1.4"/>
+      <line x1="-15" y1="0" x2="15" y2="0" stroke="#475569" stroke-width="1.4"/>
+      <polygon points="0,-17 -3,-10 3,-10" fill="#38bdf8"/>
+      <text x="0" y="-21" text-anchor="middle" font-size="10" font-weight="700" fill="#38bdf8">K</text>
+      <text x="0" y="29" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">G</text>
+      <text x="24" y="4" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">D</text>
+      <text x="-24" y="4" text-anchor="middle" font-size="10" font-weight="700" fill="#334155">B</text>
+    </g>
+
+</svg>

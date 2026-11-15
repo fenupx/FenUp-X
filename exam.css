@@ -5548,6 +5548,23 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     box-sizing: border-box;
 }
 
+.exam-lightbox-content.lightbox-dark-bg img,
+.exam-lightbox-content.lightbox-dark-bg svg {
+    background: #0f172a;
+}
+
+#scene-yazili .exam-qimage-box.print-bg-white,
+.exam-qimage-box.print-bg-white,
+.print-qimage.print-bg-white,
+.exam-qimage-box.print-bg-white img,
+.print-qimage.print-bg-white img {
+    background: #ffffff !important;
+}
+
+#scene-yazili .exam-qimage-box.print-bg-white figcaption.exam-caption {
+    color: #334155;
+}
+
 .exam-lightbox-close {
     position: absolute;
     top: 10px;

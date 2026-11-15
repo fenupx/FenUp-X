@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 175" width="720" height="175" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif">
+  <defs>
+    <radialGradient id="g-sun" cx="38%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#fef08a"/><stop offset="45%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#c2410c"/>
+    </radialGradient>
+    <radialGradient id="g-earth" cx="35%" cy="30%" r="68%">
+      <stop offset="0%" stop-color="#7dd3fc"/><stop offset="55%" stop-color="#0284c7"/><stop offset="100%" stop-color="#1e3a8a"/>
+    </radialGradient>
+    <radialGradient id="g-mars" cx="35%" cy="30%" r="68%">
+      <stop offset="0%" stop-color="#fca5a5"/><stop offset="55%" stop-color="#dc2626"/><stop offset="100%" stop-color="#7f1d1d"/>
+    </radialGradient>
+    <radialGradient id="g-jup" cx="35%" cy="30%" r="68%">
+      <stop offset="0%" stop-color="#fed7aa"/><stop offset="55%" stop-color="#d97706"/><stop offset="100%" stop-color="#78350f"/>
+    </radialGradient>
+    <radialGradient id="g-moon" cx="35%" cy="30%" r="68%">
+      <stop offset="0%" stop-color="#f1f5f9"/><stop offset="60%" stop-color="#94a3b8"/><stop offset="100%" stop-color="#475569"/>
+    </radialGradient>
+    <linearGradient id="g-crate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e9c496"/><stop offset="100%" stop-color="#c8965a"/>
+    </linearGradient>
+    <marker id="a-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1 L10 5 L0 9 z" fill="#14b8a6"/>
+    </marker>
+    <marker id="a-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1 L10 5 L0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="a-navy" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1 L10 5 L0 9 z" fill="#1d4ed8"/>
+    </marker>
+    <marker id="a-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1 L10 5 L0 9 z" fill="#ef4444"/>
+    </marker>
+    <marker id="a-amber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1 L10 5 L0 9 z" fill="#f59e0b"/>
+    </marker>
+    <marker id="a-slate" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 1 L10 5 L0 9 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect width="720" height="175" fill="none"/>
+  
+  <rect x="16" y="12" width="330" height="150" rx="12" fill="#f59e0b" fill-opacity="0.1" stroke="#fbbf24" stroke-width="1.8"/>
+  <text x="181" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#fbbf24">Karasal (İç) Gezegenler</text>
+  <text x="181" y="64" text-anchor="middle" font-size="13" font-weight="700" fill="#e2e8f0">Merkür · Venüs · Dünya · Mars</text>
+  <text x="181" y="92" text-anchor="middle" font-size="12" fill="#cbd5e1">• Katı ve kayalık yapıdadır</text>
+  <text x="181" y="114" text-anchor="middle" font-size="12" fill="#cbd5e1">• Halkaları yoktur</text>
+  <text x="181" y="136" text-anchor="middle" font-size="12" fill="#cbd5e1">• Asteroit kuşağının iç tarafındadır</text>
+
+  <rect x="374" y="12" width="330" height="150" rx="12" fill="#0284c7" fill-opacity="0.12" stroke="#38bdf8" stroke-width="1.8"/>
+  <text x="539" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#38bdf8">Gazsal (Dış) Gezegenler</text>
+  <text x="539" y="64" text-anchor="middle" font-size="13" font-weight="700" fill="#e2e8f0">Jüpiter · Satürn · Uranüs · Neptün</text>
+  <text x="539" y="92" text-anchor="middle" font-size="12" fill="#cbd5e1">• Gazsal yapıdadır</text>
+  <text x="539" y="114" text-anchor="middle" font-size="12" fill="#cbd5e1">• Tamamının uyduları ve halkaları vardır</text>
+  <text x="539" y="136" text-anchor="middle" font-size="12" fill="#cbd5e1">• Karasal gezegenlerden daha büyüktür</text>
+
+</svg>
