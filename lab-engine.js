@@ -4368,6 +4368,9 @@ function drawTugOfWarSimulation() {
 function drawTugRope(ctx) {
     const tow = labState.tugOfWar;
     const ropeY = 320;
+    const bx = tow.boxX;
+    const ropeLeft = bx - 205;
+    const ropeRight = bx + 205;
 
     ctx.save();
     ctx.strokeStyle = "#d97706"; // Kenevir sarısı
@@ -4378,8 +4381,8 @@ function drawTugRope(ctx) {
     ctx.shadowColor = "rgba(0, 0, 0, 0.45)";
     ctx.shadowBlur = 6;
     ctx.beginPath();
-    ctx.moveTo(120, ropeY);
-    ctx.lineTo(680, ropeY);
+    ctx.moveTo(ropeLeft, ropeY);
+    ctx.lineTo(ropeRight, ropeY);
     ctx.stroke();
     ctx.shadowBlur = 0;
 
@@ -4388,8 +4391,8 @@ function drawTugRope(ctx) {
     ctx.lineWidth = 3;
     ctx.setLineDash([8, 8]);
     ctx.beginPath();
-    ctx.moveTo(120, ropeY);
-    ctx.lineTo(680, ropeY);
+    ctx.moveTo(ropeLeft, ropeY);
+    ctx.lineTo(ropeRight, ropeY);
     ctx.stroke();
     ctx.setLineDash([]);
 
@@ -4435,7 +4438,7 @@ function drawTugBoxAndFlag(ctx) {
     // Metal Köşe Destekleri
     ctx.fillStyle = "#94a3b8";
     [[-30, by], [22, by], [-30, by + 57], [22, by + 57]].forEach(([cx, cy]) => {
-        ctx.fillRect(cx, cy, 8, 8);
+        ctx.fillRect(bx + cx, cy, 8, 8);
     });
 
     // Tekerlekler (Ağır Yük Rulmanı)
@@ -4471,62 +4474,112 @@ function drawTugAthletes(ctx, team) {
     const tow = labState.tugOfWar;
     const isWest = (team === "west");
     const force = isWest ? tow.fWest : tow.fEast;
+    const bx = tow.boxX;
 
     // Kuvvet miktarına göre sporcuların geriye yatma açısı (Lean angle)
-    const leanAngle = (force / 50) * 0.35 * (isWest ? -1 : 1);
+    const leanAngle = (force / 50) * 0.28 * (isWest ? -1 : 1);
     const teamColor = isWest ? "#38bdf8" : "#f87171";
     const teamDark = isWest ? "#0284c7" : "#dc2626";
+    const dir = isWest ? 1 : -1; // Takımın baktığı yön (+1 sağa, -1 sola)
 
-    // İki sporcunun pozisyonları
-    const positions = isWest ? [170, 250] : [550, 630];
+    // Halat ve sandıkla birlikte hareket eden sporcu konumları (çakışmasız)
+    const positions = isWest ? [bx - 165, bx - 95] : [bx + 95, bx + 165];
 
-    positions.forEach((px, idx) => {
+    positions.forEach((px) => {
         ctx.save();
+
+        // Zemin Gölgesi
+        ctx.fillStyle = "rgba(0, 0, 0, 0.42)";
+        ctx.beginPath();
+        ctx.ellipse(px, 376, 20, 6, 0, 0, Math.PI * 2);
+        ctx.fill();
+
         ctx.translate(px, 370);
         ctx.rotate(leanAngle);
 
-        // Ayak Zemin Teması ve Spor Ayakkabı
-        ctx.fillStyle = "#0f172a";
-        ctx.fillRect(isWest ? -18 : 6, 0, 20, 8);
-
-        // Bükülen Bacaklar
-        ctx.strokeStyle = "#334155";
+        // Arka Bacak + Ayakkabı
+        ctx.strokeStyle = "#1e293b";
         ctx.lineWidth = 7;
         ctx.lineCap = "round";
+        ctx.lineJoin = "round";
         ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(isWest ? -12 : 12, -26);
-        ctx.lineTo(0, -48);
+        ctx.moveTo(-4 * dir, -44);
+        ctx.lineTo(-14 * dir, -22);
+        ctx.lineTo(-16 * dir, 0);
         ctx.stroke();
 
-        // Gövde (Forma)
-        const jerseyGrad = ctx.createLinearGradient(-15, -48, 15, -85);
-        jerseyGrad.addColorStop(0, teamDark);
-        jerseyGrad.addColorStop(1, teamColor);
-        ctx.fillStyle = jerseyGrad;
+        ctx.fillStyle = "#0f172a";
         ctx.beginPath();
-        ctx.roundRect(-12, -85, 24, 38, 4);
+        ctx.roundRect(-16 * dir - (isWest ? 10 : 4), -4, 15, 6, 3);
         ctx.fill();
 
-        // Çeken Kollar ve Halatı Kavrayan Eller
-        ctx.strokeStyle = "#fed7aa"; // Ten rengi
+        // Ön Bacak + Spor Ayakkabı
+        ctx.strokeStyle = "#334155";
+        ctx.lineWidth = 7.5;
+        ctx.beginPath();
+        ctx.moveTo(4 * dir, -44);
+        ctx.lineTo(14 * dir, -22);
+        ctx.lineTo(12 * dir, 0);
+        ctx.stroke();
+
+        ctx.fillStyle = "#e2e8f0";
+        ctx.beginPath();
+        ctx.roundRect(12 * dir - (isWest ? 4 : 11), -4, 16, 6, 3);
+        ctx.fill();
+
+        // Gövde (Forma + Gölgelendirme)
+        const jerseyGrad = ctx.createLinearGradient(-13, -86, 13, -44);
+        jerseyGrad.addColorStop(0, teamColor);
+        jerseyGrad.addColorStop(1, teamDark);
+        ctx.fillStyle = jerseyGrad;
+        ctx.strokeStyle = "rgba(255,255,255,0.22)";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.roundRect(-12, -86, 24, 42, 7);
+        ctx.fill();
+        ctx.stroke();
+
+        // Arka Kol (Halata Uzanan)
+        ctx.strokeStyle = "#fdba74";
         ctx.lineWidth = 5;
         ctx.beginPath();
-        ctx.moveTo(0, -78);
-        ctx.lineTo(isWest ? 14 : -14, -58);
-        ctx.lineTo(isWest ? 24 : -24, -50);
+        ctx.moveTo(-2 * dir, -76);
+        ctx.lineTo(12 * dir, -60);
+        ctx.lineTo(22 * dir, -50);
         ctx.stroke();
 
-        // Kafa ve Sporcu Saç/Bandana
+        // Kafa ve Sporcu Saç / Bandana
         ctx.fillStyle = "#fed7aa";
         ctx.beginPath();
-        ctx.arc(0, -96, 11, 0, Math.PI * 2);
+        ctx.arc(2 * dir, -97, 11, 0, Math.PI * 2);
         ctx.fill();
 
-        // Saç / Bandana
-        ctx.fillStyle = teamColor;
+        // Göz
+        ctx.fillStyle = "#0f172a";
         ctx.beginPath();
-        ctx.arc(0, -99, 11, Math.PI, Math.PI * 2);
+        ctx.arc(7 * dir, -98, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Bandana / Saç
+        ctx.fillStyle = teamDark;
+        ctx.beginPath();
+        ctx.arc(1 * dir, -100, 11, Math.PI, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = teamColor;
+        ctx.fillRect(-9, -102, 22, 3.5);
+
+        // Ön Kol ve Halatı Kavrayan El (y = -50 -> dünya y = 320 halat ekseni)
+        ctx.strokeStyle = "#fed7aa";
+        ctx.lineWidth = 5.5;
+        ctx.beginPath();
+        ctx.moveTo(4 * dir, -75);
+        ctx.lineTo(15 * dir, -58);
+        ctx.lineTo(25 * dir, -50);
+        ctx.stroke();
+
+        ctx.fillStyle = "#fed7aa";
+        ctx.beginPath();
+        ctx.arc(25 * dir, -50, 4.5, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.restore();
@@ -6366,17 +6419,26 @@ function drawMetalRodsAndWaxBalls(ctx) {
 
     ctx.save();
 
-    // Çubukları Tutan Sol ve Sağ Laboratuvar Destek Ayakları (Statif Ayak)
+    // Çubukları Tutan Simetrik Sol ve Sağ Laboratuvar Destek Ayakları (Statif Ayak + Taban)
     ctx.fillStyle = "#475569";
     ctx.fillRect(rodStartX - 15, 140, 12, 240);
     ctx.fillRect(rodStartX + rodLen + 10, 140, 12, 240);
 
-    // Bilye Toplama Tepsisi (Y: 360)
     ctx.fillStyle = "#334155";
     ctx.strokeStyle = "#64748b";
     ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.roundRect(rodStartX + rodLen - 50, 360, 90, 18, 4);
+    ctx.roundRect(rodStartX - 42, 364, 66, 14, 4);
+    ctx.roundRect(rodStartX + rodLen - 16, 364, 66, 14, 4);
+    ctx.fill();
+    ctx.stroke();
+
+    // Bilye Toplama Tepsisi (Y: 360)
+    ctx.fillStyle = "#1e293b";
+    ctx.strokeStyle = "#64748b";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(rodStartX + rodLen - 55, 344, 70, 16, 4);
     ctx.fill();
     ctx.stroke();
 
@@ -6389,47 +6451,76 @@ function drawMetalRodsAndWaxBalls(ctx) {
         ctx.fillStyle = "#e2e8f0";
         ctx.font = "bold 12px Nunito, sans-serif";
         ctx.textAlign = "left";
-        ctx.fillText(labelText, rodStartX + 8, ry - 8);
+        ctx.fillText(labelText, rodStartX + 8, ry - 10);
 
-        // Çubuk Gövdesi ve Isı Yayılım Gradyanı
-        // Sıcak uca (sol) doğru alev parlaması, soğuk uca (sağ) doğru metalik renk
-        const heatRatio = (rod.temp - 20) / 80; // 0.0 -> 1.0
+        // Kaşık Silüeti: Sap + Sağ Uçta Oval Kaşık Çanağı
+        const heatRatio = (rod.temp - 20) / 80;
         const rodGrad = ctx.createLinearGradient(rodStartX, ry, rodStartX + rodLen, ry);
 
         if (ht.isHeating) {
-            rodGrad.addColorStop(0, "#ffffff"); // Akkor beyaz alev ucu
-            rodGrad.addColorStop(Math.min(0.8, heatRatio * 0.9), "#ef4444"); // Sıcak kırmızı dalga
-            rodGrad.addColorStop(Math.min(1.0, heatRatio * 1.2), rod.color); // Kendi metal rengi
+            rodGrad.addColorStop(0, "#ffffff");
+            rodGrad.addColorStop(Math.min(0.8, heatRatio * 0.9), "#ef4444");
+            rodGrad.addColorStop(Math.min(1.0, heatRatio * 1.2), rod.color);
         } else {
             rodGrad.addColorStop(0, rod.color);
             rodGrad.addColorStop(1, rod.color);
         }
 
         ctx.fillStyle = rodGrad;
-        ctx.strokeStyle = "rgba(0, 0, 0, 0.4)";
+        ctx.strokeStyle = "rgba(0, 0, 0, 0.45)";
         ctx.lineWidth = 1.5;
+
+        // Kaşık Sapı
         ctx.beginPath();
-        ctx.roundRect(rodStartX, ry, rodLen, rodH, 4);
+        ctx.roundRect(rodStartX, ry + 2, rodLen - 42, rodH - 4, 5);
         ctx.fill();
         ctx.stroke();
 
-        // Üst Işık Yansıması (Metalik Derinlik)
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
-        ctx.lineWidth = 1.5;
+        // Kaşık Çanağı (Oval Kase)
         ctx.beginPath();
-        ctx.moveTo(rodStartX + 4, ry + 3);
-        ctx.lineTo(rodStartX + rodLen - 4, ry + 3);
+        ctx.ellipse(rodStartX + rodLen - 22, ry + rodH * 0.5, 24, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
         ctx.stroke();
 
+        // Malzeme Dokusu: Metal parlaklık / Tahta damar / Plastik mat vurgu
+        if (idx === 0) {
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
+            ctx.lineWidth = 1.8;
+            ctx.beginPath();
+            ctx.moveTo(rodStartX + 6, ry + 5);
+            ctx.lineTo(rodStartX + rodLen - 44, ry + 5);
+            ctx.stroke();
+        } else if (idx === 1) {
+            ctx.strokeStyle = "rgba(69, 26, 3, 0.4)";
+            ctx.lineWidth = 1;
+            for (let g = 0; g < 3; g++) {
+                ctx.beginPath();
+                ctx.moveTo(rodStartX + 20 + g * 90, ry + 5 + g * 2);
+                ctx.lineTo(rodStartX + 95 + g * 90, ry + 5 + g * 2);
+                ctx.stroke();
+            }
+        } else {
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.28)";
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(rodStartX + 8, ry + 5);
+            ctx.lineTo(rodStartX + rodLen - 46, ry + 5);
+            ctx.stroke();
+        }
+
         // Sağ Uçtaki Balmumu Damlası ve Çelik Bilye
-        const ballBaseX = rodStartX + rodLen - 12;
-        const ballBaseY = ry + rodH + 4;
+        const ballBaseX = rodStartX + rodLen - 16;
+        const ballBaseY = ry + rodH + 6;
 
         if (!rod.waxMelted) {
-            // Erimemiş Balmumu Tutucu (Sarımsı Krem)
             ctx.fillStyle = "#fef08a";
             ctx.beginPath();
-            ctx.ellipse(ballBaseX, ry + rodH, 7, 4, 0, 0, Math.PI * 2);
+            ctx.ellipse(ballBaseX, ry + rodH + 2, 8, 4.5, 0, 0, Math.PI * 2);
+            ctx.fill();
+        } else {
+            ctx.fillStyle = "rgba(254, 240, 138, 0.65)";
+            ctx.beginPath();
+            ctx.arc(ballBaseX, ry + rodH + 4, 2.5, 0, Math.PI * 2);
             ctx.fill();
         }
 
@@ -7394,28 +7485,47 @@ function drawAbsorptionSimulation() {
         ctx.fill();
     }
 
-    // Lamba Gövdesi & Reflektör
-    ctx.fillStyle = "#4b5563";
+    // Lamba Gövdesi, Soğutma Kanatçıkları & Reflektör
+    ctx.fillStyle = "#334155";
+    ctx.fillRect(lx - 14, ly - 48, 28, 14);
+    ctx.strokeStyle = "#64748b";
+    ctx.lineWidth = 1.5;
+    for (let f = -8; f <= 8; f += 8) {
+        ctx.beginPath();
+        ctx.moveTo(lx + f, ly - 46);
+        ctx.lineTo(lx + f, ly - 36);
+        ctx.stroke();
+    }
+
+    const hoodGrad = ctx.createLinearGradient(lx - 35, ly - 35, lx + 35, ly);
+    hoodGrad.addColorStop(0, "#475569");
+    hoodGrad.addColorStop(1, "#1e293b");
+    ctx.fillStyle = hoodGrad;
     ctx.beginPath();
-    ctx.moveTo(lx - 35, ly);
-    ctx.lineTo(lx + 35, ly);
-    ctx.lineTo(lx + 15, ly - 35);
-    ctx.lineTo(lx - 15, ly - 35);
+    ctx.moveTo(lx - 40, ly);
+    ctx.lineTo(lx + 40, ly);
+    ctx.lineTo(lx + 16, ly - 36);
+    ctx.lineTo(lx - 16, ly - 36);
     ctx.closePath();
     ctx.fill();
-    ctx.strokeStyle = "#9ca3af";
+    ctx.strokeStyle = "#94a3b8";
     ctx.lineWidth = 2;
     ctx.stroke();
 
-    // Ampul Camı
+    // Ampul Camı ve Mercek Parlaması
     ctx.beginPath();
     ctx.arc(lx, ly, 16, 0, Math.PI * 2);
-    ctx.fillStyle = ab.lampOn ? "#fef08a" : "#6b7280";
+    ctx.fillStyle = ab.lampOn ? "#fef08a" : "#64748b";
     ctx.fill();
+    if (ab.lampOn) {
+        ctx.strokeStyle = "rgba(254, 240, 138, 0.8)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
 
     // 2. 3 Adet Renkli Kap ve Termometreler (x: 130, 270, 410)
     const cups = [
-        { cx: 130, color: "#0f172a", border: "#334155", temp: ab.tempBlack }, // Siyah Kap
+        { cx: 130, color: "#0f172a", border: "#475569", temp: ab.tempBlack }, // Siyah Kap
         { cx: 270, color: "#2563eb", border: "#60a5fa", temp: ab.tempBlue },  // Mavi Kap
         { cx: 410, color: "#f8fafc", border: "#cbd5e1", temp: ab.tempWhite }  // Beyaz Kap
     ];
@@ -7426,7 +7536,7 @@ function drawAbsorptionSimulation() {
         const cw = 75;
         const ch = 110;
 
-        // Kap Silindiri
+        // Kap Silindiri + Kenar Parlaması
         ctx.fillStyle = cup.color;
         ctx.beginPath();
         ctx.roundRect(cx - cw / 2, cy, cw, ch, [0, 0, 10, 10]);
@@ -7435,19 +7545,35 @@ function drawAbsorptionSimulation() {
         ctx.lineWidth = 2.5;
         ctx.stroke();
 
-        // Termometre (Cam Tüp ve Kırmızı Sıvı)
+        const cupShine = ctx.createLinearGradient(cx - cw / 2, 0, cx - cw / 2 + 16, 0);
+        cupShine.addColorStop(0, "rgba(255, 255, 255, 0.22)");
+        cupShine.addColorStop(1, "rgba(255, 255, 255, 0)");
+        ctx.fillStyle = cupShine;
+        ctx.fillRect(cx - cw / 2 + 3, cy + 3, 14, ch - 8);
+
+        // Termometre (Cam Tüp, Çentikler ve Kırmızı Sıvı)
         const tx = cx;
         const ty = cy - 45;
         const th = 135;
 
         // Cam Tüp
-        ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.18)";
         ctx.beginPath();
-        ctx.roundRect(tx - 4, ty, 8, th, 4);
+        ctx.roundRect(tx - 4.5, ty, 9, th, 4.5);
         ctx.fill();
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.45)";
         ctx.lineWidth = 1.2;
         ctx.stroke();
+
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+        ctx.lineWidth = 1;
+        for (let k = 1; k <= 5; k++) {
+            const kyTick = ty + k * 18;
+            ctx.beginPath();
+            ctx.moveTo(tx - 4.5, kyTick);
+            ctx.lineTo(tx, kyTick);
+            ctx.stroke();
+        }
 
         // Termometre Haznesi
         ctx.beginPath();
@@ -7924,7 +8050,7 @@ function drawExpansionSimulation() {
     ctx.fillStyle = "#1e293b";
     ctx.fillRect(rx - 70, benchY - 14, 40, 14); // Taban
     ctx.fillStyle = "#94a3b8";
-    ctx.fillRect(rx - 55, 100, 8, benchY - 100); // Dikey sütun
+    ctx.fillRect(rx - 55, 38, 8, benchY - 38); // Dikey sütun (üst taşıyıcı kola kadar)
 
     // Yatay Halka Tutucu Kolu
     ctx.fillRect(rx - 55, ry - 5, 45, 10);
@@ -7955,14 +8081,20 @@ function drawExpansionSimulation() {
     const sx = 620;
     const sy = benchY - 10;
 
-    // Cam Beher
+    // Cam Beher + Specular Parlama
     ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
     ctx.beginPath();
     ctx.roundRect(sx - 42, sy - 90, 84, 90, [0, 0, 8, 8]);
     ctx.fill();
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
     ctx.lineWidth = 2;
     ctx.stroke();
+
+    const expGlassShine = ctx.createLinearGradient(sx - 42, 0, sx - 26, 0);
+    expGlassShine.addColorStop(0, "rgba(255, 255, 255, 0.3)");
+    expGlassShine.addColorStop(1, "rgba(255, 255, 255, 0)");
+    ctx.fillStyle = expGlassShine;
+    ctx.fillRect(sx - 39, sy - 86, 14, 80);
 
     // Soğuk Su
     ctx.fillStyle = "rgba(56, 189, 248, 0.45)";
@@ -7970,10 +8102,24 @@ function drawExpansionSimulation() {
     ctx.roundRect(sx - 40, sy - 75, 80, 75, [0, 0, 6, 6]);
     ctx.fill();
 
-    // Su İçinde Buz Küpleri
-    ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
-    ctx.fillRect(sx - 25, sy - 65, 14, 14);
-    ctx.fillRect(sx + 10, sy - 50, 16, 16);
+    // Su İçinde Çokgen Buz Küpleri
+    [
+        [sx - 26, sy - 66, 15],
+        [sx + 8, sy - 54, 17]
+    ].forEach(([ix, iy, sz]) => {
+        ctx.fillStyle = "rgba(224, 242, 254, 0.78)";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(ix + sz * 0.2, iy);
+        ctx.lineTo(ix + sz * 0.9, iy + sz * 0.15);
+        ctx.lineTo(ix + sz, iy + sz * 0.85);
+        ctx.lineTo(ix + sz * 0.1, iy + sz);
+        ctx.lineTo(ix, iy + sz * 0.3);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+    });
 
     // Buhar Parçacıkları (Suya daldırıldığında)
     ex.steamParticles.forEach(p => {
@@ -7983,18 +8129,28 @@ function drawExpansionSimulation() {
         ctx.fill();
     });
 
-    // 4. METAL KÜRE VE TUTMA ZİNCİRİ (ex.sphereX, ex.sphereY)
+    // 4. METAL KÜRE, TAŞIYICI KOL VE TUTMA ZİNCİRİ (ex.sphereX, ex.sphereY)
     const kx = ex.sphereX;
     const ky = ex.sphereY;
     const kr = ex.sphereRadius;
 
-    // Tutma Zinciri (Tepeden küreye iner)
-    ctx.strokeStyle = "#94a3b8";
-    ctx.lineWidth = 2;
+    // Üst Taşıyıcı Kol ve Kıskaç (Kürenin havada asılı kalmasını önler)
+    ctx.fillStyle = "#64748b";
+    ctx.fillRect(rx - 55, 42, Math.max(20, (kx - (rx - 55)) + 12), 6);
+    ctx.fillStyle = "#94a3b8";
     ctx.beginPath();
-    ctx.moveTo(kx, 40);
+    ctx.roundRect(kx - 7, 38, 14, 12, 3);
+    ctx.fill();
+
+    // Tutma Zinciri (Taşıyıcı kıskaçtan küreye iner)
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 2]);
+    ctx.beginPath();
+    ctx.moveTo(kx, 50);
     ctx.lineTo(kx, ky - kr);
     ctx.stroke();
+    ctx.setLineDash([]);
 
     // Küre Çizimi
     ctx.save();
@@ -11094,10 +11250,17 @@ function drawWorkStudent(ctx, x, y, pose, anim, extraOffset = 0) {
             }
         }
 
+        // Zemin Temas Gölgesi
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+        ctx.beginPath();
+        ctx.ellipse(0, 2, 26, 5, 0, 0, Math.PI * 2);
+        ctx.fill();
+
         // Bacaklar
         ctx.strokeStyle = pantsColor;
-        ctx.lineWidth = 8;
+        ctx.lineWidth = 8.5;
         ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
         // Sol bacak (önde bükülü)
         ctx.beginPath();
         ctx.moveTo(-4 + leanOffset * 0.4, -40);
@@ -11114,35 +11277,47 @@ function drawWorkStudent(ctx, x, y, pose, anim, extraOffset = 0) {
         // Ayakkabılar
         ctx.fillStyle = shoeColor;
         ctx.beginPath();
-        ctx.roundRect(14, -5, 16, 5, 2);
-        ctx.roundRect(-34 - leanOffset * 0.5, -5, 14, 5, 2);
+        ctx.roundRect(14, -5, 16, 5, 2.5);
+        ctx.roundRect(-34 - leanOffset * 0.5, -5, 14, 5, 2.5);
         ctx.fill();
 
-        // Gövde (kuvvete göre dinamik eğik)
+        // Gövde (Önlük ve Mavi Yaka Detayı)
         ctx.strokeStyle = shirtColor;
-        ctx.lineWidth = 14;
+        ctx.lineWidth = 16;
         ctx.beginPath();
         ctx.moveTo(-6 + leanOffset * 0.3, -42);
         ctx.lineTo(10 + leanOffset, -72);
         ctx.stroke();
 
+        ctx.strokeStyle = shirtTrim;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(4 + leanOffset * 0.7, -68);
+        ctx.lineTo(12 + leanOffset, -72);
+        ctx.stroke();
+
         // Kollar (sandığa dayalı)
         ctx.strokeStyle = shirtColor;
-        ctx.lineWidth = 6;
+        ctx.lineWidth = 6.5;
         ctx.beginPath();
         ctx.moveTo(8 + leanOffset, -68);
+        ctx.lineTo(22 + leanOffset * 0.4, -62);
         ctx.lineTo(36, -58);
         ctx.stroke();
         // Eller
         ctx.fillStyle = skinColor;
         ctx.beginPath();
-        ctx.arc(38, -58, 4, 0, Math.PI * 2);
+        ctx.arc(38, -58, 4.5, 0, Math.PI * 2);
         ctx.fill();
 
-        // Baş
+        // Baş ve Yüz Detayı
         ctx.fillStyle = skinColor;
         ctx.beginPath();
         ctx.arc(16 + leanOffset * 1.1, -84, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath();
+        ctx.arc(21 + leanOffset * 1.1, -85, 1.4, 0, Math.PI * 2);
         ctx.fill();
 
         // Saç
@@ -11487,6 +11662,10 @@ function drawWorkWallObstacle(ctx, x, y, w, h) {
             if (rw > 2) {
                 ctx.fillStyle = (r % 3 === 0) ? '#991b1b' : (r % 3 === 1) ? '#b91c1c' : '#7f1d1d';
                 ctx.fillRect(rx, by + 2, rw, brickH - 3);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+                ctx.fillRect(rx, by + 2, rw, 2);
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+                ctx.fillRect(rx, by + brickH - 3, rw, 2);
             }
         }
     }
@@ -21782,36 +21961,81 @@ function drawHeatExchangeSimulation() {
     const he = labState.heatExchange;
 
     const drawBeaker = (bx, by, bw, bh, liquidColor, tempVal, isHot) => {
-        // Cam Beher
+        // Sıvı Dolgusu + Yüzey Menisküsü
         ctx.fillStyle = liquidColor;
-        ctx.fillRect(bx + 3, by + 20, bw - 6, bh - 23);
-
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
-        ctx.lineWidth = 2.5;
         ctx.beginPath();
-        ctx.roundRect(bx, by, bw, bh, [0, 0, 8, 8]);
+        ctx.roundRect(bx + 3, by + 22, bw - 6, bh - 25, [0, 0, 8, 8]);
+        ctx.fill();
+
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(bx + 4, by + 22);
+        ctx.lineTo(bx + bw - 4, by + 22);
         ctx.stroke();
 
-        // Termometre
-        const tx = bx + bw * 0.5;
-        ctx.fillStyle = "#e2e8f0";
-        ctx.fillRect(tx - 3, by - 40, 6, bh + 10);
+        // Cam Beher + Specular Parlama
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.65)";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.roundRect(bx, by, bw, bh, [0, 0, 10, 10]);
+        ctx.stroke();
 
-        // Kırmızı cıva sütunu
-        const mercH = (tempVal / 100) * (bh - 10);
+        const gShine = ctx.createLinearGradient(bx, 0, bx + 18, 0);
+        gShine.addColorStop(0, "rgba(255, 255, 255, 0.3)");
+        gShine.addColorStop(1, "rgba(255, 255, 255, 0)");
+        ctx.fillStyle = gShine;
+        ctx.fillRect(bx + 3, by + 4, 15, bh - 10);
+
+        // Dereceli Termometre
+        const tx = bx + bw * 0.5;
+        ctx.fillStyle = "rgba(226, 232, 240, 0.9)";
+        ctx.beginPath();
+        ctx.roundRect(tx - 4, by - 44, 8, bh + 14, 4);
+        ctx.fill();
+
+        const mercH = Math.max(8, (tempVal / 100) * (bh - 10));
         ctx.fillStyle = isHot ? "#ef4444" : "#38bdf8";
         ctx.fillRect(tx - 2, by + bh - mercH - 10, 4, mercH);
 
-        // Termometre Haznesi
         ctx.beginPath();
-        ctx.arc(tx, by + bh - 5, 6, 0, Math.PI * 2);
+        ctx.arc(tx, by + bh - 6, 6.5, 0, Math.PI * 2);
         ctx.fill();
+
+        ctx.strokeStyle = "#475569";
+        ctx.lineWidth = 1;
+        for (let t = 0; t <= 4; t++) {
+            const tyTick = by - 28 + t * 24;
+            ctx.beginPath();
+            ctx.moveTo(tx - 4, tyTick);
+            ctx.lineTo(tx + 1, tyTick);
+            ctx.stroke();
+        }
     };
 
     if (!he.isMixed) {
         // Ayrı Kaplar: Sol Sıcak (Kırmızı), Sağ Soğuk (Mavi)
         drawBeaker(180, 220, 110, 160, "rgba(239, 68, 68, 0.65)", he.t1, true);
         drawBeaker(510, 220, 110, 160, "rgba(56, 189, 248, 0.65)", he.t2, false);
+
+        // Sıcak -> Soğuk Isı Akışı Yön Göstergesi
+        ctx.strokeStyle = "rgba(251, 146, 60, 0.7)";
+        ctx.lineWidth = 2.5;
+        const waveOffset = Math.sin(animTime * 4) * 4;
+        ctx.beginPath();
+        ctx.moveTo(315, 295);
+        ctx.bezierCurveTo(360, 280 + waveOffset, 440, 310 - waveOffset, 480, 295);
+        ctx.stroke();
+        ctx.fillStyle = "#fb923c";
+        ctx.beginPath();
+        ctx.moveTo(486, 295);
+        ctx.lineTo(474, 289);
+        ctx.lineTo(474, 301);
+        ctx.closePath();
+        ctx.fill();
+        ctx.font = "bold 11px Nunito, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Isı Akışı (Sıcaktan Soğuğa)", 400, 275);
 
         // Sıcak Kaptan Çıkan Buhar Kıvrımları
         ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
@@ -22103,84 +22327,175 @@ function drawWaterStateSimulation() {
 
     const ws = labState.waterState;
 
-    // --- SOL: İSPİRTO OCAĞI VE BEHERGLAS (x: 100 -> 320) ---
-    // Masa Tablası
-    ctx.fillStyle = "#1e293b";
-    ctx.fillRect(60, 420, 280, 60);
+    // --- SOL: İSPİRTO OCAĞI, SACAYAK VE CAM BEHERGLAS (x: 70 -> 340) ---
+    // Masa Tablası ve LED Kenar Çizgisi
+    const tableGrad = ctx.createLinearGradient(0, 420, 0, 500);
+    tableGrad.addColorStop(0, "#1e293b");
+    tableGrad.addColorStop(1, "#0f172a");
+    ctx.fillStyle = tableGrad;
+    ctx.fillRect(40, 420, 320, 80);
+    ctx.fillStyle = "rgba(56, 189, 248, 0.35)";
+    ctx.fillRect(40, 418, 320, 2);
 
-    // İspirto Ocağı
-    ctx.fillStyle = "#d97706";
-    ctx.fillRect(170, 400, 60, 20); // ocak gövdesi
-    ctx.fillStyle = "#78350f";
-    ctx.fillRect(193, 385, 14, 15); // fitil yuvası
-
-    // Sacayak (Tripod)
-    ctx.strokeStyle = "#64748b";
-    ctx.lineWidth = 3;
+    // İspirto Ocağı (Cam hazne + pirinç fitil)
+    ctx.fillStyle = "rgba(255, 255, 255, 0.14)";
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(135, 420); ctx.lineTo(150, 350);
-    ctx.moveTo(265, 420); ctx.lineTo(250, 350);
+    ctx.roundRect(162, 390, 66, 30, 7);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "rgba(147, 51, 234, 0.4)";
+    ctx.beginPath();
+    ctx.roundRect(165, 400, 60, 18, [0, 0, 5, 5]);
+    ctx.fill();
+    ctx.fillStyle = "#d97706";
+    ctx.fillRect(187, 378, 16, 12);
+
+    // Sacayak (Tripod - 3 ayak)
+    ctx.strokeStyle = "#64748b";
+    ctx.lineWidth = 3.5;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(125, 420); ctx.lineTo(142, 344);
+    ctx.moveTo(265, 420); ctx.lineTo(248, 344);
+    ctx.moveTo(195, 420); ctx.lineTo(195, 344);
     ctx.stroke();
 
     // Seramik Tel Kafes
     ctx.fillStyle = "#94a3b8";
-    ctx.fillRect(145, 348, 110, 4);
+    ctx.beginPath();
+    ctx.roundRect(132, 342, 126, 6, 3);
+    ctx.fill();
 
-    // Alev Parçacıkları
+    // Alev Parçacıkları ve Ocak Alevi
     if (ws.isHeating) {
+        const flameGrad = ctx.createLinearGradient(195, 378, 195, 342);
+        flameGrad.addColorStop(0, "rgba(56, 189, 248, 0.9)");
+        flameGrad.addColorStop(0.45, "#f97316");
+        flameGrad.addColorStop(1, "rgba(250, 204, 21, 0)");
+        ctx.fillStyle = flameGrad;
+        ctx.beginPath();
+        ctx.moveTo(186, 378);
+        ctx.quadraticCurveTo(183, 355, 195, 342);
+        ctx.quadraticCurveTo(207, 355, 204, 378);
+        ctx.closePath();
+        ctx.fill();
+
         ws.flameParticles.forEach(p => {
             ctx.fillStyle = "#facc15";
             ctx.beginPath();
-            ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+            ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
             ctx.fill();
         });
     }
 
-    // Beherglas (x: 155, y: 240, W: 90, H: 108)
-    const bx = 155;
-    const by = 240;
-    const bw = 90;
-    const bh = 108;
+    // Beherglas (x: 140, y: 214, W: 110, H: 128)
+    const bx = 140;
+    const by = 214;
+    const bw = 110;
+    const bh = 128;
 
     // Beher İçi Sıvı/Buz
     if (ws.temp < 0 || ws.phase === "melting") {
-        // Buz Parçaları (Fasetli Kristaller)
-        ctx.fillStyle = "rgba(224, 242, 254, 0.75)";
-        ctx.beginPath();
-        ctx.roundRect(bx + 15, by + 50, 26, 26, 4);
-        ctx.roundRect(bx + 45, by + 60, 24, 24, 4);
-        ctx.roundRect(bx + 30, by + 30, 22, 22, 4);
-        ctx.fill();
+        // Fasetli Buz Kristalleri
+        [
+            [bx + 18, by + 68, 28],
+            [bx + 54, by + 72, 26],
+            [bx + 36, by + 44, 24]
+        ].forEach(([ix, iy, sz]) => {
+            ctx.fillStyle = "rgba(224, 242, 254, 0.78)";
+            ctx.strokeStyle = "rgba(186, 230, 253, 0.9)";
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(ix + sz * 0.2, iy);
+            ctx.lineTo(ix + sz * 0.9, iy + sz * 0.15);
+            ctx.lineTo(ix + sz, iy + sz * 0.8);
+            ctx.lineTo(ix + sz * 0.15, iy + sz);
+            ctx.lineTo(ix, iy + sz * 0.35);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        });
     }
 
     if (ws.temp >= 0) {
         // Sıvı Su Tabakası
-        const waterH = Math.min(bh - 14, 40 + (ws.temp / 100) * 35);
-        ctx.fillStyle = "rgba(56, 189, 248, 0.55)";
-        ctx.fillRect(bx + 3, by + bh - waterH, bw - 6, waterH);
+        const waterH = Math.min(bh - 16, 48 + (ws.temp / 100) * 44);
+        const wGrad = ctx.createLinearGradient(bx, by + bh - waterH, bx, by + bh);
+        wGrad.addColorStop(0, "rgba(56, 189, 248, 0.52)");
+        wGrad.addColorStop(1, "rgba(14, 165, 233, 0.72)");
+        ctx.fillStyle = wGrad;
+        ctx.beginPath();
+        ctx.roundRect(bx + 3, by + bh - waterH, bw - 6, waterH, [0, 0, 7, 7]);
+        ctx.fill();
+
+        // Su yüzeyi parlaması
+        ctx.strokeStyle = "rgba(224, 242, 254, 0.65)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(bx + 4, by + bh - waterH);
+        ctx.lineTo(bx + bw - 4, by + bh - waterH);
+        ctx.stroke();
 
         // Kaynama Kabarcıkları
         ws.bubbleParticles.forEach(b => {
-            ctx.fillStyle = "rgba(255, 255, 255, 0.75)";
+            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
             ctx.beginPath();
             ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
             ctx.fill();
         });
+
+        // Buhar kıvrımları (90°C+)
+        if (ws.temp >= 90) {
+            ctx.strokeStyle = "rgba(226, 232, 240, 0.35)";
+            ctx.lineWidth = 1.6;
+            for (let s = 0; s < 3; s++) {
+                const sx = bx + 28 + s * 26;
+                const sway = Math.sin(animTime * 3 + s) * 6;
+                ctx.beginPath();
+                ctx.moveTo(sx, by + 10);
+                ctx.bezierCurveTo(sx - 6 + sway, by - 14, sx + 6 - sway, by - 30, sx + sway * 0.5, by - 50);
+                ctx.stroke();
+            }
+        }
     }
 
-    // Cam Duvarlar
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.6)";
+    // Cam Duvarlar + Specular Parlama
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.65)";
     ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.roundRect(bx, by, bw, bh, [0, 0, 8, 8]);
+    ctx.roundRect(bx, by, bw, bh, [0, 0, 10, 10]);
     ctx.stroke();
 
-    // Termometre
-    ctx.fillStyle = "#e2e8f0";
-    ctx.fillRect(bx + 40, by - 40, 6, bh + 15);
-    const mercH = Math.max(8, ((ws.temp + 20) / 140) * (bh + 5));
+    const glassShine = ctx.createLinearGradient(bx, 0, bx + 18, 0);
+    glassShine.addColorStop(0, "rgba(255, 255, 255, 0.35)");
+    glassShine.addColorStop(1, "rgba(255, 255, 255, 0)");
+    ctx.fillStyle = glassShine;
+    ctx.fillRect(bx + 3, by + 4, 15, bh - 10);
+
+    // Dereceli Termometre (Ölçek çentikleri + hazne)
+    const tx = bx + bw * 0.5;
+    ctx.fillStyle = "rgba(226, 232, 240, 0.9)";
+    ctx.beginPath();
+    ctx.roundRect(tx - 4, by - 45, 8, bh + 18, 4);
+    ctx.fill();
+    const mercH = Math.max(10, ((ws.temp + 20) / 140) * (bh + 6));
     ctx.fillStyle = "#ef4444";
-    ctx.fillRect(bx + 41, by + bh - mercH - 10, 4, mercH);
+    ctx.fillRect(tx - 2, by + bh - mercH - 12, 4, mercH);
+    ctx.beginPath();
+    ctx.arc(tx, by + bh - 12, 6, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 1;
+    for (let t = 0; t <= 5; t++) {
+        const tyTick = by - 32 + t * 24;
+        ctx.beginPath();
+        ctx.moveTo(tx - 4, tyTick);
+        ctx.lineTo(tx + 1, tyTick);
+        ctx.stroke();
+    }
 
     // --- SAĞ: SICAKLIK-ZAMAN GRAFİĞİ (x: 420 -> 760, y: 80 -> 420) ---
     const gx = 420;
