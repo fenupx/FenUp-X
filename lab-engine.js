@@ -769,6 +769,7 @@ export const labState = {
         isPlaying: false,
         animProgress: 0.0,
         selectedDish: 1,         // 1, 2, 3, 4
+        visibleDishes: [1, 2],   // Varsayılan 2 kap (Kontrol vs Tek Değişkenli)
         dishes: [
             { id: 1, name: "1. Kap (İdeal)", water: true, temp: 25, light: false, oxygen: true, sproutProgress: 0.0 },
             { id: 2, name: "2. Kap (Susuz)", water: false, temp: 25, light: false, oxygen: true, sproutProgress: 0.0 },
@@ -4334,6 +4335,21 @@ function drawTugOfWarSimulation() {
     // 6. Kuvvet Vektör Okları
     drawTugForceVectors(ctx);
 
+    // TYMM Uyumlu Türkçe Kuvvet Etiketleri (Üst Özet Şeridi)
+    ctx.save();
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    const towState = labState.tugOfWar;
+    ctx.fillStyle = "#60a5fa";
+    ctx.fillText(`Batı Kuvveti: ${towState.fWest} N`, 175, 58);
+    ctx.fillStyle = "#f87171";
+    ctx.fillText(`Doğu Kuvveti: ${towState.fEast} N`, 625, 58);
+    ctx.fillStyle = "#facc15";
+    const netAbs = Math.abs(towState.netForce);
+    const netText = netAbs === 0 ? "Bileşke Kuvvet: 0 N (Dengelenmiş)" : `Bileşke Kuvvet: ${netAbs} N (${towState.netForce > 0 ? "Doğu" : "Batı"})`;
+    ctx.fillText(netText, 400, 58);
+    ctx.restore();
+
     // 7. Kutlama Parçacıkları
     const tow = labState.tugOfWar;
     tow.cheerParticles.forEach(p => {
@@ -5040,6 +5056,21 @@ function drawPlaneMirrorSimulation(ctx, r) {
     // 4. Ayna Gövdesi Çizimi (Yatay Çubuk)
     drawPlaneMirrorGlass(ctx, mirrorStartX, mirrorEndX, mirrorY, isSmooth);
 
+    // Türkçe Optik Etiketler (Normal, Gelme/Yansıma Açısı, Düzlem Ayna)
+    ctx.fillStyle = "#7dd3fc";
+    ctx.font = "bold 12.5px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Normal", normalX, 78);
+    ctx.fillStyle = "#38bdf8";
+    ctx.textAlign = "right";
+    ctx.fillText(`Gelme Açısı (${r.incidentAngle}°)`, normalX - 18, mirrorY - 82);
+    ctx.fillStyle = "#4ade80";
+    ctx.textAlign = "left";
+    ctx.fillText(`Yansıma Açısı (${r.incidentAngle}°)`, normalX + 18, mirrorY - 82);
+    ctx.fillStyle = "#cbd5e1";
+    ctx.textAlign = "center";
+    ctx.fillText(isSmooth ? "Düzlem Ayna (Düzgün Yansıma)" : "Pürüzlü Yüzey (Dağınık Yansıma)", normalX, mirrorY + 38);
+
     ctx.restore();
 }
 
@@ -5682,6 +5713,16 @@ function drawDensityTowerSimulation() {
     // 3. Büyük Şeffaf Dereceli Silindir Gövdesi
     drawGraduatedCylinder(ctx);
 
+    if (labState.densityTower.activeLiquids.length === 0) {
+        const cyl = labState.densityTower.cylinder;
+        ctx.save();
+        ctx.fillStyle = "rgba(148, 163, 184, 0.85)";
+        ctx.font = "600 14px Nunito, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Silindire sıvı ekleyin", cyl.x + cyl.w * 0.5, cyl.y + cyl.h * 0.5);
+        ctx.restore();
+    }
+
     // 4. Bırakılan Katı Cisimler
     drawDensityObjects(ctx);
 
@@ -5736,6 +5777,22 @@ function drawDensityLayers(ctx) {
             ctx.arc(bx, by, 1.5, 0, Math.PI * 2);
             ctx.fill();
         }
+
+        // Katman Türkçe etiketi
+        ctx.fillStyle = "rgba(15, 23, 42, 0.72)";
+        const labelText = liquid.name || liquid.id;
+        ctx.font = "bold 12px Nunito, sans-serif";
+        const tw = ctx.measureText(labelText).width;
+        const pillW = tw + 16;
+        const pillX = cyl.x + cyl.w * 0.5 - pillW * 0.5;
+        const pillY = layerTopY + layerH * 0.5 - 10;
+        ctx.beginPath();
+        ctx.roundRect(pillX, pillY, pillW, 20, 10);
+        ctx.fill();
+        ctx.fillStyle = "#f8fafc";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(labelText, cyl.x + cyl.w * 0.5, layerTopY + layerH * 0.5);
     }
 
     ctx.restore();
@@ -6318,6 +6375,14 @@ function drawMetalRodsAndWaxBalls(ctx) {
     ht.rods.forEach((rod, idx) => {
         const ry = startY + idx * gapY;
 
+        // Çubuk / Kaşık Türü Etiketi (MEB 5. Sınıf: Metal, Tahta, Plastik)
+        const rodLabels = ["Metal Kaşık (İletken)", "Tahta Kaşık (Yalıtkan)", "Plastik Kaşık (Yalıtkan)"];
+        const labelText = rodLabels[idx] || rod.name || "";
+        ctx.fillStyle = "#e2e8f0";
+        ctx.font = "bold 12px Nunito, sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText(labelText, rodStartX + 8, ry - 8);
+
         // Çubuk Gövdesi ve Isı Yayılım Gradyanı
         // Sıcak uca (sol) doğru alev parlaması, soğuk uca (sağ) doğru metalik renk
         const heatRatio = (rod.temp - 20) / 80; // 0.0 -> 1.0
@@ -6517,6 +6582,7 @@ function initGerminationState() {
     g.isPlaying = false;
     g.animProgress = 0.0;
     g.selectedDish = 1;
+    g.visibleDishes = [1, 2];
     g.dishes = [
         { id: 1, name: "1. Kap (İdeal)", water: true, temp: 25, light: false, oxygen: true, sproutProgress: 0.0 },
         { id: 2, name: "2. Kap (Susuz)", water: false, temp: 25, light: false, oxygen: true, sproutProgress: 0.0 },
@@ -6534,7 +6600,31 @@ function resetGerminationExperiment() {
 }
 
 function selectGerminationDish(dishId) {
-    labState.germination.selectedDish = dishId;
+    const g = labState.germination;
+    g.selectedDish = dishId;
+    if (!g.visibleDishes.includes(dishId)) {
+        g.visibleDishes = [...g.visibleDishes, dishId].sort((a, b) => a - b);
+    }
+    updateGerminationDOMControls();
+    updateGerminationMetricsDOM();
+}
+
+function toggleGerminationDishVisible(dishId) {
+    const g = labState.germination;
+    const isVis = g.visibleDishes.includes(dishId);
+    if (isVis) {
+        if (g.visibleDishes.length <= 1) {
+            showLabToast("En az 1 deney kabı ekranda kalmalıdır.");
+            return;
+        }
+        g.visibleDishes = g.visibleDishes.filter(id => id !== dishId);
+        if (g.selectedDish === dishId) {
+            g.selectedDish = g.visibleDishes[0];
+        }
+    } else {
+        g.visibleDishes = [...g.visibleDishes, dishId].sort((a, b) => a - b);
+        g.selectedDish = dishId;
+    }
     updateGerminationDOMControls();
     updateGerminationMetricsDOM();
 }
@@ -6617,10 +6707,13 @@ function updateGerminationDOMControls() {
     // Kap Seçim Butonları (Hızlı Bar & Sağ Panel)
     [1, 2, 3, 4].forEach(id => {
         const isSel = (g.selectedDish === id);
+        const isVis = Array.isArray(g.visibleDishes) && g.visibleDishes.includes(id);
         const b = document.getElementById(`btn-germ-dish-${id}`);
         const p = document.getElementById(`pill-germ-dish-${id}`);
+        const v = document.getElementById(`btn-germ-vis-${id}`);
         if (b) b.classList.toggle('active', isSel);
         if (p) p.classList.toggle('active', isSel);
+        if (v) v.classList.toggle('active', isVis);
     });
 
     // Su Butonları
@@ -6740,8 +6833,10 @@ function setupGerminationControlsDOM() {
     [1, 2, 3, 4].forEach(id => {
         const b = document.getElementById(`btn-germ-dish-${id}`);
         const p = document.getElementById(`pill-germ-dish-${id}`);
+        const v = document.getElementById(`btn-germ-vis-${id}`);
         if (b) b.addEventListener('click', () => selectGerminationDish(id));
         if (p) p.addEventListener('click', () => selectGerminationDish(id));
+        if (v) v.addEventListener('click', () => toggleGerminationDishVisible(id));
     });
 
     const pWaterYes = document.getElementById('pill-germ-water-yes');
@@ -6781,52 +6876,81 @@ function setupGerminationControlsDOM() {
     if (btnRec) btnRec.addEventListener('click', recordMeasurement);
 }
 
-// Deney 6.6 Canvas Çizim Motoru (ZERO-CANVAS-TEXT)
+// Deney 6.6 Canvas Çizim Motoru (Esnek 1-4 Kap + Dinamik Ortalama + Net Etiketler)
 function drawGerminationSimulation() {
     if (!ctx || !canvas) return;
+    const W = canvas.width;
+    const scale = W / 800;
     const w = 800;
     const h = 500;
     const g = labState.germination;
 
     ctx.save();
+    ctx.scale(scale, scale);
     ctx.clearRect(0, 0, w, h);
 
     // 1. Laboratuvar Tezgahı ve Arka Plan
     const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
     bgGrad.addColorStop(0, "#0b1329");
-    bgGrad.addColorStop(0.65, "#131d38");
-    bgGrad.addColorStop(1, "#1e293b");
+    bgGrad.addColorStop(0.7, "#131d38");
+    bgGrad.addColorStop(1, "#0f172a");
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, w, h);
 
-    // Tezgah Ahşap Yüzeyi
-    const benchY = 320;
-    const tableGrad = ctx.createLinearGradient(0, benchY, 0, h);
-    tableGrad.addColorStop(0, "#334155");
-    tableGrad.addColorStop(0.08, "#1e293b");
-    tableGrad.addColorStop(1, "#0f172a");
-    ctx.fillStyle = tableGrad;
-    ctx.fillRect(0, benchY, w, h - benchY);
-
-    ctx.strokeStyle = "rgba(56, 189, 248, 0.2)";
-    ctx.lineWidth = 2;
+    // Üst Gün Göstergesi
+    ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.45)";
+    ctx.lineWidth = 1.5;
     ctx.beginPath();
-    ctx.moveTo(0, benchY);
-    ctx.lineTo(w, benchY);
+    ctx.roundRect(18, 14, 150, 30, 15);
+    ctx.fill();
     ctx.stroke();
+    ctx.fillStyle = "#e0f2fe";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(`📅 ${g.currentDay}. Gün / 7`, 93, 29);
 
-    // 2. 4 Petri Kabının Çizimi (x: 120, 300, 480, 660)
-    const dishPositions = [120, 300, 480, 660];
+    const visibleList = g.dishes.filter(d => Array.isArray(g.visibleDishes) ? g.visibleDishes.includes(d.id) : true);
+    const dishesToDraw = visibleList.length ? visibleList : [g.dishes[0]];
+    const count = dishesToDraw.length;
 
-    g.dishes.forEach((dish, idx) => {
-        const cx = dishPositions[idx];
-        const cy = 300;
-        const rx = 68;
-        const ry = 22;
-        const dishH = 34;
+    let slots = [];
+    if (count === 1) {
+        slots = [{ cx: 400, cy: 295, rx: 132, ry: 40, dishH: 60, sf: 1.55 }];
+    } else if (count === 2) {
+        slots = [
+            { cx: 225, cy: 295, rx: 106, ry: 34, dishH: 50, sf: 1.3 },
+            { cx: 575, cy: 295, rx: 106, ry: 34, dishH: 50, sf: 1.3 }
+        ];
+    } else if (count === 3) {
+        slots = [
+            { cx: 155, cy: 295, rx: 86, ry: 27, dishH: 42, sf: 1.08 },
+            { cx: 400, cy: 295, rx: 86, ry: 27, dishH: 42, sf: 1.08 },
+            { cx: 645, cy: 295, rx: 86, ry: 27, dishH: 42, sf: 1.08 }
+        ];
+    } else {
+        slots = [
+            { cx: 235, cy: 175, rx: 88, ry: 26, dishH: 36, sf: 1.0 },
+            { cx: 565, cy: 175, rx: 88, ry: 26, dishH: 36, sf: 1.0 },
+            { cx: 235, cy: 385, rx: 88, ry: 26, dishH: 36, sf: 1.0 },
+            { cx: 565, cy: 385, rx: 88, ry: 26, dishH: 36, sf: 1.0 }
+        ];
+    }
+
+    dishesToDraw.forEach((dish, idx) => {
+        const { cx, cy, rx, ry, dishH, sf } = slots[idx];
         const isSelected = (dish.id === g.selectedDish);
 
         ctx.save();
+
+        // Tezgah alt raf çizgisi
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.18)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(cx - rx - 24, cy + dishH + 12);
+        ctx.lineTo(cx + rx + 24, cy + dishH + 12);
+        ctx.stroke();
 
         // Seçim Halesi / Glow
         if (isSelected) {
@@ -6845,31 +6969,23 @@ function drawGerminationSimulation() {
         ctx.fillStyle = "rgba(0, 0, 0, 0.4)";
         ctx.fill();
 
-        // Ortam Efekti (Işık veya Soğukluk veya Karanlık)
+        // Ortam Efekti (Işık veya Soğukluk)
         if (dish.light) {
-            // 4. Kap: Güneş Işığı Hüzmesi
-            const cone = ctx.createLinearGradient(cx, 40, cx, cy);
-            cone.addColorStop(0, "rgba(253, 224, 71, 0.45)");
+            const cone = ctx.createLinearGradient(cx, cy - 110 * sf, cx, cy);
+            cone.addColorStop(0, "rgba(253, 224, 71, 0.35)");
             cone.addColorStop(1, "rgba(253, 224, 71, 0.02)");
             ctx.fillStyle = cone;
             ctx.beginPath();
-            ctx.moveTo(cx - 20, 40);
-            ctx.lineTo(cx + 20, 40);
-            ctx.lineTo(cx + rx + 15, cy + 10);
-            ctx.lineTo(cx - rx - 15, cy + 10);
+            ctx.moveTo(cx - 20, cy - 95 * sf);
+            ctx.lineTo(cx + 20, cy - 95 * sf);
+            ctx.lineTo(cx + rx + 12, cy + 10);
+            ctx.lineTo(cx - rx - 12, cy + 10);
             ctx.closePath();
             ctx.fill();
         } else if (dish.temp === 0) {
-            // 3. Kap: Buz / Soğuk Kristal Efekti
             ctx.fillStyle = "rgba(56, 189, 248, 0.12)";
             ctx.beginPath();
-            ctx.arc(cx, cy - 20, 55, 0, Math.PI * 2);
-            ctx.fill();
-        } else if (!dish.light && dish.id === 1) {
-            // 1. Kap: Karanlık Dolap Atmosferi
-            ctx.fillStyle = "rgba(0, 0, 0, 0.28)";
-            ctx.beginPath();
-            ctx.roundRect(cx - rx - 10, cy - 80, (rx + 10) * 2, 140, 8);
+            ctx.arc(cx, cy - 12, rx * 0.85, 0, Math.PI * 2);
             ctx.fill();
         }
 
@@ -6881,12 +6997,12 @@ function drawGerminationSimulation() {
         ctx.ellipse(cx, cy, rx, ry, 0, Math.PI, 0, true);
         ctx.closePath();
         ctx.fill();
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+        ctx.strokeStyle = isSelected ? "#38bdf8" : "rgba(255, 255, 255, 0.38)";
         ctx.lineWidth = 1.5;
         ctx.stroke();
 
         // Pamuk Katmanı
-        const cottonY = cy + 10;
+        const cottonY = cy + dishH * 0.28;
         ctx.beginPath();
         ctx.ellipse(cx, cottonY, rx - 6, ry - 3, 0, 0, Math.PI * 2);
         if (dish.water) {
@@ -6990,6 +7106,24 @@ function drawGerminationSimulation() {
         ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
         ctx.lineWidth = 1.8;
         ctx.stroke();
+
+        // Kap Üstü Net Durum Etiketi
+        const condText = `${dish.id}. Kap: ${dish.temp}°C • ${dish.water ? "Nemli" : "Kuru"} • ${dish.light ? "Aydınlık" : "Karanlık"}`;
+        const badgeW = Math.max(204, Math.round(rx * 2.2));
+        const badgeY = cy - (count === 4 ? 70 : 88);
+        ctx.fillStyle = isSelected ? "rgba(14, 116, 144, 0.92)" : "rgba(15, 23, 42, 0.9)";
+        ctx.strokeStyle = isSelected ? "#38bdf8" : "rgba(148, 163, 184, 0.45)";
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.roundRect(cx - badgeW * 0.5, badgeY - 13, badgeW, 26, 13);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#f8fafc";
+        ctx.font = "bold 11.5px Nunito, sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(condText, cx, badgeY + 0.5);
 
         ctx.restore();
     });
@@ -10564,8 +10698,8 @@ function drawWorkSimulation() {
 
     // 2. Sıfır Metin - Zero-Canvas-Text: HUD paneli canvas dışındaki HTML şeridine taşınmıştır
 
-    // 3. Zemin Çizgisi ve Izgara
-    const groundY = 390;
+    // 3. Zemin Çizgisi ve Izgara (Dikey merkezleme için Y=310)
+    const groundY = 310;
     ctx.strokeStyle = 'rgba(71, 85, 105, 0.6)';
     ctx.lineWidth = 3;
     ctx.beginPath();
@@ -10640,7 +10774,7 @@ function drawWorkHorizontal(ctx, work, groundY) {
     // Sandık
     drawWorkCrate(ctx, crateX, crateY, crateW, crateH);
 
-    // Vektör Oku: Uygulanan Kuvvet (F)
+    // Vektör Oku: Uygulanan Kuvvet (TYMM uyumlu Türkçe etiket)
     const arrowLen = 35 + (work.force * 0.8);
     drawWorkVectorArrow(
         ctx,
@@ -10649,11 +10783,11 @@ function drawWorkHorizontal(ctx, work, groundY) {
         crateX + crateW + arrowLen,
         crateY + crateH / 2,
         '#ef4444',
-        'F ➔',
-        -14
+        `Kuvvet: ${work.force} N ➔`,
+        -16
     );
 
-    // Vektör Oku: Sürtünme Kuvveti (fs)
+    // Vektör Oku: Sürtünme Kuvveti
     if (work.frictionEnabled) {
         drawWorkVectorArrow(
             ctx,
@@ -10662,12 +10796,12 @@ function drawWorkHorizontal(ctx, work, groundY) {
             crateX - 45,
             groundY - 6,
             '#f59e0b',
-            'fs ⬅',
+            'Sürtünme ⬅',
             -12
         );
     }
 
-    // Vektör Oku: Yer Değiştirme (Δx)
+    // Vektör Oku: Alınan Yol
     if (curDist > 0.1) {
         drawWorkVectorArrow(
             ctx,
@@ -10676,8 +10810,8 @@ function drawWorkHorizontal(ctx, work, groundY) {
             curX,
             groundY + 36,
             '#06b6d4',
-            'Δx ➔',
-            16
+            `Alınan Yol: ${curDist.toFixed(1)} m ➔`,
+            18
         );
     }
 }
@@ -10728,7 +10862,7 @@ function drawWorkLift(ctx, work, groundY) {
     // Sandık
     drawWorkCrate(ctx, crateX, crateY, crateW, crateH);
 
-    // Vektör Oku: Kaldırma Kuvveti (F - Düşey Yukarı)
+    // Vektör Oku: Kaldırma Kuvveti (TYMM uyumlu Türkçe etiket)
     const arrowLen = 35 + (work.force * 0.8);
     drawWorkVectorArrow(
         ctx,
@@ -10737,11 +10871,11 @@ function drawWorkLift(ctx, work, groundY) {
         centerX,
         crateY - arrowLen,
         '#ef4444',
-        'F ⬆',
-        -10
+        `Kuvvet: ${work.force} N ⬆`,
+        -12
     );
 
-    // Vektör Oku: Yer Değiştirme / Yükseklik (h)
+    // Vektör Oku: Alınan Yol / Yükseklik
     if (curH > 0.1) {
         drawWorkVectorArrow(
             ctx,
@@ -10750,12 +10884,12 @@ function drawWorkLift(ctx, work, groundY) {
             centerX + 65,
             crateY + crateH,
             '#06b6d4',
-            'h ⬆',
-            12
+            `Yükseklik: ${curH.toFixed(1)} m ⬆`,
+            14
         );
     }
 
-    // Ağırlık / Yerçekimi Kuvveti Oku (G = 100 N aşağı)
+    // Ağırlık / Yerçekimi Kuvveti Oku
     drawWorkVectorArrow(
         ctx,
         centerX,
@@ -10763,8 +10897,8 @@ function drawWorkLift(ctx, work, groundY) {
         centerX,
         crateY + crateH + 40,
         '#64748b',
-        'G ⬇',
-        12
+        'Ağırlık ⬇',
+        14
     );
 }
 
@@ -10793,7 +10927,7 @@ function drawWorkCarry(ctx, work, groundY) {
     const bagHandX = curX + 18;
     const bagHandY = groundY - 60;
 
-    // Vektör Oku: Çantayı Taşıma Kuvveti (F - Düşey Yukarı)
+    // Vektör Oku: Çantayı Taşıma Kuvveti
     drawWorkVectorArrow(
         ctx,
         bagHandX,
@@ -10801,11 +10935,11 @@ function drawWorkCarry(ctx, work, groundY) {
         bagHandX,
         bagHandY - 60,
         '#ef4444',
-        'F ⬆',
-        -10
+        `Kuvvet: ${work.force} N ⬆`,
+        -12
     );
 
-    // Vektör Oku: Yer Değiştirme (Δx - Yatay Sağa)
+    // Vektör Oku: Alınan Yol (Yatay Sağa)
     if (curDist > 0.1) {
         drawWorkVectorArrow(
             ctx,
@@ -10814,8 +10948,8 @@ function drawWorkCarry(ctx, work, groundY) {
             curX,
             groundY + 36,
             '#06b6d4',
-            'Δx ➔',
-            16
+            `Alınan Yol: ${curDist.toFixed(1)} m ➔`,
+            18
         );
     }
 
@@ -10853,7 +10987,7 @@ function drawWorkWall(ctx, work, groundY) {
     const charX = wallX - 40;
     drawWorkStudent(ctx, charX, groundY, "wall", work.isPlaying ? animTime : 0, work.force);
 
-    // Vektör Oku: Duvara Uygulanan Kuvvet (F)
+    // Vektör Oku: Duvara Uygulanan Kuvvet
     const arrowLen = 35 + (work.force * 0.8);
     drawWorkVectorArrow(
         ctx,
@@ -10862,8 +10996,8 @@ function drawWorkWall(ctx, work, groundY) {
         charX + 30 + arrowLen,
         groundY - 70,
         '#ef4444',
-        'F ➔',
-        -12
+        `Kuvvet: ${work.force} N ➔`,
+        -14
     );
 }
 
@@ -10901,7 +11035,19 @@ function drawWorkVectorArrow(ctx, fromX, fromY, toX, toY, color, label, labelOff
     ctx.closePath();
     ctx.fill();
 
-    // Zero-Canvas-Text: Vektör oku yalın ve keskin çizilir; yön ve büyüklük alt metrik şeridinde (#metrics-bar-7-1) gösterilir.
+    if (label) {
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = color;
+        ctx.font = 'bold 12px Nunito, sans-serif';
+        ctx.textBaseline = 'middle';
+        if (Math.abs(dx) >= Math.abs(dy) && dx > 0) {
+            ctx.textAlign = 'left';
+            ctx.fillText(label, fromX + 4, (fromY + toY) * 0.5 + labelOffset);
+        } else {
+            ctx.textAlign = 'center';
+            ctx.fillText(label, (fromX + toX) * 0.5, (fromY + toY) * 0.5 + labelOffset);
+        }
+    }
     ctx.restore();
 }
 
@@ -11799,10 +11945,10 @@ function drawEnergySimulation() {
 
 function drawEnergyBarsGauge(ctx, scale) {
     const energy = labState.energy;
-    const boxX = 20 * scale;
-    const boxY = 45 * scale;
-    const boxW = 110 * scale;
-    const boxH = 180 * scale;
+    const boxX = 18 * scale;
+    const boxY = 38 * scale;
+    const boxW = 152 * scale;
+    const boxH = 195 * scale;
 
     ctx.save();
 
@@ -11815,19 +11961,24 @@ function drawEnergyBarsGauge(ctx, scale) {
     ctx.fill();
     ctx.stroke();
 
-    // Çubuk Parametreleri (Zero-Canvas-Text: Seviye çubukları nitel görsel kılavuzdur, sayısal değerler alt metrik şeridindedir)
+    // Başlık (TYMM 7. Sınıf: formülsüz Türkçe enerji adları)
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = `bold ${11 * scale}px Nunito, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillText("Enerji Dönüşümü", boxX + boxW / 2, boxY + 18 * scale);
+
     const maxVal = Math.max(15, energy.initialTotalEnergy * 1.05);
-    const barW = 16 * scale;
-    const gap = 7 * scale;
-    const maxBarH = 140 * scale;
-    const startX = boxX + (12 * scale);
-    const bottomY = boxY + boxH - (20 * scale);
+    const barW = 20 * scale;
+    const gap = 12 * scale;
+    const maxBarH = 130 * scale;
+    const startX = boxX + (16 * scale);
+    const bottomY = boxY + boxH - (28 * scale);
 
     const bars = [
-        { label: "Ek", val: energy.kineticEnergy, color: "#38bdf8", glow: "rgba(56, 189, 248, 0.4)" },
-        { label: "Ep", val: energy.potentialEnergy, color: "#10b981", glow: "rgba(16, 185, 129, 0.4)" },
-        { label: "Eısı", val: energy.heatEnergy, color: "#ef4444", glow: "rgba(239, 68, 68, 0.4)" },
-        { label: "Etop", val: energy.totalEnergy, color: "#facc15", glow: "rgba(250, 204, 21, 0.4)" }
+        { label: "Kinetik", short: "Kin.", val: energy.kineticEnergy, color: "#38bdf8", glow: "rgba(56, 189, 248, 0.4)" },
+        { label: "Potansiyel", short: "Pot.", val: energy.potentialEnergy, color: "#10b981", glow: "rgba(16, 185, 129, 0.4)" },
+        { label: "Isı", short: "Isı", val: energy.heatEnergy, color: "#ef4444", glow: "rgba(239, 68, 68, 0.4)" },
+        { label: "Toplam", short: "Top.", val: energy.totalEnergy, color: "#facc15", glow: "rgba(250, 204, 21, 0.4)" }
     ];
 
     bars.forEach((b, idx) => {
@@ -11853,11 +12004,11 @@ function drawEnergyBarsGauge(ctx, scale) {
             ctx.shadowBlur = 0;
         }
 
-        // Çubuk altı renkli gösterge noktası (Zero-Canvas-Text)
+        // Çubuk altı Türkçe etiket
         ctx.fillStyle = b.color;
-        ctx.beginPath();
-        ctx.arc(bx + (barW / 2), bottomY + (10 * scale), 3 * scale, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.font = `bold ${10 * scale}px Nunito, sans-serif`;
+        ctx.textAlign = "center";
+        ctx.fillText(b.short, bx + barW / 2, bottomY + 15 * scale);
     });
 
     ctx.restore();
@@ -12659,6 +12810,11 @@ function drawLensSimulation() {
     ctx.lineWidth = 1.5 * scale;
     ctx.stroke();
 
+    ctx.fillStyle = "rgba(56, 189, 248, 0.85)";
+    ctx.font = `bold ${11 * scale}px Nunito, sans-serif`;
+    ctx.textAlign = "right";
+    ctx.fillText("Asal Eksen", W - (32 * scale), cy - (10 * scale));
+
     // 2. MODA GÖRE IŞINLARIN VE CİSMİN ÇİZİMİ (Işınlar altta akar)
     if (mode === "parallel") {
         drawParallelRaysMode(ctx, cx, cy, f, isConvex, scale);
@@ -12669,17 +12825,21 @@ function drawLensSimulation() {
     // 3. Merceğin Çizimi (Cam Gövde & Sembolik Oklar)
     drawLensElement(ctx, cx, cy, isConvex, scale);
 
-    // 4. Odak ve Merkez Noktaları (F1, 2F1, F2, 2F2, O) - Eksen çizgisinin net 18px altında
-    drawFocalPoint(ctx, cx - f, cy, "F₁", scale);
+    // 4. Odak ve Merkez Noktaları (F1, 2F1, F2, 2F2, O)
+    drawFocalPoint(ctx, cx - f, cy, "F₁ (Odak)", scale);
     drawFocalPoint(ctx, cx - (2 * f), cy, "2F₁", scale);
-    drawFocalPoint(ctx, cx + f, cy, "F₂", scale);
+    drawFocalPoint(ctx, cx + f, cy, "F₂ (Odak)", scale);
     drawFocalPoint(ctx, cx + (2 * f), cy, "2F₂", scale);
 
-    // Optik Merkez (O) (Zero-Canvas-Text: Pürüzsüz vektör optik merkez diski)
+    // Optik Merkez (O)
     ctx.beginPath();
     ctx.arc(cx, cy, 2.5 * scale, 0, Math.PI * 2);
     ctx.fillStyle = "#ffffff";
     ctx.fill();
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = `bold ${11 * scale}px Nunito, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillText("O", cx + (10 * scale), cy + (14 * scale));
 
     ctx.restore();
 }
@@ -12688,17 +12848,23 @@ function drawFocalPoint(ctx, x, y, label, scale) {
     ctx.save();
     // 1. Odak Noktası Diski
     ctx.beginPath();
-    ctx.arc(x, y, 2.5 * scale, 0, Math.PI * 2);
+    ctx.arc(x, y, 3 * scale, 0, Math.PI * 2);
     ctx.fillStyle = "#00d2ff";
     ctx.fill();
 
-    // 2. Dikey Minimal Çentik (Zero-Canvas-Text: Odak mesafesi alt barda yer alır)
+    // 2. Dikey Minimal Çentik
     ctx.beginPath();
-    ctx.moveTo(x, y - (4 * scale));
-    ctx.lineTo(x, y + (4 * scale));
-    ctx.strokeStyle = "rgba(0, 210, 255, 0.5)";
+    ctx.moveTo(x, y - (5 * scale));
+    ctx.lineTo(x, y + (5 * scale));
+    ctx.strokeStyle = "rgba(0, 210, 255, 0.55)";
     ctx.lineWidth = 1.5 * scale;
     ctx.stroke();
+
+    // 3. Odak Etiketi
+    ctx.fillStyle = "#38bdf8";
+    ctx.font = `bold ${11 * scale}px Nunito, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillText(label, x, y + (19 * scale));
 
     ctx.restore();
 }
@@ -16267,6 +16433,23 @@ function drawElectroFrictionSetup(ctx, f) {
 
     // 4. Kıvılcım Transfer Parçacıkları
     drawElectroSparks(ctx, f.sparks);
+
+    // 5. Türkçe Malzeme Etiketleri & Elektron Akış Yönü
+    const isEbonite = (f.pair === "ebonite");
+    ctx.save();
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(isEbonite ? "Yün Kumaş" : "İpek Kumaş", f.cloth.x + f.cloth.w * 0.5, f.cloth.y - 12);
+    ctx.fillText(isEbonite ? "Ebonit Çubuk" : "Cam Çubuk", f.rod.x + f.rod.w * 0.5, f.rod.y - 12);
+    ctx.fillText("Kâğıt Parçacıkları", 520, 468);
+
+    if (f.isRubbing) {
+        ctx.fillStyle = "#38bdf8";
+        ctx.font = "bold 12px Nunito, sans-serif";
+        ctx.fillText(isEbonite ? "e⁻ Yün ➔ Çubuk" : "e⁻ Cam ➔ İpek", 260, 125);
+    }
+    ctx.restore();
 }
 
 function drawElectroRod(ctx, rod, pair) {
@@ -18093,11 +18276,11 @@ function drawPyramidTiers(ctx, fp) {
     for (let i = 0; i < 4; i++) {
         const tier = TROPHIC_TIERS[i];
         const isSelected = (fp.selectedTier === i);
-        drawPyramidTierTrapezoid(ctx, tier, isSelected, fp);
+        drawPyramidTierTrapezoid(ctx, tier, isSelected, fp, i);
     }
 }
 
-function drawPyramidTierTrapezoid(ctx, tier, isSelected, fp) {
+function drawPyramidTierTrapezoid(ctx, tier, isSelected, fp, tierIdx = 0) {
     ctx.save();
     const cx = 360;
     const yT = tier.yTop;
@@ -18143,15 +18326,15 @@ function drawPyramidTierTrapezoid(ctx, tier, isSelected, fp) {
     ctx.lineTo(xTR - 4, yT + 1);
     ctx.stroke();
 
-    // Zero-Canvas-Text: Basamak merkezi ışıma diski (İsim ve metrikler alt metrik şeridinde yer alır)
+    // Basamak adı etiketi (Üretici, 1. Tüketici, 2. Tüketici, 3. Tüketici)
     const midY = (yT + yB) / 2;
-    ctx.fillStyle = isSelected ? '#ffffff' : tier.color;
-    ctx.shadowColor = tier.color;
-    ctx.shadowBlur = isSelected ? 10 : 4;
-    ctx.beginPath();
-    ctx.arc(cx, midY, 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
+    const tierLabels = ["Üreticiler", "1. Tüketiciler", "2. Tüketiciler", "3. Tüketiciler"];
+    const tierLabel = tierLabels[tierIdx] || tierLabels[0];
+    ctx.fillStyle = "#f8fafc";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(tierLabel, cx, midY);
 
     ctx.restore();
 }
@@ -18184,12 +18367,17 @@ function drawPyramidDecomposers(ctx, isSelected) {
 
     ctx.shadowBlur = 0;
 
-    // Zero-Canvas-Text: Ayrıştırıcılar odası geri dönüşüm çemberi (Metinler ve açıklamalar alt metrik şeridindedir)
+    // Ayrıştırıcılar odası geri dönüşüm çemberi ve başlığı
     ctx.strokeStyle = isSelected ? '#facc15' : 'rgba(192, 132, 252, 0.6)';
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.arc(bx + bw / 2, by + bh / 2, 22, 0, Math.PI * 1.5);
+    ctx.arc(bx + bw / 2, by + bh / 2 - 14, 20, 0, Math.PI * 1.5);
     ctx.stroke();
+
+    ctx.fillStyle = "#f3e8ff";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Ayrıştırıcılar", bx + bw / 2, by + bh / 2 + 24);
 
     // 4 basamaktan ayrıştırıcılara bağlanan mor bağlantı hatları
     ctx.strokeStyle = 'rgba(139, 92, 246, 0.45)';
@@ -20277,6 +20465,17 @@ function drawFrictionSimulation() {
         ctx.stroke();
     }
 
+    // Aktif Zemin Etiketi (Tuval üzerinde net görünüm)
+    const surfTitles = { ice: "Pürüzsüz Zemin (Az Sürtünme)", wood: "Mukavva Zemin", sand: "Kumlu Zemin", carpet: "Pamuklu Kumaş (Çok Sürtünme)" };
+    ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.45)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.roundRect(450, 26, 320, 32, 16); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#e0f2fe";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`Zemin: ${surfTitles[fr.surface] || fr.surface}`, 610, 46);
+
     // 7. Sürtünme Parçacıkları (Skid / Toz)
     fr.skidParticles.forEach(p => {
         ctx.fillStyle = p.color;
@@ -20658,6 +20857,14 @@ function drawLightRectSimulation() {
         ctx.fillRect(716, 170, 8, 160);
         ctx.fillStyle = "#475569";
         ctx.fillRect(706, 360, 28, 20); // ayak
+
+        // Türkçe Etiketler (Işık Kaynağı, Delikli Kartonlar, Ekran)
+        ctx.fillStyle = "#cbd5e1";
+        ctx.font = "bold 12.5px Nunito, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Işık Kaynağı", srcX, 345);
+        ctx.fillText("Delikli Kartonlar", 450, 145);
+        ctx.fillText("Ekran", 720, 155);
 
         // IŞININ DOĞRUSAL YOLU:
         ctx.save();
@@ -21998,6 +22205,19 @@ function drawWaterStateSimulation() {
     ctx.stroke();
     ctx.setLineDash([]);
 
+    // Grafik Eksen ve Sıcaklık Etiketleri
+    ctx.fillStyle = "#fca5a5";
+    ctx.font = "bold 11.5px Nunito, sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText("100°C", gx - 6, y100 + 4);
+    ctx.fillStyle = "#7dd3fc";
+    ctx.fillText("0°C", gx - 6, y0 + 4);
+    ctx.fillStyle = "#cbd5e1";
+    ctx.textAlign = "left";
+    ctx.fillText("Sıcaklık (°C)", gx, gy - 10);
+    ctx.textAlign = "right";
+    ctx.fillText("Zaman", gx + gw, gy + gh + 18);
+
     // Grafik Eğrisi Çizimi (Neon Çizgi - Sınır Taşma Korumalı)
     if (ws.history.length > 1) {
         ctx.save();
@@ -22289,6 +22509,16 @@ function drawCircuitSimulation() {
     }
 
     // 4. Elektron Akış Noktaları (Sarı Fotonlar)
+    // Devre Elemanı Türkçe Etiketleri (Pil, Anahtar, Ampul)
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`Pil (${cc.batteryCount} Adet)`, 400, 88);
+    ctx.textAlign = "right";
+    ctx.fillText(cc.switchClosed ? "Anahtar (Kapalı)" : "Anahtar (Açık)", 142, 255);
+    ctx.textAlign = "center";
+    ctx.fillText(`Ampul (${cc.bulbCount} Adet)`, 400, 425);
+
     if (cc.switchClosed) {
         ctx.fillStyle = "#facc15";
         const perimeter = (640 - 160) * 2 + (380 - 120) * 2; // 480*2 + 260*2 = 1480 px
@@ -25614,62 +25844,110 @@ function drawLightTransmissionSimulation() {
     ctx.fillStyle = "#0b1120";
     ctx.fillRect(0, 0, W, H);
 
-    ctx.fillStyle = "#475569";
-    ctx.fillRect(60 * scale, 225 * scale, 80 * scale, 50 * scale);
-    ctx.fillStyle = lt.lightOn ? "#fde047" : "#334155";
-    ctx.fillRect(140 * scale, 218 * scale, 16 * scale, 64 * scale);
+    // Laboratuvar Tezgahı
+    const tableGrad = ctx.createLinearGradient(0, 385 * scale, 0, H);
+    tableGrad.addColorStop(0, "#1e293b");
+    tableGrad.addColorStop(1, "#0f172a");
+    ctx.fillStyle = tableGrad;
+    ctx.fillRect(0, 385 * scale, W, H - 385 * scale);
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.22)";
+    ctx.lineWidth = 1.5 * scale;
+    ctx.beginPath(); ctx.moveTo(0, 385 * scale); ctx.lineTo(W, 385 * scale); ctx.stroke();
 
+    // 1. Gerçekçi El Feneri (Sol Taraf)
+    ctx.fillStyle = "#334155";
+    ctx.beginPath(); ctx.roundRect(44 * scale, 232 * scale, 78 * scale, 36 * scale, 8 * scale); ctx.fill();
+    ctx.strokeStyle = "#64748b"; ctx.lineWidth = 2 * scale; ctx.stroke();
+    // Fener Başlığı (Konik)
+    ctx.fillStyle = "#475569";
+    ctx.beginPath();
+    ctx.moveTo(122 * scale, 232 * scale);
+    ctx.lineTo(154 * scale, 212 * scale);
+    ctx.lineTo(154 * scale, 288 * scale);
+    ctx.lineTo(122 * scale, 268 * scale);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    // Fener Düğmesi ve Lens Camı
+    ctx.fillStyle = lt.lightOn ? "#22c55e" : "#ef4444";
+    ctx.fillRect(72 * scale, 226 * scale, 18 * scale, 6 * scale);
+    ctx.fillStyle = lt.lightOn ? "#fef08a" : "#1e293b";
+    ctx.fillRect(154 * scale, 215 * scale, 10 * scale, 70 * scale);
+
+    // 2. Malzemenin Arkasından Bakılan Cisim (Parlak Yıldız / Kalem Kartı)
+    const objX = 480 * scale, objY = 250 * scale;
+    ctx.save();
+    ctx.beginPath(); ctx.roundRect(objX - 24 * scale, objY - 36 * scale, 48 * scale, 72 * scale, 8 * scale);
+    ctx.fillStyle = "#1e293b"; ctx.fill();
+    ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 1.5 * scale; ctx.stroke();
+    ctx.fillStyle = "#facc15";
+    ctx.beginPath(); ctx.arc(objX, objY - 6 * scale, 14 * scale, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#38bdf8";
+    ctx.fillRect(objX - 10 * scale, objY + 14 * scale, 20 * scale, 10 * scale);
+    ctx.restore();
+
+    // 3. Fenerden Çıkan Işık Konisi (Fener -> Malzeme)
     if (lt.lightOn) {
-        ctx.fillStyle = "rgba(253, 224, 71, 0.22)";
+        const cone1 = ctx.createLinearGradient(164 * scale, 250 * scale, 355 * scale, 250 * scale);
+        cone1.addColorStop(0, "rgba(253, 224, 71, 0.36)");
+        cone1.addColorStop(1, "rgba(253, 224, 71, 0.16)");
+        ctx.fillStyle = cone1;
         ctx.beginPath();
-        ctx.moveTo(156 * scale, 222 * scale);
-        ctx.lineTo(360 * scale, 160 * scale);
-        ctx.lineTo(360 * scale, 340 * scale);
-        ctx.lineTo(156 * scale, 278 * scale);
+        ctx.moveTo(164 * scale, 216 * scale);
+        ctx.lineTo(355 * scale, 150 * scale);
+        ctx.lineTo(355 * scale, 350 * scale);
+        ctx.lineTo(164 * scale, 284 * scale);
         ctx.closePath();
         ctx.fill();
     }
 
+    // 4. Test Edilen Madde Levhası
+    ctx.save();
     if (lt.material === "transparent") {
         ctx.fillStyle = "rgba(56, 189, 248, 0.18)";
         ctx.strokeStyle = "#38bdf8";
     } else if (lt.material === "translucent") {
-        ctx.fillStyle = "rgba(241, 245, 249, 0.55)";
+        ctx.fillStyle = "rgba(241, 245, 249, 0.56)";
         ctx.strokeStyle = "#cbd5e1";
     } else {
         ctx.fillStyle = "#92400e";
         ctx.strokeStyle = "#f59e0b";
     }
     ctx.lineWidth = 3 * scale;
-    ctx.fillRect(360 * scale, 130 * scale, 34 * scale, 240 * scale);
-    ctx.strokeRect(360 * scale, 130 * scale, 34 * scale, 240 * scale);
+    ctx.beginPath(); ctx.roundRect(355 * scale, 125 * scale, 36 * scale, 250 * scale, 6 * scale);
+    ctx.fill(); ctx.stroke();
+    ctx.restore();
 
+    // 5. Ekran (Sağ Taraf)
     ctx.fillStyle = "#1e293b";
     ctx.strokeStyle = "#64748b";
-    ctx.fillRect(650 * scale, 100 * scale, 24 * scale, 300 * scale);
-    ctx.strokeRect(650 * scale, 100 * scale, 24 * scale, 300 * scale);
+    ctx.lineWidth = 2.5 * scale;
+    ctx.beginPath(); ctx.roundRect(654 * scale, 105 * scale, 26 * scale, 290 * scale, 4 * scale);
+    ctx.fill(); ctx.stroke();
 
     if (lt.lightOn) {
         if (lt.material === "transparent") {
-            ctx.fillStyle = "rgba(253, 224, 71, 0.2)";
-            ctx.beginPath(); ctx.moveTo(394 * scale, 160 * scale); ctx.lineTo(650 * scale, 125 * scale); ctx.lineTo(650 * scale, 375 * scale); ctx.lineTo(394 * scale, 340 * scale); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = "rgba(253, 224, 71, 0.22)";
+            ctx.beginPath(); ctx.moveTo(391 * scale, 150 * scale); ctx.lineTo(654 * scale, 125 * scale); ctx.lineTo(654 * scale, 375 * scale); ctx.lineTo(391 * scale, 350 * scale); ctx.closePath(); ctx.fill();
             ctx.fillStyle = "#fef08a";
-            ctx.fillRect(646 * scale, 135 * scale, 8 * scale, 230 * scale);
+            ctx.fillRect(650 * scale, 130 * scale, 8 * scale, 240 * scale);
         } else if (lt.material === "translucent") {
-            ctx.fillStyle = "rgba(253, 224, 71, 0.08)";
-            ctx.beginPath(); ctx.moveTo(394 * scale, 160 * scale); ctx.lineTo(650 * scale, 125 * scale); ctx.lineTo(650 * scale, 375 * scale); ctx.lineTo(394 * scale, 340 * scale); ctx.closePath(); ctx.fill();
-            ctx.fillStyle = "rgba(254, 240, 138, 0.45)";
-            ctx.fillRect(646 * scale, 135 * scale, 8 * scale, 230 * scale);
+            ctx.fillStyle = "rgba(253, 224, 71, 0.09)";
+            ctx.beginPath(); ctx.moveTo(391 * scale, 150 * scale); ctx.lineTo(654 * scale, 125 * scale); ctx.lineTo(654 * scale, 375 * scale); ctx.lineTo(391 * scale, 350 * scale); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = "rgba(254, 240, 138, 0.48)";
+            ctx.fillRect(650 * scale, 130 * scale, 8 * scale, 240 * scale);
         } else {
             ctx.fillStyle = "#020617";
-            ctx.fillRect(644 * scale, 135 * scale, 12 * scale, 230 * scale);
+            ctx.fillRect(648 * scale, 130 * scale, 12 * scale, 240 * scale);
         }
     }
 
-    ctx.fillStyle = "#e2e8f0";
-    ctx.font = `bold ${15 * scale}px Nunito, sans-serif`;
+    // 6. Türkçe Etiketler (El Feneri, Test Edilen Madde, Arka Cisim, Ekran)
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = `bold ${13 * scale}px Nunito, sans-serif`;
     ctx.textAlign = "center";
-    ctx.fillText(lt.material === "transparent" ? "Pencere Camı (Saydam)" : (lt.material === "translucent" ? "Yağlı Kâğıt (Yarı Saydam)" : "Tahta Levha (Opak)"), 377 * scale, 405 * scale);
+    ctx.fillText("El Feneri", 98 * scale, 315 * scale);
+    ctx.fillText(lt.material === "transparent" ? "Pencere Camı (Saydam)" : (lt.material === "translucent" ? "Yağlı Kâğıt (Yarı Saydam)" : "Tahta Levha (Opak)"), 373 * scale, 412 * scale);
+    ctx.fillText("Gözlenen Cisim", objX, 310 * scale);
+    ctx.fillText(lt.lightOn && lt.material === "opaque" ? "Ekran (Tam Gölge)" : "Ekran", 667 * scale, 418 * scale);
     ctx.restore();
 }
 
@@ -25774,7 +26052,21 @@ function drawColorWheelSimulation() {
     ctx.fillRect(0, 0, W, H);
 
     if (cw.mode === "wheel") {
-        const cx = 400 * scale, cy = 245 * scale, R = 165 * scale;
+        const cx = 400 * scale, cy = 225 * scale, R = 152 * scale;
+
+        // Çark standı ve motor mili
+        ctx.fillStyle = "#334155";
+        ctx.strokeStyle = "#64748b";
+        ctx.lineWidth = 2 * scale;
+        ctx.beginPath();
+        ctx.roundRect(cx - 8 * scale, cy + R - 10 * scale, 16 * scale, 60 * scale, 4 * scale);
+        ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.roundRect(cx - 75 * scale, cy + R + 42 * scale, 150 * scale, 16 * scale, 8 * scale);
+        ctx.fill();
+        ctx.stroke();
+
         const colors = ["#ef4444", "#f97316", "#facc15", "#22c55e", "#3b82f6", "#6366f1", "#a855f7"];
         const slice = (Math.PI * 2) / colors.length;
         ctx.save();
@@ -25796,19 +26088,41 @@ function drawColorWheelSimulation() {
         ctx.restore();
         ctx.strokeStyle = "#cbd5e1"; ctx.lineWidth = 4 * scale;
         ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
-        ctx.fillStyle = "#f8fafc"; ctx.font = `bold ${15 * scale}px Nunito, sans-serif`; ctx.textAlign = "center";
-        ctx.fillText(cw.speed >= 70 ? "Gözümüzde BEYAZ olarak algılanır!" : "Hızı artırarak renklerin birleşmesini gözlemleyin", cx, 455 * scale);
+
+        // Merkez motor somunu
+        ctx.fillStyle = "#1e293b";
+        ctx.strokeStyle = "#94a3b8";
+        ctx.lineWidth = 2 * scale;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 10 * scale, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        const msg = cw.speed >= 70 ? "Gözümüzde BEYAZ olarak algılanır!" : "Hızı artırarak renklerin birleşmesini gözlemleyin";
+        ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+        ctx.beginPath();
+        ctx.roundRect(cx - 210 * scale, 444 * scale, 420 * scale, 34 * scale, 17 * scale);
+        ctx.fill();
+        ctx.fillStyle = "#f8fafc"; ctx.font = `bold ${14 * scale}px Nunito, sans-serif`; ctx.textAlign = "center";
+        ctx.fillText(msg, cx, 466 * scale);
     } else {
         const p = computePerceivedColor611(cw.lightColor, cw.objectColor);
         const lightHex = { white: "rgba(248,250,252,0.28)", red: "rgba(239,68,68,0.28)", green: "rgba(34,197,94,0.28)", blue: "rgba(59,130,246,0.28)" }[cw.lightColor];
         ctx.fillStyle = lightHex;
-        ctx.beginPath(); ctx.moveTo(350 * scale, 45 * scale); ctx.lineTo(450 * scale, 45 * scale); ctx.lineTo(540 * scale, 350 * scale); ctx.lineTo(260 * scale, 350 * scale); ctx.closePath(); ctx.fill();
-        ctx.fillStyle = "#475569"; ctx.fillRect(350 * scale, 20 * scale, 100 * scale, 25 * scale);
+        ctx.beginPath(); ctx.moveTo(350 * scale, 58 * scale); ctx.lineTo(450 * scale, 58 * scale); ctx.lineTo(545 * scale, 345 * scale); ctx.lineTo(255 * scale, 345 * scale); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = "#475569"; ctx.strokeStyle = "#94a3b8"; ctx.lineWidth = 2 * scale;
+        ctx.beginPath(); ctx.roundRect(345 * scale, 22 * scale, 110 * scale, 36 * scale, 8 * scale); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "#f8fafc"; ctx.font = `bold ${12 * scale}px Nunito, sans-serif`; ctx.textAlign = "center";
+        ctx.fillText("Işık Kaynağı", 400 * scale, 45 * scale);
+
         ctx.fillStyle = p.hex;
         ctx.strokeStyle = "#cbd5e1"; ctx.lineWidth = 3 * scale;
-        ctx.beginPath(); ctx.arc(400 * scale, 270 * scale, 75 * scale, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        ctx.fillStyle = "#f8fafc"; ctx.font = `bold ${16 * scale}px Nunito, sans-serif`; ctx.textAlign = "center";
-        ctx.fillText(`Görünen Renk: ${p.label}`, 400 * scale, 410 * scale);
+        ctx.beginPath(); ctx.arc(400 * scale, 265 * scale, 75 * scale, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+        ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+        ctx.beginPath(); ctx.roundRect(275 * scale, 392 * scale, 250 * scale, 36 * scale, 18 * scale); ctx.fill();
+        ctx.fillStyle = "#f8fafc"; ctx.font = `bold ${15 * scale}px Nunito, sans-serif`; ctx.textAlign = "center";
+        ctx.fillText(`Görünen Renk: ${p.label}`, 400 * scale, 415 * scale);
     }
     ctx.restore();
 }

@@ -57,8 +57,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@500;600;700&family=Kalam:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8.9.30">
-    <link rel="stylesheet" href="exam.css?v=8.9.30">
+    <link rel="stylesheet" href="style.css?v=8.9.31">
+    <link rel="stylesheet" href="exam.css?v=8.9.31">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -2776,6 +2776,15 @@
                                 <h4 class="lab-box-heading"><i class="fas fa-sliders-h"></i> Deney Kapları ve Şartlar</h4>
                                 <div class="lab-lens-controls-box">
                                     <div class="lab-field-group">
+                                        <label class="lab-field-label">Karşılaştırılan Kaplar (1–4 Seçim):</label>
+                                        <div class="lab-select-pills" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+                                            <button class="lab-select-pill active" id="btn-germ-vis-1" type="button">1. Kap</button>
+                                            <button class="lab-select-pill active" id="btn-germ-vis-2" type="button">2. Kap</button>
+                                            <button class="lab-select-pill" id="btn-germ-vis-3" type="button">3. Kap</button>
+                                            <button class="lab-select-pill" id="btn-germ-vis-4" type="button">4. Kap</button>
+                                        </div>
+                                    </div>
+                                    <div class="lab-field-group" style="margin-top: 8px;">
                                         <label class="lab-field-label">İncelenen Deney Kabı:</label>
                                         <div class="lab-select-pills" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
                                             <button class="lab-select-pill active" id="pill-germ-dish-1">🌱 1. Kap (İdeal)</button>
@@ -5348,10 +5357,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
     <script>
-        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.30';
+        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.31';
     </script>
-    <script type="module" src="exam-engine.js?v=8.9.30"></script>
-    <script type="module" src="lab-engine.js?v=8.9.30"></script>
-    <script type="module" src="script.js?v=8.9.30"></script>
+    <script type="module" src="exam-engine.js?v=8.9.31"></script>
+    <script type="module" src="lab-engine.js?v=8.9.31"></script>
+    <script type="module" src="script.js?v=8.9.31"></script>
 </body>
 </html>
