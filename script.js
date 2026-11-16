@@ -7735,27 +7735,53 @@ try {
 } catch (_) {}
 
 // ==========================================================================
-// V8.9.1: KÜRESEL AKILLI TAHTA (ETAP) TAM EKRAN ÇİZİM TAHTASI MODÜLÜ
+// V8.9.33: KÜRESEL AKILLI TAHTA (FATİH KALEM) ÇİZİM MOTORU VE ARAÇ SETİ
 // ==========================================================================
 let globalSmartboardState = {
     isOpen: false,
     isFullscreen: false,
-    mode: 'white',
-    color: '#2d3436',
+    mode: 'white', // 'white' | 'dark' | 'grid'
+    tool: 'pen',   // 'pen' | 'highlighter' | 'line' | 'dashed' | 'arrow' | 'rect' | 'circle' | 'eraser'
+    color: '#1e293b',
     size: 4,
     isEraser: false,
     isDrawing: false,
+    activePointerId: null,
+    dpr: 1,
+    cssWidth: 850,
+    cssHeight: 450,
     lastX: 0,
-    lastY: 0
+    lastY: 0,
+    history: [],
+    redoStack: [],
+    currentCmd: null
 };
+
+const SB_COLORS_LIGHT = [
+    { color: '#1e293b', title: 'Siyah' },
+    { color: '#dc2626', title: 'Kırmızı' },
+    { color: '#2563eb', title: 'Mavi' },
+    { color: '#16a34a', title: 'Yeşil' },
+    { color: '#ea580c', title: 'Turuncu' },
+    { color: '#9333ea', title: 'Mor' }
+];
+
+const SB_COLORS_DARK = [
+    { color: '#f8fafc', title: 'Beyaz (Tebeşir)' },
+    { color: '#facc15', title: 'Sarı' },
+    { color: '#38bdf8', title: 'Turkuaz' },
+    { color: '#fb7185', title: 'Pembe / Kırmızı' },
+    { color: '#4ade80', title: 'Yeşil' },
+    { color: '#fb923c', title: 'Turuncu' }
+];
 
 export function toggleGlobalSmartboard(forceOpen) {
     const modal = document.getElementById('smartboard-modal');
     const floatBtn = document.getElementById('floating-smartboard-btn');
     if (!modal) return;
 
-    const shouldOpen = (typeof forceOpen === 'boolean') 
-        ? forceOpen 
+    const shouldOpen = (typeof forceOpen === 'boolean')
+        ? forceOpen
         : (modal.classList.contains('is-hidden') || modal.style.display === 'none');
 
     if (shouldOpen) {
@@ -7763,11 +7789,13 @@ export function toggleGlobalSmartboard(forceOpen) {
         modal.style.display = 'flex';
         globalSmartboardState.isOpen = true;
         if (floatBtn) floatBtn.classList.add('active');
-        resizeGlobalSmartboardCanvas();
+        requestAnimationFrame(() => resizeGlobalSmartboardCanvas());
     } else {
         modal.classList.add('is-hidden');
         modal.style.display = 'none';
         globalSmartboardState.isOpen = false;
+        globalSmartboardState.isDrawing = false;
+        globalSmartboardState.activePointerId = null;
         if (floatBtn) floatBtn.classList.remove('active');
     }
 }
@@ -7775,64 +7803,166 @@ export function toggleGlobalSmartboard(forceOpen) {
 export function openSmartboard() { toggleGlobalSmartboard(true); }
 export function closeSmartboard() { toggleGlobalSmartboard(false); }
 
-function resizeGlobalSmartboardCanvas() {
-    const canvas = document.getElementById('smartboard-canvas');
-    if (!canvas) return;
-    const container = document.getElementById('sb-canvas-container');
-    if (!container) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+function renderSmartboardCommand(targetCtx, cmd) {
+    if (!targetCtx || !cmd || !cmd.points || cmd.points.length === 0) return;
 
-    const newWidth = container.clientWidth || 850;
-    const newHeight = container.clientHeight || 450;
+    targetCtx.save();
+    targetCtx.lineCap = 'round';
+    targetCtx.lineJoin = 'round';
 
-    let tempCanvas = null;
-    if (canvas.width > 0 && canvas.height > 0) {
-        tempCanvas = document.createElement('canvas');
-        tempCanvas.width = canvas.width;
-        tempCanvas.height = canvas.height;
-        const tCtx = tempCanvas.getContext('2d');
-        if (tCtx) tCtx.drawImage(canvas, 0, 0);
+    const pts = cmd.points;
+    const p0 = pts[0];
+    const pLast = pts[pts.length - 1];
+
+    if (cmd.tool === 'eraser') {
+        targetCtx.globalCompositeOperation = 'destination-out';
+        targetCtx.strokeStyle = '#000000';
+        targetCtx.fillStyle = '#000000';
+        targetCtx.lineWidth = Math.max(cmd.size * 4, 22);
+    } else if (cmd.tool === 'highlighter') {
+        targetCtx.globalAlpha = 0.36;
+        targetCtx.strokeStyle = cmd.color;
+        targetCtx.fillStyle = cmd.color;
+        targetCtx.lineWidth = Math.max(cmd.size * 3.2, 16);
+    } else {
+        targetCtx.strokeStyle = cmd.color;
+        targetCtx.fillStyle = cmd.color;
+        targetCtx.lineWidth = cmd.size;
     }
 
-    canvas.width = newWidth;
-    canvas.height = newHeight;
+    if (cmd.tool === 'pen' || cmd.tool === 'highlighter' || cmd.tool === 'eraser') {
+        if (pts.length === 1) {
+            targetCtx.beginPath();
+            targetCtx.arc(p0.x, p0.y, targetCtx.lineWidth * 0.5, 0, Math.PI * 2);
+            targetCtx.fill();
+        } else if (pts.length === 2) {
+            targetCtx.beginPath();
+            targetCtx.moveTo(p0.x, p0.y);
+            targetCtx.lineTo(pLast.x, pLast.y);
+            targetCtx.stroke();
+        } else {
+            targetCtx.beginPath();
+            targetCtx.moveTo(p0.x, p0.y);
+            for (let i = 1; i < pts.length - 1; i++) {
+                const midX = (pts[i].x + pts[i + 1].x) * 0.5;
+                const midY = (pts[i].y + pts[i + 1].y) * 0.5;
+                targetCtx.quadraticCurveTo(pts[i].x, pts[i].y, midX, midY);
+            }
+            targetCtx.lineTo(pLast.x, pLast.y);
+            targetCtx.stroke();
+        }
+    } else if (cmd.tool === 'line' || cmd.tool === 'dashed') {
+        if (cmd.tool === 'dashed') {
+            targetCtx.setLineDash([Math.max(8, cmd.size * 2.4), Math.max(6, cmd.size * 1.6)]);
+        }
+        targetCtx.beginPath();
+        targetCtx.moveTo(p0.x, p0.y);
+        targetCtx.lineTo(pLast.x, pLast.y);
+        targetCtx.stroke();
+    } else if (cmd.tool === 'arrow') {
+        const dx = pLast.x - p0.x;
+        const dy = pLast.y - p0.y;
+        const dist = Math.hypot(dx, dy);
+        targetCtx.beginPath();
+        targetCtx.moveTo(p0.x, p0.y);
+        targetCtx.lineTo(pLast.x, pLast.y);
+        targetCtx.stroke();
 
-    const bg = globalSmartboardState.mode === 'dark' ? '#1e293b' : '#ffffff';
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    if (tempCanvas) {
-        ctx.drawImage(tempCanvas, 0, 0);
+        if (dist > 4) {
+            const angle = Math.atan2(dy, dx);
+            const headLen = Math.max(12, cmd.size * 3.2);
+            targetCtx.beginPath();
+            targetCtx.moveTo(pLast.x, pLast.y);
+            targetCtx.lineTo(pLast.x - headLen * Math.cos(angle - Math.PI / 6), pLast.y - headLen * Math.sin(angle - Math.PI / 6));
+            targetCtx.moveTo(pLast.x, pLast.y);
+            targetCtx.lineTo(pLast.x - headLen * Math.cos(angle + Math.PI / 6), pLast.y - headLen * Math.sin(angle + Math.PI / 6));
+            targetCtx.stroke();
+        }
+    } else if (cmd.tool === 'rect') {
+        const rx = Math.min(p0.x, pLast.x);
+        const ry = Math.min(p0.y, pLast.y);
+        const rw = Math.abs(pLast.x - p0.x);
+        const rh = Math.abs(pLast.y - p0.y);
+        targetCtx.strokeRect(rx, ry, rw, rh);
+    } else if (cmd.tool === 'circle') {
+        const cx = (p0.x + pLast.x) * 0.5;
+        const cy = (p0.y + pLast.y) * 0.5;
+        const rx = Math.abs(pLast.x - p0.x) * 0.5;
+        const ry = Math.abs(pLast.y - p0.y) * 0.5;
+        targetCtx.beginPath();
+        targetCtx.ellipse(cx, cy, Math.max(1, rx), Math.max(1, ry), 0, 0, Math.PI * 2);
+        targetCtx.stroke();
     }
+
+    targetCtx.restore();
 }
 
-function updateSmartboardPalette() {
+function redrawSmartboardMainCanvas() {
+    const canvas = document.getElementById('smartboard-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d', { desynchronized: true }) || canvas.getContext('2d');
+    if (!ctx) return;
+
+    const { dpr, cssWidth, cssHeight, history } = globalSmartboardState;
+    ctx.save();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, cssWidth, cssHeight);
+    for (let i = 0; i < history.length; i++) {
+        renderSmartboardCommand(ctx, history[i]);
+    }
+    ctx.restore();
+}
+
+function updateSmartboardUndoRedoUI() {
+    const undoBtn = document.getElementById('sb-btn-undo');
+    const redoBtn = document.getElementById('sb-btn-redo');
+    if (undoBtn) undoBtn.disabled = globalSmartboardState.history.length === 0;
+    if (redoBtn) redoBtn.disabled = globalSmartboardState.redoStack.length === 0;
+}
+
+function resizeGlobalSmartboardCanvas() {
+    const canvas = document.getElementById('smartboard-canvas');
+    const previewCanvas = document.getElementById('smartboard-preview-canvas');
+    const container = document.getElementById('sb-canvas-container');
+    if (!canvas || !container) return;
+
+    const cssW = Math.max(container.clientWidth || 850, 1);
+    const cssH = Math.max(container.clientHeight || 450, 1);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+
+    globalSmartboardState.dpr = dpr;
+    globalSmartboardState.cssWidth = cssW;
+    globalSmartboardState.cssHeight = cssH;
+
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+
+    if (previewCanvas) {
+        previewCanvas.width = Math.round(cssW * dpr);
+        previewCanvas.height = Math.round(cssH * dpr);
+        const pCtx = previewCanvas.getContext('2d');
+        if (pCtx) pCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    redrawSmartboardMainCanvas();
+    updateSmartboardUndoRedoUI();
+}
+
+function updateSmartboardPalette(preserveCompatibleColor = false) {
     const palette = document.getElementById('sb-color-palette');
     if (!palette) return;
 
-    const isWhite = globalSmartboardState.mode === 'white';
-    const colors = isWhite 
-        ? [
-            { color: '#2d3436', title: 'Siyah' },
-            { color: '#e74c3c', title: 'Kırmızı' },
-            { color: '#0984e3', title: 'Mavi' },
-            { color: 'rgba(253, 203, 110, 0.7)', title: 'Floresan Fosforlu Sarı' }
-          ]
-        : [
-            { color: '#ffffff', title: 'Beyaz' },
-            { color: '#facc15', title: 'Neon Sarı' },
-            { color: '#38bdf8', title: 'Neon Mavi' },
-            { color: 'rgba(74, 222, 128, 0.7)', title: 'Neon Fosforlu Yeşil' }
-          ];
+    const isDark = globalSmartboardState.mode === 'dark';
+    const colors = isDark ? SB_COLORS_DARK : SB_COLORS_LIGHT;
 
-    globalSmartboardState.color = colors[0].color;
-    globalSmartboardState.isEraser = false;
+    if (!preserveCompatibleColor || !colors.some(c => c.color === globalSmartboardState.color)) {
+        globalSmartboardState.color = colors[0].color;
+    }
 
     palette.innerHTML = `
         <span class="sb-group-label"><i class="fas fa-palette"></i> Renk:</span>
-        ${colors.map((c, i) => `
-            <button type="button" class="sb-color-btn ${i === 0 ? 'active' : ''}" data-color="${c.color}" style="background:${c.color};" title="${c.title}"></button>
+        ${colors.map(c => `
+            <button type="button" class="sb-color-btn ${c.color === globalSmartboardState.color ? 'active' : ''}" data-color="${c.color}" style="background:${c.color};" title="${c.title}"></button>
         `).join('')}
     `;
 
@@ -7841,20 +7971,59 @@ function updateSmartboardPalette() {
             palette.querySelectorAll('.sb-color-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             globalSmartboardState.color = btn.dataset.color;
-            globalSmartboardState.isEraser = false;
-            const eraserBtn = document.getElementById('sb-btn-eraser');
-            if (eraserBtn) eraserBtn.classList.remove('active');
+            if (globalSmartboardState.tool === 'eraser') {
+                setSmartboardTool('pen');
+            }
         };
     });
+}
+
+function setSmartboardTool(toolName) {
+    const modal = document.getElementById('smartboard-modal');
+    globalSmartboardState.tool = toolName;
+    globalSmartboardState.isEraser = (toolName === 'eraser');
+    if (!modal) return;
+    modal.querySelectorAll('#sb-tools-palette .sb-tool-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tool === toolName);
+    });
+}
+
+function setSmartboardMode(newMode) {
+    const container = document.getElementById('sb-canvas-container');
+    const btnWhite = document.getElementById('sb-mode-white');
+    const btnDark = document.getElementById('sb-mode-dark');
+    const btnGrid = document.getElementById('sb-mode-grid');
+
+    const prevMode = globalSmartboardState.mode;
+    globalSmartboardState.mode = newMode;
+
+    if (btnWhite) btnWhite.classList.toggle('active', newMode === 'white');
+    if (btnDark) btnDark.classList.toggle('active', newMode === 'dark');
+    if (btnGrid) btnGrid.classList.toggle('active', newMode === 'grid');
+
+    if (container) {
+        container.classList.remove('mode-white', 'mode-dark', 'mode-grid');
+        container.classList.add(`mode-${newMode}`);
+    }
+
+    if (newMode === 'dark' && prevMode !== 'dark') {
+        updateSmartboardPalette(false);
+    } else if (newMode !== 'dark' && prevMode === 'dark') {
+        updateSmartboardPalette(false);
+    } else {
+        updateSmartboardPalette(true);
+    }
 }
 
 export function initGlobalSmartboard() {
     const floatBtn = document.getElementById('floating-smartboard-btn');
     const modal = document.getElementById('smartboard-modal');
     const canvas = document.getElementById('smartboard-canvas');
+    const previewCanvas = document.getElementById('smartboard-preview-canvas');
     if (!modal || !canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { desynchronized: true }) || canvas.getContext('2d');
+    const pCtx = previewCanvas ? (previewCanvas.getContext('2d', { desynchronized: true }) || previewCanvas.getContext('2d')) : null;
     if (!ctx) return;
 
     if (floatBtn) {
@@ -7873,39 +8042,61 @@ export function initGlobalSmartboard() {
         if (e.target === modal) toggleGlobalSmartboard(false);
     };
 
-    const container = document.getElementById('sb-canvas-container');
+    // Tahta Modu Değiştiricileri (Beyaz / Siyah / Kareli)
+    document.getElementById('sb-mode-white')?.addEventListener('click', () => setSmartboardMode('white'));
+    document.getElementById('sb-mode-dark')?.addEventListener('click', () => setSmartboardMode('dark'));
+    document.getElementById('sb-mode-grid')?.addEventListener('click', () => setSmartboardMode('grid'));
 
-    // Tahta Modu Değiştiricileri (Beyaz / Koyu)
-    const btnWhite = document.getElementById('sb-mode-white');
-    const btnDark = document.getElementById('sb-mode-dark');
+    // Araç Seçimi (Kalem, Fosforlu, Düz Çizgi, Kesikli, Ok, Dikdörtgen, Daire, Silgi)
+    modal.querySelectorAll('#sb-tools-palette .sb-tool-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (btn.dataset.tool) setSmartboardTool(btn.dataset.tool);
+        });
+    });
 
-    if (btnWhite && btnDark) {
-        btnWhite.onclick = () => {
-            if (globalSmartboardState.mode === 'white') return;
-            globalSmartboardState.mode = 'white';
-            btnWhite.classList.add('active');
-            btnDark.classList.remove('active');
-            if (container) {
-                container.classList.remove('mode-dark');
-                container.classList.add('mode-white');
+    // Kalem Kalınlıkları
+    const sizeBtns = modal.querySelectorAll('.sb-size-btn');
+    sizeBtns.forEach(btn => {
+        btn.onclick = () => {
+            sizeBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            globalSmartboardState.size = parseInt(btn.dataset.size || '4', 10);
+            if (globalSmartboardState.tool === 'eraser') {
+                setSmartboardTool('pen');
             }
-            updateSmartboardPalette();
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
         };
+    });
 
-        btnDark.onclick = () => {
-            if (globalSmartboardState.mode === 'dark') return;
-            globalSmartboardState.mode = 'dark';
-            btnDark.classList.add('active');
-            btnWhite.classList.remove('active');
-            if (container) {
-                container.classList.remove('mode-white');
-                container.classList.add('mode-dark');
+    // Geri Al / İleri Al / Temizle
+    document.getElementById('sb-btn-undo')?.addEventListener('click', () => {
+        if (globalSmartboardState.history.length === 0) return;
+        const popped = globalSmartboardState.history.pop();
+        globalSmartboardState.redoStack.push(popped);
+        redrawSmartboardMainCanvas();
+        updateSmartboardUndoRedoUI();
+    });
+
+    document.getElementById('sb-btn-redo')?.addEventListener('click', () => {
+        if (globalSmartboardState.redoStack.length === 0) return;
+        const restored = globalSmartboardState.redoStack.pop();
+        globalSmartboardState.history.push(restored);
+        redrawSmartboardMainCanvas();
+        updateSmartboardUndoRedoUI();
+    });
+
+    const clearBtn = document.getElementById('sb-btn-clear');
+    if (clearBtn) {
+        clearBtn.onclick = () => {
+            globalSmartboardState.history = [];
+            globalSmartboardState.redoStack = [];
+            redrawSmartboardMainCanvas();
+            if (pCtx) {
+                pCtx.save();
+                pCtx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
+                pCtx.clearRect(0, 0, globalSmartboardState.cssWidth, globalSmartboardState.cssHeight);
+                pCtx.restore();
             }
-            updateSmartboardPalette();
-            ctx.fillStyle = '#1e293b';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            updateSmartboardUndoRedoUI();
         };
     }
 
@@ -7916,121 +8107,147 @@ export function initGlobalSmartboard() {
         btnFs.onclick = () => {
             globalSmartboardState.isFullscreen = !globalSmartboardState.isFullscreen;
             dialog.classList.toggle('is-fullscreen', globalSmartboardState.isFullscreen);
-            btnFs.innerHTML = globalSmartboardState.isFullscreen 
-                ? '<i class="fas fa-compress"></i> <span>Normal Ekran</span>' 
+            btnFs.innerHTML = globalSmartboardState.isFullscreen
+                ? '<i class="fas fa-compress"></i> <span>Normal Ekran</span>'
                 : '<i class="fas fa-expand"></i> <span>Tam Ekran</span>';
-            setTimeout(resizeGlobalSmartboardCanvas, 50);
+            requestAnimationFrame(() => setTimeout(resizeGlobalSmartboardCanvas, 30));
         };
     }
 
-    // Kalem Boyutları
-    const sizeBtns = modal.querySelectorAll('.sb-size-btn');
-    sizeBtns.forEach(btn => {
-        btn.onclick = () => {
-            sizeBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            globalSmartboardState.size = parseInt(btn.dataset.size || '4', 10);
-            globalSmartboardState.isEraser = false;
-            const eraserBtn = document.getElementById('sb-btn-eraser');
-            if (eraserBtn) eraserBtn.classList.remove('active');
-        };
-    });
-
-    // Silgi Butonu
-    const eraserBtn = document.getElementById('sb-btn-eraser');
-    if (eraserBtn) {
-        eraserBtn.onclick = () => {
-            globalSmartboardState.isEraser = !globalSmartboardState.isEraser;
-            eraserBtn.classList.toggle('active', globalSmartboardState.isEraser);
-            if (globalSmartboardState.isEraser) {
-                modal.querySelectorAll('.sb-color-btn').forEach(b => b.classList.remove('active'));
-            } else {
-                updateSmartboardPalette();
-            }
-        };
-    }
-
-    // Temizle Butonu
-    const clearBtn = document.getElementById('sb-btn-clear');
-    if (clearBtn) {
-        clearBtn.onclick = () => {
-            const bg = globalSmartboardState.mode === 'dark' ? '#1e293b' : '#ffffff';
-            ctx.fillStyle = bg;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        };
-    }
-
-    // Çizim Dinleyicileri (Touch & Mouse with e.preventDefault & touch-action: none)
-    function getPointerPos(evt) {
+    // Fatih Kalem PointerEvent Çizim Motoru (Coalesced Events + Quadratic Bezier)
+    function getCanvasPoint(evt) {
         const rect = canvas.getBoundingClientRect();
-        let clientX = evt.clientX;
-        let clientY = evt.clientY;
-
-        if (evt.touches && evt.touches.length > 0) {
-            clientX = evt.touches[0].clientX;
-            clientY = evt.touches[0].clientY;
-        } else if (evt.changedTouches && evt.changedTouches.length > 0) {
-            clientX = evt.changedTouches[0].clientX;
-            clientY = evt.changedTouches[0].clientY;
-        }
-
-        const scaleX = canvas.width / rect.width;
-        const scaleY = canvas.height / rect.height;
-
         return {
-            x: (clientX - rect.left) * scaleX,
-            y: (clientY - rect.top) * scaleY
+            x: evt.clientX - rect.left,
+            y: evt.clientY - rect.top
         };
     }
 
-    function startDraw(e) {
+    function onPointerDown(e) {
+        if (e.pointerType === 'mouse' && e.button !== 0) return;
         if (e.cancelable) e.preventDefault();
+
         globalSmartboardState.isDrawing = true;
-        const pos = getPointerPos(e);
-        globalSmartboardState.lastX = pos.x;
-        globalSmartboardState.lastY = pos.y;
+        globalSmartboardState.activePointerId = e.pointerId;
+        try {
+            canvas.setPointerCapture?.(e.pointerId);
+        } catch (_) {}
+
+        const pt = getCanvasPoint(e);
+        globalSmartboardState.lastX = pt.x;
+        globalSmartboardState.lastY = pt.y;
+        globalSmartboardState.currentCmd = {
+            tool: globalSmartboardState.tool,
+            color: globalSmartboardState.color,
+            size: globalSmartboardState.size,
+            points: [pt]
+        };
+
+        if (globalSmartboardState.tool === 'eraser') {
+            ctx.save();
+            ctx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
+            renderSmartboardCommand(ctx, globalSmartboardState.currentCmd);
+            ctx.restore();
+        } else if (pCtx) {
+            pCtx.save();
+            pCtx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
+            pCtx.clearRect(0, 0, globalSmartboardState.cssWidth, globalSmartboardState.cssHeight);
+            renderSmartboardCommand(pCtx, globalSmartboardState.currentCmd);
+            pCtx.restore();
+        }
     }
 
-    function moveDraw(e) {
+    function onPointerMove(e) {
         if (!globalSmartboardState.isDrawing) return;
+        if (globalSmartboardState.activePointerId !== null && e.pointerId !== globalSmartboardState.activePointerId) return;
         if (e.cancelable) e.preventDefault();
 
-        const pos = getPointerPos(e);
-        ctx.beginPath();
-        ctx.moveTo(globalSmartboardState.lastX, globalSmartboardState.lastY);
-        ctx.lineTo(pos.x, pos.y);
+        const cmd = globalSmartboardState.currentCmd;
+        if (!cmd) return;
 
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
+        const coalesced = typeof e.getCoalescedEvents === 'function' ? e.getCoalescedEvents() : null;
+        const events = (coalesced && coalesced.length > 0) ? coalesced : [e];
 
-        if (globalSmartboardState.isEraser) {
-            ctx.strokeStyle = globalSmartboardState.mode === 'dark' ? '#1e293b' : '#ffffff';
-            ctx.lineWidth = Math.max(globalSmartboardState.size * 4, 20);
-        } else {
-            ctx.strokeStyle = globalSmartboardState.color;
-            ctx.lineWidth = globalSmartboardState.size;
+        const isFreehand = (cmd.tool === 'pen' || cmd.tool === 'highlighter' || cmd.tool === 'eraser');
+        for (let i = 0; i < events.length; i++) {
+            const pt = getCanvasPoint(events[i]);
+            const prev = cmd.points[cmd.points.length - 1];
+            const dist = Math.hypot(pt.x - prev.x, pt.y - prev.y);
+            if (isFreehand) {
+                if (dist >= 0.75) {
+                    cmd.points.push(pt);
+                    globalSmartboardState.lastX = pt.x;
+                    globalSmartboardState.lastY = pt.y;
+                }
+            } else {
+                if (cmd.points.length === 1) cmd.points.push(pt);
+                else cmd.points[1] = pt;
+                globalSmartboardState.lastX = pt.x;
+                globalSmartboardState.lastY = pt.y;
+            }
         }
 
-        ctx.stroke();
-        globalSmartboardState.lastX = pos.x;
-        globalSmartboardState.lastY = pos.y;
+        if (cmd.tool === 'eraser') {
+            const len = cmd.points.length;
+            if (len >= 2) {
+                ctx.save();
+                ctx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
+                renderSmartboardCommand(ctx, {
+                    tool: 'eraser',
+                    color: '#000000',
+                    size: cmd.size,
+                    points: cmd.points.slice(Math.max(0, len - 3))
+                });
+                ctx.restore();
+            }
+        } else if (pCtx) {
+            pCtx.save();
+            pCtx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
+            pCtx.clearRect(0, 0, globalSmartboardState.cssWidth, globalSmartboardState.cssHeight);
+            renderSmartboardCommand(pCtx, cmd);
+            pCtx.restore();
+        }
     }
 
-    function endDraw(e) {
+    function finishStroke(e) {
         if (!globalSmartboardState.isDrawing) return;
+        if (e && globalSmartboardState.activePointerId !== null && e.pointerId !== globalSmartboardState.activePointerId) return;
         if (e && e.cancelable) e.preventDefault();
+
+        try {
+            if (globalSmartboardState.activePointerId !== null) {
+                canvas.releasePointerCapture?.(globalSmartboardState.activePointerId);
+            }
+        } catch (_) {}
+
         globalSmartboardState.isDrawing = false;
+        globalSmartboardState.activePointerId = null;
+
+        const cmd = globalSmartboardState.currentCmd;
+        globalSmartboardState.currentCmd = null;
+
+        if (pCtx) {
+            pCtx.save();
+            pCtx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
+            pCtx.clearRect(0, 0, globalSmartboardState.cssWidth, globalSmartboardState.cssHeight);
+            pCtx.restore();
+        }
+
+        if (cmd && cmd.points.length > 0) {
+            ctx.save();
+            ctx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
+            renderSmartboardCommand(ctx, cmd);
+            ctx.restore();
+            globalSmartboardState.history.push(cmd);
+            globalSmartboardState.redoStack = [];
+            updateSmartboardUndoRedoUI();
+        }
     }
 
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('mousemove', moveDraw);
-    canvas.addEventListener('mouseup', endDraw);
-    canvas.addEventListener('mouseleave', endDraw);
-
-    canvas.addEventListener('touchstart', startDraw, { passive: false });
-    canvas.addEventListener('touchmove', moveDraw, { passive: false });
-    canvas.addEventListener('touchend', endDraw, { passive: false });
-    canvas.addEventListener('touchcancel', endDraw, { passive: false });
+    canvas.addEventListener('pointerdown', onPointerDown, { passive: false });
+    canvas.addEventListener('pointermove', onPointerMove, { passive: false });
+    canvas.addEventListener('pointerup', finishStroke, { passive: false });
+    canvas.addEventListener('pointercancel', finishStroke, { passive: false });
 
     window.addEventListener('resize', () => {
         if (globalSmartboardState.isOpen) {
@@ -8038,12 +8255,13 @@ export function initGlobalSmartboard() {
         }
     });
 
-    if (container) container.classList.add('mode-white');
-    updateSmartboardPalette();
+    setSmartboardMode('white');
+    setSmartboardTool('pen');
     resizeGlobalSmartboardCanvas();
 }
 
 if (typeof window !== 'undefined') {
+    window.globalSmartboardState = globalSmartboardState;
     window.toggleGlobalSmartboard = toggleGlobalSmartboard;
     window.openSmartboard = openSmartboard;
     window.closeSmartboard = closeSmartboard;

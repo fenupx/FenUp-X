@@ -57,8 +57,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@500;600;700&family=Kalam:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8.9.32">
-    <link rel="stylesheet" href="exam.css?v=8.9.32">
+    <link rel="stylesheet" href="style.css?v=8.9.33">
+    <link rel="stylesheet" href="exam.css?v=8.9.33">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -5320,36 +5320,50 @@
         <div class="smartboard-dialog">
             <div class="smartboard-header">
                 <div class="smartboard-header-left">
-                    <span class="smartboard-header-title"><i class="fas fa-chalkboard"></i> Akıllı Tahta (ETAP) Çizim Alanı</span>
-                    <div class="smartboard-mode-toggle">
-                        <button type="button" id="sb-mode-white" class="sb-mode-btn active" title="Beyaz Tahta">⬜ Beyaz Tahta</button>
-                        <button type="button" id="sb-mode-dark" class="sb-mode-btn" title="Koyu Tahta">⬛ Koyu Tahta</button>
+                    <span class="smartboard-header-title"><i class="fas fa-chalkboard"></i> Akıllı Tahta (Fatih Kalem)</span>
+                    <div class="smartboard-mode-toggle" role="group" aria-label="Tahta Zemini">
+                        <button type="button" id="sb-mode-white" class="sb-mode-btn active" title="Beyaz Tahta">⬜ Beyaz</button>
+                        <button type="button" id="sb-mode-dark" class="sb-mode-btn" title="Siyah Tahta (Tebeşir)">⬛ Siyah</button>
+                        <button type="button" id="sb-mode-grid" class="sb-mode-btn" title="Kareli Tahta">▦ Kareli</button>
                     </div>
                 </div>
                 <div class="smartboard-header-actions">
+                    <button type="button" id="sb-btn-undo" class="sb-action-btn" title="Geri Al" disabled><i class="fas fa-undo"></i> <span>Geri Al</span></button>
+                    <button type="button" id="sb-btn-redo" class="sb-action-btn" title="İleri Al" disabled><i class="fas fa-redo"></i> <span>İleri Al</span></button>
                     <button type="button" id="sb-btn-fullscreen" class="sb-action-btn" title="Tam Ekran Aç/Kapat"><i class="fas fa-expand"></i> <span>Tam Ekran</span></button>
                     <button type="button" id="sb-btn-close" class="sb-action-btn sb-close-btn" title="Kapat"><i class="fas fa-times"></i></button>
                 </div>
             </div>
 
             <div class="smartboard-toolbar">
+                <div class="sb-tool-group sb-tools-palette" id="sb-tools-palette" role="group" aria-label="Çizim Araçları">
+                    <button type="button" id="sb-tool-pen" class="sb-tool-btn active" data-tool="pen" title="Serbest El Kalem"><i class="fas fa-pen"></i> Kalem</button>
+                    <button type="button" id="sb-tool-highlighter" class="sb-tool-btn" data-tool="highlighter" title="Fosforlu Kalem"><i class="fas fa-highlighter"></i> Fosforlu</button>
+                    <button type="button" id="sb-tool-line" class="sb-tool-btn" data-tool="line" title="Düz Çizgi"><i class="fas fa-slash"></i> Çizgi</button>
+                    <button type="button" id="sb-tool-dashed" class="sb-tool-btn" data-tool="dashed" title="Kesikli Çizgi"><i class="fas fa-ellipsis-h"></i> Kesikli</button>
+                    <button type="button" id="sb-tool-arrow" class="sb-tool-btn" data-tool="arrow" title="Ok Çizimi"><i class="fas fa-long-arrow-alt-right"></i> Ok</button>
+                    <button type="button" id="sb-tool-rect" class="sb-tool-btn" data-tool="rect" title="Dikdörtgen"><i class="far fa-square"></i> Kutu</button>
+                    <button type="button" id="sb-tool-circle" class="sb-tool-btn" data-tool="circle" title="Daire / Elips"><i class="far fa-circle"></i> Daire</button>
+                    <button type="button" id="sb-btn-eraser" class="sb-tool-btn sb-eraser-btn" data-tool="eraser" title="Silgi"><i class="fas fa-eraser"></i> Silgi</button>
+                </div>
                 <div class="sb-tool-group sb-color-palette" id="sb-color-palette">
                     <!-- Renkler JavaScript tarafından tahta moduna göre senkronize edilir -->
                 </div>
-                <div class="sb-tool-group">
-                    <span class="sb-group-label"><i class="fas fa-pen"></i> Kalınlık:</span>
+                <div class="sb-tool-group sb-size-palette">
+                    <span class="sb-group-label"><i class="fas fa-sliders-h"></i> Uç:</span>
                     <button type="button" class="sb-size-btn" data-size="2" title="İnce (2px)">İnce</button>
                     <button type="button" class="sb-size-btn active" data-size="4" title="Orta (4px)">Orta</button>
-                    <button type="button" class="sb-size-btn" data-size="10" title="Kalın Fosforlu (10px)">Fosforlu</button>
+                    <button type="button" class="sb-size-btn" data-size="8" title="Kalın (8px)">Kalın</button>
+                    <button type="button" class="sb-size-btn" data-size="14" title="Çok Kalın (14px)">Vurgu</button>
                 </div>
                 <div class="sb-tool-group sb-actions-group">
-                    <button type="button" id="sb-btn-eraser" class="sb-tool-btn" title="Silgi Modu"><i class="fas fa-eraser"></i> Silgi</button>
-                    <button type="button" id="sb-btn-clear" class="sb-tool-btn" title="Tahtayı Temizle"><i class="fas fa-trash-alt"></i> Temizle</button>
+                    <button type="button" id="sb-btn-clear" class="sb-tool-btn sb-clear-btn" title="Tahtayı Temizle"><i class="fas fa-trash-alt"></i> Temizle</button>
                 </div>
             </div>
 
-            <div class="smartboard-canvas-container" id="sb-canvas-container">
+            <div class="smartboard-canvas-container mode-white" id="sb-canvas-container">
                 <canvas id="smartboard-canvas" height="450"></canvas>
+                <canvas id="smartboard-preview-canvas" height="450"></canvas>
             </div>
         </div>
     </div>
@@ -5357,10 +5371,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
     <script>
-        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.32';
+        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.33';
     </script>
-    <script type="module" src="exam-engine.js?v=8.9.32"></script>
-    <script type="module" src="lab-engine.js?v=8.9.32"></script>
-    <script type="module" src="script.js?v=8.9.32"></script>
+    <script type="module" src="exam-engine.js?v=8.9.33"></script>
+    <script type="module" src="lab-engine.js?v=8.9.33"></script>
+    <script type="module" src="script.js?v=8.9.33"></script>
 </body>
 </html>

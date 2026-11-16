@@ -4892,8 +4892,9 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
 }
 
 .smartboard-dialog {
-    width: 92%;
-    max-width: 960px;
+    width: 94%;
+    max-width: 1120px;
+    height: 88vh;
     max-height: 92vh;
     background: #0f172a;
     border: 1px solid rgba(0, 210, 255, 0.35);
@@ -4902,7 +4903,7 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transition: all 0.25s ease;
+    transition: all 0.2s ease;
 }
 
 /* Tam Ekran (Fullscreen) Durumu */
@@ -4917,7 +4918,8 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
 }
 
 .smartboard-dialog.is-fullscreen .smartboard-canvas-container {
-    height: calc(100vh - 120px) !important;
+    flex: 1 1 auto !important;
+    height: auto !important;
     max-height: none !important;
 }
 
@@ -4925,22 +4927,22 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 18px;
+    padding: 10px 14px;
     background: rgba(30, 41, 59, 0.95);
     border-bottom: 1px solid rgba(148, 163, 184, 0.2);
-    gap: 12px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
 .smartboard-header-left {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
 .smartboard-header-title {
-    font-size: 1rem;
+    font-size: 0.96rem;
     font-weight: 800;
     color: #38bdf8;
     display: inline-flex;
@@ -4955,11 +4957,12 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     border-radius: 8px;
     padding: 2px;
     gap: 2px;
+    flex-wrap: wrap;
 }
 
 .sb-mode-btn {
-    padding: 5px 12px;
-    font-size: 0.8rem;
+    padding: 5px 10px;
+    font-size: 0.78rem;
     font-weight: 700;
     color: #94a3b8;
     background: transparent;
@@ -4983,12 +4986,13 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
 .smartboard-header-actions {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    flex-wrap: wrap;
 }
 
 .sb-action-btn {
-    padding: 6px 12px;
-    font-size: 0.82rem;
+    padding: 6px 10px;
+    font-size: 0.8rem;
     font-weight: 600;
     color: #e2e8f0;
     background: rgba(51, 65, 85, 0.8);
@@ -5002,37 +5006,43 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     touch-action: manipulation;
 }
 
-.sb-action-btn:hover {
+.sb-action-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.sb-action-btn:not(:disabled):hover {
     background: rgba(71, 85, 105, 0.9);
     border-color: #38bdf8;
     color: #fff;
 }
 
 .sb-close-btn:hover {
-    background: rgba(239, 68, 68, 0.25);
-    border-color: #ef4444;
-    color: #ef4444;
+    background: rgba(239, 68, 68, 0.25) !important;
+    border-color: #ef4444 !important;
+    color: #ef4444 !important;
 }
 
 .smartboard-toolbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 16px;
+    padding: 8px 14px;
     background: rgba(15, 23, 42, 0.95);
     border-bottom: 1px solid rgba(148, 163, 184, 0.15);
-    gap: 12px;
+    gap: 8px 12px;
     flex-wrap: wrap;
 }
 
 .sb-tool-group {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    flex-wrap: wrap;
 }
 
 .sb-group-label {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     color: #94a3b8;
     font-weight: 600;
 }
@@ -5041,26 +5051,27 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    border: 2px solid transparent;
+    border: 2px solid rgba(148, 163, 184, 0.45);
     cursor: pointer;
     transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
     touch-action: manipulation;
     outline: none;
+    flex-shrink: 0;
 }
 
 .sb-color-btn:hover {
-    transform: scale(1.18);
+    transform: scale(1.16);
 }
 
 .sb-color-btn.active {
     transform: scale(1.22);
-    border-color: #ffffff;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    border-color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.85);
 }
 
 .sb-size-btn {
-    padding: 4px 10px;
-    font-size: 0.8rem;
+    padding: 4px 9px;
+    font-size: 0.78rem;
     font-weight: 600;
     color: #94a3b8;
     background: rgba(30, 41, 59, 0.8);
@@ -5079,8 +5090,8 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
 }
 
 .sb-tool-btn {
-    padding: 5px 12px;
-    font-size: 0.82rem;
+    padding: 5px 10px;
+    font-size: 0.79rem;
     font-weight: 600;
     color: #f1f5f9;
     background: rgba(51, 65, 85, 0.8);
@@ -5089,9 +5100,10 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px;
     transition: all 0.15s;
     touch-action: manipulation;
+    white-space: nowrap;
 }
 
 .sb-tool-btn:hover {
@@ -5100,20 +5112,30 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
 }
 
 .sb-tool-btn.active {
-    background: rgba(239, 68, 68, 0.2);
+    background: rgba(56, 189, 248, 0.22);
+    border-color: #38bdf8;
+    color: #38bdf8;
+    box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
+}
+
+.sb-tool-btn.sb-eraser-btn.active {
+    background: rgba(239, 68, 68, 0.22);
     border-color: #ef4444;
     color: #fca5a5;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.25);
 }
 
 .smartboard-canvas-container {
     position: relative;
     width: 100%;
-    height: 450px;
-    flex: 1;
+    min-height: 260px;
+    flex: 1 1 auto;
     overflow: hidden;
     cursor: crosshair;
     touch-action: none;
-    transition: background-color 0.25s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: background-color 0.2s ease;
 }
 
 .smartboard-canvas-container.mode-white {
@@ -5121,14 +5143,54 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
 }
 
 .smartboard-canvas-container.mode-dark {
-    background: #1e293b;
+    background: #141e30;
 }
 
-#smartboard-canvas {
+.smartboard-canvas-container.mode-grid {
+    background-color: #ffffff;
+    background-image:
+        linear-gradient(to right, rgba(59, 130, 246, 0.14) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(59, 130, 246, 0.14) 1px, transparent 1px);
+    background-size: 28px 28px;
+}
+
+#smartboard-canvas,
+#smartboard-preview-canvas {
+    position: absolute;
+    inset: 0;
     display: block;
     width: 100%;
     height: 100%;
     touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#smartboard-preview-canvas {
+    pointer-events: none;
+    z-index: 2;
+}
+
+@media (max-width: 600px) {
+    .smartboard-dialog {
+        width: 98%;
+        height: 92vh;
+        max-height: 94vh;
+        border-radius: 12px;
+    }
+    .smartboard-header {
+        padding: 8px 10px;
+    }
+    .smartboard-toolbar {
+        padding: 6px 10px;
+        gap: 6px;
+    }
+    .sb-tool-btn,
+    .sb-size-btn,
+    .sb-action-btn {
+        padding: 4px 8px;
+        font-size: 0.74rem;
+    }
 }
 
 /* 3. Yönetici (Admin) Sade Profil Kartı */
