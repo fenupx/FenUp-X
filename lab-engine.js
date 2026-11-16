@@ -3819,10 +3819,15 @@ function drawMotionTrack(ctx) {
         ctx.lineTo(cx, 436);
         ctx.stroke();
 
-        // Çentik altı LED nokta
+        // Çentik altı LED nokta ve metre etiketi
         ctx.fillStyle = (i === 0 || i === 4) ? "#facc15" : "#38bdf8";
         ctx.beginPath();
         ctx.arc(cx, 442, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "rgba(226, 232, 240, 0.8)";
+        ctx.font = "bold 10px Nunito, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(`${Math.round((i / 4) * m.trackLength)} m`, cx, 456);
         ctx.fill();
     }
 }
@@ -3996,6 +4001,10 @@ function drawMotionLiveGraph(ctx) {
     const barMaxW = gw - 48;
 
     // Üst Bar: Alınan Yol (Skaler - Mavi/Camgöbeği)
+    ctx.fillStyle = "#bae6fd";
+    ctx.font = "bold 11px Nunito, sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText(`Alınan Yol: ${m.distanceTraveled.toFixed(0)} m`, barX, gy + 24);
     const distRatio = Math.min(1, m.distanceTraveled / maxScale);
     ctx.fillStyle = "rgba(56, 189, 248, 0.16)";
     ctx.beginPath();
@@ -4010,6 +4019,8 @@ function drawMotionLiveGraph(ctx) {
     }
 
     // Alt Bar: Yer Değiştirme (Vektörel - Kehribar)
+    ctx.fillStyle = "#fde68a";
+    ctx.fillText(`Yer Değiştirme: ${displacement.toFixed(0)} m`, barX, gy + 72);
     const dispRatio = Math.min(1, displacement / maxScale);
     ctx.fillStyle = "rgba(251, 191, 36, 0.16)";
     ctx.beginPath();
@@ -7127,6 +7138,16 @@ function drawGerminationSimulation() {
             ctx.stroke();
         }
 
+        // Pamuk Lifi Dokusu (Kıvrımlı lif çizgileri)
+        ctx.strokeStyle = dish.water ? "rgba(224, 242, 254, 0.35)" : "rgba(148, 163, 184, 0.35)";
+        ctx.lineWidth = 1;
+        for (let f = -2; f <= 2; f++) {
+            const fx = cx + f * (rx * 0.25);
+            ctx.beginPath();
+            ctx.arc(fx, cottonY, 8 * sf, 0.2, Math.PI * 1.1);
+            ctx.stroke();
+        }
+
         // 3 Adet Fasulye Tohumu ve Filizleri
         const seeds = [
             { ox: -26, oy: -1, rot: -0.25 },
@@ -8624,6 +8645,27 @@ function drawConductivitySimulation() {
     ctx.quadraticCurveTo(px - 75, 250, clip1X - 25, clip1Y);
     ctx.stroke();
 
+    // Kırmızı ve Mavi Krokodil (Timsah Ağzı) Kıskaçlar
+    [
+        { x: clip1X - 25, y: clip1Y, dir: 1, col: "#2563eb" },
+        { x: clip2X + 25, y: clip2Y, dir: -1, col: "#10b981" }
+    ].forEach(c => {
+        ctx.save();
+        ctx.fillStyle = c.col;
+        ctx.beginPath();
+        ctx.roundRect(c.dir > 0 ? c.x - 16 : c.x, c.y - 6, 16, 12, 3);
+        ctx.fill();
+        ctx.fillStyle = "#cbd5e1";
+        ctx.beginPath();
+        ctx.moveTo(c.x, c.y - 4);
+        ctx.lineTo(c.x + c.dir * 14, c.y - 1);
+        ctx.lineTo(c.x + c.dir * 14, c.y + 1);
+        ctx.lineTo(c.x, c.y + 4);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    });
+
     // Elektron Akışı Parçacıkları (Yalnızca devre kapalı ve iletkense, kablo yollarını tam izler)
     if (cd.switchClosed && cd.isConductive) {
         cd.electronParticles.forEach(p => {
@@ -9320,7 +9362,7 @@ function drawResistanceSimulation() {
             ctx.stroke();
         }
 
-        // Sol Sabit Klemens (Pirinç klemens: x = tx - tableW/2 + 30 = 220)
+        // Sol Sabit Klemens + Bağlantı Vidası
         const k1X = tx - tableW / 2 + 30;
         const k1Y = ty;
         ctx.fillStyle = "#fbbf24";
@@ -9330,8 +9372,13 @@ function drawResistanceSimulation() {
         ctx.strokeStyle = "#92400e";
         ctx.lineWidth = 2;
         ctx.stroke();
+        ctx.strokeStyle = "#451a03";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(k1X - 4, k1Y - 4); ctx.lineTo(k1X + 4, k1Y + 4);
+        ctx.stroke();
 
-        // Sağ Hareketli Klemens (Boy ayarına göre: 10, 20, 30, 40 cm)
+        // Sağ Hareketli Klemens + Bağlantı Vidası (Boy ayarına göre: 10, 20, 30, 40 cm)
         const k2X = k1X + (res.wireLength / 40) * (tableW - 60);
         const k2Y = ty;
         ctx.fillStyle = "#fbbf24";
@@ -9340,6 +9387,11 @@ function drawResistanceSimulation() {
         ctx.fill();
         ctx.strokeStyle = "#92400e";
         ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.strokeStyle = "#451a03";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(k2X - 4, k2Y - 4); ctx.lineTo(k2X + 4, k2Y + 4);
         ctx.stroke();
 
         // Devre Kablo Bağlantıları
@@ -16725,14 +16777,18 @@ function drawElectroCloth(ctx, cloth, pair) {
     ctx.fill();
     ctx.stroke();
 
-    // Kumaş Dikiş / Kat İzi Çizgileri
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
+    // Kumaş Dikiş / Dokuma Çizgileri
+    ctx.strokeStyle = isEbonite ? 'rgba(120, 53, 15, 0.2)' : 'rgba(255, 255, 255, 0.25)';
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.moveTo(cloth.x + 10, cloth.y + cloth.h * 0.4);
     ctx.lineTo(cloth.x + cloth.w - 10, cloth.y + cloth.h * 0.4);
     ctx.moveTo(cloth.x + 10, cloth.y + cloth.h * 0.7);
     ctx.lineTo(cloth.x + cloth.w - 10, cloth.y + cloth.h * 0.7);
+    for (let wx = cloth.x + 18; wx < cloth.x + cloth.w - 12; wx += 22) {
+        ctx.moveTo(wx, cloth.y + 8);
+        ctx.lineTo(wx, cloth.y + cloth.h - 8);
+    }
     ctx.stroke();
 
     // Kumaş İçi Yükler
@@ -17838,8 +17894,16 @@ function drawElectroscopeGroundWire(ctx, es) {
 
     ctx.beginPath();
     ctx.moveTo(groundX - 25, groundY);
-    ctx.bezierCurveTo(groundX - 80, groundY + 50, 520, groundY + 40, isGrounded ? 444 : 500, isGrounded ? 110 : groundY + 15);
+    const tipX = isGrounded ? 444 : 500;
+    const tipY = isGrounded ? 110 : groundY + 15;
+    ctx.bezierCurveTo(groundX - 80, groundY + 50, 520, groundY + 40, tipX, tipY);
     ctx.stroke();
+
+    // Topraklama Temas Kıskacı / Ucu
+    ctx.fillStyle = isGrounded ? '#34d399' : '#94a3b8';
+    ctx.beginPath();
+    ctx.arc(tipX, tipY, isGrounded ? 6 : 4, 0, Math.PI * 2);
+    ctx.fill();
     ctx.restore();
 
     ctx.restore();
@@ -18513,9 +18577,9 @@ function drawPyramidTierTrapezoid(ctx, tier, isSelected, fp, tierIdx = 0) {
     ctx.lineTo(xTR - 4, yT + 1);
     ctx.stroke();
 
-    // Basamak adı etiketi (Üretici, 1. Tüketici, 2. Tüketici, 3. Tüketici)
+    // Basamak adı etiketi ve organizma ikonu (Üretici, 1. Tüketici, 2. Tüketici, 3. Tüketici)
     const midY = (yT + yB) / 2;
-    const tierLabels = ["Üreticiler", "1. Tüketiciler", "2. Tüketiciler", "3. Tüketiciler"];
+    const tierLabels = ["🌱 Üreticiler", "🦗 1. Tüketiciler", "🐸 2. Tüketiciler", "🦅 3. Tüketiciler"];
     const tierLabel = tierLabels[tierIdx] || tierLabels[0];
     ctx.fillStyle = "#f8fafc";
     ctx.font = "bold 13px Nunito, sans-serif";
@@ -18564,7 +18628,7 @@ function drawPyramidDecomposers(ctx, isSelected) {
     ctx.fillStyle = "#f3e8ff";
     ctx.font = "bold 13px Nunito, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("Ayrıştırıcılar", bx + bw / 2, by + bh / 2 + 24);
+    ctx.fillText("🍄 Ayrıştırıcılar", bx + bw / 2, by + bh / 2 + 24);
 
     // 4 basamaktan ayrıştırıcılara bağlanan mor bağlantı hatları
     ctx.strokeStyle = 'rgba(139, 92, 246, 0.45)';
@@ -20087,8 +20151,12 @@ function drawDynamometerSimulation() {
     ctx.lineWidth = 1.5;
     ctx.strokeRect(dynX - dynW * 0.5, dynY + 10, dynW, dynH - 20);
 
-    // 10 Eşit Bölmeli Dinamometre Ölçek Çizgileri (0 ctx.fillText)
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+    // 10 Eşit Bölmeli Dinamometre Ölçek Çizgileri ve Newton Sayıları (0–10 N)
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
+    ctx.fillStyle = "rgba(226, 232, 240, 0.85)";
+    ctx.font = "bold 9px Nunito, sans-serif";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
     const scaleTopY = dynY + 18;
     const scaleHeight = dynH - 36;
     for (let i = 0; i <= 10; i++) {
@@ -20099,6 +20167,9 @@ function drawDynamometerSimulation() {
         ctx.moveTo(dynX - dynW * 0.5 + 3, ty);
         ctx.lineTo(dynX - dynW * 0.5 + (isMajor ? 13 : 8), ty);
         ctx.stroke();
+        if (isMajor) {
+            ctx.fillText(`${i}`, dynX - dynW * 0.5 + 15, ty);
+        }
     }
 
     // 3. Helezonik Sarmal Yay ve Uzama Hesaplaması
@@ -20568,13 +20639,15 @@ function drawFrictionSimulation() {
         ctx.fillStyle = glassGrad;
         ctx.fillRect(trackX, 380, trackW, trackH);
 
-        // Cam Yansıma Işıkları
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.75)";
+        // Cam Yansıma Işıkları + Buz Parıltısı
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.82)";
         ctx.lineWidth = 2;
-        for (let gx = trackX + 30; gx < trackX + trackW - 40; gx += 70) {
+        for (let gx = trackX + 25; gx < trackX + trackW - 40; gx += 65) {
             ctx.beginPath();
             ctx.moveTo(gx, 384);
-            ctx.lineTo(gx + 35, 384);
+            ctx.lineTo(gx + 32, 384);
+            ctx.moveTo(gx + 8, 396);
+            ctx.lineTo(gx + 20, 388);
             ctx.stroke();
         }
         // Cam Pah Kenarı
@@ -20605,9 +20678,9 @@ function drawFrictionSimulation() {
         ctx.fillRect(trackX, 380, trackW, trackH);
 
         ctx.fillStyle = "#fde68a";
-        for (let i = 0; i < 110; i++) {
-            const px = trackX + ((i * 47) % trackW);
-            const py = 383 + ((i * 23) % (trackH - 6));
+        for (let i = 0; i < 180; i++) {
+            const px = trackX + ((i * 41) % trackW);
+            const py = 383 + ((i * 19) % (trackH - 6));
             ctx.fillRect(px, py, 2, 2);
         }
         ctx.strokeStyle = "#b45309";
@@ -21031,11 +21104,16 @@ function drawLightRectSimulation() {
             ctx.fillRect(cx - cardW * 0.5, hy + 7, cardW, 73);
             ctx.strokeRect(cx - cardW * 0.5, hy + 7, cardW, 73);
 
-            // Delik Kenar Çerçevesi
-            ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
-            ctx.lineWidth = 1.5;
+            // 3B Karton Yan Kenar Derinliği
+            ctx.fillStyle = "#78350f";
+            ctx.fillRect(cx + cardW * 0.5, hy - 80, 4, 73);
+            ctx.fillRect(cx + cardW * 0.5, hy + 7, 4, 73);
+
+            // Delik Kenar Çerçevesi + Işık Halesi
+            ctx.strokeStyle = "rgba(250, 204, 21, 0.55)";
+            ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.arc(cx, hy, 7, 0, Math.PI * 2);
+            ctx.arc(cx, hy, 8, 0, Math.PI * 2);
             ctx.stroke();
         }
 
@@ -21750,14 +21828,20 @@ function drawCompressibilitySimulation() {
     ctx.fillStyle = "#ef4444";
     ctx.fillRect(90, 225, 15, 30);  // kırmızı sızdırmaz tıkaç
 
-    // Dereceli Hacim Çizgileri (0 ctx.fillText)
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+    // Dereceli Hacim Çizgileri ve mL Rakamları
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
+    ctx.fillStyle = "rgba(226, 232, 240, 0.8)";
+    ctx.font = "bold 9px Nunito, sans-serif";
+    ctx.textAlign = "center";
     for (let t = 1; t <= 9; t++) {
         const tx = barrelX + t * 28;
         const tH = (t % 2 === 0) ? 16 : 9;
         ctx.lineWidth = (t % 2 === 0) ? 2 : 1;
         ctx.beginPath();
         ctx.moveTo(tx, barrelY);
+        if (t % 2 === 0) {
+            ctx.fillText(`${t * 10}`, tx, barrelY + 26);
+        }
         ctx.lineTo(tx, barrelY + tH);
         ctx.stroke();
     }
@@ -22723,18 +22807,29 @@ function drawCircuitSimulation() {
 
     const cc = labState.circuit;
 
-    // Dikdörtgen Devre Döngüsü:
-    // Sol Üst: (160, 120) -> Sağ Üst: (640, 120)
-    // Sağ Alt: (640, 380) -> Sol Alt: (160, 380)
+    // Yuvarlatılmış Yalıtkan/Bakır Devre Kablosu
     ctx.strokeStyle = "#f59e0b"; // Bakır İletken Tel
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 4.5;
     ctx.beginPath();
-    ctx.moveTo(160, 120);
-    ctx.lineTo(640, 120);
-    ctx.lineTo(640, 380);
-    ctx.lineTo(160, 380);
-    ctx.closePath();
+    ctx.roundRect(160, 120, 480, 260, 24);
     ctx.stroke();
+
+    // Anahtar kapalıyken akan elektrik akımı / elektron noktaları
+    if (cc.switchClosed && cc.batteryCount > 0) {
+        const flowOffset = (animTime * 90) % 40;
+        ctx.fillStyle = "#38bdf8";
+        for (let p = 0; p < 1480; p += 40) {
+            const dist = (p + flowOffset) % 1480;
+            let ex = 160, ey = 120;
+            if (dist < 480) { ex = 160 + dist; ey = 120; }
+            else if (dist < 740) { ex = 640; ey = 120 + (dist - 480); }
+            else if (dist < 1220) { ex = 640 - (dist - 740); ey = 380; }
+            else { ex = 160; ey = 380 - (dist - 1220); }
+            ctx.beginPath();
+            ctx.arc(ex, ey, 3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
 
     // 1. ÜST RAY: PİLLER (x: 320 -> 480)
     const batW = 55;
@@ -24986,9 +25081,17 @@ function drawAqueductSimulation(ctx, aq, t) {
     const pierPositions = [120, 300, 480, 660];
 
     pierPositions.forEach(px => {
-        // Alt ayak gövdesi
+        // Alt ayak gövdesi + Taş Derz Dokusu
         ctx.fillStyle = stoneGrad;
         ctx.fillRect(px, 240, pierWidth, 170);
+        ctx.strokeStyle = 'rgba(41, 37, 36, 0.45)';
+        ctx.lineWidth = 1;
+        for (let sy = 256; sy < 400; sy += 18) {
+            ctx.beginPath();
+            ctx.moveTo(px, sy);
+            ctx.lineTo(px + pierWidth, sy);
+            ctx.stroke();
+        }
 
         // Sinan'ın Piramidal Sel Mahmuzları (Vadi akıntısını yaran üçgen mahmuzlar)
         ctx.fillStyle = '#44403c';
@@ -26237,6 +26340,32 @@ function drawLightTransmissionSimulation() {
     ctx.lineWidth = 3 * scale;
     ctx.beginPath(); ctx.roundRect(355 * scale, 125 * scale, 36 * scale, 250 * scale, 6 * scale);
     ctx.fill(); ctx.stroke();
+
+    // Malzeme Yüzey Dokusu (Cam yansıma / Buzlu nokta / Tahta damarı)
+    if (lt.material === "transparent") {
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
+        ctx.lineWidth = 1.6 * scale;
+        ctx.beginPath();
+        ctx.moveTo(362 * scale, 155 * scale); ctx.lineTo(382 * scale, 138 * scale);
+        ctx.moveTo(362 * scale, 235 * scale); ctx.lineTo(384 * scale, 215 * scale);
+        ctx.stroke();
+    } else if (lt.material === "translucent") {
+        ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+        for (let ty = 140; ty < 365; ty += 18) {
+            ctx.beginPath();
+            ctx.arc((365 + (ty % 14)) * scale, ty * scale, 1.5 * scale, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    } else {
+        ctx.strokeStyle = "rgba(69, 26, 3, 0.55)";
+        ctx.lineWidth = 1.5 * scale;
+        for (let wy = 145; wy < 365; wy += 24) {
+            ctx.beginPath();
+            ctx.moveTo(358 * scale, wy * scale);
+            ctx.lineTo(388 * scale, (wy + 8) * scale);
+            ctx.stroke();
+        }
+    }
     ctx.restore();
 
     // 5. Ekran (Sağ Taraf)
@@ -26409,6 +26538,11 @@ function drawColorWheelSimulation() {
             ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
         }
         ctx.restore();
+        if (cw.speed >= 25) {
+            ctx.strokeStyle = `rgba(248, 250, 252, ${Math.min(0.45, cw.speed / 180).toFixed(2)})`;
+            ctx.lineWidth = 8 * scale;
+            ctx.beginPath(); ctx.arc(cx, cy, R + 6 * scale, 0, Math.PI * 2); ctx.stroke();
+        }
         ctx.strokeStyle = "#cbd5e1"; ctx.lineWidth = 4 * scale;
         ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
 

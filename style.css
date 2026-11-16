@@ -2440,7 +2440,8 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    max-width: 90vw;
+    max-width: min(88vw, 480px);
+    box-sizing: border-box;
     text-align: center;
 }
 .lab-toast.show {
