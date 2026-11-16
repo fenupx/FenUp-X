@@ -6516,4 +6516,24 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     padding: 2px 5px;
 }
 
+/* Sanal Laboratuvar Tam Ekran (Native + iOS/WebKit CSS Yedeği) */
+body.lab-fullscreen-open {
+    overflow: hidden !important;
+}
+
+#lab-view.is-lab-fullscreen:not(.is-hidden) {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 99990 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 12px 16px 24px !important;
+    overflow-y: auto !important;
+    background: #060b18 !important;
+    box-sizing: border-box !important;
+}
+
 

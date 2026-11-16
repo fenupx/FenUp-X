@@ -1328,6 +1328,16 @@ const navigation = (() => {
     }
     function cleanLayers() {
         closeMobileMenu();
+        if (typeof resetMasterPause === 'function') resetMasterPause();
+        try {
+            if (globalSmartboardState) globalSmartboardState.isFullscreen = false;
+        } catch (_) {}
+        const sbModal = document.getElementById('smartboard-modal');
+        if (sbModal) sbModal.classList.add('is-hidden');
+        const sbDialog = document.querySelector('#smartboard-modal .smartboard-dialog');
+        if (sbDialog) sbDialog.classList.remove('is-fullscreen');
+        const sbBtnFs = document.getElementById('sb-btn-fullscreen');
+        if (sbBtnFs) sbBtnFs.innerHTML = '<i class="fas fa-expand"></i> <span>Tam Ekran</span>';
         document.querySelectorAll('.modal-overlay.is-open, .modal-overlay.active').forEach(el => {
             if (el.id === 'modal-onboarding-grade' && !document.body.classList.contains('account-admin')) return;
             el.classList.add('is-hidden'); el.classList.remove('is-open', 'active');
@@ -1428,14 +1438,16 @@ window.FenUpNavigation = navigation;
 function switchScene(from, to) {
     closeMobileMenu();
     if(!from || !to) return;
-    if (from.id === 'scene-quiz' && to.id !== 'scene-quiz') {
+    if ((from.id === 'scene-quiz' || from.id === 'scene-tournament-quiz') && to.id !== from.id) {
         clearQuizTimersAndAudio();
+        resetMasterPause();
     }
     if (from.id === 'scene-yazili' && to.id !== 'scene-yazili' && window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
         window.FenUpExam.closeExamView();
     }
-    if (from.id === 'lab-view' && to.id !== 'lab-view' && window.FenUpLab && typeof window.FenUpLab.cleanupOnLeave === "function") {
-        window.FenUpLab.cleanupOnLeave();
+    if (from.id === 'lab-view' && to.id !== 'lab-view' && window.FenUpLab) {
+        if (typeof window.FenUpLab.cleanupOnLeave === "function") window.FenUpLab.cleanupOnLeave();
+        if (typeof window.FenUpLab.exitLabFullscreen === "function") window.FenUpLab.exitLabFullscreen();
     }
     from.classList.add('is-hidden');
     to.classList.remove('is-hidden');
@@ -1568,12 +1580,19 @@ if(masterPauseBtn) masterPauseBtn.onclick = toggleMasterPause;
 const btnMasterResume = document.getElementById('btn-master-resume');
 if(btnMasterResume) btnMasterResume.onclick = toggleMasterPause;
 
+function resetMasterPause() {
+    isGlobalPaused = false;
+    if (pauseOverlay) pauseOverlay.classList.add('is-hidden');
+    if (masterPauseBtn) masterPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+}
+
 // --- 5. MENÜ YÖNLENDİRMELERİ ---
 let activeMode = "", selectedGrade = null, selectedUnit = null;
 let usedQuestions = []; 
 
 function returnToHome() {
     clearQuizTimersAndAudio();
+    resetMasterPause();
     if (window.FenUpExam && typeof window.FenUpExam.closeExamView === "function") {
         window.FenUpExam.closeExamView();
     }
@@ -2075,6 +2094,13 @@ let sessionMistakes = [];
 function clearQuizTimersAndAudio() {
     clearInterval(quizState.timerInterval);
     quizState.timerInterval = null;
+    try {
+        if (tState && tState.timerInterval) {
+            clearInterval(tState.timerInterval);
+            tState.timerInterval = null;
+        }
+    } catch (_) {}
+    if (typeof resetMasterPause === 'function') resetMasterPause();
     if (Array.isArray(quizState._pendingTimers)) {
         quizState._pendingTimers.forEach(id => clearTimeout(id));
         quizState._pendingTimers = [];

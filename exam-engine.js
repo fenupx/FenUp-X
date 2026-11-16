@@ -5718,7 +5718,7 @@ export async function openExamView(options = {}) {
                     const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
                     if (isFs && (document.fullscreenElement || document.webkitFullscreenElement)?.id === 'exam-view-study') {
                         $('exam-view-study').dataset.fullscreenMode = 'native';
-                    } else if (!isFs || $('exam-view-study')?.dataset.fullscreenMode === 'native') {
+                    } else if (!isFs && $('exam-view-study')?.dataset.fullscreenMode === 'native') {
                         exitStudyFullscreen();
                     }
                 });
