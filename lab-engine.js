@@ -5163,24 +5163,28 @@ function drawConcaveMirrorSimulation(ctx, r) {
     ctx.arc(centerX, axisY, 5, 0, Math.PI * 2);
     ctx.fill();
 
-    // 3. Çukur Ayna Yayı (Concave Arc - İçbükey)
+    // 3. Çukur Ayna Yayı (Concave Arc - Sola Göre İçbükey ")")
+    const mirrorRadius = 230;
+    const mirrorCenterX = mirrorX - 200;
+    const mirrorArcX = (y) => mirrorCenterX + Math.sqrt(Math.max(0, mirrorRadius * mirrorRadius - (y - axisY) * (y - axisY)));
+
     ctx.save();
     ctx.strokeStyle = "#00d2ff";
     ctx.lineWidth = 6;
     ctx.shadowColor = "#00d2ff";
     ctx.shadowBlur = 12;
     ctx.beginPath();
-    // Yay çukur tarafı sola bakar
-    ctx.arc(mirrorX + 200, axisY, 230, Math.PI * 0.82, Math.PI * 1.18);
+    // Yay çukur tarafı sola bakar: ")"
+    ctx.arc(mirrorCenterX, axisY, mirrorRadius, -Math.PI * 0.18, Math.PI * 0.18);
     ctx.stroke();
     ctx.shadowBlur = 0;
 
-    // Aynanın Arka Sırlı Taraması
+    // Aynanın Arka Sırlı Taraması (Sağ Dış Yüzey)
     ctx.strokeStyle = "#475569";
     ctx.lineWidth = 2;
-    for (let a = Math.PI * 0.83; a <= Math.PI * 1.17; a += 0.04) {
-        const ax = mirrorX + 200 + Math.cos(a) * 230;
-        const ay = axisY + Math.sin(a) * 230;
+    for (let a = -Math.PI * 0.17; a <= Math.PI * 0.17; a += 0.04) {
+        const ax = mirrorCenterX + Math.cos(a) * mirrorRadius;
+        const ay = axisY + Math.sin(a) * mirrorRadius;
         ctx.beginPath();
         ctx.moveTo(ax, ay);
         ctx.lineTo(ax + 10, ay + 6);
@@ -5192,10 +5196,10 @@ function drawConcaveMirrorSimulation(ctx, r) {
     const candleH = r.candleHeight;
     drawReflectionCandle(ctx, candleX, axisY, candleH, false, 1.0);
 
-    // 5. Işın Çizimleri (Principal Rays)
+    // 5. Işın Çizimleri (Principal Rays - Yay Yüzeyine Tam Temas)
     const flameTipY = axisY - candleH;
     const hitY1 = flameTipY;
-    const hitX1 = mirrorX - 10;
+    const hitX1 = mirrorArcX(hitY1);
 
     // Işın 1: Asal Eksene Paralel Gelen -> Odaktan Geçerek Yansır
     drawLaserBeam(ctx, candleX, flameTipY, hitX1, hitY1, "#38bdf8", 2.2, 0.85);
@@ -5206,8 +5210,8 @@ function drawConcaveMirrorSimulation(ctx, r) {
     drawLaserBeam(ctx, hitX1, hitY1, endX1, endY1, "#4ade80", 2.2, 0.85);
 
     // Işın 2: Tepe Noktasına Vuran Işın (Aynı Açıyla Yansır)
-    const hitX2 = mirrorX - 6;
     const hitY2 = axisY;
+    const hitX2 = mirrorArcX(hitY2);
     drawLaserBeam(ctx, candleX, flameTipY, hitX2, hitY2, "#38bdf8", 2.0, 0.8);
     const outSlope2 = (axisY - flameTipY) / (hitX2 - candleX);
     const endX2 = 80;
@@ -5277,24 +5281,28 @@ function drawConvexMirrorSimulation(ctx, r) {
     ctx.arc(virtualFocusX, axisY, 5, 0, Math.PI * 2);
     ctx.fill();
 
-    // 3. Tümsek Ayna Yayı (Convex Arc - Dışbükey Sola Bakan Şişkinlik)
+    // 3. Tümsek Ayna Yayı (Convex Arc - Sola Göre Dışbükey "(")
+    const mirrorRadius = 230;
+    const mirrorCenterX = mirrorX + 200;
+    const mirrorArcX = (y) => mirrorCenterX - Math.sqrt(Math.max(0, mirrorRadius * mirrorRadius - (y - axisY) * (y - axisY)));
+
     ctx.save();
     ctx.strokeStyle = "#10b981";
     ctx.lineWidth = 6;
     ctx.shadowColor = "#10b981";
     ctx.shadowBlur = 12;
     ctx.beginPath();
-    // Yay bombeli tarafı sola bakar
-    ctx.arc(mirrorX - 200, axisY, 230, -Math.PI * 0.18, Math.PI * 0.18);
+    // Yay bombeli tarafı sola bakar: "("
+    ctx.arc(mirrorCenterX, axisY, mirrorRadius, Math.PI * 0.82, Math.PI * 1.18);
     ctx.stroke();
     ctx.shadowBlur = 0;
 
-    // Aynanın Arka Taraması (Sağ Taraf)
+    // Aynanın Arka Taraması (Sağ İç/Arka Yüzey)
     ctx.strokeStyle = "#475569";
     ctx.lineWidth = 2;
-    for (let a = -Math.PI * 0.17; a <= Math.PI * 0.17; a += 0.04) {
-        const ax = mirrorX - 200 + Math.cos(a) * 230;
-        const ay = axisY + Math.sin(a) * 230;
+    for (let a = Math.PI * 0.83; a <= Math.PI * 1.17; a += 0.04) {
+        const ax = mirrorCenterX + Math.cos(a) * mirrorRadius;
+        const ay = axisY + Math.sin(a) * mirrorRadius;
         ctx.beginPath();
         ctx.moveTo(ax, ay);
         ctx.lineTo(ax + 10, ay + 6);
@@ -5306,10 +5314,10 @@ function drawConvexMirrorSimulation(ctx, r) {
     const candleH = r.candleHeight;
     drawReflectionCandle(ctx, candleX, axisY, candleH, false, 1.0);
 
-    // 5. Işın Çizimleri
+    // 5. Işın Çizimleri (Yay Yüzeyine Tam Temas)
     const flameTipY = axisY - candleH;
-    const hitX1 = mirrorX + 8;
     const hitY1 = flameTipY;
+    const hitX1 = mirrorArcX(hitY1);
 
     // Asal Eksene Paralel Gelen Işın
     drawLaserBeam(ctx, candleX, flameTipY, hitX1, hitY1, "#38bdf8", 2.2, 0.85);
