@@ -25051,7 +25051,7 @@ function updateCellMicroscopeDOM() {
     const lf = document.getElementById('label-511-focus'); if (lf) lf.textContent = `%${cm.focus}`;
     const mSpec = document.getElementById('mbar-511-specimen'); if (mSpec) mSpec.textContent = isPlant ? "Soğan Zarı (Bitki)" : "Ağız İçi Epitel (Hayvan)";
     const mZoom = document.getElementById('mbar-511-zoom'); if (mZoom) mZoom.textContent = `${cm.zoom}x`;
-    const mFoc = document.getElementById('mbar-511-focus'); if (mFoc) mFoc.textContent = cm.focus >= 80 ? `%${cm.focus} (Net)` : `%${cm.focus} (Bulanık)`;
+    const mFoc = document.getElementById('mbar-511-focus'); if (mFoc) mFoc.textContent = cm.focus >= 80 ? `%${cm.focus} (Net Odaklandı)` : `%${cm.focus} (Odak Dışı — Netlik Vidasını Ayarla)`;
     const mStat = document.getElementById('mbar-511-status');
     if (mStat) mStat.textContent = isPlant ? "🔬 Bitki hücresinde hücre duvarı ve köşeli yapı gözlemlenir" : "🧬 Hayvan hücresi yuvarlağımsıdır, hücre duvarı yoktur";
     const pTitle = document.getElementById('cell-pedagogical-title');
@@ -25193,6 +25193,17 @@ function drawMicroscopeCallouts(c, callouts, scale) {
     c.restore();
 }
 
+let _cellSpecCanvas = null;
+let _cellBlurCanvas = null;
+let _cellBlurCanvas2 = null;
+
+function getOffscreenCanvas(existing, w, h) {
+    const c = existing || document.createElement('canvas');
+    if (c.width !== w) c.width = w;
+    if (c.height !== h) c.height = h;
+    return c;
+}
+
 function drawCellMicroscopeSimulation() {
     if (!ctx || !canvas) return;
     const W = canvas.width, H = canvas.height, scale = W / 800;
@@ -25216,16 +25227,18 @@ function drawCellMicroscopeSimulation() {
     ctx.arc(cx, cy, R + 14 * scale, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(cx, cy, R, 0, Math.PI * 2);
-    ctx.clip();
+    // Preparat katmanını tam boyutlu offscreen tuvale çiz (Safari/WebKit dahil tüm tarayıcılarda gerçek bulanıklık için)
+    const lensSize = Math.max(64, Math.round(R * 2));
+    _cellSpecCanvas = getOffscreenCanvas(_cellSpecCanvas, lensSize, lensSize);
+    const sctx = _cellSpecCanvas.getContext('2d');
+    const lcx = lensSize * 0.5;
+    const lcy = lensSize * 0.5;
 
-    const blurPx = Math.max(0, (100 - cm.focus) * 0.08);
-    ctx.filter = blurPx > 0 ? `blur(${blurPx.toFixed(1)}px)` : "none";
+    sctx.save();
+    sctx.clearRect(0, 0, lensSize, lensSize);
 
     // Gerçekçi mikroskop kondansatör aydınlatması ve yumuşak vinyet
-    const bg = ctx.createRadialGradient(cx - 18 * scale, cy - 18 * scale, 18 * scale, cx, cy, R);
+    const bg = sctx.createRadialGradient(lcx - 18 * scale, lcy - 18 * scale, 18 * scale, lcx, lcy, R);
     if (isPlant) {
         bg.addColorStop(0, "#f0fdf4");
         bg.addColorStop(0.65, "#dcfce7");
@@ -25235,8 +25248,8 @@ function drawCellMicroscopeSimulation() {
         bg.addColorStop(0.65, "#e0f2fe");
         bg.addColorStop(1, "#bae6fd");
     }
-    ctx.fillStyle = bg;
-    ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
+    sctx.fillStyle = bg;
+    sctx.fillRect(0, 0, lensSize, lensSize);
 
     const zFactor = cm.zoom === 10 ? 0.65 : (cm.zoom === 40 ? 1.0 : 1.45);
     let anchors = null;
@@ -25248,34 +25261,34 @@ function drawCellMicroscopeSimulation() {
         for (let row = -3; row <= 3; row++) {
             for (let col = -3; col <= 3; col++) {
                 const isCenterCell = (row === 0 && col === 0);
-                const wallPoly = getPlantCellPolygon(row, col, cx, cy, cw, ch, zFactor, scale);
+                const wallPoly = getPlantCellPolygon(row, col, lcx, lcy, cw, ch, zFactor, scale);
                 const wallThickness = (isCenterCell ? 5.2 : 4.2) * Math.min(1.2, 0.75 + zFactor * 0.25) * scale;
                 const membranePoly = insetPolygon(wallPoly, wallThickness);
 
                 // Hücre duvarı gövdesi ve sitoplazma dolgusu
-                traceSmoothClosedPoly(ctx, wallPoly);
-                ctx.fillStyle = isCenterCell ? "rgba(187, 247, 208, 0.66)" : "rgba(187, 247, 208, 0.48)";
-                ctx.fill();
-                ctx.strokeStyle = isCenterCell ? "#14532d" : "rgba(21, 128, 61, 0.78)";
-                ctx.lineWidth = wallThickness;
-                ctx.stroke();
+                traceSmoothClosedPoly(sctx, wallPoly);
+                sctx.fillStyle = isCenterCell ? "rgba(187, 247, 208, 0.66)" : "rgba(187, 247, 208, 0.48)";
+                sctx.fill();
+                sctx.strokeStyle = isCenterCell ? "#14532d" : "rgba(21, 128, 61, 0.78)";
+                sctx.lineWidth = wallThickness;
+                sctx.stroke();
 
                 // İnce iç Hücre Zarı çizgisi (hücre duvarının hemen içinde)
-                traceSmoothClosedPoly(ctx, membranePoly);
-                ctx.strokeStyle = isCenterCell ? "#10b981" : "rgba(16, 185, 129, 0.55)";
-                ctx.lineWidth = (isCenterCell ? 1.9 : 1.2) * scale;
-                ctx.stroke();
+                traceSmoothClosedPoly(sctx, membranePoly);
+                sctx.strokeStyle = isCenterCell ? "#10b981" : "rgba(16, 185, 129, 0.55)";
+                sctx.lineWidth = (isCenterCell ? 1.9 : 1.2) * scale;
+                sctx.stroke();
 
                 // Sitoplazma granülleri (hafif mikroskobik doku)
                 const cellCenterX = wallPoly.reduce((s, p) => s + p.x, 0) / wallPoly.length;
                 const cellCenterY = wallPoly.reduce((s, p) => s + p.y, 0) / wallPoly.length;
-                ctx.fillStyle = isCenterCell ? "rgba(22, 101, 52, 0.22)" : "rgba(22, 101, 52, 0.14)";
+                sctx.fillStyle = isCenterCell ? "rgba(22, 101, 52, 0.22)" : "rgba(22, 101, 52, 0.14)";
                 for (let g = 0; g < 10; g++) {
                     const gx = cellCenterX + (cellNoise2D(row * 13 + g, col, 71) - 0.5) * cw * 0.56;
                     const gy = cellCenterY + (cellNoise2D(row, col * 17 + g, 83) - 0.5) * ch * 0.48;
-                    ctx.beginPath();
-                    ctx.arc(gx, gy, (1.1 + cellNoise2D(g, row + col, 97) * 1.1) * scale, 0, Math.PI * 2);
-                    ctx.fill();
+                    sctx.beginPath();
+                    sctx.arc(gx, gy, (1.1 + cellNoise2D(g, row + col, 97) * 1.1) * scale, 0, Math.PI * 2);
+                    sctx.fill();
                 }
 
                 // Çekirdek (bitki hücresinde kenara/duvara yakın konumda)
@@ -25283,43 +25296,44 @@ function drawCellMicroscopeSimulation() {
                 const nucX = cellCenterX + nucSide * cw * 0.22;
                 const nucY = cellCenterY + (isCenterCell ? 0.05 : (cellNoise2D(row, col, 9) - 0.5) * 0.18) * ch;
                 const nucR = 13.5 * zFactor * scale;
-                const nucGrad = ctx.createRadialGradient(nucX - 3 * scale, nucY - 3 * scale, 2 * scale, nucX, nucY, nucR);
+                const nucGrad = sctx.createRadialGradient(nucX - 3 * scale, nucY - 3 * scale, 2 * scale, nucX, nucY, nucR);
                 nucGrad.addColorStop(0, "#15803d");
                 nucGrad.addColorStop(0.7, "#14532d");
                 nucGrad.addColorStop(1, "#052e16");
-                ctx.fillStyle = nucGrad;
-                ctx.beginPath();
-                ctx.arc(nucX, nucY, nucR, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.strokeStyle = "rgba(5, 46, 22, 0.85)";
-                ctx.lineWidth = 1.4 * scale;
-                ctx.stroke();
+                sctx.fillStyle = nucGrad;
+                sctx.beginPath();
+                sctx.arc(nucX, nucY, nucR, 0, Math.PI * 2);
+                sctx.fill();
+                sctx.strokeStyle = "rgba(5, 46, 22, 0.85)";
+                sctx.lineWidth = 1.4 * scale;
+                sctx.stroke();
 
                 // Çekirdekçik detayı
-                ctx.fillStyle = "rgba(2, 44, 34, 0.7)";
-                ctx.beginPath();
-                ctx.arc(nucX + 2.5 * zFactor * scale, nucY - 2 * zFactor * scale, 3.8 * zFactor * scale, 0, Math.PI * 2);
-                ctx.fill();
+                sctx.fillStyle = "rgba(2, 44, 34, 0.7)";
+                sctx.beginPath();
+                sctx.arc(nucX + 2.5 * zFactor * scale, nucY - 2 * zFactor * scale, 3.8 * zFactor * scale, 0, Math.PI * 2);
+                sctx.fill();
 
                 if (isCenterCell) {
-                    // Tam anatomik hedef noktaları (merkez hücrenin gerçek koordinatları)
+                    const offsetX = cx - lcx;
+                    const offsetY = cy - lcy;
                     const wallTarget = {
-                        x: (wallPoly[1].x + wallPoly[2].x) * 0.5,
-                        y: (wallPoly[1].y + wallPoly[2].y) * 0.5
+                        x: (wallPoly[1].x + wallPoly[2].x) * 0.5 + offsetX,
+                        y: (wallPoly[1].y + wallPoly[2].y) * 0.5 + offsetY
                     };
                     const memTarget = {
-                        x: (membranePoly[2].x + membranePoly[3].x) * 0.5,
-                        y: (membranePoly[2].y + membranePoly[3].y) * 0.5
+                        x: (membranePoly[2].x + membranePoly[3].x) * 0.5 + offsetX,
+                        y: (membranePoly[2].y + membranePoly[3].y) * 0.5 + offsetY
                     };
                     const cytoTarget = {
-                        x: cellCenterX + cw * 0.15,
-                        y: cellCenterY - ch * 0.04
+                        x: cellCenterX + cw * 0.15 + offsetX,
+                        y: cellCenterY - ch * 0.04 + offsetY
                     };
                     anchors = {
                         wall: wallTarget,
                         membrane: memTarget,
                         cytoplasm: cytoTarget,
-                        nucleus: { x: nucX, y: nucY }
+                        nucleus: { x: nucX + offsetX, y: nucY + offsetY }
                     };
                 }
             }
@@ -25335,8 +25349,8 @@ function drawCellMicroscopeSimulation() {
         ];
 
         cells.forEach(cell => {
-            const hx = cx + cell.dx * zFactor * scale;
-            const hy = cy + cell.dy * zFactor * scale;
+            const hx = lcx + cell.dx * zFactor * scale;
+            const hy = lcy + cell.dy * zFactor * scale;
             const rx = cell.rx * zFactor * scale;
             const ry = cell.ry * zFactor * scale;
             const steps = 28;
@@ -25347,58 +25361,96 @@ function drawCellMicroscopeSimulation() {
             }
 
             // Yarı saydam epitel sitoplazması
-            traceSmoothClosedPoly(ctx, pts);
-            const cellGrad = ctx.createRadialGradient(hx - 10 * scale, hy - 10 * scale, 6 * scale, hx, hy, Math.max(rx, ry));
+            traceSmoothClosedPoly(sctx, pts);
+            const cellGrad = sctx.createRadialGradient(hx - 10 * scale, hy - 10 * scale, 6 * scale, hx, hy, Math.max(rx, ry));
             cellGrad.addColorStop(0, cell.main ? "rgba(147, 197, 253, 0.56)" : "rgba(147, 197, 253, 0.36)");
             cellGrad.addColorStop(1, cell.main ? "rgba(59, 130, 246, 0.42)" : "rgba(59, 130, 246, 0.25)");
-            ctx.fillStyle = cellGrad;
-            ctx.fill();
+            sctx.fillStyle = cellGrad;
+            sctx.fill();
 
             // İnce kıvrımlı Hücre Zarı (Hücre duvarı YOKTUR)
-            ctx.strokeStyle = cell.main ? "#1d4ed8" : "rgba(29, 78, 216, 0.6)";
-            ctx.lineWidth = (cell.main ? 2.4 : 1.6) * scale;
-            ctx.stroke();
+            sctx.strokeStyle = cell.main ? "#1d4ed8" : "rgba(29, 78, 216, 0.6)";
+            sctx.lineWidth = (cell.main ? 2.4 : 1.6) * scale;
+            sctx.stroke();
 
             // Sitoplazma içi hafif katlanmalar ve granüller
-            ctx.fillStyle = cell.main ? "rgba(30, 58, 138, 0.22)" : "rgba(30, 58, 138, 0.14)";
+            sctx.fillStyle = cell.main ? "rgba(30, 58, 138, 0.22)" : "rgba(30, 58, 138, 0.14)";
             for (let g = 0; g < 12; g++) {
                 const ang = cellNoise2D(g, cell.seed, 19) * Math.PI * 2;
                 const rad = (0.28 + cellNoise2D(cell.seed, g, 31) * 0.45);
-                ctx.beginPath();
-                ctx.arc(hx + Math.cos(ang) * rx * rad, hy + Math.sin(ang) * ry * rad, (1.1 + cellNoise2D(g, 3, 5) * 1.1) * scale, 0, Math.PI * 2);
-                ctx.fill();
+                sctx.beginPath();
+                sctx.arc(hx + Math.cos(ang) * rx * rad, hy + Math.sin(ang) * ry * rad, (1.1 + cellNoise2D(g, 3, 5) * 1.1) * scale, 0, Math.PI * 2);
+                sctx.fill();
             }
 
             // Merkezde koyu metilen mavisi Çekirdek
             const nucX = hx + 7 * zFactor * scale;
             const nucY = hy - 4 * zFactor * scale;
             const nucR = (cell.main ? 15.5 : 12.5) * zFactor * scale;
-            const nucGrad = ctx.createRadialGradient(nucX - 3 * scale, nucY - 3 * scale, 2 * scale, nucX, nucY, nucR);
+            const nucGrad = sctx.createRadialGradient(nucX - 3 * scale, nucY - 3 * scale, 2 * scale, nucX, nucY, nucR);
             nucGrad.addColorStop(0, "#3b82f6");
             nucGrad.addColorStop(0.6, "#1e3a8a");
             nucGrad.addColorStop(1, "#172554");
-            ctx.fillStyle = nucGrad;
-            ctx.beginPath();
-            ctx.arc(nucX, nucY, nucR, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.strokeStyle = "#0f172a";
-            ctx.lineWidth = 1.2 * scale;
-            ctx.stroke();
+            sctx.fillStyle = nucGrad;
+            sctx.beginPath();
+            sctx.arc(nucX, nucY, nucR, 0, Math.PI * 2);
+            sctx.fill();
+            sctx.strokeStyle = "#0f172a";
+            sctx.lineWidth = 1.2 * scale;
+            sctx.stroke();
 
-            ctx.fillStyle = "rgba(15, 23, 42, 0.7)";
-            ctx.beginPath();
-            ctx.arc(nucX + 2.5 * zFactor * scale, nucY - 2 * zFactor * scale, 3.8 * zFactor * scale, 0, Math.PI * 2);
-            ctx.fill();
+            sctx.fillStyle = "rgba(15, 23, 42, 0.7)";
+            sctx.beginPath();
+            sctx.arc(nucX + 2.5 * zFactor * scale, nucY - 2 * zFactor * scale, 3.8 * zFactor * scale, 0, Math.PI * 2);
+            sctx.fill();
 
             if (cell.main) {
+                const offsetX = cx - lcx;
+                const offsetY = cy - lcy;
                 const memPt = getAnimalCellContourPoint(hx, hy, rx, ry, -0.52, cell.seed);
                 anchors = {
-                    membrane: memPt,
-                    cytoplasm: { x: hx - rx * 0.46, y: hy + ry * 0.24 },
-                    nucleus: { x: nucX, y: nucY }
+                    membrane: { x: memPt.x + offsetX, y: memPt.y + offsetY },
+                    cytoplasm: { x: hx - rx * 0.46 + offsetX, y: hy + ry * 0.24 + offsetY },
+                    nucleus: { x: nucX + offsetX, y: nucY + offsetY }
                 };
             }
         });
+    }
+    sctx.restore();
+
+    // Dairesel lens içine çiz (Safari/WebKit dahil tüm tarayıcılarda 2 aşamalı örnekleme bulanıklığı)
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI * 2);
+    ctx.clip();
+
+    const blurNorm = Math.max(0, Math.min(1, (100 - cm.focus) / 80));
+    if (blurNorm > 0.02) {
+        const midSize = Math.max(36, Math.round(lensSize / (2 + blurNorm * 3.5)));
+        const tinySize = Math.max(22, Math.round(lensSize / (2.5 + blurNorm * 7.5)));
+        _cellBlurCanvas = getOffscreenCanvas(_cellBlurCanvas, midSize, midSize);
+        _cellBlurCanvas2 = getOffscreenCanvas(_cellBlurCanvas2, tinySize, tinySize);
+        const b1 = _cellBlurCanvas.getContext('2d');
+        const b2 = _cellBlurCanvas2.getContext('2d');
+        b1.imageSmoothingEnabled = true;
+        b1.imageSmoothingQuality = 'high';
+        b1.clearRect(0, 0, midSize, midSize);
+        b1.drawImage(_cellSpecCanvas, 0, 0, midSize, midSize);
+
+        b2.imageSmoothingEnabled = true;
+        b2.imageSmoothingQuality = 'high';
+        b2.clearRect(0, 0, tinySize, tinySize);
+        b2.drawImage(_cellBlurCanvas, 0, 0, tinySize, tinySize);
+
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(_cellBlurCanvas2, cx - R, cy - R, R * 2, R * 2);
+
+        // Odak dışı kontrast yumuşaması (optik pus)
+        ctx.fillStyle = `rgba(241, 245, 249, ${(blurNorm * 0.18).toFixed(2)})`;
+        ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
+    } else {
+        ctx.drawImage(_cellSpecCanvas, cx - R, cy - R, R * 2, R * 2);
     }
 
     // Doğal optik kenar vinyeti
@@ -25407,8 +25459,6 @@ function drawCellMicroscopeSimulation() {
     vignette.addColorStop(1, "rgba(2, 6, 23, 0.34)");
     ctx.fillStyle = vignette;
     ctx.fillRect(cx - R, cy - R, R * 2, R * 2);
-
-    ctx.filter = "none";
     ctx.restore();
 
     // Mikroskop camı dış kenar vurgusu
@@ -25418,7 +25468,29 @@ function drawCellMicroscopeSimulation() {
     ctx.arc(cx, cy, R, 0, Math.PI * 2);
     ctx.stroke();
 
-    if (cm.showLabels && cm.focus >= 60 && anchors) {
+    // Odak Durumu Geri Bildirim Rozeti
+    const isSharp = cm.focus >= 80;
+    const statusLabel = isSharp ? "🔍 Net Odaklandı" : "⚠️ Odak Dışı — Netlik Vidasını Ayarla";
+    ctx.save();
+    ctx.font = `bold ${11.5 * scale}px Nunito, sans-serif`;
+    const badgeW = isSharp ? 150 * scale : 272 * scale;
+    const badgeH = 28 * scale;
+    const badgeX = cx - badgeW * 0.5;
+    const badgeY = cy + R - 38 * scale;
+    ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
+    ctx.strokeStyle = isSharp ? "#4ade80" : "#facc15";
+    ctx.lineWidth = 1.5 * scale;
+    ctx.beginPath();
+    ctx.roundRect(badgeX, badgeY, badgeW, badgeH, 14 * scale);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = isSharp ? "#86efac" : "#fde047";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(statusLabel, cx, badgeY + badgeH * 0.5 + 0.5 * scale);
+    ctx.restore();
+
+    if (cm.showLabels && cm.focus >= 80 && anchors) {
         const boxX = 568 * scale;
         const boxW = 214 * scale;
         const callouts = isPlant
