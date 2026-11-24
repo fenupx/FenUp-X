@@ -138,10 +138,17 @@ export const EXPERIMENTS_DATABASE = [
     },
     {
         id: "6.8", grade: 6, unit: 5, unitName: "Maddenin Doğası ve Isı",
-        title: "Katılarda Genleşme ve Büzülme - Gravzant Halkası",
-        code: "FB.6.5.1", bookRef: "2. Kitap, s. 22–24",
+        title: "Genleşme ve Büzülme (Gravzant Halkası & Gazlar)",
+        code: "FB.6.5.1", bookRef: "2. Kitap, s. 21–24",
         active: true, // 🏆 AKTİF!
-        desc: "Gravzant halkası ve metal küre düzeneğinde küreyi ısıtıp genleşmesini (halkadan geçememe) ve soğuk suya daldırarak büzülmesini (halkadan tekrar geçme) gözlemleyin."
+        desc: "Katılarda Gravzant halkasıyla, gazlarda ise sıcak ve soğuk su kaplarına yerleştirilen balonlu cam şişelerle genleşme ve büzülmeyi gözlemleyin."
+    },
+    {
+        id: "6.12", grade: 6, unit: 5, unitName: "Maddenin Doğası ve Isı",
+        title: "Saf Maddelerin Hâl Değişim Noktaları (Erime, Donma, Kaynama)",
+        code: "FB.6.5.2", bookRef: "2. Kitap, s. 29–33",
+        active: true, // 🏆 AKTİF!
+        desc: "Buz (0°C), stearik asit (69°C su banyosu), etil alkol (78°C) ve saf suyu (100°C) ısıtarak canlı Sıcaklık–Zaman grafiğinde sabit sıcaklık platosunu keşfedin."
     },
     {
         id: "6.5", grade: 6, unit: 5, unitName: "Maddenin Doğası ve Yoğunluk",
@@ -789,8 +796,9 @@ export const labState = {
         measurements: []
     },
 
-    // DENEY 6.5: SIVILARIN YOĞUNLUĞU VE YOĞUNLUK KULESİ (FB.6.5.3 - FB.6.5.4)
+    // DENEY 6.5: SIVILARIN YOĞUNLUĞU, YOĞUNLUK KULESİ VE ÖLÇÜM TEZGÂHI (FB.6.5.3 - FB.6.5.4)
     densityTower: {
+        mode: "tower",           // "tower" (Yoğunluk Kulesi) | "bench" (Kütle-Hacim-Yoğunluk Ölçümü)
         activeLiquids: [],       // eklenen sıralı katmanlar
         pouringLiquid: null,     // dökülen sıvı animasyonu
         pourProgress: 0,         // 0 -> 1
@@ -801,6 +809,11 @@ export const labState = {
             w: 160,
             h: 360
         },
+        // 2. Mod: Kütle-Hacim-Yoğunluk Ölçüm Tezgâhı (MEB 6. Sınıf 2. Kitap s. 39-45)
+        benchSample: "stone",    // "stone" | "iron" | "glass" | "aluminum"
+        benchDropped: false,
+        benchDropProgress: 0.0,  // 0 .. 1
+        benchWaterLevel: 50.0,   // V1 = 50 cm³ -> V2
         measurements: []
     },
 
@@ -833,8 +846,9 @@ export const labState = {
         measurements: []
     },
 
-    // DENEY 6.8: KATILARDA GENLEŞME VE BÜZÜLME - GRAVZANT HALKASI (FB.6.5.1)
+    // DENEY 6.8: KATILARDA VE GAZLARDA GENLEŞME VE BÜZÜLME (FB.6.5.1)
     expansion: {
+        mode: "solid",           // "solid" (Gravzant Halkası) | "gas" (Şişe ve Balon)
         step: "cold_pass",       // "cold_pass", "heating", "hot_try", "quenching"
         sphereTemp: 20.0,        // °C (20 - 250)
         sphereRadius: 26.0,      // px (26.0 soğuk -> 32.5 sıcak)
@@ -847,6 +861,28 @@ export const labState = {
         isPassingThrough: true,  // Soğukken geçer, sıcakken geçemez
         flameParticles: [],
         steamParticles: [],
+        // 2. Mod: Gazlarda Genleşme ve Büzülme (MEB 6. Sınıf 2. Kitap s. 21)
+        gasPlaced: false,
+        gasProgress: 0.0,        // 0 (oda 20°C) .. 1 (80°C şişmiş / 5°C sönmüş)
+        gasHotTemp: 20.0,
+        gasColdTemp: 20.0,
+        gasHotParticles: [],
+        gasColdParticles: [],
+        measurements: []
+    },
+
+    // DENEY 6.12: SAF MADDELERİN HÂL DEĞİŞİM NOKTALARI (FB.6.5.2 — 2. Kitap s. 29-33)
+    phaseChange: {
+        substance: "ice",        // "ice" (0°C) | "stearic" (69°C benmari) | "water" (100°C) | "alcohol" (78°C)
+        isHeating: false,
+        temp: -10.0,             // °C
+        elapsedMin: 0.0,         // dk (0 .. 12 dk)
+        phaseProgress: 0.0,      // 0 .. 1 (plato boyunca ilerleme)
+        inPlateau: false,
+        completed: false,
+        history: [{ t: 0, temp: -10.0 }],
+        bubbles: [],
+        steam: [],
         measurements: []
     },
 
@@ -1548,6 +1584,7 @@ function setupWorkspaceShellDOM() {
     setupCellMicroscopeControlsDOM();
     setupLightTransmissionControlsDOM();
     setupColorWheelControlsDOM();
+    setupPhaseChangeControlsDOM();
 
     // 13. 6. SINIF KONTROLLERİ (DENEY 6.1 - 6.10)
     setupEclipseControlsDOM();
@@ -1815,6 +1852,7 @@ export function openExperimentWorkspace(expId, options = {}) {
     const is69 = (expId === "6.9");
     const is610 = (expId === "6.10");
     const is611 = (expId === "6.11");
+    const is612 = (expId === "6.12");
     const is71 = (expId === "7.1");
     const is72 = (expId === "7.2");
     const is73 = (expId === "7.3");
@@ -1850,9 +1888,11 @@ export function openExperimentWorkspace(expId, options = {}) {
     const mbar511 = document.getElementById('metrics-bar-5-11');
     const mbar512 = document.getElementById('metrics-bar-5-12');
     const mbar611 = document.getElementById('metrics-bar-6-11');
+    const mbar612 = document.getElementById('metrics-bar-6-12');
     if (mbar511) mbar511.classList.toggle('is-hidden', !is511);
     if (mbar512) mbar512.classList.toggle('is-hidden', !is512);
     if (mbar611) mbar611.classList.toggle('is-hidden', !is611);
+    if (mbar612) mbar612.classList.toggle('is-hidden', !is612);
     const mbar61 = document.getElementById('metrics-bar-6-1');
     const mbar62 = document.getElementById('metrics-bar-6-2');
     const mbar63 = document.getElementById('metrics-bar-6-3');
@@ -1918,9 +1958,11 @@ export function openExperimentWorkspace(expId, options = {}) {
     const qc511 = document.getElementById('quick-controls-5-11');
     const qc512 = document.getElementById('quick-controls-5-12');
     const qc611 = document.getElementById('quick-controls-6-11');
+    const qc612 = document.getElementById('quick-controls-6-12');
     if (qc511) qc511.classList.toggle('is-hidden', !is511);
     if (qc512) qc512.classList.toggle('is-hidden', !is512);
     if (qc611) qc611.classList.toggle('is-hidden', !is611);
+    if (qc612) qc612.classList.toggle('is-hidden', !is612);
     const qc61 = document.getElementById('quick-controls-6-1');
     const qc62 = document.getElementById('quick-controls-6-2');
     const qc63 = document.getElementById('quick-controls-6-3');
@@ -1986,9 +2028,11 @@ export function openExperimentWorkspace(expId, options = {}) {
     const vars511 = document.getElementById('vars-container-5-11');
     const vars512 = document.getElementById('vars-container-5-12');
     const vars611 = document.getElementById('vars-container-6-11');
+    const vars612 = document.getElementById('vars-container-6-12');
     if (vars511) vars511.classList.toggle('is-hidden', !is511);
     if (vars512) vars512.classList.toggle('is-hidden', !is512);
     if (vars611) vars611.classList.toggle('is-hidden', !is611);
+    if (vars612) vars612.classList.toggle('is-hidden', !is612);
     const vars61 = document.getElementById('vars-container-6-1');
     const vars62 = document.getElementById('vars-container-6-2');
     const vars63 = document.getElementById('vars-container-6-3');
@@ -2054,9 +2098,11 @@ export function openExperimentWorkspace(expId, options = {}) {
     const guide511 = document.getElementById('guide-container-5-11');
     const guide512 = document.getElementById('guide-container-5-12');
     const guide611 = document.getElementById('guide-container-6-11');
+    const guide612 = document.getElementById('guide-container-6-12');
     if (guide511) guide511.classList.toggle('is-hidden', !is511);
     if (guide512) guide512.classList.toggle('is-hidden', !is512);
     if (guide611) guide611.classList.toggle('is-hidden', !is611);
+    if (guide612) guide612.classList.toggle('is-hidden', !is612);
     const guide61 = document.getElementById('guide-container-6-1');
     const guide62 = document.getElementById('guide-container-6-2');
     const guide63 = document.getElementById('guide-container-6-3');
@@ -2206,6 +2252,8 @@ function resetCurrentExperiment() {
         resetLightTransmissionExperiment();
     } else if (labState.activeExperimentId === "6.11") {
         resetColorWheelExperiment();
+    } else if (labState.activeExperimentId === "6.12") {
+        resetPhaseChangeExperiment();
     } else if (labState.activeExperimentId === "6.1") {
         resetEclipseExperiment();
     } else if (labState.activeExperimentId === "6.2") {
@@ -2403,6 +2451,8 @@ function initExperimentCanvas() {
         initLightTransmissionState();
     } else if (labState.activeExperimentId === "6.11") {
         initColorWheelState();
+    } else if (labState.activeExperimentId === "6.12") {
+        initPhaseChangeState();
     } else if (labState.activeExperimentId === "6.1") {
         initEclipseState();
     } else if (labState.activeExperimentId === "6.2") {
@@ -2501,6 +2551,9 @@ function startRenderLoop() {
             } else if (labState.activeExperimentId === "6.11") {
                 updateColorWheelPhysics();
                 drawColorWheelSimulation();
+            } else if (labState.activeExperimentId === "6.12") {
+                updatePhaseChangePhysics();
+                drawPhaseChangeSimulation();
             } else if (labState.activeExperimentId === "6.1") {
                 updateEclipsePhysics();
                 drawEclipseSimulation();
@@ -5548,13 +5601,29 @@ const DENSITY_OBJECTS_DEF = {
     iron: { id: "iron", name: "Demir Vida", mass: 156, volume: 20, density: 7.80, color: "#94a3b8", label: "Demir Vida (7.80 g/cm³ - Batar)" }
 };
 
+const DENSITY_BENCH_SAMPLES = {
+    stone: { id: "stone", name: "Taş", mass: 52, volume: 20, density: 2.6, color: "#64748b", accent: "#cbd5e1" },
+    iron: { id: "iron", name: "Demir Cıvata", mass: 156, volume: 20, density: 7.8, color: "#475569", accent: "#94a3b8" },
+    glass: { id: "glass", name: "Cam Bilye", mass: 50, volume: 20, density: 2.5, color: "#0ea5e9", accent: "#bae6fd" },
+    aluminum: { id: "aluminum", name: "Alüminyum Küp", mass: 54, volume: 20, density: 2.7, color: "#94a3b8", accent: "#f1f5f9" }
+};
+
+function getDensityBenchSample(key) {
+    return DENSITY_BENCH_SAMPLES[key] || DENSITY_BENCH_SAMPLES.stone;
+}
+
 function initDensityTowerState() {
     const dt = labState.densityTower;
+    dt.mode = dt.mode || "tower";
     dt.activeLiquids = [];
     dt.pouringLiquid = null;
     dt.pourProgress = 0;
     dt.objects = [];
     dt.cylinder = { x: 320, y: 55, w: 160, h: 360 };
+    dt.benchSample = dt.benchSample || "stone";
+    dt.benchDropped = false;
+    dt.benchDropProgress = 0.0;
+    dt.benchWaterLevel = 50.0;
 
     updateDensityTowerDOMControls();
     updateDensityMetricsDOM();
@@ -5562,6 +5631,15 @@ function initDensityTowerState() {
 
 function resetDensityTowerExperiment() {
     const dt = labState.densityTower;
+    if (dt.mode === "bench") {
+        dt.benchDropped = false;
+        dt.benchDropProgress = 0.0;
+        dt.benchWaterLevel = 50.0;
+        updateDensityTowerDOMControls();
+        updateDensityMetricsDOM();
+        showLabToast("🔄 Ölçüm tezgâhı sıfırlandı (V₁ = 50 cm³)");
+        return;
+    }
     dt.activeLiquids = [];
     dt.pouringLiquid = null;
     dt.pourProgress = 0;
@@ -5574,6 +5652,23 @@ function resetDensityTowerExperiment() {
 
 function updateDensityTowerDOMControls() {
     const dt = labState.densityTower;
+    const isBench = dt.mode === "bench";
+
+    const bTower = document.getElementById('btn-65-mode-tower');
+    const bBench = document.getElementById('btn-65-mode-bench');
+    if (bTower) bTower.classList.toggle('active', !isBench);
+    if (bBench) bBench.classList.toggle('active', isBench);
+
+    const grpTower = document.getElementById('group-65-tower-ctrl');
+    const grpBench = document.getElementById('group-65-bench-ctrl');
+    if (grpTower) grpTower.classList.toggle('is-hidden', isBench);
+    if (grpBench) grpBench.classList.toggle('is-hidden', !isBench);
+
+    ['stone', 'iron', 'glass', 'aluminum'].forEach(k => {
+        const el = document.getElementById(`btn-65-mat-${k}`);
+        if (el) el.classList.toggle('active', dt.benchSample === k);
+    });
+
     const addedIds = dt.activeLiquids.map(l => l.id);
 
     // Dökme butonları aktiflik durumu
@@ -5597,6 +5692,53 @@ function updateDensityTowerDOMControls() {
 }
 
 function setupDensityTowerControlsDOM() {
+    const bTower = document.getElementById('btn-65-mode-tower');
+    const bBench = document.getElementById('btn-65-mode-bench');
+    if (bTower) bTower.addEventListener('click', () => {
+        labState.densityTower.mode = "tower";
+        updateDensityTowerDOMControls();
+        updateDensityMetricsDOM();
+        showLabToast("🧪 Yoğunluk Kulesi Modu Aktif");
+    });
+    if (bBench) bBench.addEventListener('click', () => {
+        labState.densityTower.mode = "bench";
+        updateDensityTowerDOMControls();
+        updateDensityMetricsDOM();
+        showLabToast("⚖️ Kütle–Hacim–Yoğunluk Ölçüm Tezgâhı Aktif");
+    });
+
+    ['stone', 'iron', 'glass', 'aluminum'].forEach(k => {
+        const el = document.getElementById(`btn-65-mat-${k}`);
+        if (el) el.addEventListener('click', () => {
+            const dt = labState.densityTower;
+            dt.benchSample = k;
+            dt.benchDropped = false;
+            dt.benchDropProgress = 0;
+            dt.benchWaterLevel = 50;
+            updateDensityTowerDOMControls();
+            updateDensityMetricsDOM();
+            showLabToast(`⚖️ ${getDensityBenchSample(k).name} seçildi (${getDensityBenchSample(k).mass} g)`);
+        });
+    });
+
+    const bDrop = document.getElementById('btn-65-bench-drop');
+    if (bDrop) bDrop.addEventListener('click', () => {
+        const dt = labState.densityTower;
+        dt.benchDropped = true;
+        updateDensityMetricsDOM();
+        const s = getDensityBenchSample(dt.benchSample);
+        showLabToast(`💧 ${s.name} suya bırakıldı: V = ${s.volume} cm³, d = ${s.density.toFixed(1)} g/cm³`);
+    });
+    const bReset = document.getElementById('btn-65-bench-reset');
+    if (bReset) bReset.addEventListener('click', () => {
+        const dt = labState.densityTower;
+        dt.benchDropped = false;
+        dt.benchDropProgress = 0;
+        dt.benchWaterLevel = 50;
+        updateDensityMetricsDOM();
+        showLabToast("🔄 Dereceli silindir sıfırlandı (V₁ = 50 cm³)");
+    });
+
     // Sıvı Ekleme Butonları (Hem hızlı bar hem sağ panel)
     ['honey', 'glycerin', 'water', 'oil'].forEach(liquidKey => {
         const btn = document.getElementById(`btn-pour-${liquidKey}`);
@@ -5813,6 +5955,11 @@ function updateDensityMetricsDOM() {
 }
 
 function drawDensityTowerSimulation() {
+    if (labState.densityTower.mode === "bench") {
+        drawDensityBenchSimulation();
+        return;
+    }
+
     const w = canvas.width;
     const h = canvas.height;
     const scale = w / 800;
@@ -5859,6 +6006,197 @@ function drawDensityTowerSimulation() {
 
     // 5. Sıvı Dökme Animasyonu (Beher ve Akış Huzmesi)
     drawPouringStream(ctx);
+
+    ctx.restore();
+}
+
+function drawDensityBenchSimulation() {
+    const scale = canvas.width / 800;
+    const dt = labState.densityTower;
+    const s = getDensityBenchSample(dt.benchSample);
+
+    // Pürüzsüz düşüş ve su yükselmesi animasyonu
+    const targetDrop = dt.benchDropped ? 1.0 : 0.0;
+    dt.benchDropProgress += (targetDrop - dt.benchDropProgress) * 0.12;
+    const targetWater = dt.benchDropped ? (50 + s.volume) : 50;
+    dt.benchWaterLevel += (targetWater - dt.benchWaterLevel) * 0.12;
+
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    // Arka Plan & Masa
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 500);
+    bgGrad.addColorStop(0, "#080f1e");
+    bgGrad.addColorStop(1, "#132038");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 800, 500);
+
+    // Üst Başlık
+    ctx.fillStyle = "rgba(56, 189, 248, 0.14)";
+    ctx.strokeStyle = "#38bdf8";
+    ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.roundRect(175, 14, 450, 30, 15); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#e0f2fe";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("⚖️ KÜTLE, HACİM VE YOĞUNLUK ÖLÇÜM TEZGÂHI (d = m / V)", 400, 34);
+
+    const benchY = 410;
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(0, benchY, 800, 90);
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, benchY); ctx.lineTo(800, benchY); ctx.stroke();
+
+    const drawSampleObj = (cx, cy) => {
+        ctx.save();
+        ctx.translate(cx, cy);
+        if (s.id === "stone") {
+            ctx.fillStyle = "#64748b";
+            ctx.strokeStyle = "#cbd5e1";
+            ctx.lineWidth = 1.4;
+            ctx.beginPath();
+            ctx.moveTo(-20, 6); ctx.lineTo(-15, -14); ctx.lineTo(4, -18);
+            ctx.lineTo(20, -6); ctx.lineTo(16, 14); ctx.lineTo(-10, 16);
+            ctx.closePath(); ctx.fill(); ctx.stroke();
+        } else if (s.id === "iron") {
+            // Demir cıvata
+            ctx.fillStyle = "#475569";
+            ctx.strokeStyle = "#cbd5e1";
+            ctx.lineWidth = 1.4;
+            ctx.beginPath(); ctx.roundRect(-18, -16, 36, 12, 3); ctx.fill(); ctx.stroke();
+            ctx.beginPath(); ctx.roundRect(-9, -4, 18, 22, 2); ctx.fill(); ctx.stroke();
+            ctx.strokeStyle = "#94a3b8";
+            for (let ty = 1; ty <= 14; ty += 5) {
+                ctx.beginPath(); ctx.moveTo(-8, ty); ctx.lineTo(8, ty); ctx.stroke();
+            }
+        } else if (s.id === "glass") {
+            const g = ctx.createRadialGradient(-6, -6, 2, 0, 0, 18);
+            g.addColorStop(0, "#e0f2fe");
+            g.addColorStop(0.4, "#38bdf8");
+            g.addColorStop(1, "#0369a1");
+            ctx.fillStyle = g;
+            ctx.beginPath(); ctx.arc(0, 0, 18, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = "#bae6fd"; ctx.lineWidth = 1.2; ctx.stroke();
+        } else {
+            const g = ctx.createLinearGradient(-16, -16, 16, 16);
+            g.addColorStop(0, "#f1f5f9");
+            g.addColorStop(1, "#64748b");
+            ctx.fillStyle = g;
+            ctx.strokeStyle = "#e2e8f0";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath(); ctx.roundRect(-16, -16, 32, 32, 3); ctx.fill(); ctx.stroke();
+        }
+        ctx.restore();
+    };
+
+    // === SOL İSTASYON: DİJİTAL TARTI / KÜTLE ÖLÇÜMÜ ===
+    const scaleX = 205;
+    // Gövde
+    ctx.fillStyle = "#334155";
+    ctx.strokeStyle = "#94a3b8";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.roundRect(scaleX - 105, benchY - 76, 210, 76, 10); ctx.fill(); ctx.stroke();
+    // Tartı Kefesi
+    ctx.fillStyle = "#cbd5e1";
+    ctx.fillRect(scaleX - 75, benchY - 90, 150, 10);
+    ctx.fillStyle = "#64748b";
+    ctx.fillRect(scaleX - 16, benchY - 80, 32, 6);
+    // Dijital LCD Ekran
+    ctx.fillStyle = "#064e3b";
+    ctx.strokeStyle = "#10b981";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.roundRect(scaleX - 68, benchY - 56, 136, 38, 6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#34d399";
+    ctx.font = "bold 20px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText(`${s.mass.toFixed(1)} g`, scaleX, benchY - 30);
+
+    // Tartı üstündeki cisim
+    drawSampleObj(scaleX, benchY - 110);
+
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "bold 12px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`1. İstasyon: Terazi (Kütle m = ${s.mass} g)`, scaleX, 118);
+
+    // === SAĞ İSTASYON: DERECELİ SİLİNDİR (V1 = 50 cm³ -> V2) ===
+    const cylX = 565;
+    const cylW = 122;
+    const cylTop = 100;
+    const cylBot = benchY - 6;
+    const cylH = cylBot - cylTop;
+
+    // Su seviyesi (0 .. 100 cm³ -> cylBot .. cylTop + 28)
+    const waterPxPerCm3 = (cylH - 32) / 100;
+    const waterY = cylBot - dt.benchWaterLevel * waterPxPerCm3;
+    const v1Y = cylBot - 50 * waterPxPerCm3;
+
+    const wGrad = ctx.createLinearGradient(cylX, waterY, cylX, cylBot);
+    wGrad.addColorStop(0, "rgba(56, 189, 248, 0.42)");
+    wGrad.addColorStop(1, "rgba(2, 132, 199, 0.68)");
+    ctx.fillStyle = wGrad;
+    ctx.fillRect(cylX - cylW / 2 + 4, waterY, cylW - 8, cylBot - waterY - 2);
+
+    // Cisim (silindirin üstünde bekliyor veya suya batmış)
+    const objY = 74 + dt.benchDropProgress * (cylBot - 24 - 74);
+    drawSampleObj(cylX, objY);
+
+    // Cam Silindir Gövdesi
+    ctx.strokeStyle = "rgba(226, 232, 240, 0.8)";
+    ctx.lineWidth = 2.6;
+    ctx.beginPath(); ctx.roundRect(cylX - cylW / 2, cylTop, cylW, cylH, [4, 4, 10, 10]); ctx.stroke();
+
+    // Ölçek Çizgileri (10 .. 100 cm³)
+    for (let v = 10; v <= 100; v += 10) {
+        const ty = cylBot - v * waterPxPerCm3;
+        const major = v % 20 === 0 || v === 50 || v === 70;
+        ctx.strokeStyle = major ? "#e2e8f0" : "rgba(148, 163, 184, 0.45)";
+        ctx.lineWidth = major ? 1.5 : 1;
+        ctx.beginPath(); ctx.moveTo(cylX - cylW / 2 + 4, ty); ctx.lineTo(cylX - cylW / 2 + (major ? 18 : 10), ty); ctx.stroke();
+        if (v % 20 === 0 || v === 50 || v === 70) {
+            ctx.fillStyle = "#cbd5e1";
+            ctx.font = "bold 9.5px Nunito, sans-serif";
+            ctx.textAlign = "right";
+            ctx.fillText(`${v} cm³`, cylX - cylW / 2 - 6, ty + 3);
+        }
+    }
+
+    // V1 ve V2 Gösterge Çizgileri
+    ctx.strokeStyle = "#facc15";
+    ctx.lineWidth = 1.4;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath(); ctx.moveTo(cylX + cylW / 2, v1Y); ctx.lineTo(cylX + cylW / 2 + 65, v1Y); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = "#fde047";
+    ctx.font = "bold 10.5px Nunito, sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText("V₁ = 50 cm³", cylX + cylW / 2 + 8, v1Y - 5);
+
+    if (dt.benchDropped) {
+        ctx.strokeStyle = "#34d399";
+        ctx.lineWidth = 1.6;
+        ctx.beginPath(); ctx.moveTo(cylX + cylW / 2, waterY); ctx.lineTo(cylX + cylW / 2 + 65, waterY); ctx.stroke();
+        ctx.fillStyle = "#6ee7b7";
+        ctx.fillText(`V₂ = ${50 + s.volume} cm³`, cylX + cylW / 2 + 8, waterY - 5);
+    }
+
+    // Alt Hesaplama Kartı
+    ctx.fillStyle = "rgba(15, 23, 42, 0.94)";
+    ctx.strokeStyle = dt.benchDropped ? "#34d399" : "#38bdf8";
+    ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.roundRect(70, benchY + 14, 660, 58, 10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#f8fafc";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    if (dt.benchDropped) {
+        ctx.fillText(`${s.name} · Kütle (m) = ${s.mass} g  |  Hacim (V = V₂ − V₁) = ${s.volume} cm³  |  Yoğunluk (d = m / V) = ${s.density.toFixed(1)} g/cm³`, 400, benchY + 38);
+        ctx.fillStyle = "#34d399";
+        ctx.font = "bold 11.5px Nunito, sans-serif";
+        ctx.fillText(`✅ Ölçüm Tamamlandı: Yoğunluk saf maddeler için ayırt edici özelliktir!`, 400, benchY + 58);
+    } else {
+        ctx.fillText(`${s.name} terazide ölçüldü (m = ${s.mass} g). Hacmini ölçmek için "Suya Bırak / Ölç" butonuna tıklayın.`, 400, benchY + 46);
+    }
 
     ctx.restore();
 }
@@ -7751,6 +8089,7 @@ function drawAbsorptionSimulation() {
 
 function initExpansionState() {
     const ex = labState.expansion;
+    ex.mode = ex.mode || "solid";
     ex.step = "ready"; // Başlangıçta henüz denenmedi durumu
     ex.sphereTemp = 20.0;
     ex.sphereRadius = 25.5; // Soğukken halkanın (29.0) içinden rahat geçer
@@ -7763,14 +8102,34 @@ function initExpansionState() {
     ex.isPassingThrough = false;
     ex.flameParticles = [];
     ex.steamParticles = [];
+    ex.gasPlaced = false;
+    ex.gasProgress = 0.0;
+    ex.gasHotTemp = 20.0;
+    ex.gasColdTemp = 20.0;
+    initGasExpansionParticles();
 
     updateExpansionDOMControls();
     updateExpansionMetricsDOM();
 }
 
+function initGasExpansionParticles() {
+    const ex = labState.expansion;
+    ex.gasHotParticles = [];
+    ex.gasColdParticles = [];
+    for (let i = 0; i < 16; i++) {
+        const ang = (i / 16) * Math.PI * 2;
+        ex.gasHotParticles.push({ x: (Math.random() - 0.5) * 56, y: (Math.random() - 0.5) * 90, vx: Math.cos(ang) * 1.1, vy: Math.sin(ang) * 1.1 });
+        ex.gasColdParticles.push({ x: (Math.random() - 0.5) * 56, y: (Math.random() - 0.5) * 90, vx: Math.cos(ang) * 1.1, vy: Math.sin(ang) * 1.1 });
+    }
+}
+
 function resetExpansionExperiment() {
+    const curMode = labState.expansion.mode || "solid";
     initExpansionState();
-    showLabToast("Gravzant düzeneği başlangıç durumuna sıfırlandı!");
+    labState.expansion.mode = curMode;
+    updateExpansionDOMControls();
+    updateExpansionMetricsDOM();
+    showLabToast(curMode === "gas" ? "🎈 Gaz genleşme düzeneği oda sıcaklığına (20°C) sıfırlandı!" : "Gravzant düzeneği başlangıç durumuna sıfırlandı!");
 }
 
 function setExpansionStep(stepName) {
@@ -7843,6 +8202,34 @@ function setExpansionStep(stepName) {
 function updateExpansionPhysics() {
     const ex = labState.expansion;
 
+    if (ex.mode === "gas") {
+        const targetProg = ex.gasPlaced ? 1.0 : 0.0;
+        ex.gasProgress += (targetProg - ex.gasProgress) * 0.045;
+        ex.gasHotTemp = 20.0 + ex.gasProgress * 60.0;  // 20 -> 80°C
+        ex.gasColdTemp = 20.0 - ex.gasProgress * 15.0; // 20 -> 5°C
+
+        const hotSpeed = 0.8 + ex.gasProgress * 2.4;
+        const coldSpeed = Math.max(0.25, 0.8 - ex.gasProgress * 0.55);
+
+        ex.gasHotParticles.forEach(p => {
+            p.x += p.vx * hotSpeed;
+            p.y += p.vy * hotSpeed;
+            if (p.x < -30 || p.x > 30) { p.vx *= -1; p.x = Math.max(-30, Math.min(30, p.x)); }
+            const topLim = -68 - ex.gasProgress * 44;
+            if (p.y < topLim || p.y > 46) { p.vy *= -1; p.y = Math.max(topLim, Math.min(46, p.y)); }
+        });
+        ex.gasColdParticles.forEach(p => {
+            p.x += p.vx * coldSpeed;
+            p.y += p.vy * coldSpeed;
+            if (p.x < -28 || p.x > 28) { p.vx *= -1; p.x = Math.max(-28, Math.min(28, p.x)); }
+            const topLim = -46 + ex.gasProgress * 24;
+            if (p.y < topLim || p.y > 46) { p.vy *= -1; p.y = Math.max(topLim, Math.min(46, p.y)); }
+        });
+
+        updateExpansionMetricsDOM();
+        return;
+    }
+
     // Küre Pozisyon İnterpolasyonu
     ex.sphereY += (ex.targetY - ex.sphereY) * 0.08;
 
@@ -7910,6 +8297,22 @@ function updateExpansionPhysics() {
 
 function updateExpansionDOMControls() {
     const ex = labState.expansion;
+    const isGas = ex.mode === "gas";
+
+    const bSolid = document.getElementById('btn-68-mode-solid');
+    const bGas = document.getElementById('btn-68-mode-gas');
+    if (bSolid) bSolid.classList.toggle('active', !isGas);
+    if (bGas) bGas.classList.toggle('active', isGas);
+
+    const grpSolid = document.getElementById('group-68-solid-ctrl');
+    const grpGas = document.getElementById('group-68-gas-ctrl');
+    if (grpSolid) grpSolid.classList.toggle('is-hidden', isGas);
+    if (grpGas) grpGas.classList.toggle('is-hidden', !isGas);
+
+    const lblGas = document.getElementById('label-68-gas-start');
+    const btnGasStart = document.getElementById('btn-68-gas-start');
+    if (lblGas) lblGas.textContent = ex.gasPlaced ? "Kaplardan Çıkar (20°C)" : "Şişeleri Kaplara Yerleştir";
+    if (btnGasStart) btnGasStart.classList.toggle('active', ex.gasPlaced);
 
     const steps = ["cold_pass", "heating", "hot_try", "quenching", "quenched_pass"];
     const quickIds = {
@@ -7938,6 +8341,25 @@ function updateExpansionDOMControls() {
 
 function updateExpansionMetricsDOM() {
     const ex = labState.expansion;
+
+    if (ex.mode === "gas") {
+        const elState = document.getElementById('mbar-68-state');
+        const elTemp = document.getElementById('mbar-68-temp');
+        const elVol = document.getElementById('mbar-68-volume');
+        const elStatus = document.getElementById('mbar-68-status');
+        if (elState) elState.textContent = ex.gasPlaced ? "Sıcak vs. Buzlu Su" : "Oda Sıcaklığı";
+        if (elTemp) elTemp.textContent = `${ex.gasHotTemp.toFixed(0)}°C / ${ex.gasColdTemp.toFixed(0)}°C`;
+        if (elVol) elVol.textContent = ex.gasPlaced ? "Sıcak: Şişti · Soğuk: Söndü" : "Eşit Hacim";
+        if (elStatus) {
+            elStatus.textContent = ex.gasPlaced
+                ? "🎈 Sıcak sudaki gaz genleşip balonu şişirdi; buzlu sudaki gaz büzülüp balonu söndürdü!"
+                : "🎈 Şişeleri sıcak (80°C) ve buzlu (5°C) su kaplarına yerleştirerek gözlemleyin";
+            elStatus.style.color = ex.gasPlaced ? "#facc15" : "#38bdf8";
+            elStatus.style.borderColor = ex.gasPlaced ? "#facc15" : "#38bdf8";
+        }
+        return;
+    }
+
     const isHot = ex.sphereTemp > 30;
     const temperatureLabel = ex.sphereTemp <= 25 ? 'Oda Sıcaklığı' : (ex.step === 'quenching' ? 'Soğuyor (Hâlâ Sıcak)' : 'Sıcak');
     const sizeLabel = ex.sphereRadius > ex.ringRadius ? 'Genleşmiş (Halkadan Büyük)' : (isHot ? 'Halkadan Küçük (Hâlâ Sıcak)' : 'Oda Sıcaklığındaki Boyut');
@@ -8014,6 +8436,40 @@ function updateExpansionMetricsDOM() {
 }
 
 function setupExpansionControlsDOM() {
+    const bSolid = document.getElementById('btn-68-mode-solid');
+    const bGas = document.getElementById('btn-68-mode-gas');
+    if (bSolid) bSolid.addEventListener('click', () => {
+        labState.expansion.mode = "solid";
+        updateExpansionDOMControls();
+        updateExpansionMetricsDOM();
+        showLabToast("🔥 Katılarda Genleşme (Gravzant Halkası) Modu Aktif");
+    });
+    if (bGas) bGas.addEventListener('click', () => {
+        labState.expansion.mode = "gas";
+        if (labState.expansion.gasHotParticles.length === 0) initGasExpansionParticles();
+        updateExpansionDOMControls();
+        updateExpansionMetricsDOM();
+        showLabToast("🎈 Gazlarda Genleşme ve Büzülme (Şişe ve Balon) Modu Aktif");
+    });
+
+    const bGasStart = document.getElementById('btn-68-gas-start');
+    if (bGasStart) bGasStart.addEventListener('click', () => {
+        labState.expansion.gasPlaced = !labState.expansion.gasPlaced;
+        updateExpansionDOMControls();
+        updateExpansionMetricsDOM();
+        showLabToast(labState.expansion.gasPlaced ? "🔥❄️ Şişeler Sıcak (80°C) ve Buzlu (5°C) suya yerleştirildi!" : "🔄 Şişeler oda sıcaklığına alındı");
+    });
+    const bGasReset = document.getElementById('btn-68-gas-reset');
+    if (bGasReset) bGasReset.addEventListener('click', () => {
+        labState.expansion.gasPlaced = false;
+        labState.expansion.gasProgress = 0;
+        labState.expansion.gasHotTemp = 20;
+        labState.expansion.gasColdTemp = 20;
+        updateExpansionDOMControls();
+        updateExpansionMetricsDOM();
+        showLabToast("🔄 Gaz düzeneği oda sıcaklığına (20°C) sıfırlandı");
+    });
+
     const bCold = document.getElementById('btn-grav-pass-cold');
     const bHeat = document.getElementById('btn-grav-heat');
     const bHot = document.getElementById('btn-grav-pass-hot');
@@ -8043,9 +8499,190 @@ function setupExpansionControlsDOM() {
     if (btnRec) btnRec.addEventListener('click', recordMeasurement);
 }
 
+function drawGasExpansionSimulation() {
+    const scale = canvas.width / 800;
+    const ex = labState.expansion;
+    const prog = ex.gasProgress;
+
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    // Arka Plan
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 500);
+    bgGrad.addColorStop(0, "#080f1e");
+    bgGrad.addColorStop(1, "#142038");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 800, 500);
+
+    // Başlık
+    ctx.fillStyle = "rgba(56, 189, 248, 0.15)";
+    ctx.strokeStyle = "#38bdf8";
+    ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.roundRect(185, 14, 430, 30, 15); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#e0f2fe";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("🎈 GAZLARDA GENLEŞME VE BÜZÜLME (Şişe ve Balon)", 400, 34);
+
+    // Laboratuvar Masası
+    const tableY = 415;
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(0, tableY, 800, 85);
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, tableY); ctx.lineTo(800, tableY); ctx.stroke();
+
+    const drawBottleBath = (cx, isHot) => {
+        const bathW = 240;
+        const bathH = 148;
+        const bathTop = tableY - bathH;
+
+        // 1. Geniş Şeffaf Su Kabı
+        const waterGrad = ctx.createLinearGradient(cx, bathTop + 26, cx, tableY);
+        if (isHot) {
+            waterGrad.addColorStop(0, "rgba(249, 115, 22, 0.42)");
+            waterGrad.addColorStop(1, "rgba(220, 38, 38, 0.62)");
+        } else {
+            waterGrad.addColorStop(0, "rgba(56, 189, 248, 0.35)");
+            waterGrad.addColorStop(1, "rgba(2, 132, 199, 0.58)");
+        }
+        ctx.fillStyle = waterGrad;
+        ctx.beginPath();
+        ctx.roundRect(cx - bathW / 2 + 4, bathTop + 28, bathW - 8, bathH - 31, [2, 2, 10, 10]);
+        ctx.fill();
+
+        // Sıcak suda buhar çizgileri, soğuk suda buz küpleri
+        if (isHot) {
+            ctx.strokeStyle = "rgba(254, 215, 170, 0.5)";
+            ctx.lineWidth = 2;
+            [-75, -45, 50, 80].forEach((ox, idx) => {
+                const wave = Math.sin(Date.now() * 0.004 + idx) * 5;
+                ctx.beginPath();
+                ctx.moveTo(cx + ox, bathTop + 22);
+                ctx.quadraticCurveTo(cx + ox + wave, bathTop - 4, cx + ox - wave, bathTop - 28);
+                ctx.stroke();
+            });
+        } else {
+            // Buz küpleri
+            ctx.fillStyle = "rgba(224, 242, 254, 0.78)";
+            ctx.strokeStyle = "#bae6fd";
+            ctx.lineWidth = 1.2;
+            [[-86, 36], [-62, 54], [62, 38], [82, 58]].forEach(([ox, oy]) => {
+                ctx.beginPath();
+                ctx.roundRect(cx + ox - 11, bathTop + oy, 22, 18, 4);
+                ctx.fill();
+                ctx.stroke();
+            });
+        }
+
+        // Cam Kap Çerçevesi
+        ctx.strokeStyle = "rgba(226, 232, 240, 0.75)";
+        ctx.lineWidth = 2.6;
+        ctx.beginPath();
+        ctx.roundRect(cx - bathW / 2, bathTop, bathW, bathH, [4, 4, 12, 12]);
+        ctx.stroke();
+
+        // 2. Cam Şişe (Suyun içinde)
+        const bottleY = tableY - 14;
+        ctx.fillStyle = "rgba(241, 245, 249, 0.16)";
+        ctx.strokeStyle = "rgba(226, 232, 240, 0.85)";
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(cx - 38, bottleY);
+        ctx.lineTo(cx - 38, bottleY - 102);
+        ctx.quadraticCurveTo(cx - 38, bottleY - 124, cx - 16, bottleY - 134);
+        ctx.lineTo(cx - 16, bottleY - 166);
+        ctx.lineTo(cx + 16, bottleY - 166);
+        ctx.lineTo(cx + 16, bottleY - 134);
+        ctx.quadraticCurveTo(cx + 38, bottleY - 124, cx + 38, bottleY - 102);
+        ctx.lineTo(cx + 38, bottleY);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // 3. Şişe İçindeki Hava Tanecikleri
+        const particles = isHot ? ex.gasHotParticles : ex.gasColdParticles;
+        ctx.fillStyle = isHot ? "#fb923c" : "#38bdf8";
+        particles.forEach(p => {
+            ctx.beginPath();
+            ctx.arc(cx + p.x, bottleY - 60 + p.y, 3, 0, Math.PI * 2);
+            ctx.fill();
+        });
+
+        // 4. Gülen Yüzlü Balon (Sıcak: Şişer, Soğuk: Söner/Büzülür)
+        const neckY = bottleY - 166;
+        const rx = isHot ? (30 + prog * 34) : (30 - prog * 13);
+        const ry = isHot ? (36 + prog * 40) : (36 - prog * 18);
+        const balCy = isHot ? (neckY - ry - 4) : (neckY - ry + prog * 14);
+
+        ctx.save();
+        ctx.translate(cx, balCy);
+        if (!isHot && prog > 0.3) ctx.rotate(prog * 0.42); // Sönünce hafif yana yatar
+
+        const bGrad = ctx.createRadialGradient(-rx * 0.3, -ry * 0.3, 3, 0, 0, Math.max(rx, ry));
+        if (isHot) {
+            bGrad.addColorStop(0, "#fda4af");
+            bGrad.addColorStop(0.5, "#ef4444");
+            bGrad.addColorStop(1, "#991b1b");
+        } else {
+            bGrad.addColorStop(0, "#7dd3fc");
+            bGrad.addColorStop(0.5, "#0284c7");
+            bGrad.addColorStop(1, "#0c4a6e");
+        }
+        ctx.fillStyle = bGrad;
+        ctx.strokeStyle = "rgba(255,255,255,0.5)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Gülen Yüz (Ders kitabı s. 21 uyumu)
+        ctx.fillStyle = "#0f172a";
+        ctx.beginPath();
+        ctx.arc(-rx * 0.28, -ry * 0.14, Math.max(2, rx * 0.08), 0, Math.PI * 2);
+        ctx.arc(rx * 0.28, -ry * 0.14, Math.max(2, rx * 0.08), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#0f172a";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(0, ry * 0.05, rx * 0.32, 0.15 * Math.PI, 0.85 * Math.PI);
+        ctx.stroke();
+        ctx.restore();
+
+        // Balon ağzı (şişe boğazına geçirilmiş)
+        ctx.fillStyle = isHot ? "#dc2626" : "#0284c7";
+        ctx.fillRect(cx - 18, neckY - 4, 36, 9);
+
+        // Alt Bilgi Kartı
+        const tempVal = isHot ? ex.gasHotTemp : ex.gasColdTemp;
+        const cardColor = isHot ? "#f97316" : "#38bdf8";
+        ctx.fillStyle = "rgba(15, 23, 42, 0.92)";
+        ctx.strokeStyle = cardColor;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.roundRect(cx - 148, tableY + 12, 296, 56, 10); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "#f8fafc";
+        ctx.font = "bold 12px Nunito, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(isHot ? `🔥 Sıcak Su Kabı (${tempVal.toFixed(0)} °C)` : `❄️ Buzlu Su Kabı (${tempVal.toFixed(0)} °C)`, cx, tableY + 34);
+        ctx.fillStyle = cardColor;
+        ctx.font = "bold 11px Nunito, sans-serif";
+        ctx.fillText(ex.gasPlaced ? (isHot ? "Hava GENLEŞTİ → Balon Şişti" : "Hava BÜZÜLDÜ → Balon Söndü") : "Oda Sıcaklığı (20 °C) — Hazır", cx, tableY + 54);
+    };
+
+    drawBottleBath(215, true);
+    drawBottleBath(585, false);
+
+    ctx.restore();
+}
+
 // Deney 6.8 Canvas Çizim Motoru (ZERO-CANVAS-TEXT)
 function drawExpansionSimulation() {
     if (!ctx || !canvas) return;
+    if (labState.expansion.mode === "gas") {
+        drawGasExpansionSimulation();
+        return;
+    }
     const w = 800;
     const h = 500;
     const ex = labState.expansion;
@@ -25518,11 +26155,22 @@ function updateTableHeader(expId) {
         thead.innerHTML = `
             <tr>
                 <th>#</th>
-                <th>Deney Aşaması</th>
-                <th>Küre Sıcaklığı</th>
-                <th>Küre Hacmi</th>
-                <th>Halkadan Geçiş Durumu</th>
+                <th>Deney Aşaması / Ortam</th>
+                <th>Sıcaklık</th>
+                <th>Hacim / Balon Durumu</th>
+                <th>Geçiş / Gözlem Sonucu</th>
                 <th>Fiziksel Nitel Çıkarım</th>
+            </tr>
+        `;
+    } else if (expId === "6.12") {
+        thead.innerHTML = `
+            <tr>
+                <th>#</th>
+                <th>Saf Madde</th>
+                <th>Olay</th>
+                <th>Sabit Sıcaklık (°C)</th>
+                <th>Süre (dk)</th>
+                <th>Ayırt Edici Özellik Çıkarımı</th>
             </tr>
         `;
     } else if (expId === "6.9") {
@@ -25876,6 +26524,19 @@ function recordMeasurement() {
             cw.measurements.push(row);
         }
         showLabToast(`Renk Gözlemi #${cw.measurements.length} deftere kaydedildi!`);
+    } else if (expId === "6.12") {
+        const pc = labState.phaseChange;
+        const def = getPhaseChangeDef(pc.substance);
+        const row = {
+            id: pc.measurements.length + 1,
+            col1: def.name,
+            col2: def.eventLabel,
+            col3: `${def.point} °C (Anlık: ${pc.temp.toFixed(1)} °C)`,
+            col4: `${pc.elapsedMin.toFixed(1)} dk`,
+            col5: `${def.name} için sabit ${def.eventLabel.toLowerCase()} noktası ayırt edici özelliktir`
+        };
+        pc.measurements.push(row);
+        showLabToast(`Hâl Değişimi Gözlemi #${row.id} deftere kaydedildi!`);
     } else if (expId === "6.1") {
         const ec = labState.eclipse;
         const isSolar = ec.mode === "solar";
@@ -25948,18 +26609,33 @@ function recordMeasurement() {
         showLabToast(`Yansıma Gözlemi #${row.id} deftere kaydedildi!`);
     } else if (expId === "6.5") {
         const dt = labState.densityTower;
-        const names = dt.activeLiquids.map(l => `${l.name} (d=${l.density.toFixed(2)})`);
-        const objNames = dt.objects.map(o => `${o.name} (d=${o.density})`);
-        const row = {
-            id: dt.measurements.length + 1,
-            col1: `${dt.activeLiquids.length} / 2 Sıvı`,
-            col2: names.length > 0 ? "Su: 100g/100cm³=1.00 · Yağ: 90g/100cm³=0.90" : "Silindir Boş",
-            col3: dt.activeLiquids[0] ? `${dt.activeLiquids[0].name} (d=${dt.activeLiquids[0].density.toFixed(2)} g/cm³)` : "—",
-            col4: dt.activeLiquids.length > 1 ? `${dt.activeLiquids[dt.activeLiquids.length - 1].name} (d=${dt.activeLiquids[dt.activeLiquids.length - 1].density.toFixed(2)} g/cm³)` : "—",
-            col5: objNames.length > 0 ? objNames.join(', ') : "Cisim Bırakılmadı"
-        };
-        dt.measurements.push(row);
-        showLabToast(`Yoğunluk Gözlemi #${row.id} deftere kaydedildi!`);
+        if (dt.mode === "bench") {
+            const s = getDensityBenchSample(dt.benchSample);
+            const v2 = dt.benchDropped ? (50 + s.volume) : 50;
+            const row = {
+                id: dt.measurements.length + 1,
+                col1: s.name,
+                col2: `${s.mass} g`,
+                col3: dt.benchDropped ? `${s.volume} cm³ (50 → ${v2} cm³)` : "Henüz suya bırakılmadı",
+                col4: `${s.density.toFixed(1)} g/cm³`,
+                col5: "Yoğunluk = Kütle / Hacim (Ayırt edici özellik)"
+            };
+            dt.measurements.push(row);
+            showLabToast(`Yoğunluk Ölçümü #${row.id} deftere kaydedildi!`);
+        } else {
+            const names = dt.activeLiquids.map(l => `${l.name} (d=${l.density.toFixed(2)})`);
+            const objNames = dt.objects.map(o => `${o.name} (d=${o.density})`);
+            const row = {
+                id: dt.measurements.length + 1,
+                col1: `${dt.activeLiquids.length} / 2 Sıvı`,
+                col2: names.length > 0 ? "Su: 100g/100cm³=1.00 · Yağ: 90g/100cm³=0.90" : "Silindir Boş",
+                col3: dt.activeLiquids[0] ? `${dt.activeLiquids[0].name} (d=${dt.activeLiquids[0].density.toFixed(2)} g/cm³)` : "—",
+                col4: dt.activeLiquids.length > 1 ? `${dt.activeLiquids[dt.activeLiquids.length - 1].name} (d=${dt.activeLiquids[dt.activeLiquids.length - 1].density.toFixed(2)} g/cm³)` : "—",
+                col5: objNames.length > 0 ? objNames.join(', ') : "Cisim Bırakılmadı"
+            };
+            dt.measurements.push(row);
+            showLabToast(`Yoğunluk Gözlemi #${row.id} deftere kaydedildi!`);
+        }
     } else if (expId === "6.6") {
         const g = labState.germination;
         const d = g.dishes.find(x => x.id === g.selectedDish) || g.dishes[0];
@@ -25994,27 +26670,40 @@ function recordMeasurement() {
         showLabToast(`Soğrulma Gözlemi #${row.id} deftere kaydedildi!`);
     } else if (expId === "6.8") {
         const ex = labState.expansion;
-        const stepLabels = {
-            cold_pass: "1. Soğukken Geçirme",
-            heating: "2. Alevde Isıtma",
-            hot_try: "3. Sıcakken Deneme",
-            quenching: "4. Soğuk Suda Soğutma",
-            quenched_pass: "5. Soğutma Sonrası Yeniden Deneme"
-        };
-        const passText = ex.isPassingThrough ? "✅ Halkadan Geçti" : "⛔ Takıldı, Geçemedi!";
-        const inference = ex.isPassingThrough 
-            ? "Büzüldü / Hacim Küçüldü (r_küre < r_halka)" 
-            : "Genleşti / Hacim Büyüdü (r_küre > r_halka)";
-        const row = {
-            id: ex.measurements.length + 1,
-            col1: stepLabels[ex.step] || "Gözlem",
-            col2: `${ex.sphereTemp.toFixed(0)}°C`,
-            col3: ex.sphereRadius > 28 ? "Büyük (Genleşmiş)" : "Normal (Büzülmüş)",
-            col4: passText,
-            col5: inference
-        };
-        ex.measurements.push(row);
-        showLabToast(`Gravzant Gözlemi #${row.id} deftere kaydedildi!`);
+        if (ex.mode === "gas") {
+            const row = {
+                id: ex.measurements.length + 1,
+                col1: ex.gasPlaced ? "Sıcak Su (80°C) vs. Buzlu Su (5°C)" : "Oda Sıcaklığı (20°C)",
+                col2: `${ex.gasHotTemp.toFixed(0)}°C / ${ex.gasColdTemp.toFixed(0)}°C`,
+                col3: ex.gasPlaced ? "Sıcak: Şişti · Soğuk: Söndü" : "İki balon da normal",
+                col4: ex.gasPlaced ? "Genleşme (80°C) · Büzülme (5°C)" : "Başlangıç durumu",
+                col5: "Gazlar ısı alınca genleşir, ısı verince büzülür"
+            };
+            ex.measurements.push(row);
+            showLabToast(`Gaz Genleşme Gözlemi #${row.id} deftere kaydedildi!`);
+        } else {
+            const stepLabels = {
+                cold_pass: "1. Soğukken Geçirme",
+                heating: "2. Alevde Isıtma",
+                hot_try: "3. Sıcakken Deneme",
+                quenching: "4. Soğuk Suda Soğutma",
+                quenched_pass: "5. Soğutma Sonrası Yeniden Deneme"
+            };
+            const passText = ex.isPassingThrough ? "✅ Halkadan Geçti" : "⛔ Takıldı, Geçemedi!";
+            const inference = ex.isPassingThrough 
+                ? "Büzüldü / Hacim Küçüldü (r_küre < r_halka)" 
+                : "Genleşti / Hacim Büyüdü (r_küre > r_halka)";
+            const row = {
+                id: ex.measurements.length + 1,
+                col1: stepLabels[ex.step] || "Gözlem",
+                col2: `${ex.sphereTemp.toFixed(0)}°C`,
+                col3: ex.sphereRadius > 28 ? "Büyük (Genleşmiş)" : "Normal (Büzülmüş)",
+                col4: passText,
+                col5: inference
+            };
+            ex.measurements.push(row);
+            showLabToast(`Gravzant Gözlemi #${row.id} deftere kaydedildi!`);
+        }
     } else if (expId === "6.9") {
         const cd = labState.conductivity;
         const matNames = {
@@ -26497,6 +27186,7 @@ export function getActiveExperimentMeasurements(expId) {
     if (expId === "5.11") return labState.cellMicroscope.measurements;
     if (expId === "5.12") return labState.lightTransmission.measurements;
     if (expId === "6.11") return labState.colorWheel.measurements;
+    if (expId === "6.12") return labState.phaseChange.measurements;
     if (expId === "6.1") return labState.eclipse.measurements;
     if (expId === "6.2") return labState.tugOfWar.measurements;
     if (expId === "6.3") return labState.motion.measurements;
@@ -26723,6 +27413,8 @@ function renderMeasurementTable() {
         measurements = labState.lightTransmission.measurements;
     } else if (expId === "6.11") {
         measurements = labState.colorWheel.measurements;
+    } else if (expId === "6.12") {
+        measurements = labState.phaseChange.measurements;
     } else if (expId === "6.1") {
         measurements = labState.eclipse.measurements;
     } else if (expId === "6.2") {
@@ -26818,6 +27510,8 @@ function clearMeasurementTable(silent = false) {
         labState.lightTransmission.measurements = [];
     } else if (expId === "6.11") {
         labState.colorWheel.measurements = [];
+    } else if (expId === "6.12") {
+        labState.phaseChange.measurements = [];
     } else if (expId === "6.1") {
         labState.eclipse.measurements = [];
     } else if (expId === "6.2") {
@@ -29001,6 +29695,430 @@ function drawColorWheelSimulation() {
         ctx.fillStyle = "#f8fafc"; ctx.font = `bold ${15 * scale}px Nunito, sans-serif`; ctx.textAlign = "center";
         ctx.fillText(`Görünen Renk: ${p.label}`, 400 * scale, 415 * scale);
     }
+    ctx.restore();
+}
+
+// ============================================================================
+// DENEY 6.12: SAF MADDELERİN HÂL DEĞİŞİM NOKTALARI (FB.6.5.2 — 2. KİTAP s. 29-33)
+// ============================================================================
+
+const PHASE_CHANGE_DEFS = {
+    ice: {
+        id: "ice", name: "Buz (Saf Su)", eventLabel: "Erime", point: 0,
+        startTemp: -12, endTemp: 24, maxAxis: 35, minAxis: -15,
+        solidColor: "#bae6fd", liquidColor: "rgba(56, 189, 248, 0.65)",
+        benmari: false, initialPhase: "Katı (Buz)", plateauPhase: "Katı + Sıvı (Eriyor)", finalPhase: "Sıvı (Su)"
+    },
+    stearic: {
+        id: "stearic", name: "Stearik Asit (Benmari)", eventLabel: "Erime", point: 69,
+        startTemp: 40, endTemp: 86, maxAxis: 100, minAxis: 20,
+        solidColor: "#fef3c7", liquidColor: "rgba(253, 224, 71, 0.58)",
+        benmari: true, initialPhase: "Katı (Stearik Asit)", plateauPhase: "Katı + Sıvı (69°C Plato)", finalPhase: "Sıvı (Stearik Asit)"
+    },
+    water: {
+        id: "water", name: "Saf Su", eventLabel: "Kaynama", point: 100,
+        startTemp: 25, endTemp: 100, maxAxis: 115, minAxis: 0,
+        solidColor: "rgba(56, 189, 248, 0.62)", liquidColor: "rgba(56, 189, 248, 0.62)",
+        benmari: false, initialPhase: "Sıvı (Su)", plateauPhase: "Sıvı + Gaz (100°C Kaynıyor)", finalPhase: "Kaynıyor (100°C Sabit)"
+    },
+    alcohol: {
+        id: "alcohol", name: "Etil Alkol", eventLabel: "Kaynama", point: 78,
+        startTemp: 25, endTemp: 78, maxAxis: 115, minAxis: 0,
+        solidColor: "rgba(167, 139, 250, 0.58)", liquidColor: "rgba(167, 139, 250, 0.58)",
+        benmari: false, initialPhase: "Sıvı (Etil Alkol)", plateauPhase: "Sıvı + Gaz (78°C Kaynıyor)", finalPhase: "Kaynıyor (78°C Sabit)"
+    }
+};
+
+function getPhaseChangeDef(sub) {
+    return PHASE_CHANGE_DEFS[sub] || PHASE_CHANGE_DEFS.ice;
+}
+
+function setupPhaseChangeControlsDOM() {
+    ['ice', 'stearic', 'water', 'alcohol'].forEach(sub => {
+        const btn = document.getElementById(`btn-612-sub-${sub}`);
+        if (btn) btn.addEventListener('click', () => {
+            labState.phaseChange.substance = sub;
+            initPhaseChangeState();
+            showLabToast(`🧪 ${getPhaseChangeDef(sub).name} seçildi (${getPhaseChangeDef(sub).point} °C)`);
+        });
+    });
+
+    const btnHeat = document.getElementById('btn-612-heater');
+    if (btnHeat) btnHeat.addEventListener('click', () => {
+        const pc = labState.phaseChange;
+        if (pc.completed) initPhaseChangeState();
+        pc.isHeating = !pc.isHeating;
+        updatePhaseChangeDOMControls();
+        showLabToast(pc.isHeating ? "🔥 İspirto ocağı yakıldı: Sıcaklık–Zaman grafiği çiziliyor" : "❄️ Isıtıcı durduruldu");
+    });
+
+    const btnReset = document.getElementById('btn-612-reset');
+    if (btnReset) btnReset.addEventListener('click', resetPhaseChangeExperiment);
+
+    const btnRec = document.getElementById('btn-record-data-6-12');
+    if (btnRec) btnRec.addEventListener('click', recordMeasurement);
+}
+
+function initPhaseChangeState() {
+    const pc = labState.phaseChange;
+    const def = getPhaseChangeDef(pc.substance);
+    pc.isHeating = false;
+    pc.temp = def.startTemp;
+    pc.elapsedMin = 0.0;
+    pc.phaseProgress = 0.0;
+    pc.inPlateau = false;
+    pc.completed = false;
+    pc.history = [{ t: 0.0, temp: def.startTemp }];
+    pc.bubbles = [];
+    pc.steam = [];
+    updatePhaseChangeDOMControls();
+    updatePhaseChangeMetricsDOM();
+}
+
+function resetPhaseChangeExperiment() {
+    initPhaseChangeState();
+    showLabToast("🔄 Hâl değişim düzeneği ve grafik sıfırlandı");
+}
+
+function updatePhaseChangeDOMControls() {
+    const pc = labState.phaseChange;
+    ['ice', 'stearic', 'water', 'alcohol'].forEach(sub => {
+        const el = document.getElementById(`btn-612-sub-${sub}`);
+        if (el) el.classList.toggle('active', pc.substance === sub);
+    });
+    const btnHeat = document.getElementById('btn-612-heater');
+    const lblHeat = document.getElementById('label-612-heater');
+    if (btnHeat) btnHeat.classList.toggle('active', pc.isHeating);
+    if (lblHeat) lblHeat.textContent = pc.isHeating ? "Isıtıcıyı Durdur" : "Isıtıcıyı Başlat";
+}
+
+function updatePhaseChangePhysics() {
+    const pc = labState.phaseChange;
+    const def = getPhaseChangeDef(pc.substance);
+
+    if (pc.isHeating && !pc.completed) {
+        const dtMin = 0.055;
+        pc.elapsedMin = Math.min(12.0, pc.elapsedMin + dtMin);
+
+        if (pc.elapsedMin < 4.0) {
+            const r = pc.elapsedMin / 4.0;
+            pc.temp = def.startTemp + (def.point - def.startTemp) * r;
+            pc.inPlateau = false;
+            pc.phaseProgress = 0.0;
+        } else if (pc.elapsedMin < 8.5) {
+            pc.temp = def.point;
+            pc.inPlateau = true;
+            pc.phaseProgress = (pc.elapsedMin - 4.0) / 4.5;
+        } else {
+            pc.inPlateau = (def.eventLabel === "Kaynama");
+            pc.phaseProgress = 1.0;
+            if (def.eventLabel === "Kaynama") {
+                pc.temp = def.point;
+            } else {
+                const r = (pc.elapsedMin - 8.5) / 3.5;
+                pc.temp = def.point + (def.endTemp - def.point) * r;
+            }
+        }
+
+        const last = pc.history[pc.history.length - 1];
+        if (!last || pc.elapsedMin - last.t >= 0.15) {
+            pc.history.push({ t: pc.elapsedMin, temp: pc.temp });
+        }
+
+        if (def.eventLabel === "Kaynama" && pc.inPlateau && Math.random() < 0.55) {
+            pc.bubbles.push({ x: 165 + Math.random() * 70, y: 318, r: 2 + Math.random() * 2.5, vy: 1.8 + Math.random(), alpha: 0.85 });
+            pc.steam.push({ x: 170 + Math.random() * 60, y: 215, r: 6 + Math.random() * 5, vy: 1.2 + Math.random() * 0.6, alpha: 0.55 });
+        } else if (def.benmari && pc.temp > 55 && Math.random() < 0.3) {
+            pc.steam.push({ x: 160 + Math.random() * 80, y: 215, r: 5 + Math.random() * 4, vy: 1.0, alpha: 0.4 });
+        }
+
+        if (pc.elapsedMin >= 12.0) {
+            pc.completed = true;
+            pc.isHeating = false;
+            updatePhaseChangeDOMControls();
+        }
+    }
+
+    for (let i = pc.bubbles.length - 1; i >= 0; i--) {
+        const b = pc.bubbles[i];
+        b.y -= b.vy; b.alpha -= 0.025;
+        if (b.alpha <= 0 || b.y < 238) pc.bubbles.splice(i, 1);
+    }
+    for (let i = pc.steam.length - 1; i >= 0; i--) {
+        const s = pc.steam[i];
+        s.y -= s.vy; s.r += 0.12; s.alpha -= 0.012;
+        if (s.alpha <= 0 || s.y < 80) pc.steam.splice(i, 1);
+    }
+
+    updatePhaseChangeMetricsDOM();
+}
+
+function updatePhaseChangeMetricsDOM() {
+    const pc = labState.phaseChange;
+    const def = getPhaseChangeDef(pc.substance);
+    const phaseText = pc.phaseProgress >= 1 ? def.finalPhase : (pc.inPlateau ? def.plateauPhase : def.initialPhase);
+
+    const mbSub = document.getElementById('mbar-612-substance');
+    const mbTemp = document.getElementById('mbar-612-temp');
+    const mbTime = document.getElementById('mbar-612-time');
+    const mbPhase = document.getElementById('mbar-612-phase');
+    const mbStatus = document.getElementById('mbar-612-status');
+
+    if (mbSub) mbSub.textContent = `${def.name} (${def.eventLabel}: ${def.point} °C)`;
+    if (mbTemp) mbTemp.textContent = `${pc.temp.toFixed(1)} °C`;
+    if (mbTime) mbTime.textContent = `${pc.elapsedMin.toFixed(1)} dk`;
+    if (mbPhase) mbPhase.textContent = phaseText;
+    if (mbStatus) {
+        if (pc.inPlateau) {
+            mbStatus.textContent = `⚡ HÂL DEĞİŞİMİ (${def.point} °C): Sıcaklık sabit kalıyor — yatay plato oluşuyor!`;
+            mbStatus.style.color = "#facc15";
+        } else if (pc.completed) {
+            mbStatus.textContent = `✅ Tamamlandı: ${def.name} için ${def.eventLabel.toLowerCase()} noktası ${def.point} °C olarak doğrulandı!`;
+            mbStatus.style.color = "#34d399";
+        } else {
+            mbStatus.textContent = `🔥 ${def.name} ısıtılıyor; ${def.point} °C'ta sabit sıcaklık platosunu gözlemleyin`;
+            mbStatus.style.color = "#38bdf8";
+        }
+    }
+
+    const mSub = document.getElementById('metric-612-sub');
+    const mPoint = document.getElementById('metric-612-point');
+    const mTemp = document.getElementById('metric-612-temp');
+    const mTime = document.getElementById('metric-612-time');
+    if (mSub) mSub.textContent = def.name;
+    if (mPoint) mPoint.textContent = `${def.point} °C (${def.eventLabel})`;
+    if (mTemp) mTemp.textContent = `${pc.temp.toFixed(1)} °C`;
+    if (mTime) mTime.textContent = `${pc.elapsedMin.toFixed(1)} dk`;
+}
+
+function drawPhaseChangeSimulation() {
+    if (!ctx || !canvas) return;
+    const scale = canvas.width / 800;
+    const pc = labState.phaseChange;
+    const def = getPhaseChangeDef(pc.substance);
+
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 500);
+    bgGrad.addColorStop(0, "#080f1e");
+    bgGrad.addColorStop(1, "#132038");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 800, 500);
+
+    ctx.fillStyle = "rgba(56, 189, 248, 0.14)";
+    ctx.strokeStyle = "#38bdf8";
+    ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.roundRect(145, 14, 510, 30, 15); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#e0f2fe";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`🌡️ SAF MADDELERİN HÂL DEĞİŞİM NOKTALARI — ${def.name} (${def.point} °C)`, 400, 34);
+
+    const tableY = 425;
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(0, tableY, 800, 75);
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, tableY); ctx.lineTo(800, tableY); ctx.stroke();
+
+    // === SOL: ISITMA DÜZENEĞİ ===
+    const cx = 200;
+    ctx.strokeStyle = "#94a3b8";
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(cx - 75, 342); ctx.lineTo(cx + 75, 342);
+    ctx.moveTo(cx - 58, 342); ctx.lineTo(cx - 78, tableY);
+    ctx.moveTo(cx + 58, 342); ctx.lineTo(cx + 78, tableY);
+    ctx.stroke();
+
+    ctx.fillStyle = "#334155";
+    ctx.strokeStyle = "#64748b";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.roundRect(cx - 32, tableY - 40, 64, 40, 6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#64748b";
+    ctx.fillRect(cx - 8, tableY - 52, 16, 12);
+
+    if (pc.isHeating) {
+        const flGrad = ctx.createRadialGradient(cx, tableY - 64, 2, cx, tableY - 64, 24);
+        flGrad.addColorStop(0, "#fef08a");
+        flGrad.addColorStop(0.5, "#f97316");
+        flGrad.addColorStop(1, "rgba(239, 68, 68, 0)");
+        ctx.fillStyle = flGrad;
+        ctx.beginPath(); ctx.ellipse(cx, tableY - 64, 14, 22, 0, 0, Math.PI * 2); ctx.fill();
+    }
+
+    ctx.fillStyle = "rgba(148, 163, 184, 0.12)";
+    ctx.strokeStyle = "rgba(226, 232, 240, 0.78)";
+    ctx.lineWidth = 2.4;
+    ctx.beginPath(); ctx.roundRect(cx - 64, 214, 128, 126, [4, 4, 14, 14]); ctx.fill(); ctx.stroke();
+
+    if (def.benmari) {
+        ctx.fillStyle = "rgba(56, 189, 248, 0.34)";
+        ctx.beginPath(); ctx.roundRect(cx - 60, 246, 120, 91, [2, 2, 11, 11]); ctx.fill();
+
+        ctx.fillStyle = "rgba(241, 245, 249, 0.16)";
+        ctx.strokeStyle = "#fde68a";
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.roundRect(cx - 34, 228, 68, 84, [3, 3, 10, 10]); ctx.fill(); ctx.stroke();
+
+        const meltR = pc.phaseProgress;
+        ctx.fillStyle = meltR > 0.05 ? def.liquidColor : def.solidColor;
+        ctx.fillRect(cx - 31, 260, 62, 49);
+        if (meltR < 0.95) {
+            ctx.fillStyle = "#fef9c3";
+            ctx.fillRect(cx - 24, 272 + meltR * 22, 48, Math.max(4, 34 * (1 - meltR)));
+        }
+        ctx.fillStyle = "#fde68a";
+        ctx.font = "bold 9.5px Nunito, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Su Banyosu (Benmari)", cx, 333);
+    } else if (def.id === "ice") {
+        const meltR = pc.phaseProgress;
+        if (meltR > 0.02) {
+            ctx.fillStyle = def.liquidColor;
+            ctx.beginPath(); ctx.roundRect(cx - 60, 337 - meltR * 84, 120, meltR * 84, [2, 2, 11, 11]); ctx.fill();
+        }
+        if (meltR < 0.98) {
+            const cubeScale = Math.max(0.2, 1 - meltR * 0.8);
+            ctx.fillStyle = "rgba(224, 242, 254, 0.88)";
+            ctx.strokeStyle = "#7dd3fc";
+            ctx.lineWidth = 1.4;
+            [[-30, 290], [6, 294], [-14, 262]].forEach(([ox, oy]) => {
+                ctx.beginPath();
+                ctx.roundRect(cx + ox, oy + meltR * 22, 28 * cubeScale, 24 * cubeScale, 4);
+                ctx.fill(); ctx.stroke();
+            });
+        }
+    } else {
+        ctx.fillStyle = def.liquidColor;
+        ctx.beginPath(); ctx.roundRect(cx - 60, 248, 120, 89, [2, 2, 11, 11]); ctx.fill();
+    }
+
+    pc.bubbles.forEach(b => {
+        ctx.fillStyle = `rgba(224, 242, 254, ${b.alpha})`;
+        ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill();
+    });
+    pc.steam.forEach(s => {
+        ctx.fillStyle = `rgba(226, 232, 240, ${s.alpha})`;
+        ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fill();
+    });
+
+    const thermX = cx + 22;
+    ctx.fillStyle = "rgba(248, 250, 252, 0.9)";
+    ctx.strokeStyle = "#64748b";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.roundRect(thermX - 5, 96, 10, 190, 5); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#ef4444";
+    ctx.beginPath(); ctx.arc(thermX, 290, 8, 0, Math.PI * 2); ctx.fill();
+
+    const tNorm = Math.max(0, Math.min(1, (pc.temp - def.minAxis) / (def.maxAxis - def.minAxis)));
+    const mercH = 18 + tNorm * 160;
+    ctx.fillRect(thermX - 2.5, 286 - mercH, 5, mercH);
+
+    ctx.fillStyle = "rgba(15, 23, 42, 0.92)";
+    ctx.strokeStyle = pc.inPlateau ? "#facc15" : "#f87171";
+    ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.roundRect(thermX + 16, 116, 86, 30, 8); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = pc.inPlateau ? "#fef08a" : "#fecaca";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`${pc.temp.toFixed(1)} °C`, thermX + 59, 136);
+
+    // === SAĞ: CANLI SICAKLIK (°C) - ZAMAN (dk) GRAFİĞİ ===
+    const gx = 375;
+    const gy = 82;
+    const gw = 385;
+    const gh = 305;
+
+    ctx.fillStyle = "rgba(10, 16, 30, 0.92)";
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.35)";
+    ctx.lineWidth = 1.6;
+    ctx.beginPath(); ctx.roundRect(gx, gy, gw, gh, 12); ctx.fill(); ctx.stroke();
+
+    ctx.fillStyle = "#f1f5f9";
+    ctx.font = "bold 12px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("Canlı Sıcaklık (°C) – Zaman (dk) Grafiği", gx + gw / 2, gy + 22);
+
+    const pLeft = gx + 54;
+    const pRight = gx + gw - 22;
+    const pTop = gy + 42;
+    const pBot = gy + gh - 38;
+    const plotW = pRight - pLeft;
+    const plotH = pBot - pTop;
+
+    ctx.strokeStyle = "#94a3b8";
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.moveTo(pLeft, pTop); ctx.lineTo(pLeft, pBot); ctx.lineTo(pRight, pBot);
+    ctx.stroke();
+
+    const pointY = pBot - ((def.point - def.minAxis) / (def.maxAxis - def.minAxis)) * plotH;
+    ctx.strokeStyle = "rgba(250, 204, 21, 0.6)";
+    ctx.lineWidth = 1.4;
+    ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(pLeft, pointY); ctx.lineTo(pRight, pointY); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = "#fde047";
+    ctx.font = "bold 10px Nunito, sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText(`${def.point}°C`, pLeft - 6, pointY + 4);
+
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "bold 9.5px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    [0, 4, 8, 12].forEach(m => {
+        const tx = pLeft + (m / 12) * plotW;
+        ctx.fillText(`${m} dk`, tx, pBot + 16);
+    });
+    ctx.fillText("Zaman (dk)", pLeft + plotW / 2, pBot + 31);
+
+    if (pc.history.length > 0) {
+        ctx.strokeStyle = "#38bdf8";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        pc.history.forEach((pt, idx) => {
+            const px = pLeft + (pt.t / 12) * plotW;
+            const py = pBot - ((pt.temp - def.minAxis) / (def.maxAxis - def.minAxis)) * plotH;
+            if (idx === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        });
+        ctx.stroke();
+
+        if (pc.elapsedMin >= 4.0) {
+            const platEnd = Math.min(8.5, pc.elapsedMin);
+            const x1 = pLeft + (4.0 / 12) * plotW;
+            const x2 = pLeft + (platEnd / 12) * plotW;
+            ctx.strokeStyle = "#facc15";
+            ctx.lineWidth = 4.2;
+            ctx.beginPath(); ctx.moveTo(x1, pointY); ctx.lineTo(x2, pointY); ctx.stroke();
+
+            ctx.fillStyle = "#fef08a";
+            ctx.font = "bold 10px Nunito, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(`Sabit Sıcaklık (${def.eventLabel}: ${def.point}°C)`, (x1 + x2) / 2, pointY - 10);
+        }
+
+        const last = pc.history[pc.history.length - 1];
+        const lx = pLeft + (last.t / 12) * plotW;
+        const ly = pBot - ((last.temp - def.minAxis) / (def.maxAxis - def.minAxis)) * plotH;
+        ctx.fillStyle = pc.inPlateau ? "#facc15" : "#ef4444";
+        ctx.beginPath(); ctx.arc(lx, ly, 5, 0, Math.PI * 2); ctx.fill();
+    }
+
+    ctx.fillStyle = "rgba(15, 23, 42, 0.92)";
+    ctx.strokeStyle = pc.inPlateau ? "#facc15" : "#38bdf8";
+    ctx.lineWidth = 1.4;
+    ctx.beginPath(); ctx.roundRect(45, tableY + 14, 710, 44, 10); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#f8fafc";
+    ctx.font = "bold 12px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(
+        `${def.name} · ${def.eventLabel} Noktası: ${def.point} °C  |  Anlık Sıcaklık: ${pc.temp.toFixed(1)} °C  |  Süre: ${pc.elapsedMin.toFixed(1)} dk`,
+        400, tableY + 41
+    );
+
     ctx.restore();
 }
 

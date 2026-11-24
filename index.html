@@ -57,8 +57,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@500;600;700&family=Kalam:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8.9.37">
-    <link rel="stylesheet" href="exam.css?v=8.9.37">
+    <link rel="stylesheet" href="style.css?v=8.9.38">
+    <link rel="stylesheet" href="exam.css?v=8.9.38">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -834,6 +834,15 @@
                         <div class="metrics-pill status" id="mbar-611-status">🌈 Çark hızlandıkça tüm renkler birleşip beyaz görünür</div>
                     </div>
 
+                    <!-- Canvas Altı Responsive Metrik Şeridi (Deney 6.12 - Saf Maddelerin Hâl Değişim Noktaları) -->
+                    <div id="metrics-bar-6-12" class="lab-canvas-metrics-bar is-hidden">
+                        <div class="metrics-pill" style="color: #38bdf8;"><i class="fas fa-flask"></i> Saf Madde: <strong id="mbar-612-substance">Buz (Erime: 0 °C)</strong></div>
+                        <div class="metrics-pill" style="color: #f87171;"><i class="fas fa-thermometer-half"></i> Sıcaklık: <strong id="mbar-612-temp">-10.0 °C</strong></div>
+                        <div class="metrics-pill" style="color: #facc15;"><i class="fas fa-clock"></i> Süre: <strong id="mbar-612-time">0.0 dk</strong></div>
+                        <div class="metrics-pill" style="color: #34d399;"><i class="fas fa-snowflake"></i> Hâl: <strong id="mbar-612-phase">Katı</strong></div>
+                        <div class="metrics-pill status" id="mbar-612-status">🔥 Isıtıcıyı başlatarak hâl değişiminde sıcaklığın sabit kaldığı platoyu gözlemleyin</div>
+                    </div>
+
                     <!-- Canvas Altı Hızlı Dokunmatik Açı Kontrol Barı (Deney 7.3) -->
                     <div id="quick-controls-7-3" class="lab-canvas-quick-controls">
                         <button class="lab-btn-step" id="btn-angle-minus-5" title="-5 Derece">-5°</button>
@@ -1208,9 +1217,15 @@
                         </div>
                     </div>
 
-                    <!-- Canvas Altı Hızlı Sıvı Yoğunluk Kulesi Kontrol Barı (Deney 6.5) -->
+                    <!-- Canvas Altı Hızlı Sıvı Yoğunluk Kulesi ve Ölçüm Tezgâhı Kontrol Barı (Deney 6.5) -->
                     <div id="quick-controls-6-5" class="lab-canvas-quick-controls is-hidden">
                         <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group" id="group-modes-6-5">
+                                <button class="lab-toggle-btn active" id="btn-65-mode-tower" title="Sıvı Yoğunluk Kulesi">🧪 Yoğunluk Kulesi</button>
+                                <button class="lab-toggle-btn" id="btn-65-mode-bench" title="Eşit Kollu Terazi ve Dereceli Silindir ile Yoğunluk Ölçümü">⚖️ Kütle–Hacim–Yoğunluk Ölçümü</button>
+                            </div>
+                        </div>
+                        <div class="lab-quick-lens-row" id="group-65-tower-ctrl">
                             <div class="lab-toggle-btn-group">
                                 <button class="lab-toggle-btn is-hidden" id="btn-pour-honey" title="Bal Ekle (1.40 g/cm³)" aria-hidden="true"><i class="fas fa-fill-drip" style="color: #f59e0b;"></i> + Bal</button>
                                 <button class="lab-toggle-btn is-hidden" id="btn-pour-glycerin" title="Gliserin Ekle (1.26 g/cm³)" aria-hidden="true"><i class="fas fa-fill-drip" style="color: #c084fc;"></i> + Gliserin</button>
@@ -1222,6 +1237,18 @@
                                 <button class="lab-toggle-btn" id="btn-drop-plastic" title="Plastik Kapak Bırak (Askıda)"><i class="fas fa-circle" style="color: #ef4444;"></i> Plastik Bırak</button>
                                 <button class="lab-toggle-btn" id="btn-drop-iron" title="Demir Vida Bırak (Batar)"><i class="fas fa-wrench" style="color: #94a3b8;"></i> Vida Bırak</button>
                                 <button class="lab-toggle-btn" id="btn-density-reset" title="Silindiri Boşalt"><i class="fas fa-trash-alt"></i> Boşalt</button>
+                            </div>
+                        </div>
+                        <div class="lab-quick-lens-row is-hidden" id="group-65-bench-ctrl">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-65-mat-stone" title="Taş (2.6 g/cm³)">🪨 Taş</button>
+                                <button class="lab-toggle-btn" id="btn-65-mat-iron" title="Demir Cıvata (7.8 g/cm³)">🔩 Demir Cıvata</button>
+                                <button class="lab-toggle-btn" id="btn-65-mat-glass" title="Cam Bilye (2.5 g/cm³)">🔮 Cam Bilye</button>
+                                <button class="lab-toggle-btn" id="btn-65-mat-aluminum" title="Alüminyum Küp (2.7 g/cm³)">🧊 Alüminyum Küp</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-65-bench-drop" title="Cismi Dereceli Silindire Bırak ve Yoğunluğu Ölç"><i class="fas fa-tint"></i> Suya Bırak / Ölç</button>
+                                <button class="lab-toggle-btn" id="btn-65-bench-reset" title="Ölçüm Tezgâhını Sıfırla"><i class="fas fa-redo"></i> Sıfırla</button>
                             </div>
                         </div>
                     </div>
@@ -1260,9 +1287,15 @@
                         </div>
                     </div>
 
-                    <!-- Canvas Altı Hızlı Gravzant Halkası Kontrol Barı (Deney 6.8) -->
+                    <!-- Canvas Altı Hızlı Genleşme ve Büzülme Kontrol Barı (Deney 6.8 - Katılar ve Gazlar) -->
                     <div id="quick-controls-6-8" class="lab-canvas-quick-controls is-hidden">
                         <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group" id="group-modes-6-8">
+                                <button class="lab-toggle-btn active" id="btn-68-mode-solid" title="Katılarda Genleşme: Gravzant Halkası">🔥 Katılarda (Gravzant Halkası)</button>
+                                <button class="lab-toggle-btn" id="btn-68-mode-gas" title="Gazlarda Genleşme ve Büzülme: Şişe ve Balon">🎈 Gazlarda (Şişe ve Balon)</button>
+                            </div>
+                        </div>
+                        <div class="lab-quick-lens-row" id="group-68-solid-ctrl">
                             <div class="lab-toggle-btn-group">
                                 <button class="lab-toggle-btn active" id="btn-grav-pass-cold" title="Soğuk Küreyi Halkadan Geçir"><i class="fas fa-arrow-down"></i> 1. Geçir (Soğuk)</button>
                                 <button class="lab-toggle-btn" id="btn-grav-heat" title="İspirto Ocağında Küreyi Isıt"><i class="fas fa-fire" style="color: #f97316;"></i> 2. Küreyi Isıt</button>
@@ -1272,6 +1305,12 @@
                             </div>
                             <div class="lab-toggle-btn-group">
                                 <button class="lab-toggle-btn" id="btn-grav-reset" title="Düzeneği Sıfırla"><i class="fas fa-redo"></i> Sıfırla</button>
+                            </div>
+                        </div>
+                        <div class="lab-quick-lens-row is-hidden" id="group-68-gas-ctrl">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-68-gas-start" title="Şişeleri Sıcak (80°C) ve Buzlu (5°C) Su Kaplarına Yerleştir"><i class="fas fa-play"></i> <span id="label-68-gas-start">Şişeleri Kaplara Yerleştir</span></button>
+                                <button class="lab-toggle-btn" id="btn-68-gas-reset" title="Şişeleri Oda Sıcaklığına (20°C) Al"><i class="fas fa-redo"></i> Oda Sıcaklığı (20°C)</button>
                             </div>
                         </div>
                     </div>
@@ -1570,6 +1609,24 @@
                                 <button class="lab-toggle-btn" id="btn-611-light-red">🔴 Kırmızı</button>
                                 <button class="lab-toggle-btn" id="btn-611-light-green">🟢 Yeşil</button>
                                 <button class="lab-toggle-btn" id="btn-611-light-blue">🔵 Mavi</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Canvas Altı Hızlı Kontroller (Deney 6.12 - Saf Maddelerin Hâl Değişim Noktaları) -->
+                    <div id="quick-controls-6-12" class="lab-canvas-quick-controls is-hidden">
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group" id="group-612-substances">
+                                <button class="lab-toggle-btn active" id="btn-612-sub-ice" title="Buz — Erime Noktası: 0 °C">🧊 Buz (0°C)</button>
+                                <button class="lab-toggle-btn" id="btn-612-sub-stearic" title="Stearik Asit — Su Banyosunda Erime: 69 °C">🕯️ Stearik Asit (69°C)</button>
+                                <button class="lab-toggle-btn" id="btn-612-sub-water" title="Saf Su — Kaynama Noktası: 100 °C">💧 Su (100°C)</button>
+                                <button class="lab-toggle-btn" id="btn-612-sub-alcohol" title="Etil Alkol — Kaynama Noktası: 78 °C">🧪 Etil Alkol (78°C)</button>
+                            </div>
+                        </div>
+                        <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-612-heater" title="İspirto Ocağını Başlat / Durdur"><i class="fas fa-fire"></i> <span id="label-612-heater">Isıtıcıyı Başlat</span></button>
+                                <button class="lab-toggle-btn" id="btn-612-reset" title="Düzeneği ve Grafiği Sıfırla"><i class="fas fa-redo"></i> Sıfırla</button>
                             </div>
                         </div>
                     </div>
@@ -3791,6 +3848,47 @@
                             </div>
                         </div>
 
+                        <!-- DENEY 6.12 DEĞİŞKENLERİ: SAF MADDELERİN HÂL DEĞİŞİM NOKTALARI -->
+                        <div id="vars-container-6-12" class="is-hidden">
+                            <div class="lab-panel-box">
+                                <h4 class="lab-box-heading"><i class="fas fa-vial"></i> Maarif Modeli Değişkenleri (FB.6.5.2)</h4>
+                                <div class="lab-vars-list">
+                                    <div class="lab-var-row"><span class="var-badge indep">Bağımsız:</span> Saf maddenin cinsi (Buz, Stearik Asit, Su, Etil Alkol)</div>
+                                    <div class="lab-var-row"><span class="var-badge dep">Bağımlı:</span> Erime / Kaynama sıcaklığı (°C) ve Sıcaklık–Zaman grafiği</div>
+                                    <div class="lab-var-row"><span class="var-badge ctrl">Sabit Tutulan:</span> Özdeş ısıtıcı gücü ve ortam basıncı (1 atm)</div>
+                                </div>
+                            </div>
+                            <div class="lab-pedagogical-card is-work" id="phase-pedagogical-box" style="margin-top: 12px;">
+                                <div class="pedagogical-icon"><i class="fas fa-thermometer-half"></i></div>
+                                <div class="pedagogical-content">
+                                    <strong id="phase-pedagogical-title">🧊 Saf Maddelerde Hâl Değişim Noktası</strong>
+                                    <p id="phase-pedagogical-text">Her saf maddenin kendine özgü erime, donma ve kaynama sıcaklığı vardır. Hâl değişimi süresince sıcaklık sabit kalır.</p>
+                                </div>
+                            </div>
+                            <div class="lab-panel-box" style="margin-top: 12px;">
+                                <h4 class="lab-box-heading"><i class="fas fa-tachometer-alt"></i> Anlık Termometre ve Grafik Değerleri</h4>
+                                <div class="lab-stats-grid">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Saf Madde</span>
+                                        <strong class="chip-val" id="metric-612-sub" style="color: #38bdf8;">Buz</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Hâl Değişim Noktası</span>
+                                        <strong class="chip-val" id="metric-612-point" style="color: #facc15;">0 °C (Erime)</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Anlık Sıcaklık</span>
+                                        <strong class="chip-val" id="metric-612-temp" style="color: #f87171;">-10.0 °C</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Geçen Süre</span>
+                                        <strong class="chip-val" id="metric-612-time" style="color: #34d399;">0.0 dk</strong>
+                                    </div>
+                                </div>
+                                <button id="btn-record-data-6-12" class="action-btn lab-record-action-btn" style="margin-top: 12px;"><i class="fas fa-clipboard-check"></i> 📋 Gözlemi Kaydet</button>
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- TAB 2: VERİ DEFTERİ VE ÖLÇÜM TABLOSU -->
@@ -4550,6 +4648,21 @@
                                 <div class="guide-item">
                                     <strong>2. Cisimlerin Renkli Görünmesi:</strong>
                                     <p>Beyaz cisimler üzerine düşen tüm ışıkları yansıtır; siyah cisimler ise ışığı soğurur. Kırmızı bir cisim yalnızca kırmızı ışığı yansıttığı için mavi ışık altında <strong>siyah</strong> görünür.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DENEY 6.12 REHBERİ: SAF MADDELERİN HÂL DEĞİŞİM NOKTALARI -->
+                        <div id="guide-container-6-12" class="lab-panel-box is-hidden">
+                            <h4 class="lab-box-heading"><i class="fas fa-book-open"></i> Hâl Değişim Noktaları Rehberi (FB.6.5.2)</h4>
+                            <div class="lab-guide-text">
+                                <div class="guide-item">
+                                    <strong>1. Ayırt Edici Özellik Olarak Erime, Donma ve Kaynama Noktası:</strong>
+                                    <p>Saf maddelerin erime ve kaynama sıcaklıkları birbirinden farklıdır: Buz <strong>0 °C</strong>'ta erir, stearik asit su banyosunda <strong>69 °C</strong>'ta erir, etil alkol <strong>78 °C</strong>'ta, saf su ise <strong>100 °C</strong>'ta kaynar.</p>
+                                </div>
+                                <div class="guide-item">
+                                    <strong>2. Hâl Değişimi Sırasında Sabit Sıcaklık Platosu:</strong>
+                                    <p>Bir saf madde hâl değiştirirken verilen ısı, tanecikler arasındaki bağları koparmak için kullanılır; bu yüzden hâl değişimi tamamlanana kadar termometredeki sıcaklık <strong>sabit kalır</strong> (grafikte yatay düz çizgi oluşur).</p>
                                 </div>
                             </div>
                         </div>
@@ -5481,10 +5594,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
     <script>
-        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.37';
+        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.38';
     </script>
-    <script type="module" src="exam-engine.js?v=8.9.37"></script>
-    <script type="module" src="lab-engine.js?v=8.9.37"></script>
-    <script type="module" src="script.js?v=8.9.37"></script>
+    <script type="module" src="exam-engine.js?v=8.9.38"></script>
+    <script type="module" src="lab-engine.js?v=8.9.38"></script>
+    <script type="module" src="script.js?v=8.9.38"></script>
 </body>
 </html>

@@ -15,9 +15,9 @@ test.describe('FenUp X — Sanal Laboratuvar UX Yenilemesi, Müfredat Düzeltmel
     await expect(welcome).toBeVisible();
     await expect(gradeCatalog).toBeHidden();
 
-    // Dinamik deney sayıları: 5. Sınıf (12), 6. Sınıf (11), 7. Sınıf (10)
+    // Dinamik deney sayıları: 5. Sınıf (12), 6. Sınıf (12), 7. Sınıf (10)
     await expect(page.locator('#lab-welcome-meta-5')).toContainText('12 İnteraktif Deney');
-    await expect(page.locator('#lab-welcome-meta-6')).toContainText('11 İnteraktif Deney');
+    await expect(page.locator('#lab-welcome-meta-6')).toContainText('12 İnteraktif Deney');
     await expect(page.locator('#lab-welcome-meta-7')).toContainText('10 İnteraktif Deney');
 
     // Yatay taşma kontrolü (karşılama ekranı)

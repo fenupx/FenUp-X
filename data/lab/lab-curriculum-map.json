@@ -699,6 +699,30 @@
     ]
   },
   {
+    "experiment_id": "6.12",
+    "grade": 6,
+    "unit": 5,
+    "output_codes": [
+      "FB.6.5.2"
+    ],
+    "program_version": "Türkiye Yüzyılı Maarif Modeli (2024)",
+    "source_url": "https://tymm.meb.gov.tr/fen-bilimleri-dersi/unite/413",
+    "textbook_name": "Fen Bilimleri - 6 Ders Kitabı (2. Kitap)",
+    "textbook_pdf_pages": "29-33",
+    "textbook_printed_pages": "29-33",
+    "activity_title": "Saf Maddelerin Hâl Değişim Noktaları (Erime, Donma ve Kaynama)",
+    "expected_observation": "Buzun 0 °C'ta, stearik asidin su banyosunda 69 °C'ta eridiği; etil alkolün 78 °C'ta, saf suyun 100 °C'ta kaynadığı ve hâl değişimi süresince Sıcaklık–Zaman grafiğinde sıcaklığın sabit kaldığı yatay plato oluştuğu gözlemlenir.",
+    "independent_variable": "Saf maddenin cinsi (Buz, Stearik Asit, Su, Etil Alkol)",
+    "dependent_variable": "Erime / kaynama sıcaklığı (°C) ve sıcaklık-zaman grafiği",
+    "controlled_variables": ["Özdeş ısıtıcı gücü", "Ortam basıncı (1 atm)"],
+    "scope_exclusions": ["Özgül ısı (Q = m·c·ΔT) hesaplamaları"],
+    "verified_status": "verified",
+    "evaluation_questions": [
+      "Saf maddeler hâl değiştirirken termometrede okunan sıcaklık neden bir süre sabit kalır?",
+      "Etil alkol ve saf suyun kaynama noktalarının farklı olması maddelerin hangi özelliğini kanıtlar?"
+    ]
+  },
+  {
     "experiment_id": "7.1",
     "grade": 7,
     "unit": 2,

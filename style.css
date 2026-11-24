@@ -2891,6 +2891,9 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
 #quick-controls-7-2,
 #quick-controls-5-2,
 #quick-controls-5-3,
+#quick-controls-6-5,
+#quick-controls-6-8,
+#quick-controls-6-12,
 #quick-controls-7-5 {
     flex-direction: column;
     align-items: stretch;
@@ -5415,8 +5418,8 @@ body:has(#lab-view:not(.is-hidden) #lab-workspace-view:not(.is-hidden):not([styl
     #admin-user-list { padding: 6px !important; }
 }
 
-/* One visible control set for these experiments; right-panel teaching text stays. */
-#quick-controls-6-8, #quick-controls-6-9 { display: none !important; pointer-events: none !important; }
+/* One visible control set for 6.9; 6.8 uses quick-controls for Solid/Gas mode selector. */
+#quick-controls-6-9 { display: none !important; pointer-events: none !important; }
 .lab-mini-pill-btn { background: #172033; color: #f8fafc; border: 1px solid #64748b; border-radius: 8px; padding: 10px 12px; min-height: 44px; touch-action: manipulation; }
 .lab-mini-pill-btn.active { background: #075985; border-color: #38bdf8; }
 :is(.lab-mini-pill-btn, .lab-select-pill):focus-visible { outline: 3px solid #38bdf8; outline-offset: 2px; }
