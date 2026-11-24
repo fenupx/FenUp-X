@@ -2888,7 +2888,10 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     color: #030712;
     box-shadow: 0 0 12px rgba(0, 210, 255, 0.4);
 }
-#quick-controls-7-2 {
+#quick-controls-7-2,
+#quick-controls-5-2,
+#quick-controls-5-3,
+#quick-controls-7-5 {
     flex-direction: column;
     align-items: stretch;
     gap: 8px;

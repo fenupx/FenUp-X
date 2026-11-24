@@ -538,6 +538,26 @@ export const labState = {
             steamParticles: []
         },
 
+        // Mod 4: Süzme (Katı-Sıvı Heterojen Karışım - Kum + Su)
+        filtration: {
+            isRunning: false,
+            progress: 0.0,        // 0 .. 100 (%)
+            sandTrapped: 0.0,     // 0 .. 40 g
+            waterFiltered: 0.0,   // 0 .. 100 mL
+            pourAngle: 0.0,
+            drops: []
+        },
+
+        // Mod 5: Eleme (Katı-Katı Heterojen Karışım - Kepekli Un)
+        sieving: {
+            isRunning: false,
+            progress: 0.0,        // 0 .. 100 (%)
+            branOnTop: 30.0,      // sabit 30 g iri kepek üstte kalır
+            flourSifted: 0.0,     // 0 .. 70 g ince un alta elenir
+            shakePhase: 0.0,
+            fallingFlour: []
+        },
+
         measurements: []
     },
 
@@ -866,19 +886,26 @@ export const labState = {
         measurements: []
     },
 
-    // DENEY 5.2: DİNAMOMETRE VE YAY ESNEKLİĞİ (FB.5.2.1 - FB.5.2.2)
+    // DENEY 5.2: DİNAMOMETRE VE KÜTLE-AĞIRLIK ÖLÇÜMÜ (FB.5.2.1 - FB.5.2.2)
     dynamometer: {
+        mode: "spring",          // "spring" (Dinamometre Kuvvet) | "massweight" (Kütle ve Ağırlık)
         springType: "medium",    // "thin" (max 10N) | "medium" (max 20N) | "thick" (max 40N)
         force: 0,                // 0 - 20 N (asılı ağırlıklar)
         weightsCount: 0,         // her ağırlık 2 N
         currentStretch: 0.0,     // cm cinsinden uzama
         targetStretch: 0.0,
         divisionCount: 0,        // ölçekteki bölme sayısı
+        // 2. Mod: Kütle ve Ağırlık Ölçümü (MEB 5. Sınıf 1. Kitap s. 73)
+        mwEnv: "earth",          // "earth" | "moon"
+        mwObject: "apple",       // "apple" | "stone" | "iron"
+        mwMassGrams: 500,        // 100 | 200 | 500 | 1000
+        mwCurrentStretch: 5.0,
         measurements: []
     },
 
-    // DENEY 5.3: SÜRTÜNME KUVVETİ VE YÜZEY TÜRLLERİ (FB.5.2.4)
+    // DENEY 5.3: SÜRTÜNME KUVVETİ, HAVA VE SU DİRENCİ (FB.5.2.4)
     friction: {
+        mode: "surface",         // "surface" (Yüzey Sürtünmesi) | "fluid" (Hava ve Su Direnci)
         surface: "ice",          // "ice" | "wood" | "sand" | "carpet"
         rampHeight: 2,           // 1: Düşük (1 takoz), 2: Orta (2 takoz), 3: Yüksek (3 takoz)
         carState: "ready",       // "ready" | "rolling" | "sliding" | "stopped"
@@ -888,6 +915,17 @@ export const labState = {
         distanceTraveled: 0.0,   // metre
         wheelAngle: 0.0,
         skidParticles: [],
+        // 2. Mod: Hava ve Su Direnci (MEB 5. Sınıf 1. Kitap s. 83)
+        fluidSubMode: "air",     // "air" (Düz vs. Buruşturulmuş Kâğıt) | "water" (Silindirde Disk vs. Sivri Cisim)
+        fluidRunning: false,
+        fluidElapsed: 0.0,
+        fluidSlowY: 0.0,         // 0 .. 1 (0: üst, 1: taban)
+        fluidFastY: 0.0,         // 0 .. 1
+        fluidSlowTime: 0.0,
+        fluidFastTime: 0.0,
+        fluidSlowDone: false,
+        fluidFastDone: false,
+        fluidBubbles: [],
         measurements: []
     },
 
@@ -15172,14 +15210,18 @@ function drawBeakerHeaderAndStopwatch(ctx, beaker, cx, topY) {
 // --- 8.6. DENEY 7.6: KARIŞIMLARIN AYRILMASI (AYIRMA HUNİSİ & BASİT DAMITMA) MOTORU ---
 
 function setupSeparationControlsDOM() {
-    // 1. Mod Geçiş Butonları (Ayırma Hunisi / Ayrımsal Damıtma / Buharlaştırma)
+    // 1. Mod Geçiş Butonları (Ayırma Hunisi / Ayrımsal Damıtma / Buharlaştırma / Süzme / Eleme)
     const btnFunnel = document.getElementById('btn-mode-funnel');
     const btnDistill = document.getElementById('btn-mode-distill');
     const btnEvap = document.getElementById('btn-mode-evap');
+    const btnFilter = document.getElementById('btn-mode-filter');
+    const btnSieve = document.getElementById('btn-mode-sieve');
 
     if (btnFunnel) btnFunnel.addEventListener('click', () => setSeparationMode("funnel"));
     if (btnDistill) btnDistill.addEventListener('click', () => setSeparationMode("distill"));
     if (btnEvap) btnEvap.addEventListener('click', () => setSeparationMode("evap"));
+    if (btnFilter) btnFilter.addEventListener('click', () => setSeparationMode("filter"));
+    if (btnSieve) btnSieve.addEventListener('click', () => setSeparationMode("sieve"));
 
     // 2. Ayırma Hunisi Kontrolleri
     const btnValve = document.getElementById('btn-funnel-valve');
@@ -15199,6 +15241,18 @@ function setupSeparationControlsDOM() {
     if (btnEvapHeater) btnEvapHeater.addEventListener('click', toggleEvapHeater);
     if (btnEvapReset) btnEvapReset.addEventListener('click', resetEvapApparatus);
 
+    // 4.5. Süzme (Kum-Su) Kontrolleri
+    const btnFilterStart = document.getElementById('btn-filter-start');
+    const btnFilterReset = document.getElementById('btn-filter-reset');
+    if (btnFilterStart) btnFilterStart.addEventListener('click', toggleFilterStart);
+    if (btnFilterReset) btnFilterReset.addEventListener('click', resetFilterApparatus);
+
+    // 4.6. Eleme (Kepekli Un) Kontrolleri
+    const btnSieveStart = document.getElementById('btn-sieve-start');
+    const btnSieveReset = document.getElementById('btn-sieve-reset');
+    if (btnSieveStart) btnSieveStart.addEventListener('click', toggleSieveStart);
+    if (btnSieveReset) btnSieveReset.addEventListener('click', resetSieveApparatus);
+
     // 5. Veri Defterine Kaydet
     const btnRecord75 = document.getElementById('btn-record-data-7-5');
     if (btnRecord75) btnRecord75.addEventListener('click', recordMeasurement);
@@ -15209,27 +15263,41 @@ function setSeparationMode(mode) {
     const isFunnel = (mode === "funnel");
     const isDistill = (mode === "distill");
     const isEvap = (mode === "evap");
+    const isFilter = (mode === "filter");
+    const isSieve = (mode === "sieve");
 
     const btnFunnel = document.getElementById('btn-mode-funnel');
     const btnDistill = document.getElementById('btn-mode-distill');
     const btnEvap = document.getElementById('btn-mode-evap');
+    const btnFilter = document.getElementById('btn-mode-filter');
+    const btnSieve = document.getElementById('btn-mode-sieve');
     if (btnFunnel) btnFunnel.classList.toggle('active', isFunnel);
     if (btnDistill) btnDistill.classList.toggle('active', isDistill);
     if (btnEvap) btnEvap.classList.toggle('active', isEvap);
+    if (btnFilter) btnFilter.classList.toggle('active', isFilter);
+    if (btnSieve) btnSieve.classList.toggle('active', isSieve);
 
     const grpFunnel = document.getElementById('group-controls-funnel');
     const grpDistill = document.getElementById('group-controls-distill');
     const grpEvap = document.getElementById('group-controls-evap');
+    const grpFilter = document.getElementById('group-controls-filter');
+    const grpSieve = document.getElementById('group-controls-sieve');
     if (grpFunnel) grpFunnel.classList.toggle('is-hidden', !isFunnel);
     if (grpDistill) grpDistill.classList.toggle('is-hidden', !isDistill);
     if (grpEvap) grpEvap.classList.toggle('is-hidden', !isEvap);
+    if (grpFilter) grpFilter.classList.toggle('is-hidden', !isFilter);
+    if (grpSieve) grpSieve.classList.toggle('is-hidden', !isSieve);
 
     const statsFunnel = document.getElementById('stats-grid-funnel');
     const statsDistill = document.getElementById('stats-grid-distill');
     const statsEvap = document.getElementById('stats-grid-evap');
+    const statsFilter = document.getElementById('stats-grid-filter');
+    const statsSieve = document.getElementById('stats-grid-sieve');
     if (statsFunnel) statsFunnel.classList.toggle('is-hidden', !isFunnel);
     if (statsDistill) statsDistill.classList.toggle('is-hidden', !isDistill);
     if (statsEvap) statsEvap.classList.toggle('is-hidden', !isEvap);
+    if (statsFilter) statsFilter.classList.toggle('is-hidden', !isFilter);
+    if (statsSieve) statsSieve.classList.toggle('is-hidden', !isSieve);
 
     const badge = document.getElementById('sep-principle-badge');
     const pIcon = document.getElementById('sep-principle-icon');
@@ -15247,17 +15315,34 @@ function setSeparationMode(mode) {
             pIcon.innerHTML = '<i class="fas fa-fire"></i>';
             pTitle.textContent = "KAYNAMA NOKTASI FARKI (Ayrımsal Damıtma)";
             pDesc.textContent = "Birbiri içinde homojen karışan (çözelti) sıvılardan kaynama noktası düşük olan (Etil Alkol, 78°C) önce yoğun biçimde buharlaşır ve soğutucuda yoğuşarak alkolce zengin sıvı olarak ayrılır.";
-        } else {
+        } else if (isEvap) {
             badge.classList.add('distill-mode');
             pIcon.innerHTML = '<i class="fas fa-sun"></i>';
             pTitle.textContent = "BUHARLAŞTIRMA (Katı-Sıvı Homojen Karışım)";
             pDesc.textContent = "Tuzlu su gibi katı-sıvı çözeltilerde su ısıtılarak buharlaştırılır; çözünen katı (tuz) buharlaşamadığı için kap dibinde kristallenerek ayrılır.";
+        } else if (isFilter) {
+            badge.classList.remove('distill-mode');
+            pIcon.innerHTML = '<i class="fas fa-tint"></i>';
+            pTitle.textContent = "SÜZME (Katı–Sıvı Heterojen Karışım)";
+            pDesc.textContent = "Suda çözünmeyen katı tanecikler (kum) süzgeç kâğıdının gözeneklerinden geçemeyip kalıntı olarak tutulurken, berrak su süzüntü olarak alt behere geçer.";
+        } else {
+            badge.classList.remove('distill-mode');
+            pIcon.innerHTML = '<i class="fas fa-th"></i>';
+            pTitle.textContent = "ELEME (Katı–Katı Heterojen · Tanecik Boyutu Farkı)";
+            pDesc.textContent = "Farklı tanecik boyutundaki katı karışımlarda (kepekli un) ince un tanecikleri elek gözeneklerinden alta geçerken, iri kepek parçaları elek üstünde kalır.";
         }
     }
 
     updateSeparationPedagogicalBox();
     updateSeparationMetricsDOM();
-    showLabToast(isFunnel ? "🧪 Ayırma Hunisi Modu Aktif" : (isDistill ? "🔥 Ayrımsal Damıtma Modu Aktif" : "🧂 Buharlaştırma (Tuz-Su) Modu Aktif"));
+    const toastMap = {
+        funnel: "🧪 Ayırma Hunisi Modu Aktif",
+        distill: "🔥 Ayrımsal Damıtma Modu Aktif",
+        evap: "🧂 Buharlaştırma (Tuz-Su) Modu Aktif",
+        filter: "⏳ Süzme (Kum–Su) Modu Aktif",
+        sieve: "🌾 Eleme (Kepekli Un) Modu Aktif"
+    };
+    showLabToast(toastMap[mode] || "🧪 Ayırma Yöntemi Seçildi");
 }
 
 function toggleFunnelValve() {
@@ -15359,13 +15444,75 @@ function resetEvapApparatus() {
     showLabToast("🔄 Tuzlu su buharlaştırma kabı sıfırlandı");
 }
 
+function toggleFilterStart() {
+    const fl = labState.separation.filtration;
+    if (fl.progress >= 100) resetFilterApparatus();
+    fl.isRunning = !fl.isRunning;
+    const lbl = document.getElementById('label-filter-start');
+    const btn = document.getElementById('btn-filter-start');
+    if (lbl) lbl.textContent = fl.isRunning ? "Süzmeyi Durdur" : "Süzmeyi Başlat";
+    if (btn) btn.classList.toggle('active', fl.isRunning);
+    updateSeparationPedagogicalBox();
+    showLabToast(fl.isRunning ? "⏳ Kum–su karışımı süzgeç kâğıdına dökülüyor" : "⏸️ Süzme duraklatıldı");
+}
+
+function resetFilterApparatus() {
+    const fl = labState.separation.filtration;
+    fl.isRunning = false;
+    fl.progress = 0.0;
+    fl.sandTrapped = 0.0;
+    fl.waterFiltered = 0.0;
+    fl.pourAngle = 0.0;
+    fl.drops = [];
+    const lbl = document.getElementById('label-filter-start');
+    const btn = document.getElementById('btn-filter-start');
+    if (lbl) lbl.textContent = "Süzmeyi Başlat";
+    if (btn) btn.classList.remove('active');
+    updateSeparationPedagogicalBox();
+    updateSeparationMetricsDOM();
+    showLabToast("🔄 Süzme düzeneği sıfırlandı");
+}
+
+function toggleSieveStart() {
+    const sv = labState.separation.sieving;
+    if (sv.progress >= 100) resetSieveApparatus();
+    sv.isRunning = !sv.isRunning;
+    const lbl = document.getElementById('label-sieve-start');
+    const btn = document.getElementById('btn-sieve-start');
+    if (lbl) lbl.textContent = sv.isRunning ? "Elemeyi Durdur" : "Elemeyi Başlat";
+    if (btn) btn.classList.toggle('active', sv.isRunning);
+    updateSeparationPedagogicalBox();
+    showLabToast(sv.isRunning ? "🌾 Elek sallanıyor: ince un alta dökülüyor" : "⏸️ Eleme duraklatıldı");
+}
+
+function resetSieveApparatus() {
+    const sv = labState.separation.sieving;
+    sv.isRunning = false;
+    sv.progress = 0.0;
+    sv.branOnTop = 30.0;
+    sv.flourSifted = 0.0;
+    sv.shakePhase = 0.0;
+    sv.fallingFlour = [];
+    const lbl = document.getElementById('label-sieve-start');
+    const btn = document.getElementById('btn-sieve-start');
+    if (lbl) lbl.textContent = "Elemeyi Başlat";
+    if (btn) btn.classList.remove('active');
+    updateSeparationPedagogicalBox();
+    updateSeparationMetricsDOM();
+    showLabToast("🔄 Eleme düzeneği sıfırlandı");
+}
+
 function resetSeparationExperiment() {
     if (labState.separation.mode === "funnel") {
         refillFunnel();
     } else if (labState.separation.mode === "distill") {
         resetDistillApparatus();
-    } else {
+    } else if (labState.separation.mode === "evap") {
         resetEvapApparatus();
+    } else if (labState.separation.mode === "filter") {
+        resetFilterApparatus();
+    } else {
+        resetSieveApparatus();
     }
 }
 
@@ -15457,7 +15604,7 @@ function updateSeparationPedagogicalBox() {
                 pText.textContent = "Homojen alkol-su karışımında kaynama noktası daha düşük olan etil alkol (78°C) sudan (100°C) önce yoğun biçimde buharlaşır. Ayrımsal damıtma yöntemiyle kaynama noktası farkından yararlanılarak alkolce zengin sıvı elde edilir.";
             }
         }
-    } else {
+    } else if (sep.mode === "evap") {
         const ev = sep.evaporation;
         if (ev.waterVolume <= 0.5) {
             box.className = "lab-pedagogical-card is-work";
@@ -15535,7 +15682,7 @@ function updateSeparationMetricsDOM() {
         }
         if (mAlcohol) mAlcohol.textContent = `${d.distilledAlcohol.toFixed(1)} mL`;
         if (mFlaskLiquid) mFlaskLiquid.textContent = `${(d.alcoholVolume + d.waterVolume).toFixed(1)} mL`;
-    } else {
+    } else if (sep.mode === "evap") {
         const ev = sep.evaporation;
         const mEvTemp = document.getElementById('metric-evap-temp');
         const mEvWater = document.getElementById('metric-evap-water');
@@ -15545,6 +15692,22 @@ function updateSeparationMetricsDOM() {
         if (mEvWater) mEvWater.textContent = `${ev.evaporatedWater.toFixed(1)} mL`;
         if (mEvRemain) mEvRemain.textContent = `${ev.waterVolume.toFixed(1)} mL`;
         if (mEvSalt) mEvSalt.textContent = `${ev.crystallizedSalt.toFixed(1)} g`;
+    } else if (sep.mode === "filter") {
+        const fl = sep.filtration;
+        const mSand = document.getElementById('metric-filter-sand');
+        const mWater = document.getElementById('metric-filter-water');
+        const mPct = document.getElementById('metric-filter-pct');
+        if (mSand) mSand.textContent = `${fl.sandTrapped.toFixed(1)} g`;
+        if (mWater) mWater.textContent = `${fl.waterFiltered.toFixed(1)} mL`;
+        if (mPct) mPct.textContent = `%${Math.round(fl.progress)}`;
+    } else if (sep.mode === "sieve") {
+        const sv = sep.sieving;
+        const mBran = document.getElementById('metric-sieve-bran');
+        const mFlour = document.getElementById('metric-sieve-flour');
+        const mPct = document.getElementById('metric-sieve-pct');
+        if (mBran) mBran.textContent = `${sv.branOnTop.toFixed(1)} g`;
+        if (mFlour) mFlour.textContent = `${sv.flourSifted.toFixed(1)} g`;
+        if (mPct) mPct.textContent = `%${Math.round(sv.progress)}`;
     }
 
     // Metrik Şeridi (#metrics-bar-7-5) Güncellemesi
@@ -15593,7 +15756,7 @@ function updateSeparationMetricsDOM() {
                 mbStatus.style.color = "#facc15";
             }
         }
-    } else {
+    } else if (sep.mode === "evap") {
         const ev = sep.evaporation;
         if (mbMethod) mbMethod.textContent = "Buharlaştırma (Tuz-Su)";
         if (mbSubstances) mbSubstances.textContent = "Tuz (20 g) + Su (100 mL)";
@@ -15607,6 +15770,40 @@ function updateSeparationMetricsDOM() {
                 mbStatus.style.color = "#38bdf8";
             } else {
                 mbStatus.textContent = "🧂 Katı-sıvı homojen çözeltiler buharlaştırma ile ayrılır";
+                mbStatus.style.color = "#facc15";
+            }
+        }
+    } else if (sep.mode === "filter") {
+        const fl = sep.filtration;
+        if (mbMethod) mbMethod.textContent = "Süzme (Kum–Su)";
+        if (mbSubstances) mbSubstances.textContent = "Kum (40 g) + Su (100 mL)";
+        if (mbPhase) mbPhase.textContent = fl.progress >= 99 ? "Süzme Tamamlandı" : (fl.isRunning ? `Süzülüyor (%${Math.round(fl.progress)})` : "Hazır");
+        if (mbStatus) {
+            if (fl.progress >= 99) {
+                mbStatus.textContent = "🏆 Başarılı: Kum süzgeç kâğıdında kaldı, berrak su alt behere süzüldü!";
+                mbStatus.style.color = "#34d399";
+            } else if (fl.isRunning) {
+                mbStatus.textContent = "⏳ Kum tanecikleri süzgeçte tutuluyor, berrak su damlıyor...";
+                mbStatus.style.color = "#38bdf8";
+            } else {
+                mbStatus.textContent = "⏳ Katı–sıvı heterojen karışımlar süzme yöntemiyle ayrılır";
+                mbStatus.style.color = "#facc15";
+            }
+        }
+    } else {
+        const sv = sep.sieving;
+        if (mbMethod) mbMethod.textContent = "Eleme (Kepekli Un)";
+        if (mbSubstances) mbSubstances.textContent = "İri Kepek (30 g) + İnce Un (70 g)";
+        if (mbPhase) mbPhase.textContent = sv.progress >= 99 ? "Eleme Tamamlandı" : (sv.isRunning ? `Eleniyor (%${Math.round(sv.progress)})` : "Hazır");
+        if (mbStatus) {
+            if (sv.progress >= 99) {
+                mbStatus.textContent = "🏆 Başarılı: İnce un alta elendi, iri kepek elek üstünde kaldı!";
+                mbStatus.style.color = "#34d399";
+            } else if (sv.isRunning) {
+                mbStatus.textContent = "🌾 Elek sallanıyor: küçük un tanecikleri gözeneklerden geçiyor...";
+                mbStatus.style.color = "#38bdf8";
+            } else {
+                mbStatus.textContent = "🌾 Tanecik boyutu farklı katı–katı karışımlar eleme ile ayrılır";
                 mbStatus.style.color = "#facc15";
             }
         }
@@ -15790,7 +15987,7 @@ function updateSeparationPhysics() {
         updateSeparationPedagogicalBox();
     }
     // --- MOD 3: BUHARLAŞTIRMA (TUZ-SU) FİZİĞİ ---
-    else {
+    else if (sep.mode === "evap") {
         const ev = sep.evaporation;
         if (ev.isHeating && ev.waterVolume > 0) {
             if (ev.temp < 100.0) { ev.temp = Math.min(100.0, ev.temp + 0.55); }
@@ -15822,6 +16019,74 @@ function updateSeparationPhysics() {
         updateSeparationMetricsDOM();
         updateSeparationPedagogicalBox();
     }
+    // --- MOD 4: SÜZME (KUM-SU) FİZİĞİ ---
+    else if (sep.mode === "filter") {
+        const fl = sep.filtration;
+        const targetAngle = fl.isRunning && fl.progress < 100 ? 0.58 : 0.0;
+        fl.pourAngle += (targetAngle - fl.pourAngle) * 0.12;
+
+        if (fl.isRunning && fl.progress < 100) {
+            fl.progress = Math.min(100, fl.progress + 0.42);
+            fl.sandTrapped = (fl.progress / 100) * 40.0;
+            fl.waterFiltered = (fl.progress / 100) * 100.0;
+
+            if (Math.random() < 0.5) {
+                fl.drops.push({ x: 400 + (Math.random() - 0.5) * 3, y: 292, vy: 2.6 + Math.random() * 1.5, r: 3.2 });
+            }
+            if (fl.progress >= 100) {
+                fl.isRunning = false;
+                const lbl = document.getElementById('label-filter-start');
+                const btn = document.getElementById('btn-filter-start');
+                if (lbl) lbl.textContent = "Süzmeyi Başlat";
+                if (btn) btn.classList.remove('active');
+            }
+        }
+        const waterLevelY = 436 - (fl.waterFiltered / 100) * 76;
+        for (let i = fl.drops.length - 1; i >= 0; i--) {
+            const d = fl.drops[i];
+            d.y += d.vy;
+            d.vy += 0.22;
+            if (d.y >= waterLevelY) fl.drops.splice(i, 1);
+        }
+        updateSeparationMetricsDOM();
+        updateSeparationPedagogicalBox();
+    }
+    // --- MOD 5: ELEME (KEPEKLİ UN) FİZİĞİ ---
+    else {
+        const sv = sep.sieving;
+        if (sv.isRunning && sv.progress < 100) {
+            sv.shakePhase += 0.42;
+            sv.progress = Math.min(100, sv.progress + 0.45);
+            sv.flourSifted = (sv.progress / 100) * 70.0;
+
+            for (let k = 0; k < 2; k++) {
+                if (Math.random() < 0.75) {
+                    sv.fallingFlour.push({
+                        x: 400 + Math.sin(sv.shakePhase) * 14 + (Math.random() - 0.5) * 150,
+                        y: 238,
+                        vy: 2.2 + Math.random() * 1.8,
+                        r: 1.8 + Math.random() * 1.4
+                    });
+                }
+            }
+            if (sv.progress >= 100) {
+                sv.isRunning = false;
+                const lbl = document.getElementById('label-sieve-start');
+                const btn = document.getElementById('btn-sieve-start');
+                if (lbl) lbl.textContent = "Elemeyi Başlat";
+                if (btn) btn.classList.remove('active');
+            }
+        }
+        const moundTopY = 434 - (sv.flourSifted / 70) * 44;
+        for (let i = sv.fallingFlour.length - 1; i >= 0; i--) {
+            const p = sv.fallingFlour[i];
+            p.y += p.vy;
+            p.vy += 0.16;
+            if (p.y >= moundTopY) sv.fallingFlour.splice(i, 1);
+        }
+        updateSeparationMetricsDOM();
+        updateSeparationPedagogicalBox();
+    }
 }
 
 // --- 8.6.1. SAF CANVAS 2D ÇİZİM MOTORU ---
@@ -15831,8 +16096,10 @@ function drawSeparationSimulation() {
 
     const w = 800;
     const h = 500;
+    const scale = canvas.width / 800;
     ctx.save();
-    ctx.clearRect(0, 0, w, h);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.scale(scale, scale);
 
     // Zarif Arka Plan & Laboratuvar Zemin Gradyanı
     const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
@@ -15862,11 +16129,275 @@ function drawSeparationSimulation() {
         drawFunnelApparatus(ctx, sep.funnel);
     } else if (sep.mode === "distill") {
         drawDistillationApparatus(ctx, sep.distillation);
-    } else {
+    } else if (sep.mode === "evap") {
         drawEvaporationApparatus(ctx, sep.evaporation);
+    } else if (sep.mode === "filter") {
+        drawFiltrationApparatus(ctx, sep.filtration);
+    } else {
+        drawSievingApparatus(ctx, sep.sieving);
     }
 
     ctx.restore();
+}
+
+function drawSepCanvasBadge(ctx, x, y, text, borderColor, textColor) {
+    ctx.save();
+    ctx.font = "bold 11px Nunito, sans-serif";
+    const tw = ctx.measureText(text).width;
+    const bw = tw + 18;
+    const bh = 24;
+    ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+    ctx.strokeStyle = borderColor;
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.roundRect(x - bw / 2, y - bh / 2, bw, bh, 7);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = textColor;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, x, y + 0.5);
+    ctx.restore();
+}
+
+function drawFiltrationApparatus(ctx, fl) {
+    // Üst Başlık Rozeti
+    drawSepCanvasBadge(ctx, 400, 28, "⏳ SÜZME (Kum–Su) · Katı–Sıvı Heterojen", "#38bdf8", "#e0f2fe");
+
+    // 1. Statif Stand (Sağda dikey demir çubuk ve huni halkası)
+    ctx.fillStyle = "#334155";
+    ctx.fillRect(500, 428, 120, 12);
+    const rodGrad = ctx.createLinearGradient(554, 0, 566, 0);
+    rodGrad.addColorStop(0, "#64748b");
+    rodGrad.addColorStop(0.5, "#e2e8f0");
+    rodGrad.addColorStop(1, "#475569");
+    ctx.fillStyle = rodGrad;
+    ctx.fillRect(555, 130, 10, 298);
+
+    // Statif Halka Kolu
+    ctx.fillStyle = "#475569";
+    ctx.fillRect(548, 212, 24, 14);
+    ctx.fillRect(450, 216, 104, 6);
+
+    // 2. Üstte Eğik Kum-Su Beheri (Dökülme animasyonlu)
+    const remainRatio = Math.max(0, 1 - fl.progress / 100);
+    ctx.save();
+    ctx.translate(295, 118);
+    ctx.rotate(fl.pourAngle);
+    ctx.fillStyle = "rgba(148, 163, 184, 0.14)";
+    ctx.strokeStyle = "rgba(226, 232, 240, 0.75)";
+    ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.roundRect(-42, -52, 84, 96, [4, 4, 10, 10]);
+    ctx.fill();
+    ctx.stroke();
+    if (remainRatio > 0.02) {
+        const lh = remainRatio * 68;
+        ctx.fillStyle = "rgba(180, 115, 55, 0.72)";
+        ctx.fillRect(-39, 41 - lh, 78, lh);
+        // Kum tanecikleri
+        ctx.fillStyle = "#78350f";
+        for (let i = 0; i < 12; i++) {
+            const sx = -30 + ((i * 19) % 60);
+            const sy = 36 - ((i * 13) % Math.max(8, lh - 6));
+            ctx.beginPath(); ctx.arc(sx, sy, 2.2, 0, Math.PI * 2); ctx.fill();
+        }
+    }
+    ctx.restore();
+
+    // Dökülen Kum-Su Akışı
+    if (fl.isRunning && fl.progress < 100) {
+        ctx.strokeStyle = "rgba(180, 115, 55, 0.85)";
+        ctx.lineWidth = 7;
+        ctx.beginPath();
+        ctx.moveTo(342, 130);
+        ctx.quadraticCurveTo(378, 152, 396, 205);
+        ctx.stroke();
+    }
+
+    // 3. Cam Huni ve Süzgeç Kâğıdı
+    ctx.fillStyle = "rgba(226, 232, 240, 0.12)";
+    ctx.strokeStyle = "rgba(226, 232, 240, 0.8)";
+    ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.moveTo(334, 178);
+    ctx.lineTo(466, 178);
+    ctx.lineTo(410, 260);
+    ctx.lineTo(410, 294);
+    ctx.lineTo(390, 294);
+    ctx.lineTo(390, 260);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Süzgeç Kâğıdı (Beyaz koni)
+    ctx.fillStyle = "rgba(248, 250, 252, 0.88)";
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(342, 172);
+    ctx.lineTo(458, 172);
+    ctx.lineTo(400, 255);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Süzgeçte Biriken Kum (Kalıntı)
+    if (fl.sandTrapped > 0.5) {
+        const sandRatio = fl.sandTrapped / 40.0;
+        const sandTopY = 250 - sandRatio * 44;
+        const halfW = 8 + sandRatio * 34;
+        ctx.fillStyle = "#b45309";
+        ctx.beginPath();
+        ctx.moveTo(400 - halfW, sandTopY);
+        ctx.quadraticCurveTo(400, sandTopY - 8, 400 + halfW, sandTopY);
+        ctx.lineTo(400, 253);
+        ctx.closePath();
+        ctx.fill();
+
+        // Kum doku noktaları
+        ctx.fillStyle = "#fde68a";
+        for (let i = 0; i < 16; i++) {
+            const gx = 400 + Math.sin(i * 2.1) * (halfW * 0.65);
+            const gy = sandTopY + 4 + (i % 4) * (sandRatio * 8);
+            ctx.beginPath(); ctx.arc(gx, Math.min(248, gy), 1.6, 0, Math.PI * 2); ctx.fill();
+        }
+    }
+
+    // 4. Berrak Su Damlaları
+    ctx.fillStyle = "#38bdf8";
+    fl.drops.forEach((d) => {
+        ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill();
+    });
+
+    // 5. Alt Toplama Beheri (Süzüntü: Berrak Su)
+    ctx.fillStyle = "rgba(148, 163, 184, 0.1)";
+    ctx.strokeStyle = "rgba(226, 232, 240, 0.78)";
+    ctx.lineWidth = 2.4;
+    ctx.beginPath();
+    ctx.roundRect(338, 326, 124, 114, [4, 4, 14, 14]);
+    ctx.fill();
+    ctx.stroke();
+
+    const waterH = (fl.waterFiltered / 100.0) * 82;
+    if (waterH > 1) {
+        const wGrad = ctx.createLinearGradient(340, 437 - waterH, 340, 437);
+        wGrad.addColorStop(0, "rgba(56, 189, 248, 0.55)");
+        wGrad.addColorStop(1, "rgba(14, 165, 233, 0.75)");
+        ctx.fillStyle = wGrad;
+        ctx.beginPath();
+        ctx.roundRect(341, 437 - waterH, 118, waterH, [2, 2, 11, 11]);
+        ctx.fill();
+    }
+
+    // 6. Net Türkçe Etiketler
+    drawSepCanvasBadge(ctx, 195, 196, "Süzgeç Kâğıdı", "#cbd5e1", "#f8fafc");
+    drawSepCanvasBadge(ctx, 195, 238, `Kalıntı (Kum): ${fl.sandTrapped.toFixed(1)} g`, "#f59e0b", "#fde68a");
+    drawSepCanvasBadge(ctx, 195, 382, `Süzüntü (Su): ${fl.waterFiltered.toFixed(1)} mL`, "#38bdf8", "#bae6fd");
+}
+
+function drawSievingApparatus(ctx, sv) {
+    // Üst Başlık Rozeti
+    drawSepCanvasBadge(ctx, 400, 28, "🌾 ELEME (Kepekli Un) · Katı–Katı Heterojen · Tanecik Boyutu Farkı", "#f59e0b", "#fef3c7");
+
+    const shakeX = sv.isRunning ? Math.sin(sv.shakePhase) * 14 : 0;
+    const sieveX = 400 + shakeX;
+    const sieveY = 205;
+    const sieveW = 220;
+    const sieveH = 44;
+
+    // 1. Alt Toplama Kabı (Geniş Cam/Seramik Kâse)
+    ctx.fillStyle = "rgba(148, 163, 184, 0.12)";
+    ctx.strokeStyle = "rgba(226, 232, 240, 0.75)";
+    ctx.lineWidth = 2.4;
+    ctx.beginPath();
+    ctx.moveTo(270, 342);
+    ctx.lineTo(530, 342);
+    ctx.lineTo(506, 438);
+    ctx.lineTo(294, 438);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Elenen İnce Un Yığını (Alt kapta birikir)
+    if (sv.flourSifted > 0.5) {
+        const ratio = sv.flourSifted / 70.0;
+        const moundH = ratio * 52;
+        const fGrad = ctx.createLinearGradient(400, 436 - moundH, 400, 436);
+        fGrad.addColorStop(0, "#ffffff");
+        fGrad.addColorStop(1, "#e2e8f0");
+        ctx.fillStyle = fGrad;
+        ctx.beginPath();
+        ctx.moveTo(300, 436);
+        ctx.quadraticCurveTo(400, 436 - moundH * 1.7, 500, 436);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    // 2. Dökülen İnce Un Tanecikleri
+    ctx.fillStyle = "#f8fafc";
+    sv.fallingFlour.forEach((p) => {
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+    });
+
+    // 3. Telli Ahşap / Metal Elek
+    ctx.save();
+    ctx.translate(sieveX, sieveY);
+
+    // Elek tel ızgarası (alt taban)
+    ctx.fillStyle = "rgba(148, 163, 184, 0.28)";
+    ctx.fillRect(-sieveW / 2 + 8, sieveH / 2 - 6, sieveW - 16, 8);
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 1.2;
+    for (let gx = -sieveW / 2 + 12; gx <= sieveW / 2 - 12; gx += 10) {
+        ctx.beginPath(); ctx.moveTo(gx, sieveH / 2 - 6); ctx.lineTo(gx, sieveH / 2 + 2); ctx.stroke();
+    }
+
+    // Elek üstündeki karışım (İnce un azalır, iri kepek kalır)
+    const remainFlourRatio = Math.max(0, 1 - sv.progress / 100);
+    if (remainFlourRatio > 0.04) {
+        ctx.fillStyle = "rgba(248, 250, 252, 0.85)";
+        ctx.beginPath();
+        ctx.ellipse(0, sieveH / 2 - 10, 88 * remainFlourRatio + 10, 12 * remainFlourRatio + 3, 0, Math.PI, 0);
+        ctx.fill();
+    }
+
+    // İri Kepek Parçaları (Elek üstünde kalır!)
+    for (let i = 0; i < 24; i++) {
+        const bx = -82 + ((i * 37) % 164);
+        const bounce = sv.isRunning ? Math.abs(Math.sin(sv.shakePhase * 1.3 + i)) * 6 : 0;
+        const by = sieveH / 2 - 12 - (i % 3) * 4 - bounce;
+        ctx.fillStyle = i % 2 === 0 ? "#d97706" : "#b45309";
+        ctx.strokeStyle = "#fde68a";
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.ellipse(bx, by, 5.5, 3.2, (i * 0.5) % Math.PI, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+    }
+
+    // Ahşap Elek Çerçevesi
+    const rimGrad = ctx.createLinearGradient(0, -sieveH / 2, 0, sieveH / 2);
+    rimGrad.addColorStop(0, "#d97706");
+    rimGrad.addColorStop(0.5, "#b45309");
+    rimGrad.addColorStop(1, "#78350f");
+    ctx.fillStyle = rimGrad;
+    ctx.strokeStyle = "#fde68a";
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.roundRect(-sieveW / 2, -sieveH / 2, sieveW, sieveH, 8);
+    ctx.stroke();
+    // Sol ve sağ ahşap yan duvarlar + alt bant
+    ctx.fillRect(-sieveW / 2, -sieveH / 2, 12, sieveH);
+    ctx.fillRect(sieveW / 2 - 12, -sieveH / 2, 12, sieveH);
+    ctx.fillRect(-sieveW / 2, -sieveH / 2, sieveW, 8);
+
+    ctx.restore();
+
+    // 4. Net Türkçe Etiketler
+    drawSepCanvasBadge(ctx, 155, 200, `Elek Üstü (Kepek): ${sv.branOnTop.toFixed(1)} g`, "#f59e0b", "#fde68a");
+    drawSepCanvasBadge(ctx, 645, 200, "Telli Elek Gözenekleri", "#cbd5e1", "#f8fafc");
+    drawSepCanvasBadge(ctx, 155, 392, `Elenen (İnce Un): ${sv.flourSifted.toFixed(1)} g`, "#e2e8f0", "#ffffff");
 }
 
 function drawEvaporationApparatus(ctx, ev) {
@@ -20802,6 +21333,7 @@ function drawMoonPhasesSimulation() {
 
 function initDynamometerState() {
     const dm = labState.dynamometer;
+    dm.mode = dm.mode || "spring";
     dm.springType = "medium";
     dm.force = 0;
     dm.weightsCount = 0;
@@ -20809,17 +21341,44 @@ function initDynamometerState() {
     dm.targetStretch = 0.0;
     dm.divisionCount = 0;
     dm.isPermanentlyDeformed = false;
+    dm.mwEnv = dm.mwEnv || "earth";
+    dm.mwObject = dm.mwObject || "apple";
+    dm.mwMassGrams = dm.mwMassGrams || 500;
+    dm.mwCurrentStretch = dm.mwEnv === "moon" ? (dm.mwMassGrams / 100) / 6 : (dm.mwMassGrams / 100);
     updateDynamometerDOMControls();
     updateDynamometerPhysics();
 }
 
 function resetDynamometerExperiment() {
-    initDynamometerState();
-    showLabToast("Dinamometre yayındaki ağırlıklar boşaltıldı!");
+    const dm = labState.dynamometer;
+    if (dm.mode === "massweight") {
+        dm.mwEnv = "earth";
+        dm.mwObject = "apple";
+        dm.mwMassGrams = 500;
+        dm.mwCurrentStretch = 5.0;
+        updateDynamometerDOMControls();
+        updateDynamometerPhysics();
+        showLabToast("Kütle ve Ağırlık düzeneği sıfırlandı (Dünya, 500 g Elma)!");
+    } else {
+        initDynamometerState();
+        showLabToast("Dinamometre yayındaki ağırlıklar boşaltıldı!");
+    }
 }
 
 function updateDynamometerDOMControls() {
     const dm = labState.dynamometer;
+    const isMW = dm.mode === "massweight";
+
+    const btnSpringMode = document.getElementById('btn-52-mode-spring');
+    const btnMWMode = document.getElementById('btn-52-mode-massweight');
+    if (btnSpringMode) btnSpringMode.classList.toggle('active', !isMW);
+    if (btnMWMode) btnMWMode.classList.toggle('active', isMW);
+
+    const grpSpring = document.getElementById('group-52-spring-ctrl');
+    const grpMW = document.getElementById('group-52-mw-ctrl');
+    if (grpSpring) grpSpring.classList.toggle('is-hidden', isMW);
+    if (grpMW) grpMW.classList.toggle('is-hidden', !isMW);
+
     ['btn-52-spring-thin', 'pill-52-thin'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('active', dm.springType === 'thin');
@@ -20832,10 +21391,72 @@ function updateDynamometerDOMControls() {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('active', dm.springType === 'thick');
     });
+
+    const bEarth = document.getElementById('btn-52-env-earth');
+    const bMoon = document.getElementById('btn-52-env-moon');
+    if (bEarth) bEarth.classList.toggle('active', dm.mwEnv === 'earth');
+    if (bMoon) bMoon.classList.toggle('active', dm.mwEnv === 'moon');
+
+    ['apple', 'stone', 'iron'].forEach(obj => {
+        const el = document.getElementById(`btn-52-obj-${obj}`);
+        if (el) el.classList.toggle('active', dm.mwObject === obj);
+    });
+    [100, 200, 500, 1000].forEach(g => {
+        const el = document.getElementById(`btn-52-mass-${g}`);
+        if (el) el.classList.toggle('active', dm.mwMassGrams === g);
+    });
 }
 
 function setupDynamometerControlsDOM() {
     const dm = labState.dynamometer;
+
+    const btnSpringMode = document.getElementById('btn-52-mode-spring');
+    const btnMWMode = document.getElementById('btn-52-mode-massweight');
+    if (btnSpringMode) btnSpringMode.addEventListener('click', () => {
+        dm.mode = "spring";
+        updateDynamometerDOMControls();
+        updateDynamometerPhysics();
+        showLabToast("⚖️ Dinamometre (Kuvvet Ölçümü) Modu Aktif");
+    });
+    if (btnMWMode) btnMWMode.addEventListener('click', () => {
+        dm.mode = "massweight";
+        updateDynamometerDOMControls();
+        updateDynamometerPhysics();
+        showLabToast("🌍 Kütle ve Ağırlık Ölçümü (Terazi vs. Dinamometre) Modu Aktif");
+    });
+
+    const bEarth = document.getElementById('btn-52-env-earth');
+    const bMoon = document.getElementById('btn-52-env-moon');
+    if (bEarth) bEarth.addEventListener('click', () => {
+        dm.mwEnv = "earth";
+        updateDynamometerDOMControls();
+        updateDynamometerPhysics();
+        showLabToast("🌍 Dünya Ortamı Seçildi");
+    });
+    if (bMoon) bMoon.addEventListener('click', () => {
+        dm.mwEnv = "moon";
+        updateDynamometerDOMControls();
+        updateDynamometerPhysics();
+        showLabToast("🌕 Ay Ortamı Seçildi: Kütle değişmedi, ağırlık 1/6'ya düştü!");
+    });
+
+    ['apple', 'stone', 'iron'].forEach(obj => {
+        const el = document.getElementById(`btn-52-obj-${obj}`);
+        if (el) el.addEventListener('click', () => {
+            dm.mwObject = obj;
+            updateDynamometerDOMControls();
+            updateDynamometerPhysics();
+        });
+    });
+
+    [100, 200, 500, 1000].forEach(g => {
+        const el = document.getElementById(`btn-52-mass-${g}`);
+        if (el) el.addEventListener('click', () => {
+            dm.mwMassGrams = g;
+            updateDynamometerDOMControls();
+            updateDynamometerPhysics();
+        });
+    });
 
     const setSpring = (type) => {
         dm.springType = type;
@@ -20897,6 +21518,56 @@ function setupDynamometerControlsDOM() {
 
 function updateDynamometerPhysics() {
     const dm = labState.dynamometer;
+
+    if (dm.mode === "massweight") {
+        const earthWeight = dm.mwMassGrams / 100; // 100 g -> 1 N, 1000 g -> 10 N
+        const targetW = dm.mwEnv === "moon" ? earthWeight / 6 : earthWeight;
+        dm.mwCurrentStretch += (targetW - dm.mwCurrentStretch) * 0.18;
+
+        const envName = dm.mwEnv === "moon" ? "Ay (1/6 Çekim)" : "Dünya";
+        const massLabel = dm.mwMassGrams >= 1000 ? "1 kg (1000 g)" : `${dm.mwMassGrams} g`;
+        const weightLabel = `${targetW.toFixed(2)} N`;
+
+        const mbSpring = document.getElementById('mbar-52-spring');
+        const mbForce = document.getElementById('mbar-52-force');
+        const mbStretch = document.getElementById('mbar-52-stretch');
+        const mbStatus = document.getElementById('mbar-52-status');
+
+        if (mbSpring) mbSpring.textContent = envName;
+        if (mbForce) mbForce.textContent = `Ağırlık: ${weightLabel}`;
+        if (mbStretch) mbStretch.textContent = `Kütle: ${massLabel}`;
+        if (mbStatus) {
+            mbStatus.textContent = dm.mwEnv === "moon"
+                ? "🌕 Ay'da eşit kollu terazideki kütle DEĞİŞMEZ, dinamometredeki ağırlık 1/6'ya düşer!"
+                : "🌍 Eşit kollu terazi kütleyi (g/kg), dinamometre ağırlığı (N) ölçer";
+            mbStatus.style.borderLeftColor = dm.mwEnv === "moon" ? "#facc15" : "#38bdf8";
+        }
+
+        const mForce = document.getElementById('metric-52-force');
+        const mStretch = document.getElementById('metric-52-stretch');
+        const mDivs = document.getElementById('metric-52-divs');
+        if (mForce) mForce.textContent = weightLabel;
+        if (mStretch) mStretch.textContent = massLabel;
+        if (mDivs) {
+            mDivs.textContent = envName;
+            mDivs.style.color = dm.mwEnv === "moon" ? "#facc15" : "#38bdf8";
+        }
+
+        const pedBox = document.getElementById('dynamometer-pedagogical-box');
+        const pedTitle = document.getElementById('dynamometer-pedagogical-title');
+        const pedText = document.getElementById('dynamometer-pedagogical-text');
+        if (pedBox && pedTitle && pedText) {
+            pedBox.className = "lab-pedagogical-card is-work";
+            pedTitle.textContent = dm.mwEnv === "moon"
+                ? "🌕 Ay'da Kütle Değişmez, Ağırlık Azalır"
+                : "⚖️ Kütle (Terazi) ve Ağırlık (Dinamometre) Farkı";
+            pedText.textContent = dm.mwEnv === "moon"
+                ? `Aynı ${massLabel} cisim Ay'a götürüldüğünde eşit kollu terazi aynı tartı taşlarıyla dengede kalır (kütle değişmez). Dinamometredeki ağırlık ise Dünya'dakinin 1/6'sı olan ${weightLabel} değerini gösterir.`
+                : `Eşit kollu terazi madde miktarı olan kütleyi (${massLabel}) ölçer ve her yerde aynıdır. Dinamometre ise cisme etki eden çekim kuvvetini yani ağırlığı (${weightLabel}) Newton cinsinden ölçer.`;
+        }
+        return;
+    }
+
     const kMap = { thin: 1.5, medium: 0.8, thick: 0.4 };
     const k = kMap[dm.springType] || 0.8;
 
@@ -20964,6 +21635,11 @@ function updateDynamometerPhysics() {
 }
 
 function drawDynamometerSimulation() {
+    if (labState.dynamometer.mode === "massweight") {
+        drawMassWeightSimulation();
+        return;
+    }
+
     const w = canvas.width;
     const h = canvas.height;
     const scale = w / 800;
@@ -21154,11 +21830,391 @@ function drawDynamometerSimulation() {
 }
 
 // ============================================================================
+function drawMassWeightObject(ctx, cx, cy, objType, massGrams) {
+    const r = 14 + (massGrams >= 1000 ? 9 : massGrams >= 500 ? 6 : massGrams >= 200 ? 3 : 0);
+    ctx.save();
+    ctx.translate(cx, cy);
+    if (objType === "apple") {
+        const g = ctx.createRadialGradient(-r * 0.3, -r * 0.3, 2, 0, 0, r);
+        g.addColorStop(0, "#fca5a5");
+        g.addColorStop(0.45, "#dc2626");
+        g.addColorStop(1, "#7f1d1d");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "#78350f";
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(0, -r + 2);
+        ctx.quadraticCurveTo(3, -r - 6, 5, -r - 8);
+        ctx.stroke();
+        ctx.fillStyle = "#22c55e";
+        ctx.beginPath();
+        ctx.ellipse(7, -r - 4, 6, 3, -0.4, 0, Math.PI * 2);
+        ctx.fill();
+    } else if (objType === "stone") {
+        const g = ctx.createRadialGradient(-r * 0.25, -r * 0.25, 2, 0, 0, r);
+        g.addColorStop(0, "#cbd5e1");
+        g.addColorStop(0.55, "#64748b");
+        g.addColorStop(1, "#334155");
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.moveTo(-r, 2);
+        ctx.lineTo(-r * 0.7, -r * 0.8);
+        ctx.lineTo(r * 0.2, -r * 0.95);
+        ctx.lineTo(r * 0.95, -r * 0.35);
+        ctx.lineTo(r * 0.85, r * 0.75);
+        ctx.lineTo(-r * 0.55, r * 0.9);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.25)";
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+    } else {
+        // Demir kütle (silindirik tartı)
+        const bw = r * 1.5;
+        const bh = r * 1.45;
+        const g = ctx.createLinearGradient(-bw / 2, 0, bw / 2, 0);
+        g.addColorStop(0, "#334155");
+        g.addColorStop(0.35, "#94a3b8");
+        g.addColorStop(1, "#1e293b");
+        ctx.fillStyle = g;
+        ctx.strokeStyle = "#cbd5e1";
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.roundRect(-bw / 2, -bh / 2, bw, bh, 4);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#475569";
+        ctx.beginPath();
+        ctx.arc(0, -bh / 2 - 4, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+    }
+    ctx.restore();
+}
+
+function drawMassWeightSimulation() {
+    const w = canvas.width;
+    const scale = w / 800;
+    const dm = labState.dynamometer;
+    const isMoon = dm.mwEnv === "moon";
+    const earthW = dm.mwMassGrams / 100;
+    const displayW = isMoon ? earthW / 6 : earthW;
+    const massText = dm.mwMassGrams >= 1000 ? "1 kg (1000 g)" : `${dm.mwMassGrams} g`;
+    const objNames = { apple: "Elma", stone: "Taş", iron: "Demir Kütle" };
+
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    // 1. Ortam Arka Planı (Dünya vs. Ay)
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 500);
+    if (isMoon) {
+        bgGrad.addColorStop(0, "#050714");
+        bgGrad.addColorStop(0.7, "#111827");
+        bgGrad.addColorStop(1, "#374151");
+    } else {
+        bgGrad.addColorStop(0, "#091326");
+        bgGrad.addColorStop(0.7, "#0f1e3a");
+        bgGrad.addColorStop(1, "#1e293b");
+    }
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 800, 500);
+
+    // Ay ortamında yıldızlar ve kraterli zemin dokusu
+    if (isMoon) {
+        ctx.fillStyle = "rgba(255, 255, 255, 0.55)";
+        [[48, 42], [130, 72], [290, 35], [440, 55], [640, 40], [745, 78], [520, 28]].forEach(([sx, sy]) => {
+            ctx.beginPath(); ctx.arc(sx, sy, 1.5, 0, Math.PI * 2); ctx.fill();
+        });
+    }
+
+    // Üst Ortam Başlık Rozeti
+    ctx.fillStyle = isMoon ? "rgba(250, 204, 21, 0.16)" : "rgba(56, 189, 248, 0.16)";
+    ctx.strokeStyle = isMoon ? "#facc15" : "#38bdf8";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(225, 14, 350, 30, 15);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = isMoon ? "#fef08a" : "#e0f2fe";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(isMoon ? "🌕 AY ORTAMI (Çekim Kuvveti Dünya'nın 1/6'sı)" : "🌍 DÜNYA ORTAMI (Standart Yer Çekimi)", 400, 34);
+
+    // Masa / Zemin Tablası
+    const deskY = 412;
+    const deskGrad = ctx.createLinearGradient(0, deskY, 0, 500);
+    deskGrad.addColorStop(0, isMoon ? "#4b5563" : "#334155");
+    deskGrad.addColorStop(1, isMoon ? "#1f2937" : "#0f172a");
+    ctx.fillStyle = deskGrad;
+    ctx.fillRect(0, deskY, 800, 88);
+    ctx.strokeStyle = isMoon ? "#9ca3af" : "#475569";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, deskY); ctx.lineTo(800, deskY); ctx.stroke();
+
+    // Orta ayırıcı kesikli çizgi
+    ctx.strokeStyle = "rgba(148, 163, 184, 0.2)";
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([6, 6]);
+    ctx.beginPath(); ctx.moveTo(435, 62); ctx.lineTo(435, deskY - 8); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // === SOL: EŞİT KOLLU TERAZİ (KÜTLE ÖLÇÜMÜ) ===
+    const balX = 220;
+    const balBaseY = deskY;
+
+    // Terazi kaidesi
+    const baseGrad = ctx.createLinearGradient(balX - 72, 0, balX + 72, 0);
+    baseGrad.addColorStop(0, "#1e293b");
+    baseGrad.addColorStop(0.5, "#475569");
+    baseGrad.addColorStop(1, "#1e293b");
+    ctx.fillStyle = baseGrad;
+    ctx.strokeStyle = "#94a3b8";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(balX - 75, balBaseY - 22, 150, 22, [8, 8, 2, 2]);
+    ctx.fill();
+    ctx.stroke();
+
+    // Dikey çelik sütun
+    const colGrad = ctx.createLinearGradient(balX - 9, 0, balX + 9, 0);
+    colGrad.addColorStop(0, "#64748b");
+    colGrad.addColorStop(0.5, "#e2e8f0");
+    colGrad.addColorStop(1, "#475569");
+    ctx.fillStyle = colGrad;
+    ctx.fillRect(balX - 8, 170, 16, balBaseY - 192);
+
+    // Denge ibresi göstergesi (Her zaman 0 = Denge!)
+    ctx.fillStyle = "#0f172a";
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.arc(balX, 176, 26, Math.PI, 0);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Orta 0 çizgisi ve ibre
+    ctx.strokeStyle = "#22c55e";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(balX, 176);
+    ctx.lineTo(balX, 146);
+    ctx.stroke();
+    ctx.fillStyle = "#22c55e";
+    ctx.font = "bold 9px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("DENGE", balX, 142);
+
+    // Yatay Terazi Kolu (Tam Yatay = Dengede)
+    const beamY = 176;
+    const panOff = 115;
+    ctx.fillStyle = "#cbd5e1";
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(balX - panOff - 8, beamY - 5, (panOff + 8) * 2, 10, 5);
+    ctx.fill();
+    ctx.stroke();
+
+    // Pivot vidası
+    ctx.fillStyle = "#facc15";
+    ctx.beginPath(); ctx.arc(balX, beamY, 6, 0, Math.PI * 2); ctx.fill();
+
+    // Sol ve Sağ Kefeler
+    const panY = 296;
+    [balX - panOff, balX + panOff].forEach((px) => {
+        ctx.strokeStyle = "#94a3b8";
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(px, beamY + 4);
+        ctx.lineTo(px - 42, panY);
+        ctx.moveTo(px, beamY + 4);
+        ctx.lineTo(px + 42, panY);
+        ctx.stroke();
+
+        // Kefe tabağı
+        const pGrad = ctx.createLinearGradient(px - 48, panY, px + 48, panY);
+        pGrad.addColorStop(0, "#b45309");
+        pGrad.addColorStop(0.5, "#fbbf24");
+        pGrad.addColorStop(1, "#92400e");
+        ctx.fillStyle = pGrad;
+        ctx.beginPath();
+        ctx.moveTo(px - 48, panY);
+        ctx.quadraticCurveTo(px, panY + 18, px + 48, panY);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = "#fef3c7";
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+    });
+
+    // Sol Kefede Seçilen Cisim
+    drawMassWeightObject(ctx, balX - panOff, panY - 18, dm.mwObject, dm.mwMassGrams);
+
+    // Sağ Kefede Standart Pirinç Tartı Taşları
+    const weightX = balX + panOff;
+    const brassGrad = ctx.createLinearGradient(weightX - 24, 0, weightX + 24, 0);
+    brassGrad.addColorStop(0, "#a16207");
+    brassGrad.addColorStop(0.5, "#fde047");
+    brassGrad.addColorStop(1, "#854d0e");
+    ctx.fillStyle = brassGrad;
+    ctx.strokeStyle = "#fef9c3";
+    ctx.lineWidth = 1.3;
+    const wBoxW = dm.mwMassGrams >= 1000 ? 48 : dm.mwMassGrams >= 500 ? 42 : 34;
+    const wBoxH = dm.mwMassGrams >= 1000 ? 38 : dm.mwMassGrams >= 500 ? 32 : 26;
+    ctx.beginPath();
+    ctx.roundRect(weightX - wBoxW / 2, panY - wBoxH, wBoxW, wBoxH, 4);
+    ctx.fill();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(weightX, panY - wBoxH - 4, 5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = "#1e293b";
+    ctx.font = "bold 10px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(dm.mwMassGrams >= 1000 ? "1 kg" : `${dm.mwMassGrams} g`, weightX, panY - wBoxH / 2 + 4);
+
+    // Sol Alt Bilgi Kartı
+    ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+    ctx.strokeStyle = "rgba(34, 197, 94, 0.55)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(45, 426, 350, 58, 10);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#86efac";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`Eşit Kollu Terazi · Kütle: ${massText}`, 220, 449);
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "bold 11px Nunito, sans-serif";
+    ctx.fillText(`${objNames[dm.mwObject]} kütlesi Dünya'da ve Ay'da DEĞİŞMEZ`, 220, 470);
+
+    // === SAĞ: DİNAMOMETRE (AĞIRLIK ÖLÇÜMÜ) ===
+    const dynX = 615;
+    // Stand
+    ctx.fillStyle = "#334155";
+    ctx.strokeStyle = "#64748b";
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    ctx.roundRect(495, deskY - 16, 220, 16, 4);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = colGrad;
+    ctx.fillRect(520, 74, 10, deskY - 90);
+    ctx.fillStyle = "#475569";
+    ctx.fillRect(516, 76, 18, 14);
+    ctx.fillRect(526, 80, 94, 6);
+
+    // Dinamometre Gövdesi
+    const bodyY = 98;
+    const bodyW = 48;
+    const bodyH = 148;
+    ctx.fillStyle = "rgba(226, 232, 240, 0.14)";
+    ctx.strokeStyle = "rgba(203, 213, 225, 0.7)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(dynX - bodyW / 2, bodyY, bodyW, bodyH, 6);
+    ctx.fill();
+    ctx.stroke();
+
+    // 0–10 N Ölçek Çizgileri ve Rakamları
+    for (let n = 0; n <= 10; n++) {
+        const ty = bodyY + 14 + (n / 10) * (bodyH - 26);
+        const major = n % 2 === 0;
+        ctx.strokeStyle = major ? "#e2e8f0" : "rgba(148, 163, 184, 0.5)";
+        ctx.lineWidth = major ? 1.5 : 1;
+        ctx.beginPath();
+        ctx.moveTo(dynX - bodyW / 2 + 4, ty);
+        ctx.lineTo(dynX - bodyW / 2 + (major ? 14 : 9), ty);
+        ctx.stroke();
+        if (major) {
+            ctx.fillStyle = "#cbd5e1";
+            ctx.font = "bold 9px Nunito, sans-serif";
+            ctx.textAlign = "right";
+            ctx.fillText(`${n} N`, dynX - bodyW / 2 - 5, ty + 3);
+        }
+    }
+
+    // Yay ve Gösterge (Ağırlığa göre uzar: 0..10 N)
+    const stretchRatio = Math.max(0, Math.min(1, dm.mwCurrentStretch / 10));
+    const pointerY = bodyY + 14 + stretchRatio * (bodyH - 26);
+
+    ctx.strokeStyle = "#f87171";
+    ctx.lineWidth = 2.4;
+    ctx.beginPath();
+    ctx.moveTo(dynX, bodyY + 6);
+    const coils = 8;
+    const springSpan = Math.max(12, pointerY - (bodyY + 8));
+    for (let i = 0; i < coils; i++) {
+        const sy1 = bodyY + 8 + ((i + 0.25) / coils) * springSpan;
+        const sy2 = bodyY + 8 + ((i + 0.75) / coils) * springSpan;
+        ctx.lineTo(dynX - 8, sy1);
+        ctx.lineTo(dynX + 8, sy2);
+    }
+    ctx.lineTo(dynX, pointerY);
+    ctx.stroke();
+
+    // Kırmızı gösterge halkası
+    ctx.fillStyle = "#ef4444";
+    ctx.fillRect(dynX - bodyW / 2 + 3, pointerY - 3, bodyW - 6, 6);
+
+    // Kanca ve Asılı Cisim
+    const rodEndY = bodyY + bodyH + 18 + stretchRatio * 48;
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(dynX, pointerY + 3);
+    ctx.lineTo(dynX, rodEndY);
+    ctx.arc(dynX, rodEndY + 7, 7, -Math.PI / 2, Math.PI * 1.1);
+    ctx.stroke();
+
+    drawMassWeightObject(ctx, dynX, rodEndY + 30, dm.mwObject, dm.mwMassGrams);
+
+    // Sağda canlı Newton rozeti
+    ctx.fillStyle = isMoon ? "rgba(250, 204, 21, 0.18)" : "rgba(239, 68, 68, 0.2)";
+    ctx.strokeStyle = isMoon ? "#facc15" : "#f87171";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(dynX + 34, pointerY - 14, 78, 28, 8);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = isMoon ? "#fef08a" : "#fecaca";
+    ctx.font = "bold 12px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`${displayW.toFixed(2)} N`, dynX + 73, pointerY + 4);
+
+    // Sağ Alt Bilgi Kartı
+    ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+    ctx.strokeStyle = isMoon ? "rgba(250, 204, 21, 0.65)" : "rgba(248, 113, 113, 0.6)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(455, 426, 315, 58, 10);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = isMoon ? "#fde047" : "#fca5a5";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(`Dinamometre · Ağırlık: ${displayW.toFixed(2)} N`, 612, 449);
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = "bold 11px Nunito, sans-serif";
+    ctx.fillText(isMoon ? `Dünya'daki ${earthW.toFixed(1)} N ağırlık Ay'da 1/6'ya düştü!` : "Ağırlık yer çekimine bağlıdır, Ay'da azalır", 612, 470);
+
+    ctx.restore();
+}
+
 // --- 5.3. DENEY 5.3: SÜRTÜNME KUVVETİ VE YÜZEY TÜRLLERİ (FB.5.2.4) ---
 // ============================================================================
 
 function initFrictionState() {
     const fr = labState.friction;
+    fr.mode = fr.mode || "surface";
     if (!fr.surface) fr.surface = "ice";
     if (!fr.rampHeight) fr.rampHeight = 2;
     fr.carState = "ready";
@@ -21166,6 +22222,16 @@ function initFrictionState() {
     fr.distanceTraveled = 0.0;
     fr.wheelAngle = 0.0;
     fr.skidParticles = [];
+    fr.fluidSubMode = fr.fluidSubMode || "air";
+    fr.fluidRunning = false;
+    fr.fluidElapsed = 0.0;
+    fr.fluidSlowY = 0.0;
+    fr.fluidFastY = 0.0;
+    fr.fluidSlowTime = 0.0;
+    fr.fluidFastTime = 0.0;
+    fr.fluidSlowDone = false;
+    fr.fluidFastDone = false;
+    fr.fluidBubbles = [];
 
     // Başlangıç araba konumu: Seçili kitap yüksekliğine göre rampanın üstü
     const rampTopX = 85;
@@ -21177,13 +22243,50 @@ function initFrictionState() {
     updateFrictionPhysics();
 }
 
+function resetFluidResistanceState() {
+    const fr = labState.friction;
+    fr.fluidRunning = false;
+    fr.fluidElapsed = 0.0;
+    fr.fluidSlowY = 0.0;
+    fr.fluidFastY = 0.0;
+    fr.fluidSlowTime = 0.0;
+    fr.fluidFastTime = 0.0;
+    fr.fluidSlowDone = false;
+    fr.fluidFastDone = false;
+    fr.fluidBubbles = [];
+    updateFrictionPhysics();
+}
+
 function resetFrictionExperiment() {
-    initFrictionState();
-    showLabToast("🚗 Oyuncak araba kitap rampasının tepesine yerleştirildi!");
+    const fr = labState.friction;
+    if (fr.mode === "fluid") {
+        resetFluidResistanceState();
+        showLabToast("🔄 Cisimler başlangıç yüksekliğine alındı!");
+    } else {
+        initFrictionState();
+        showLabToast("🚗 Oyuncak araba kitap rampasının tepesine yerleştirildi!");
+    }
 }
 
 function updateFrictionDOMControls() {
     const fr = labState.friction;
+    const isFluid = fr.mode === "fluid";
+
+    const bSurfMode = document.getElementById('btn-53-mode-surface');
+    const bFluidMode = document.getElementById('btn-53-mode-fluid');
+    if (bSurfMode) bSurfMode.classList.toggle('active', !isFluid);
+    if (bFluidMode) bFluidMode.classList.toggle('active', isFluid);
+
+    const grpSurf = document.getElementById('group-53-surface-ctrl');
+    const grpFluid = document.getElementById('group-53-fluid-ctrl');
+    if (grpSurf) grpSurf.classList.toggle('is-hidden', isFluid);
+    if (grpFluid) grpFluid.classList.toggle('is-hidden', !isFluid);
+
+    const bAir = document.getElementById('btn-53-fluid-air');
+    const bWater = document.getElementById('btn-53-fluid-water');
+    if (bAir) bAir.classList.toggle('active', fr.fluidSubMode === 'air');
+    if (bWater) bWater.classList.toggle('active', fr.fluidSubMode === 'water');
+
     ['btn-53-surf-ice', 'pill-53-ice', 'btn-surface-glass', 'btn-surface-ice'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.classList.toggle('active', fr.surface === 'ice');
@@ -21207,6 +22310,48 @@ function updateFrictionDOMControls() {
 
 function setupFrictionControlsDOM() {
     const fr = labState.friction;
+
+    const bSurfMode = document.getElementById('btn-53-mode-surface');
+    const bFluidMode = document.getElementById('btn-53-mode-fluid');
+    if (bSurfMode) bSurfMode.addEventListener('click', () => {
+        fr.mode = "surface";
+        updateFrictionDOMControls();
+        updateFrictionPhysics();
+        showLabToast("🚗 Yüzey Sürtünmesi Modu Aktif");
+    });
+    if (bFluidMode) bFluidMode.addEventListener('click', () => {
+        fr.mode = "fluid";
+        resetFluidResistanceState();
+        updateFrictionDOMControls();
+        showLabToast("🌬️ Hava ve Su Direnci Modu Aktif");
+    });
+
+    const bAir = document.getElementById('btn-53-fluid-air');
+    const bWater = document.getElementById('btn-53-fluid-water');
+    if (bAir) bAir.addEventListener('click', () => {
+        fr.fluidSubMode = "air";
+        resetFluidResistanceState();
+        updateFrictionDOMControls();
+        showLabToast("🌬️ Hava Direnci: Düz vs. Buruşturulmuş Fon Kartonu");
+    });
+    if (bWater) bWater.addEventListener('click', () => {
+        fr.fluidSubMode = "water";
+        resetFluidResistanceState();
+        updateFrictionDOMControls();
+        showLabToast("💧 Su Direnci: Su Dolu Silindirde Disk vs. Sivri Cisim");
+    });
+
+    const bFluidStart = document.getElementById('btn-53-fluid-start');
+    if (bFluidStart) bFluidStart.addEventListener('click', () => {
+        resetFluidResistanceState();
+        fr.fluidRunning = true;
+        showLabToast("🚀 Cisimler aynı anda serbest bırakıldı!");
+    });
+    const bFluidReset = document.getElementById('btn-53-fluid-reset');
+    if (bFluidReset) bFluidReset.addEventListener('click', () => {
+        resetFluidResistanceState();
+        showLabToast("🔄 Cisimler başlangıç konumuna alındı");
+    });
 
     const setSurface = (s) => {
         fr.surface = s;
@@ -21256,6 +22401,92 @@ function setupFrictionControlsDOM() {
 
 function updateFrictionPhysics() {
     const fr = labState.friction;
+
+    if (fr.mode === "fluid") {
+        const isAir = fr.fluidSubMode === "air";
+        const slowDuration = isAir ? 3.20 : 3.80; // saniye (geniş yüzey)
+        const fastDuration = isAir ? 0.95 : 1.35; // saniye (küçük / sivri yüzey)
+
+        if (fr.fluidRunning) {
+            const dt = 0.016;
+            fr.fluidElapsed += dt;
+
+            if (!fr.fluidSlowDone) {
+                fr.fluidSlowTime = Math.min(slowDuration, fr.fluidElapsed);
+                fr.fluidSlowY = Math.min(1.0, fr.fluidSlowTime / slowDuration);
+                if (fr.fluidSlowY >= 1.0) fr.fluidSlowDone = true;
+            }
+            if (!fr.fluidFastDone) {
+                fr.fluidFastTime = Math.min(fastDuration, fr.fluidElapsed);
+                const tNorm = fr.fluidFastTime / fastDuration;
+                fr.fluidFastY = Math.min(1.0, isAir ? (tNorm * tNorm) : (0.35 * tNorm + 0.65 * tNorm * tNorm));
+                if (fr.fluidFastY >= 1.0) fr.fluidFastDone = true;
+            }
+
+            if (!isAir && Math.random() < 0.35) {
+                const leftActive = !fr.fluidSlowDone;
+                const rightActive = !fr.fluidFastDone;
+                if (leftActive) {
+                    fr.fluidBubbles.push({ x: 250 + (Math.random() - 0.5) * 44, y: 120 + fr.fluidSlowY * 275, r: 2 + Math.random() * 2.5, vy: 1.3 + Math.random() * 1.2, alpha: 0.75 });
+                }
+                if (rightActive) {
+                    fr.fluidBubbles.push({ x: 550 + (Math.random() - 0.5) * 28, y: 120 + fr.fluidFastY * 275, r: 2 + Math.random() * 2, vy: 1.5 + Math.random() * 1.2, alpha: 0.75 });
+                }
+            }
+
+            if (fr.fluidSlowDone && fr.fluidFastDone) {
+                fr.fluidRunning = false;
+            }
+        }
+
+        for (let i = fr.fluidBubbles.length - 1; i >= 0; i--) {
+            const b = fr.fluidBubbles[i];
+            b.y -= b.vy;
+            b.alpha -= 0.015;
+            if (b.y < 105 || b.alpha <= 0) fr.fluidBubbles.splice(i, 1);
+        }
+
+        const mbSurf = document.getElementById('mbar-53-surface');
+        const mbFric = document.getElementById('mbar-53-friction');
+        const mbDist = document.getElementById('mbar-53-distance');
+        const mbStatus = document.getElementById('mbar-53-status');
+
+        if (mbSurf) mbSurf.textContent = isAir ? "Hava Direnci (Kâğıt)" : "Su Direnci (Silindir)";
+        if (mbFric) mbFric.textContent = "Geniş Yüzey > Küçük Yüzey";
+        if (mbDist) mbDist.textContent = `${fr.fluidSlowTime.toFixed(2)} sn / ${fr.fluidFastTime.toFixed(2)} sn`;
+        if (mbStatus) {
+            if (fr.fluidSlowDone && fr.fluidFastDone) {
+                mbStatus.textContent = isAir
+                    ? `🏁 Buruşturulmuş kâğıt (${fr.fluidFastTime.toFixed(2)} sn) düz kâğıttan (${fr.fluidSlowTime.toFixed(2)} sn) çok önce yere ulaştı!`
+                    : `🏁 Sivri cisim (${fr.fluidFastTime.toFixed(2)} sn) geniş diskten (${fr.fluidSlowTime.toFixed(2)} sn) çok önce tabana ulaştı!`;
+            } else if (fr.fluidRunning) {
+                mbStatus.textContent = isAir
+                    ? "🌬️ Geniş yüzeyli düz kâğıda daha büyük hava direnci etki ediyor..."
+                    : "💧 Geniş diske daha büyük su direnci etki ediyor...";
+            } else {
+                mbStatus.textContent = isAir
+                    ? "📄 Özdeş düz ve buruşturulmuş fon kartonlarını aynı anda bırakın"
+                    : "💧 Su dolu silindirlerde geniş disk ile sivri cismi karşılaştırın";
+            }
+        }
+
+        const mFric = document.getElementById('metric-53-friction');
+        const mDist = document.getElementById('metric-53-distance');
+        const mState = document.getElementById('metric-53-status');
+        if (mFric) mFric.textContent = isAir ? "Hava Direnci" : "Su Direnci";
+        if (mDist) mDist.textContent = `${fr.fluidSlowTime.toFixed(2)} / ${fr.fluidFastTime.toFixed(2)} sn`;
+        if (mState) mState.textContent = fr.fluidRunning ? "Düşüyor..." : (fr.fluidSlowDone ? "Tamamlandı" : "Hazır");
+
+        const pTitle = document.getElementById('friction-pedagogical-title');
+        const pText = document.getElementById('friction-pedagogical-text');
+        if (pTitle && pText) {
+            pTitle.textContent = isAir ? "🌬️ Hava Direnci ve Yüzey Alanı" : "💧 Su Direnci ve Cisim Şekli";
+            pText.textContent = isAir
+                ? "Özdeş iki kâğıttan yüzeyi geniş olan düz kâğıda daha fazla hava direnci etki ettiği için salınarak yavaş düşer; buruşturulmuş kâğıt hızla yere iner."
+                : "Su içinde hareket eden geniş düz diske daha büyük su direnci etki eder; sivri/damla şekilli cisim suyu yararak tabana daha hızlı ulaşır.";
+        }
+        return;
+    }
 
     // Sürtünme katsayıları: Cam/Buz çok az, ahşap orta, zımpara yüksek, halı çok yüksek
     const muMap = { ice: 0.025, wood: 0.09, sand: 0.28, carpet: 0.45 };
@@ -21381,6 +22612,11 @@ function updateFrictionPhysics() {
 
 // MEB 1. Kitap s. 80 Birebir Düzenek: Üst üste ders kitapları, mukavva rampa, gerçekçi kaplamalar ve model araba
 function drawFrictionSimulation() {
+    if (labState.friction.mode === "fluid") {
+        drawFluidResistanceSimulation();
+        return;
+    }
+
     const w = canvas.width;
     const h = canvas.height;
     const scale = w / 800;
@@ -21734,6 +22970,252 @@ function drawFrictionSimulation() {
     ctx.restore(); // Araba restore
 
     ctx.restore(); // Genel canvas restore
+}
+
+function drawFluidResistanceSimulation() {
+    const w = canvas.width;
+    const scale = w / 800;
+    const fr = labState.friction;
+    const isAir = fr.fluidSubMode === "air";
+
+    ctx.save();
+    ctx.scale(scale, scale);
+
+    // Arka plan
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 500);
+    bgGrad.addColorStop(0, "#080f20");
+    bgGrad.addColorStop(1, "#13223b");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 800, 500);
+
+    // Üst Başlık
+    ctx.fillStyle = "rgba(56, 189, 248, 0.14)";
+    ctx.strokeStyle = "#38bdf8";
+    ctx.lineWidth = 1.4;
+    ctx.beginPath();
+    ctx.roundRect(195, 14, 410, 30, 15);
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = "#e0f2fe";
+    ctx.font = "bold 13px Nunito, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(isAir ? "🌬️ HAVA DİRENCİ: Düz vs. Buruşturulmuş Fon Kartonu" : "💧 SU DİRENCİ: Geniş Disk vs. Sivri (Aerodinamik) Cisim", 400, 34);
+
+    // Zemin / Masa
+    const floorY = 430;
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(0, floorY, 800, 70);
+    ctx.strokeStyle = "#475569";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, floorY); ctx.lineTo(800, floorY); ctx.stroke();
+
+    const drawUpArrow = (x, y, len, color, label) => {
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = 2.6;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, y - len);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y - len);
+        ctx.lineTo(x - 6, y - len + 9);
+        ctx.lineTo(x + 6, y - len + 9);
+        ctx.closePath();
+        ctx.fill();
+        if (label) {
+            ctx.font = "bold 10px Nunito, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(label, x, y + 13);
+        }
+        ctx.restore();
+    };
+
+    if (isAir) {
+        const startY = 92;
+        const endY = floorY - 18;
+        const span = endY - startY;
+
+        // Başlangıç hizası çizgisi
+        ctx.strokeStyle = "rgba(250, 204, 21, 0.45)";
+        ctx.lineWidth = 1.4;
+        ctx.setLineDash([6, 4]);
+        ctx.beginPath(); ctx.moveTo(85, startY); ctx.lineTo(715, startY); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = "#fde047";
+        ctx.font = "bold 10px Nunito, sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText("Başlangıç Hizası", 92, startY - 7);
+
+        // Sol: Düz Fon Kartonu (Geniş Yüzey)
+        const flutter = (fr.fluidRunning && !fr.fluidSlowDone) ? Math.sin(fr.fluidElapsed * 5.2) * 26 : 0;
+        const tilt = (fr.fluidRunning && !fr.fluidSlowDone) ? Math.cos(fr.fluidElapsed * 5.2) * 0.16 : 0;
+        const leftX = 240 + flutter;
+        const leftY = startY + fr.fluidSlowY * span;
+
+        ctx.save();
+        ctx.translate(leftX, leftY);
+        ctx.rotate(tilt);
+        const cardGrad = ctx.createLinearGradient(-56, 0, 56, 0);
+        cardGrad.addColorStop(0, "#fbbf24");
+        cardGrad.addColorStop(0.5, "#fde68a");
+        cardGrad.addColorStop(1, "#f59e0b");
+        ctx.fillStyle = cardGrad;
+        ctx.strokeStyle = "#fef3c7";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(-56, -7, 112, 14, 3);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        // Yukarı yönlü büyük hava direnci okları
+        if (fr.fluidRunning && !fr.fluidSlowDone) {
+            drawUpArrow(leftX - 32, leftY + 34, 28, "#38bdf8", "");
+            drawUpArrow(leftX, leftY + 42, 36, "#38bdf8", "Büyük Hava Direnci");
+            drawUpArrow(leftX + 32, leftY + 34, 28, "#38bdf8", "");
+        }
+
+        // Sağ: Buruşturulmuş Fon Kartonu (Küçük Yüzey)
+        const rightX = 560;
+        const rightY = startY + fr.fluidFastY * span;
+        ctx.save();
+        ctx.translate(rightX, rightY);
+        const ballGrad = ctx.createRadialGradient(-5, -5, 2, 0, 0, 17);
+        ballGrad.addColorStop(0, "#fef3c7");
+        ballGrad.addColorStop(0.5, "#f59e0b");
+        ballGrad.addColorStop(1, "#b45309");
+        ctx.fillStyle = ballGrad;
+        ctx.beginPath();
+        ctx.moveTo(-16, -4); ctx.lineTo(-10, -15); ctx.lineTo(4, -16);
+        ctx.lineTo(16, -8); ctx.lineTo(14, 10); ctx.lineTo(2, 16);
+        ctx.lineTo(-13, 11); ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = "#78350f";
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+        ctx.restore();
+
+        if (fr.fluidRunning && !fr.fluidFastDone) {
+            drawUpArrow(rightX, rightY + 32, 14, "#38bdf8", "Küçük Direnç");
+        }
+
+        // Alt Karşılaştırma Kartları
+        [
+            { cx: 240, title: "Düz Fon Kartonu (Geniş Yüzey)", time: fr.fluidSlowTime, sub: "Hava direnci BÜYÜK · Yavaş düşer", color: "#f59e0b" },
+            { cx: 560, title: "Buruşturulmuş Kâğıt (Küçük Yüzey)", time: fr.fluidFastTime, sub: "Hava direnci KÜÇÜK · Hızlı düşer", color: "#38bdf8" }
+        ].forEach((c) => {
+            ctx.fillStyle = "rgba(15, 23, 42, 0.92)";
+            ctx.strokeStyle = c.color;
+            ctx.lineWidth = 1.4;
+            ctx.beginPath(); ctx.roundRect(c.cx - 145, floorY + 10, 290, 50, 8); ctx.fill(); ctx.stroke();
+            ctx.fillStyle = "#f8fafc";
+            ctx.font = "bold 11.5px Nunito, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(`${c.title} · ${c.time.toFixed(2)} sn`, c.cx, floorY + 30);
+            ctx.fillStyle = c.color;
+            ctx.font = "bold 10.5px Nunito, sans-serif";
+            ctx.fillText(c.sub, c.cx, floorY + 48);
+        });
+    } else {
+        // SU DİRENCİ: İki Dereceli Şeffaf Cam Silindir
+        const cylTop = 86;
+        const cylH = floorY - cylTop;
+        const cylW = 136;
+        const waterTop = cylTop + 26;
+        const startY = waterTop + 24;
+        const endY = floorY - 22;
+        const span = endY - startY;
+
+        [250, 550].forEach((cx) => {
+            // Su dolgusu
+            const wGrad = ctx.createLinearGradient(cx, waterTop, cx, floorY);
+            wGrad.addColorStop(0, "rgba(56, 189, 248, 0.30)");
+            wGrad.addColorStop(1, "rgba(2, 132, 199, 0.48)");
+            ctx.fillStyle = wGrad;
+            ctx.fillRect(cx - cylW / 2 + 4, waterTop, cylW - 8, floorY - waterTop - 3);
+
+            // Su yüzeyi parıltısı
+            ctx.strokeStyle = "rgba(186, 230, 253, 0.7)";
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(cx - cylW / 2 + 4, waterTop); ctx.lineTo(cx + cylW / 2 - 4, waterTop); ctx.stroke();
+
+            // Cam silindir gövdesi
+            ctx.strokeStyle = "rgba(226, 232, 240, 0.65)";
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            ctx.roundRect(cx - cylW / 2, cylTop, cylW, cylH, [4, 4, 10, 10]);
+            ctx.stroke();
+
+            // Derece çizgileri (100 - 500 mL)
+            for (let m = 1; m <= 5; m++) {
+                const ty = floorY - (m / 5.5) * (floorY - waterTop);
+                ctx.strokeStyle = "rgba(226, 232, 240, 0.45)";
+                ctx.lineWidth = 1.2;
+                ctx.beginPath(); ctx.moveTo(cx - cylW / 2 + 4, ty); ctx.lineTo(cx - cylW / 2 + 16, ty); ctx.stroke();
+                ctx.fillStyle = "#94a3b8";
+                ctx.font = "bold 8.5px Nunito, sans-serif";
+                ctx.textAlign = "right";
+                ctx.fillText(`${m * 100} mL`, cx - cylW / 2 - 6, ty + 3);
+            }
+        });
+
+        // Kabarcıklar
+        fr.fluidBubbles.forEach((b) => {
+            ctx.fillStyle = `rgba(224, 242, 254, ${b.alpha})`;
+            ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill();
+        });
+
+        // Sol Silindir: Geniş Düz Disk
+        const leftY = startY + fr.fluidSlowY * span;
+        ctx.fillStyle = "#ef4444";
+        ctx.strokeStyle = "#fecaca";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(250 - 42, leftY - 8, 84, 16, 4);
+        ctx.fill();
+        ctx.stroke();
+        if (fr.fluidRunning && !fr.fluidSlowDone) {
+            drawUpArrow(250, leftY + 38, 30, "#fbbf24", "Büyük Su Direnci");
+        }
+
+        // Sağ Silindir: Sivri / Damla Şekilli Aerodinamik Cisim
+        const rightY = startY + fr.fluidFastY * span;
+        ctx.fillStyle = "#22c55e";
+        ctx.strokeStyle = "#bbf7d0";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(550, rightY + 20);
+        ctx.quadraticCurveTo(568, rightY + 2, 550, rightY - 18);
+        ctx.quadraticCurveTo(532, rightY + 2, 550, rightY + 20);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        if (fr.fluidRunning && !fr.fluidFastDone) {
+            drawUpArrow(550, rightY + 38, 13, "#fbbf24", "Küçük Direnç");
+        }
+
+        // Alt Karşılaştırma Kartları
+        [
+            { cx: 250, title: "Geniş Düz Disk", time: fr.fluidSlowTime, sub: "Su direnci BÜYÜK · Yavaş batar", color: "#ef4444" },
+            { cx: 550, title: "Sivri / Damla Cisim", time: fr.fluidFastTime, sub: "Su direnci KÜÇÜK · Hızlı batar", color: "#22c55e" }
+        ].forEach((c) => {
+            ctx.fillStyle = "rgba(15, 23, 42, 0.92)";
+            ctx.strokeStyle = c.color;
+            ctx.lineWidth = 1.4;
+            ctx.beginPath(); ctx.roundRect(c.cx - 140, floorY + 10, 280, 50, 8); ctx.fill(); ctx.stroke();
+            ctx.fillStyle = "#f8fafc";
+            ctx.font = "bold 11.5px Nunito, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(`${c.title} · ${c.time.toFixed(2)} sn`, c.cx, floorY + 30);
+            ctx.fillStyle = c.color;
+            ctx.font = "bold 10.5px Nunito, sans-serif";
+            ctx.fillText(c.sub, c.cx, floorY + 48);
+        });
+    }
+
+    ctx.restore();
 }
 
 // --- 5.4. DENEY 5.4: IŞIĞIN DOĞRUSAL YAYILMASI (FB.5.4.1) ---
@@ -24196,31 +25678,62 @@ function recordMeasurement() {
         showLabToast(`Ay Evresi Gözlemi #${row.id} deftere kaydedildi!`);
     } else if (expId === "5.2") {
         const dm = labState.dynamometer;
-        const typeLabels = { thin: "İnce Yay", medium: "Orta Yay", thick: "Kalın Yay" };
-        const row = {
-            id: dm.measurements.length + 1,
-            col1: typeLabels[dm.springType],
-            col2: `${dm.force} N (${dm.weightsCount} Ağırlık)`,
-            col3: `${dm.currentStretch.toFixed(1)} cm`,
-            col4: `${dm.divisionCount} Bölme`,
-            col5: "Kuvvet ile uzama doğru orantılıdır"
-        };
-        dm.measurements.push(row);
-        showLabToast(`Dinamometre Ölçümü #${row.id} deftere kaydedildi!`);
+        if (dm.mode === "massweight") {
+            const envLabel = dm.mwEnv === "moon" ? "🌕 Ay" : "🌍 Dünya";
+            const objNames = { apple: "Elma", stone: "Taş", iron: "Demir Kütle" };
+            const weightN = dm.mwEnv === "moon" ? (dm.mwMassGrams / 100) / 6 : (dm.mwMassGrams / 100);
+            const massStr = dm.mwMassGrams >= 1000 ? "1 kg (1000 g)" : `${dm.mwMassGrams} g`;
+            const row = {
+                id: dm.measurements.length + 1,
+                col1: `Kütle-Ağırlık (${envLabel})`,
+                col2: objNames[dm.mwObject] || "Cisim",
+                col3: `Terazi: ${massStr}`,
+                col4: `Dinamometre: ${weightN.toFixed(2)} N`,
+                col5: dm.mwEnv === "moon" ? "Kütle değişmez; ağırlık Ay'da 1/6'ya düşer" : "Terazi kütleyi (g/kg), dinamometre ağırlığı (N) ölçer"
+            };
+            dm.measurements.push(row);
+            showLabToast(`Kütle–Ağırlık Gözlemi #${row.id} deftere kaydedildi!`);
+        } else {
+            const typeLabels = { thin: "İnce Yay", medium: "Orta Yay", thick: "Kalın Yay" };
+            const row = {
+                id: dm.measurements.length + 1,
+                col1: typeLabels[dm.springType],
+                col2: `${dm.force} N (${dm.weightsCount} Ağırlık)`,
+                col3: `${dm.currentStretch.toFixed(1)} cm`,
+                col4: `${dm.divisionCount} Bölme`,
+                col5: "Kuvvet ile uzama doğru orantılıdır"
+            };
+            dm.measurements.push(row);
+            showLabToast(`Dinamometre Ölçümü #${row.id} deftere kaydedildi!`);
+        }
     } else if (expId === "5.3") {
         const fr = labState.friction;
-        const surfNames = { ice: "Pürüzsüz Zemin", wood: "Mukavva Zemin", sand: "Kumlu Zemin", carpet: "Pamuklu Kumaş" };
-        const fLevels = { ice: "Çok Düşük", wood: "Düşük", sand: "Yüksek", carpet: "Çok Yüksek" };
-        const row = {
-            id: fr.measurements.length + 1,
-            col1: surfNames[fr.surface],
-            col2: fLevels[fr.surface],
-            col3: `${fr.rampHeight} Takoz`,
-            col4: `${fr.distanceTraveled.toFixed(1)} m`,
-            col5: fr.distanceTraveled > 6 ? "Pürüzsüz yüzeyde az sürtünme, çok yol" : "Pürüzlü yüzeyde çok sürtünme, az yol"
-        };
-        fr.measurements.push(row);
-        showLabToast(`Sürtünme Gözlemi #${row.id} deftere kaydedildi!`);
+        if (fr.mode === "fluid") {
+            const isAir = fr.fluidSubMode === "air";
+            const row = {
+                id: fr.measurements.length + 1,
+                col1: isAir ? "🌬️ Hava Direnci" : "💧 Su Direnci",
+                col2: isAir ? "Düz vs. Buruşturulmuş Kâğıt" : "Geniş Disk vs. Sivri Cisim",
+                col3: "Geniş Yüzey vs. Küçük Yüzey",
+                col4: `${fr.fluidSlowTime.toFixed(2)} sn / ${fr.fluidFastTime.toFixed(2)} sn`,
+                col5: "Yüzey alanı büyüdükçe direnç artar, düşüş yavaşlar"
+            };
+            fr.measurements.push(row);
+            showLabToast(`Direnç Gözlemi #${row.id} deftere kaydedildi!`);
+        } else {
+            const surfNames = { ice: "Pürüzsüz Zemin", wood: "Mukavva Zemin", sand: "Kumlu Zemin", carpet: "Pamuklu Kumaş" };
+            const fLevels = { ice: "Çok Düşük", wood: "Düşük", sand: "Yüksek", carpet: "Çok Yüksek" };
+            const row = {
+                id: fr.measurements.length + 1,
+                col1: surfNames[fr.surface],
+                col2: fLevels[fr.surface],
+                col3: `${fr.rampHeight} Takoz`,
+                col4: `${fr.distanceTraveled.toFixed(1)} m`,
+                col5: fr.distanceTraveled > 6 ? "Pürüzsüz yüzeyde az sürtünme, çok yol" : "Pürüzlü yüzeyde çok sürtünme, az yol"
+            };
+            fr.measurements.push(row);
+            showLabToast(`Sürtünme Gözlemi #${row.id} deftere kaydedildi!`);
+        }
     } else if (expId === "5.4") {
         const lr = labState.lightRect;
         const row = {
@@ -24732,7 +26245,7 @@ function recordMeasurement() {
             };
             sep.measurements.push(row);
             showLabToast(`Damıtma Gözlemi #${row.id} deftere kaydedildi!`);
-        } else {
+        } else if (sep.mode === "evap") {
             const ev = sep.evaporation;
             const row = {
                 id: sep.measurements.length + 1,
@@ -24744,6 +26257,30 @@ function recordMeasurement() {
             };
             sep.measurements.push(row);
             showLabToast(`Buharlaştırma Gözlemi #${row.id} deftere kaydedildi!`);
+        } else if (sep.mode === "filter") {
+            const fl = sep.filtration;
+            const row = {
+                id: sep.measurements.length + 1,
+                col1: "⏳ Süzme",
+                col2: "Kum + Su (Katı–Sıvı Heterojen)",
+                col3: "Tanecik Boyutu Farkı (Süzgeç Kâğıdı)",
+                col4: `Kalıntı (Kum): ${fmt(fl.sandTrapped)} g · Süzüntü (Su): ${fmt(fl.waterFiltered)} mL`,
+                col5: fl.progress >= 99 ? "Kum süzgeçte kaldı, berrak su ayrıldı (%100)" : `Süzme sürüyor (%${Math.round(fl.progress)})`
+            };
+            sep.measurements.push(row);
+            showLabToast(`Süzme Gözlemi #${row.id} deftere kaydedildi!`);
+        } else {
+            const sv = sep.sieving;
+            const row = {
+                id: sep.measurements.length + 1,
+                col1: "🌾 Eleme",
+                col2: "Kepekli Un (Katı–Katı Heterojen)",
+                col3: "Tanecik Boyutu Farkı (Telli Elek)",
+                col4: `Elek Üstü (Kepek): ${fmt(sv.branOnTop)} g · Elenen (Un): ${fmt(sv.flourSifted)} g`,
+                col5: sv.progress >= 99 ? "İnce un elendi, iri kepek üstte kaldı (%100)" : `Eleme sürüyor (%${Math.round(sv.progress)})`
+            };
+            sep.measurements.push(row);
+            showLabToast(`Eleme Gözlemi #${row.id} deftere kaydedildi!`);
         }
     } else if (expId === "7.6") {
         const dissolve = labState.dissolve;

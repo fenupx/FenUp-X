@@ -57,8 +57,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@500;600;700&family=Kalam:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8.9.36">
-    <link rel="stylesheet" href="exam.css?v=8.9.36">
+    <link rel="stylesheet" href="style.css?v=8.9.37">
+    <link rel="stylesheet" href="exam.css?v=8.9.37">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -996,8 +996,12 @@
                             <div class="lab-toggle-btn-group" id="group-modes-7-5">
                                 <button class="lab-toggle-btn active" id="btn-mode-funnel" title="Ayırma Hunisi ile Yoğunluk Farkı"><i class="fas fa-filter"></i> 🧪 Ayırma Hunisi</button>
                                 <button class="lab-toggle-btn" id="btn-mode-distill" title="Ayrımsal Damıtma ile Kaynama Noktası Farkı"><i class="fas fa-fire"></i> 🔥 Ayrımsal Damıtma</button>
-                                <button class="lab-toggle-btn" id="btn-mode-evap" title="Buharlaştırma ile Tuz-Su Ayrılması"><i class="fas fa-sun"></i> 🧂 Buharlaştırma (Tuz-Su)</button>
+                                <button class="lab-toggle-btn" id="btn-mode-evap" title="Buharlaştırma ile Tuz-Su Ayrılması"><i class="fas fa-sun"></i> 🧂 Buharlaştırma</button>
+                                <button class="lab-toggle-btn" id="btn-mode-filter" title="Süzme ile Kum-Su Ayrılması"><i class="fas fa-tint"></i> ⏳ Süzme (Kum–Su)</button>
+                                <button class="lab-toggle-btn" id="btn-mode-sieve" title="Eleme ile Kepekli Un Ayrılması"><i class="fas fa-th"></i> 🌾 Eleme (Kepekli Un)</button>
                             </div>
+                        </div>
+                        <div class="lab-quick-lens-row">
                             <div class="lab-toggle-btn-group" id="group-controls-funnel">
                                 <button class="lab-toggle-btn active" id="btn-funnel-valve" title="Musluğu Aç / Kapat"><i class="fas fa-faucet"></i> <span id="label-funnel-valve">Musluğu Aç</span></button>
                                 <button class="lab-toggle-btn" id="btn-funnel-refill" title="Huniyi Tekrar Doldur"><i class="fas fa-redo"></i> Huniyi Doldur</button>
@@ -1009,6 +1013,14 @@
                             <div class="lab-toggle-btn-group is-hidden" id="group-controls-evap">
                                 <button class="lab-toggle-btn active" id="btn-evap-heater" title="Buharlaştırma Isıtıcısını Başlat / Durdur"><i class="fas fa-fire-alt"></i> <span id="label-evap-heater">Isıtıcıyı Başlat</span></button>
                                 <button class="lab-toggle-btn" id="btn-evap-reset" title="Buharlaştırma Kabını Sıfırla"><i class="fas fa-redo"></i> Düzeneği Sıfırla</button>
+                            </div>
+                            <div class="lab-toggle-btn-group is-hidden" id="group-controls-filter">
+                                <button class="lab-toggle-btn active" id="btn-filter-start" title="Süzme İşlemini Başlat / Durdur"><i class="fas fa-play"></i> <span id="label-filter-start">Süzmeyi Başlat</span></button>
+                                <button class="lab-toggle-btn" id="btn-filter-reset" title="Süzme Düzeneğini Sıfırla"><i class="fas fa-redo"></i> Düzeneği Sıfırla</button>
+                            </div>
+                            <div class="lab-toggle-btn-group is-hidden" id="group-controls-sieve">
+                                <button class="lab-toggle-btn active" id="btn-sieve-start" title="Eleme İşlemini Başlat / Durdur"><i class="fas fa-play"></i> <span id="label-sieve-start">Elemeyi Başlat</span></button>
+                                <button class="lab-toggle-btn" id="btn-sieve-reset" title="Eleme Düzeneğini Sıfırla"><i class="fas fa-redo"></i> Düzeneği Sıfırla</button>
                             </div>
                         </div>
                     </div>
@@ -1323,9 +1335,15 @@
                         </div>
                     </div>
 
-                    <!-- Canvas Altı Hızlı Dokunmatik Kontroller (Deney 5.2 - Dinamometre ve Yay Esnekliği) -->
+                    <!-- Canvas Altı Hızlı Dokunmatik Kontroller (Deney 5.2 - Dinamometre ve Kütle-Ağırlık) -->
                     <div id="quick-controls-5-2" class="lab-canvas-quick-controls is-hidden">
                         <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group" id="group-modes-5-2">
+                                <button class="lab-toggle-btn active" id="btn-52-mode-spring" title="Dinamometre ile Kuvvet Ölçümü">⚖️ Dinamometre (Kuvvet Ölçümü)</button>
+                                <button class="lab-toggle-btn" id="btn-52-mode-massweight" title="Eşit Kollu Terazi ve Dinamometre Karşılaştırması">🌍 Kütle ve Ağırlık (Terazi vs. Dinamometre)</button>
+                            </div>
+                        </div>
+                        <div class="lab-quick-lens-row" id="group-52-spring-ctrl">
                             <div class="lab-toggle-btn-group">
                                 <button class="lab-toggle-btn" id="btn-52-spring-thin" title="İnce Yay (Hassas, Kolay Uzar)">🪶 İnce Yay</button>
                                 <button class="lab-toggle-btn active" id="btn-52-spring-medium" title="Orta Yay (Standart)">📏 Orta Yay</button>
@@ -1337,11 +1355,34 @@
                                 <button class="lab-toggle-btn" id="btn-52-reset" title="Yayı Boşalt"><i class="fas fa-redo"></i> Sıfırla</button>
                             </div>
                         </div>
+                        <div class="lab-quick-lens-row is-hidden" id="group-52-mw-ctrl">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-52-env-earth" title="Dünya Ortamı">🌍 Dünya</button>
+                                <button class="lab-toggle-btn" id="btn-52-env-moon" title="Ay Ortamı (1/6 Çekim)">🌕 Ay</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-52-obj-apple" title="Elma">🍎 Elma</button>
+                                <button class="lab-toggle-btn" id="btn-52-obj-stone" title="Taş">🪨 Taş</button>
+                                <button class="lab-toggle-btn" id="btn-52-obj-iron" title="Demir Kütle">🏋️ Demir</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn" id="btn-52-mass-100" title="100 gram">100 g</button>
+                                <button class="lab-toggle-btn" id="btn-52-mass-200" title="200 gram">200 g</button>
+                                <button class="lab-toggle-btn active" id="btn-52-mass-500" title="500 gram">500 g</button>
+                                <button class="lab-toggle-btn" id="btn-52-mass-1000" title="1000 gram (1 kg)">1000 g</button>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Canvas Altı Hızlı Dokunmatik Kontroller (Deney 5.3 - Sürtünme Kuvveti ve Yüzeyler) -->
+                    <!-- Canvas Altı Hızlı Dokunmatik Kontroller (Deney 5.3 - Sürtünme, Hava ve Su Direnci) -->
                     <div id="quick-controls-5-3" class="lab-canvas-quick-controls is-hidden">
                         <div class="lab-quick-lens-row">
+                            <div class="lab-toggle-btn-group" id="group-modes-5-3">
+                                <button class="lab-toggle-btn active" id="btn-53-mode-surface" title="Yüzey Türlerine Göre Sürtünme">🚗 Yüzey Sürtünmesi</button>
+                                <button class="lab-toggle-btn" id="btn-53-mode-fluid" title="Hava ve Su Direnci Gözlemi">🌬️ Hava ve Su Direnci</button>
+                            </div>
+                        </div>
+                        <div class="lab-quick-lens-row" id="group-53-surface-ctrl">
                             <div class="lab-toggle-btn-group">
                                 <button class="lab-toggle-btn active" id="btn-53-surf-ice" title="Pürüzsüz Zemin (En Az Sürtünme)">✨ Pürüzsüz Zemin</button>
                                 <button class="lab-toggle-btn" id="btn-53-surf-wood" title="Mukavva Zemin">📦 Mukavva Zemin</button>
@@ -1351,6 +1392,16 @@
                             <div class="lab-toggle-btn-group">
                                 <button class="lab-toggle-btn active" id="btn-53-launch" title="Aracı Rampadan Bırak"><i class="fas fa-play"></i> Bırak</button>
                                 <button class="lab-toggle-btn" id="btn-53-reset" title="Aracı Rampaya Geri Koy"><i class="fas fa-undo"></i> Başa Al</button>
+                            </div>
+                        </div>
+                        <div class="lab-quick-lens-row is-hidden" id="group-53-fluid-ctrl">
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-53-fluid-air" title="Düz ve Buruşturulmuş Fon Kartonu">🌬️ Hava Direnci (Kâğıt)</button>
+                                <button class="lab-toggle-btn" id="btn-53-fluid-water" title="Su Dolu Silindirde Disk ve Sivri Cisim">💧 Su Direnci (Silindir)</button>
+                            </div>
+                            <div class="lab-toggle-btn-group">
+                                <button class="lab-toggle-btn active" id="btn-53-fluid-start" title="Cisimleri Aynı Anda Bırak"><i class="fas fa-play"></i> Bırak</button>
+                                <button class="lab-toggle-btn" id="btn-53-fluid-reset" title="Başlangıç Yüksekliğine Al"><i class="fas fa-undo"></i> Sıfırla</button>
                             </div>
                         </div>
                     </div>
@@ -1889,6 +1940,46 @@
                                     <div class="lab-stat-chip">
                                         <span class="chip-label">Elde Edilen Tuz</span>
                                         <strong class="chip-val" id="metric-evap-salt" style="color: #facc15;">0.0 g</strong>
+                                    </div>
+                                </div>
+
+                                <!-- Süzme (Kum-Su) Metrikleri -->
+                                <div class="lab-stats-grid is-hidden" id="stats-grid-filter">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Karışım Türü</span>
+                                        <strong class="chip-val" style="color: #cbd5e1;">Katı–Sıvı Heterojen</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Kalıntı (Süzgeçte Kum)</span>
+                                        <strong class="chip-val" id="metric-filter-sand" style="color: #f59e0b;">0.0 g</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Süzüntü (Temiz Su)</span>
+                                        <strong class="chip-val" id="metric-filter-water" style="color: #38bdf8;">0.0 mL</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">İlerleme</span>
+                                        <strong class="chip-val" id="metric-filter-pct" style="color: #34d399;">%0</strong>
+                                    </div>
+                                </div>
+
+                                <!-- Eleme (Kepekli Un) Metrikleri -->
+                                <div class="lab-stats-grid is-hidden" id="stats-grid-sieve">
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Karışım Türü</span>
+                                        <strong class="chip-val" style="color: #cbd5e1;">Katı–Katı Heterojen</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Elek Üstü (İri Kepek)</span>
+                                        <strong class="chip-val" id="metric-sieve-bran" style="color: #f59e0b;">30.0 g</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">Elenen (İnce Un)</span>
+                                        <strong class="chip-val" id="metric-sieve-flour" style="color: #f8fafc;">0.0 g</strong>
+                                    </div>
+                                    <div class="lab-stat-chip">
+                                        <span class="chip-label">İlerleme</span>
+                                        <strong class="chip-val" id="metric-sieve-pct" style="color: #34d399;">%0</strong>
                                     </div>
                                 </div>
 
@@ -5390,10 +5481,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
     <script>
-        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.36';
+        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.37';
     </script>
-    <script type="module" src="exam-engine.js?v=8.9.36"></script>
-    <script type="module" src="lab-engine.js?v=8.9.36"></script>
-    <script type="module" src="script.js?v=8.9.36"></script>
+    <script type="module" src="exam-engine.js?v=8.9.37"></script>
+    <script type="module" src="lab-engine.js?v=8.9.37"></script>
+    <script type="module" src="script.js?v=8.9.37"></script>
 </body>
 </html>
