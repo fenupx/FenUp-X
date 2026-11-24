@@ -2888,6 +2888,43 @@ body { background: #000; color: #fff; min-height: 100vh; min-height: 100dvh; ove
     color: #030712;
     box-shadow: 0 0 12px rgba(0, 210, 255, 0.4);
 }
+#quick-controls-7-2 {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+}
+.energy-activity-group {
+    width: 100%;
+    justify-content: center;
+}
+.energy-activity-group .lab-toggle-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 8px 10px;
+    font-size: 0.85rem;
+}
+.energy-controls-subrow {
+    align-items: center;
+    margin-top: 0;
+}
+.energy-stops-group {
+    align-items: center;
+}
+.energy-stops-label {
+    color: #94a3b8;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 0 8px 0 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+.energy-stop-btn.active {
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.45);
+}
 .lab-lens-sliders-row {
     display: flex;
     gap: 16px;

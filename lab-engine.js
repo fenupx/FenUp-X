@@ -182,10 +182,10 @@ export const EXPERIMENTS_DATABASE = [
     },
     {
         id: "7.2", grade: 7, unit: 2, unitName: "Kuvvet ve Enerjiyi Keşfedelim",
-        title: "Mekanik Enerji Dönüşümü ve Korunumu (Sarkaç ve Rampa)",
-        code: "FB.7.2.2 - FB.7.2.3", bookRef: "1. Kitap, s. 70–85",
+        title: "Enerji Dönüşümleri ve Korunumu (Etkinlik Noktası-5)",
+        code: "FB.7.2.2 - FB.7.2.3", bookRef: "1. Kitap, s. 72–75",
         active: true, // 🏆 AKTİF!
-        desc: "Salınan sarkaç veya kaykaycı üzerinde potansiyel ve kinetik enerjinin birbirine dönüşümünü, sürtünmeyle ısıya aktarımını ve enerjinin korunumunu nitel olarak gözlemleyin."
+        desc: "Sarkaç, basketbol topu, sarmal yay ve kitaplar üzerindeki eğik düzlem etkinliklerinde kinetik (mavi) ve potansiyel (kırmızı) enerji dönüşümünü canlı sütun grafiklerle gözlemleyin."
     },
     {
         id: "7.3", grade: 7, unit: 4, unitName: "Işığın Kırılması ve Mercekler",
@@ -345,40 +345,61 @@ export const labState = {
         measurements: []
     },
 
-    // Deney 7.2 Fizik Durumu (Mekanik Enerji: Sarkaç ve Rampa)
+    // Deney 7.2 Fizik Durumu (MEB 7. Sınıf 1. Kitap Etkinlik Noktası-5 — 4 Etkinlik)
     energy: {
-        mode: "pendulum", // "pendulum" (Sarkaç) veya "ramp" (U-Rampa)
+        mode: "pendulum", // "pendulum" | "basketball" | "spring" | "incline"
         isPlaying: true,
         isSlowMo: false,
-        frictionEnabled: false,
+        frictionEnabled: false, // Kitap şartı: "Sürtünme kuvvetini ihmal ediniz."
         mass: 2.0, // 1.0 - 5.0 kg
-        releaseAngle: 45, // 15° - 60° (derece)
+        releaseAngle: 45, // Sarkaç bırakma açısı (15° - 60°)
         gravity: 9.8, // m/s^2
+        activeStopIndex: -1, // -1: serbest hareket, 0/1/2: dondurulmuş konum durağı
+        currentPositionLabel: "Başlangıç",
 
-        // Sarkaç bileşenleri
+        // 1. Etkinlik: Sarkaç
         pendulum: {
             length: 1.5, // metre
-            pivotX: 420, // canvas px
-            pivotY: 65,  // canvas px
-            rodPx: 220,  // px
-            angle: 45 * (Math.PI / 180), // radyan
-            omega: 0,    // rad/s
-            isDragging: false
-        },
-
-        // U-Rampa bileşenleri
-        ramp: {
-            radius: 1.6, // metre
-            centerX: 420,
-            centerY: 140,
-            radiusPx: 200,
-            angle: 45 * (Math.PI / 180), // radyan
+            pivotX: 495, // canvas px (sol bar grafiğinden net ayrılmış)
+            pivotY: 66,  // canvas px
+            rodPx: 235,  // px
+            angle: 45 * (Math.PI / 180),
             omega: 0,
             isDragging: false
         },
 
+        // 2. Etkinlik: Basketbol Topu (Omuz Hizasından Serbest Bırakma)
+        basketball: {
+            releaseHeight: 1.5, // 0.8 - 2.0 m
+            height: 1.5,        // anlık yükseklik (m)
+            vy: 0,              // düşey hız (m/s, aşağı negatif)
+            squash: 0,          // zemin temas anında hafif esneme (0..1)
+            phase: "falling"    // "falling" | "rising"
+        },
+
+        // 3. Etkinlik: Sarmal Yay ve Maket Araba
+        spring: {
+            compressionPct: 80, // %20 - %100
+            compression: 0.80,  // anlık sıkışma oranı (0..1)
+            carOffset: 0,       // yaydan çıktıktan sonraki ilerleme (0..1)
+            velocity: 0,        // m/s
+            wheelAngle: 0,
+            phase: "expanding", // "expanding" | "gliding" | "pause"
+            pauseTimer: 0,
+            oscPhase: 0
+        },
+
+        // 4. Etkinlik: Kitaplar Üzerinde Eğik Düzlem ve Maket Araba
+        incline: {
+            bookCount: 4,       // 2 - 5 kitap
+            progress: 0,        // 0 (En Üst) .. 1 (En Alt) .. 1.32 (Masa düzlüğü)
+            velocity: 0,        // m/s
+            wheelAngle: 0,
+            pauseTimer: 0
+        },
+
         // Anlık Enerji Değerleri
-        currentHeight: 0, // metre
+        currentHeight: 0, // metre (yayda sıkışma cm)
         currentSpeed: 0,  // m/s
         potentialEnergy: 0, // J
         kineticEnergy: 0,   // J
@@ -11733,19 +11754,73 @@ function drawWorkWallObstacle(ctx, x, y, w, h) {
     ctx.restore();
 }
 
-// --- 6.5. DENEY 7.2: MEKANİK ENERJİ DÖNÜŞÜMÜ (SARKAÇ VE RAMPA) MOTORU ---
+// --- 6.5. DENEY 7.2: ENERJİ DÖNÜŞÜMLERİ VE KORUNUMU (MEB 7. SINIF 1. KİTAP ETKİNLİK NOKTASI-5) ---
+
+const ENERGY_ACTIVITY_CONFIG = {
+    pendulum: {
+        shortName: "Sarkaç",
+        toastTitle: "🔄 1. Etkinlik: Sarkaç Seçildi",
+        massLabel: "Sarkaç Kütlesi:",
+        paramLabel: "Bırakma Açısı:",
+        heightLabel: "Yükseklik",
+        epLabel: "Potansiyel Enerji (Kırmızı)",
+        paramMin: 15, paramMax: 60, paramStep: 5,
+        stops: ["Başlangıç", "En Alt", "En Üst"]
+    },
+    basketball: {
+        shortName: "Basketbol Topu",
+        toastTitle: "🏀 2. Etkinlik: Basketbol Topu Bırakma Seçildi",
+        massLabel: "Top Kütlesi:",
+        paramLabel: "Bırakma Yüksekliği:",
+        heightLabel: "Yerden Yükseklik",
+        epLabel: "Çekim Potansiyel (Kırmızı)",
+        paramMin: 0.8, paramMax: 2.0, paramStep: 0.1,
+        stops: ["En Üst (Omuz)", "Orta Konum", "En Alt (Temas Öncesi)"]
+    },
+    spring: {
+        shortName: "Sarmal Yay ve Araba",
+        toastTitle: "🌀 3. Etkinlik: Sarmal Yay ve Maket Araba Seçildi",
+        massLabel: "Araba Kütlesi:",
+        paramLabel: "Yay Sıkışma Miktarı:",
+        heightLabel: "Yay Sıkışması",
+        epLabel: "Esneklik Potansiyel (Kırmızı)",
+        paramMin: 20, paramMax: 100, paramStep: 10,
+        stops: ["Sıkıştırılmış Hâli", "Yay Açılırken", "Serbest Bırakıldıktan Sonra"]
+    },
+    incline: {
+        shortName: "Eğik Düzlem ve Araba",
+        toastTitle: "📚 4. Etkinlik: Kitaplar Üzerinde Eğik Düzlem Seçildi",
+        massLabel: "Araba Kütlesi:",
+        paramLabel: "Kitap Sayısı (Yükseklik):",
+        heightLabel: "Rampa Yüksekliği",
+        epLabel: "Çekim Potansiyel (Kırmızı)",
+        paramMin: 2, paramMax: 5, paramStep: 1,
+        stops: ["En Üst", "Orta", "En Alt"]
+    }
+};
+
+function getEnergyActivityConfig(mode) {
+    return ENERGY_ACTIVITY_CONFIG[mode] || ENERGY_ACTIVITY_CONFIG.pendulum;
+}
 
 function setupEnergyControlsDOM() {
-    // 1. Simülasyon Modu Seçimi (Sarkaç / Rampa)
-    const bPend = document.getElementById('btn-mode-pendulum');
-    const pPend = document.getElementById('pill-energy-pendulum');
-    if (bPend) bPend.addEventListener('click', () => setEnergyMode("pendulum"));
-    if (pPend) pPend.addEventListener('click', () => setEnergyMode("pendulum"));
+    // 1. 4 Kitap Etkinliği Mod Seçicisi
+    const modeButtons = [
+        { id: 'btn-mode-pendulum', mode: 'pendulum' },
+        { id: 'btn-mode-basketball', mode: 'basketball' },
+        { id: 'btn-mode-spring', mode: 'spring' },
+        { id: 'btn-mode-incline', mode: 'incline' }
+    ];
+    modeButtons.forEach(({ id, mode }) => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('click', () => setEnergyMode(mode));
+    });
 
-    const bRamp = document.getElementById('btn-mode-ramp');
-    const pRamp = document.getElementById('pill-energy-ramp');
-    if (bRamp) bRamp.addEventListener('click', () => setEnergyMode("ramp"));
-    if (pRamp) pRamp.addEventListener('click', () => setEnergyMode("ramp"));
+    // 1.5. Konum İnceleme Butonları (Kitap Grafik Durakları)
+    [0, 1, 2].forEach((stopIdx) => {
+        const btn = document.getElementById(`btn-energy-stop-${stopIdx}`);
+        if (btn) btn.addEventListener('click', () => applyEnergyStop(stopIdx));
+    });
 
     // 2. Oynat / Duraklat Butonu
     const btnPlay = document.getElementById('btn-energy-play-pause');
@@ -11754,6 +11829,8 @@ function setupEnergyControlsDOM() {
             const energy = labState.energy;
             energy.isPlaying = !energy.isPlaying;
             if (energy.isPlaying) {
+                energy.activeStopIndex = -1;
+                updateEnergyStopButtonsUI();
                 btnPlay.innerHTML = '<i class="fas fa-pause"></i> <span id="label-energy-play">Duraklat</span>';
                 btnPlay.classList.add('active');
                 showLabToast("▶️ Simülasyon Devam Ediyor");
@@ -11776,7 +11853,7 @@ function setupEnergyControlsDOM() {
         });
     }
 
-    // 4. Sürtünme / Hava Direnci Butonları
+    // 4. Sürtünme / Hava Direnci Butonu (Kitap şartı: varsayılan Kapalı)
     const setFriction = (enabled) => {
         const energy = labState.energy;
         energy.frictionEnabled = enabled;
@@ -11786,34 +11863,26 @@ function setupEnergyControlsDOM() {
         if (btnFric) btnFric.classList.toggle('friction-active', enabled);
         if (labelFric) labelFric.textContent = enabled ? "Açık" : "Kapalı";
 
-        const pOff = document.getElementById('pill-energy-friction-off');
-        const pOn = document.getElementById('pill-energy-friction-on');
-        if (pOff) pOff.classList.toggle('active', !enabled);
-        if (pOn) pOn.classList.toggle('active', enabled);
-
+        if (!enabled) {
+            energy.heatEnergy = 0;
+        }
         calculateEnergyInstantValues();
-        showLabToast(enabled ? "💨 Sürtünme ve Hava Direnci Açık (Isı Kaybı Var)" : "🛡️ Sürtünme Kapatıldı (İdeal Mekanik Korunum)");
+        showLabToast(enabled ? "💨 Sürtünme Açık (Bir miktar enerji ısıya dönüşür)" : "🛡️ Sürtünme İhmal Edildi (Toplam Enerji Korunur)");
     };
 
     const btnFric = document.getElementById('btn-energy-friction');
     if (btnFric) btnFric.addEventListener('click', () => setFriction(!labState.energy.frictionEnabled));
 
-    const pOff = document.getElementById('pill-energy-friction-off');
-    if (pOff) pOff.addEventListener('click', () => setFriction(false));
-
-    const pOn = document.getElementById('pill-energy-friction-on');
-    if (pOn) pOn.addEventListener('click', () => setFriction(true));
-
-    // 5. Yeniden Bırak Butonu
+    // 5. Sıfırla / Yeniden Bırak Butonu
     const btnRestart = document.getElementById('btn-energy-restart');
     if (btnRestart) {
         btnRestart.addEventListener('click', () => {
             resetEnergyMotion();
-            showLabToast("🔄 Cisim başlangıç yüksekliğine alındı ve serbest bırakıldı");
+            showLabToast("🔄 Etkinlik başlangıç konumundan yeniden başlatıldı");
         });
     }
 
-    // 6. Kütle Slider'ı (m)
+    // 6. Kütle Slider'ı
     const massRange = document.getElementById('lab-energy-mass-range');
     const massDisplay = document.getElementById('lab-energy-mass-display');
     if (massRange) {
@@ -11825,14 +11894,22 @@ function setupEnergyControlsDOM() {
         });
     }
 
-    // 7. Bırakma Açısı / Yükseklik Slider'ı (θ)
-    const angleRange = document.getElementById('lab-energy-angle-range');
-    const angleDisplay = document.getElementById('lab-energy-angle-display');
-    if (angleRange) {
-        angleRange.addEventListener('input', (e) => {
-            const val = parseInt(e.target.value, 10);
-            labState.energy.releaseAngle = val;
-            if (angleDisplay) angleDisplay.textContent = `${val}°`;
+    // 7. Etkinliğe Özel 2. Değişken Slider'ı (Açı / Yükseklik / Sıkışma / Kitap Sayısı)
+    const paramRange = document.getElementById('lab-energy-angle-range');
+    if (paramRange) {
+        paramRange.addEventListener('input', (e) => {
+            const energy = labState.energy;
+            const rawVal = parseFloat(e.target.value);
+            if (energy.mode === "pendulum") {
+                energy.releaseAngle = Math.round(rawVal);
+            } else if (energy.mode === "basketball") {
+                energy.basketball.releaseHeight = parseFloat(rawVal.toFixed(1));
+            } else if (energy.mode === "spring") {
+                energy.spring.compressionPct = Math.round(rawVal);
+            } else if (energy.mode === "incline") {
+                energy.incline.bookCount = Math.round(rawVal);
+            }
+            syncEnergyParamSliderDisplay();
             resetEnergyMotion();
         });
     }
@@ -11842,22 +11919,172 @@ function setupEnergyControlsDOM() {
     if (btnRecord72) btnRecord72.addEventListener('click', recordMeasurement);
 }
 
-function setEnergyMode(mode) {
+function updateEnergyStopButtonsUI() {
     const energy = labState.energy;
-    energy.mode = mode;
-    const isPendulum = (mode === "pendulum");
-
-    ['btn-mode-pendulum', 'pill-energy-pendulum'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.toggle('active', isPendulum);
+    const cfg = getEnergyActivityConfig(energy.mode);
+    cfg.stops.forEach((label, idx) => {
+        const btn = document.getElementById(`btn-energy-stop-${idx}`);
+        if (btn) {
+            btn.textContent = label;
+            btn.classList.toggle('active', energy.activeStopIndex === idx);
+        }
     });
-    ['btn-mode-ramp', 'pill-energy-ramp'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.toggle('active', !isPendulum);
+}
+
+function syncEnergyParamSliderDisplay() {
+    const energy = labState.energy;
+    const cfg = getEnergyActivityConfig(energy.mode);
+    const massLabel = document.getElementById('lab-energy-mass-label');
+    const paramLabel = document.getElementById('lab-energy-param-label');
+    const paramRange = document.getElementById('lab-energy-angle-range');
+    const paramDisplay = document.getElementById('lab-energy-angle-display');
+    const heightLabel = document.getElementById('metric-energy-height-label');
+    const epLabel = document.getElementById('metric-energy-ep-label');
+
+    if (massLabel) massLabel.textContent = cfg.massLabel;
+    if (paramLabel) paramLabel.textContent = cfg.paramLabel;
+    if (heightLabel) heightLabel.textContent = cfg.heightLabel;
+    if (epLabel) epLabel.textContent = cfg.epLabel;
+
+    if (paramRange) {
+        paramRange.min = String(cfg.paramMin);
+        paramRange.max = String(cfg.paramMax);
+        paramRange.step = String(cfg.paramStep);
+    }
+
+    if (energy.mode === "pendulum") {
+        if (paramRange) paramRange.value = String(energy.releaseAngle);
+        if (paramDisplay) paramDisplay.textContent = `${energy.releaseAngle}°`;
+    } else if (energy.mode === "basketball") {
+        if (paramRange) paramRange.value = String(energy.basketball.releaseHeight);
+        if (paramDisplay) paramDisplay.textContent = `${energy.basketball.releaseHeight.toFixed(1)} m`;
+    } else if (energy.mode === "spring") {
+        if (paramRange) paramRange.value = String(energy.spring.compressionPct);
+        if (paramDisplay) paramDisplay.textContent = `%${energy.spring.compressionPct}`;
+    } else if (energy.mode === "incline") {
+        if (paramRange) paramRange.value = String(energy.incline.bookCount);
+        if (paramDisplay) paramDisplay.textContent = `${energy.incline.bookCount} Kitap`;
+    }
+}
+
+function setEnergyMode(mode) {
+    const validModes = ["pendulum", "basketball", "spring", "incline"];
+    const nextMode = validModes.includes(mode) ? mode : "pendulum";
+    const energy = labState.energy;
+    energy.mode = nextMode;
+    energy.activeStopIndex = -1;
+
+    validModes.forEach((m) => {
+        const btn = document.getElementById(`btn-mode-${m}`);
+        if (btn) btn.classList.toggle('active', m === nextMode);
     });
 
+    syncEnergyParamSliderDisplay();
+    updateEnergyStopButtonsUI();
     resetEnergyMotion();
-    showLabToast(isPendulum ? "🔄 Sarkaç Modu Seçildi" : "🛹 U-Rampa Modu Seçildi");
+    showLabToast(getEnergyActivityConfig(nextMode).toastTitle);
+}
+
+function applyEnergyStop(stopIdx) {
+    const energy = labState.energy;
+    const cfg = getEnergyActivityConfig(energy.mode);
+    const stopLabel = cfg.stops[stopIdx] || cfg.stops[0];
+
+    energy.activeStopIndex = stopIdx;
+    energy.isPlaying = false;
+    energy.heatEnergy = 0;
+
+    const btnPlay = document.getElementById('btn-energy-play-pause');
+    if (btnPlay) {
+        btnPlay.innerHTML = '<i class="fas fa-play"></i> <span id="label-energy-play">Oynat</span>';
+        btnPlay.classList.remove('active');
+    }
+
+    const g = energy.gravity;
+
+    if (energy.mode === "pendulum") {
+        const maxRad = energy.releaseAngle * (Math.PI / 180);
+        const hMax = energy.pendulum.length * (1 - Math.cos(maxRad));
+        if (stopIdx === 0) {
+            energy.pendulum.angle = maxRad;
+            energy.pendulum.omega = 0;
+        } else if (stopIdx === 1) {
+            energy.pendulum.angle = 0;
+            const vMax = Math.sqrt(Math.max(0, 2 * g * hMax));
+            energy.pendulum.omega = -(vMax / energy.pendulum.length);
+        } else {
+            energy.pendulum.angle = -maxRad;
+            energy.pendulum.omega = 0;
+        }
+    } else if (energy.mode === "basketball") {
+        const b = energy.basketball;
+        b.squash = 0;
+        if (stopIdx === 0) {
+            b.height = b.releaseHeight;
+            b.vy = 0;
+            b.phase = "falling";
+        } else if (stopIdx === 1) {
+            b.height = b.releaseHeight * 0.5;
+            b.vy = -Math.sqrt(Math.max(0, 2 * g * (b.releaseHeight * 0.5)));
+            b.phase = "falling";
+        } else {
+            b.height = 0.01;
+            b.vy = -Math.sqrt(Math.max(0, 2 * g * Math.max(0, b.releaseHeight - 0.01)));
+            b.phase = "falling";
+        }
+    } else if (energy.mode === "spring") {
+        const s = energy.spring;
+        const s0 = s.compressionPct / 100;
+        const eMax = getSpringInitialEnergy(energy);
+        const vMax = Math.sqrt(Math.max(0, (2 * eMax) / energy.mass));
+        s.pauseTimer = 0;
+        if (stopIdx === 0) {
+            s.compression = s0;
+            s.carOffset = 0;
+            s.velocity = 0;
+            s.phase = "expanding";
+        } else if (stopIdx === 1) {
+            s.compression = s0 * 0.5;
+            s.carOffset = 0;
+            s.velocity = vMax * Math.sqrt(0.75);
+            s.phase = "expanding";
+        } else {
+            s.compression = 0;
+            s.carOffset = 0.55;
+            s.velocity = vMax;
+            s.phase = "gliding";
+        }
+    } else if (energy.mode === "incline") {
+        const inc = energy.incline;
+        const hMax = getInclineHeightMeters(inc.bookCount);
+        inc.pauseTimer = 0;
+        if (stopIdx === 0) {
+            inc.progress = 0;
+            inc.velocity = 0;
+        } else if (stopIdx === 1) {
+            inc.progress = 0.5;
+            inc.velocity = Math.sqrt(Math.max(0, 2 * g * (hMax * 0.5)));
+        } else {
+            inc.progress = 1.0;
+            inc.velocity = Math.sqrt(Math.max(0, 2 * g * hMax));
+        }
+    }
+
+    energy.currentPositionLabel = stopLabel;
+    updateEnergyStopButtonsUI();
+    calculateEnergyInstantValues();
+    showLabToast(`📍 Konum Donduruldu: ${cfg.shortName} — ${stopLabel}`);
+}
+
+function getSpringInitialEnergy(energy) {
+    // 7. sınıf kavramsal ölçek: sıkışma oranı arttıkça esneklik potansiyel enerjisi artar (E = 0.5 * k * x^2)
+    const x = (energy.spring.compressionPct / 100) * 0.45; // 0.09 m .. 0.45 m
+    const k = 160; // N/m (temiz, okunaklı Joule ölçeği)
+    return 0.5 * k * x * x;
+}
+
+function getInclineHeightMeters(bookCount) {
+    return bookCount * 0.22; // 2 kitap: 0.44 m .. 5 kitap: 1.10 m
 }
 
 function resetEnergyMotion() {
@@ -11865,9 +12092,25 @@ function resetEnergyMotion() {
     const rad = energy.releaseAngle * (Math.PI / 180);
     energy.pendulum.angle = rad;
     energy.pendulum.omega = 0;
-    energy.ramp.angle = rad;
-    energy.ramp.omega = 0;
+
+    energy.basketball.height = energy.basketball.releaseHeight;
+    energy.basketball.vy = 0;
+    energy.basketball.squash = 0;
+    energy.basketball.phase = "falling";
+
+    energy.spring.compression = energy.spring.compressionPct / 100;
+    energy.spring.carOffset = 0;
+    energy.spring.velocity = 0;
+    energy.spring.phase = "expanding";
+    energy.spring.pauseTimer = 0;
+    energy.spring.oscPhase = 0;
+
+    energy.incline.progress = 0;
+    energy.incline.velocity = 0;
+    energy.incline.pauseTimer = 0;
+
     energy.heatEnergy = 0;
+    energy.activeStopIndex = -1;
     energy.isPlaying = true;
 
     const btnPlay = document.getElementById('btn-energy-play-pause');
@@ -11876,40 +12119,29 @@ function resetEnergyMotion() {
         btnPlay.classList.add('active');
     }
 
+    updateEnergyStopButtonsUI();
     calculateEnergyInstantValues();
 }
 
 function initEnergyState() {
     const energy = labState.energy;
+    energy.mode = "pendulum";
     energy.isPlaying = true;
     energy.isSlowMo = false;
     energy.frictionEnabled = false;
     energy.mass = 2.0;
     energy.releaseAngle = 45;
+    energy.basketball.releaseHeight = 1.5;
+    energy.spring.compressionPct = 80;
+    energy.incline.bookCount = 4;
     energy.heatEnergy = 0;
-
-    const rad = 45 * (Math.PI / 180);
-    energy.pendulum.angle = rad;
-    energy.pendulum.omega = 0;
-    energy.ramp.angle = rad;
-    energy.ramp.omega = 0;
+    energy.activeStopIndex = -1;
 
     // Arayüz Kontrollerini Eşitle
     const massRange = document.getElementById('lab-energy-mass-range');
     const massDisplay = document.getElementById('lab-energy-mass-display');
-    if (massRange) massRange.value = 2.0;
+    if (massRange) massRange.value = "2";
     if (massDisplay) massDisplay.textContent = "2.0 kg";
-
-    const angleRange = document.getElementById('lab-energy-angle-range');
-    const angleDisplay = document.getElementById('lab-energy-angle-display');
-    if (angleRange) angleRange.value = 45;
-    if (angleDisplay) angleDisplay.textContent = "45°";
-
-    const btnPlay = document.getElementById('btn-energy-play-pause');
-    if (btnPlay) {
-        btnPlay.innerHTML = '<i class="fas fa-pause"></i> <span id="label-energy-play">Duraklat</span>';
-        btnPlay.classList.add('active');
-    }
 
     const btnSlow = document.getElementById('btn-energy-slowmo');
     if (btnSlow) btnSlow.classList.remove('slowmo-active');
@@ -11919,77 +12151,174 @@ function initEnergyState() {
     if (btnFric) btnFric.classList.remove('friction-active');
     if (labelFric) labelFric.textContent = "Kapalı";
 
-    const pOff = document.getElementById('pill-energy-friction-off');
-    const pOn = document.getElementById('pill-energy-friction-on');
-    if (pOff) pOff.classList.add('active');
-    if (pOn) pOn.classList.remove('active');
-
-    ['btn-mode-pendulum', 'pill-energy-pendulum'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.toggle('active', energy.mode === "pendulum");
-    });
-    ['btn-mode-ramp', 'pill-energy-ramp'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.toggle('active', energy.mode === "ramp");
+    ["pendulum", "basketball", "spring", "incline"].forEach((m) => {
+        const el = document.getElementById(`btn-mode-${m}`);
+        if (el) el.classList.toggle('active', m === energy.mode);
     });
 
-    calculateEnergyInstantValues();
+    syncEnergyParamSliderDisplay();
+    updateEnergyStopButtonsUI();
+    resetEnergyMotion();
 }
 
 function resetEnergyExperiment() {
+    const currentMode = labState.energy.mode || "pendulum";
     initEnergyState();
-    showLabToast("Mekanik enerji simülasyonu sıfırlandı (2 kg, 45°)");
+    if (currentMode !== "pendulum") {
+        setEnergyMode(currentMode);
+    } else {
+        showLabToast("Enerji dönüşümü simülasyonu sıfırlandı");
+    }
 }
 
 function calculateEnergyInstantValues() {
     const energy = labState.energy;
-    const isPendulum = (energy.mode === "pendulum");
-
-    const radius = isPendulum ? energy.pendulum.length : energy.ramp.radius;
-    const curAngle = isPendulum ? energy.pendulum.angle : energy.ramp.angle;
-    const omega = isPendulum ? energy.pendulum.omega : energy.ramp.omega;
-
-    const relRad = energy.releaseAngle * (Math.PI / 180);
-    const hRel = radius * (1 - Math.cos(relRad));
-    const hCur = radius * (1 - Math.cos(curAngle));
-
     const m = energy.mass;
     const g = energy.gravity;
+    const cfg = getEnergyActivityConfig(energy.mode);
 
-    const E_initial = m * g * hRel;
-    energy.initialTotalEnergy = E_initial;
+    let E_initial = 10;
+    let Ep = 0;
+    let Ek = 0;
+    let curH = 0;
+    let curV = 0;
+    let posLabel = cfg.stops[0];
 
-    const Ep = m * g * Math.max(0, hCur);
+    if (energy.mode === "pendulum") {
+        const p = energy.pendulum;
+        const relRad = energy.releaseAngle * (Math.PI / 180);
+        const hRel = p.length * (1 - Math.cos(relRad));
+        const hCur = Math.max(0, p.length * (1 - Math.cos(p.angle)));
 
-    if (!energy.frictionEnabled) {
-        energy.totalEnergy = E_initial;
-        energy.heatEnergy = 0;
-        const Ek = Math.max(0, E_initial - Ep);
-        const v = Math.sqrt(Math.max(0, (2 * Ek) / m));
+        E_initial = Math.max(0.1, m * g * hRel);
+        Ep = m * g * hCur;
+        curH = hCur;
 
-        energy.currentHeight = hCur;
-        energy.currentSpeed = v;
-        energy.potentialEnergy = Ep;
-        energy.kineticEnergy = Ek;
-    } else {
-        const vRaw = Math.abs(radius * omega);
-        const EkRaw = 0.5 * m * (vRaw * vRaw);
-        const EmekRaw = Ep + EkRaw;
+        if (!energy.frictionEnabled) {
+            energy.heatEnergy = 0;
+            Ek = Math.max(0, E_initial - Ep);
+            curV = Math.sqrt(Math.max(0, (2 * Ek) / m));
+        } else {
+            const vRaw = Math.abs(p.length * p.omega);
+            const EkRaw = 0.5 * m * vRaw * vRaw;
+            const currentLoss = Math.max(0, E_initial - (Ep + EkRaw));
+            energy.heatEnergy = Math.max(energy.heatEnergy, Math.min(E_initial, currentLoss));
+            const effectiveMek = Math.max(0, E_initial - energy.heatEnergy);
+            Ek = Math.max(0, effectiveMek - Ep);
+            curV = Math.sqrt(Math.max(0, (2 * Ek) / m));
+        }
 
-        // Isı enerjisi geri dönüşsüzdür (Termodinamiğin 2. Yasası uyarınca monoton artar)
-        const currentLoss = Math.max(0, E_initial - EmekRaw);
-        energy.heatEnergy = Math.max(energy.heatEnergy, Math.min(E_initial, currentLoss));
+        if (energy.activeStopIndex >= 0) {
+            posLabel = cfg.stops[energy.activeStopIndex];
+        } else if (Math.abs(p.angle) < 0.08) {
+            posLabel = "En Alt";
+        } else if (p.angle > relRad * 0.85) {
+            posLabel = "Başlangıç";
+        } else if (p.angle < -relRad * 0.85) {
+            posLabel = "En Üst";
+        } else {
+            posLabel = "Salınım Arası";
+        }
+    } else if (energy.mode === "basketball") {
+        const b = energy.basketball;
+        const h0 = b.releaseHeight;
+        const hCur = Math.max(0, Math.min(h0, b.height));
+        E_initial = Math.max(0.1, m * g * h0);
+        Ep = m * g * hCur;
+        curH = hCur;
 
-        const effectiveMek = Math.max(0, E_initial - energy.heatEnergy);
-        const effectiveEk = Math.max(0, effectiveMek - Ep);
-        const v = Math.sqrt(Math.max(0, (2 * effectiveEk) / m));
+        if (!energy.frictionEnabled) {
+            energy.heatEnergy = 0;
+            Ek = Math.max(0, E_initial - Ep);
+            curV = Math.sqrt(Math.max(0, (2 * Ek) / m));
+        } else {
+            const EkRaw = 0.5 * m * b.vy * b.vy;
+            const currentLoss = Math.max(0, E_initial - (Ep + EkRaw));
+            energy.heatEnergy = Math.max(energy.heatEnergy, Math.min(E_initial, currentLoss));
+            const effectiveMek = Math.max(0, E_initial - energy.heatEnergy);
+            Ek = Math.max(0, effectiveMek - Ep);
+            curV = Math.sqrt(Math.max(0, (2 * Ek) / m));
+        }
 
-        energy.totalEnergy = E_initial;
-        energy.currentHeight = hCur;
-        energy.currentSpeed = v;
-        energy.potentialEnergy = Ep;
-        energy.kineticEnergy = effectiveEk;
+        if (energy.activeStopIndex >= 0) {
+            posLabel = cfg.stops[energy.activeStopIndex];
+        } else if (hCur >= h0 * 0.92) {
+            posLabel = "En Üst (Omuz)";
+        } else if (hCur <= 0.06) {
+            posLabel = "En Alt (Temas Öncesi)";
+        } else {
+            posLabel = b.phase === "falling" ? "Düşüş Anı" : "Yükseliş Anı";
+        }
+    } else if (energy.mode === "spring") {
+        const s = energy.spring;
+        const s0 = s.compressionPct / 100;
+        E_initial = Math.max(0.1, getSpringInitialEnergy(energy));
+        const ratio = s0 > 0 ? Math.max(0, Math.min(1, s.compression / s0)) : 0;
+        Ep = E_initial * ratio * ratio; // Esneklik potansiyel enerjisi sıkışmanın karesiyle orantılı
+        curH = s.compression * 0.45; // metre cinsinden sıkışma
+
+        if (!energy.frictionEnabled) {
+            energy.heatEnergy = 0;
+            Ek = Math.max(0, E_initial - Ep);
+            curV = Math.sqrt(Math.max(0, (2 * Ek) / m));
+        } else {
+            const EkRaw = 0.5 * m * s.velocity * s.velocity;
+            const currentLoss = Math.max(0, E_initial - (Ep + EkRaw));
+            energy.heatEnergy = Math.max(energy.heatEnergy, Math.min(E_initial, currentLoss));
+            const effectiveMek = Math.max(0, E_initial - energy.heatEnergy);
+            Ek = Math.max(0, effectiveMek - Ep);
+            curV = Math.sqrt(Math.max(0, (2 * Ek) / m));
+        }
+
+        if (energy.activeStopIndex >= 0) {
+            posLabel = cfg.stops[energy.activeStopIndex];
+        } else if (s.compression >= s0 * 0.9) {
+            posLabel = "Sıkıştırılmış Hâli";
+        } else if (s.compression > 0.02) {
+            posLabel = "Yay Açılırken";
+        } else {
+            posLabel = "Serbest Bırakıldıktan Sonra";
+        }
+    } else if (energy.mode === "incline") {
+        const inc = energy.incline;
+        const hMax = getInclineHeightMeters(inc.bookCount);
+        const rampProgress = Math.max(0, Math.min(1, inc.progress));
+        const hCur = hMax * (1 - rampProgress);
+        E_initial = Math.max(0.1, m * g * hMax);
+        Ep = m * g * hCur;
+        curH = hCur;
+
+        if (!energy.frictionEnabled) {
+            energy.heatEnergy = 0;
+            Ek = Math.max(0, E_initial - Ep);
+            curV = Math.sqrt(Math.max(0, (2 * Ek) / m));
+        } else {
+            const EkRaw = 0.5 * m * inc.velocity * inc.velocity;
+            const currentLoss = Math.max(0, E_initial - (Ep + EkRaw));
+            energy.heatEnergy = Math.max(energy.heatEnergy, Math.min(E_initial, currentLoss));
+            const effectiveMek = Math.max(0, E_initial - energy.heatEnergy);
+            Ek = Math.max(0, effectiveMek - Ep);
+            curV = Math.sqrt(Math.max(0, (2 * Ek) / m));
+        }
+
+        if (energy.activeStopIndex >= 0) {
+            posLabel = cfg.stops[energy.activeStopIndex];
+        } else if (inc.progress <= 0.08) {
+            posLabel = "En Üst";
+        } else if (inc.progress >= 0.92) {
+            posLabel = "En Alt";
+        } else {
+            posLabel = "Orta";
+        }
     }
+
+    energy.initialTotalEnergy = E_initial;
+    energy.totalEnergy = E_initial;
+    energy.currentHeight = curH;
+    energy.currentSpeed = curV;
+    energy.potentialEnergy = Ep;
+    energy.kineticEnergy = Ek;
+    energy.currentPositionLabel = posLabel;
 
     updateEnergyMetrics();
 }
@@ -11997,21 +12326,18 @@ function calculateEnergyInstantValues() {
 function updateEnergyPhysics() {
     const energy = labState.energy;
     if (!energy.isPlaying) return;
+    if (energy.mode === "pendulum" && energy.pendulum.isDragging) return;
 
-    const isDragging = (energy.mode === "pendulum" ? energy.pendulum.isDragging : energy.ramp.isDragging);
-    if (isDragging) return;
-
-    const baseDt = energy.isSlowMo ? 0.008 : 0.016;
+    const dt = energy.isSlowMo ? 0.008 : 0.016;
     const subSteps = 4;
-    const subDt = baseDt / subSteps;
-
+    const subDt = dt / subSteps;
     const g = energy.gravity;
-    const damping = energy.frictionEnabled ? 0.22 : 0;
-    const maxRelRad = energy.releaseAngle * (Math.PI / 180);
 
     if (energy.mode === "pendulum") {
         const p = energy.pendulum;
         const L = p.length;
+        const damping = energy.frictionEnabled ? 0.22 : 0;
+        const maxRelRad = energy.releaseAngle * (Math.PI / 180);
 
         for (let i = 0; i < subSteps; i++) {
             const alpha = -(g / L) * Math.sin(p.angle) - damping * p.omega;
@@ -12019,34 +12345,126 @@ function updateEnergyPhysics() {
             p.angle += p.omega * subDt;
 
             if (!energy.frictionEnabled) {
-                // Sürtünmesiz ortamda tepe noktasını aşamaz
                 if (p.angle > maxRelRad) { p.angle = maxRelRad; p.omega = 0; }
                 if (p.angle < -maxRelRad) { p.angle = -maxRelRad; p.omega = 0; }
-            } else {
-                // Sürtünmeli ortamda genlik sönümlenir ve dipte doğal olarak durur
-                if (Math.abs(p.angle) < 0.003 && Math.abs(p.omega) < 0.003) {
-                    p.angle = 0;
-                    p.omega = 0;
-                    break;
-                }
+            } else if (Math.abs(p.angle) < 0.003 && Math.abs(p.omega) < 0.003) {
+                p.angle = 0;
+                p.omega = 0;
+                break;
             }
         }
-    } else {
-        const r = energy.ramp;
-        const R = r.radius;
+    } else if (energy.mode === "basketball") {
+        const b = energy.basketball;
+        const h0 = b.releaseHeight;
+        if (b.squash > 0) b.squash = Math.max(0, b.squash - dt * 5.5);
 
         for (let i = 0; i < subSteps; i++) {
-            const alpha = -(g / R) * Math.sin(r.angle) - (damping * 1.1) * r.omega;
-            r.omega += alpha * subDt;
-            r.angle += r.omega * subDt;
+            const drag = energy.frictionEnabled ? 0.14 * b.vy : 0;
+            b.vy += (-g - drag) * subDt;
+            b.height += b.vy * subDt;
 
-            if (!energy.frictionEnabled) {
-                if (r.angle > maxRelRad) { r.angle = maxRelRad; r.omega = 0; }
-                if (r.angle < -maxRelRad) { r.angle = -maxRelRad; r.omega = 0; }
+            if (b.height <= 0) {
+                b.height = 0;
+                b.squash = 0.85;
+                if (!energy.frictionEnabled) {
+                    // Sürtünmesiz ortamda enerji korunumu: aynı yüksekliğe geri çıkar
+                    b.vy = Math.sqrt(2 * g * h0);
+                    b.phase = "rising";
+                } else {
+                    const restitution = 0.78;
+                    b.vy = Math.abs(b.vy) * restitution;
+                    b.phase = "rising";
+                    if (b.vy < 0.35) {
+                        b.vy = 0;
+                        b.height = 0;
+                        break;
+                    }
+                }
+            } else if (b.height >= h0 && b.vy > 0) {
+                b.height = h0;
+                b.vy = 0;
+                b.phase = "falling";
+            } else if (b.vy < 0) {
+                b.phase = "falling";
+            }
+        }
+    } else if (energy.mode === "spring") {
+        const s = energy.spring;
+        const s0 = s.compressionPct / 100;
+        const eMax = getSpringInitialEnergy(energy);
+        const vMax = Math.sqrt(Math.max(0.01, (2 * eMax) / energy.mass));
+
+        if (s.phase === "expanding") {
+            const omega = 5.4 / Math.sqrt(energy.mass * 0.5);
+            s.oscPhase += omega * dt;
+            if (s.oscPhase >= Math.PI / 2) {
+                s.compression = 0;
+                s.velocity = energy.frictionEnabled ? vMax * 0.92 : vMax;
+                s.phase = "gliding";
             } else {
-                if (Math.abs(r.angle) < 0.003 && Math.abs(r.omega) < 0.003) {
-                    r.angle = 0;
-                    r.omega = 0;
+                s.compression = s0 * Math.cos(s.oscPhase);
+                const frac = Math.sin(s.oscPhase);
+                s.velocity = (energy.frictionEnabled ? vMax * 0.94 : vMax) * frac;
+                s.wheelAngle += s.velocity * dt * 4.5;
+            }
+        } else if (s.phase === "gliding") {
+            if (energy.frictionEnabled) {
+                s.velocity = Math.max(0, s.velocity - 2.4 * dt);
+            } else {
+                s.velocity = vMax;
+            }
+            s.carOffset += (s.velocity / 5.5) * dt;
+            s.wheelAngle += s.velocity * dt * 5.2;
+
+            if (s.carOffset >= 1.0 || (energy.frictionEnabled && s.velocity <= 0.05)) {
+                s.carOffset = Math.min(1.0, s.carOffset);
+                s.phase = "pause";
+                s.pauseTimer = 0.85;
+            }
+        } else if (s.phase === "pause") {
+            s.pauseTimer -= dt;
+            if (s.pauseTimer <= 0) {
+                s.compression = s0;
+                s.carOffset = 0;
+                s.velocity = 0;
+                s.oscPhase = 0;
+                s.phase = "expanding";
+                energy.heatEnergy = 0;
+            }
+        }
+    } else if (energy.mode === "incline") {
+        const inc = energy.incline;
+        const hMax = getInclineHeightMeters(inc.bookCount);
+        const rampLen = 1.65; // metre
+        const sinTheta = Math.min(0.85, hMax / rampLen);
+        const cosTheta = Math.sqrt(Math.max(0.1, 1 - sinTheta * sinTheta));
+
+        if (inc.pauseTimer > 0) {
+            inc.pauseTimer -= dt;
+            if (inc.pauseTimer <= 0) {
+                inc.progress = 0;
+                inc.velocity = 0;
+                energy.heatEnergy = 0;
+            }
+        } else {
+            for (let i = 0; i < subSteps; i++) {
+                if (inc.progress < 1.0) {
+                    const fricDecel = energy.frictionEnabled ? 0.16 * g * cosTheta : 0;
+                    const accel = Math.max(0.4, g * sinTheta - fricDecel);
+                    inc.velocity += accel * subDt;
+                    inc.progress += (inc.velocity / rampLen) * subDt;
+                    inc.wheelAngle += inc.velocity * subDt * 5.5;
+                } else {
+                    if (energy.frictionEnabled) {
+                        inc.velocity = Math.max(0, inc.velocity - 2.6 * subDt);
+                    }
+                    inc.progress += (inc.velocity / rampLen) * subDt;
+                    inc.wheelAngle += inc.velocity * subDt * 5.5;
+                }
+
+                if (inc.progress >= 1.32 || (energy.frictionEnabled && inc.progress >= 1.0 && inc.velocity <= 0.08)) {
+                    inc.progress = Math.min(1.32, inc.progress);
+                    inc.pauseTimer = 0.85;
                     break;
                 }
             }
@@ -12058,7 +12476,10 @@ function updateEnergyPhysics() {
 
 function updateEnergyMetrics() {
     const energy = labState.energy;
+    const cfg = getEnergyActivityConfig(energy.mode);
 
+    const elActivity = document.getElementById('metric-energy-activity');
+    const elPosition = document.getElementById('metric-energy-position');
     const elMass = document.getElementById('metric-energy-mass');
     const elHeight = document.getElementById('metric-energy-height');
     const elSpeed = document.getElementById('metric-energy-speed');
@@ -12067,71 +12488,96 @@ function updateEnergyMetrics() {
     const elHeat = document.getElementById('metric-energy-heat');
     const elTotal = document.getElementById('metric-energy-total');
 
+    if (elActivity) elActivity.textContent = cfg.shortName;
+    if (elPosition) elPosition.textContent = energy.currentPositionLabel;
     if (elMass) elMass.textContent = `${energy.mass.toFixed(1)} kg`;
-    if (elHeight) elHeight.textContent = `${energy.currentHeight.toFixed(2)} m`;
+    if (elHeight) {
+        elHeight.textContent = energy.mode === "spring"
+            ? `${Math.round(energy.spring.compression * 100)}% (${(energy.currentHeight * 100).toFixed(0)} cm)`
+            : `${energy.currentHeight.toFixed(2)} m`;
+    }
     if (elSpeed) elSpeed.textContent = `${energy.currentSpeed.toFixed(2)} m/s`;
-    if (elEp) elEp.textContent = `${energy.potentialEnergy.toFixed(2)} J`;
-    if (elEk) elEk.textContent = `${energy.kineticEnergy.toFixed(2)} J`;
-    if (elHeat) elHeat.textContent = `${energy.heatEnergy.toFixed(2)} J`;
-    if (elTotal) elTotal.textContent = `${energy.totalEnergy.toFixed(2)} J (Sabit)`;
+    if (elEp) elEp.textContent = `${energy.potentialEnergy.toFixed(1)} J`;
+    if (elEk) elEk.textContent = `${energy.kineticEnergy.toFixed(1)} J`;
+    if (elHeat) elHeat.textContent = `${energy.heatEnergy.toFixed(1)} J`;
+    if (elTotal) {
+        elTotal.textContent = energy.frictionEnabled
+            ? `${energy.totalEnergy.toFixed(1)} J (Isı Dahil)`
+            : `${energy.totalEnergy.toFixed(1)} J (Korundu)`;
+    }
 
-    // Dinamik Maarif Modeli Pedagojik Kartı
+    // Dinamik Maarif Modeli Pedagojik Kartı (Formülsüz, 7. Sınıf TYMM)
     const cardBox = document.getElementById('energy-pedagogical-box');
     const cardIcon = document.getElementById('energy-pedagogical-icon');
     const cardTitle = document.getElementById('energy-pedagogical-title');
     const cardText = document.getElementById('energy-pedagogical-text');
 
+    const epRatio = energy.totalEnergy > 0 ? energy.potentialEnergy / energy.totalEnergy : 0;
+    const ekRatio = energy.totalEnergy > 0 ? energy.kineticEnergy / energy.totalEnergy : 0;
+
     if (cardBox && cardIcon && cardTitle && cardText) {
-        if (energy.frictionEnabled && energy.heatEnergy > 0.4) {
-            cardBox.style.borderColor = "rgba(239, 68, 68, 0.65)";
-            cardIcon.style.color = "#ef4444";
+        if (energy.frictionEnabled && energy.heatEnergy > 0.35) {
+            cardBox.style.borderColor = "rgba(251, 146, 60, 0.7)";
+            cardIcon.style.color = "#fb923c";
             cardIcon.innerHTML = '<i class="fas fa-fire-alt"></i>';
             cardTitle.textContent = "🔥 Sürtünme ve Isıya Dönüşüm:";
-            cardText.textContent = `Sürtünme ve hava direnci mekanik enerjinin ${energy.heatEnergy.toFixed(1)} J'lük kısmını ısı enerjisine dönüştürdü. Salınım genliği küçülüyor; fakat toplam enerji (Potansiyel + Kinetik + Isı) daima korunur!`;
-        } else if (energy.currentHeight > energy.initialTotalEnergy / (energy.mass * energy.gravity) * 0.94 || energy.currentSpeed < 0.25) {
-            cardBox.style.borderColor = "rgba(16, 185, 129, 0.65)";
-            cardIcon.style.color = "#10b981";
+            cardText.textContent = `Sürtünme nedeniyle mekanik enerjinin ${energy.heatEnergy.toFixed(1)} J'lük kısmı ısıya dönüştü. Toplam enerji (Potansiyel + Kinetik + Isı) yine korunur.`;
+        } else if (epRatio >= 0.90) {
+            cardBox.style.borderColor = "rgba(239, 68, 68, 0.7)";
+            cardIcon.style.color = "#ef4444";
             cardIcon.innerHTML = '<i class="fas fa-mountain"></i>';
-            cardTitle.textContent = "⚡ Tepe Noktası (Maksimum Potansiyel Enerji):";
-            cardText.textContent = "Cisim dönüş anında anlık olarak durur. Mekanik enerjinin tamamı Çekim Potansiyel Enerjisi hâlindedir.";
-        } else if (energy.currentHeight < 0.04 || energy.kineticEnergy > energy.totalEnergy * 0.94) {
-            cardBox.style.borderColor = "rgba(56, 189, 248, 0.65)";
+            cardTitle.textContent = energy.mode === "spring"
+                ? "🔴 Sıkıştırılmış Hâl (En Yüksek Esneklik Potansiyel):"
+                : "🔴 En Üst Konum (En Yüksek Potansiyel Enerji):";
+            cardText.textContent = energy.mode === "spring"
+                ? "Yay sıkıştırıldığında enerji esneklik potansiyel enerjisi olarak depolanır; araba henüz hareketsiz olduğu için kinetik enerji sıfırdır."
+                : "Cisim en yüksek noktadayken çekim potansiyel enerjisi (kırmızı sütun) en büyük, sürati sıfır olduğu için kinetik enerjisi (mavi sütun) sıfırdır.";
+        } else if (ekRatio >= 0.90) {
+            cardBox.style.borderColor = "rgba(56, 189, 248, 0.7)";
             cardIcon.style.color = "#38bdf8";
             cardIcon.innerHTML = '<i class="fas fa-bolt"></i>';
-            cardTitle.textContent = "🚀 Denge / Dip Konumu (Maksimum Kinetik Enerji):";
-            cardText.textContent = "Cisim en alçak noktadan geçerken sürati ve kinetik enerjisi maksimuma ulaşır. Potansiyel enerjinin tamamı kinetik enerjiye dönüşmüştür!";
+            cardTitle.textContent = energy.mode === "spring"
+                ? "🔵 Serbest Bırakıldıktan Sonra (En Yüksek Kinetik):"
+                : "🔵 En Alt Konum (En Yüksek Kinetik Enerji):";
+            cardText.textContent = energy.mode === "spring"
+                ? "Yay tamamen açılıp arabayı fırlattığında esneklik potansiyel enerjisi kinetik enerjiye (mavi sütun) dönüşür; araba en büyük süratine ulaşır."
+                : "Yükseklik en aza indiğinde potansiyel enerjinin tamamı kinetik enerjiye (mavi sütun) dönüşür ve cisim en büyük süratle hareket eder.";
         } else {
-            cardBox.style.borderColor = "rgba(250, 204, 21, 0.5)";
+            cardBox.style.borderColor = "rgba(250, 204, 21, 0.55)";
             cardIcon.style.color = "#facc15";
             cardIcon.innerHTML = '<i class="fas fa-sync-alt"></i>';
-            cardTitle.textContent = "🔄 Enerji Dönüşümü Devam Ediyor:";
-            cardText.textContent = "Potansiyel ve kinetik enerji sürekli olarak birbirine dönüşmektedir. Sürtünmesiz ortamda toplam mekanik enerji daima sabit kalır.";
+            cardTitle.textContent = "🔄 Potansiyel ⇄ Kinetik Dönüşümü:";
+            cardText.textContent = "Kırmızı potansiyel enerji sütunu ile mavi kinetik enerji sütunu birbirine dönüşürken, sürtünme ihmal edildiğinde toplam enerji değişmez.";
         }
     }
 
     // Metrik Şeridi (#metrics-bar-7-2) Güncellemesi
+    const mbAct = document.getElementById('mbar-72-activity');
     const mbEp = document.getElementById('mbar-72-ep');
     const mbEk = document.getElementById('mbar-72-ek');
     const mbEtot = document.getElementById('mbar-72-etot');
-    const mbSpeed = document.getElementById('mbar-72-speed');
+    const mbPos = document.getElementById('mbar-72-position');
     const mbStatus = document.getElementById('mbar-72-status');
 
+    if (mbAct) mbAct.textContent = cfg.shortName;
     if (mbEp) mbEp.textContent = `${energy.potentialEnergy.toFixed(1)} J`;
     if (mbEk) mbEk.textContent = `${energy.kineticEnergy.toFixed(1)} J`;
     if (mbEtot) mbEtot.textContent = `${energy.totalEnergy.toFixed(1)} J`;
-    if (mbSpeed) mbSpeed.textContent = `${energy.currentSpeed.toFixed(1)} m/s`;
+    if (mbPos) mbPos.textContent = energy.currentPositionLabel;
     if (mbStatus) {
-        if (energy.frictionEnabled && energy.heatEnergy > 0.4) {
-            mbStatus.textContent = "🔥 Sürtünmeyle Mekanik Enerji Isıya Dönüşüyor";
-            mbStatus.style.color = "#ef4444";
-        } else if (energy.currentSpeed < 0.25) {
-            mbStatus.textContent = "⚡ Tepe Noktası: Maksimum Potansiyel Enerji";
-            mbStatus.style.color = "#10b981";
-        } else if (energy.kineticEnergy > energy.totalEnergy * 0.9) {
-            mbStatus.textContent = "🚀 Dip Noktası: Maksimum Kinetik Enerji";
+        if (energy.frictionEnabled && energy.heatEnergy > 0.35) {
+            mbStatus.textContent = "🔥 Sürtünmeyle bir miktar enerji ısıya dönüşüyor";
+            mbStatus.style.color = "#fb923c";
+        } else if (epRatio >= 0.90) {
+            mbStatus.textContent = energy.mode === "spring"
+                ? "🔴 Yay Sıkışık: Esneklik Potansiyel En Yüksek"
+                : "🔴 En Üst Konum: Potansiyel Enerji En Yüksek";
+            mbStatus.style.color = "#f87171";
+        } else if (ekRatio >= 0.90) {
+            mbStatus.textContent = "🔵 En Yüksek Sürat: Kinetik Enerji En Yüksek";
             mbStatus.style.color = "#38bdf8";
         } else {
-            mbStatus.textContent = "🔄 Potansiyel ⇄ Kinetik Enerji Dönüşümü (Toplam Sabit)";
+            mbStatus.textContent = "🔄 Sürtünmesiz ortamda toplam enerji korunur";
             mbStatus.style.color = "#facc15";
         }
     }
@@ -12151,7 +12597,7 @@ function drawEnergySimulation() {
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, w, h);
 
-    // 2. İnce Teknik Çizim Izgarası (Fizik Masası)
+    // 2. İnce Teknik Çizim Izgarası
     ctx.save();
     ctx.strokeStyle = "rgba(255, 255, 255, 0.03)";
     ctx.lineWidth = 1 * scale;
@@ -12170,89 +12616,297 @@ function drawEnergySimulation() {
     }
     ctx.restore();
 
-    // 3. Sol Kenara Sabitlenmiş Zarif Canlı Enerji Göstergesi (Bar Chart)
+    // 3. Sol Kenara Sabitlenmiş Canlı Sütun Grafiği (Kinetik = Mavi, Potansiyel = Kırmızı)
     drawEnergyBarsGauge(ctx, scale);
 
-    // 4. Deney Simülasyonu Çizimi (Sarkaç veya Rampa)
-    const energy = labState.energy;
-    if (energy.mode === "pendulum") {
+    // 4. Seçili MEB Kitap Etkinliğinin Çizimi
+    const mode = labState.energy.mode;
+    if (mode === "pendulum") {
         drawPendulumSimulation(ctx, scale);
-    } else {
-        drawRampSimulation(ctx, scale);
+    } else if (mode === "basketball") {
+        drawBasketballSimulation(ctx, scale);
+    } else if (mode === "spring") {
+        drawSpringCarSimulation(ctx, scale);
+    } else if (mode === "incline") {
+        drawInclineCarSimulation(ctx, scale);
     }
 }
 
 function drawEnergyBarsGauge(ctx, scale) {
     const energy = labState.energy;
-    const boxX = 18 * scale;
-    const boxY = 38 * scale;
-    const boxW = 152 * scale;
-    const boxH = 195 * scale;
+    const cfg = getEnergyActivityConfig(energy.mode);
+    const boxX = 16 * scale;
+    const boxY = 28 * scale;
+    const boxW = 168 * scale;
+    const boxH = 242 * scale;
 
     ctx.save();
 
-    // Arka plan paneli
-    ctx.fillStyle = "rgba(10, 16, 30, 0.88)";
-    ctx.strokeStyle = "rgba(0, 210, 255, 0.25)";
+    // Ana Grafik Paneli
+    ctx.fillStyle = "rgba(10, 16, 30, 0.92)";
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.3)";
     ctx.lineWidth = 1.5 * scale;
     ctx.beginPath();
     ctx.roundRect(boxX, boxY, boxW, boxH, 12 * scale);
     ctx.fill();
     ctx.stroke();
 
-    // Başlık (TYMM 7. Sınıf: formülsüz Türkçe enerji adları)
-    ctx.fillStyle = "#94a3b8";
+    // Başlık (Formülsüz MEB 7. Sınıf Türkçe)
+    ctx.fillStyle = "#f1f5f9";
     ctx.font = `bold ${11 * scale}px Nunito, sans-serif`;
     ctx.textAlign = "center";
-    ctx.fillText("Enerji Dönüşümü", boxX + boxW / 2, boxY + 18 * scale);
+    ctx.fillText("Enerji Sütun Grafiği", boxX + boxW / 2, boxY + 19 * scale);
 
-    const maxVal = Math.max(15, energy.initialTotalEnergy * 1.05);
-    const barW = 20 * scale;
-    const gap = 12 * scale;
-    const maxBarH = 130 * scale;
-    const startX = boxX + (16 * scale);
-    const bottomY = boxY + boxH - (28 * scale);
+    // Alt Bilgi (Sürtünme durumu)
+    ctx.fillStyle = energy.frictionEnabled ? "#fb923c" : "#34d399";
+    ctx.font = `bold ${9 * scale}px Nunito, sans-serif`;
+    ctx.fillText(energy.frictionEnabled ? "Sürtünme: Açık" : "Sürtünme İhmal Edildi", boxX + boxW / 2, boxY + 33 * scale);
 
+    const maxVal = Math.max(0.1, energy.initialTotalEnergy * 1.12);
+    const showHeat = energy.frictionEnabled || energy.heatEnergy > 0.05;
     const bars = [
-        { label: "Kinetik", short: "Kin.", val: energy.kineticEnergy, color: "#38bdf8", glow: "rgba(56, 189, 248, 0.4)" },
-        { label: "Potansiyel", short: "Pot.", val: energy.potentialEnergy, color: "#10b981", glow: "rgba(16, 185, 129, 0.4)" },
-        { label: "Isı", short: "Isı", val: energy.heatEnergy, color: "#ef4444", glow: "rgba(239, 68, 68, 0.4)" },
-        { label: "Toplam", short: "Top.", val: energy.totalEnergy, color: "#facc15", glow: "rgba(250, 204, 21, 0.4)" }
+        { short: "Kinetik", val: energy.kineticEnergy, color: "#38bdf8", glow: "rgba(56, 189, 248, 0.45)" },
+        { short: "Potansiyel", val: energy.potentialEnergy, color: "#ef4444", glow: "rgba(239, 68, 68, 0.45)" },
+        { short: "Toplam", val: energy.totalEnergy, color: "#facc15", glow: "rgba(250, 204, 21, 0.4)" }
     ];
+    if (showHeat) {
+        bars.push({ short: "Isı", val: energy.heatEnergy, color: "#fb923c", glow: "rgba(251, 146, 60, 0.4)" });
+    }
+
+    const innerPad = 14 * scale;
+    const usableW = boxW - innerPad * 2;
+    const gap = (showHeat ? 8 : 14) * scale;
+    const barW = (usableW - gap * (bars.length - 1)) / bars.length;
+    const maxBarH = 148 * scale;
+    const bottomY = boxY + boxH - (32 * scale);
+    const topY = bottomY - maxBarH;
+
+    // Toplam Enerji Korunum Kesikli Referans Çizgisi
+    const totalRatio = Math.max(0, Math.min(1, energy.initialTotalEnergy / maxVal));
+    const totalLineY = bottomY - totalRatio * maxBarH;
+    ctx.strokeStyle = "rgba(250, 204, 21, 0.5)";
+    ctx.lineWidth = 1.2 * scale;
+    ctx.setLineDash([4 * scale, 3 * scale]);
+    ctx.beginPath();
+    ctx.moveTo(boxX + 10 * scale, totalLineY);
+    ctx.lineTo(boxX + boxW - 10 * scale, totalLineY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    const denom = Math.max(0.001, energy.initialTotalEnergy);
 
     bars.forEach((b, idx) => {
-        const bx = startX + idx * (barW + gap);
+        const bx = boxX + innerPad + idx * (barW + gap);
         const ratio = Math.max(0, Math.min(1, b.val / maxVal));
         const barH = ratio * maxBarH;
         const by = bottomY - barH;
+        const pct = Math.min(100, Math.max(0, Math.round((b.val / denom) * 100)));
 
         // Arka boş sütun
         ctx.fillStyle = "rgba(255, 255, 255, 0.06)";
         ctx.beginPath();
-        ctx.roundRect(bx, bottomY - maxBarH, barW, maxBarH, 4 * scale);
+        ctx.roundRect(bx, topY, barW, maxBarH, 5 * scale);
         ctx.fill();
 
-        // Dolu çubuk
+        // Dolu canlı sütun
         if (barH > 1) {
             ctx.fillStyle = b.color;
             ctx.shadowColor = b.glow;
-            ctx.shadowBlur = 6 * scale;
+            ctx.shadowBlur = 7 * scale;
             ctx.beginPath();
-            ctx.roundRect(bx, by, barW, barH, 4 * scale);
+            ctx.roundRect(bx, by, barW, barH, 5 * scale);
             ctx.fill();
             ctx.shadowBlur = 0;
         }
 
-        // Çubuk altı Türkçe etiket
-        ctx.fillStyle = b.color;
-        ctx.font = `bold ${10 * scale}px Nunito, sans-serif`;
+        // Sütun üstü yüzde değeri
+        ctx.fillStyle = "#e2e8f0";
+        ctx.font = `bold ${8.5 * scale}px Nunito, sans-serif`;
         ctx.textAlign = "center";
-        ctx.fillText(b.short, bx + barW / 2, bottomY + 15 * scale);
+        const pctY = Math.max(topY - 4 * scale, by - 4 * scale);
+        ctx.fillText(`%${pct}`, bx + barW / 2, pctY);
+
+        // Sütun altı Türkçe etiket
+        ctx.fillStyle = b.color;
+        ctx.font = `bold ${(showHeat ? 8.2 : 9.2) * scale}px Nunito, sans-serif`;
+        const lbl = showHeat && b.short === "Potansiyel" ? "Pot." : (showHeat && b.short === "Kinetik" ? "Kin." : b.short);
+        ctx.fillText(lbl, bx + barW / 2, bottomY + 15 * scale);
+    });
+
+    // Alt Konum Rozeti
+    const badgeY = boxY + boxH + 10 * scale;
+    const badgeH = 44 * scale;
+    ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
+    ctx.strokeStyle = "rgba(148, 163, 184, 0.25)";
+    ctx.lineWidth = 1.2 * scale;
+    ctx.beginPath();
+    ctx.roundRect(boxX, badgeY, boxW, badgeH, 10 * scale);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = `bold ${9 * scale}px Nunito, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillText(cfg.shortName, boxX + boxW / 2, badgeY + 16 * scale);
+
+    ctx.fillStyle = "#facc15";
+    ctx.font = `bold ${10 * scale}px Nunito, sans-serif`;
+    ctx.fillText(energy.currentPositionLabel, boxX + boxW / 2, badgeY + 33 * scale);
+
+    ctx.restore();
+}
+
+function drawEnergyPositionBadge(ctx, x, y, text, isHighlighted, scale) {
+    ctx.save();
+    ctx.font = `bold ${9.5 * scale}px Nunito, sans-serif`;
+    const padX = 7 * scale;
+    const tw = ctx.measureText(text).width;
+    const bw = tw + padX * 2;
+    const bh = 19 * scale;
+
+    ctx.fillStyle = isHighlighted ? "rgba(239, 68, 68, 0.92)" : "rgba(15, 23, 42, 0.85)";
+    ctx.strokeStyle = isHighlighted ? "#fca5a5" : "rgba(148, 163, 184, 0.45)";
+    ctx.lineWidth = 1.2 * scale;
+    ctx.beginPath();
+    ctx.roundRect(x - bw / 2, y - bh / 2, bw, bh, 6 * scale);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = isHighlighted ? "#ffffff" : "#cbd5e1";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(text, x, y + 0.5 * scale);
+    ctx.restore();
+}
+
+function drawEnergyVelocityArrow(ctx, x1, y1, x2, y2, scale) {
+    ctx.save();
+    ctx.strokeStyle = "#38bdf8";
+    ctx.fillStyle = "#38bdf8";
+    ctx.lineWidth = 2.6 * scale;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+
+    const arrowSize = 7 * scale;
+    const arrowAngle = Math.atan2(y2 - y1, x2 - x1);
+    ctx.beginPath();
+    ctx.moveTo(x2, y2);
+    ctx.lineTo(x2 - arrowSize * Math.cos(arrowAngle - Math.PI / 6), y2 - arrowSize * Math.sin(arrowAngle - Math.PI / 6));
+    ctx.lineTo(x2 - arrowSize * Math.cos(arrowAngle + Math.PI / 6), y2 - arrowSize * Math.sin(arrowAngle + Math.PI / 6));
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+}
+
+function drawToyCar(ctx, scale, wheelAngle, isRedAccent) {
+    // Araba merkez alt tekerlek temas noktası (0, 0) olacak şekilde çizilir
+    const wheelR = 10 * scale;
+    const bodyW = 76 * scale;
+    const bodyH = 20 * scale;
+    const wheelOff = 23 * scale;
+
+    ctx.save();
+
+    // Gövde alt gölge
+    ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+    ctx.beginPath();
+    ctx.ellipse(0, 1 * scale, bodyW * 0.52, 4 * scale, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Alt Şasi
+    const chassisY = -(wheelR + bodyH - 2 * scale);
+    const bodyGrad = ctx.createLinearGradient(0, chassisY - 14 * scale, 0, chassisY + bodyH);
+    if (isRedAccent) {
+        bodyGrad.addColorStop(0, "#fb7185");
+        bodyGrad.addColorStop(0.5, "#e11d48");
+        bodyGrad.addColorStop(1, "#9f1239");
+    } else {
+        bodyGrad.addColorStop(0, "#38bdf8");
+        bodyGrad.addColorStop(0.5, "#0284c7");
+        bodyGrad.addColorStop(1, "#075985");
+    }
+
+    // Üst Kabin
+    ctx.fillStyle = bodyGrad;
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
+    ctx.lineWidth = 1.2 * scale;
+    ctx.beginPath();
+    ctx.moveTo(-22 * scale, chassisY);
+    ctx.lineTo(-14 * scale, chassisY - 14 * scale);
+    ctx.lineTo(14 * scale, chassisY - 14 * scale);
+    ctx.lineTo(24 * scale, chassisY);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Ön ve Arka Cam
+    ctx.fillStyle = "rgba(186, 230, 253, 0.78)";
+    ctx.beginPath();
+    ctx.moveTo(-11 * scale, chassisY - 2 * scale);
+    ctx.lineTo(-7 * scale, chassisY - 11 * scale);
+    ctx.lineTo(10 * scale, chassisY - 11 * scale);
+    ctx.lineTo(18 * scale, chassisY - 2 * scale);
+    ctx.closePath();
+    ctx.fill();
+
+    // Ana Gövde
+    ctx.fillStyle = bodyGrad;
+    ctx.beginPath();
+    ctx.roundRect(-bodyW / 2, chassisY, bodyW, bodyH, [6 * scale, 9 * scale, 4 * scale, 4 * scale]);
+    ctx.fill();
+    ctx.stroke();
+
+    // Far (Sağ ön)
+    ctx.fillStyle = "#fef08a";
+    ctx.beginPath();
+    ctx.roundRect(bodyW / 2 - 4 * scale, chassisY + 4 * scale, 4 * scale, 7 * scale, 2 * scale);
+    ctx.fill();
+
+    // Arka Stop Lambası (Sol arka)
+    ctx.fillStyle = "#fca5a5";
+    ctx.beginPath();
+    ctx.roundRect(-bodyW / 2, chassisY + 5 * scale, 3.5 * scale, 6 * scale, 1.5 * scale);
+    ctx.fill();
+
+    // Dönen Tekerlekler
+    [-wheelOff, wheelOff].forEach((wx) => {
+        ctx.save();
+        ctx.translate(wx, -wheelR);
+        ctx.rotate(wheelAngle);
+
+        // Lastik
+        ctx.fillStyle = "#0f172a";
+        ctx.strokeStyle = "#475569";
+        ctx.lineWidth = 2 * scale;
+        ctx.beginPath();
+        ctx.arc(0, 0, wheelR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Jant ve Jant Kolları
+        ctx.fillStyle = "#cbd5e1";
+        ctx.beginPath();
+        ctx.arc(0, 0, wheelR * 0.48, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = "#334155";
+        ctx.lineWidth = 1.4 * scale;
+        for (let k = 0; k < 4; k++) {
+            const a = (k * Math.PI) / 2;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(Math.cos(a) * wheelR * 0.72, Math.sin(a) * wheelR * 0.72);
+            ctx.stroke();
+        }
+        ctx.restore();
     });
 
     ctx.restore();
 }
 
+// 1. ETKİNLİK: SARKAÇ
 function drawPendulumSimulation(ctx, scale) {
     const energy = labState.energy;
     const p = energy.pendulum;
@@ -12272,54 +12926,61 @@ function drawPendulumSimulation(ctx, scale) {
     ctx.strokeStyle = "#475569";
     ctx.lineWidth = 1.5 * scale;
     ctx.beginPath();
-    ctx.roundRect(cx - (55 * scale), cy - (14 * scale), 110 * scale, 14 * scale, 4 * scale);
+    ctx.roundRect(cx - (60 * scale), cy - (14 * scale), 120 * scale, 14 * scale, 4 * scale);
     ctx.fill();
     ctx.stroke();
 
-    // Braket vidaları
     ctx.fillStyle = "#94a3b8";
-    [-42, -20, 20, 42].forEach(off => {
+    [-46, -22, 22, 46].forEach(off => {
         ctx.beginPath();
         ctx.arc(cx + (off * scale), cy - (7 * scale), 2.5 * scale, 0, Math.PI * 2);
         ctx.fill();
     });
 
-    // 2. Düşey Denge Çizgisi (Dashed Faint Line)
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+    // 2. Düşey Denge Çizgisi
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.14)";
     ctx.lineWidth = 1 * scale;
     ctx.setLineDash([4 * scale, 4 * scale]);
     ctx.beginPath();
     ctx.moveTo(cx, cy);
-    ctx.lineTo(cx, lowestY + (45 * scale));
+    ctx.lineTo(cx, lowestY + (52 * scale));
     ctx.stroke();
 
-    // 3. Salınım Yörünge Yayı (Faint Arc)
+    // 3. Salınım Yörünge Yayı
     const maxRad = energy.releaseAngle * (Math.PI / 180);
     ctx.beginPath();
     ctx.arc(cx, cy, L, (Math.PI / 2) - maxRad, (Math.PI / 2) + maxRad);
-    ctx.strokeStyle = "rgba(0, 210, 255, 0.15)";
-    ctx.lineWidth = 1.5 * scale;
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.22)";
+    ctx.lineWidth = 2 * scale;
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // 4. Referans Denge / Zemin Seviyesi (h = 0 kesikli çizgisi)
-    ctx.strokeStyle = "rgba(16, 185, 129, 0.35)";
+    // 4. Referans En Alt Seviye Çizgisi
+    ctx.strokeStyle = "rgba(239, 68, 68, 0.35)";
     ctx.lineWidth = 1 * scale;
     ctx.setLineDash([3 * scale, 3 * scale]);
     ctx.beginPath();
-    ctx.moveTo(cx - (160 * scale), lowestY);
-    ctx.lineTo(cx + (160 * scale), lowestY);
+    ctx.moveTo(cx - (185 * scale), lowestY);
+    ctx.lineTo(cx + (185 * scale), lowestY);
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // 5. Yükseklik Farkı Gösterge Çizgisi (h)
-    if (lowestY - by > 4 * scale) {
-        const indX = cx + (Math.sin(angle) > 0 ? -1 : 1) * (140 * scale);
-        ctx.strokeStyle = "rgba(56, 189, 248, 0.5)";
-        ctx.lineWidth = 1 * scale;
-        ctx.setLineDash([2 * scale, 2 * scale]);
+    // Konum İşaretleri (Başlangıç / En Alt / En Üst)
+    const rightPeakX = cx + L * Math.sin(maxRad);
+    const rightPeakY = cy + L * Math.cos(maxRad);
+    const leftPeakX = cx - L * Math.sin(maxRad);
+    const leftPeakY = cy + L * Math.cos(maxRad);
 
-        // Yatay hiza çizgisi
+    drawEnergyPositionBadge(ctx, Math.min(738 * scale, rightPeakX + 34 * scale), rightPeakY - 26 * scale, "Başlangıç", energy.activeStopIndex === 0, scale);
+    drawEnergyPositionBadge(ctx, cx, lowestY + 52 * scale, "En Alt", energy.activeStopIndex === 1, scale);
+    drawEnergyPositionBadge(ctx, Math.max(235 * scale, leftPeakX - 28 * scale), leftPeakY - 26 * scale, "En Üst", energy.activeStopIndex === 2, scale);
+
+    // 5. Yükseklik Farkı Gösterge Çizgisi
+    if (lowestY - by > 4 * scale) {
+        const indX = cx + (Math.sin(angle) >= 0 ? -1 : 1) * (155 * scale);
+        ctx.strokeStyle = "rgba(239, 68, 68, 0.55)";
+        ctx.lineWidth = 1.2 * scale;
+        ctx.setLineDash([2 * scale, 2 * scale]);
         ctx.beginPath();
         ctx.moveTo(bx, by);
         ctx.lineTo(indX, by);
@@ -12327,25 +12988,25 @@ function drawPendulumSimulation(ctx, scale) {
         ctx.lineTo(indX, lowestY);
         ctx.stroke();
 
-        // Düşey ok
         ctx.setLineDash([]);
-        ctx.strokeStyle = "#38bdf8";
+        ctx.strokeStyle = "#f87171";
+        ctx.lineWidth = 2 * scale;
         ctx.beginPath();
         ctx.moveTo(indX, lowestY);
         ctx.lineTo(indX, by);
         ctx.stroke();
     }
 
-    // 6. Sarkaç Kolu (İnce Metal Çubuk / İp)
-    ctx.strokeStyle = "rgba(226, 232, 240, 0.85)";
-    ctx.lineWidth = 2 * scale;
+    // 6. Sarkaç İpi
+    ctx.strokeStyle = "rgba(226, 232, 240, 0.88)";
+    ctx.lineWidth = 2.2 * scale;
     ctx.beginPath();
     ctx.moveTo(cx, cy);
     ctx.lineTo(bx, by);
     ctx.stroke();
 
     // Pivot Rulmanı
-    ctx.fillStyle = "#00d2ff";
+    ctx.fillStyle = "#38bdf8";
     ctx.beginPath();
     ctx.arc(cx, cy, 6 * scale, 0, Math.PI * 2);
     ctx.fill();
@@ -12354,21 +13015,18 @@ function drawPendulumSimulation(ctx, scale) {
     ctx.arc(cx, cy, 2.5 * scale, 0, Math.PI * 2);
     ctx.fill();
 
-    // 7. Sarkaç Küresi (Metalik Gümüş Çok Katmanlı Radyal Gradyan & Zemin Projeksiyon Gölgesi)
-    const bobR = (14 + energy.mass * 2.5) * scale;
-
-    // Zemin projeksiyon gölgesi (Küre yükseldikçe gölge hafifler ve küçülür)
+    // 7. Sarkaç Küresi ve Zemin Gölgesi
+    const bobR = (15 + energy.mass * 2.4) * scale;
     const shadowDist = Math.max(0, lowestY - by);
-    const shadowAlpha = Math.max(0.08, 0.32 - (shadowDist / (L * 0.7)) * 0.22);
+    const shadowAlpha = Math.max(0.08, 0.34 - (shadowDist / (L * 0.7)) * 0.22);
     const shadowW = Math.max(bobR * 0.45, bobR * (1 - shadowDist / (L * 1.3)));
     ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
     ctx.beginPath();
-    ctx.ellipse(bx, lowestY + (12 * scale), shadowW, shadowW * 0.28, 0, 0, Math.PI * 2);
+    ctx.ellipse(bx, lowestY + (22 * scale), shadowW, shadowW * 0.28, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Dokunmatik sürükleme halkası
     if (p.isDragging) {
-        ctx.strokeStyle = "rgba(0, 210, 255, 0.6)";
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.65)";
         ctx.lineWidth = 2 * scale;
         ctx.setLineDash([3 * scale, 3 * scale]);
         ctx.beginPath();
@@ -12377,7 +13035,6 @@ function drawPendulumSimulation(ctx, scale) {
         ctx.setLineDash([]);
     }
 
-    // Yüksek Gerçeklikli Metalik Krom / Gümüş Radyal Gradyan
     const sphereGrad = ctx.createRadialGradient(
         bx - (bobR * 0.35), by - (bobR * 0.35), bobR * 0.05,
         bx, by, bobR
@@ -12389,263 +13046,502 @@ function drawPendulumSimulation(ctx, scale) {
     sphereGrad.addColorStop(1, "#1e293b");
 
     ctx.fillStyle = sphereGrad;
-    ctx.shadowColor = "rgba(0, 210, 255, 0.35)";
+    ctx.shadowColor = "rgba(56, 189, 248, 0.35)";
     ctx.shadowBlur = 8 * scale;
     ctx.beginPath();
     ctx.arc(bx, by, bobR, 0, Math.PI * 2);
     ctx.fill();
     ctx.shadowBlur = 0;
 
-    // Speküler Parlama Noktası (Star Flash)
     ctx.fillStyle = "#ffffff";
     ctx.beginPath();
-    ctx.arc(bx - (bobR * 0.32), by - (bobR * 0.32), 2.2 * scale, 0, Math.PI * 2);
+    ctx.arc(bx - (bobR * 0.32), by - (bobR * 0.32), 2.4 * scale, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
     ctx.lineWidth = 1.2 * scale;
     ctx.stroke();
 
-    // 8. Hız Vektörü Oku (Teğetsel Sürat)
+    // 8. Sürat Vektörü Oku
     if (energy.currentSpeed > 0.15) {
-        const velLen = Math.min(60 * scale, energy.currentSpeed * 12 * scale);
+        const velLen = Math.min(62 * scale, energy.currentSpeed * 12 * scale);
         const dir = (p.omega >= 0) ? 1 : -1;
         const velAngle = angle + (dir * Math.PI / 2);
-
         const vx = bx + velLen * Math.sin(velAngle);
         const vy = by + velLen * Math.cos(velAngle);
-
-        ctx.strokeStyle = "#38bdf8";
-        ctx.fillStyle = "#38bdf8";
-        ctx.lineWidth = 2.5 * scale;
-        ctx.beginPath();
-        ctx.moveTo(bx, by);
-        ctx.lineTo(vx, vy);
-        ctx.stroke();
-
-        const arrowSize = 6 * scale;
-        const arrowAngle = Math.atan2(vy - by, vx - bx);
-        ctx.beginPath();
-        ctx.moveTo(vx, vy);
-        ctx.lineTo(vx - arrowSize * Math.cos(arrowAngle - Math.PI / 6), vy - arrowSize * Math.sin(arrowAngle - Math.PI / 6));
-        ctx.lineTo(vx - arrowSize * Math.cos(arrowAngle + Math.PI / 6), vy - arrowSize * Math.sin(arrowAngle + Math.PI / 6));
-        ctx.closePath();
-        ctx.fill();
+        drawEnergyVelocityArrow(ctx, bx, by, vx, vy, scale);
     }
 
     ctx.restore();
 }
 
-function drawRampSimulation(ctx, scale) {
+// 2. ETKİNLİK: BASKETBOL TOPU BIRAKMA (OMUZ HİZASINDAN SERBEST BIRAKMA)
+function drawBasketballSimulation(ctx, scale) {
     const energy = labState.energy;
-    const r = energy.ramp;
-    const cx = r.centerX * scale;
-    const cy = r.centerY * scale;
-    const R = r.radiusPx * scale;
-    const angle = r.angle;
+    const b = energy.basketball;
+    const groundY = 418 * scale;
+    const ballX = 475 * scale;
+    const ballR = (24 + energy.mass * 2.2) * scale;
 
-    const lowestY = cy + R;
-    const maxTrackAngle = 55 * (Math.PI / 180);
+    // 0.0 m -> groundY - ballR, 2.0 m -> 86 * scale
+    const maxPxSpan = (groundY - ballR) - (86 * scale);
+    const pxPerMeter = maxPxSpan / 2.0;
+
+    const releaseY = (groundY - ballR) - (b.releaseHeight * pxPerMeter);
+    const ballY = (groundY - ballR) - (b.height * pxPerMeter);
 
     ctx.save();
 
-    // 1. Zemin ve Taşıyıcı Çelik Kafes
-    const groundY = lowestY + (20 * scale);
-    ctx.strokeStyle = "rgba(71, 85, 105, 0.4)";
-    ctx.lineWidth = 1 * scale;
-    for (let deg = -50; deg <= 50; deg += 15) {
-        const rad = deg * (Math.PI / 180);
-        const tx = cx + R * Math.sin(rad);
-        const ty = cy + R * Math.cos(rad);
-        ctx.beginPath();
-        ctx.moveTo(tx, ty);
-        ctx.lineTo(tx, groundY);
-        ctx.stroke();
-    }
+    // 1. Parke Spor Salonu Zemini
+    const floorGrad = ctx.createLinearGradient(0, groundY, 0, groundY + 42 * scale);
+    floorGrad.addColorStop(0, "#92400e");
+    floorGrad.addColorStop(0.25, "#78350f");
+    floorGrad.addColorStop(1, "#451a03");
+    ctx.fillStyle = floorGrad;
+    ctx.beginPath();
+    ctx.roundRect(218 * scale, groundY, 545 * scale, 36 * scale, 6 * scale);
+    ctx.fill();
 
-    ctx.strokeStyle = "rgba(100, 116, 139, 0.6)";
+    ctx.strokeStyle = "rgba(253, 224, 71, 0.4)";
     ctx.lineWidth = 2 * scale;
     ctx.beginPath();
-    ctx.moveTo(cx - (200 * scale), groundY);
-    ctx.lineTo(cx + (200 * scale), groundY);
+    ctx.moveTo(218 * scale, groundY);
+    ctx.lineTo(763 * scale, groundY);
     ctx.stroke();
 
-    // 2. Çift Ray (U-Rampa Kavisli Raylar)
-    ctx.strokeStyle = "#38bdf8";
-    ctx.lineWidth = 3 * scale;
-    ctx.shadowColor = "rgba(56, 189, 248, 0.5)";
-    ctx.shadowBlur = 8 * scale;
-    ctx.beginPath();
-    ctx.arc(cx, cy, R, (Math.PI / 2) - maxTrackAngle, (Math.PI / 2) + maxTrackAngle);
-    ctx.stroke();
-    ctx.shadowBlur = 0;
-
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
-    ctx.lineWidth = 1.5 * scale;
-    ctx.beginPath();
-    ctx.arc(cx, cy, R + (6 * scale), (Math.PI / 2) - maxTrackAngle, (Math.PI / 2) + maxTrackAngle);
-    ctx.stroke();
-
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
-    ctx.lineWidth = 1.5 * scale;
-    for (let deg = -52; deg <= 52; deg += 4) {
-        const rad = deg * (Math.PI / 180);
-        const x1 = cx + (R - 2 * scale) * Math.sin(rad);
-        const y1 = cy + (R - 2 * scale) * Math.cos(rad);
-        const x2 = cx + (R + 6 * scale) * Math.sin(rad);
-        const y2 = cy + (R + 6 * scale) * Math.cos(rad);
+    // Parke tahta çizgileri
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+    ctx.lineWidth = 1 * scale;
+    for (let px = 258; px < 755; px += 46) {
         ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
+        ctx.moveTo(px * scale, groundY + 2 * scale);
+        ctx.lineTo(px * scale, groundY + 34 * scale);
         ctx.stroke();
     }
 
-    // 3. Referans Denge Noktası (h = 0)
-    ctx.strokeStyle = "rgba(16, 185, 129, 0.4)";
-    ctx.lineWidth = 1 * scale;
-    ctx.setLineDash([3 * scale, 3 * scale]);
+    // 2. Sağda Yükseklik Ölçeği & Omuz Hizası Gösterimi
+    const rulerX = 648 * scale;
+    ctx.strokeStyle = "rgba(148, 163, 184, 0.45)";
+    ctx.lineWidth = 2 * scale;
     ctx.beginPath();
-    ctx.moveTo(cx - (160 * scale), lowestY);
-    ctx.lineTo(cx + (160 * scale), lowestY);
+    ctx.moveTo(rulerX, groundY);
+    ctx.lineTo(rulerX, 82 * scale);
+    ctx.stroke();
+
+    for (let mTick = 0; mTick <= 2.01; mTick += 0.5) {
+        const ty = (groundY - ballR) - (mTick * pxPerMeter);
+        ctx.strokeStyle = "rgba(148, 163, 184, 0.65)";
+        ctx.lineWidth = 1.4 * scale;
+        ctx.beginPath();
+        ctx.moveTo(rulerX - 6 * scale, ty);
+        ctx.lineTo(rulerX + 6 * scale, ty);
+        ctx.stroke();
+
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = `bold ${9.5 * scale}px Nunito, sans-serif`;
+        ctx.textAlign = "left";
+        ctx.fillText(`${mTick.toFixed(1)} m`, rulerX + 10 * scale, ty + 3 * scale);
+    }
+
+    // Omuz Hizası Kesikli Başlangıç Çizgisi
+    ctx.strokeStyle = "rgba(248, 113, 113, 0.65)";
+    ctx.lineWidth = 1.6 * scale;
+    ctx.setLineDash([6 * scale, 4 * scale]);
+    ctx.beginPath();
+    ctx.moveTo(310 * scale, releaseY);
+    ctx.lineTo(rulerX, releaseY);
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // 4. Kaykaycı / Araç Konumu
-    const cartX = cx + R * Math.sin(angle);
-    const cartY = cy + R * Math.cos(angle);
-
-    if (lowestY - cartY > 4 * scale) {
-        const indX = cx + (Math.sin(angle) > 0 ? -1 : 1) * (140 * scale);
-        ctx.strokeStyle = "rgba(56, 189, 248, 0.5)";
-        ctx.lineWidth = 1 * scale;
-        ctx.setLineDash([2 * scale, 2 * scale]);
-
-        ctx.beginPath();
-        ctx.moveTo(cartX, cartY);
-        ctx.lineTo(indX, cartY);
-        ctx.moveTo(cx, lowestY);
-        ctx.lineTo(indX, lowestY);
-        ctx.stroke();
-
-        ctx.setLineDash([]);
-        ctx.strokeStyle = "#38bdf8";
-        ctx.beginPath();
-        ctx.moveTo(indX, lowestY);
-        ctx.lineTo(indX, cartY);
-        ctx.stroke();
-    }
-
-    // 4.5. Hareket İzi (Motion Trail - Hızlı salınımda hafif neon izler)
-    if (!r.trail) r.trail = [];
-    if (energy.isPlaying && energy.currentSpeed > 0.3) {
-        r.trail.push({ x: cartX, y: cartY, angle: angle });
-        if (r.trail.length > 6) r.trail.shift();
-    } else if (!energy.isPlaying || energy.currentSpeed <= 0.1) {
-        r.trail = [];
-    }
-
-    const cartW = 34 * scale;
-    const cartH = 6 * scale;
-    const wheelR = 4.5 * scale;
-
-    r.trail.forEach((t, idx) => {
-        ctx.save();
-        ctx.translate(t.x, t.y);
-        ctx.rotate(-t.angle);
-        const trailAlpha = ((idx + 1) / r.trail.length) * 0.24;
-        ctx.fillStyle = `rgba(56, 189, 248, ${trailAlpha})`;
-        ctx.beginPath();
-        ctx.roundRect(-cartW / 2, -(wheelR * 2 + cartH), cartW, cartH, 2 * scale);
-        ctx.fill();
-        ctx.restore();
-    });
-
-    // 5. Kaykaycı / Deney Arabası Çizimi
-    ctx.save();
-    ctx.translate(cartX, cartY);
-    ctx.rotate(-angle);
-
-    if (r.isDragging) {
-        ctx.strokeStyle = "rgba(0, 210, 255, 0.6)";
-        ctx.lineWidth = 2 * scale;
-        ctx.setLineDash([3 * scale, 3 * scale]);
-        ctx.beginPath();
-        ctx.arc(0, -12 * scale, 24 * scale, 0, Math.PI * 2);
-        ctx.stroke();
-        ctx.setLineDash([]);
-    }
-
-    // Tekerlekler
-    ctx.fillStyle = "#00d2ff";
-    ctx.shadowColor = "#00d2ff";
-    ctx.shadowBlur = 4 * scale;
-    [-12 * scale, 12 * scale].forEach(wx => {
-        ctx.beginPath();
-        ctx.arc(wx, -wheelR, wheelR, 0, Math.PI * 2);
-        ctx.fill();
-    });
-    ctx.shadowBlur = 0;
-
-    // Şasi
-    ctx.fillStyle = "#0f172a";
-    ctx.strokeStyle = "#38bdf8";
+    // Düşey Hareket Yolu Çizgisi
+    ctx.strokeStyle = "rgba(56, 189, 248, 0.25)";
     ctx.lineWidth = 1.5 * scale;
+    ctx.setLineDash([4 * scale, 4 * scale]);
     ctx.beginPath();
-    ctx.roundRect(-cartW / 2, -(wheelR * 2 + cartH), cartW, cartH, 2 * scale);
+    ctx.moveTo(ballX, releaseY);
+    ctx.lineTo(ballX, groundY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Konum İşaretleri
+    drawEnergyPositionBadge(ctx, 305 * scale, releaseY, "En Üst (Omuz)", energy.activeStopIndex === 0, scale);
+    drawEnergyPositionBadge(ctx, 305 * scale, (releaseY + (groundY - ballR)) / 2, "Orta Konum", energy.activeStopIndex === 1, scale);
+    drawEnergyPositionBadge(ctx, 305 * scale, groundY - ballR, "En Alt (Temas Öncesi)", energy.activeStopIndex === 2, scale);
+
+    // Anlık Yükseklik Kırmızı Ok
+    if (b.height > 0.05) {
+        const indX = 568 * scale;
+        ctx.strokeStyle = "#f87171";
+        ctx.lineWidth = 2 * scale;
+        ctx.beginPath();
+        ctx.moveTo(indX, groundY - 2 * scale);
+        ctx.lineTo(indX, ballY);
+        ctx.stroke();
+
+        ctx.fillStyle = "#fca5a5";
+        ctx.font = `bold ${10 * scale}px Nunito, sans-serif`;
+        ctx.textAlign = "left";
+        ctx.fillText(`Yükseklik: ${b.height.toFixed(2)} m`, indX + 8 * scale, (ballY + groundY) / 2);
+    }
+
+    // 3. Zemin Gölgesi (Top yaklaştıkça büyür ve koyulaşır)
+    const heightRatio = Math.max(0, Math.min(1, b.height / Math.max(0.2, b.releaseHeight)));
+    const shadowW = ballR * (1.15 - heightRatio * 0.55);
+    const shadowAlpha = 0.45 - heightRatio * 0.30;
+    ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
+    ctx.beginPath();
+    ctx.ellipse(ballX, groundY + 4 * scale, shadowW, shadowW * 0.24, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.stroke();
 
-    // Kütle Bloğu
-    const massBoxW = (16 + energy.mass * 2.5) * scale;
-    const massBoxH = (12 + energy.mass * 2) * scale;
-    const blockY = -(wheelR * 2 + cartH + massBoxH);
+    // 4. Gerçekçi Basketbol Topu
+    const sx = 1 + b.squash * 0.14;
+    const sy = 1 - b.squash * 0.14;
 
-    const blockGrad = ctx.createLinearGradient(0, blockY, 0, blockY + massBoxH);
-    blockGrad.addColorStop(0, "#38bdf8");
-    blockGrad.addColorStop(1, "#0369a1");
-    ctx.fillStyle = blockGrad;
-    ctx.strokeStyle = "#cffafe";
-    ctx.lineWidth = 1 * scale;
+    ctx.save();
+    ctx.translate(ballX, ballY);
+    ctx.scale(sx, sy);
+
+    const ballGrad = ctx.createRadialGradient(-ballR * 0.32, -ballR * 0.32, ballR * 0.1, 0, 0, ballR);
+    ballGrad.addColorStop(0, "#fdba74");
+    ballGrad.addColorStop(0.3, "#ea580c");
+    ballGrad.addColorStop(0.75, "#c2410c");
+    ballGrad.addColorStop(1, "#7c2d12");
+
+    ctx.fillStyle = ballGrad;
     ctx.beginPath();
-    ctx.roundRect(-massBoxW / 2, blockY, massBoxW, massBoxH, 3 * scale);
+    ctx.arc(0, 0, ballR, 0, Math.PI * 2);
     ctx.fill();
-    ctx.stroke();
 
-    // Mekanik Ağırlık Yivi (Zero-Canvas-Text: Kütle sayısal değeri alt barda ve kontrollerdedir)
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.45)";
-    ctx.lineWidth = 1 * scale;
+    // Basketbol dikiş çizgileri (clip içinde)
+    ctx.save();
     ctx.beginPath();
-    ctx.moveTo(-massBoxW / 3, blockY + (massBoxH / 2));
-    ctx.lineTo(massBoxW / 3, blockY + (massBoxH / 2));
-    ctx.stroke();
+    ctx.arc(0, 0, ballR, 0, Math.PI * 2);
+    ctx.clip();
 
+    ctx.strokeStyle = "rgba(15, 23, 42, 0.85)";
+    ctx.lineWidth = 2 * scale;
+    // Yatay ekvator
+    ctx.beginPath();
+    ctx.moveTo(-ballR, 0);
+    ctx.lineTo(ballR, 0);
+    ctx.stroke();
+    // Dikey meridyen
+    ctx.beginPath();
+    ctx.moveTo(0, -ballR);
+    ctx.lineTo(0, ballR);
+    ctx.stroke();
+    // Sol ve sağ kavisli kaburga dikişleri
+    ctx.beginPath();
+    ctx.arc(-ballR * 0.82, 0, ballR * 0.72, -Math.PI * 0.42, Math.PI * 0.42);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(ballR * 0.82, 0, ballR * 0.72, Math.PI * 0.58, Math.PI * 1.42);
+    ctx.stroke();
     ctx.restore();
 
-    // 6. Hız Vektörü Oku
-    if (energy.currentSpeed > 0.15) {
-        const velLen = Math.min(65 * scale, energy.currentSpeed * 12 * scale);
-        const dir = (r.omega >= 0) ? 1 : -1;
-        const velAngle = angle + (dir * Math.PI / 2);
+    // Dış kontur + parlama
+    ctx.strokeStyle = "rgba(254, 215, 170, 0.45)";
+    ctx.lineWidth = 1.3 * scale;
+    ctx.beginPath();
+    ctx.arc(0, 0, ballR, 0, Math.PI * 2);
+    ctx.stroke();
 
-        const vx = cartX + velLen * Math.sin(velAngle);
-        const vy = cartY + velLen * Math.cos(velAngle);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+    ctx.beginPath();
+    ctx.ellipse(-ballR * 0.32, -ballR * 0.34, ballR * 0.22, ballR * 0.12, -0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
 
-        ctx.strokeStyle = "#38bdf8";
-        ctx.fillStyle = "#38bdf8";
-        ctx.lineWidth = 2.5 * scale;
+    // 5. Sürat Oku
+    if (energy.currentSpeed > 0.2) {
+        const dir = b.vy <= 0 ? 1 : -1;
+        const arrowLen = Math.min(68 * scale, energy.currentSpeed * 10 * scale);
+        drawEnergyVelocityArrow(ctx, ballX, ballY, ballX, ballY + dir * arrowLen, scale);
+    }
+
+    ctx.restore();
+}
+
+// 3. ETKİNLİK: SARMAL YAY VE MAKET ARABA
+function drawSpringCarSimulation(ctx, scale) {
+    const energy = labState.energy;
+    const s = energy.spring;
+    const tableY = 345 * scale;
+    const stopperLeft = 224 * scale;
+    const stopperW = 34 * scale;
+    const springStartX = stopperLeft + stopperW; // 258 * scale
+    const restLen = 142 * scale;
+    const maxCompressPx = 92 * scale;
+
+    const currentSpringLen = restLen - (s.compression * maxCompressPx);
+    const springEndX = springStartX + currentSpringLen;
+    const carHalfW = 38 * scale;
+    const carCenterX = (s.compression > 0.001)
+        ? (springEndX + carHalfW + 3 * scale)
+        : (springStartX + restLen + carHalfW + 3 * scale + s.carOffset * 265 * scale);
+
+    ctx.save();
+
+    // 1. Sınıf Masası / Sıra Yüzeyi
+    const deskGrad = ctx.createLinearGradient(0, tableY, 0, tableY + 20 * scale);
+    deskGrad.addColorStop(0, "#b45309");
+    deskGrad.addColorStop(0.5, "#92400e");
+    deskGrad.addColorStop(1, "#78350f");
+    ctx.fillStyle = deskGrad;
+    ctx.beginPath();
+    ctx.roundRect(212 * scale, tableY, 558 * scale, 18 * scale, 4 * scale);
+    ctx.fill();
+
+    // Masa üst parlama çizgisi
+    ctx.strokeStyle = "rgba(253, 230, 138, 0.35)";
+    ctx.lineWidth = 1.5 * scale;
+    ctx.beginPath();
+    ctx.moveTo(214 * scale, tableY + 1 * scale);
+    ctx.lineTo(768 * scale, tableY + 1 * scale);
+    ctx.stroke();
+
+    // Masa Ayakları
+    ctx.fillStyle = "#334155";
+    ctx.fillRect(236 * scale, tableY + 18 * scale, 14 * scale, 85 * scale);
+    ctx.fillRect(728 * scale, tableY + 18 * scale, 14 * scale, 85 * scale);
+
+    // 2. Sabitlenmiş Takoz (Sol Uç)
+    const blockGrad = ctx.createLinearGradient(stopperLeft, tableY - 62 * scale, stopperLeft + stopperW, tableY);
+    blockGrad.addColorStop(0, "#475569");
+    blockGrad.addColorStop(1, "#1e293b");
+    ctx.fillStyle = blockGrad;
+    ctx.strokeStyle = "#94a3b8";
+    ctx.lineWidth = 1.5 * scale;
+    ctx.beginPath();
+    ctx.roundRect(stopperLeft, tableY - 64 * scale, stopperW, 64 * scale, [5 * scale, 5 * scale, 0, 0]);
+    ctx.fill();
+    ctx.stroke();
+
+    // Takoz vidaları
+    ctx.fillStyle = "#cbd5e1";
+    [tableY - 50 * scale, tableY - 14 * scale].forEach((vy) => {
         ctx.beginPath();
-        ctx.moveTo(cartX, cartY);
-        ctx.lineTo(vx, vy);
+        ctx.arc(stopperLeft + stopperW / 2, vy, 3 * scale, 0, Math.PI * 2);
+        ctx.fill();
+    });
+
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = `bold ${9.5 * scale}px Nunito, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillText("Sabit Takoz", stopperLeft + stopperW / 2, tableY - 72 * scale);
+
+    // 3. Sarmal Yay (Helical Coil Spring)
+    const springY = tableY - 22 * scale;
+    const coils = 9;
+    const coilAmp = 14 * scale;
+    const lead = 8 * scale;
+    const bodyLen = Math.max(18 * scale, currentSpringLen - lead * 2);
+
+    // Sıkışma anında kırmızı esneklik potansiyeli parıltısı
+    const glowAlpha = Math.min(0.85, s.compression * 0.9);
+    ctx.strokeStyle = glowAlpha > 0.15
+        ? `rgba(248, 113, 113, ${0.45 + glowAlpha * 0.55})`
+        : "#cbd5e1";
+    ctx.lineWidth = 3.2 * scale;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    if (glowAlpha > 0.15) {
+        ctx.shadowColor = "rgba(239, 68, 68, 0.55)";
+        ctx.shadowBlur = 10 * scale * glowAlpha;
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(springStartX, springY);
+    ctx.lineTo(springStartX + lead, springY);
+    for (let i = 0; i < coils; i++) {
+        const t1 = (i + 0.25) / coils;
+        const t2 = (i + 0.75) / coils;
+        const t3 = (i + 1.0) / coils;
+        ctx.lineTo(springStartX + lead + t1 * bodyLen, springY - coilAmp);
+        ctx.lineTo(springStartX + lead + t2 * bodyLen, springY + coilAmp);
+        ctx.lineTo(springStartX + lead + t3 * bodyLen, springY);
+    }
+    ctx.lineTo(springEndX, springY);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Yay ucu itme plakası
+    ctx.fillStyle = "#e2e8f0";
+    ctx.fillRect(springEndX - 3 * scale, springY - 14 * scale, 5 * scale, 28 * scale);
+
+    // Yayın normal boy (denge) referans kesikli çizgisi
+    const restEndX = springStartX + restLen;
+    ctx.strokeStyle = "rgba(250, 204, 21, 0.45)";
+    ctx.lineWidth = 1.2 * scale;
+    ctx.setLineDash([4 * scale, 4 * scale]);
+    ctx.beginPath();
+    ctx.moveTo(restEndX, tableY - 78 * scale);
+    ctx.lineTo(restEndX, tableY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    ctx.fillStyle = "#fde047";
+    ctx.font = `bold ${9 * scale}px Nunito, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillText("Yayın Normal Boyu", restEndX, tableY - 84 * scale);
+
+    // Konum İşaretleri
+    drawEnergyPositionBadge(ctx, 330 * scale, tableY + 46 * scale, "Sıkıştırılmış Hâli", energy.activeStopIndex === 0, scale);
+    drawEnergyPositionBadge(ctx, 590 * scale, tableY + 46 * scale, "Serbest Bırakıldıktan Sonra", energy.activeStopIndex === 2, scale);
+
+    // 4. Maket Araba
+    ctx.save();
+    ctx.translate(carCenterX, tableY);
+    drawToyCar(ctx, scale, s.wheelAngle, true);
+    ctx.restore();
+
+    // 5. Sürat Oku
+    if (energy.currentSpeed > 0.2) {
+        const arrowLen = Math.min(72 * scale, energy.currentSpeed * 12 * scale);
+        drawEnergyVelocityArrow(ctx, carCenterX + 14 * scale, tableY - 48 * scale, carCenterX + 14 * scale + arrowLen, tableY - 48 * scale, scale);
+    }
+
+    ctx.restore();
+}
+
+// 4. ETKİNLİK: KİTAPLAR ÜZERİNDE EĞİK DÜZLEM VE MAKET ARABA
+function drawInclineCarSimulation(ctx, scale) {
+    const energy = labState.energy;
+    const inc = energy.incline;
+    const tableY = 408 * scale;
+    const bookH = 26 * scale;
+    const bookW = 104 * scale;
+    const bookLeft = 224 * scale;
+    const stackH = inc.bookCount * bookH;
+    const stackTopY = tableY - stackH;
+
+    const rampTopX = 314 * scale;
+    const rampTopY = stackTopY;
+    const rampBotX = 618 * scale;
+    const rampBotY = tableY;
+    const rampAngle = Math.atan2(rampBotY - rampTopY, rampBotX - rampTopX);
+
+    ctx.save();
+
+    // 1. Masa Yüzeyi
+    const deskGrad = ctx.createLinearGradient(0, tableY, 0, tableY + 20 * scale);
+    deskGrad.addColorStop(0, "#b45309");
+    deskGrad.addColorStop(1, "#78350f");
+    ctx.fillStyle = deskGrad;
+    ctx.beginPath();
+    ctx.roundRect(212 * scale, tableY, 558 * scale, 18 * scale, 4 * scale);
+    ctx.fill();
+
+    ctx.fillStyle = "#334155";
+    ctx.fillRect(236 * scale, tableY + 18 * scale, 14 * scale, 52 * scale);
+    ctx.fillRect(728 * scale, tableY + 18 * scale, 14 * scale, 52 * scale);
+
+    // 2. Üst Üste Renkli Kitap Yığını
+    const bookColors = [
+        { cover: "#1d4ed8", spine: "#1e3a8a" },
+        { cover: "#dc2626", spine: "#991b1b" },
+        { cover: "#059669", spine: "#065f46" },
+        { cover: "#d97706", spine: "#92400e" },
+        { cover: "#7c3aed", spine: "#5b21b6" }
+    ];
+
+    for (let i = 0; i < inc.bookCount; i++) {
+        const by = tableY - (i + 1) * bookH;
+        const jitter = (i % 2 === 0 ? 0 : 4) * scale;
+        const bx = bookLeft + jitter;
+        const pal = bookColors[i % bookColors.length];
+
+        // Kitap kapağı
+        ctx.fillStyle = pal.cover;
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.25)";
+        ctx.lineWidth = 1 * scale;
+        ctx.beginPath();
+        ctx.roundRect(bx, by + 1 * scale, bookW, bookH - 2 * scale, 3 * scale);
+        ctx.fill();
         ctx.stroke();
 
-        const arrowSize = 6 * scale;
-        const arrowAngle = Math.atan2(vy - cartY, vx - cartX);
+        // Kitap sırtı (sol)
+        ctx.fillStyle = pal.spine;
+        ctx.fillRect(bx, by + 1 * scale, 16 * scale, bookH - 2 * scale);
+
+        // Beyaz sayfalar (sağ kenar)
+        ctx.fillStyle = "#f8fafc";
+        ctx.fillRect(bx + bookW - 14 * scale, by + 4 * scale, 11 * scale, bookH - 8 * scale);
+
+        // İnce sayfa çizgileri
+        ctx.strokeStyle = "rgba(148, 163, 184, 0.6)";
+        ctx.lineWidth = 0.8 * scale;
         ctx.beginPath();
-        ctx.moveTo(vx, vy);
-        ctx.lineTo(vx - arrowSize * Math.cos(arrowAngle - Math.PI / 6), vy - arrowSize * Math.sin(arrowAngle - Math.PI / 6));
-        ctx.lineTo(vx - arrowSize * Math.cos(arrowAngle + Math.PI / 6), vy - arrowSize * Math.sin(arrowAngle + Math.PI / 6));
-        ctx.closePath();
-        ctx.fill();
+        ctx.moveTo(bx + bookW - 13 * scale, by + bookH * 0.5);
+        ctx.lineTo(bx + bookW - 4 * scale, by + bookH * 0.5);
+        ctx.stroke();
+    }
+
+    ctx.fillStyle = "#cbd5e1";
+    ctx.font = `bold ${9.5 * scale}px Nunito, sans-serif`;
+    ctx.textAlign = "center";
+    ctx.fillText(`Kitaplar (${inc.bookCount} adet)`, bookLeft + bookW / 2, stackTopY - 12 * scale);
+
+    // 3. Ahşap Eğik Düzlem (Plank)
+    const plankThick = 11 * scale;
+    const rampLenPx = Math.hypot(rampBotX - rampTopX, rampBotY - rampTopY);
+
+    ctx.save();
+    ctx.translate(rampTopX, rampTopY);
+    ctx.rotate(rampAngle);
+
+    const woodGrad = ctx.createLinearGradient(0, 0, 0, plankThick);
+    woodGrad.addColorStop(0, "#fbbf24");
+    woodGrad.addColorStop(0.5, "#d97706");
+    woodGrad.addColorStop(1, "#92400e");
+    ctx.fillStyle = woodGrad;
+    ctx.strokeStyle = "#fef3c7";
+    ctx.lineWidth = 1.2 * scale;
+    ctx.beginPath();
+    ctx.roundRect(0, 0, rampLenPx, plankThick, 3 * scale);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+
+    // 4. Konum İşaretleri (En Üst / Orta / En Alt)
+    const getRampPoint = (t) => ({
+        x: rampTopX + (rampBotX - rampTopX) * t,
+        y: rampTopY + (rampBotY - rampTopY) * t
+    });
+    const ptTop = getRampPoint(0.08);
+    const ptMid = getRampPoint(0.50);
+    const ptBot = getRampPoint(0.95);
+
+    drawEnergyPositionBadge(ctx, ptTop.x + 18 * scale, ptTop.y - 54 * scale, "En Üst", energy.activeStopIndex === 0, scale);
+    drawEnergyPositionBadge(ctx, ptMid.x + 22 * scale, ptMid.y - 54 * scale, "Orta", energy.activeStopIndex === 1, scale);
+    drawEnergyPositionBadge(ctx, ptBot.x + 34 * scale, ptBot.y - 54 * scale, "En Alt", energy.activeStopIndex === 2, scale);
+
+    // 5. Maket Araba (Eğik Düzlemden Masaya Akıcı Geçiş)
+    let carX, carY, carRot;
+    if (inc.progress <= 1.0) {
+        const pt = getRampPoint(inc.progress);
+        carX = pt.x;
+        carY = pt.y;
+        carRot = rampAngle;
+    } else {
+        const extra = (inc.progress - 1.0) * 320 * scale;
+        carX = rampBotX + extra;
+        carY = tableY;
+        carRot = 0;
+    }
+
+    ctx.save();
+    ctx.translate(carX, carY);
+    ctx.rotate(carRot);
+    drawToyCar(ctx, scale, inc.wheelAngle, false);
+    ctx.restore();
+
+    // 6. Sürat Oku
+    if (energy.currentSpeed > 0.2) {
+        const arrowLen = Math.min(68 * scale, energy.currentSpeed * 12 * scale);
+        const ax = carX + Math.cos(carRot) * 10 * scale;
+        const ay = carY - 38 * scale + Math.sin(carRot) * 10 * scale;
+        drawEnergyVelocityArrow(ctx, ax, ay, ax + Math.cos(carRot) * arrowLen, ay + Math.sin(carRot) * arrowLen, scale);
     }
 
     ctx.restore();
@@ -18976,12 +19872,12 @@ function setupCanvasPointerEvents() {
                 calculateWorkPhysics();
             }
         }
-        // Deney 7.2: Sarkaç Açısı veya Rampa Konumu Ayarı
+        // Deney 7.2: Sarkaç Açısı Ayarı
         else if (labState.activeExperimentId === "7.2") {
             const energy = labState.energy;
             if (energy.mode === "pendulum") {
-                const pivotX = 420;
-                const pivotY = 65;
+                const pivotX = energy.pendulum.pivotX;
+                const pivotY = energy.pendulum.pivotY;
                 const dx = canvasX - pivotX;
                 const dy = canvasY - pivotY;
                 if (dy > 30) {
@@ -18991,26 +19887,7 @@ function setupCanvasPointerEvents() {
                     energy.pendulum.angle = angle;
                     energy.pendulum.omega = 0;
                     energy.heatEnergy = 0;
-                    const angleDeg = Math.round(Math.abs(angle * (180 / Math.PI)));
-                    energy.releaseAngle = Math.max(15, Math.min(60, angleDeg));
-                    const angleRange = document.getElementById('lab-energy-angle-range');
-                    const angleDisplay = document.getElementById('lab-energy-angle-display');
-                    if (angleRange) angleRange.value = energy.releaseAngle;
-                    if (angleDisplay) angleDisplay.textContent = `${energy.releaseAngle}°`;
-                    calculateEnergyInstantValues();
-                }
-            } else if (energy.mode === "ramp") {
-                const centerX = 420;
-                const centerY = 140;
-                const dx = canvasX - centerX;
-                const dy = canvasY - centerY;
-                if (dy > 20) {
-                    let angle = Math.atan2(dx, dy);
-                    const maxRad = 55 * (Math.PI / 180);
-                    angle = Math.max(-maxRad, Math.min(maxRad, angle));
-                    energy.ramp.angle = angle;
-                    energy.ramp.omega = 0;
-                    energy.heatEnergy = 0;
+                    energy.activeStopIndex = -1;
                     const angleDeg = Math.round(Math.abs(angle * (180 / Math.PI)));
                     energy.releaseAngle = Math.max(15, Math.min(60, angleDeg));
                     const angleRange = document.getElementById('lab-energy-angle-range');
@@ -19172,8 +20049,9 @@ function setupCanvasPointerEvents() {
         } else if (labState.activeExperimentId === "7.1") {
             labState.work.isDragging = true;
         } else if (labState.activeExperimentId === "7.2") {
-            labState.energy.pendulum.isDragging = true;
-            labState.energy.ramp.isDragging = true;
+            if (labState.energy.mode === "pendulum") {
+                labState.energy.pendulum.isDragging = true;
+            }
         }
         labState.optics.isDraggingLaser = true;
         labState.lens.isDraggingObject = true;
@@ -19383,7 +20261,7 @@ function setupCanvasPointerEvents() {
         const isDragging63 = (labState.activeExperimentId === "6.3" && labState.motion && labState.motion.car.isDragging);
         const isDragging64 = (labState.activeExperimentId === "6.4" && labState.reflection && labState.reflection.isDragging);
         const isDragging71 = (labState.activeExperimentId === "7.1" && labState.work.isDragging);
-        const isDragging72 = (labState.activeExperimentId === "7.2" && (labState.energy.pendulum.isDragging || labState.energy.ramp.isDragging));
+        const isDragging72 = (labState.activeExperimentId === "7.2" && labState.energy.pendulum.isDragging);
         const isDragging77 = (labState.activeExperimentId === "7.7" && (
             (labState.electro.mode === "friction" && (labState.electro.friction.cloth.isDragging || labState.electro.friction.rod.isDragging)) ||
             (labState.electro.mode === "conduction" && (labState.electro.conduction.sphere1.isDragging || labState.electro.conduction.sphere2.isDragging))
@@ -19423,9 +20301,8 @@ function setupCanvasPointerEvents() {
         if (labState.work) {
             labState.work.isDragging = false;
         }
-        if (labState.energy) {
+        if (labState.energy && labState.energy.pendulum) {
             labState.energy.pendulum.isDragging = false;
-            labState.energy.ramp.isDragging = false;
         }
         if (labState.electro) {
             labState.electro.friction.cloth.isDragging = false;
@@ -23203,11 +24080,11 @@ function updateTableHeader(expId) {
         thead.innerHTML = `
             <tr>
                 <th>#</th>
-                <th>Deney Modu</th>
-                <th>Cisim Kütlesi</th>
-                <th>Yükseklik & Sürat</th>
-                <th>Potansiyel / Kinetik Enerji</th>
-                <th>Toplam Mekanik / Isı</th>
+                <th>Etkinlik</th>
+                <th>Konum</th>
+                <th>Potansiyel Enerji</th>
+                <th>Kinetik Enerji</th>
+                <th>Toplam Enerji</th>
             </tr>
         `;
     } else if (expId === "7.3") {
@@ -23721,14 +24598,20 @@ function recordMeasurement() {
         showLabToast(`İş Gözlemi #${row.id} deftere kaydedildi!`);
     } else if (expId === "7.2") {
         const energy = labState.energy;
-        const modeLabel = energy.mode === "pendulum" ? "🔄 Sarkaç" : "🛹 U-Rampa";
+        const cfg = getEnergyActivityConfig(energy.mode);
+        const denom = Math.max(0.001, energy.totalEnergy);
+        const epPct = Math.round((energy.potentialEnergy / denom) * 100);
+        const ekPct = Math.round((energy.kineticEnergy / denom) * 100);
+        const totalNote = energy.frictionEnabled
+            ? `${fmt(energy.totalEnergy, 1)} J (Isı: ${fmt(energy.heatEnergy, 1)} J)`
+            : `${fmt(energy.totalEnergy, 1)} J (Korundu)`;
         const row = {
             id: energy.measurements.length + 1,
-            col1: modeLabel,
-            col2: `${fmt(energy.mass, 1)} kg`,
-            col3: `Yükseklik: ${fmt(energy.currentHeight, 2)} m · Sürat: ${fmt(energy.currentSpeed, 1)} m/s`,
-            col4: `Potansiyel: ${fmt(energy.potentialEnergy, 1)} J · Kinetik: ${fmt(energy.kineticEnergy, 1)} J`,
-            col5: `Toplam: ${fmt(energy.totalEnergy, 1)} J (Isı: ${fmt(energy.heatEnergy, 1)} J)`
+            col1: cfg.shortName,
+            col2: energy.currentPositionLabel || "Gözlem",
+            col3: `${fmt(energy.potentialEnergy, 1)} J (%${epPct})`,
+            col4: `${fmt(energy.kineticEnergy, 1)} J (%${ekPct})`,
+            col5: totalNote
         };
 
         energy.measurements.push(row);
@@ -24228,8 +25111,8 @@ export function isExperimentCompleted(expId, measurements) {
             return hasWork && hasNoWork;
         }
         case "7.2": {
-            const heights = new Set(measurements.map(m => m.col3 || m.col4));
-            return heights.size >= 2;
+            const states = new Set(measurements.map(m => `${m.col1}|${m.col2}|${m.col3}`));
+            return states.size >= 2;
         }
         case "7.3": {
             const angles = new Set(measurements.map(m => m.col2 || m.col1));
