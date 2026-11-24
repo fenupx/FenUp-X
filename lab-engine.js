@@ -1473,9 +1473,13 @@ function setupWorkspaceShellDOM() {
     const btnReset = document.getElementById('btn-lab-reset');
     if (btnReset) btnReset.addEventListener('click', resetCurrentExperiment);
 
-    // 3. Tam Ekran Butonu
+    // 3. Tam Ekran ve Tam Ekran Veri Defteri Butonları
     const btnFullscreen = document.getElementById('btn-lab-fullscreen');
     if (btnFullscreen) btnFullscreen.addEventListener('click', toggleLabFullscreen);
+    const btnFsNotebook = document.getElementById('btn-lab-fs-notebook');
+    if (btnFsNotebook) btnFsNotebook.addEventListener('click', toggleLabFullscreenNotebook);
+    const btnFsNotebookClose = document.getElementById('btn-lab-fs-notebook-close');
+    if (btnFsNotebookClose) btnFsNotebookClose.addEventListener('click', () => setLabFullscreenNotebookOpen(false));
 
     // 4. Panel ve Mobil Tab Seçicileri (Masaüstü + Mobil Senkronize)
     document.querySelectorAll('.lab-tab-btn').forEach(tabBtn => {
@@ -2341,6 +2345,16 @@ function resetCurrentExperiment() {
     clearMeasurementTable(true);
 }
 
+function scheduleLabCanvasResize() {
+    resizeCanvas();
+    if (typeof requestAnimationFrame === 'function') {
+        requestAnimationFrame(() => {
+            resizeCanvas();
+        });
+    }
+    setTimeout(resizeCanvas, 80);
+}
+
 function syncLabFullscreenButton(isFs) {
     const btn = document.getElementById('btn-lab-fullscreen');
     if (!btn) return;
@@ -2352,10 +2366,32 @@ function syncLabFullscreenButton(isFs) {
     btn.setAttribute('aria-label', isFs ? 'Tam Ekrandan Çık' : 'Tam Ekran');
 }
 
+function syncLabFsNotebookButton(isOpen) {
+    const btn = document.getElementById('btn-lab-fs-notebook');
+    if (!btn) return;
+    btn.classList.toggle('active', !!isOpen);
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+}
+
+function setLabFullscreenNotebookOpen(open) {
+    const labView = document.getElementById('lab-view');
+    if (!labView) return;
+    const shouldOpen = !!open && labView.classList.contains('is-lab-fullscreen');
+    labView.classList.toggle('is-lab-fs-notebook-open', shouldOpen);
+    syncLabFsNotebookButton(shouldOpen);
+}
+
+function toggleLabFullscreenNotebook() {
+    const labView = document.getElementById('lab-view');
+    if (!labView || !labView.classList.contains('is-lab-fullscreen')) return;
+    const isOpen = labView.classList.contains('is-lab-fs-notebook-open');
+    setLabFullscreenNotebookOpen(!isOpen);
+}
+
 export function exitLabFullscreen() {
     const labView = document.getElementById('lab-view');
     if (labView) {
-        labView.classList.remove('is-lab-fullscreen');
+        labView.classList.remove('is-lab-fullscreen', 'is-lab-fs-notebook-open');
         labView.removeAttribute('data-lab-fullscreen-mode');
     }
     if (typeof document !== "undefined") {
@@ -2373,7 +2409,9 @@ export function exitLabFullscreen() {
             }
         } catch (_) {}
     }
+    syncLabFsNotebookButton(false);
     syncLabFullscreenButton(false);
+    scheduleLabCanvasResize();
 }
 
 function toggleLabFullscreen() {
@@ -2385,9 +2423,11 @@ function toggleLabFullscreen() {
     if (!isFull) {
         if (labView) {
             labView.classList.add('is-lab-fullscreen');
+            labView.classList.remove('is-lab-fs-notebook-open');
             labView.dataset.labFullscreenMode = 'css';
         }
         document.body.classList.add('lab-fullscreen-open');
+        syncLabFsNotebookButton(false);
         syncLabFullscreenButton(true);
 
         const elem = document.documentElement;
@@ -2397,6 +2437,7 @@ function toggleLabFullscreen() {
                 if (p && typeof p.then === "function") {
                     p.then(() => {
                         if (labView && document.fullscreenElement) labView.dataset.labFullscreenMode = 'native';
+                        scheduleLabCanvasResize();
                     }).catch(() => {});
                 }
             } else if (typeof elem.webkitRequestFullscreen === "function") {
@@ -2408,10 +2449,9 @@ function toggleLabFullscreen() {
             }
         } catch (_) {}
         showLabToast("Laboratuvar tam ekran moduna alındı");
-        setTimeout(resizeCanvas, 50);
+        scheduleLabCanvasResize();
     } else {
         exitLabFullscreen();
-        setTimeout(resizeCanvas, 50);
     }
 }
 
@@ -30135,6 +30175,8 @@ if (typeof window !== "undefined") {
         resetCurrentExperiment,
         toggleLabFullscreen,
         exitLabFullscreen,
+        toggleLabFullscreenNotebook,
+        setLabFullscreenNotebookOpen,
         setIncidentAngle,
         setWorkMode,
         toggleDualPlayPause,
@@ -30160,9 +30202,23 @@ if (typeof window !== "undefined") {
         document.addEventListener(evt, () => {
             const isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
             const labView = document.getElementById('lab-view');
-            if (!isFs && labView && labView.dataset.labFullscreenMode === 'native') {
+            if (isFs && labView && !labView.classList.contains('is-hidden')) {
+                labView.classList.add('is-lab-fullscreen');
+                labView.dataset.labFullscreenMode = 'native';
+                document.body.classList.add('lab-fullscreen-open');
+                syncLabFullscreenButton(true);
+                scheduleLabCanvasResize();
+            } else if (!isFs && labView && labView.dataset.labFullscreenMode === 'native') {
                 exitLabFullscreen();
             }
         });
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        const labView = document.getElementById('lab-view');
+        if (labView && labView.classList.contains('is-lab-fullscreen')) {
+            exitLabFullscreen();
+        }
     });
 }

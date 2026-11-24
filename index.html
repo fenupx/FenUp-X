@@ -57,8 +57,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Caveat:wght@500;600;700&family=Kalam:wght@400;500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=8.9.38">
-    <link rel="stylesheet" href="exam.css?v=8.9.38">
+    <link rel="stylesheet" href="style.css?v=8.9.39">
+    <link rel="stylesheet" href="exam.css?v=8.9.39">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -524,6 +524,7 @@
                     <small id="lab-exp-ref">MEB 2. Kitap, s. 16–29 (Etkinlik Noktası: Işığın Ortam Değiştirmesi ve Kırılma)</small>
                 </div>
                 <div class="lab-workspace-actions">
+                    <button id="btn-lab-fs-notebook" class="lab-action-pill lab-fs-only-btn" type="button" title="Veri Defteri ve Yönerge Panelini Aç/Kapat" aria-label="Veri Defteri" aria-expanded="false" aria-controls="lab-sidebar-section"><i class="fas fa-book-open"></i> <span>Veri Defteri</span></button>
                     <button id="btn-lab-reset" class="lab-action-pill" title="Deneyi Sıfırla"><i class="fas fa-redo"></i> <span>Sıfırla</span></button>
                     <button id="btn-lab-fullscreen" class="lab-action-pill" title="Tam Ekran" aria-label="Tam Ekran" aria-pressed="false"><i class="fas fa-expand"></i></button>
                 </div>
@@ -1634,6 +1635,11 @@
 
                 <!-- SAĞ/ALT (%35): Kontrol Paneli & Veri Tablosu -->
                 <div class="lab-sidebar-section" id="lab-sidebar-section">
+                    <!-- Tam Ekran Veri Defteri Çekmecesi Üst Çubuğu (Yalnızca Tam Ekranda Görünür) -->
+                    <div class="lab-fs-drawer-header">
+                        <span class="lab-fs-drawer-title"><i class="fas fa-book-open"></i> Veri Defteri &amp; Yönerge</span>
+                        <button id="btn-lab-fs-notebook-close" class="lab-fs-drawer-close" type="button" title="Paneli Kapat" aria-label="Veri Defteri Panelini Kapat"><i class="fas fa-times"></i> <span>Kapat</span></button>
+                    </div>
                     <!-- Masaüstü Panel Sekmeleri (Değişkenler, Veri Defteri, Rehber) -->
                     <div class="lab-panel-tabs" id="lab-panel-tabs">
                         <button class="lab-tab-btn active" data-tab="vars"><i class="fas fa-sliders-h"></i> 🎛️ Değişkenler</button>
@@ -5594,10 +5600,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js" defer></script>
     <script>
-        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.38';
+        window.__FENUPX_CONTENT_V6_VERSION__ = '8.9.39';
     </script>
-    <script type="module" src="exam-engine.js?v=8.9.38"></script>
-    <script type="module" src="lab-engine.js?v=8.9.38"></script>
-    <script type="module" src="script.js?v=8.9.38"></script>
+    <script type="module" src="exam-engine.js?v=8.9.39"></script>
+    <script type="module" src="lab-engine.js?v=8.9.39"></script>
+    <script type="module" src="script.js?v=8.9.39"></script>
 </body>
 </html>
