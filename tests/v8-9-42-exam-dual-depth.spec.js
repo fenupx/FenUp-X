@@ -120,6 +120,31 @@ test.describe('V8.9.44 — Çift Derinlikli Bilgi İstasyonu V5 (Öğrenme Çık
       }
     }
 
+    // FB.7.2.1 Bölüm 3: force-compare.svg & distance-compare.svg objectFit=contain ve doğal en-boy oranı korunmalı
+    await page.evaluate(async () => {
+      const imgs = [...document.querySelectorAll('.comp-gallery-svg img')];
+      await Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(r => { img.onload = r; img.onerror = r; })));
+    });
+    const svgMetrics = await page.locator('.comp-gallery-svg img').evaluateAll(els => els.map(el => {
+      const r = el.getBoundingClientRect();
+      return {
+        src: el.getAttribute('src'),
+        objectFit: getComputedStyle(el).objectFit,
+        width: r.width,
+        height: r.height,
+        naturalWidth: el.naturalWidth,
+        naturalHeight: el.naturalHeight
+      };
+    }));
+    expect(svgMetrics.length).toBe(2);
+    for (const m of svgMetrics) {
+      expect(m.objectFit, `${m.src} objectFit contain olmalı`).toBe('contain');
+      expect(m.width, `${m.src} genişliği > 200px olmalı`).toBeGreaterThan(200);
+      const renderedRatio = m.width / m.height;
+      const naturalRatio = m.naturalWidth / m.naturalHeight;
+      expect(Math.abs(renderedRatio - naturalRatio), `${m.src} en-boy oranı korunmalı`).toBeLessThanOrEqual(0.15);
+    }
+
     // FB.7.2.2: illu-kinetik-faktorler.jpg ve illu-enerji-deneyleri.jpg altındaki cols-2 kutuları (çakışma = 0) + tags şeridi
     await selectDeepOutcome(page, 'FB.7.2.2');
     const cols2Groups = page.locator('.comp-panel-captions.cols-2');

@@ -6400,13 +6400,13 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     object-position: center 18% !important;
 }
 
-.study-print-gallery .study-print-img-wrap {
+.study-print-gallery.study-print-gallery-photo .study-print-img-wrap {
     aspect-ratio: 16 / 10;
     width: 100%;
     overflow: hidden;
 }
 
-.study-print-gallery .study-print-img-wrap img {
+.study-print-gallery.study-print-gallery-photo .study-print-img-wrap img {
     width: 100%;
     height: 100%;
     max-height: none;
@@ -6414,9 +6414,53 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     display: block;
 }
 
-.comp-gallery.comp-gallery-svg .comp-figure .comp-img-frame img {
-    height: 210px;
-    object-fit: contain;
+.comp-gallery.comp-gallery-svg {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 16px;
+}
+
+.comp-gallery.comp-gallery-svg .comp-figure .comp-img-frame {
+    aspect-ratio: auto !important;
+    height: auto !important;
+    width: 100%;
+    padding: 14px 16px;
+    background: #0f172a !important;
+    overflow: visible;
+}
+
+.comp-gallery.comp-gallery-svg .comp-figure .comp-img-frame img,
+.comp-figure-svg .comp-img-frame img {
+    width: 100%;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    display: block;
+}
+
+.study-print-gallery.study-print-gallery-svg {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 12px;
+}
+
+.study-print-gallery.study-print-gallery-svg .study-print-img-wrap {
+    aspect-ratio: auto !important;
+    height: auto !important;
+    width: 100%;
+    padding: 12px 14px;
+    background: #0f172a !important;
+    border-radius: 6px;
+    overflow: visible;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
+.study-print-gallery.study-print-gallery-svg .study-print-img-wrap img,
+.study-print-figure.is-svg .study-print-img-wrap img {
+    width: 100%;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    display: block;
 }
 
 /* Özel Eğitsel Vektörel SVG Diyagramlar + Hafif Mikro-Animasyon */
