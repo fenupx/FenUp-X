@@ -53,18 +53,24 @@ test.describe('V8.9.44 — Çift Derinlikli Bilgi İstasyonu V5 (Öğrenme Çık
 
     await enterStudy(page, 1, '7');
 
-    // 7. Sınıf 1D1Y ilk girişinde 2 kartlı ön seçim ekranı görünmeli ve 0 "kazanım" içermeli
+    // 7. Sınıf 1D1Y ilk girişinde 2 kartlı ön seçim ekranı görünmeli, alttaki kartlar ve üst geçiş/PDF çubuğu gizli olmalı
     await expect(page.locator('#study-mode-chooser')).toBeVisible();
     await expect(page.locator('#btn-chooser-quick')).toBeVisible();
     await expect(page.locator('#btn-chooser-deep')).toBeVisible();
+    await expect(page.locator('#exam-view-study .exam-cards-layout')).toBeHidden();
+    await expect(page.locator('#study-depth-switch')).toBeHidden();
+    await expect(page.locator('#btn-study-pdf-download')).toBeHidden();
     const chooserText = await page.locator('#study-mode-chooser').innerText();
     expect(chooserText.toLowerCase()).not.toContain('kazanım');
     expect(chooserText).toContain('Öğrenme Çıktısı');
+    expect(chooserText).not.toContain('eğitsel illüstrasyon');
 
-    // Kapsamlı Hazırlık kartına tıklayınca rehber açılır ve aktif mod mavi parlayan çerçeve taşır
+    // Kapsamlı Hazırlık kartına tıklayınca rehber, kartlar ve üst geçiş/PDF çubuğu görünür olur
     await page.click('#btn-chooser-deep');
     await expect(page.locator('#study-mode-chooser')).toBeHidden();
+    await expect(page.locator('#exam-view-study .exam-cards-layout')).toBeVisible();
     await expect(page.locator('#study-depth-switch')).toBeVisible();
+    await expect(page.locator('#btn-study-pdf-download')).toBeVisible();
     await expect(page.locator('#btn-study-mode-deep')).toHaveClass(/active/);
     await expect(page.locator('#btn-study-mode-deep')).toHaveAttribute('aria-selected', 'true');
 

@@ -2884,42 +2884,42 @@ function renderStudyModeChooser() {
 
     chooserEl.innerHTML = `
         <div class="study-chooser-header">
-            <span class="study-chooser-scope-pill"><i class="fas fa-layer-group"></i> 7. Sınıf 1. Dönem 1. Yazılı · ${esc(formatScenarioTitle(activeScenario))}</span>
-            <h2 class="study-chooser-title">Bilgi İstasyonu Çalışma Modunu Seç</h2>
-            <p class="study-chooser-sub">İstediğin derinlikte çalışmaya başla; içerideyken üst çubuktan istediğin zaman diğer moda tek tıkla geçebilirsin.</p>
+            <span class="study-chooser-scope-pill"><i class="fas fa-layer-group"></i> 7. Sınıf 1. Dönem 1. Yazılı · ${esc(formatScenarioTitle(activeScenario))} · ${deepOutcomes.length} Öğrenme Çıktısı</span>
+            <h2 class="study-chooser-title">Nasıl çalışmak istersin?</h2>
+            <p class="study-chooser-sub">Çalışma derinliğini seç; içerideyken üst çubuktan istediğin zaman diğer moda geçebilirsin.</p>
         </div>
         <div class="study-chooser-grid">
             <div class="study-chooser-card" data-chooser-card="quick">
                 <div class="study-chooser-card-top">
                     <span class="study-chooser-icon quick"><i class="fas fa-bolt"></i></span>
-                    <span class="study-chooser-pill">${quickCardCount} Kompakt Kart · ~8 dk</span>
+                    <span class="study-chooser-pill">Özet Akış</span>
                 </div>
                 <h3>Hızlı Tekrar</h3>
-                <p>Sınav öncesi hızlı gözden geçirme için özet bilgi kartları, kilit kavramlar ve temel hatırlatıcılar.</p>
+                <p>Sınav öncesi hızlı gözden geçirme</p>
                 <ul class="study-chooser-list">
-                    <li><i class="fas fa-check"></i> Adım adım kompakt konu kartları</li>
-                    <li><i class="fas fa-check"></i> Senaryo ${scNum} öğrenme çıktılarına filtrelenmiş özet</li>
-                    <li><i class="fas fa-check"></i> Tek tıkla A4 PDF / Yazdır desteği</li>
+                    <li><i class="fas fa-check"></i> Kısa özet kartları</li>
+                    <li><i class="fas fa-check"></i> Temel kavramlar ve anahtar bilgiler</li>
+                    <li><i class="fas fa-check"></i> Hızlı tekrar akışı</li>
                 </ul>
                 <button type="button" id="btn-chooser-quick" class="exam-btn-secondary study-chooser-cta" data-depth="quick">
-                    <span>Hızlı Tekrarı Başlat</span> <i class="fas fa-arrow-right"></i>
+                    <span>Hızlı Tekrara Başla</span> <i class="fas fa-arrow-right"></i>
                 </button>
             </div>
 
             <div class="study-chooser-card featured" data-chooser-card="deep">
                 <div class="study-chooser-card-top">
                     <span class="study-chooser-icon deep"><i class="fas fa-book-open"></i></span>
-                    <span class="study-chooser-pill featured-pill">Önerilen · ${deepOutcomes.length} Öğrenme Çıktısı · ~25 dk</span>
+                    <span class="study-chooser-pill featured-pill">Önerilen</span>
                 </div>
                 <h3>Kapsamlı Hazırlık</h3>
-                <p>Konuyu sıfırdan ve derinlemesine öğrenmek için görsel bilgi kartları, yol haritası, 8 eğitsel illüstrasyon, karşılaştırma tabloları ve deney köprüleri.</p>
+                <p>Konuyu sıfırdan ayrıntılı öğrenme</p>
                 <ul class="study-chooser-list">
-                    <li><i class="fas fa-check"></i> Tıklanabilir konu yol haritası ve görsel bilgi kartları</li>
-                    <li><i class="fas fa-check"></i> Panel-hizalı eğitsel illüstrasyonlar &amp; 3 özel SVG diyagram</li>
-                    <li><i class="fas fa-check"></i> Yazılıda Dikkat!, Hızlı Kontrol &amp; Sanal Laboratuvar köprüsü</li>
+                    <li><i class="fas fa-check"></i> Ayrıntılı konu anlatımı ve görseller</li>
+                    <li><i class="fas fa-check"></i> Karşılaştırma tabloları ve örnekler</li>
+                    <li><i class="fas fa-check"></i> Yazılıda dikkat kutuları ve hızlı kontrol</li>
                 </ul>
                 <button type="button" id="btn-chooser-deep" class="exam-btn-primary study-chooser-cta" data-depth="deep">
-                    <span>Kapsamlı Hazırlığı Başlat</span> <i class="fas fa-arrow-right"></i>
+                    <span>Kapsamlı Hazırlığa Başla</span> <i class="fas fa-arrow-right"></i>
                 </button>
             </div>
         </div>

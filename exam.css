@@ -7408,14 +7408,24 @@ body:has(#scene-yazili.study-active) .cookie-banner {
    V8.9.43 — ÖN MOD SEÇİM EKRANI + YOL HARİTASI + BİLGİ KARTLARI + PANEL ALT YAZILARI
    ============================================================================ */
 
-/* 1. Bilgi İstasyonu Ön Mod Seçim Ekranı (#study-mode-chooser) */
+/* 1. Bilgi İstasyonu Ön Mod Seçim Ekranı (#study-mode-chooser) — Tam İzolasyon */
+#scene-yazili.study-active #exam-view-study.chooser-active .exam-cards-layout,
+#exam-view-study.chooser-active .exam-cards-layout,
+#exam-view-study.chooser-active #study-depth-switch,
+#exam-view-study.chooser-active #btn-study-pdf-download,
+#exam-view-study.chooser-active #btn-study-toggle-plan,
+#exam-view-study.chooser-active #btn-study-fullscreen {
+    display: none !important;
+    visibility: hidden !important;
+}
+
 .study-mode-chooser {
     width: 100%;
-    max-width: 1040px;
-    margin: 12px auto 36px;
-    padding: 28px 26px 32px;
+    max-width: 960px;
+    margin: 18px auto 36px;
+    padding: 30px 28px 34px;
     border-radius: 22px;
-    background: rgba(15, 23, 42, 0.86);
+    background: rgba(15, 23, 42, 0.88);
     border: 1px solid rgba(56, 189, 248, 0.28);
     text-align: left;
 }
