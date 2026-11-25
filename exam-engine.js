@@ -2183,7 +2183,12 @@ function renderComprehensiveFigureHtml(assetPath, captionOrVisual, options = {})
     const forPrint = !!options.forPrint;
     const isSvg = assetPath.toLowerCase().endsWith('.svg');
     const isIllustration = !!options.isIllustration;
-    const fullSrc = ASSET_BASE + assetPath + '?v=' + CONTENT_V6_VERSION;
+    const PRINT_SVG_LIGHT_MAP = {
+        'assets/force-compare.svg': 'assets/force-compare-print.svg',
+        'assets/distance-compare.svg': 'assets/distance-compare-print.svg'
+    };
+    const resolvedAsset = (forPrint && PRINT_SVG_LIGHT_MAP[assetPath]) ? PRINT_SVG_LIGHT_MAP[assetPath] : assetPath;
+    const fullSrc = ASSET_BASE + resolvedAsset + '?v=' + CONTENT_V6_VERSION;
     const fallbackSrc = options.fallbackAsset ? (ASSET_BASE + options.fallbackAsset + '?v=' + CONTENT_V6_VERSION) : '';
     const isVisualObj = captionOrVisual && typeof captionOrVisual === 'object';
     const captionText = isVisualObj

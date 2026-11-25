@@ -6403,6 +6403,7 @@ body:has(#scene-yazili.study-active) .cookie-banner {
 .study-print-gallery.study-print-gallery-photo .study-print-img-wrap {
     aspect-ratio: 16 / 10;
     width: 100%;
+    max-height: 145px;
     overflow: hidden;
 }
 
@@ -6438,27 +6439,28 @@ body:has(#scene-yazili.study-active) .cookie-banner {
 }
 
 .study-print-gallery.study-print-gallery-svg {
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px;
 }
 
 .study-print-gallery.study-print-gallery-svg .study-print-img-wrap {
     aspect-ratio: auto !important;
     height: auto !important;
     width: 100%;
-    padding: 12px 14px;
-    background: #0f172a !important;
+    padding: 8px 10px;
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1;
     border-radius: 6px;
     overflow: visible;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
 }
 
 .study-print-gallery.study-print-gallery-svg .study-print-img-wrap img,
 .study-print-figure.is-svg .study-print-img-wrap img {
-    width: 100%;
+    width: auto !important;
+    max-width: 100% !important;
     height: auto !important;
-    max-height: none !important;
+    max-height: 155px !important;
+    margin: 0 auto;
     object-fit: contain !important;
     display: block;
 }
@@ -7157,9 +7159,25 @@ body:has(#scene-yazili.study-active) .cookie-banner {
 
 .study-print-img-wrap img {
     display: block;
-    width: 100%;
-    max-height: 220px;
+    width: auto;
+    max-width: 100%;
+    max-height: 195px;
     object-fit: contain;
+    margin: 0 auto;
+}
+
+.study-print-figure.is-illustration .study-print-img-wrap img {
+    width: auto;
+    max-width: 100%;
+    max-height: 195px;
+    object-fit: contain;
+    margin: 0 auto;
+}
+
+.study-print-figure.is-custom-svg .comp-custom-svg {
+    max-height: 220px;
+    width: auto;
+    max-width: 100%;
     margin: 0 auto;
 }
 
