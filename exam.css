@@ -5937,14 +5937,15 @@ body:has(#scene-yazili.study-active) .cookie-banner {
 .study-depth-switch {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     padding: 4px;
     border-radius: 14px;
-    background: rgba(15, 23, 42, 0.78);
-    border: 1px solid rgba(56, 189, 248, 0.32);
+    background: rgba(15, 23, 42, 0.86);
+    border: 1px solid rgba(148, 163, 184, 0.28);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
+.exam-study-toolbar .study-depth-btn,
 .study-depth-btn {
     display: inline-flex;
     align-items: center;
@@ -5952,27 +5953,34 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     gap: 7px;
     min-height: 44px;
     padding: 8px 16px;
-    border: none;
-    border-radius: 10px;
-    background: transparent;
-    color: #cbd5e1;
+    border: 2px solid transparent !important;
+    border-radius: 11px !important;
+    background: transparent !important;
+    color: #94a3b8 !important;
+    opacity: 0.78;
+    box-shadow: none !important;
     font-size: 0.9rem;
     font-weight: 700;
     cursor: pointer;
     white-space: nowrap;
     touch-action: manipulation;
-    transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+    transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
 }
 
+.exam-study-toolbar .study-depth-btn:hover,
 .study-depth-btn:hover {
-    color: #ffffff;
-    background: rgba(56, 189, 248, 0.14);
+    color: #f8fafc !important;
+    opacity: 1;
+    background: rgba(56, 189, 248, 0.16) !important;
 }
 
+.exam-study-toolbar .study-depth-btn.active,
 .study-depth-btn.active {
-    background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
-    color: #ffffff;
-    box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35);
+    opacity: 1 !important;
+    border: 2px solid #38bdf8 !important;
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.38) 0%, rgba(2, 132, 199, 0.74) 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 14px rgba(56, 189, 248, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.28) !important;
 }
 
 .study-pdf-btn {
@@ -7280,4 +7288,634 @@ body:has(#scene-yazili.study-active) .cookie-banner {
         page-break-inside: avoid !important;
     }
 }
+
+/* ============================================================================
+   V8.9.43 — ÖN MOD SEÇİM EKRANI + YOL HARİTASI + BİLGİ KARTLARI + PANEL ALT YAZILARI
+   ============================================================================ */
+
+/* 1. Bilgi İstasyonu Ön Mod Seçim Ekranı (#study-mode-chooser) */
+.study-mode-chooser {
+    width: 100%;
+    max-width: 1040px;
+    margin: 12px auto 36px;
+    padding: 28px 26px 32px;
+    border-radius: 22px;
+    background: rgba(15, 23, 42, 0.86);
+    border: 1px solid rgba(56, 189, 248, 0.28);
+    text-align: left;
+}
+
+.study-chooser-header {
+    text-align: center;
+    margin-bottom: 26px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.study-chooser-scope-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(14, 165, 233, 0.16);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    color: #bae6fd;
+    font-size: 0.88rem;
+    font-weight: 700;
+}
+
+.study-chooser-title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.study-chooser-sub {
+    margin: 0;
+    max-width: 680px;
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: #cbd5e1;
+}
+
+.study-chooser-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    align-items: stretch;
+}
+
+.study-chooser-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 24px 24px 22px;
+    border-radius: 18px;
+    background: rgba(30, 41, 59, 0.72);
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    transition: border-color 0.2s ease, transform 0.18s ease, box-shadow 0.2s ease;
+}
+
+.study-chooser-card:hover {
+    border-color: rgba(56, 189, 248, 0.6);
+    transform: translateY(-2px);
+}
+
+.study-chooser-card.featured {
+    background: linear-gradient(145deg, rgba(14, 116, 144, 0.3) 0%, rgba(15, 23, 42, 0.94) 100%);
+    border: 2px solid #38bdf8;
+    box-shadow: 0 0 22px rgba(56, 189, 248, 0.24);
+}
+
+.study-chooser-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.study-chooser-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+}
+
+.study-chooser-icon.quick {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.study-chooser-icon.deep {
+    background: rgba(56, 189, 248, 0.22);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.5);
+}
+
+.study-chooser-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    color: #cbd5e1;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.study-chooser-pill.featured-pill {
+    background: rgba(14, 165, 233, 0.24);
+    border-color: rgba(56, 189, 248, 0.55);
+    color: #e0f2fe;
+}
+
+.study-chooser-card h3 {
+    margin: 0;
+    font-size: 1.38rem;
+    font-weight: 800;
+    color: #ffffff;
+}
+
+.study-chooser-card p {
+    margin: 0;
+    font-size: 0.96rem;
+    line-height: 1.58;
+    color: #cbd5e1;
+}
+
+.study-chooser-list {
+    list-style: none;
+    margin: 2px 0 8px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 auto;
+}
+
+.study-chooser-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    font-size: 0.92rem;
+    line-height: 1.45;
+    color: #e2e8f0;
+}
+
+.study-chooser-list li i {
+    color: #38bdf8;
+    margin-top: 4px;
+    flex-shrink: 0;
+}
+
+.study-chooser-cta {
+    width: 100%;
+    min-height: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 0.98rem;
+    font-weight: 800;
+}
+
+/* 2. Tıklanabilir Yol Haritası (.comp-roadmap) */
+.comp-roadmap {
+    padding: 16px 20px;
+    border-radius: 16px;
+    background: rgba(15, 23, 42, 0.78);
+    border: 1px solid rgba(56, 189, 248, 0.32);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.comp-roadmap-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.86rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #7dd3fc;
+}
+
+.comp-roadmap-steps {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.comp-roadmap-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(56, 189, 248, 0.38);
+    background: rgba(30, 41, 59, 0.85);
+    color: #f1f5f9;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.18s ease, background 0.18s ease, transform 0.15s ease;
+}
+
+.comp-roadmap-step:hover {
+    border-color: #38bdf8;
+    background: rgba(14, 165, 233, 0.25);
+    transform: translateY(-1px);
+}
+
+.comp-roadmap-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #0284c7;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.comp-roadmap-arrow {
+    color: #38bdf8;
+    font-weight: 800;
+    font-size: 1rem;
+    user-select: none;
+}
+
+/* 3. 2 Sütunlu Görsel Bilgi Kartları (.comp-info-cards-grid) */
+.comp-info-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.comp-info-card {
+    padding: 16px 18px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.76);
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.comp-info-card-head {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.comp-info-badge {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.18);
+    border: 1px solid rgba(56, 189, 248, 0.42);
+    color: #7dd3fc;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.comp-info-card h4 {
+    margin: 0;
+    font-size: 1.05rem;
+    line-height: 1.35;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.comp-info-card p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.58;
+    color: #cbd5e1;
+}
+
+/* 4. Ferah Tam Genişlik İllüstrasyon + Panel-Hizalı Alt Yazılar */
+.comp-figure {
+    cursor: default;
+}
+
+.comp-img-frame[data-lightbox-src] {
+    cursor: zoom-in;
+}
+
+.comp-figure-illustration .comp-img-frame {
+    width: 100%;
+    aspect-ratio: auto;
+}
+
+.comp-figure-illustration .comp-img-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.comp-visual-caption-bar {
+    padding: 14px 16px 16px !important;
+    background: rgba(15, 23, 42, 0.96) !important;
+    border-top: 1px solid rgba(148, 163, 184, 0.22);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comp-visual-short-title {
+    font-size: 0.94rem;
+    font-weight: 800;
+    color: #f8fafc;
+    letter-spacing: 0.01em;
+}
+
+.comp-panel-captions {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+}
+
+.comp-panel-captions.cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.comp-panel-captions.cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.comp-panel-captions.rows-2 {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.comp-panel-cap {
+    padding: 11px 13px;
+    border-radius: 11px;
+    background: rgba(30, 41, 59, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-left-width: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.comp-panel-cap.tone-positive {
+    border-color: rgba(16, 185, 129, 0.4);
+    border-left-color: #10b981;
+    background: rgba(16, 185, 129, 0.12);
+}
+
+.comp-panel-cap.tone-negative {
+    border-color: rgba(239, 68, 68, 0.42);
+    border-left-color: #ef4444;
+    background: rgba(239, 68, 68, 0.12);
+}
+
+.comp-panel-cap.tone-info {
+    border-color: rgba(56, 189, 248, 0.42);
+    border-left-color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+}
+
+.comp-panel-cap.tone-warn {
+    border-color: rgba(245, 158, 11, 0.45);
+    border-left-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.12);
+}
+
+.comp-panel-cap-title {
+    font-size: 0.9rem;
+    line-height: 1.35;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.comp-panel-cap-detail {
+    font-size: 0.86rem;
+    line-height: 1.45;
+    color: #e2e8f0;
+}
+
+.comp-caption-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.comp-caption-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.14);
+    border: 1px solid rgba(56, 189, 248, 0.38);
+    color: #e0f2fe;
+    font-size: 0.84rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+/* 4 Öğeli Fotoğraf Galerisi Desteği */
+.comp-gallery.cols-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 1600px) {
+    .comp-gallery.cols-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .comp-info-card p,
+    .comp-panel-cap-detail {
+        font-size: 1.02rem;
+    }
+
+    .comp-roadmap-step {
+        min-height: 48px;
+        font-size: 0.98rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .study-mode-chooser {
+        padding: 18px 14px 22px;
+    }
+
+    .study-chooser-title {
+        font-size: 1.38rem;
+    }
+
+    .study-chooser-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .comp-info-cards-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .comp-gallery.cols-4 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .comp-roadmap-step {
+        min-height: 48px;
+    }
+
+    .comp-panel-captions.cols-3,
+    .comp-panel-captions.cols-2 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* V4 Print / PDF Stilleri (Yol Haritası, Bilgi Kartları ve Panel Alt Yazıları) */
+.study-print-roadmap {
+    margin: 0 0 12px;
+    padding: 8px 11px;
+    border: 1px solid #94a3b8;
+    border-radius: 8px;
+    background: #f8fafc;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.study-print-roadmap-label {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #334155;
+    margin-bottom: 5px;
+}
+
+.study-print-roadmap-steps {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: #0f172a;
+}
+
+.study-print-roadmap-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid #94a3b8;
+    background: #ffffff;
+    font-weight: 600;
+}
+
+.study-print-info-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin: 8px 0 10px;
+}
+
+.study-print-info-card {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: #ffffff;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.study-print-info-card .comp-info-badge {
+    background: #e2e8f0;
+    color: #0f172a;
+    border-color: #94a3b8;
+    font-size: 10px;
+    padding: 1px 7px;
+}
+
+.study-print-info-card h4 {
+    margin: 3px 0;
+    font-size: 12.5px;
+    color: #0f172a;
+}
+
+.study-print-info-card p {
+    margin: 0;
+    font-size: 11.5px;
+    line-height: 1.45;
+    color: #1e293b;
+}
+
+.study-print-caption-bar {
+    margin-top: 8px;
+    text-align: left !important;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.study-print-short-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.study-print-panel-captions {
+    display: grid;
+    gap: 7px;
+}
+
+.study-print-panel-captions.cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.study-print-panel-captions.cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.study-print-panel-captions.rows-2 {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.study-print-panel-cap {
+    padding: 6px 8px;
+    border: 1px solid #94a3b8;
+    border-left-width: 3px;
+    border-radius: 6px;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.study-print-panel-cap.tone-positive { border-left-color: #059669; background: #ecfdf5; }
+.study-print-panel-cap.tone-negative { border-left-color: #dc2626; background: #fef2f2; }
+.study-print-panel-cap.tone-info { border-left-color: #0284c7; background: #f0f9ff; }
+.study-print-panel-cap.tone-warn { border-left-color: #d97706; background: #fffbeb; }
+
+.study-print-panel-cap .comp-panel-cap-title {
+    color: #0f172a !important;
+    font-size: 11px;
+}
+
+.study-print-panel-cap .comp-panel-cap-detail {
+    color: #1e293b !important;
+    font-size: 10.5px;
+}
+
+.study-print-caption-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.study-print-caption-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border: 1px solid #94a3b8;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #0f172a;
+    background: #f8fafc;
+}
+
 

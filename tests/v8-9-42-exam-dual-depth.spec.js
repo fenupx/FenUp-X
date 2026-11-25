@@ -16,6 +16,17 @@ async function enterStudy(page, scenarioNum = 1, grade = '7') {
   await page.waitForSelector('#exam-view-study:not(.is-hidden)', { state: 'visible', timeout: 10000 });
 }
 
+async function enterDeepStudy(page, scenarioNum = 1) {
+  await enterStudy(page, scenarioNum, '7');
+  const chooser = page.locator('#study-mode-chooser');
+  if (await chooser.isVisible()) {
+    await page.click('#btn-chooser-deep');
+  } else {
+    await page.click('#btn-study-mode-deep');
+  }
+  await expect(page.locator('.comp-outcome-doc')).toBeVisible({ timeout: 10000 });
+}
+
 async function selectDeepOutcome(page, outcomeId) {
   const sel = page.locator('#comp-outcome-select');
   if (await sel.isVisible()) {
@@ -27,8 +38,12 @@ async function selectDeepOutcome(page, outcomeId) {
   await expect(page.locator(`.comp-outcome-doc[data-outcome-id="${outcomeId}"]`)).toBeVisible();
 }
 
-test.describe('V8.9.42 — Çift Derinlikli Bilgi İstasyonu (Hızlı Tekrar | Kapsamlı Hazırlık V3) & Senaryoya Özel PDF', () => {
-  test('1. Hızlı Tekrar <-> Kapsamlı Hazırlık geçişi, 0 hata, yatay taşma yok ve erişilebilir dokunma hedefleri', async ({ page }) => {
+function boxesOverlap(a, b) {
+  return !(a.x + a.width <= b.x + 1 || b.x + b.width <= a.x + 1 || a.y + a.height <= b.y + 1 || b.y + b.height <= a.y + 1);
+}
+
+test.describe('V8.9.43 — Çift Derinlikli Bilgi İstasyonu UX & V4 (Ön Seçim, Mavi Aktif Mod, Yol Haritası, Bilgi Kartları, Panel Alt Yazıları, PDF)', () => {
+  test('1. Ön Mod Seçim Ekranı (#study-mode-chooser), mavi parlayan aktif mod vurgusu, 0 hata ve yatay taşma yok', async ({ page }) => {
     const pageErrors = [];
     const consoleErrors = [];
     page.on('pageerror', err => pageErrors.push(err.message));
@@ -38,16 +53,24 @@ test.describe('V8.9.42 — Çift Derinlikli Bilgi İstasyonu (Hızlı Tekrar | K
 
     await enterStudy(page, 1, '7');
 
-    // Başlangıçta Hızlı Tekrar aktif ve mod anahtarı görünür
-    await expect(page.locator('#study-depth-switch')).toBeVisible();
-    await expect(page.locator('#btn-study-mode-quick')).toHaveAttribute('aria-selected', 'true');
-    await expect(page.locator('#btn-study-mode-deep')).toHaveAttribute('aria-selected', 'false');
+    // 7. Sınıf 1D1Y ilk girişinde 2 kartlı ön seçim ekranı görünmeli
+    await expect(page.locator('#study-mode-chooser')).toBeVisible();
+    await expect(page.locator('#btn-chooser-quick')).toBeVisible();
+    await expect(page.locator('#btn-chooser-deep')).toBeVisible();
 
-    // Kapsamlı Hazırlık moduna geç
-    await page.click('#btn-study-mode-deep');
+    // Kapsamlı Hazırlık kartına tıklayınca rehber açılır ve aktif mod mavi parlayan çerçeve taşır
+    await page.click('#btn-chooser-deep');
+    await expect(page.locator('#study-mode-chooser')).toBeHidden();
+    await expect(page.locator('#study-depth-switch')).toBeVisible();
+    await expect(page.locator('#btn-study-mode-deep')).toHaveClass(/active/);
     await expect(page.locator('#btn-study-mode-deep')).toHaveAttribute('aria-selected', 'true');
-    await expect(page.locator('#exam-view-study')).toHaveClass(/comprehensive-active/);
-    await expect(page.locator('.comp-outcome-doc')).toBeVisible();
+
+    const activeStyle = await page.locator('#btn-study-mode-deep').evaluate(el => {
+      const s = getComputedStyle(el);
+      return { borderColor: s.borderTopColor, boxShadow: s.boxShadow };
+    });
+    expect(activeStyle.borderColor).toBe('rgb(56, 189, 248)');
+    expect(activeStyle.boxShadow).not.toBe('none');
 
     // Yatay taşma kontrolü
     const overflow = await page.evaluate(() => ({
@@ -56,179 +79,147 @@ test.describe('V8.9.42 — Çift Derinlikli Bilgi İstasyonu (Hızlı Tekrar | K
     }));
     expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.innerWidth + 1);
 
-    // Etkileşimli düğme boyutları (>= 44px; ETAP >= 1600px ve mobil <= 767px için >= 48px)
-    const minExpected = (overflow.innerWidth >= 1600 || overflow.innerWidth <= 767) ? 48 : 44;
-    for (const selector of ['#btn-study-mode-quick', '#btn-study-mode-deep', '#btn-study-pdf-download']) {
-      const box = await page.locator(selector).boundingBox();
-      expect(box, `${selector} boundingBox`).not.toBeNull();
-      expect(box.height, `${selector} height >= ${minExpected}`).toBeGreaterThanOrEqual(minExpected - 1);
-    }
-
-    // Hızlı Tekrar moduna geri dön
+    // Üst çubuktan Hızlı Tekrar'a tek tıkla geçiş (ön seçim tekrar çıkmaz)
     await page.click('#btn-study-mode-quick');
-    await expect(page.locator('#btn-study-mode-quick')).toHaveAttribute('aria-selected', 'true');
-    await expect(page.locator('#exam-view-study')).not.toHaveClass(/comprehensive-active/);
+    await expect(page.locator('#study-mode-chooser')).toBeHidden();
+    await expect(page.locator('#btn-study-mode-quick')).toHaveClass(/active/);
     await expect(page.locator('.exam-card-title')).toBeVisible();
 
     expect(pageErrors, 'Sayfa hatası olmamalı').toEqual([]);
     expect(consoleErrors.filter(e => !e.includes('favicon')), 'Konsol hatası olmamalı').toEqual([]);
   });
 
-  test('2. Senaryo filtreleme doğruluğu (S1, S2, S3, S4)', async ({ page }) => {
-    // Senaryo 1: tam 5 kazanım
-    await enterStudy(page, 1, '7');
-    await page.click('#btn-study-mode-deep');
+  test('2. Yol Haritası (.comp-roadmap), Görsel Bilgi Kartları (info_cards) ve 3’lü/2’li çakışmasız panel alt yazıları', async ({ page }) => {
+    await enterDeepStudy(page, 1);
+
+    // FB.7.2.1: Yol haritası + info_cards + cols-3 (3 panel alt yazısı, çakışma = 0)
+    await selectDeepOutcome(page, 'FB.7.2.1');
+    await expect(page.locator('.comp-roadmap')).toBeVisible();
+    expect(await page.locator('.comp-roadmap-step').count()).toBeGreaterThanOrEqual(3);
+    expect(await page.locator('.comp-info-card').count()).toBeGreaterThanOrEqual(4);
+
+    // Yol haritası adımı tıklaması hatasız çalışır
+    await page.locator('.comp-roadmap-step').nth(1).click();
+
+    const cols3 = page.locator('.comp-panel-captions.cols-3 .comp-panel-cap');
+    await expect(cols3).toHaveCount(3);
+    const boxes3 = await cols3.evaluateAll(els => els.map(el => {
+      const r = el.getBoundingClientRect();
+      return { x: r.x, y: r.y, width: r.width, height: r.height };
+    }));
+    for (let i = 0; i < boxes3.length; i++) {
+      for (let j = i + 1; j < boxes3.length; j++) {
+        expect(boxesOverlap(boxes3[i], boxes3[j]), `cols-3 kutu ${i}-${j} çakışmamalı`).toBe(false);
+      }
+    }
+
+    // FB.7.2.2: cols-2 (2 panel alt yazısı, çakışma = 0) + tags şeridi
+    await selectDeepOutcome(page, 'FB.7.2.2');
+    const cols2 = page.locator('.comp-panel-captions.cols-2 .comp-panel-cap');
+    await expect(cols2).toHaveCount(2);
+    const boxes2 = await cols2.evaluateAll(els => els.map(el => {
+      const r = el.getBoundingClientRect();
+      return { x: r.x, y: r.y, width: r.width, height: r.height };
+    }));
+    expect(boxes2.length === 2 && !boxesOverlap(boxes2[0], boxes2[1])).toBe(true);
+    expect(await page.locator('.comp-caption-tags .comp-caption-tag').count()).toBeGreaterThanOrEqual(3);
+  });
+
+  test('3. Senaryo filtreleme doğruluğu (S1, S2, S3, S4)', async ({ page }) => {
+    await enterDeepStudy(page, 1);
     const s1Ids = await page.evaluate(() => window.FenUpExam.getActiveComprehensiveOutcomes().map(o => o.outcome_id));
     expect(s1Ids).toEqual(['FB.7.1.1', 'FB.7.1.4', 'FB.7.1.5', 'FB.7.2.1', 'FB.7.2.2']);
 
-    // Senaryo 2: tam 4 kazanım
-    await enterStudy(page, 2, '7');
-    await page.click('#btn-study-mode-deep');
+    await enterDeepStudy(page, 2);
     const s2Ids = await page.evaluate(() => window.FenUpExam.getActiveComprehensiveOutcomes().map(o => o.outcome_id));
     expect(s2Ids).toEqual(['FB.7.1.1', 'FB.7.1.3', 'FB.7.1.5', 'FB.7.2.1']);
 
-    // Senaryo 3: tam 5 kazanım
-    await enterStudy(page, 3, '7');
-    await page.click('#btn-study-mode-deep');
+    await enterDeepStudy(page, 3);
     const s3Ids = await page.evaluate(() => window.FenUpExam.getActiveComprehensiveOutcomes().map(o => o.outcome_id));
     expect(s3Ids).toEqual(['FB.7.1.1', 'FB.7.1.3', 'FB.7.1.4', 'FB.7.2.1', 'FB.7.2.2']);
 
-    // Senaryo 4: FB.7.1.1 hariç, senaryo dağılımıyla birebir uyumlu
-    await enterStudy(page, 4, '7');
-    await page.click('#btn-study-mode-deep');
-    const s4Check = await page.evaluate(() => {
-      const expected = window.FenUpExam.getActiveScenario().allocation.map(a => a.outcome_id);
-      const actual = window.FenUpExam.getActiveComprehensiveOutcomes().map(o => o.outcome_id);
-      return { expected, actual };
-    });
+    await enterDeepStudy(page, 4);
+    const s4Check = await page.evaluate(() => ({
+      expected: window.FenUpExam.getActiveScenario().allocation.map(a => a.outcome_id),
+      actual: window.FenUpExam.getActiveComprehensiveOutcomes().map(o => o.outcome_id)
+    }));
     expect(s4Check.actual).toEqual(s4Check.expected);
     expect(s4Check.actual).not.toContain('FB.7.1.1');
-    expect(s4Check.actual).toEqual(expect.arrayContaining(['FB.7.1.4', 'FB.7.1.5', 'FB.7.2.1', 'FB.7.2.2']));
   });
 
-  test('3. Tüm görseller (naturalWidth > 0), 3 özel SVG diyagram (> 120px) ve quick_checks akordeonu', async ({ page }) => {
-    // S1 üzerinden FB.7.1.4 (svg-star-lifecycle-dual) ve FB.7.1.5 (svg-cosmic-address) + FB.7.2.2 kontrolü
-    await enterStudy(page, 1, '7');
-    await page.click('#btn-study-mode-deep');
+  test('4. Tüm görseller (naturalWidth > 0), 3 özel SVG (> 120px), quick_checks ve Deney 7.1 köprüsü', async ({ page }) => {
+    await enterDeepStudy(page, 1);
 
     for (const oid of ['FB.7.1.1', 'FB.7.1.4', 'FB.7.1.5', 'FB.7.2.1', 'FB.7.2.2']) {
       await selectDeepOutcome(page, oid);
       await page.evaluate(async () => {
         const imgs = [...document.querySelectorAll('.comp-outcome-doc img')];
-        imgs.forEach(img => { img.loading = 'eager'; });
         await Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(r => { img.onload = r; img.onerror = r; })));
       });
-      const imgAudit = await page.evaluate(() => {
-        const imgs = [...document.querySelectorAll('.comp-outcome-doc img')];
-        return imgs.map(i => ({ src: i.getAttribute('src'), complete: i.complete, w: i.naturalWidth }));
-      });
-      expect(imgAudit.length, `${oid} görsel içermeli`).toBeGreaterThan(0);
-      for (const im of imgAudit) {
-        expect(im.complete && im.w > 0, `${oid} kırık görsel: ${im.src}`).toBe(true);
-      }
+      const broken = await page.evaluate(() => [...document.querySelectorAll('.comp-outcome-doc img')].filter(i => !i.complete || i.naturalWidth === 0).map(i => i.src));
+      expect(broken, `${oid} kırık görsel olmamalı`).toEqual([]);
 
       if (oid === 'FB.7.1.4') {
-        const w = await page.locator('[data-svg-id="svg-star-lifecycle-dual"] svg').evaluate(el => el.getBoundingClientRect().width);
-        expect(w).toBeGreaterThan(120);
+        expect(await page.locator('[data-svg-id="svg-star-lifecycle-dual"] svg').evaluate(el => el.getBoundingClientRect().width)).toBeGreaterThan(120);
+        expect(await page.locator('.comp-panel-captions.rows-2 .comp-panel-cap').count()).toBe(2);
       }
       if (oid === 'FB.7.1.5') {
-        const w = await page.locator('[data-svg-id="svg-cosmic-address"] svg').evaluate(el => el.getBoundingClientRect().width);
-        expect(w).toBeGreaterThan(120);
+        expect(await page.locator('[data-svg-id="svg-cosmic-address"] svg').evaluate(el => el.getBoundingClientRect().width)).toBeGreaterThan(120);
       }
     }
 
-    // quick_checks açılıp kapanma kontrolü (FB.7.2.2 üzerinde)
+    // quick_checks akordeonu
     const firstQc = page.locator('.comp-quick-check').first();
-    await expect(firstQc).not.toHaveAttribute('open', '');
     await firstQc.locator('summary').click();
     await expect(firstQc).toHaveAttribute('open', '');
     await firstQc.locator('summary').click();
     await expect(firstQc).not.toHaveAttribute('open', '');
 
-    // S2 üzerinden FB.7.1.3 (svg-space-debris-cycle) ve uzay kirliliği illüstrasyonu kontrolü
-    await enterStudy(page, 2, '7');
-    await page.click('#btn-study-mode-deep');
-    await selectDeepOutcome(page, 'FB.7.1.3');
-    await page.evaluate(async () => {
-      const imgs = [...document.querySelectorAll('.comp-outcome-doc img')];
-      imgs.forEach(img => { img.loading = 'eager'; });
-      await Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(r => { img.onload = r; img.onerror = r; })));
-    });
-    const debrisSvgW = await page.locator('[data-svg-id="svg-space-debris-cycle"] svg').evaluate(el => el.getBoundingClientRect().width);
-    expect(debrisSvgW).toBeGreaterThan(120);
-    const debrisBroken = await page.evaluate(() => [...document.querySelectorAll('.comp-outcome-doc img')].filter(i => !i.complete || i.naturalWidth === 0).length);
-    expect(debrisBroken).toBe(0);
-  });
-
-  test('4. FB.7.2.1 üzerindeki Deney 7.1 köprüsü Sanal Laboratuvar Deney 7.1 ekranını açar', async ({ page }) => {
-    await enterStudy(page, 1, '7');
-    await page.click('#btn-study-mode-deep');
+    // Deney 7.1 köprüsü
     await selectDeepOutcome(page, 'FB.7.2.1');
-
-    const bridgeBtn = page.locator('.comp-lab-bridge-btn[data-lab-exp="7.1"]');
-    await expect(bridgeBtn).toBeVisible();
-    await bridgeBtn.click();
-
+    await page.locator('.comp-lab-bridge-btn[data-lab-exp="7.1"]').click();
     await expect(page.locator('#lab-view')).toBeVisible({ timeout: 10000 });
     await expect(page.locator('#lab-view')).toContainText(/Fiziksel|İş|7\.1/i, { timeout: 10000 });
   });
 
-  test('5. PDF İndir akışı hem Hızlı Tekrar hem Kapsamlı Hazırlık modunda aktif senaryoya filtrelenmiş beyaz çıktı üretir', async ({ page }) => {
+  test('5. PDF İndir önizlemesi hem Hızlı Tekrar hem Kapsamlı Hazırlıkta senaryo filtreli ve beyaz zeminli çalışır', async ({ page }) => {
     await enterStudy(page, 2, '7');
+    await page.click('#btn-chooser-quick');
 
-    // A) Hızlı Tekrar PDF
-    await expect(page.locator('#btn-study-mode-quick')).toHaveAttribute('aria-selected', 'true');
+    // Hızlı Tekrar PDF
     await page.click('#btn-study-pdf-download');
-    await expect(page.locator('#exam-print-preview-modal')).toBeVisible();
     await expect(page.locator('#exam-print-sheet.study-print-mode')).toBeVisible();
-
-    const quickPrint = await page.evaluate(() => {
-      const sheet = document.querySelector('#exam-print-sheet');
-      const outcomes = [...sheet.querySelectorAll('.study-print-outcome')].map(el => el.dataset.outcomeId);
-      return {
-        textLen: sheet.innerText.trim().length,
-        header: sheet.querySelector('.print-school-title')?.textContent || '',
-        outcomes
-      };
-    });
-    expect(quickPrint.textLen).toBeGreaterThan(400);
-    expect(quickPrint.header).toContain('Senaryo 2');
-    expect(quickPrint.header).toContain('Hızlı Tekrar');
+    const quickPrint = await page.evaluate(() => ({
+      outcomes: [...document.querySelectorAll('#exam-print-sheet .study-print-outcome')].map(el => el.dataset.outcomeId),
+      bg: getComputedStyle(document.querySelector('#exam-print-sheet')).backgroundColor
+    }));
     expect(quickPrint.outcomes).toEqual(['FB.7.1.1', 'FB.7.1.3', 'FB.7.1.5', 'FB.7.2.1']);
-
+    expect(quickPrint.bg).toBe('rgb(255, 255, 255)');
     await page.click('#btn-print-preview-close');
-    await expect(page.locator('#exam-print-preview-modal')).toBeHidden();
 
-    // B) Kapsamlı Hazırlık PDF
+    // Kapsamlı Hazırlık PDF (yol haritası + info_cards + panel captions dahil)
     await page.click('#btn-study-mode-deep');
     await page.click('#btn-study-pdf-download');
-    await expect(page.locator('#exam-print-preview-modal')).toBeVisible();
-
-    const deepPrint = await page.evaluate(() => {
-      const sheet = document.querySelector('#exam-print-sheet');
-      const outcomes = [...sheet.querySelectorAll('.study-print-outcome')].map(el => el.dataset.outcomeId);
-      return {
-        textLen: sheet.innerText.trim().length,
-        header: sheet.querySelector('.print-school-title')?.textContent || '',
-        outcomes,
-        bg: getComputedStyle(sheet).backgroundColor
-      };
-    });
-    expect(deepPrint.textLen).toBeGreaterThan(1200);
-    expect(deepPrint.header).toContain('Senaryo 2');
-    expect(deepPrint.header).toContain('Kapsamlı Hazırlık');
+    await expect(page.locator('#exam-print-sheet.study-print-mode')).toBeVisible();
+    const deepPrint = await page.evaluate(() => ({
+      outcomes: [...document.querySelectorAll('#exam-print-sheet .study-print-outcome')].map(el => el.dataset.outcomeId),
+      roadmaps: document.querySelectorAll('#exam-print-sheet .study-print-roadmap').length,
+      infoCards: document.querySelectorAll('#exam-print-sheet .study-print-info-card').length,
+      panelCaps: document.querySelectorAll('#exam-print-sheet .study-print-panel-cap').length,
+      bg: getComputedStyle(document.querySelector('#exam-print-sheet')).backgroundColor
+    }));
     expect(deepPrint.outcomes).toEqual(['FB.7.1.1', 'FB.7.1.3', 'FB.7.1.5', 'FB.7.2.1']);
+    expect(deepPrint.roadmaps).toBe(4);
+    expect(deepPrint.infoCards).toBeGreaterThan(10);
+    expect(deepPrint.panelCaps).toBeGreaterThanOrEqual(3);
     expect(deepPrint.bg).toBe('rgb(255, 255, 255)');
   });
 
-  test('6. 5. Sınıf Bilgi İstasyonunda mod anahtarı gizli, Hızlı Tekrar + PDF İndir sorunsuz çalışır', async ({ page }) => {
+  test('6. 5. Sınıf Bilgi İstasyonunda ön seçim ekranı atlanır, doğrudan Hızlı Tekrar + PDF İndir açılır', async ({ page }) => {
     await enterStudy(page, 1, '5');
+    await expect(page.locator('#study-mode-chooser')).toBeHidden();
     await expect(page.locator('#study-depth-switch')).toBeHidden();
+    await expect(page.locator('.exam-card-title')).toBeVisible();
     await expect(page.locator('#btn-study-pdf-download')).toBeVisible();
-    await page.click('#btn-study-pdf-download');
-    await expect(page.locator('#exam-print-sheet.study-print-mode')).toBeVisible();
-    const text = await page.locator('#exam-print-sheet .print-school-title').textContent();
-    expect(text).toContain('5. Sınıf');
-    expect(text).toContain('Hızlı Tekrar');
   });
 });

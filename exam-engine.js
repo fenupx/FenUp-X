@@ -169,6 +169,7 @@ function createDefaultState() {
         studyCardIdx: 0,
         studyMode: 'free', // 'free' | 'review'
         studyDepth: 'quick', // 'quick' (Hızlı Tekrar) | 'deep' (Kapsamlı Hazırlık)
+        studyModeChosen: false,
         deepOutcomeId: null,
         reviewCardIds: [],
         returnToSummary: false,
@@ -968,7 +969,10 @@ async function loadData(revision = getActiveContentRevision(), showError = true,
                     } catch (_) {}
 
                     try {
-                        const compRes = await fetch(base + 'kapsamli_hazirlik_7_1d1y_v3.json?v=' + CONTENT_V6_VERSION);
+                        let compRes = await fetch(base + 'kapsamli_hazirlik_7_1d1y_v4.json?v=' + CONTENT_V6_VERSION);
+                        if (!compRes.ok) {
+                            compRes = await fetch(base + 'kapsamli_hazirlik_7_1d1y_v3.json?v=' + CONTENT_V6_VERSION);
+                        }
                         if (compRes.ok) {
                             data.comprehensiveV3 = await compRes.json();
                         }
@@ -1523,6 +1527,7 @@ function renderChoice() {
             state.returnToSummary = false;
             state.activeStudyRevision = targetRev;
             state.studySessionIsFresh = true;
+            state.studyModeChosen = false;
             state.studyCardIdx = 0;
             goToStep('study');
         };
@@ -1817,10 +1822,11 @@ export function getActiveComprehensiveOutcomes() {
 
 export function setStudyDepth(depth) {
     const nextDepth = (depth === 'deep' && hasComprehensiveStudy()) ? 'deep' : 'quick';
+    state.studyModeChosen = true;
     if (state.studyDepth !== nextDepth) {
         state.studyDepth = nextDepth;
-        saveState();
     }
+    saveState();
     renderStudy(state.studyCardIdx || 0);
 }
 
@@ -2057,29 +2063,79 @@ function renderComprehensiveSvgDiagram(svgId, forPrint = false) {
     return '';
 }
 
-function renderComprehensiveFigureHtml(assetPath, caption, options = {}) {
+function renderComprehensivePanelCaptionsHtml(visual, forPrint = false) {
+    if (!visual) return '';
+    const shortTitle = visual.short_title || '';
+    const layout = visual.panel_layout || '';
+    const panels = Array.isArray(visual.panel_captions) ? visual.panel_captions : [];
+    const tags = Array.isArray(visual.caption_tags) ? visual.caption_tags : [];
+
+    if (!shortTitle && panels.length === 0 && tags.length === 0) {
+        return visual.caption ? `<figcaption>${esc(visual.caption)}</figcaption>` : '';
+    }
+
+    const wrapCls = forPrint ? 'study-print-caption-bar' : 'comp-visual-caption-bar';
+    const titleCls = forPrint ? 'study-print-short-title' : 'comp-visual-short-title';
+    const gridCls = forPrint
+        ? `study-print-panel-captions ${layout}`
+        : `comp-panel-captions ${layout}`;
+    const cardCls = forPrint ? 'study-print-panel-cap' : 'comp-panel-cap';
+    const tagsCls = forPrint ? 'study-print-caption-tags' : 'comp-caption-tags';
+    const tagCls = forPrint ? 'study-print-caption-tag' : 'comp-caption-tag';
+
+    return `
+        <figcaption class="${wrapCls}">
+            ${shortTitle ? `<div class="${titleCls}">${esc(shortTitle)}</div>` : ''}
+            ${panels.length > 0 ? `
+                <div class="${gridCls}">
+                    ${panels.map(p => `
+                        <div class="${cardCls} tone-${esc(p.tone || 'info')}">
+                            <strong class="comp-panel-cap-title">${esc(p.title || '')}</strong>
+                            <span class="comp-panel-cap-detail">${esc(p.detail || '')}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : ''}
+            ${tags.length > 0 ? `
+                <div class="${tagsCls}">
+                    ${tags.map(t => `<span class="${tagCls}">${esc(t)}</span>`).join('')}
+                </div>
+            ` : ''}
+        </figcaption>
+    `;
+}
+
+function renderComprehensiveFigureHtml(assetPath, captionOrVisual, options = {}) {
     if (!assetPath) return '';
     const forPrint = !!options.forPrint;
     const isSvg = assetPath.toLowerCase().endsWith('.svg');
     const isIllustration = !!options.isIllustration;
     const fullSrc = ASSET_BASE + assetPath + '?v=' + CONTENT_V6_VERSION;
     const fallbackSrc = options.fallbackAsset ? (ASSET_BASE + options.fallbackAsset + '?v=' + CONTENT_V6_VERSION) : '';
+    const isVisualObj = captionOrVisual && typeof captionOrVisual === 'object';
+    const captionText = isVisualObj
+        ? (captionOrVisual.short_title || captionOrVisual.caption || '')
+        : (captionOrVisual || '');
     const figCls = forPrint
         ? `study-print-figure${isSvg ? ' is-svg' : ''}${isIllustration ? ' is-illustration' : ''}`
         : `comp-figure${isSvg ? ' comp-figure-svg' : ''}${isIllustration ? ' comp-figure-illustration' : ''}`;
     const lbAttrs = !forPrint
-        ? ` data-lightbox-src="${esc(fullSrc)}" data-lightbox-alt="${esc(caption || '')}" data-lightbox-caption="${esc(caption || '')}" title="Tam ekran büyütmek için tıklayın"`
+        ? ` data-lightbox-src="${esc(fullSrc)}" data-lightbox-alt="${esc(captionText)}" data-lightbox-caption="${esc(captionText)}" title="Tam ekran büyütmek için tıklayın"`
         : '';
     const fbAttrs = fallbackSrc
         ? ` data-fallback-src="${esc(fallbackSrc)}" onerror="if(this.dataset.fallbackSrc&&!this.dataset.fbUsed){this.dataset.fbUsed='1';this.src=this.dataset.fallbackSrc;}"`
         : '';
+    const captionHtml = isVisualObj
+        ? renderComprehensivePanelCaptionsHtml(captionOrVisual, forPrint)
+        : (captionText ? `<figcaption>${esc(captionText)}</figcaption>` : '');
+
     return `
-        <figure class="${figCls}"${lbAttrs}>
-            <div class="${forPrint ? 'study-print-img-wrap' : 'comp-img-frame'}">
-                <img src="${esc(fullSrc)}" alt="${esc(caption || 'Eğitsel görsel')}" loading="eager"${fbAttrs}>
+        <figure class="${figCls}">
+            <div class="${forPrint ? 'study-print-img-wrap' : 'comp-img-frame'}"${lbAttrs}>
+                <img src="${esc(fullSrc)}" alt="${esc(captionText || 'Eğitsel görsel')}" loading="eager"${fbAttrs}>
                 ${!forPrint ? '<span class="comp-zoom-pill"><i class="fas fa-search-plus"></i> Büyüt</span>' : ''}
             </div>
-            ${caption ? `<figcaption>${esc(caption)}</figcaption>` : ''}
+            ${captionHtml}
         </figure>
     `;
 }
@@ -2090,21 +2146,25 @@ function renderComprehensiveVisualBlock(visual, options = {}) {
     const parts = [];
     const vt = visual.visual_type;
 
-    if (vt === 'illustration') {
-        parts.push(renderComprehensiveFigureHtml(visual.asset, visual.caption, {
+    if (vt === 'illustration' || vt === 'illustration_plus_svg') {
+        parts.push(renderComprehensiveFigureHtml(visual.asset, visual, {
             forPrint,
             isIllustration: true,
             fallbackAsset: visual.fallback_asset || ''
         }));
-        if (visual.secondary_svg_id) {
-            parts.push(renderComprehensiveSvgDiagram(visual.secondary_svg_id, forPrint));
+        const svgId = visual.svg_diagram_id || visual.secondary_svg_id;
+        if (svgId) {
+            parts.push(renderComprehensiveSvgDiagram(svgId, forPrint));
         }
-    } else if (vt === 'photo') {
-        parts.push(renderComprehensiveFigureHtml(visual.asset, visual.caption, {
+    } else if (vt === 'photo' || vt === 'photo_plus_svg') {
+        parts.push(renderComprehensiveFigureHtml(visual.asset, visual.caption || visual, {
             forPrint,
             isIllustration: false,
             fallbackAsset: visual.fallback_asset || ''
         }));
+        if (visual.svg_diagram_id) {
+            parts.push(renderComprehensiveSvgDiagram(visual.svg_diagram_id, forPrint));
+        }
     } else if (vt === 'svg_diagram') {
         if (visual.svg_diagram_id) {
             parts.push(`
@@ -2123,9 +2183,10 @@ function renderComprehensiveVisualBlock(visual, options = {}) {
     } else if (vt === 'photo_gallery' || vt === 'svg_gallery') {
         const items = Array.isArray(visual.items) ? visual.items : [];
         if (items.length > 0) {
+            const colCount = items.length >= 4 ? 4 : Math.min(items.length, 3);
             const galleryCls = forPrint
                 ? `study-print-gallery cols-${Math.min(items.length, 3)}`
-                : `comp-gallery comp-gallery-${vt === 'svg_gallery' ? 'svg' : 'photo'} cols-${Math.min(items.length, 3)}`;
+                : `comp-gallery comp-gallery-${vt === 'svg_gallery' ? 'svg' : 'photo'} cols-${colCount}`;
             parts.push(`
                 <div class="${galleryCls}">
                     ${items.map(it => renderComprehensiveFigureHtml(it.asset, it.caption, {
@@ -2144,12 +2205,18 @@ function renderComprehensiveVisualBlock(visual, options = {}) {
 function renderComprehensiveOutcomeHtml(outcome, options = {}) {
     if (!outcome) return '';
     const forPrint = !!options.forPrint;
+    const roadmap = Array.isArray(outcome.roadmap) ? outcome.roadmap : [];
     const sections = Array.isArray(outcome.sections) ? outcome.sections : [];
     const tables = Array.isArray(outcome.comparison_tables) ? outcome.comparison_tables : [];
     const examples = Array.isArray(outcome.daily_life_examples) ? outcome.daily_life_examples : [];
     const watchouts = Array.isArray(outcome.exam_watchouts) ? outcome.exam_watchouts : [];
     const quickChecks = Array.isArray(outcome.quick_checks) ? outcome.quick_checks : [];
     const labBridge = outcome.lab_bridge || null;
+
+    // Yol haritasında bölüm ID'siyle eşleşmeyen son adımı (ör. fb721-deney, fb722-deney) lab köprüsüne bağla
+    const sectionIds = new Set(sections.map(s => s.id).filter(Boolean));
+    const unmatchedRoadmapIds = roadmap.map(r => r.id).filter(id => id && !sectionIds.has(id));
+    const labRoadmapId = unmatchedRoadmapIds[0] || '';
 
     return `
         <div class="${forPrint ? 'study-print-outcome' : 'comp-outcome-doc'}" data-outcome-id="${esc(outcome.outcome_id)}">
@@ -2171,22 +2238,55 @@ function renderComprehensiveOutcomeHtml(outcome, options = {}) {
                 ` : ''}
             </header>
 
-            <!-- 2. Ayrıntılı Konu Anlatımı + Hibrit Görseller -->
+            <!-- 1b. Tıklanabilir Yol Haritası (V4) -->
+            ${roadmap.length > 0 ? `
+                <nav class="${forPrint ? 'study-print-roadmap' : 'comp-roadmap'}" aria-label="Konu Yol Haritası">
+                    <div class="${forPrint ? 'study-print-roadmap-label' : 'comp-roadmap-title'}"><i class="fas fa-route"></i> Konu Yol Haritası</div>
+                    <div class="${forPrint ? 'study-print-roadmap-steps' : 'comp-roadmap-steps'}">
+                        ${roadmap.map((r, idx) => `
+                            ${forPrint
+                                ? `<span class="study-print-roadmap-step"><b>${esc(r.step || (idx + 1))}</b> ${esc(r.label)}</span>`
+                                : `<button type="button" class="comp-roadmap-step" data-roadmap-target="${esc(r.id || '')}"><span class="comp-roadmap-num">${esc(r.step || (idx + 1))}</span><span class="comp-roadmap-text">${esc(r.label)}</span></button>`}
+                            ${idx < roadmap.length - 1 ? '<span class="comp-roadmap-arrow" aria-hidden="true">→</span>' : ''}
+                        `).join('')}
+                    </div>
+                </nav>
+            ` : ''}
+
+            <!-- 2. Görsel Bilgi Kartları (info_cards) + Hibrit Görseller -->
             <div class="${forPrint ? 'study-print-sections' : 'comp-sections-stack'}">
-                ${sections.map(sec => `
+                ${sections.map(sec => {
+                    const infoCards = Array.isArray(sec.info_cards) ? sec.info_cards : [];
+                    const paragraphs = Array.isArray(sec.paragraphs) ? sec.paragraphs : [];
+                    return `
                     <section class="${forPrint ? 'study-print-section' : 'comp-section-block'}" id="${esc(sec.id || '')}">
                         <h3 class="${forPrint ? 'study-print-sec-heading' : 'comp-section-heading'}">${esc(sec.heading)}</h3>
                         ${sec.lead ? `<p class="${forPrint ? 'study-print-sec-lead' : 'comp-section-lead'}">${esc(sec.lead)}</p>` : ''}
-                        <div class="${forPrint ? 'study-print-sec-body' : 'comp-section-paragraphs'}">
-                            ${(sec.paragraphs || []).map(p => `<p>${esc(p)}</p>`).join('')}
-                        </div>
+                        ${infoCards.length > 0 ? `
+                            <div class="${forPrint ? 'study-print-info-cards' : 'comp-info-cards-grid'}">
+                                ${infoCards.map(ic => `
+                                    <div class="${forPrint ? 'study-print-info-card' : 'comp-info-card'}">
+                                        <div class="comp-info-card-head">
+                                            ${ic.badge ? `<span class="comp-info-badge">${esc(ic.badge)}</span>` : ''}
+                                            <h4>${esc(ic.title || '')}</h4>
+                                        </div>
+                                        <p>${esc(ic.text || '')}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        ` : (paragraphs.length > 0 ? `
+                            <div class="${forPrint ? 'study-print-sec-body' : 'comp-section-paragraphs'}">
+                                ${paragraphs.map(p => `<p>${esc(p)}</p>`).join('')}
+                            </div>
+                        ` : '')}
                         <div class="${forPrint ? 'study-print-visuals' : 'comp-section-visuals'}">
                             ${sec.featured_illustration ? renderComprehensiveVisualBlock(sec.featured_illustration, { forPrint }) : ''}
                             ${sec.visual ? renderComprehensiveVisualBlock(sec.visual, { forPrint }) : ''}
                             ${sec.secondary_illustration ? renderComprehensiveVisualBlock(sec.secondary_illustration, { forPrint }) : ''}
                         </div>
                     </section>
-                `).join('')}
+                `;
+                }).join('')}
             </div>
 
             <!-- 3. Karşılaştırma Tabloları -->
@@ -2270,7 +2370,7 @@ function renderComprehensiveOutcomeHtml(outcome, options = {}) {
             ` : ''}
 
             ${labBridge && !forPrint ? `
-                <section class="comp-lab-bridge" data-lab-exp="${esc(labBridge.exp_id)}">
+                <section class="comp-lab-bridge" ${labRoadmapId ? `id="${esc(labRoadmapId)}"` : ''} data-lab-exp="${esc(labBridge.exp_id)}">
                     <div class="comp-lab-bridge-info">
                         <span class="comp-lab-bridge-tag"><i class="fas fa-flask"></i> Sanal Laboratuvar Köprüsü</span>
                         <h4>${esc(labBridge.title)}</h4>
@@ -2482,6 +2582,18 @@ function renderComprehensiveStudy() {
             };
         }
 
+        // Yol haritası adımlarına tıklanınca ilgili alt bölüme veya deney köprüsüne yumuşak kaydır
+        cardPanel.querySelectorAll('.comp-roadmap-step[data-roadmap-target]').forEach(stepBtn => {
+            stepBtn.addEventListener('click', () => {
+                const targetId = stepBtn.dataset.roadmapTarget;
+                if (!targetId) return;
+                const targetEl = document.getElementById(targetId);
+                if (targetEl && typeof targetEl.scrollIntoView === 'function') {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
         // Sanal Laboratuvar Köprüsü tıklaması: tam ekrandan çıkıp doğrudan ilgili deneye geç
         cardPanel.querySelectorAll('.comp-lab-bridge-btn').forEach(link => {
             link.addEventListener('click', (e) => {
@@ -2646,14 +2758,143 @@ export function openStudyPrintPreview(triggerEl = null) {
     }, 50);
 }
 
+function renderStudyModeChooser() {
+    const chooserEl = $('study-mode-chooser');
+    const studyView = $('exam-view-study');
+    const sceneEl = $('scene-yazili');
+    const cardsLayout = studyView?.querySelector('.exam-cards-layout');
+    if (!chooserEl) return false;
+
+    const activeScenario = getActiveScenario();
+    const scNum = getActiveScenarioNumber();
+    const deepOutcomes = getActiveComprehensiveOutcomes();
+    const quickCardCount = (CARDS || []).length;
+
+    if (studyView) studyView.classList.add('chooser-active');
+    if (studyView) studyView.classList.remove('comprehensive-active');
+    if (sceneEl) sceneEl.classList.add('comprehensive-study-mode');
+    if (cardsLayout) cardsLayout.style.display = 'none';
+
+    const switchEl = $('study-depth-switch');
+    if (switchEl) switchEl.style.display = 'none';
+    const btnTogglePlan = $('btn-study-toggle-plan');
+    if (btnTogglePlan) btnTogglePlan.style.display = 'none';
+    const btnPdf = $('btn-study-pdf-download');
+    if (btnPdf) btnPdf.style.display = 'none';
+
+    const btnBackChoice = $('btn-study-back-choice');
+    if (btnBackChoice) {
+        btnBackChoice.innerHTML = '<i class="fas fa-arrow-left"></i> <span>Çalışma Seçimi</span>';
+        btnBackChoice.onclick = () => {
+            state.studyMode = 'free';
+            state.returnToSummary = false;
+            saveState();
+            backStep('choice');
+        };
+    }
+    const btnJumpPractice = $('btn-study-jump-practice');
+    if (btnJumpPractice) {
+        btnJumpPractice.onclick = () => {
+            setupPracticeNewMode = true;
+            goToStep('practice');
+        };
+    }
+
+    chooserEl.innerHTML = `
+        <div class="study-chooser-header">
+            <span class="study-chooser-scope-pill"><i class="fas fa-layer-group"></i> 7. Sınıf 1. Dönem 1. Yazılı · ${esc(formatScenarioTitle(activeScenario))}</span>
+            <h2 class="study-chooser-title">Bilgi İstasyonu Çalışma Modunu Seç</h2>
+            <p class="study-chooser-sub">İstediğin derinlikte çalışmaya başla; içerideyken üst çubuktan istediğin zaman diğer moda tek tıkla geçebilirsin.</p>
+        </div>
+        <div class="study-chooser-grid">
+            <div class="study-chooser-card" data-chooser-card="quick">
+                <div class="study-chooser-card-top">
+                    <span class="study-chooser-icon quick"><i class="fas fa-bolt"></i></span>
+                    <span class="study-chooser-pill">${quickCardCount} Kompakt Kart · ~8 dk</span>
+                </div>
+                <h3>Hızlı Tekrar</h3>
+                <p>Sınav öncesi hızlı gözden geçirme için özet bilgi kartları, kilit kavramlar ve temel hatırlatıcılar.</p>
+                <ul class="study-chooser-list">
+                    <li><i class="fas fa-check"></i> Adım adım kompakt konu kartları</li>
+                    <li><i class="fas fa-check"></i> Senaryo ${scNum} kazanımlarına filtrelenmiş özet</li>
+                    <li><i class="fas fa-check"></i> Tek tıkla A4 PDF / Yazdır desteği</li>
+                </ul>
+                <button type="button" id="btn-chooser-quick" class="exam-btn-secondary study-chooser-cta" data-depth="quick">
+                    <span>Hızlı Tekrarı Başlat</span> <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <div class="study-chooser-card featured" data-chooser-card="deep">
+                <div class="study-chooser-card-top">
+                    <span class="study-chooser-icon deep"><i class="fas fa-book-open"></i></span>
+                    <span class="study-chooser-pill featured-pill">Önerilen · ${deepOutcomes.length} Kazanım · ~25 dk</span>
+                </div>
+                <h3>Kapsamlı Hazırlık</h3>
+                <p>Konuyu sıfırdan ve derinlemesine öğrenmek için görsel bilgi kartları, yol haritası, 8 eğitsel illüstrasyon, karşılaştırma tabloları ve deney köprüleri.</p>
+                <ul class="study-chooser-list">
+                    <li><i class="fas fa-check"></i> Tıklanabilir konu yol haritası ve görsel bilgi kartları</li>
+                    <li><i class="fas fa-check"></i> Panel-hizalı eğitsel illüstrasyonlar &amp; 3 özel SVG diyagram</li>
+                    <li><i class="fas fa-check"></i> Yazılıda Dikkat!, Hızlı Kontrol &amp; Sanal Laboratuvar köprüsü</li>
+                </ul>
+                <button type="button" id="btn-chooser-deep" class="exam-btn-primary study-chooser-cta" data-depth="deep">
+                    <span>Kapsamlı Hazırlığı Başlat</span> <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    `;
+
+    chooserEl.classList.remove('is-hidden');
+    chooserEl.style.display = 'block';
+
+    const chooseMode = (depth) => {
+        state.studyModeChosen = true;
+        state.studyDepth = depth;
+        saveState();
+        chooserEl.classList.add('is-hidden');
+        chooserEl.style.display = 'none';
+        if (studyView) studyView.classList.remove('chooser-active');
+        if (cardsLayout) cardsLayout.style.display = '';
+        if (btnTogglePlan) btnTogglePlan.style.display = '';
+        if (btnPdf) btnPdf.style.display = '';
+        renderStudy(state.studyCardIdx || 0);
+    };
+
+    const btnQuick = $('btn-chooser-quick');
+    const btnDeep = $('btn-chooser-deep');
+    if (btnQuick) btnQuick.onclick = () => chooseMode('quick');
+    if (btnDeep) btnDeep.onclick = () => chooseMode('deep');
+    return true;
+}
+
 // 3a. AŞAMA: KONU ÇALIŞMA EKRANI (Veri Kartları, Çalışma Planı & İnteraktif Deneyler)
 function renderStudy(cardIndex) {
     stopAnimation();
-    syncStudyToolbarControls();
 
     const studyView = $('exam-view-study');
     const sceneEl = $('scene-yazili');
     const cardPanelEl = $('exam-card-article');
+    const chooserEl = $('study-mode-chooser');
+    const cardsLayout = studyView?.querySelector('.exam-cards-layout');
+    const btnTogglePlanEl = $('btn-study-toggle-plan');
+    const btnPdfEl = $('btn-study-pdf-download');
+
+    // 7. Sınıf 1D1Y ilk girişinde 2 kartlı ön mod seçim ekranını göster
+    if (hasComprehensiveStudy() && !state.studyModeChosen) {
+        renderStudyModeChooser();
+        return;
+    }
+
+    if (chooserEl) {
+        chooserEl.classList.add('is-hidden');
+        chooserEl.style.display = 'none';
+    }
+    if (studyView) studyView.classList.remove('chooser-active');
+    if (cardsLayout) cardsLayout.style.display = '';
+    if (btnTogglePlanEl) btnTogglePlanEl.style.display = '';
+    if (btnPdfEl) btnPdfEl.style.display = '';
+
+    syncStudyToolbarControls();
+
     if (hasComprehensiveStudy() && state.studyDepth === 'deep') {
         renderComprehensiveStudy();
         return;

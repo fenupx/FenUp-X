@@ -1,0 +1,1437 @@
+{
+  "schema_version": "4.0.0",
+  "package_id": "FenUpX-7-1D1Y-Kapsamli-Hazirlik-V4",
+  "grade": 7,
+  "academic_year": "2026-2027",
+  "term": 1,
+  "exam": 1,
+  "updated_date": "2026-11-25",
+  "curriculum_guard": "Yalnızca MEB 7. Sınıf Fen Bilimleri 1. Kitap (s. 16-71) ve FenUp X 7. Sınıf 1. & 2. Ünite Özetleri kapsamındadır; müfredat dışı bilgi içermez.",
+  "outcomes": [
+    {
+      "outcome_id": "FB.7.1.1",
+      "unit_id": "7-U01",
+      "unit_title": "1. Ünite: Uzay Çağı",
+      "title": "Uzay araştırmaları için geliştirilen teknolojileri karşılaştırabilme",
+      "short_title": "Uzay Teknolojileri",
+      "book_pages": "16–28",
+      "estimated_minutes": 10,
+      "hero_summary": "Dünya atmosferinin ötesindeki geniş bölgeye uzay denir; uzay tamamen boş değildir, gök cisimlerinin yanında seyrek gaz ve toz da bulunur. Uzay araçlarını dış görünüşüne göre değil; görevine, insan taşıyıp taşımadığına ve yeniden kullanım durumuna göre karşılaştırırız.",
+      "roadmap": [
+        {
+          "id": "fb711-araclar",
+          "step": 1,
+          "label": "6 Temel Uzay Aracı"
+        },
+        {
+          "id": "fb711-uydular",
+          "step": 2,
+          "label": "Yapay Uydu Görevleri"
+        },
+        {
+          "id": "fb711-teleskop",
+          "step": 3,
+          "label": "Teleskoplar & Gözlemevleri"
+        },
+        {
+          "id": "fb711-turkiye",
+          "step": 4,
+          "label": "Türkiye’nin Uzay Çalışmaları"
+        }
+      ],
+      "key_concepts": [
+        "Uzay Roketi",
+        "Uzay Sondası",
+        "Yapay Uydu",
+        "Uzay Mekiği",
+        "Uzay İstasyonu",
+        "Teleskop & Gözlemevi",
+        "TÜRKSAT 6A & İMECE",
+        "Alper Gezeravcı & Nüzhet Gökdoğan"
+      ],
+      "sections": [
+        {
+          "id": "fb711-araclar",
+          "heading": "1. Altı Temel Uzay Aracı ve Görevleri",
+          "lead": "Aynı ortamda bulunmak, aynı görevi yapmak değildir. Her aracın görevi ayrıdır:",
+          "info_cards": [
+            {
+              "title": "Uzay Roketi",
+              "badge": "Taşıyıcı",
+              "text": "Uydu, sonda ve yükleri Dünya’dan uzaya taşır. Motor ve yakıt kullanır; yeniden kullanım tasarıma bağlıdır."
+            },
+            {
+              "title": "Uzay Sondası",
+              "badge": "İnsansız",
+              "text": "Uzak gök cisimlerini yakından inceleyip Dünya’ya veri ve görüntü gönderen robotik araştırma aracıdır."
+            },
+            {
+              "title": "Yapay Uydu",
+              "badge": "İnsansız",
+              "text": "Bir gök cisminin yörüngesinde dolanır. Çoğu güneş panellerinden elektrik üretir, yer istasyonlarından yönetilir."
+            },
+            {
+              "title": "Uzay Mekiği",
+              "badge": "İnsanlı",
+              "text": "Astronot ve malzeme taşır; görev bitiminde Dünya’ya geri dönebilir ve yeniden kullanılabilir."
+            },
+            {
+              "title": "Uzay İstasyonu",
+              "badge": "İnsanlı Merkez",
+              "text": "Astronotların yörüngede uzun süre yaşayıp bilimsel deney yaptığı merkezdir. Dünya’ya inmez, bakımı yörüngede yapılır."
+            },
+            {
+              "title": "Uzay Teleskobu",
+              "badge": "İnsansız Gözlem",
+              "text": "Dünya atmosferinin dışında gök cisimlerinden gelen ışığı toplayarak net gözlem yapar (Hubble, James Webb)."
+            }
+          ],
+          "visual": {
+            "visual_type": "photo_gallery",
+            "items": [
+              {
+                "asset": "assets/rocket.jpg",
+                "caption": "Uzay Roketi · Taşıma"
+              },
+              {
+                "asset": "assets/juno.jpg",
+                "caption": "Uzay Sondası (Juno) · İnsansız İnceleme"
+              },
+              {
+                "asset": "assets/shuttle-day.jpg",
+                "caption": "Uzay Mekiği · Gidiş-Dönüş Taşıma"
+              },
+              {
+                "asset": "assets/iss.jpg",
+                "caption": "Uzay İstasyonu · Yaşam & Deney"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fb711-uydular",
+          "heading": "2. Yapay Uyduların 4 Farklı Görevi",
+          "lead": "Her yapay uydu aynı işi yapmaz; Ay doğal uydudur, yapay uydular ise insan yapımıdır:",
+          "info_cards": [
+            {
+              "title": "Haberleşme",
+              "badge": "İletişim",
+              "text": "TV, telefon, radyo ve internet sinyallerini aktarır."
+            },
+            {
+              "title": "Yer Gözlem",
+              "badge": "Görüntüleme",
+              "text": "Yeryüzünü görüntüler; afet, tarım ve haritacılıkta kullanılır."
+            },
+            {
+              "title": "Meteoroloji",
+              "badge": "Hava Tahmini",
+              "text": "Bulutları ve atmosfer olaylarını izleyerek hava tahmini verisi sağlar."
+            },
+            {
+              "title": "Konumlama",
+              "badge": "Navigasyon",
+              "text": "Araç, gemi ve telefonlarda yol bulma (navigasyon) sinyali verir."
+            }
+          ],
+          "visual": {
+            "visual_type": "illustration",
+            "asset": "assets/illu-uydular-gorevler.jpg",
+            "fallback_asset": "assets/satellite-photo.jpg",
+            "short_title": "Dünya Çevresinde 4 Yapay Uydu Görevi",
+            "panel_layout": "tags",
+            "caption_tags": [
+              "Haberleşme Sinyali",
+              "Yer Gözlem Taraması",
+              "Meteoroloji (Fırtına/Bulut)",
+              "Konumlama / Navigasyon"
+            ]
+          }
+        },
+        {
+          "id": "fb711-teleskop",
+          "heading": "3. Teleskoplar ve Gözlemevleri (Rasathaneler)",
+          "lead": "Teleskop gök cismine gitmez; ondan gelen ışığı mercek veya ayna yardımıyla toplar.",
+          "info_cards": [
+            {
+              "title": "Yer Tabanlı Teleskop",
+              "badge": "Gözlemevinde",
+              "text": "Bakımı kolaydır; ancak atmosfer, bulut ve şehir ışık kirliliği gözlemi zorlaştırabilir."
+            },
+            {
+              "title": "Uzay Teleskobu",
+              "badge": "Atmosfer Dışında",
+              "text": "Bulut ve ışık kirliliğinden etkilenmez. Hubble ve James Webb farklı ışık türlerini gözleyerek birbirini tamamlar."
+            },
+            {
+              "title": "Gözlemevi Kurulum Şartları",
+              "badge": "Hepsi Birlikte",
+              "text": "Şehir ışıklarından uzak, yüksek rakımlı, yıl boyu açık gökyüzüne sahip, deprem riski düşük ve TV/radyo yayınlarından uzak yerler seçilir."
+            },
+            {
+              "title": "Türkiye’den Örnekler",
+              "badge": "TUG & DAG",
+              "text": "Antalya Bakırlıtepe’deki TÜBİTAK Ulusal Gözlemevi (TUG) ve Erzurum’daki Doğu Anadolu Gözlemevi (DAG)."
+            }
+          ],
+          "visual": {
+            "visual_type": "photo_gallery",
+            "items": [
+              {
+                "asset": "assets/hubble.jpg",
+                "caption": "Hubble Uzay Teleskobu"
+              },
+              {
+                "asset": "assets/webb.jpg",
+                "caption": "James Webb Uzay Teleskobu"
+              },
+              {
+                "asset": "assets/tug.jpg",
+                "caption": "Antalya TUG Gözlemevi"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fb711-turkiye",
+          "heading": "4. Türkiye’nin Uyduları, Kurumları ve Öncü İsimleri",
+          "lead": "Ülkemiz hem haberleşme hem de yer gözlem uydularıyla uzay araştırmalarında yer almaktadır:",
+          "info_cards": [
+            {
+              "title": "Haberleşme: TÜRKSAT",
+              "badge": "İlk Yerli: 6A",
+              "text": "TÜRKSAT 3A, 4A, 4B, 5A, 5B ve ilk yerli-millî haberleşme uydumuz TÜRKSAT 6A. (1B, 1C, 2A görevini tamamladı; 1A fırlatmada başarısız oldu.)"
+            },
+            {
+              "title": "Gözlem: GÖKTÜRK & İMECE",
+              "badge": "Yerli Gözlem",
+              "text": "GÖKTÜRK-1, GÖKTÜRK-2 ve yerli yüksek çözünürlüklü İMECE. (BİLSAT ilk gözlem, RASAT ilk yerli tasarım gözlem uydumuzdur; görevlerini tamamladılar.)"
+            },
+            {
+              "title": "Kurumlar & TEKNOFEST",
+              "badge": "TUA & TÜBİTAK UZAY",
+              "text": "TÜBİTAK UZAY uydu Ar-Ge çalışmalarını, Türkiye Uzay Ajansı (TUA) ulusal uzay projelerini yürütür; TEKNOFEST gençleri destekler."
+            },
+            {
+              "title": "Astronom vs. Astronot",
+              "badge": "Öncü İsimler",
+              "text": "Astronom gök bilimcisidir (uzaya gitmesi gerekmez — ilk kadın astronomumuz Nüzhet Gökdoğan). Astronot uzay görevine katılır (ilk insan Yuri Gagarin; ilk Türk astronot Alper Gezeravcı, 19 Ocak 2024’te ISS’de 13 deney yaptı)."
+            }
+          ],
+          "visual": {
+            "visual_type": "photo_gallery",
+            "items": [
+              {
+                "asset": "assets/alper.jpg",
+                "caption": "Alper Gezeravcı · 13 Bilimsel Deney (ISS)"
+              },
+              {
+                "asset": "assets/istanbul.jpg",
+                "caption": "ISS’den İstanbul’un Gerçek Fotoğrafı"
+              }
+            ]
+          }
+        }
+      ],
+      "comparison_tables": [
+        {
+          "title": "Uzay Araçları Karşılaştırma Tablosu",
+          "headers": [
+            "Araç",
+            "Temel Görev",
+            "İnsanlı mı?",
+            "Öne Çıkan Özellik"
+          ],
+          "rows": [
+            [
+              "Uzay Roketi",
+              "Uzaya araç ve yük taşıma",
+              "Taşıyıcı",
+              "Yakıt kullanır; yeniden kullanım tasarıma bağlı"
+            ],
+            [
+              "Uzay Sondası",
+              "Uzak gök cismi inceleme",
+              "İnsansız",
+              "Robotik veri toplar (ör. Juno)"
+            ],
+            [
+              "Yapay Uydu",
+              "Haberleşme / gözlem / meteoroloji",
+              "İnsansız",
+              "Yörüngede güneş paneliyle çalışır"
+            ],
+            [
+              "Uzay Mekiği",
+              "Astronot ve yük taşıma",
+              "İnsanlı",
+              "Dünya’ya dönüp yeniden kullanılabilir"
+            ],
+            [
+              "Uzay İstasyonu",
+              "Yörüngede yaşam ve deney",
+              "İnsanlı",
+              "Dünya’ya inmez; bakımı yörüngede yapılır"
+            ],
+            [
+              "Uzay Teleskobu",
+              "Gök cisimlerini gözlemleme",
+              "İnsansız",
+              "Atmosfer dışında net gözlem yapar"
+            ]
+          ]
+        }
+      ],
+      "daily_life_examples": [
+        {
+          "title": "Navigasyon ve Haritalar",
+          "description": "Konumlama uyduları sayesinde telefonlardan anlık yol tarifi alırız."
+        },
+        {
+          "title": "Afet ve Tarım İzleme",
+          "description": "İMECE gibi yer gözlem uyduları deprem ve yangın alanlarını görüntülemeye yardım eder."
+        },
+        {
+          "title": "Teknoloji Aktarımı",
+          "description": "Su arıtma, ısı yalıtımı, güneş panelleri ve görüntü işleme teknolojileri uzay çalışmalarıyla gelişmiştir."
+        }
+      ],
+      "exam_watchouts": [
+        {
+          "trap": "Bütün yapay uydular yalnızca haberleşme içindir.",
+          "truth": "Hayır; haberleşme, yer gözlem, meteoroloji ve konumlama gibi farklı görevlere ayrılırlar."
+        },
+        {
+          "trap": "Astronomlar mutlaka uzaya giden kişilerdir.",
+          "truth": "Astronom gök bilimi araştıran bilim insanıdır ve yerden de çalışır; uzay görevine katılan kişi astronottur."
+        },
+        {
+          "trap": "Gözlemevi kurmak için şehirden uzak olmak tek başına yeterlidir.",
+          "truth": "Az ışık kirliliğinin yanında bulutsuz açık gökyüzü, yüksek rakım ve uygun hava koşulları da gerekir."
+        },
+        {
+          "trap": "Tüm uzay roketleri yeniden kullanılabilir.",
+          "truth": "Hayır; yeniden kullanılabilme özelliği roketin tasarımına bağlıdır."
+        }
+      ],
+      "quick_checks": [
+        {
+          "q": "TÜRKSAT 6A ile İMECE arasındaki temel görev farkı nedir?",
+          "a": "TÜRKSAT 6A haberleşme (iletişim/yayın), İMECE yer gözlem (yeryüzü görüntüleme) uydusudur."
+        },
+        {
+          "q": "Uzay mekiği ile uzay istasyonunun en belirgin farkı nedir?",
+          "a": "Mekik astronot/yük taşıyıp Dünya’ya döner; istasyon ise yörüngede sürekli yaşam ve deney merkezidir."
+        },
+        {
+          "q": "Uzay teleskobunun yer teleskobuna göre en büyük avantajı nedir?",
+          "a": "Atmosfer dışında olduğu için bulut, hava olayları ve şehir ışık kirliliğinden etkilenmez."
+        }
+      ],
+      "lab_bridge": null
+    },
+    {
+      "outcome_id": "FB.7.1.3",
+      "unit_id": "7-U01",
+      "unit_title": "1. Ünite: Uzay Çağı",
+      "title": "Uzay araştırmalarının yol açabileceği problemleri çözebilme",
+      "short_title": "Uzay Kirliliği",
+      "book_pages": "30–32",
+      "estimated_minutes": 7,
+      "hero_summary": "Dünya çevresindeki yörüngelerde kalan işlevsiz uydular, roket parçaları ve çarpışma artıkları insan yapımı uzay kirliliğini oluşturur. Çok yüksek hızla hareket ettikleri için küçücük bir parça bile çalışan araçlara ciddi zarar verebilir.",
+      "roadmap": [
+        {
+          "id": "fb713-nedir",
+          "step": 1,
+          "label": "Uzay Kirliliği Nedir?"
+        },
+        {
+          "id": "fb713-risk",
+          "step": 2,
+          "label": "Neden Tehlikeli?"
+        },
+        {
+          "id": "fb713-cozum",
+          "step": 3,
+          "label": "Önleme ve Temizleme"
+        }
+      ],
+      "key_concepts": [
+        "İnsan Yapımı Enkaz",
+        "Doğal Gök Taşı Farkı",
+        "Yüksek Hızlı Çarpışma",
+        "Görev Sonu Planı",
+        "Kaçınma Manevrası",
+        "Ağ / Robot Kol Yakalama"
+      ],
+      "sections": [
+        {
+          "id": "fb713-nedir",
+          "heading": "1. Uzay Kirliliği Nasıl Oluşur?",
+          "lead": "Uzay kirliliği yalnızca insan faaliyetlerinden kaynaklanan işlevsiz cisimlerin yörüngede birikmesidir:",
+          "info_cards": [
+            {
+              "title": "Başlıca Kaynaklar",
+              "badge": "İnsan Yapımı",
+              "text": "Görevini bitiren yapay uydular, ayrılan roket parçaları, boş yakıt tankları ve çarpışma artıkları."
+            },
+            {
+              "title": "Doğal Gök Taşları Hariç",
+              "badge": "Önemli Ayrım",
+              "text": "Doğal gök taşları ve asteroitler insan yapımı olmadığı için uzay kirliliği sayılmaz."
+            },
+            {
+              "title": "Zincirleme Artış",
+              "badge": "Yeni Parçalar",
+              "text": "Yörüngedeki parçalar çarpıştıkça yüzlerce yeni küçük parça oluşur ve kirlilik büyür."
+            }
+          ],
+          "visual": {
+            "visual_type": "illustration",
+            "asset": "assets/illu-uzay-kirliligi.jpg",
+            "fallback_asset": "assets/debris-impact.jpg",
+            "short_title": "Alçak Dünya Yörüngesinde Uzay Kirliliği ve Temizleme",
+            "panel_layout": "tags",
+            "caption_tags": [
+              "Eski Roket Kademesi",
+              "İşlevsiz Uydu Parçaları",
+              "Etkin Çalışan Uydu",
+              "Ağ & Robot Kollu Temizleme Aracı"
+            ]
+          }
+        },
+        {
+          "id": "fb713-risk",
+          "heading": "2. Yol Açtığı Problemler ve Veri Yorumlama",
+          "lead": "Küçük bir parça + çok yüksek hız = çalışan uzay aracında büyük hasar riski.",
+          "info_cards": [
+            {
+              "title": "Araçlara ve Astronotlara Risk",
+              "badge": "Hasar",
+              "text": "Etkin uydulara, teleskoplara, uzay istasyonuna ve astronotlara çarpıp zarar verebilir."
+            },
+            {
+              "title": "Günlük Hizmetlerde Aksama",
+              "badge": "Dünya’ya Etki",
+              "text": "Uydular zarar görürse haberleşme, navigasyon, hava tahmini ve yer gözlem hizmetleri aksayabilir."
+            },
+            {
+              "title": "Veriden Doğru Çıkarım",
+              "badge": "Kesinlik Uydurma",
+              "text": "Parça sayısının artması çarpışma riskini artırır; ancak tek başına kesin bir çarpışma tarihi vermez."
+            }
+          ],
+          "visual": {
+            "visual_type": "photo_plus_svg",
+            "asset": "assets/debris-impact.jpg",
+            "caption": "Küçük bir enkaz parçasının uzay aracı panelinde oluşturduğu gerçek çarpma hasarı",
+            "svg_diagram_id": "svg-space-debris-cycle"
+          }
+        },
+        {
+          "id": "fb713-cozum",
+          "heading": "3. Çözüm Önerileri: Önleme + Temizleme",
+          "lead": "İyi bir çözüm hem yeni enkaz bırakmamalı hem de mevcut riski güvenli biçimde azaltmalıdır:",
+          "info_cards": [
+            {
+              "title": "1. Önleme (Görev Sonu Planı)",
+              "badge": "Yeni Çöpü Engelle",
+              "text": "Parça bırakmayan tasarımlar yapmak; ömrü biten uyduyu kontrollü atmosfere sokmak veya güvenli bölgeye taşımak."
+            },
+            {
+              "title": "2. İzleme & Kaçınma",
+              "badge": "Anlık Koruma",
+              "text": "Enkazı izleyip çalışan uyduya kaçınma manevrası yaptırmak (riski azaltır ama çöpü temizlemez)."
+            },
+            {
+              "title": "3. Yakalama & Uzaklaştırma",
+              "badge": "Aktif Temizlik",
+              "text": "Büyük enkazı parçalamadan ağ veya robot kolla yakalayıp uzaklaştırmak (ör. RemoveDEBRIS)."
+            }
+          ],
+          "visual": {
+            "visual_type": "photo",
+            "asset": "assets/removedebris.jpg",
+            "caption": "Enkaz yakalama yöntemlerini test eden RemoveDEBRIS deney uydusu"
+          }
+        }
+      ],
+      "comparison_tables": [
+        {
+          "title": "Çözüm Yöntemlerinin Güçlü Yönleri ve Sınırları",
+          "headers": [
+            "Yöntem",
+            "Amacı",
+            "Sınırı / Dikkat"
+          ],
+          "rows": [
+            [
+              "Görev Sonu Uzaklaştırma",
+              "Yeni enkaz birikmesini baştan önler",
+              "Mevcut eski çöpleri temizlemez"
+            ],
+            [
+              "İzleme & Kaçınma Manevrası",
+              "Etkin uyduları çarpışmadan korur",
+              "Çöp sayısını azaltmaz; çok küçük parçalar izlenemeyebilir"
+            ],
+            [
+              "Ağ / Robot Kol Yakalama",
+              "Mevcut tehlikeli enkazı doğrudan azaltır",
+              "Yeni parça ve kontrolsüz düşüş oluşturmamalıdır"
+            ]
+          ]
+        }
+      ],
+      "daily_life_examples": [
+        {
+          "title": "İletişim Kesintisi Riski",
+          "description": "Haberleşme uydusu hasar görürse TV, telefon ve internet sinyalleri aksayabilir."
+        },
+        {
+          "title": "Hava Durumu ve Ulaşım",
+          "description": "Meteoroloji ve konumlama uydularındaki hasar günlük hava tahmini ve navigasyonu etkiler."
+        },
+        {
+          "title": "İstasyon Kaçınma Manevrası",
+          "description": "Uluslararası Uzay İstasyonu, yakınlaşan enkaz tespit edildiğinde rotasını kaydırarak astronotları korur."
+        }
+      ],
+      "exam_watchouts": [
+        {
+          "trap": "Gök taşları da uzay kirliliğine girer.",
+          "truth": "Hayır; gök taşları doğaldır. Uzay kirliliği yalnızca insan yapımı işlevsiz parçalardır."
+        },
+        {
+          "trap": "Büyük enkazı patlatıp küçük parçalara ayırmak sorunu çözer.",
+          "truth": "Tam tersi! Yüzlerce küçük ve hızlı parça yaratarak çarpışma riskini katlar."
+        },
+        {
+          "trap": "Kaçınma manevrası uzay çöplerini temizler.",
+          "truth": "Sadece o anki çarpışmayı önler; mevcut enkazı yörüngeden kaldırmaz."
+        }
+      ],
+      "quick_checks": [
+        {
+          "q": "Doğal bir gök taşı insan yapımı uzay kirliliği sayılır mı?",
+          "a": "Hayır; yalnızca insan yapımı işlevsiz uydu, roket ve çarpışma parçaları uzay kirliliğidir."
+        },
+        {
+          "q": "Büyük bir işlevsiz uyduyu parçalayarak küçültmek neden yanlıştır?",
+          "a": "Yeni küçük ve yüksek hızlı parçalar oluşturarak etkin uydular için tehlikeyi büyütür."
+        },
+        {
+          "q": "Bir temizleme planının başarılı sayılması için hangi iki şart gerekir?",
+          "a": "Yeni küçük parça oluşturmamalı ve yeryüzüne kontrolsüz düşüşe yol açmamalıdır."
+        }
+      ],
+      "lab_bridge": null
+    },
+    {
+      "outcome_id": "FB.7.1.4",
+      "unit_id": "7-U01",
+      "unit_title": "1. Ünite: Uzay Çağı",
+      "title": "Yıldızların yaşamını açıklayarak yapılandırabilme",
+      "short_title": "Yıldızların Yaşamı",
+      "book_pages": "35–46",
+      "estimated_minutes": 11,
+      "hero_summary": "Yıldızlar çoğunlukla hidrojen ve helyumdan oluşan, enerjisini çekirdek tepkimelerinden üreten sıcak gök cisimleridir. Bulutsu (nebula) içinde doğarlar; hangi yaşam yolunu izleyeceklerini ise başlangıç kütleleri belirler.",
+      "roadmap": [
+        {
+          "id": "fb714-renk",
+          "step": 1,
+          "label": "Renk, Sıcaklık & Işık Yılı"
+        },
+        {
+          "id": "fb714-bulutsu",
+          "step": 2,
+          "label": "Bulutsular & Doğum"
+        },
+        {
+          "id": "fb714-yasam",
+          "step": 3,
+          "label": "İki Yaşam Yolu"
+        },
+        {
+          "id": "fb714-takim",
+          "step": 4,
+          "label": "Takımyıldızlar & Yön Bulma"
+        }
+      ],
+      "key_concepts": [
+        "Mavi-Beyaz-Sarı-Turuncu-Kırmızı",
+        "Işık Yılı (Uzaklık)",
+        "Bulutsu (Atbaşı, Orion, Tarantula)",
+        "Önyıldız",
+        "Kırmızı Dev & Beyaz Cüce",
+        "Süpernova, Nötron Yıldızı & Kara Delik",
+        "Takımyıldız & Kutup Yıldızı"
+      ],
+      "sections": [
+        {
+          "id": "fb714-renk",
+          "heading": "1. Yıldızların Renkleri, Sıcaklığı ve Işık Yılı",
+          "lead": "Yıldızlar kendi ışığını üretir (Ay ve gezegenler ışığı yansıtır). Renkleri yüzey sıcaklığını gösterir:",
+          "info_cards": [
+            {
+              "title": "Sıcaktan Soğuğa Renk Sırası",
+              "badge": "Mavi → Kırmızı",
+              "text": "En sıcak yıldızlar mavi/beyaz, orta sıcaklıktakiler sarı (Güneş sarı-turuncu), daha düşük sıcaklıktakiler turuncu/kırmızıdır."
+            },
+            {
+              "title": "Yakınlık Yanılgısı",
+              "badge": "Güneş Orta Boy",
+              "text": "Güneş en büyük yıldız değildir (Arcturus, Aldebaran, Rigel çok daha büyüktür); bize yakın olduğu için büyük görünür."
+            },
+            {
+              "title": "Işık Yılı = UZAKLIK",
+              "badge": "~9,46 Trilyon km",
+              "text": "Işık saniyede ~300.000 km yol alır; 1 yılda aldığı mesafe 1 ışık yılıdır. Proxima Centauri ~4,24 ışık yılı uzaktadır."
+            },
+            {
+              "title": "Yıldız Kayması Nedir?",
+              "badge": "Atmosfer Olayı",
+              "text": "Bir yıldızın düşmesi değil; küçük bir gök taşının Dünya atmosferinde ısınıp ışık izi bırakmasıdır."
+            }
+          ],
+          "visual": {
+            "visual_type": "svg_diagram",
+            "asset": "assets/diagram-star-colors.svg",
+            "caption": "Yüzey sıcaklığına göre yıldız renkleri: Mavi/Beyaz (en sıcak) → Sarı → Turuncu/Kırmızı"
+          }
+        },
+        {
+          "id": "fb714-bulutsu",
+          "heading": "2. Yıldızların Doğum Yeri: Bulutsular (Nebulalar)",
+          "lead": "Yıldızlar hidrojen gazı ve tozdan oluşan bulutsularda kütle çekimiyle sıkışarak doğar:",
+          "info_cards": [
+            {
+              "title": "Atbaşı Bulutsusu",
+              "badge": "Avcı Takımyıldızı",
+              "text": "Şekli bir denizatının başına benzediği için bu adı almıştır."
+            },
+            {
+              "title": "Orion (Orayın) Bulutsusu",
+              "badge": "Çıplak Gözle Görülür",
+              "text": "Avcı takımyıldızındadır ve gözlem aracı olmadan bile seçilebilecek kadar parlaktır."
+            },
+            {
+              "title": "Tarantula Bulutsusu",
+              "badge": "En Parlaklar",
+              "text": "Güney Yarım Küre’den görülür; bilinen en sıcak ve en büyük kütleli yıldızlara ev sahipliği yapar."
+            },
+            {
+              "title": "Doğum Sırası",
+              "badge": "Bulutsu → Önyıldız → Yıldız",
+              "text": "Gaz ve toz kütle çekimiyle çöküp ısınarak önyıldızı oluşturur; merkezde çekirdek tepkimesi başlayınca yıldız doğar."
+            }
+          ],
+          "visual": {
+            "visual_type": "illustration",
+            "asset": "assets/illu-yildiz-dogumu.jpg",
+            "fallback_asset": "assets/diagram-nebula-collapse.svg",
+            "short_title": "Bulutsu (Nebula) İçinde Önyıldız ve Genç Yıldızlar",
+            "panel_layout": "tags",
+            "caption_tags": [
+              "Gaz & Toz Sütunları",
+              "Kütle Çekimiyle Çöken Önyıldız",
+              "Sıcak Mavi-Beyaz Yıldızlar",
+              "Sarı & Kırmızı Yıldızlar"
+            ]
+          }
+        },
+        {
+          "id": "fb714-yasam",
+          "heading": "3. Başlangıç Kütlesine Göre İki Yaşam Yolu",
+          "lead": "Yıldızlar canlı değildir; 'yaşam' sözü geçirdikleri evreler için benzetmedir. Yolu başlangıç kütlesi belirler:",
+          "info_cards": [
+            {
+              "title": "Küçük Kütleli Yıldız (Güneş Benzeri)",
+              "badge": "Daha Uzun Ömür",
+              "text": "Bulutsu → Küçük Kütleli Yıldız → Kırmızı Dev → Gezegenimsi Bulutsu → Beyaz Cüce. Güneş de sonunda beyaz cüce olur."
+            },
+            {
+              "title": "Büyük Kütleli Yıldız",
+              "badge": "Daha Kısa Ömür",
+              "text": "Yakıtını hızla tüketir: Bulutsu → Büyük Kütleli Yıldız → Kırmızı Süperdev → Süpernova Patlaması → Nötron Yıldızı VEYA Kara Delik."
+            }
+          ],
+          "visual": {
+            "visual_type": "illustration_plus_svg",
+            "asset": "assets/illu-yildiz-sonlari.jpg",
+            "fallback_asset": "assets/diagram-large-star-cycle.svg",
+            "svg_diagram_id": "svg-star-lifecycle-dual",
+            "short_title": "Yıldızların İki Farklı Sonu",
+            "panel_layout": "rows-2",
+            "panel_captions": [
+              {
+                "title": "Üst Sahne · Küçük Kütleli Yıldız Sonu",
+                "detail": "Kırmızı dev dış katmanlarını bırakır → Gezegenimsi Bulutsu + merkezde Beyaz Cüce",
+                "tone": "info"
+              },
+              {
+                "title": "Alt Sahne · Büyük Kütleli Yıldız Sonu",
+                "detail": "Süpernova Patlaması → Alternatif sonlar: Nötron Yıldızı (solda) VEYA Kara Delik (sağda)",
+                "tone": "warn"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fb714-takim",
+          "heading": "4. Takımyıldızlar, Yıldız Kümeleri ve Yön Bulma",
+          "lead": "Gökyüzünde yan yana görünmek, uzayda gerçekten yakın olmak demek değildir:",
+          "info_cards": [
+            {
+              "title": "Takımyıldız",
+              "badge": "Gökyüzü Deseni",
+              "text": "Büyükayı, Küçükayı, Kraliçe, Avcı, Başak, Ejderha ve Çoban başlıca örneklerdir. Yıldızları gerçekte çok farklı uzaklıklarda olabilir."
+            },
+            {
+              "title": "Yıldız Kümesi",
+              "badge": "Gerçek Grup",
+              "text": "Birbirine kütle çekimiyle gerçekten bağlı yıldız gruplarıdır; takımyıldızla aynı şey değildir."
+            },
+            {
+              "title": "Kutup Yıldızı (Polaris)",
+              "badge": "Kuzeyi Gösterir",
+              "text": "Küçükayı’dadır. Büyükayı’daki kepçenin dış kenarındaki 2 işaret yıldızının doğrultusu ~5 kat uzatılarak bulunur."
+            }
+          ],
+          "visual": {
+            "visual_type": "svg_diagram",
+            "asset": "assets/diagram-constellations.svg",
+            "caption": "Büyükayı’nın 2 işaret yıldızı doğrultusunu ~5 kat uzatarak Küçükayı’daki Kutup Yıldızı’nı bulma"
+          }
+        }
+      ],
+      "comparison_tables": [
+        {
+          "title": "Küçük Kütleli vs. Büyük Kütleli Yıldız Yaşam Yolları",
+          "headers": [
+            "Aşama",
+            "Küçük Kütleli (Güneş Benzeri)",
+            "Büyük Kütleli Yıldız"
+          ],
+          "rows": [
+            [
+              "Doğum",
+              "Bulutsu → Önyıldız",
+              "Bulutsu → Önyıldız"
+            ],
+            [
+              "Genişleme",
+              "Kırmızı Dev",
+              "Kırmızı Süperdev"
+            ],
+            [
+              "Son Geçiş",
+              "Gezegenimsi Bulutsu",
+              "Süpernova Patlaması"
+            ],
+            [
+              "Son Kalıntı",
+              "Beyaz Cüce",
+              "Nötron Yıldızı VEYA Kara Delik"
+            ],
+            [
+              "Ömür",
+              "Daha uzun (yakıtı yavaş harcar)",
+              "Daha kısa (yakıtı hızlı harcar)"
+            ]
+          ]
+        }
+      ],
+      "daily_life_examples": [
+        {
+          "title": "Gece Yön Bulma",
+          "description": "Kuzey Yarım Küre’de açık gecelerde Kutup Yıldızı’na (Polaris) bakarak kuzey yönü bulunur."
+        },
+        {
+          "title": "Çıplak Gözle Orion Bulutsusu",
+          "description": "Kış gecelerinde Avcı (Orion) takımyıldızında teleskopsuz fark edilebilir."
+        },
+        {
+          "title": "Yıldız Kayması",
+          "description": "Gökyüzünde hızla sönen parlak izler düşen yıldız değil, atmosferde yanan küçük gök taşlarıdır."
+        }
+      ],
+      "exam_watchouts": [
+        {
+          "trap": "Işık yılı zaman birimidir.",
+          "truth": "Hayır! Işık yılı, ışığın 1 yılda aldığı yolu gösteren UZAKLIK birimidir (~9,46 trilyon km)."
+        },
+        {
+          "trap": "Güneş yaşamının sonunda kara delik olur.",
+          "truth": "Güneş küçük/orta kütleli yıldızdır; sonunda beyaz cüce olur."
+        },
+        {
+          "trap": "Büyük kütleli yıldız önce nötron yıldızı, sonra kara delik olur.",
+          "truth": "Peş peşe aşamalar değildir; süpernova sonrası kütleye bağlı iki alternatif sondur."
+        },
+        {
+          "trap": "Gezegenimsi bulutsu bir gezegendir.",
+          "truth": "Gezegen değildir; kırmızı devin uzaya bıraktığı gaz ve toz katmanlarıdır."
+        }
+      ],
+      "quick_checks": [
+        {
+          "q": "Işık yılı zaman mı, uzaklık birimi midir?",
+          "a": "Uzaklık birimidir; ışığın boşlukta 1 yılda aldığı mesafedir (~9,46 trilyon km)."
+        },
+        {
+          "q": "Yıldızın hangi yaşam yolunu izleyeceğini hangi özelliği belirler?",
+          "a": "Başlangıç kütlesi (büyük kütleli yıldızlar yakıtını hızlı tüketip daha kısa yaşar)."
+        },
+        {
+          "q": "Kutup Yıldızı hangi takımyıldızdadır?",
+          "a": "Küçükayı takımyıldızındadır ve Kuzey Yarım Küre’de kuzeyi gösterir."
+        }
+      ],
+      "lab_bridge": null
+    },
+    {
+      "outcome_id": "FB.7.1.5",
+      "unit_id": "7-U01",
+      "unit_title": "1. Ünite: Uzay Çağı",
+      "title": "Yıldız, galaksi ve evren kavramlarını açıklayarak yapılandırabilme",
+      "short_title": "Yıldız, Galaksi ve Evren",
+      "book_pages": "46–49",
+      "estimated_minutes": 6,
+      "hero_summary": "Yıldız, galaksi ve evren iç içe geçmiş bir kapsama düzeni oluşturur. Yıldızlar ve gezegen sistemleri galaksilerin (gök adaların) içinde, tüm galaksiler ve madde-enerji ise evrenin içinde yer alır.",
+      "roadmap": [
+        {
+          "id": "fb715-kavram",
+          "step": 1,
+          "label": "Yıldız · Galaksi · Evren"
+        },
+        {
+          "id": "fb715-adres",
+          "step": 2,
+          "label": "Dünya’nın Kozmik Adresi"
+        }
+      ],
+      "key_concepts": [
+        "Yıldız vs. Gezegen",
+        "Güneş Sistemi",
+        "Galaksi (Gök Ada)",
+        "Samanyolu & Avcı (Orion) Kolu",
+        "Andromeda Galaksisi",
+        "Edwin Hubble",
+        "Evren"
+      ],
+      "sections": [
+        {
+          "id": "fb715-kavram",
+          "heading": "1. Üç Temel Kavramı Ayırt Et",
+          "lead": "Her kavram farklı ölçekteki bir yapıyı anlatır; biri diğerinin yerine kullanılamaz:",
+          "info_cards": [
+            {
+              "title": "Yıldız",
+              "badge": "Tek Gök Cismi",
+              "text": "Kendi ısı ve ışığını üreten gök cismidir (ör. Güneş). Dünya ise ışığını üretmeyen bir gezegendir."
+            },
+            {
+              "title": "Galaksi (Gök Ada)",
+              "badge": "Milyarlarca Yıldız",
+              "text": "Çok sayıda yıldız, gezegen, bulutsu, gaz ve tozu kütle çekimiyle tutan dev yapıdır. İlk keşfeden: Edwin Hubble."
+            },
+            {
+              "title": "Samanyolu & Andromeda",
+              "badge": "Sarmal Galaksiler",
+              "text": "Güneş Sistemi Samanyolu’nun Avcı (Orion) kolundadır. En yakın büyük galaksi Andromeda’dır (çapı Samanyolu’nun ~2 katı)."
+            },
+            {
+              "title": "Evren",
+              "badge": "En Büyük Bütün",
+              "text": "Tüm galaksileri, yıldızları, gezegenleri, maddeyi, enerjiyi ve uzayı kapsayan en geniş bütündür."
+            }
+          ],
+          "visual": {
+            "visual_type": "photo_gallery",
+            "items": [
+              {
+                "asset": "assets/sun.jpg",
+                "caption": "Yıldız: Güneş"
+              },
+              {
+                "asset": "assets/andromeda.jpg",
+                "caption": "Galaksi: Andromeda"
+              },
+              {
+                "asset": "assets/deepfield.jpg",
+                "caption": "Evrenden Bir Kesit (Çok Sayıda Galaksi)"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fb715-adres",
+          "heading": "2. Dünya’nın Evrendeki Adresi (Kapsama Sırası)",
+          "lead": "Tıpkı evin mahallenin, mahallenin şehrin içinde olması gibi gök cisimleri de iç içe kapsama ilişkisi kurar:",
+          "info_cards": [
+            {
+              "title": "Küçükten Büyüğe Adresimiz",
+              "badge": "İçinde Yer Alır →",
+              "text": "Dünya → Güneş Sistemi → Samanyolu Galaksisi (Avcı Kolu) → Evren."
+            },
+            {
+              "title": "En Genişten En Dara",
+              "badge": "Kapsar >",
+              "text": "Evren > Galaksi > Yıldız Sistemi > Yıldız / Gezegen. Bu sıralama oluşum sırası değil, kapsama sırasıdır."
+            }
+          ],
+          "visual": {
+            "visual_type": "illustration_plus_svg",
+            "asset": "assets/illu-kozmik-adres.jpg",
+            "svg_diagram_id": "svg-cosmic-address",
+            "short_title": "Soldan Sağa Kozmik Ölçek Yolculuğu",
+            "panel_layout": "tags",
+            "caption_tags": [
+              "1. Dünya (Gezegen)",
+              "2. Güneş Sistemi",
+              "3. Samanyolu Galaksisi",
+              "4. Galaksiler ve Evren"
+            ]
+          }
+        }
+      ],
+      "comparison_tables": [
+        {
+          "title": "Yıldız, Galaksi ve Evren Karşılaştırması",
+          "headers": [
+            "Kavram",
+            "İçeriği",
+            "Örnek",
+            "Kapsama Yeri"
+          ],
+          "rows": [
+            [
+              "Yıldız",
+              "Kendi ışığını üreten tek gök cismi",
+              "Güneş",
+              "Galaksinin içindedir"
+            ],
+            [
+              "Galaksi",
+              "Çok sayıda yıldız, sistem, gaz ve toz",
+              "Samanyolu, Andromeda",
+              "Evrenin içindedir"
+            ],
+            [
+              "Evren",
+              "Tüm galaksiler, madde, enerji ve uzay",
+              "Tüm evren",
+              "Hepsini kapsar"
+            ]
+          ]
+        }
+      ],
+      "daily_life_examples": [
+        {
+          "title": "Posta Adresi Benzetmesi",
+          "description": "Dünya = Ev · Güneş Sistemi = Mahalle · Samanyolu = Şehir · Evren = Tüm Dünya."
+        },
+        {
+          "title": "Karanlık Gecede Samanyolu",
+          "description": "Işık kirliliğinden uzak bölgelerde yaz gecesi görülen parlak kuşak kendi galaksimiz Samanyolu’dur."
+        },
+        {
+          "title": "Ampul ve Şehir Benzetmesi",
+          "description": "Güneş tek bir ampulse, galaksi milyarlarca ampulün aydınlattığı dev bir şehir gibidir."
+        }
+      ],
+      "exam_watchouts": [
+        {
+          "trap": "Dünya, Güneş’in içindedir.",
+          "truth": "Hayır; ikisi Güneş Sistemi’nin ayrı üyeleridir ve Dünya Güneş’in çevresinde dolanır."
+        },
+        {
+          "trap": "Avcı (Orion) kolu ayrı bir galaksidir.",
+          "truth": "Hayır; Samanyolu Galaksisi’nin içindeki bir sarmal koldur."
+        },
+        {
+          "trap": "Teleskobun derin alan fotoğrafı evrenin tamamıdır.",
+          "truth": "Evrenin tamamı değil, gökyüzünün çok küçük bir bölgesindeki galaksilerin görüntüsüdür."
+        }
+      ],
+      "quick_checks": [
+        {
+          "q": "Dünya, Güneş Sistemi, Samanyolu ve Evren’i küçükten büyüğe sırala.",
+          "a": "Dünya → Güneş Sistemi → Samanyolu Galaksisi → Evren."
+        },
+        {
+          "q": "Avcı (Orion) kolu nedir?",
+          "a": "Güneş Sistemi’nin içinde bulunduğu Samanyolu Galaksisi’nin sarmal kollarından biridir."
+        },
+        {
+          "q": "Galaksileri ilk keşfeden bilim insanı kimdir?",
+          "a": "Edwin Hubble."
+        }
+      ],
+      "lab_bridge": null
+    },
+    {
+      "outcome_id": "FB.7.2.1",
+      "unit_id": "7-U02",
+      "unit_title": "2. Ünite: Kuvvet ve Enerjiyi Keşfedelim",
+      "title": "Fiziksel anlamda yapılan işin bağlı olduğu faktörlere ilişkin bilimsel çıkarım yapabilme",
+      "short_title": "Fiziksel Anlamda İş",
+      "book_pages": "59–64",
+      "estimated_minutes": 9,
+      "hero_summary": "Yorulmak tek başına fiziksel iş değildir! Bir kuvvetin fiziksel anlamda iş yapması için cisme kuvvet uygulanmalı ve cisim o kuvvet doğrultusunda yer değiştirmelidir. İşin birimi joule (J)’dür.",
+      "roadmap": [
+        {
+          "id": "fb721-kosul",
+          "step": 1,
+          "label": "Fiziksel İşin 2 Şartı"
+        },
+        {
+          "id": "fb721-ornek",
+          "step": 2,
+          "label": "Kaldır · Tut · Taşı"
+        },
+        {
+          "id": "fb721-faktor",
+          "step": 3,
+          "label": "Kuvvet & Yol Etkisi"
+        },
+        {
+          "id": "fb721-deney",
+          "step": 4,
+          "label": "Sanal Deney 7.1"
+        }
+      ],
+      "key_concepts": [
+        "Kuvvet + Yer Değiştirme",
+        "Kuvvet Doğrultusu",
+        "Kaldırma · Tutma · Yatay Taşıma",
+        "İtme ve Çekme",
+        "Kuvvet (N) · Yol (m) · İş (J)",
+        "Kontrollü Deney"
+      ],
+      "sections": [
+        {
+          "id": "fb721-kosul",
+          "heading": "1. Hangi Durumda Fiziksel İş Yapılır?",
+          "lead": "Karar verirken daima şu 3 soruyu sor: Hangi cisim? Hangi kuvvet? Hangi yönde yer değiştirme?",
+          "info_cards": [
+            {
+              "title": "2 Zorunlu Şart",
+              "badge": "İkisi Birden!",
+              "text": "(1) Cisme kuvvet uygulanmalı ve (2) Cisim o kuvvet doğrultusunda yer değiştirmelidir."
+            },
+            {
+              "title": "Yorulmak ≠ Fiziksel İş",
+              "badge": "Dikkat",
+              "text": "Ders çalışmak, kitap okumak veya kıpırdamayan duvarı itmek yorucu olsa da yer değiştirme sıfır olduğu için iş YAPILMAZ."
+            },
+            {
+              "title": "Merdiven vs. Düz Koridor",
+              "badge": "Ders Kitabı s. 64",
+              "text": "Kitap kolisini merdivenden üst kata çıkarırken iş YAPILIR; düz koridorda sabit yükseklikte taşırken elin yukarı destek kuvveti harekete dik olduğundan iş YAPMAZ."
+            }
+          ],
+          "visual": {
+            "visual_type": "illustration",
+            "asset": "assets/illu-fiziksel-is.jpg",
+            "fallback_asset": "assets/lift-hold-carry.png",
+            "short_title": "Üç Günlük Durumu Karşılaştır",
+            "panel_layout": "cols-3",
+            "panel_captions": [
+              {
+                "title": "1. Koli Kaldırma",
+                "detail": "Kuvvet ↑ · Hareket ↑ → İŞ VAR",
+                "tone": "positive"
+              },
+              {
+                "title": "2. Duvar İtme",
+                "detail": "Yer değiştirme 0 m → İŞ YOK",
+                "tone": "negative"
+              },
+              {
+                "title": "3. Market Arabası",
+                "detail": "Kuvvet → · Hareket → → İŞ VAR",
+                "tone": "positive"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fb721-ornek",
+          "heading": "2. Kaldırma, Tutma, Yatay Taşıma ile İtme–Çekme",
+          "lead": "İtme veya çekme olması sonucu tek başına belirlemez; önemli olan kuvvet ile hareketin aynı doğrultuda olmasıdır:",
+          "info_cards": [
+            {
+              "title": "Yukarı Kaldırma",
+              "badge": "İŞ VAR",
+              "text": "Kuvvet yukarı, hareket yukarı → elin kuvveti iş yapar."
+            },
+            {
+              "title": "Hareketsiz Tutma",
+              "badge": "İŞ YOK",
+              "text": "Cisim kıpırdamadığı (yer değiştirme = 0) için iş yapılmaz."
+            },
+            {
+              "title": "Yatay Taşıma",
+              "badge": "İŞ YOK (Destek)",
+              "text": "Destek kuvveti yukarı, hareket yatay (dik) olduğu için destek kuvveti iş yapmaz."
+            },
+            {
+              "title": "İtme ve Çekme",
+              "badge": "İkisi de İş Yapar",
+              "text": "Kutuyu sağa itmek de iple sağa çekmek de aynı doğrultuda yer değiştirme sağladığı için iş yaptırır."
+            }
+          ],
+          "visual": {
+            "visual_type": "photo_gallery",
+            "items": [
+              {
+                "asset": "assets/lift-hold-carry.png",
+                "caption": "Kaldır (İş VAR) · Tut (İş YOK) · Yatay Taşı (İş YOK)"
+              },
+              {
+                "asset": "assets/push-pull.png",
+                "caption": "Hem itme hem çekme kuvveti iş yaptırabilir"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fb721-faktor",
+          "heading": "3. Yapılan İş Nelere Bağlıdır? (Birimler & Kontrollü Deney)",
+          "lead": "Kuvvet ve yer değiştirme aynı yöndeyken yapılan iş iki etkenle doğru orantılıdır; birim joule (J)’dür:",
+          "info_cards": [
+            {
+              "title": "1. Kuvvetin Büyüklüğü (N)",
+              "badge": "Yol Sabitken",
+              "text": "Yer değiştirme aynıysa daha büyük kuvvet daha çok iş yapar (20 N > 10 N)."
+            },
+            {
+              "title": "2. Yer Değiştirme (m)",
+              "badge": "Kuvvet Sabitken",
+              "text": "Kuvvet aynıysa daha uzun yer değiştirme daha çok iş yapar (4 m > 2 m)."
+            },
+            {
+              "title": "Kontrollü Deney Kuralı",
+              "badge": "Tek Değişken",
+              "text": "Bir etkeni test ederken diğerini mutlaka sabit tut! İkisi aynı anda değişirse tek bir etkene bağlayamazsın."
+            }
+          ],
+          "visual": {
+            "visual_type": "svg_gallery",
+            "items": [
+              {
+                "asset": "assets/force-compare.svg",
+                "caption": "Yol sabit (3 m): 20 N kuvvet daha çok iş yapar"
+              },
+              {
+                "asset": "assets/distance-compare.svg",
+                "caption": "Kuvvet sabit: Daha fazla yol = daha çok iş"
+              }
+            ]
+          }
+        }
+      ],
+      "comparison_tables": [
+        {
+          "title": "Kontrollü Deney Değişkenleri Tablosu",
+          "headers": [
+            "Araştırma Sorusu",
+            "Değiştirilen (Bağımsız)",
+            "Sabit Tutulan",
+            "Gözlenen (Bağımlı)"
+          ],
+          "rows": [
+            [
+              "Kuvvetin işe etkisi",
+              "Uygulanan kuvvet (N)",
+              "Yer değiştirme (m)",
+              "Yapılan iş (J)"
+            ],
+            [
+              "Yer değiştirmenin işe etkisi",
+              "Yer değiştirme (m)",
+              "Uygulanan kuvvet (N)",
+              "Yapılan iş (J)"
+            ]
+          ]
+        }
+      ],
+      "daily_life_examples": [
+        {
+          "title": "Çantayı Merdivenden Çıkarmak",
+          "description": "Kaldırma kuvveti ile hareket yukarı yönlü olduğu için fiziksel iş yapılır."
+        },
+        {
+          "title": "Market Arabasını İtmek",
+          "description": "İtme kuvveti ile arabanın hareketi aynı doğrultuda olduğu için iş yapılır."
+        },
+        {
+          "title": "Bilgisayar Başında Çalışmak",
+          "description": "Zihinsel olarak yorulunsa da cisim kuvvet doğrultusunda yer değiştirmediği için fiziksel iş yapılmaz."
+        }
+      ],
+      "exam_watchouts": [
+        {
+          "trap": "Çok yorulduysam fiziksel iş yapmışımdır.",
+          "truth": "Yorulmak ölçüt değildir; cisim kuvvet doğrultusunda yer değiştirmiyorsa fiziksel iş sıfırdır."
+        },
+        {
+          "trap": "Çantayı düz koridorda 50 m taşıdım, çok iş yaptım.",
+          "truth": "Çantayı tutan kuvvet yukarı, hareket yatay (dik) olduğu için taşıma kuvveti iş yapmaz."
+        },
+        {
+          "trap": "Hem kuvveti hem yolu farklı iki düzeneği kıyaslayarak kuvvetin etkisini bulabilirim.",
+          "truth": "Hayır; kuvvetin etkisini test etmek için yer değiştirme mutlaka eşit (sabit) olmalıdır."
+        }
+      ],
+      "quick_checks": [
+        {
+          "q": "Fiziksel anlamda iş yapılması için hangi 2 koşul şarttır?",
+          "a": "Cisme kuvvet uygulanmalı ve cisim o kuvvet doğrultusunda yer değiştirmelidir."
+        },
+        {
+          "q": "Yer değiştirmenin işe etkisini test ederken neyi sabit tutarız?",
+          "a": "Uygulanan kuvveti sabit tutar, yalnızca yer değiştirmeyi değiştiririz."
+        },
+        {
+          "q": "İş, kuvvet ve yer değiştirmenin birimleri nelerdir?",
+          "a": "İş: joule (J), Kuvvet: newton (N), Yer değiştirme: metre (m)."
+        }
+      ],
+      "lab_bridge": {
+        "exp_id": "7.1",
+        "title": "Sanal Laboratuvar · Deney 7.1: Fiziksel Anlamda İş",
+        "cta_label": "Deney 7.1’i Aç ve Kendin Dene",
+        "description": "10 N / 20 N kuvvet ve 2 m / 4 m yol karşılaştırmalarını canlı simülasyonda çalıştır."
+      }
+    },
+    {
+      "outcome_id": "FB.7.2.2",
+      "unit_id": "7-U02",
+      "unit_title": "2. Ünite: Kuvvet ve Enerjiyi Keşfedelim",
+      "title": "Enerji çeşitlerinden kinetik ve potansiyel enerjiyi karşılaştırabilme",
+      "short_title": "Kinetik ve Potansiyel Enerji",
+      "book_pages": "65–71",
+      "estimated_minutes": 10,
+      "hero_summary": "Enerji, iş yapabilme yeteneğidir ve birimi iş gibi joule (J)’dür. Cisimler hareketlerinden dolayı kinetik enerjiye, konumları veya esneklikleri nedeniyle potansiyel enerjiye sahip olurlar; havada hareket eden bir cisimde ikisi aynı anda bulunur.",
+      "roadmap": [
+        {
+          "id": "fb722-kinetik",
+          "step": 1,
+          "label": "Kinetik Enerji"
+        },
+        {
+          "id": "fb722-potansiyel",
+          "step": 2,
+          "label": "Çekim & Esneklik Potansiyel"
+        },
+        {
+          "id": "fb722-birlikte",
+          "step": 3,
+          "label": "Aynı Anda İki Enerji"
+        },
+        {
+          "id": "fb722-deney",
+          "step": 4,
+          "label": "Sanal Deney 7.2"
+        }
+      ],
+      "key_concepts": [
+        "Enerji Birimi: Joule (J)",
+        "Kinetik Enerji (Kütle & Hız)",
+        "Çekim Potansiyel (Ağırlık & Yükseklik)",
+        "Esneklik Potansiyel (Gerilme & Sıkışma)",
+        "Aynı Anda İki Enerji"
+      ],
+      "sections": [
+        {
+          "id": "fb722-kinetik",
+          "heading": "1. Kinetik Enerji (Hareket Enerjisi)",
+          "lead": "Hareket hâlindeki her cismin kinetik enerjisi vardır; duran cismin yere göre kinetik enerjisi sıfırdır:",
+          "info_cards": [
+            {
+              "title": "Hız Artarsa → Kinetik Artar",
+              "badge": "Kütle Sabit",
+              "text": "Daha hızlı giden oyuncak araba süngeri daha uzağa iter; hızlı aracın fren/durma mesafesi daha uzundur."
+            },
+            {
+              "title": "Kütle Artarsa → Kinetik Artar",
+              "badge": "Hız Sabit",
+              "text": "Aynı hızla atılan basketbol topu, daha hafif plastik topa göre daha fazla taş devirir (Yedikule örneği)."
+            }
+          ],
+          "visual": {
+            "visual_type": "svg_gallery",
+            "items": [
+              {
+                "asset": "assets/diagram-speed-kinetic-effect.svg",
+                "caption": "Kütle sabit: Hız arttıkça kinetik enerji artar"
+              },
+              {
+                "asset": "assets/diagram-mass-kinetic-effect.svg",
+                "caption": "Hız sabit: Kütle arttıkça kinetik enerji artar"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fb722-potansiyel",
+          "heading": "2. Potansiyel Enerji: Çekim ve Esneklik",
+          "lead": "Hareketsiz duran bir cisim de bulunduğu yükseklik veya değişen şekli sayesinde enerji depolayabilir:",
+          "info_cards": [
+            {
+              "title": "Çekim Potansiyel Enerjisi",
+              "badge": "Ağırlık & Yükseklik",
+              "text": "Yerden yüksekteki cisimlerde bulunur (raftaki kitap, daldaki elma). Yükseklik veya ağırlık/kütle arttıkça artar."
+            },
+            {
+              "title": "Esneklik Potansiyel Enerjisi",
+              "badge": "Gerilme & Sıkışma",
+              "text": "Sarmal yay, paket lastiği, sünger gibi esnek cisimler gerildiğinde veya sıkıştırıldığında enerji depolar."
+            }
+          ],
+          "visual": {
+            "visual_type": "illustration",
+            "asset": "assets/illu-enerji-deneyleri.jpg",
+            "fallback_asset": "assets/diagram-height-effect.svg",
+            "short_title": "İki Temel Laboratuvar Deneyi",
+            "panel_layout": "cols-2",
+            "panel_captions": [
+              {
+                "title": "Sol Panel · Kinetik Enerji (Hız)",
+                "detail": "Yüksek rampadan inen daha hızlı araba süngeri daha uzağa iter",
+                "tone": "info"
+              },
+              {
+                "title": "Sağ Panel · Çekim Potansiyel (Yükseklik)",
+                "detail": "Daha yüksekten bırakılan bilye kumda daha derin iz bırakır",
+                "tone": "positive"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fb722-birlikte",
+          "heading": "3. Aynı Sahnede Tüm Enerji Türleri",
+          "lead": "Bir cisim aynı anda hem kinetik hem de çekim potansiyel enerjisine sahip olabilir:",
+          "info_cards": [
+            {
+              "title": "Sadece Çekim Potansiyel",
+              "badge": "Duran & Yüksekte",
+              "text": "Ağaç dalında hareketsiz duran elma."
+            },
+            {
+              "title": "Sadece Kinetik (Yere Göre)",
+              "badge": "Yerde & Hareketli",
+              "text": "Düz yolda giden bisiklet ve çimde yuvarlanan top."
+            },
+            {
+              "title": "Hem Kinetik Hem Potansiyel",
+              "badge": "Yüksekte & Hareketli",
+              "text": "Gökyüzünde uçan kuş, uçak veya havadaki top."
+            },
+            {
+              "title": "Esneklik Potansiyel",
+              "badge": "Şekli Değişmiş Esnek",
+              "text": "Gerilmiş sapan lastiği veya sıkışmış/gerilmiş sarmal yay."
+            }
+          ],
+          "visual": {
+            "visual_type": "illustration",
+            "asset": "assets/illu-kinetik-potansiyel.jpg",
+            "fallback_asset": "assets/diagram-motion-vs-rest.svg",
+            "short_title": "Park Sahnesinde Enerji Çeşitlerini Bul",
+            "panel_layout": "tags",
+            "caption_tags": [
+              "Daldaki Elma → Çekim Potansiyel",
+              "Uçan Kuş → Kinetik + Çekim",
+              "Bisiklet & Top → Kinetik",
+              "Yay & Sapan → Esneklik Potansiyel"
+            ]
+          }
+        }
+      ],
+      "comparison_tables": [
+        {
+          "title": "Enerji Çeşitleri Karşılaştırma Tablosu",
+          "headers": [
+            "Enerji Türü",
+            "Kaynağı",
+            "Bağlı Olduğu Etkenler",
+            "Günlük Örnek"
+          ],
+          "rows": [
+            [
+              "Kinetik Enerji",
+              "Hareket",
+              "Kütle ve Hız",
+              "Koşan sporcu, yuvarlanan top"
+            ],
+            [
+              "Çekim Potansiyel",
+              "Yükseklik (konum)",
+              "Ağırlık (kütle) ve Yükseklik",
+              "Daldaki elma, barajdaki su"
+            ],
+            [
+              "Esneklik Potansiyel",
+              "Gerilme / sıkışma",
+              "Gerilme/sıkışma miktarı ve cismin cinsi",
+              "Gerilmiş lastik, sıkışmış yay"
+            ]
+          ]
+        }
+      ],
+      "daily_life_examples": [
+        {
+          "title": "Havuza Atlamak",
+          "description": "Daha yüksekten atlayan veya daha ağır olan kişi suya daha çok enerjiyle inip daha fazla su sıçratır."
+        },
+        {
+          "title": "Yedikule Oyunu",
+          "description": "Aynı hızda basketbol topu plastik toptan daha büyük kütleli olduğu için daha çok taş devirir."
+        },
+        {
+          "title": "Yaylı Oyuncaklar",
+          "description": "Sıkıştırılan yay esneklik potansiyel enerjisi depolar; bırakılınca harekete dönüşür."
+        }
+      ],
+      "exam_watchouts": [
+        {
+          "trap": "Hareketsiz cismin hiçbir enerjisi yoktur.",
+          "truth": "Kinetik enerjisi sıfırdır; ama yüksekteyse çekim potansiyel, gerilmiş/sıkışmışsa esneklik potansiyel enerjisi vardır."
+        },
+        {
+          "trap": "Bir cisimde ya kinetik ya potansiyel enerji olur.",
+          "truth": "Hayır! Uçan kuş veya havadaki hareketli top ikisine aynı anda sahiptir."
+        },
+        {
+          "trap": "Normal hâlde duran yayda esneklik potansiyel enerjisi vardır.",
+          "truth": "Yalnızca gerildiğinde veya sıkıştırıldığında esneklik potansiyel enerjisi depolar."
+        }
+      ],
+      "quick_checks": [
+        {
+          "q": "Hareketsiz bir cisim hangi enerji türlerine sahip olabilir?",
+          "a": "Yüksekteyse çekim potansiyel, gerilmiş veya sıkışmış esnek bir cisimse esneklik potansiyel enerjisine."
+        },
+        {
+          "q": "Aynı hızla giden kamyon ve otomobilden hangisinin kinetik enerjisi daha büyüktür?",
+          "a": "Kütlesi daha büyük olduğu için kamyonun kinetik enerjisi daha büyüktür."
+        },
+        {
+          "q": "Gökyüzünde uçan bir kuş hangi enerjilere sahiptir?",
+          "a": "Hareketli olduğu için kinetik, yerden yüksekte olduğu için çekim potansiyel enerjisine aynı anda sahiptir."
+        }
+      ],
+      "lab_bridge": {
+        "exp_id": "7.2",
+        "title": "Sanal Laboratuvar · Deney 7.2: Enerji ve Enerji Dönüşümleri",
+        "cta_label": "Deney 7.2’yi Aç ve Enerji Barlarını İzle",
+        "description": "Kinetik ve potansiyel enerji çubuklarının yükseklik ve hareketle değişimini canlı izle."
+      }
+    }
+  ]
+}
