@@ -1330,10 +1330,20 @@ const navigation = (() => {
         closeMobileMenu();
         if (typeof resetMasterPause === 'function') resetMasterPause();
         try {
-            if (globalSmartboardState) globalSmartboardState.isFullscreen = false;
+            if (globalSmartboardState) {
+                globalSmartboardState.isFullscreen = false;
+                globalSmartboardState.isOpen = false;
+                globalSmartboardState.isDrawing = false;
+                globalSmartboardState.activePointerId = null;
+            }
         } catch (_) {}
         const sbModal = document.getElementById('smartboard-modal');
-        if (sbModal) sbModal.classList.add('is-hidden');
+        if (sbModal) {
+            sbModal.classList.add('is-hidden');
+            sbModal.style.display = 'none';
+        }
+        const sbFloatBtn = document.getElementById('floating-smartboard-btn');
+        if (sbFloatBtn) sbFloatBtn.classList.remove('active');
         const sbDialog = document.querySelector('#smartboard-modal .smartboard-dialog');
         if (sbDialog) sbDialog.classList.remove('is-fullscreen');
         const sbBtnFs = document.getElementById('sb-btn-fullscreen');
@@ -7789,13 +7799,20 @@ export function toggleGlobalSmartboard(forceOpen) {
         modal.style.display = 'flex';
         globalSmartboardState.isOpen = true;
         if (floatBtn) floatBtn.classList.add('active');
-        requestAnimationFrame(() => resizeGlobalSmartboardCanvas());
+        resizeGlobalSmartboardCanvas();
+        requestAnimationFrame(() => {
+            resizeGlobalSmartboardCanvas();
+            requestAnimationFrame(() => resizeGlobalSmartboardCanvas());
+        });
     } else {
         modal.classList.add('is-hidden');
         modal.style.display = 'none';
         globalSmartboardState.isOpen = false;
         globalSmartboardState.isDrawing = false;
         globalSmartboardState.activePointerId = null;
+        globalSmartboardState.currentCmd = null;
+        const previewCanvas = document.getElementById('smartboard-preview-canvas');
+        if (previewCanvas) previewCanvas.style.opacity = '1';
         if (floatBtn) floatBtn.classList.remove('active');
     }
 }
@@ -7803,37 +7820,57 @@ export function toggleGlobalSmartboard(forceOpen) {
 export function openSmartboard() { toggleGlobalSmartboard(true); }
 export function closeSmartboard() { toggleGlobalSmartboard(false); }
 
+function getSmartboardStrokeMetrics(cmd) {
+    if (cmd.tool === 'eraser') {
+        return {
+            composite: 'destination-out',
+            alpha: 1,
+            color: '#000000',
+            lineWidth: Math.max(cmd.size * 4, 22)
+        };
+    }
+    if (cmd.tool === 'highlighter') {
+        return {
+            composite: 'source-over',
+            alpha: 0.36,
+            color: cmd.color,
+            lineWidth: Math.max(cmd.size * 3.2, 16)
+        };
+    }
+    return {
+        composite: 'source-over',
+        alpha: 1,
+        color: cmd.color,
+        lineWidth: cmd.size
+    };
+}
+
+function applySmartboardStrokeStyle(targetCtx, cmd, forceOpaque = false) {
+    const m = getSmartboardStrokeMetrics(cmd);
+    targetCtx.lineCap = 'round';
+    targetCtx.lineJoin = 'round';
+    targetCtx.globalCompositeOperation = m.composite;
+    targetCtx.globalAlpha = forceOpaque ? 1 : m.alpha;
+    targetCtx.strokeStyle = m.color;
+    targetCtx.fillStyle = m.color;
+    targetCtx.lineWidth = m.lineWidth;
+    return m;
+}
+
 function renderSmartboardCommand(targetCtx, cmd) {
     if (!targetCtx || !cmd || !cmd.points || cmd.points.length === 0) return;
 
     targetCtx.save();
-    targetCtx.lineCap = 'round';
-    targetCtx.lineJoin = 'round';
+    const m = applySmartboardStrokeStyle(targetCtx, cmd, false);
 
     const pts = cmd.points;
     const p0 = pts[0];
     const pLast = pts[pts.length - 1];
 
-    if (cmd.tool === 'eraser') {
-        targetCtx.globalCompositeOperation = 'destination-out';
-        targetCtx.strokeStyle = '#000000';
-        targetCtx.fillStyle = '#000000';
-        targetCtx.lineWidth = Math.max(cmd.size * 4, 22);
-    } else if (cmd.tool === 'highlighter') {
-        targetCtx.globalAlpha = 0.36;
-        targetCtx.strokeStyle = cmd.color;
-        targetCtx.fillStyle = cmd.color;
-        targetCtx.lineWidth = Math.max(cmd.size * 3.2, 16);
-    } else {
-        targetCtx.strokeStyle = cmd.color;
-        targetCtx.fillStyle = cmd.color;
-        targetCtx.lineWidth = cmd.size;
-    }
-
     if (cmd.tool === 'pen' || cmd.tool === 'highlighter' || cmd.tool === 'eraser') {
         if (pts.length === 1) {
             targetCtx.beginPath();
-            targetCtx.arc(p0.x, p0.y, targetCtx.lineWidth * 0.5, 0, Math.PI * 2);
+            targetCtx.arc(p0.x, p0.y, m.lineWidth * 0.5, 0, Math.PI * 2);
             targetCtx.fill();
         } else if (pts.length === 2) {
             targetCtx.beginPath();
@@ -7843,6 +7880,9 @@ function renderSmartboardCommand(targetCtx, cmd) {
         } else {
             targetCtx.beginPath();
             targetCtx.moveTo(p0.x, p0.y);
+            const firstMidX = (pts[0].x + pts[1].x) * 0.5;
+            const firstMidY = (pts[0].y + pts[1].y) * 0.5;
+            targetCtx.lineTo(firstMidX, firstMidY);
             for (let i = 1; i < pts.length - 1; i++) {
                 const midX = (pts[i].x + pts[i + 1].x) * 0.5;
                 const midY = (pts[i].y + pts[i + 1].y) * 0.5;
@@ -7900,7 +7940,7 @@ function renderSmartboardCommand(targetCtx, cmd) {
 function redrawSmartboardMainCanvas() {
     const canvas = document.getElementById('smartboard-canvas');
     if (!canvas) return;
-    const ctx = canvas.getContext('2d', { desynchronized: true }) || canvas.getContext('2d');
+    const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     const { dpr, cssWidth, cssHeight, history } = globalSmartboardState;
@@ -7920,28 +7960,69 @@ function updateSmartboardUndoRedoUI() {
     if (redoBtn) redoBtn.disabled = globalSmartboardState.redoStack.length === 0;
 }
 
-function resizeGlobalSmartboardCanvas() {
+function resizeGlobalSmartboardCanvas(forceRedraw = false) {
+    const modal = document.getElementById('smartboard-modal');
     const canvas = document.getElementById('smartboard-canvas');
     const previewCanvas = document.getElementById('smartboard-preview-canvas');
     const container = document.getElementById('sb-canvas-container');
     if (!canvas || !container) return;
 
-    const cssW = Math.max(container.clientWidth || 850, 1);
-    const cssH = Math.max(container.clientHeight || 450, 1);
-    const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    // Modal gizliyken 0×0 veya yapay 850×450 boyuta düşmeyi engelle
+    if (modal && (modal.classList.contains('is-hidden') || modal.style.display === 'none')) {
+        updateSmartboardUndoRedoUI();
+        return;
+    }
+
+    const rect = container.getBoundingClientRect();
+    const cssW = Math.round(rect.width);
+    const cssH = Math.round(rect.height);
+    if (cssW <= 0 || cssH <= 0) return;
+
+    const dpr = Math.min(Math.max(window.devicePixelRatio || 1, 1), 3);
+    const targetW = Math.round(cssW * dpr);
+    const targetH = Math.round(cssH * dpr);
+
+    const dimsChanged = (
+        canvas.width !== targetW ||
+        canvas.height !== targetH ||
+        globalSmartboardState.cssWidth !== cssW ||
+        globalSmartboardState.cssHeight !== cssH ||
+        globalSmartboardState.dpr !== dpr ||
+        (previewCanvas && (previewCanvas.width !== targetW || previewCanvas.height !== targetH))
+    );
+
+    if (!dimsChanged && !forceRedraw) return;
 
     globalSmartboardState.dpr = dpr;
     globalSmartboardState.cssWidth = cssW;
     globalSmartboardState.cssHeight = cssH;
 
-    canvas.width = Math.round(cssW * dpr);
-    canvas.height = Math.round(cssH * dpr);
+    canvas.width = targetW;
+    canvas.height = targetH;
+    const ctx = canvas.getContext('2d');
+    if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     if (previewCanvas) {
-        previewCanvas.width = Math.round(cssW * dpr);
-        previewCanvas.height = Math.round(cssH * dpr);
+        previewCanvas.width = targetW;
+        previewCanvas.height = targetH;
         const pCtx = previewCanvas.getContext('2d');
-        if (pCtx) pCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (pCtx) {
+            pCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            if (globalSmartboardState.isDrawing && globalSmartboardState.currentCmd && globalSmartboardState.currentCmd.tool !== 'eraser') {
+                const activeCmd = globalSmartboardState.currentCmd;
+                pCtx.save();
+                if (activeCmd.tool === 'highlighter') {
+                    previewCanvas.style.opacity = '0.36';
+                    const savedTool = activeCmd.tool;
+                    renderSmartboardCommand(pCtx, { ...activeCmd, tool: 'pen', size: Math.max(activeCmd.size * 3.2, 16) });
+                    activeCmd.tool = savedTool;
+                } else {
+                    previewCanvas.style.opacity = '1';
+                    renderSmartboardCommand(pCtx, activeCmd);
+                }
+                pCtx.restore();
+            }
+        }
     }
 
     redrawSmartboardMainCanvas();
@@ -8020,10 +8101,12 @@ export function initGlobalSmartboard() {
     const modal = document.getElementById('smartboard-modal');
     const canvas = document.getElementById('smartboard-canvas');
     const previewCanvas = document.getElementById('smartboard-preview-canvas');
+    const container = document.getElementById('sb-canvas-container');
     if (!modal || !canvas) return;
 
-    const ctx = canvas.getContext('2d', { desynchronized: true }) || canvas.getContext('2d');
-    const pCtx = previewCanvas ? (previewCanvas.getContext('2d', { desynchronized: true }) || previewCanvas.getContext('2d')) : null;
+    // Pardus/Linux X11 uyumluluğu için standart 2D bağlam kullan (desynchronized kapalı)
+    const ctx = canvas.getContext('2d');
+    const pCtx = previewCanvas ? previewCanvas.getContext('2d') : null;
     if (!ctx) return;
 
     if (floatBtn) {
@@ -8096,6 +8179,7 @@ export function initGlobalSmartboard() {
                 pCtx.clearRect(0, 0, globalSmartboardState.cssWidth, globalSmartboardState.cssHeight);
                 pCtx.restore();
             }
+            if (previewCanvas) previewCanvas.style.opacity = '1';
             updateSmartboardUndoRedoUI();
         };
     }
@@ -8110,22 +8194,109 @@ export function initGlobalSmartboard() {
             btnFs.innerHTML = globalSmartboardState.isFullscreen
                 ? '<i class="fas fa-compress"></i> <span>Normal Ekran</span>'
                 : '<i class="fas fa-expand"></i> <span>Tam Ekran</span>';
-            requestAnimationFrame(() => setTimeout(resizeGlobalSmartboardCanvas, 30));
+            resizeGlobalSmartboardCanvas();
+            requestAnimationFrame(() => {
+                resizeGlobalSmartboardCanvas();
+                requestAnimationFrame(() => resizeGlobalSmartboardCanvas());
+            });
         };
     }
 
-    // Fatih Kalem PointerEvent Çizim Motoru (Coalesced Events + Quadratic Bezier)
-    function getCanvasPoint(evt) {
-        const rect = canvas.getBoundingClientRect();
+    // ResizeObserver ile konteyner boyutu değiştiğinde her iki tuvali anında senkronla
+    if (container && typeof ResizeObserver === 'function') {
+        const ro = new ResizeObserver(() => {
+            if (globalSmartboardState.isOpen) {
+                resizeGlobalSmartboardCanvas();
+            }
+        });
+        ro.observe(container);
+    }
+
+    // Tekil ve Kesin Koordinat Sözleşmesi (Yalnızca CSS Piksel Uzayı: e.clientX - rect.left)
+    const MIN_FREEHAND_DIST = 1.6;
+
+    function getSmartboardPoint(evt, rect) {
         return {
             x: evt.clientX - rect.left,
             y: evt.clientY - rect.top
         };
     }
 
+    // Linux / Pardus / ETAP dokunmatik sürücülerine karşı güvenli getCoalescedEvents filtresi
+    function getSafeCoalescedEvents(e, rect) {
+        if (typeof e.getCoalescedEvents !== 'function') return [e];
+        let raw = null;
+        try {
+            raw = e.getCoalescedEvents();
+        } catch (_) {
+            return [e];
+        }
+        if (!Array.isArray(raw) || raw.length === 0) return [e];
+
+        const margin = 64;
+        const maxDeltaFromMain = Math.max(rect.width, rect.height, 400);
+        const valid = [];
+        for (let i = 0; i < raw.length; i++) {
+            const ev = raw[i];
+            if (!ev || !Number.isFinite(ev.clientX) || !Number.isFinite(ev.clientY)) continue;
+            if (ev.clientX === 0 && ev.clientY === 0 && Math.hypot(e.clientX, e.clientY) > 24) continue;
+            if (
+                ev.clientX < rect.left - margin ||
+                ev.clientX > rect.right + margin ||
+                ev.clientY < rect.top - margin ||
+                ev.clientY > rect.bottom + margin
+            ) continue;
+            if (Math.hypot(ev.clientX - e.clientX, ev.clientY - e.clientY) > maxDeltaFromMain) continue;
+            valid.push(ev);
+        }
+        return valid.length > 0 ? valid : [e];
+    }
+
+    // Artımlı (Incremental) O(1) Quadratic Bezier Segment Çizici (clearRect ve tüm noktaları döngüyle çizme YOK)
+    function drawIncrementalFreehandSegment(targetCtx, cmd, fromPt, ctrlPt, toPt, forceOpaque) {
+        if (!targetCtx) return;
+        const dpr = globalSmartboardState.dpr || 1;
+        targetCtx.save();
+        targetCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        applySmartboardStrokeStyle(targetCtx, cmd, forceOpaque);
+        targetCtx.beginPath();
+        targetCtx.moveTo(fromPt.x, fromPt.y);
+        if (ctrlPt) {
+            targetCtx.quadraticCurveTo(ctrlPt.x, ctrlPt.y, toPt.x, toPt.y);
+        } else {
+            targetCtx.lineTo(toPt.x, toPt.y);
+        }
+        targetCtx.stroke();
+        targetCtx.restore();
+    }
+
+    function drawInitialFreehandDot(targetCtx, cmd, pt, forceOpaque) {
+        if (!targetCtx) return;
+        const dpr = globalSmartboardState.dpr || 1;
+        targetCtx.save();
+        targetCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const m = applySmartboardStrokeStyle(targetCtx, cmd, forceOpaque);
+        targetCtx.beginPath();
+        targetCtx.arc(pt.x, pt.y, m.lineWidth * 0.5, 0, Math.PI * 2);
+        targetCtx.fill();
+        targetCtx.restore();
+    }
+
     function onPointerDown(e) {
         if (e.pointerType === 'mouse' && e.button !== 0) return;
         if (e.cancelable) e.preventDefault();
+
+        // Çizim başlarken tuval CSS boyutu veya DPR değişmişse anında kalibre et
+        let rect = canvas.getBoundingClientRect();
+        const curDpr = Math.min(Math.max(window.devicePixelRatio || 1, 1), 3);
+        if (
+            Math.abs(Math.round(rect.width) - globalSmartboardState.cssWidth) > 1 ||
+            Math.abs(Math.round(rect.height) - globalSmartboardState.cssHeight) > 1 ||
+            Math.abs(curDpr - globalSmartboardState.dpr) > 0.01
+        ) {
+            resizeGlobalSmartboardCanvas();
+            rect = canvas.getBoundingClientRect();
+        }
 
         globalSmartboardState.isDrawing = true;
         globalSmartboardState.activePointerId = e.pointerId;
@@ -8133,26 +8304,38 @@ export function initGlobalSmartboard() {
             canvas.setPointerCapture?.(e.pointerId);
         } catch (_) {}
 
-        const pt = getCanvasPoint(e);
+        const pt = getSmartboardPoint(e, rect);
         globalSmartboardState.lastX = pt.x;
         globalSmartboardState.lastY = pt.y;
-        globalSmartboardState.currentCmd = {
+        const cmd = {
             tool: globalSmartboardState.tool,
             color: globalSmartboardState.color,
             size: globalSmartboardState.size,
-            points: [pt]
+            points: [pt],
+            lastMid: pt
         };
+        globalSmartboardState.currentCmd = cmd;
 
-        if (globalSmartboardState.tool === 'eraser') {
-            ctx.save();
-            ctx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
-            renderSmartboardCommand(ctx, globalSmartboardState.currentCmd);
-            ctx.restore();
+        if (cmd.tool === 'eraser') {
+            if (previewCanvas) previewCanvas.style.opacity = '1';
+            drawInitialFreehandDot(ctx, cmd, pt, false);
+        } else if (cmd.tool === 'pen' || cmd.tool === 'highlighter') {
+            if (previewCanvas) {
+                previewCanvas.style.opacity = (cmd.tool === 'highlighter') ? '0.36' : '1';
+            }
+            if (pCtx) {
+                pCtx.save();
+                pCtx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
+                pCtx.clearRect(0, 0, globalSmartboardState.cssWidth, globalSmartboardState.cssHeight);
+                pCtx.restore();
+                drawInitialFreehandDot(pCtx, cmd, pt, true);
+            }
         } else if (pCtx) {
+            if (previewCanvas) previewCanvas.style.opacity = '1';
             pCtx.save();
             pCtx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
             pCtx.clearRect(0, 0, globalSmartboardState.cssWidth, globalSmartboardState.cssHeight);
-            renderSmartboardCommand(pCtx, globalSmartboardState.currentCmd);
+            renderSmartboardCommand(pCtx, cmd);
             pCtx.restore();
         }
     }
@@ -8165,47 +8348,50 @@ export function initGlobalSmartboard() {
         const cmd = globalSmartboardState.currentCmd;
         if (!cmd) return;
 
-        const coalesced = typeof e.getCoalescedEvents === 'function' ? e.getCoalescedEvents() : null;
-        const events = (coalesced && coalesced.length > 0) ? coalesced : [e];
-
+        const rect = canvas.getBoundingClientRect();
         const isFreehand = (cmd.tool === 'pen' || cmd.tool === 'highlighter' || cmd.tool === 'eraser');
-        for (let i = 0; i < events.length; i++) {
-            const pt = getCanvasPoint(events[i]);
-            const prev = cmd.points[cmd.points.length - 1];
-            const dist = Math.hypot(pt.x - prev.x, pt.y - prev.y);
-            if (isFreehand) {
-                if (dist >= 0.75) {
-                    cmd.points.push(pt);
-                    globalSmartboardState.lastX = pt.x;
-                    globalSmartboardState.lastY = pt.y;
-                }
-            } else {
-                if (cmd.points.length === 1) cmd.points.push(pt);
-                else cmd.points[1] = pt;
+
+        if (isFreehand) {
+            const events = getSafeCoalescedEvents(e, rect);
+            const activeCtx = (cmd.tool === 'eraser') ? ctx : pCtx;
+            const forceOpaque = (cmd.tool === 'highlighter');
+
+            for (let i = 0; i < events.length; i++) {
+                const pt = getSmartboardPoint(events[i], rect);
+                const prev = cmd.points[cmd.points.length - 1];
+                const dist = Math.hypot(pt.x - prev.x, pt.y - prev.y);
+                if (dist < MIN_FREEHAND_DIST) continue;
+
+                cmd.points.push(pt);
                 globalSmartboardState.lastX = pt.x;
                 globalSmartboardState.lastY = pt.y;
-            }
-        }
 
-        if (cmd.tool === 'eraser') {
-            const len = cmd.points.length;
-            if (len >= 2) {
-                ctx.save();
-                ctx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
-                renderSmartboardCommand(ctx, {
-                    tool: 'eraser',
-                    color: '#000000',
-                    size: cmd.size,
-                    points: cmd.points.slice(Math.max(0, len - 3))
-                });
-                ctx.restore();
+                const mid = {
+                    x: (prev.x + pt.x) * 0.5,
+                    y: (prev.y + pt.y) * 0.5
+                };
+
+                if (cmd.points.length === 2) {
+                    drawIncrementalFreehandSegment(activeCtx, cmd, prev, null, mid, forceOpaque);
+                } else {
+                    drawIncrementalFreehandSegment(activeCtx, cmd, cmd.lastMid, prev, mid, forceOpaque);
+                }
+                cmd.lastMid = mid;
             }
-        } else if (pCtx) {
-            pCtx.save();
-            pCtx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
-            pCtx.clearRect(0, 0, globalSmartboardState.cssWidth, globalSmartboardState.cssHeight);
-            renderSmartboardCommand(pCtx, cmd);
-            pCtx.restore();
+        } else {
+            const pt = getSmartboardPoint(e, rect);
+            if (cmd.points.length === 1) cmd.points.push(pt);
+            else cmd.points[1] = pt;
+            globalSmartboardState.lastX = pt.x;
+            globalSmartboardState.lastY = pt.y;
+
+            if (pCtx) {
+                pCtx.save();
+                pCtx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
+                pCtx.clearRect(0, 0, globalSmartboardState.cssWidth, globalSmartboardState.cssHeight);
+                renderSmartboardCommand(pCtx, cmd);
+                pCtx.restore();
+            }
         }
     }
 
@@ -8213,6 +8399,25 @@ export function initGlobalSmartboard() {
         if (!globalSmartboardState.isDrawing) return;
         if (e && globalSmartboardState.activePointerId !== null && e.pointerId !== globalSmartboardState.activePointerId) return;
         if (e && e.cancelable) e.preventDefault();
+
+        const rect = canvas.getBoundingClientRect();
+        const cmd = globalSmartboardState.currentCmd;
+
+        // Parmak/kalem kalkarken son konumu yakala
+        if (e && e.type === 'pointerup' && cmd && Number.isFinite(e.clientX) && Number.isFinite(e.clientY)) {
+            const endPt = getSmartboardPoint(e, rect);
+            const isFreehand = (cmd.tool === 'pen' || cmd.tool === 'highlighter' || cmd.tool === 'eraser');
+            if (isFreehand) {
+                const prev = cmd.points[cmd.points.length - 1];
+                if (Math.hypot(endPt.x - prev.x, endPt.y - prev.y) >= MIN_FREEHAND_DIST) {
+                    cmd.points.push(endPt);
+                }
+            } else if (cmd.points.length >= 2) {
+                cmd.points[1] = endPt;
+            } else if (Math.hypot(endPt.x - cmd.points[0].x, endPt.y - cmd.points[0].y) >= 1) {
+                cmd.points.push(endPt);
+            }
+        }
 
         try {
             if (globalSmartboardState.activePointerId !== null) {
@@ -8222,8 +8427,6 @@ export function initGlobalSmartboard() {
 
         globalSmartboardState.isDrawing = false;
         globalSmartboardState.activePointerId = null;
-
-        const cmd = globalSmartboardState.currentCmd;
         globalSmartboardState.currentCmd = null;
 
         if (pCtx) {
@@ -8232,13 +8435,27 @@ export function initGlobalSmartboard() {
             pCtx.clearRect(0, 0, globalSmartboardState.cssWidth, globalSmartboardState.cssHeight);
             pCtx.restore();
         }
+        if (previewCanvas) previewCanvas.style.opacity = '1';
 
         if (cmd && cmd.points.length > 0) {
-            ctx.save();
-            ctx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
-            renderSmartboardCommand(ctx, cmd);
-            ctx.restore();
-            globalSmartboardState.history.push(cmd);
+            const historyEntry = {
+                tool: cmd.tool,
+                color: cmd.color,
+                size: cmd.size,
+                points: cmd.points
+            };
+            if (cmd.tool === 'eraser') {
+                if (cmd.points.length >= 2 && cmd.lastMid) {
+                    const pLast = cmd.points[cmd.points.length - 1];
+                    drawIncrementalFreehandSegment(ctx, cmd, cmd.lastMid, null, pLast, false);
+                }
+            } else {
+                ctx.save();
+                ctx.setTransform(globalSmartboardState.dpr, 0, 0, globalSmartboardState.dpr, 0, 0);
+                renderSmartboardCommand(ctx, historyEntry);
+                ctx.restore();
+            }
+            globalSmartboardState.history.push(historyEntry);
             globalSmartboardState.redoStack = [];
             updateSmartboardUndoRedoUI();
         }

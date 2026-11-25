@@ -11465,7 +11465,7 @@ function drawDualTrack(ctx, trackNum, t, groundY, isAmber) {
     const dynY = groundY - 18;
     drawDynamometer(ctx, dynX, dynY, t.force, primaryColor);
 
-    // E. Uygulanan Kuvvet Vektör Oku (Sade Değer: 10 N / 20 N)
+    // E. Uygulanan Kuvvet Vektör Oku (Tekil, çakışmasız etiket: 10 N / 20 N)
     const hookX = dynX + 46;
     const arrowLen = 32 + (t.force / 50) * 55;
     drawWorkVectorArrow(
@@ -11475,14 +11475,29 @@ function drawDualTrack(ctx, trackNum, t, groundY, isAmber) {
         hookX + arrowLen,
         dynY,
         primaryColor,
-        `${t.force.toFixed(0)} N`
+        ""
     );
 
+    const forceLabel = `${t.force.toFixed(0)} N`;
+    const labelCenterX = hookX + arrowLen / 2;
+    const labelBottomY = dynY - 9;
+    ctx.save();
     ctx.font = 'bold 12px system-ui, -apple-system, sans-serif';
+    const textW = ctx.measureText(forceLabel).width;
+    const pillW = Math.max(38, textW + 12);
+    const pillH = 18;
+    ctx.fillStyle = 'rgba(15, 23, 42, 0.88)';
+    ctx.strokeStyle = primaryColor;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.roundRect(labelCenterX - pillW / 2, labelBottomY - pillH, pillW, pillH, 5);
+    ctx.fill();
+    ctx.stroke();
     ctx.fillStyle = primaryColor;
     ctx.textAlign = 'center';
-    ctx.textBaseline = 'bottom';
-    ctx.fillText(`${t.force.toFixed(0)} N`, hookX + arrowLen / 2, dynY - 7);
+    ctx.textBaseline = 'middle';
+    ctx.fillText(forceLabel, labelCenterX, labelBottomY - pillH / 2 + 0.5);
+    ctx.restore();
 
     ctx.restore();
 }
