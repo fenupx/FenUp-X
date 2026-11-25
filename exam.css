@@ -5921,3 +5921,1363 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     margin: 0 !important; max-width: none !important; max-height: none !important;
     transform: none !important; border-radius: 0 !important;
 }
+
+/* ============================================================================
+   V8.9.42 — ÇİFT DERİNLİKLİ BİLGİ İSTASYONU (Hızlı Tekrar | Kapsamlı Hazırlık)
+   4 Hedef Ekran (ETAP 1920, Masaüstü 1366, Tablet 768, Mobil 390) + A4 Print
+   ============================================================================ */
+
+.study-toolbar-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 1 auto;
+}
+
+.study-depth-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 14px;
+    background: rgba(15, 23, 42, 0.78);
+    border: 1px solid rgba(56, 189, 248, 0.32);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.study-depth-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 44px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    touch-action: manipulation;
+    transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.study-depth-btn:hover {
+    color: #ffffff;
+    background: rgba(56, 189, 248, 0.14);
+}
+
+.study-depth-btn.active {
+    background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
+    color: #ffffff;
+    box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35);
+}
+
+.study-pdf-btn {
+    min-height: 44px;
+    white-space: nowrap;
+}
+
+/* Kapsamlı Hazırlık Düzeni — Serbest Yükseklikli Dijital Ders Rehberi */
+#scene-yazili.study-active.comprehensive-study-mode:not(.is-hidden) {
+    height: auto !important;
+    max-height: none !important;
+    min-height: calc(100dvh - 88px) !important;
+    overflow: visible !important;
+    padding-bottom: 48px !important;
+    text-align: left !important;
+}
+
+#scene-yazili.study-active.comprehensive-study-mode:not(.is-hidden) #exam-view-study.comprehensive-active {
+    flex: none !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+#scene-yazili.study-active.comprehensive-study-mode:not(.is-hidden) #exam-view-study.comprehensive-active .exam-cards-layout,
+#exam-view-study.comprehensive-active .exam-cards-layout {
+    flex: none !important;
+    display: grid !important;
+    grid-template-columns: 250px minmax(0, 1fr) !important;
+    grid-template-rows: auto !important;
+    gap: 24px !important;
+    align-items: start !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+}
+
+#scene-yazili.study-active.comprehensive-study-mode:not(.is-hidden) #exam-view-study.comprehensive-active .exam-cards-layout.plan-collapsed,
+#exam-view-study.comprehensive-active .exam-cards-layout.plan-collapsed {
+    grid-template-columns: minmax(0, 1fr) !important;
+}
+
+#exam-view-study.comprehensive-active .exam-cards-layout.plan-collapsed #exam-cardnav {
+    display: none !important;
+}
+
+#exam-view-study.comprehensive-active #exam-cardnav {
+    position: sticky;
+    top: 84px;
+    max-height: calc(100vh - 108px);
+    overflow-y: auto;
+    padding: 16px;
+    border-radius: 18px;
+    background: rgba(15, 23, 42, 0.86);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    text-align: left;
+}
+
+.comp-mobile-sticky-picker {
+    display: none;
+}
+
+.comp-outcome-nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.comp-outcome-nav-btn {
+    width: 100%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 14px;
+    min-height: 48px;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(30, 41, 59, 0.65);
+    color: #e2e8f0;
+    cursor: pointer;
+    transition: border-color 0.18s ease, background 0.18s ease, transform 0.15s ease;
+}
+
+.comp-outcome-nav-btn:hover {
+    border-color: rgba(56, 189, 248, 0.55);
+    background: rgba(30, 41, 59, 0.92);
+}
+
+.comp-outcome-nav-btn.active {
+    border-color: #38bdf8;
+    background: linear-gradient(135deg, rgba(2, 132, 199, 0.34), rgba(15, 23, 42, 0.95));
+    box-shadow: 0 4px 16px rgba(14, 165, 233, 0.22);
+}
+
+.comp-nav-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.comp-nav-min {
+    font-size: 0.78rem;
+    color: #94a3b8;
+    font-weight: 600;
+}
+
+.comp-nav-title {
+    font-size: 0.95rem;
+    line-height: 1.35;
+    color: #f8fafc;
+}
+
+.comp-nav-unit {
+    font-size: 0.78rem;
+    color: #94a3b8;
+}
+
+/* Sağ Okuma Sütunu */
+#exam-card-article.comprehensive-mode {
+    display: block !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    padding: 28px 32px !important;
+    border-radius: 20px;
+    background: rgba(15, 23, 42, 0.88);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    text-align: left !important;
+}
+
+.comp-reading-container {
+    width: 100%;
+    max-width: 880px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    text-align: left;
+}
+
+.comp-scenario-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: rgba(14, 165, 233, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: #bae6fd;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.comp-outcome-doc {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+/* 1. Hero Bandı */
+.comp-hero-band {
+    padding: 24px 26px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(14, 116, 144, 0.28) 0%, rgba(15, 23, 42, 0.94) 100%);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.comp-hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.comp-outcome-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 0.84rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+}
+
+.comp-unit-pill,
+.comp-meta-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: rgba(30, 41, 59, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    color: #cbd5e1;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.comp-outcome-title {
+    margin: 0;
+    font-size: 1.75rem;
+    line-height: 1.25;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.comp-outcome-subtitle {
+    margin: 0;
+    font-size: 1rem;
+    color: #7dd3fc;
+    font-weight: 600;
+}
+
+.comp-hero-summary {
+    margin: 2px 0 0;
+    font-size: 1.04rem;
+    line-height: 1.72;
+    color: #e2e8f0;
+}
+
+.comp-concepts-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.comp-concept-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.14);
+    border: 1px solid rgba(56, 189, 248, 0.34);
+    color: #e0f2fe;
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+/* 2. Ayrıntılı Konu Bölümleri & Hibrit Görseller */
+.comp-sections-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+}
+
+.comp-section-block {
+    padding: 24px 26px;
+    border-radius: 18px;
+    background: rgba(30, 41, 59, 0.56);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.comp-section-heading {
+    margin: 0;
+    font-size: 1.32rem;
+    line-height: 1.32;
+    color: #38bdf8;
+    font-weight: 800;
+}
+
+.comp-section-lead {
+    margin: 0;
+    padding: 12px 16px;
+    border-left: 4px solid #38bdf8;
+    border-radius: 0 12px 12px 0;
+    background: rgba(14, 165, 233, 0.1);
+    color: #f1f5f9;
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.6;
+}
+
+.comp-section-paragraphs {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.comp-section-paragraphs p {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: #e2e8f0;
+}
+
+.comp-section-visuals {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 6px;
+}
+
+.comp-figure {
+    margin: 0;
+    border-radius: 16px;
+    overflow: hidden;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(148, 163, 184, 0.26);
+    box-shadow: 0 10px 26px rgba(2, 6, 23, 0.35);
+    cursor: zoom-in;
+    transition: border-color 0.18s ease, transform 0.18s ease;
+}
+
+.comp-figure:hover {
+    border-color: rgba(56, 189, 248, 0.65);
+}
+
+.comp-figure-custom-svg {
+    cursor: default;
+    padding: 12px;
+}
+
+.comp-img-frame {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: #020617;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.comp-figure-illustration .comp-img-frame {
+    aspect-ratio: 16 / 9;
+}
+
+.comp-figure-illustration .comp-img-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.comp-figure:not(.comp-figure-illustration) .comp-img-frame img {
+    width: 100%;
+    max-height: 340px;
+    object-fit: contain;
+    display: block;
+}
+
+.comp-figure-svg .comp-img-frame {
+    background: #f8fafc;
+    padding: 14px;
+}
+
+.comp-zoom-pill {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(2, 6, 23, 0.78);
+    color: #f8fafc;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    pointer-events: none;
+}
+
+.comp-figure figcaption {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #cbd5e1;
+    background: rgba(15, 23, 42, 0.95);
+    border-top: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.comp-gallery {
+    display: grid;
+    gap: 14px;
+}
+
+.comp-gallery.cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.comp-gallery.cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.comp-gallery .comp-figure:not(.comp-figure-illustration) .comp-img-frame img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.comp-gallery.comp-gallery-svg .comp-figure .comp-img-frame img {
+    height: 210px;
+    object-fit: contain;
+}
+
+/* Özel Eğitsel Vektörel SVG Diyagramlar + Hafif Mikro-Animasyon */
+.comp-svg-box {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 14px;
+}
+
+.comp-custom-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+@keyframes compOrbitSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes compSoftPulse {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 0.75; }
+}
+
+.comp-svg-orbit {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: compOrbitSpin 28s linear infinite;
+}
+
+.comp-svg-pulse {
+    animation: compSoftPulse 3.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .comp-svg-orbit,
+    .comp-svg-pulse {
+        animation: none !important;
+    }
+}
+
+/* 3. Karşılaştırma Tabloları */
+.comp-block {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.comp-block-title {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.25rem;
+    color: #f8fafc;
+    font-weight: 800;
+}
+
+.comp-block-title i {
+    color: #38bdf8;
+}
+
+.comp-table-card {
+    border-radius: 16px;
+    padding: 18px 20px;
+    background: rgba(30, 41, 59, 0.58);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+}
+
+.comp-table-title {
+    margin: 0 0 12px;
+    font-size: 1.04rem;
+    color: #e0f2fe;
+    font-weight: 700;
+}
+
+.comp-table-scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.comp-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 520px;
+    font-size: 0.94rem;
+    color: #e2e8f0;
+}
+
+.comp-table thead th {
+    background: rgba(2, 132, 199, 0.34);
+    color: #ffffff;
+    font-weight: 800;
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.comp-table tbody td {
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+    line-height: 1.5;
+    vertical-align: top;
+}
+
+.comp-table tbody tr:nth-child(even) {
+    background: rgba(15, 23, 42, 0.45);
+}
+
+.comp-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* 4. Günlük Yaşamdan Örnekler */
+.comp-examples-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.comp-example-card {
+    padding: 18px 20px;
+    border-radius: 16px;
+    background: rgba(30, 41, 59, 0.62);
+    border: 1px solid rgba(56, 189, 248, 0.24);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.comp-example-card h4 {
+    margin: 0;
+    font-size: 1.02rem;
+    color: #7dd3fc;
+    font-weight: 700;
+}
+
+.comp-example-card p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #e2e8f0;
+}
+
+/* 5. Yazılıda Dikkat! */
+.comp-watchouts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.comp-watchout-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: stretch;
+    gap: 14px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: rgba(30, 41, 59, 0.72);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.comp-watchout-trap,
+.comp-watchout-truth {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.comp-watchout-trap p,
+.comp-watchout-truth p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #f1f5f9;
+}
+
+.comp-watchout-label {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.comp-watchout-label.trap {
+    background: rgba(239, 68, 68, 0.22);
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.45);
+}
+
+.comp-watchout-label.truth {
+    background: rgba(16, 185, 129, 0.22);
+    color: #6ee7b7;
+    border: 1px solid rgba(16, 185, 129, 0.45);
+}
+
+.comp-watchout-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fbbf24;
+}
+
+/* 6. Kendini Hızlı Kontrol Et + Sanal Laboratuvar Köprüsü */
+.comp-qchecks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comp-quick-check {
+    border-radius: 14px;
+    background: rgba(30, 41, 59, 0.68);
+    border: 1px solid rgba(148, 163, 184, 0.26);
+    overflow: hidden;
+}
+
+.comp-quick-check[open] {
+    border-color: rgba(16, 185, 129, 0.55);
+}
+
+.comp-qc-summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 52px;
+    padding: 13px 16px;
+    cursor: pointer;
+    color: #f8fafc;
+    font-weight: 600;
+    font-size: 0.98rem;
+    line-height: 1.45;
+}
+
+.comp-qc-summary::-webkit-details-marker {
+    display: none;
+}
+
+.comp-qc-num {
+    flex: 0 0 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(56, 189, 248, 0.22);
+    color: #7dd3fc;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.comp-qc-q {
+    flex: 1 1 auto;
+}
+
+.comp-qc-toggle {
+    flex: 0 0 auto;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(56, 189, 248, 0.16);
+    color: #7dd3fc;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.comp-quick-check[open] .comp-qc-toggle {
+    background: rgba(16, 185, 129, 0.22);
+    color: #6ee7b7;
+}
+
+.comp-qc-answer {
+    padding: 12px 16px 15px 56px;
+    border-top: 1px solid rgba(148, 163, 184, 0.18);
+    background: rgba(15, 23, 42, 0.55);
+    color: #a7f3d0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.comp-lab-bridge {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    padding: 20px 24px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(2, 132, 199, 0.22) 100%);
+    border: 1px solid rgba(52, 211, 153, 0.45);
+}
+
+.comp-lab-bridge-info {
+    flex: 1 1 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.comp-lab-bridge-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6ee7b7;
+}
+
+.comp-lab-bridge-info h4 {
+    margin: 0;
+    font-size: 1.15rem;
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.comp-lab-bridge-info p {
+    margin: 0;
+    font-size: 0.94rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+}
+
+.comp-lab-bridge-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 12px 20px;
+    text-decoration: none !important;
+    white-space: nowrap;
+}
+
+.comp-bottom-nav {
+    position: static !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    z-index: auto !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    margin-top: 8px !important;
+    padding: 16px 0 0 !important;
+    border-top: 1px solid rgba(148, 163, 184, 0.2) !important;
+}
+
+/* ETAP Akıllı Tahta (>= 1600px, 1920x1080) */
+@media (min-width: 1600px) {
+    #scene-yazili.study-active.comprehensive-study-mode:not(.is-hidden) #exam-view-study.comprehensive-active .exam-cards-layout,
+    #exam-view-study.comprehensive-active .exam-cards-layout {
+        grid-template-columns: 280px minmax(0, 1fr) !important;
+        gap: 28px !important;
+    }
+
+    .comp-reading-container {
+        max-width: 1080px;
+    }
+
+    .comp-outcome-title {
+        font-size: 2.05rem;
+    }
+
+    .comp-hero-summary,
+    .comp-section-paragraphs p,
+    .comp-section-lead,
+    .comp-example-card p,
+    .comp-watchout-trap p,
+    .comp-watchout-truth p,
+    .comp-qc-summary,
+    .comp-qc-answer {
+        font-size: 1.15rem; /* ~18.4px */
+        line-height: 1.75;
+    }
+
+    .study-depth-btn,
+    .study-pdf-btn,
+    .comp-outcome-nav-btn,
+    .comp-lab-bridge-btn,
+    .comp-qc-summary {
+        min-height: 50px;
+    }
+}
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    #scene-yazili.study-active.comprehensive-study-mode:not(.is-hidden) #exam-view-study.comprehensive-active .exam-cards-layout,
+    #exam-view-study.comprehensive-active .exam-cards-layout {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 16px !important;
+    }
+
+    #scene-yazili.study-active.comprehensive-study-mode:not(.is-hidden) .exam-cards-layout.plan-collapsed #exam-cardnav,
+    #exam-view-study.comprehensive-active .exam-cards-layout.plan-collapsed #exam-cardnav {
+        display: block !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+    }
+
+    #exam-view-study.comprehensive-active #exam-cardnav {
+        position: static;
+        max-height: none;
+        padding: 14px 16px;
+    }
+
+    .comp-outcome-nav-list {
+        display: none;
+    }
+
+    .comp-mobile-sticky-picker {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .comp-mobile-pills {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .comp-mobile-pill {
+        flex: 0 0 auto;
+        min-height: 44px;
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        background: rgba(30, 41, 59, 0.8);
+        color: #cbd5e1;
+        font-size: 0.85rem;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .comp-mobile-pill.active {
+        background: #0284c7;
+        border-color: #38bdf8;
+        color: #ffffff;
+    }
+
+    #exam-card-article.comprehensive-mode {
+        padding: 20px 22px !important;
+    }
+
+    .comp-gallery.cols-3 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Mobil (<= 767px, 390x844) */
+@media (max-width: 767px) {
+    .study-toolbar-center {
+        width: 100%;
+        order: 3;
+    }
+
+    .study-depth-switch {
+        width: 100%;
+    }
+
+    .study-depth-btn {
+        flex: 1 1 50%;
+        min-height: 48px;
+        padding: 8px 10px;
+        font-size: 0.86rem;
+    }
+
+    .study-pdf-btn {
+        min-height: 48px;
+    }
+
+    #exam-view-study.comprehensive-active #exam-cardnav {
+        position: sticky;
+        top: 6px;
+        z-index: 25;
+        backdrop-filter: blur(10px);
+    }
+
+    .comp-mobile-pill {
+        min-height: 48px;
+    }
+
+    #exam-card-article.comprehensive-mode {
+        padding: 16px 14px !important;
+    }
+
+    .comp-hero-band,
+    .comp-section-block,
+    .comp-table-card {
+        padding: 16px 14px;
+    }
+
+    .comp-outcome-title {
+        font-size: 1.38rem;
+    }
+
+    .comp-hero-summary,
+    .comp-section-paragraphs p,
+    .comp-section-lead {
+        font-size: 1rem; /* >= 16px */
+    }
+
+    .comp-gallery.cols-2,
+    .comp-gallery.cols-3 {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .comp-watchout-item {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    .comp-watchout-arrow {
+        transform: rotate(90deg);
+        font-size: 1.1rem;
+    }
+
+    .comp-qc-summary {
+        min-height: 52px;
+        padding: 12px;
+    }
+
+    .comp-qc-answer {
+        padding: 12px 14px;
+    }
+
+    .comp-lab-bridge-btn {
+        width: 100%;
+        min-height: 48px;
+    }
+}
+
+/* ============================================================================
+   BİLGİ İSTASYONU SENARYOYA ÖZEL A4 YAZDIRMA / PDF ŞABLONU
+   ============================================================================ */
+
+#exam-print-sheet.study-print-mode {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif !important;
+    line-height: 1.5 !important;
+}
+
+.study-print-outcome {
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid #cbd5e1;
+}
+
+.study-print-outcome:last-child {
+    border-bottom: none;
+}
+
+.study-print-hero {
+    background: #f8fafc;
+    border: 1.5px solid #94a3b8;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.study-print-hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.study-print-badge {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 6px;
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.study-print-unit,
+.study-print-meta-chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: #e2e8f0;
+    color: #1e293b;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.study-print-outcome-title {
+    margin: 4px 0;
+    font-size: 18px;
+    color: #0f172a;
+    font-weight: 800;
+}
+
+.study-print-outcome-subtitle {
+    margin: 0 0 6px;
+    font-size: 13px;
+    color: #334155;
+    font-weight: 600;
+}
+
+.study-print-hero-summary {
+    margin: 6px 0 8px;
+    font-size: 13px;
+    color: #0f172a;
+}
+
+.study-print-concepts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.study-print-concept-chip {
+    display: inline-block;
+    padding: 2px 8px;
+    border: 1px solid #94a3b8;
+    border-radius: 999px;
+    font-size: 11px;
+    color: #0f172a;
+    background: #ffffff;
+}
+
+.study-print-section {
+    margin-bottom: 14px;
+}
+
+.study-print-sec-heading,
+.study-print-block-title {
+    margin: 12px 0 6px;
+    font-size: 15px;
+    color: #0f172a;
+    border-bottom: 1px solid #cbd5e1;
+    padding-bottom: 3px;
+}
+
+.study-print-sec-lead {
+    margin: 0 0 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.study-print-sec-body p,
+.study-print-card p {
+    margin: 0 0 6px;
+    font-size: 12.5px;
+    color: #0f172a;
+}
+
+.study-print-gallery {
+    display: grid;
+    gap: 10px;
+    margin: 8px 0;
+}
+
+.study-print-gallery.cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.study-print-gallery.cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.study-print-figure {
+    margin: 8px 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 8px;
+    background: #ffffff;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.study-print-img-wrap img {
+    display: block;
+    width: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    margin: 0 auto;
+}
+
+.study-print-figure figcaption {
+    margin-top: 6px;
+    font-size: 11.5px;
+    color: #334155;
+    text-align: center;
+}
+
+.study-print-table-wrap {
+    margin: 8px 0 12px;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.study-print-table-title {
+    margin: 0 0 5px;
+    font-size: 13px;
+    color: #0f172a;
+}
+
+.study-print-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    color: #0f172a;
+}
+
+.study-print-table th,
+.study-print-table td {
+    border: 1px solid #94a3b8;
+    padding: 6px 8px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.study-print-table thead th {
+    background: #e2e8f0;
+    color: #0f172a;
+    font-weight: 800;
+}
+
+.study-print-examples-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.study-print-example-card,
+.study-print-watchout,
+.study-print-qc,
+.study-print-card {
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 9px 11px;
+    margin-bottom: 8px;
+    background: #ffffff;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.study-print-example-card h4,
+.study-print-card-title {
+    margin: 0 0 4px;
+    font-size: 13px;
+    color: #0f172a;
+}
+
+.study-print-watchout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 10px;
+    border-color: #b45309;
+    background: #fffbeb;
+}
+
+.study-print-watchout .comp-watchout-trap p,
+.study-print-watchout .comp-watchout-truth p {
+    color: #0f172a !important;
+    font-size: 12px;
+}
+
+.study-print-watchout .comp-watchout-label.trap {
+    background: #fee2e2;
+    color: #991b1b;
+    border-color: #ef4444;
+}
+
+.study-print-watchout .comp-watchout-label.truth {
+    background: #d1fae5;
+    color: #065f46;
+    border-color: #10b981;
+}
+
+.study-print-qc .comp-qc-summary {
+    color: #0f172a !important;
+    min-height: auto;
+    padding: 0 0 5px;
+    font-size: 12.5px;
+}
+
+.study-print-qc .comp-qc-num {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.study-print-qc .comp-qc-answer {
+    background: #f8fafc;
+    color: #0f172a !important;
+    padding: 6px 10px;
+    border-top: 1px solid #cbd5e1;
+    font-size: 12px;
+}
+
+.study-print-takeaway,
+.study-print-misconception {
+    margin-top: 6px;
+    padding: 6px 9px;
+    border-radius: 6px;
+    font-size: 12px;
+    background: #f1f5f9;
+    color: #0f172a;
+}
+
+/* Özel SVG'lerin Beyaz A4 PDF / Print Yüksek Kontrast Uyarlaması */
+.comp-custom-svg-print .comp-svg-bg,
+#exam-print-sheet.study-print-mode .comp-svg-bg {
+    fill: #ffffff !important;
+    stroke: #334155 !important;
+}
+
+.comp-custom-svg-print .comp-svg-card,
+#exam-print-sheet.study-print-mode .comp-svg-card {
+    fill: #f8fafc !important;
+}
+
+.comp-custom-svg-print .comp-svg-title,
+.comp-custom-svg-print .comp-svg-text,
+#exam-print-sheet.study-print-mode .comp-svg-title,
+#exam-print-sheet.study-print-mode .comp-svg-text {
+    fill: #0f172a !important;
+}
+
+.comp-custom-svg-print .comp-svg-muted,
+#exam-print-sheet.study-print-mode .comp-svg-muted {
+    fill: #334155 !important;
+}
+
+.comp-custom-svg-print .comp-svg-ring-outer,
+#exam-print-sheet.study-print-mode .comp-svg-ring-outer {
+    fill: #eef2ff !important;
+    stroke: #4338ca !important;
+}
+
+.comp-custom-svg-print .comp-svg-ring-mid,
+#exam-print-sheet.study-print-mode .comp-svg-ring-mid {
+    fill: #e0f2fe !important;
+    stroke: #0369a1 !important;
+}
+
+.comp-custom-svg-print .comp-svg-ring-inner,
+#exam-print-sheet.study-print-mode .comp-svg-ring-inner {
+    fill: #fef3c7 !important;
+    stroke: #b45309 !important;
+}
+
+.comp-custom-svg-print .comp-svg-orbit,
+.comp-custom-svg-print .comp-svg-pulse {
+    animation: none !important;
+}
+
+@media print {
+    .comp-svg-orbit,
+    .comp-svg-pulse {
+        animation: none !important;
+    }
+
+    #scene-yazili,
+    #scene-yazili.study-active:not(.is-hidden),
+    #scene-yazili.study-active.comprehensive-study-mode:not(.is-hidden),
+    #floating-smartboard-btn,
+    .floating-smartboard-btn {
+        display: none !important;
+    }
+
+    #exam-print-sheet.study-print-mode {
+        background: #ffffff !important;
+        color: #0f172a !important;
+    }
+
+    .study-print-figure,
+    .study-print-table-wrap,
+    .study-print-watchout,
+    .study-print-qc,
+    .study-print-card,
+    .study-print-hero {
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+    }
+}
+

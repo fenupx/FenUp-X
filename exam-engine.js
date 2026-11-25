@@ -168,6 +168,8 @@ function createDefaultState() {
         currentStep: 'scope', // 'scope' | 'choice' | 'study' | 'practice' | 'eval' | 'summary'
         studyCardIdx: 0,
         studyMode: 'free', // 'free' | 'review'
+        studyDepth: 'quick', // 'quick' (Hızlı Tekrar) | 'deep' (Kapsamlı Hazırlık)
+        deepOutcomeId: null,
         reviewCardIds: [],
         returnToSummary: false,
         reviewingEval: false,
@@ -962,6 +964,13 @@ async function loadData(revision = getActiveContentRevision(), showError = true,
                         const ekRes = await fetch(base + 'ek_icerik.json?v=' + CONTENT_V6_VERSION);
                         if (ekRes.ok) {
                             data.ekContent = await ekRes.json();
+                        }
+                    } catch (_) {}
+
+                    try {
+                        const compRes = await fetch(base + 'kapsamli_hazirlik_7_1d1y_v3.json?v=' + CONTENT_V6_VERSION);
+                        if (compRes.ok) {
+                            data.comprehensiveV3 = await compRes.json();
                         }
                     } catch (_) {}
                 }
@@ -1785,9 +1794,874 @@ function renderChoice() {
     }
 }
 
+// --- V8.9.42: ÇİFT DERİNLİKLİ BİLGİ İSTASYONU (Hızlı Tekrar | Kapsamlı Hazırlık V3) + 3 ÖZEL SVG + SENARYOYA ÖZEL PDF ---
+export function hasComprehensiveStudy() {
+    return getActiveGrade() === '7'
+        && Array.isArray(DATA?.comprehensiveV3?.outcomes)
+        && DATA.comprehensiveV3.outcomes.length > 0
+        && state.studyMode !== 'review';
+}
+
+export function getActiveComprehensiveOutcomes() {
+    if (!Array.isArray(DATA?.comprehensiveV3?.outcomes)) return [];
+    const activeScenario = getActiveScenario();
+    const activeOutcomeIds = new Set((activeScenario?.allocation || []).map(a => a.outcome_id));
+    return DATA.comprehensiveV3.outcomes
+        .filter(o => activeOutcomeIds.size === 0 || activeOutcomeIds.has(o.outcome_id))
+        .sort((a, b) => {
+            const oA = OUTCOME_ORDER.indexOf(a.outcome_id);
+            const oB = OUTCOME_ORDER.indexOf(b.outcome_id);
+            return (oA === -1 ? 999 : oA) - (oB === -1 ? 999 : oB);
+        });
+}
+
+export function setStudyDepth(depth) {
+    const nextDepth = (depth === 'deep' && hasComprehensiveStudy()) ? 'deep' : 'quick';
+    if (state.studyDepth !== nextDepth) {
+        state.studyDepth = nextDepth;
+        saveState();
+    }
+    renderStudy(state.studyCardIdx || 0);
+}
+
+function renderComprehensiveSvgDiagram(svgId, forPrint = false) {
+    const pCls = forPrint ? ' comp-custom-svg-print' : '';
+    if (svgId === 'svg-space-debris-cycle') {
+        return `
+            <div class="comp-svg-box${pCls}" data-svg-id="svg-space-debris-cycle">
+                <svg class="comp-custom-svg" viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Uzay kirliliği risk döngüsü diyagramı: Çarpışma, yeni küçük parçalar ve etkin uydu riski">
+                    <defs>
+                        <marker id="comp-arr-amber-${forPrint ? 'p' : 's'}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b"/>
+                        </marker>
+                        <marker id="comp-arr-red-${forPrint ? 'p' : 's'}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#ef4444"/>
+                        </marker>
+                        <marker id="comp-arr-sky-${forPrint ? 'p' : 's'}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+                        </marker>
+                    </defs>
+                    <rect class="comp-svg-bg" x="4" y="4" width="752" height="352" rx="18" fill="#0b132b" stroke="#334155" stroke-width="1.5"/>
+                    <text class="comp-svg-title" x="380" y="34" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="700">Yörüngede Uzay Kirliliği Zincirleme Risk Döngüsü</text>
+
+                    <!-- Merkez Dünya ve Dönen Enkaz Yörüngesi -->
+                    <g transform="translate(380,195)">
+                        <circle cx="0" cy="0" r="92" fill="none" stroke="#38bdf8" stroke-opacity="0.35" stroke-width="1.5" stroke-dasharray="6 5"/>
+                        <g class="comp-svg-orbit">
+                            <circle cx="0" cy="0" r="74" fill="none" stroke="#f59e0b" stroke-opacity="0.55" stroke-width="1.5" stroke-dasharray="4 7"/>
+                            <circle cx="74" cy="0" r="4.5" fill="#f59e0b"/>
+                            <rect x="-78" y="-3" width="7" height="5" rx="1" fill="#ef4444"/>
+                            <circle cx="0" cy="-74" r="3.5" fill="#fbbf24"/>
+                            <circle cx="52" cy="52" r="3" fill="#94a3b8"/>
+                            <circle cx="-50" cy="-54" r="3.5" fill="#f87171"/>
+                        </g>
+                        <circle cx="0" cy="0" r="44" fill="#1d4ed8" stroke="#60a5fa" stroke-width="2"/>
+                        <path d="M -22 -14 C -10 -24, 12 -22, 18 -6 C 10 4, 24 14, 10 24 C -6 22, -24 12, -22 -14 Z" fill="#10b981" opacity="0.85"/>
+                        <text x="0" y="5" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="700">DÜNYA</text>
+                        <text class="comp-svg-muted" x="0" y="21" text-anchor="middle" fill="#bfdbfe" font-size="10">Alçak Yörünge</text>
+                    </g>
+
+                    <!-- Aşama 1 -->
+                    <g transform="translate(28, 66)">
+                        <rect class="comp-svg-card" x="0" y="0" width="218" height="92" rx="12" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+                        <text x="14" y="24" fill="#fbbf24" font-size="12" font-weight="800">1. YÖRÜNGEDE ÇARPIŞMA</text>
+                        <text class="comp-svg-text" x="14" y="45" fill="#e2e8f0" font-size="12">İşlevsiz uydular ve roket</text>
+                        <text class="comp-svg-text" x="14" y="63" fill="#e2e8f0" font-size="12">parçaları çok yüksek hızla</text>
+                        <text class="comp-svg-text" x="14" y="81" fill="#e2e8f0" font-size="12">birbirine çarpar.</text>
+                    </g>
+
+                    <!-- Aşama 2 -->
+                    <g transform="translate(514, 66)">
+                        <rect class="comp-svg-card" x="0" y="0" width="218" height="92" rx="12" fill="#1e293b" stroke="#ef4444" stroke-width="2"/>
+                        <text x="14" y="24" fill="#f87171" font-size="12" font-weight="800">2. YENİ KÜÇÜK PARÇALAR</text>
+                        <text class="comp-svg-text" x="14" y="45" fill="#e2e8f0" font-size="12">Tek bir çarpışma yüzlerce</text>
+                        <text class="comp-svg-text" x="14" y="63" fill="#e2e8f0" font-size="12">yüksek hızlı metal ve boya</text>
+                        <text class="comp-svg-text" x="14" y="81" fill="#e2e8f0" font-size="12">enkazı üretir.</text>
+                    </g>
+
+                    <!-- Aşama 3 -->
+                    <g transform="translate(250, 294)">
+                        <rect class="comp-svg-card" x="0" y="0" width="260" height="54" rx="12" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                        <text x="130" y="21" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="800">3. ETKİN UYDU VE ISS RİSKİ ARTAR</text>
+                        <text class="comp-svg-text" x="130" y="40" text-anchor="middle" fill="#e2e8f0" font-size="11.5">Çalışan uydular hasar görebilir, yeni çarpışma riski büyür</text>
+                    </g>
+
+                    <!-- Döngü Okları -->
+                    <path d="M 248 94 Q 380 48 510 94" fill="none" stroke="#f59e0b" stroke-width="2.5" marker-end="url(#comp-arr-amber-${forPrint ? 'p' : 's'})"/>
+                    <path d="M 624 160 Q 624 270 516 314" fill="none" stroke="#ef4444" stroke-width="2.5" marker-end="url(#comp-arr-red-${forPrint ? 'p' : 's'})"/>
+                    <path d="M 246 314 Q 132 270 132 164" fill="none" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#comp-arr-sky-${forPrint ? 'p' : 's'})"/>
+                </svg>
+            </div>
+        `;
+    }
+
+    if (svgId === 'svg-star-lifecycle-dual') {
+        return `
+            <div class="comp-svg-box${pCls}" data-svg-id="svg-star-lifecycle-dual">
+                <svg class="comp-custom-svg" viewBox="0 0 880 390" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Yıldızların yaşam döngüsü: Bulutsudan küçük ve büyük kütleli yıldızların iki ayrı yolu">
+                    <defs>
+                        <marker id="comp-arr-star-${forPrint ? 'p' : 's'}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#94a3b8"/>
+                        </marker>
+                    </defs>
+                    <rect class="comp-svg-bg" x="4" y="4" width="872" height="382" rx="18" fill="#0b132b" stroke="#334155" stroke-width="1.5"/>
+                    <text class="comp-svg-title" x="440" y="32" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="700">Yıldızların Yaşam Döngüsü: Başlangıç Kütlesine Göre İki Farklı Yol</text>
+
+                    <!-- Ortak Başlangıç: Bulutsu -> Önyıldız -->
+                    <g transform="translate(22,150)">
+                        <rect class="comp-svg-card" x="0" y="0" width="114" height="84" rx="14" fill="#1e293b" stroke="#a855f7" stroke-width="2"/>
+                        <circle class="comp-svg-pulse" cx="57" cy="30" r="15" fill="#a855f7" opacity="0.45"/>
+                        <circle cx="57" cy="30" r="8" fill="#e879f9"/>
+                        <text class="comp-svg-text" x="57" y="61" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="700">Bulutsu</text>
+                        <text class="comp-svg-muted" x="57" y="76" text-anchor="middle" fill="#cbd5e1" font-size="10">(Nebula)</text>
+                    </g>
+
+                    <line x1="138" y1="192" x2="162" y2="192" stroke="#94a3b8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+
+                    <g transform="translate(166,150)">
+                        <rect class="comp-svg-card" x="0" y="0" width="108" height="84" rx="14" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+                        <circle class="comp-svg-pulse" cx="54" cy="30" r="14" fill="#f59e0b" opacity="0.4"/>
+                        <circle cx="54" cy="30" r="8" fill="#fde047"/>
+                        <text class="comp-svg-text" x="54" y="61" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="700">Önyıldız</text>
+                        <text class="comp-svg-muted" x="54" y="76" text-anchor="middle" fill="#cbd5e1" font-size="10">Sıkışan çekirdek</text>
+                    </g>
+
+                    <!-- İki Kola Ayrılma -->
+                    <path d="M 276 178 C 298 178, 298 106, 322 106" fill="none" stroke="#38bdf8" stroke-width="2.4" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+                    <path d="M 276 206 C 298 206, 298 282, 322 282" fill="none" stroke="#f97316" stroke-width="2.4" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+
+                    <!-- Üst Kol Etiketi -->
+                    <text x="326" y="60" fill="#38bdf8" font-size="12" font-weight="800">ÜST KOL: Küçük Kütleli Yıldız (Güneş Benzeri · Daha Uzun Ömür)</text>
+
+                    <!-- Üst Kol Adımları -->
+                    <g transform="translate(326,70)">
+                        <rect class="comp-svg-card" x="0" y="0" width="114" height="72" rx="11" fill="#1e293b" stroke="#facc15" stroke-width="1.8"/>
+                        <circle cx="57" cy="24" r="11" fill="#facc15"/>
+                        <text class="comp-svg-text" x="57" y="50" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="700">Küçük Kütleli</text>
+                        <text class="comp-svg-muted" x="57" y="64" text-anchor="middle" fill="#cbd5e1" font-size="10">Yıldız (Güneş)</text>
+                    </g>
+                    <line x1="442" y1="106" x2="462" y2="106" stroke="#94a3b8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+
+                    <g transform="translate(466,70)">
+                        <rect class="comp-svg-card" x="0" y="0" width="114" height="72" rx="11" fill="#1e293b" stroke="#f97316" stroke-width="1.8"/>
+                        <circle cx="57" cy="24" r="14" fill="#ea580c"/>
+                        <text class="comp-svg-text" x="57" y="52" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="700">Kırmızı Dev</text>
+                        <text class="comp-svg-muted" x="57" y="65" text-anchor="middle" fill="#cbd5e1" font-size="10">Genişler</text>
+                    </g>
+                    <line x1="582" y1="106" x2="602" y2="106" stroke="#94a3b8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+
+                    <g transform="translate(606,70)">
+                        <rect class="comp-svg-card" x="0" y="0" width="120" height="72" rx="11" fill="#1e293b" stroke="#2dd4bf" stroke-width="1.8"/>
+                        <circle cx="60" cy="24" r="13" fill="none" stroke="#2dd4bf" stroke-width="3" stroke-dasharray="4 2"/>
+                        <circle cx="60" cy="24" r="4" fill="#ffffff"/>
+                        <text class="comp-svg-text" x="60" y="51" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="700">Gezegenimsi</text>
+                        <text class="comp-svg-muted" x="60" y="64" text-anchor="middle" fill="#cbd5e1" font-size="10">Bulutsu</text>
+                    </g>
+                    <line x1="728" y1="106" x2="748" y2="106" stroke="#94a3b8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+
+                    <g transform="translate(752,70)">
+                        <rect class="comp-svg-card" x="0" y="0" width="106" height="72" rx="11" fill="#1e293b" stroke="#e2e8f0" stroke-width="2"/>
+                        <circle cx="53" cy="24" r="8" fill="#ffffff" stroke="#93c5fd" stroke-width="3"/>
+                        <text class="comp-svg-text" x="53" y="52" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="700">Beyaz Cüce</text>
+                        <text class="comp-svg-muted" x="53" y="65" text-anchor="middle" fill="#cbd5e1" font-size="10">Son kalıntı</text>
+                    </g>
+
+                    <!-- Alt Kol Etiketi -->
+                    <text x="326" y="218" fill="#fb923c" font-size="12" font-weight="800">ALT KOL: Büyük Kütleli Yıldız (Yakıtı Hızlı Tüketir · Daha Kısa Ömür)</text>
+
+                    <!-- Alt Kol Adımları -->
+                    <g transform="translate(326,232)">
+                        <rect class="comp-svg-card" x="0" y="0" width="114" height="96" rx="11" fill="#1e293b" stroke="#60a5fa" stroke-width="1.8"/>
+                        <circle cx="57" cy="30" r="15" fill="#3b82f6"/>
+                        <text class="comp-svg-text" x="57" y="64" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="700">Büyük Kütleli</text>
+                        <text class="comp-svg-muted" x="57" y="79" text-anchor="middle" fill="#cbd5e1" font-size="10">Mavi-Beyaz Yıldız</text>
+                    </g>
+                    <line x1="442" y1="280" x2="462" y2="280" stroke="#94a3b8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+
+                    <g transform="translate(466,232)">
+                        <rect class="comp-svg-card" x="0" y="0" width="114" height="96" rx="11" fill="#1e293b" stroke="#ef4444" stroke-width="1.8"/>
+                        <circle cx="57" cy="30" r="18" fill="#dc2626"/>
+                        <text class="comp-svg-text" x="57" y="64" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="700">Kırmızı</text>
+                        <text class="comp-svg-muted" x="57" y="79" text-anchor="middle" fill="#cbd5e1" font-size="10.5">Süperdev</text>
+                    </g>
+                    <line x1="582" y1="280" x2="602" y2="280" stroke="#94a3b8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+
+                    <g transform="translate(606,232)">
+                        <rect class="comp-svg-card" x="0" y="0" width="110" height="96" rx="11" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
+                        <polygon class="comp-svg-pulse" points="55,10 61,24 76,20 65,31 74,44 59,37 55,51 50,37 36,44 45,31 34,20 49,24" fill="#fbbf24"/>
+                        <text class="comp-svg-text" x="55" y="66" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="700">Süpernova</text>
+                        <text class="comp-svg-muted" x="55" y="81" text-anchor="middle" fill="#cbd5e1" font-size="10">Şiddetli patlama</text>
+                    </g>
+
+                    <!-- Alternatif Dallanma: Nötron Yıldızı VEYA Kara Delik -->
+                    <path d="M 718 264 L 748 250" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+                    <path d="M 718 296 L 748 312" fill="none" stroke="#c084fc" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+                    <rect x="719" y="272" width="32" height="16" rx="6" fill="#f59e0b"/>
+                    <text x="735" y="283" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="800">VEYA</text>
+
+                    <g transform="translate(752,222)">
+                        <rect class="comp-svg-card" x="0" y="0" width="106" height="52" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
+                        <circle cx="20" cy="26" r="8" fill="#38bdf8"/>
+                        <text class="comp-svg-text" x="64" y="23" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="700">Nötron</text>
+                        <text class="comp-svg-muted" x="64" y="38" text-anchor="middle" fill="#cbd5e1" font-size="10.5">Yıldızı</text>
+                    </g>
+
+                    <g transform="translate(752,286)">
+                        <rect class="comp-svg-card" x="0" y="0" width="106" height="52" rx="10" fill="#1e293b" stroke="#c084fc" stroke-width="1.8"/>
+                        <circle cx="20" cy="26" r="9" fill="#020617" stroke="#f59e0b" stroke-width="2.5"/>
+                        <text class="comp-svg-text" x="64" y="23" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="700">Kara</text>
+                        <text class="comp-svg-muted" x="64" y="38" text-anchor="middle" fill="#cbd5e1" font-size="10.5">Delik</text>
+                    </g>
+
+                    <text class="comp-svg-muted" x="440" y="368" text-anchor="middle" fill="#94a3b8" font-size="11">Not: Nötron yıldızı ve kara delik peş peşe değil, kütleye göre oluşan alternatif sonlardır.</text>
+                </svg>
+            </div>
+        `;
+    }
+
+    if (svgId === 'svg-cosmic-address') {
+        return `
+            <div class="comp-svg-box${pCls}" data-svg-id="svg-cosmic-address">
+                <svg class="comp-custom-svg" viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kozmik adres iç içe kapsama halkaları: Dünya, Güneş Sistemi, Samanyolu Avcı Kolu ve Evren">
+                    <rect class="comp-svg-bg" x="4" y="4" width="752" height="352" rx="18" fill="#0b132b" stroke="#334155" stroke-width="1.5"/>
+                    <text class="comp-svg-title" x="380" y="32" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="700">Dünya’nın Kozmik Adresi (İç İçe Kapsama Düzeni)</text>
+
+                    <!-- Evren (En Dış Halka) -->
+                    <ellipse class="comp-svg-ring-outer" cx="380" cy="196" rx="344" ry="140" fill="#1e1b4b" fill-opacity="0.7" stroke="#818cf8" stroke-width="2.2"/>
+                    <text x="380" y="79" text-anchor="middle" fill="#c7d2fe" font-size="13.5" font-weight="800">EVREN</text>
+                    <text class="comp-svg-muted" x="380" y="96" text-anchor="middle" fill="#a5b4fc" font-size="11">Milyarlarca galaksi, tüm madde, enerji ve uzay</text>
+
+                    <!-- Samanyolu Galaksisi -->
+                    <ellipse class="comp-svg-ring-mid" cx="380" cy="212" rx="258" ry="102" fill="#172554" fill-opacity="0.82" stroke="#38bdf8" stroke-width="2.2"/>
+                    <text x="380" y="133" text-anchor="middle" fill="#7dd3fc" font-size="13" font-weight="800">SAMANYOLU GALAKSİSİ (Avcı / Orion Kolu)</text>
+                    <text class="comp-svg-muted" x="380" y="149" text-anchor="middle" fill="#bae6fd" font-size="10.5">Sarmal yapılı gök ada · Milyarlarca yıldız</text>
+
+                    <!-- Güneş Sistemi -->
+                    <ellipse class="comp-svg-ring-inner" cx="380" cy="228" rx="166" ry="64" fill="#0f172a" fill-opacity="0.9" stroke="#f59e0b" stroke-width="2.2"/>
+                    <text x="380" y="185" text-anchor="middle" fill="#fde047" font-size="12.5" font-weight="800">GÜNEŞ SİSTEMİ</text>
+                    <text class="comp-svg-muted" x="380" y="200" text-anchor="middle" fill="#fef08a" font-size="10.5">Güneş + 8 Gezegen + Uydular</text>
+
+                    <!-- Dünya -->
+                    <g transform="translate(380,242)">
+                        <circle class="comp-svg-pulse" cx="0" cy="0" r="32" fill="#2563eb" opacity="0.35"/>
+                        <circle cx="0" cy="0" r="24" fill="#1d4ed8" stroke="#60a5fa" stroke-width="2"/>
+                        <path d="M -11 -7 C -4 -14, 7 -11, 10 -2 C 5 4, 11 9, 4 13 C -4 12, -13 6, -11 -7 Z" fill="#10b981"/>
+                        <text x="0" y="4" text-anchor="middle" fill="#ffffff" font-size="11.5" font-weight="800">DÜNYA</text>
+                    </g>
+
+                    <text class="comp-svg-muted" x="380" y="346" text-anchor="middle" fill="#cbd5e1" font-size="11.5" font-weight="600">Kapsama Sırası: Dünya ⊂ Güneş Sistemi ⊂ Samanyolu Galaksisi ⊂ Evren</text>
+                </svg>
+            </div>
+        `;
+    }
+    return '';
+}
+
+function renderComprehensiveFigureHtml(assetPath, caption, options = {}) {
+    if (!assetPath) return '';
+    const forPrint = !!options.forPrint;
+    const isSvg = assetPath.toLowerCase().endsWith('.svg');
+    const isIllustration = !!options.isIllustration;
+    const fullSrc = ASSET_BASE + assetPath + '?v=' + CONTENT_V6_VERSION;
+    const fallbackSrc = options.fallbackAsset ? (ASSET_BASE + options.fallbackAsset + '?v=' + CONTENT_V6_VERSION) : '';
+    const figCls = forPrint
+        ? `study-print-figure${isSvg ? ' is-svg' : ''}${isIllustration ? ' is-illustration' : ''}`
+        : `comp-figure${isSvg ? ' comp-figure-svg' : ''}${isIllustration ? ' comp-figure-illustration' : ''}`;
+    const lbAttrs = !forPrint
+        ? ` data-lightbox-src="${esc(fullSrc)}" data-lightbox-alt="${esc(caption || '')}" data-lightbox-caption="${esc(caption || '')}" title="Tam ekran büyütmek için tıklayın"`
+        : '';
+    const fbAttrs = fallbackSrc
+        ? ` data-fallback-src="${esc(fallbackSrc)}" onerror="if(this.dataset.fallbackSrc&&!this.dataset.fbUsed){this.dataset.fbUsed='1';this.src=this.dataset.fallbackSrc;}"`
+        : '';
+    return `
+        <figure class="${figCls}"${lbAttrs}>
+            <div class="${forPrint ? 'study-print-img-wrap' : 'comp-img-frame'}">
+                <img src="${esc(fullSrc)}" alt="${esc(caption || 'Eğitsel görsel')}" loading="eager"${fbAttrs}>
+                ${!forPrint ? '<span class="comp-zoom-pill"><i class="fas fa-search-plus"></i> Büyüt</span>' : ''}
+            </div>
+            ${caption ? `<figcaption>${esc(caption)}</figcaption>` : ''}
+        </figure>
+    `;
+}
+
+function renderComprehensiveVisualBlock(visual, options = {}) {
+    if (!visual) return '';
+    const forPrint = !!options.forPrint;
+    const parts = [];
+    const vt = visual.visual_type;
+
+    if (vt === 'illustration') {
+        parts.push(renderComprehensiveFigureHtml(visual.asset, visual.caption, {
+            forPrint,
+            isIllustration: true,
+            fallbackAsset: visual.fallback_asset || ''
+        }));
+        if (visual.secondary_svg_id) {
+            parts.push(renderComprehensiveSvgDiagram(visual.secondary_svg_id, forPrint));
+        }
+    } else if (vt === 'photo') {
+        parts.push(renderComprehensiveFigureHtml(visual.asset, visual.caption, {
+            forPrint,
+            isIllustration: false,
+            fallbackAsset: visual.fallback_asset || ''
+        }));
+    } else if (vt === 'svg_diagram') {
+        if (visual.svg_diagram_id) {
+            parts.push(`
+                <figure class="${forPrint ? 'study-print-figure is-custom-svg' : 'comp-figure comp-figure-custom-svg'}">
+                    ${renderComprehensiveSvgDiagram(visual.svg_diagram_id, forPrint)}
+                    ${visual.caption ? `<figcaption>${esc(visual.caption)}</figcaption>` : ''}
+                </figure>
+            `);
+        } else if (visual.asset) {
+            parts.push(renderComprehensiveFigureHtml(visual.asset, visual.caption, {
+                forPrint,
+                isIllustration: false,
+                fallbackAsset: visual.fallback_asset || ''
+            }));
+        }
+    } else if (vt === 'photo_gallery' || vt === 'svg_gallery') {
+        const items = Array.isArray(visual.items) ? visual.items : [];
+        if (items.length > 0) {
+            const galleryCls = forPrint
+                ? `study-print-gallery cols-${Math.min(items.length, 3)}`
+                : `comp-gallery comp-gallery-${vt === 'svg_gallery' ? 'svg' : 'photo'} cols-${Math.min(items.length, 3)}`;
+            parts.push(`
+                <div class="${galleryCls}">
+                    ${items.map(it => renderComprehensiveFigureHtml(it.asset, it.caption, {
+                        forPrint,
+                        isIllustration: false,
+                        fallbackAsset: it.fallback_asset || ''
+                    })).join('')}
+                </div>
+            `);
+        }
+    }
+
+    return parts.join('');
+}
+
+function renderComprehensiveOutcomeHtml(outcome, options = {}) {
+    if (!outcome) return '';
+    const forPrint = !!options.forPrint;
+    const sections = Array.isArray(outcome.sections) ? outcome.sections : [];
+    const tables = Array.isArray(outcome.comparison_tables) ? outcome.comparison_tables : [];
+    const examples = Array.isArray(outcome.daily_life_examples) ? outcome.daily_life_examples : [];
+    const watchouts = Array.isArray(outcome.exam_watchouts) ? outcome.exam_watchouts : [];
+    const quickChecks = Array.isArray(outcome.quick_checks) ? outcome.quick_checks : [];
+    const labBridge = outcome.lab_bridge || null;
+
+    return `
+        <div class="${forPrint ? 'study-print-outcome' : 'comp-outcome-doc'}" data-outcome-id="${esc(outcome.outcome_id)}">
+            <!-- 1. Ana Fikir Özeti (Hero Bandı) -->
+            <header class="${forPrint ? 'study-print-hero' : 'comp-hero-band'}">
+                <div class="${forPrint ? 'study-print-hero-meta' : 'comp-hero-meta'}">
+                    <span class="${forPrint ? 'study-print-badge' : 'comp-outcome-badge'}">${esc(outcome.outcome_id)}</span>
+                    ${outcome.unit_title ? `<span class="${forPrint ? 'study-print-unit' : 'comp-unit-pill'}">${esc(outcome.unit_title)}</span>` : ''}
+                    ${outcome.book_pages ? `<span class="${forPrint ? 'study-print-meta-chip' : 'comp-meta-chip'}"><i class="fas fa-book"></i> MEB Ders Kitabı s. ${esc(outcome.book_pages)}</span>` : ''}
+                    ${outcome.estimated_minutes ? `<span class="${forPrint ? 'study-print-meta-chip' : 'comp-meta-chip'}"><i class="far fa-clock"></i> ~${esc(outcome.estimated_minutes)} dk</span>` : ''}
+                </div>
+                <h2 class="${forPrint ? 'study-print-outcome-title' : 'comp-outcome-title'}">${esc(outcome.short_title || outcome.title)}</h2>
+                ${outcome.title && outcome.short_title && outcome.title !== outcome.short_title ? `<p class="${forPrint ? 'study-print-outcome-subtitle' : 'comp-outcome-subtitle'}">${esc(outcome.title)}</p>` : ''}
+                ${outcome.hero_summary ? `<p class="${forPrint ? 'study-print-hero-summary' : 'comp-hero-summary'}">${esc(outcome.hero_summary)}</p>` : ''}
+                ${Array.isArray(outcome.key_concepts) && outcome.key_concepts.length > 0 ? `
+                    <div class="${forPrint ? 'study-print-concepts' : 'comp-concepts-row'}">
+                        ${outcome.key_concepts.map(k => `<span class="${forPrint ? 'study-print-concept-chip' : 'comp-concept-chip'}">${esc(k)}</span>`).join('')}
+                    </div>
+                ` : ''}
+            </header>
+
+            <!-- 2. Ayrıntılı Konu Anlatımı + Hibrit Görseller -->
+            <div class="${forPrint ? 'study-print-sections' : 'comp-sections-stack'}">
+                ${sections.map(sec => `
+                    <section class="${forPrint ? 'study-print-section' : 'comp-section-block'}" id="${esc(sec.id || '')}">
+                        <h3 class="${forPrint ? 'study-print-sec-heading' : 'comp-section-heading'}">${esc(sec.heading)}</h3>
+                        ${sec.lead ? `<p class="${forPrint ? 'study-print-sec-lead' : 'comp-section-lead'}">${esc(sec.lead)}</p>` : ''}
+                        <div class="${forPrint ? 'study-print-sec-body' : 'comp-section-paragraphs'}">
+                            ${(sec.paragraphs || []).map(p => `<p>${esc(p)}</p>`).join('')}
+                        </div>
+                        <div class="${forPrint ? 'study-print-visuals' : 'comp-section-visuals'}">
+                            ${sec.featured_illustration ? renderComprehensiveVisualBlock(sec.featured_illustration, { forPrint }) : ''}
+                            ${sec.visual ? renderComprehensiveVisualBlock(sec.visual, { forPrint }) : ''}
+                            ${sec.secondary_illustration ? renderComprehensiveVisualBlock(sec.secondary_illustration, { forPrint }) : ''}
+                        </div>
+                    </section>
+                `).join('')}
+            </div>
+
+            <!-- 3. Karşılaştırma Tabloları -->
+            ${tables.length > 0 ? `
+                <section class="${forPrint ? 'study-print-tables' : 'comp-block comp-tables-block'}">
+                    <h3 class="${forPrint ? 'study-print-block-title' : 'comp-block-title'}"><i class="fas fa-table"></i> Karşılaştırma Tabloları</h3>
+                    ${tables.map(tbl => `
+                        <div class="${forPrint ? 'study-print-table-wrap' : 'comp-table-card'}">
+                            ${tbl.title ? `<h4 class="${forPrint ? 'study-print-table-title' : 'comp-table-title'}">${esc(tbl.title)}</h4>` : ''}
+                            <div class="comp-table-scroll">
+                                <table class="${forPrint ? 'study-print-table' : 'comp-table'}">
+                                    <thead>
+                                        <tr>${(tbl.headers || []).map(h => `<th>${esc(h)}</th>`).join('')}</tr>
+                                    </thead>
+                                    <tbody>
+                                        ${(tbl.rows || []).map(row => `<tr>${row.map(cell => `<td>${esc(cell)}</td>`).join('')}</tr>`).join('')}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    `).join('')}
+                </section>
+            ` : ''}
+
+            <!-- 4. Günlük Yaşamdan Örnekler -->
+            ${examples.length > 0 ? `
+                <section class="${forPrint ? 'study-print-examples' : 'comp-block comp-examples-block'}">
+                    <h3 class="${forPrint ? 'study-print-block-title' : 'comp-block-title'}"><i class="fas fa-lightbulb"></i> Günlük Yaşamdan Örnekler</h3>
+                    <div class="${forPrint ? 'study-print-examples-grid' : 'comp-examples-grid'}">
+                        ${examples.map(ex => `
+                            <div class="${forPrint ? 'study-print-example-card' : 'comp-example-card'}">
+                                <h4>${esc(ex.title)}</h4>
+                                <p>${esc(ex.description)}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            ` : ''}
+
+            <!-- 5. Yazılıda Dikkat! -->
+            ${watchouts.length > 0 ? `
+                <section class="${forPrint ? 'study-print-watchouts' : 'comp-block comp-watchouts-block'}">
+                    <h3 class="${forPrint ? 'study-print-block-title' : 'comp-block-title'}"><i class="fas fa-exclamation-triangle"></i> Yazılıda Dikkat!</h3>
+                    <div class="${forPrint ? 'study-print-watchouts-list' : 'comp-watchouts-list'}">
+                        ${watchouts.map(w => `
+                            <div class="${forPrint ? 'study-print-watchout' : 'comp-watchout-item'}">
+                                <div class="comp-watchout-trap">
+                                    <span class="comp-watchout-label trap">Yanlış Bilinen</span>
+                                    <p>${esc(w.trap)}</p>
+                                </div>
+                                <div class="comp-watchout-arrow" aria-hidden="true">→</div>
+                                <div class="comp-watchout-truth">
+                                    <span class="comp-watchout-label truth">Doğrusu</span>
+                                    <p>${esc(w.truth)}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+            ` : ''}
+
+            <!-- 6. Kendini Hızlı Kontrol Et + Sanal Laboratuvar Köprüsü -->
+            ${quickChecks.length > 0 ? `
+                <section class="${forPrint ? 'study-print-qchecks' : 'comp-block comp-qchecks-block'}">
+                    <h3 class="${forPrint ? 'study-print-block-title' : 'comp-block-title'}"><i class="fas fa-check-double"></i> Kendini Hızlı Kontrol Et</h3>
+                    <div class="${forPrint ? 'study-print-qchecks-list' : 'comp-qchecks-list'}">
+                        ${quickChecks.map((qc, idx) => `
+                            <details class="${forPrint ? 'study-print-qc' : 'comp-quick-check'}"${forPrint ? ' open' : ''}>
+                                <summary class="comp-qc-summary">
+                                    <span class="comp-qc-num">${idx + 1}</span>
+                                    <span class="comp-qc-q">${esc(qc.q)}</span>
+                                    <span class="comp-qc-toggle" aria-hidden="true">${forPrint ? '' : 'Yanıtı Gör'}</span>
+                                </summary>
+                                <div class="comp-qc-answer">
+                                    <strong>Yanıt:</strong> ${esc(qc.a)}
+                                </div>
+                            </details>
+                        `).join('')}
+                    </div>
+                </section>
+            ` : ''}
+
+            ${labBridge && !forPrint ? `
+                <section class="comp-lab-bridge" data-lab-exp="${esc(labBridge.exp_id)}">
+                    <div class="comp-lab-bridge-info">
+                        <span class="comp-lab-bridge-tag"><i class="fas fa-flask"></i> Sanal Laboratuvar Köprüsü</span>
+                        <h4>${esc(labBridge.title)}</h4>
+                        <p>${esc(labBridge.description)}</p>
+                    </div>
+                    <a href="#lab-view/exp/${esc(labBridge.exp_id)}" class="exam-btn-primary comp-lab-bridge-btn" data-lab-exp="${esc(labBridge.exp_id)}">
+                        <i class="fas fa-play-circle"></i> <span>${esc(labBridge.cta_label || `Deney ${labBridge.exp_id} Aç`)}</span>
+                    </a>
+                </section>
+            ` : ''}
+        </div>
+    `;
+}
+
+function syncStudyToolbarControls() {
+    const canDeep = hasComprehensiveStudy();
+    const switchEl = $('study-depth-switch');
+    const btnQuick = $('btn-study-mode-quick');
+    const btnDeep = $('btn-study-mode-deep');
+    const btnPdf = $('btn-study-pdf-download');
+
+    if (!canDeep && state.studyDepth === 'deep') {
+        state.studyDepth = 'quick';
+    }
+    const isDeep = canDeep && state.studyDepth === 'deep';
+
+    if (switchEl) {
+        switchEl.classList.toggle('is-hidden', !canDeep);
+        switchEl.style.display = canDeep ? 'inline-flex' : 'none';
+    }
+    if (btnQuick) {
+        btnQuick.classList.toggle('active', !isDeep);
+        btnQuick.setAttribute('aria-selected', String(!isDeep));
+        btnQuick.onclick = () => setStudyDepth('quick');
+    }
+    if (btnDeep) {
+        btnDeep.classList.toggle('active', isDeep);
+        btnDeep.setAttribute('aria-selected', String(isDeep));
+        btnDeep.onclick = () => setStudyDepth('deep');
+    }
+    if (btnPdf) {
+        btnPdf.onclick = () => openStudyPrintPreview(btnPdf);
+    }
+}
+
+function renderComprehensiveStudy() {
+    const outcomes = getActiveComprehensiveOutcomes();
+    if (!outcomes.length) {
+        state.studyDepth = 'quick';
+        renderStudy(state.studyCardIdx || 0);
+        return;
+    }
+
+    const activeScenario = getActiveScenario();
+    const scNum = getActiveScenarioNumber();
+    let activeIdx = outcomes.findIndex(o => o.outcome_id === state.deepOutcomeId);
+    if (activeIdx === -1) {
+        activeIdx = 0;
+        state.deepOutcomeId = outcomes[0].outcome_id;
+    }
+    const activeOutcome = outcomes[activeIdx];
+    saveState();
+
+    // Üst araç çubuğu bağlantıları
+    const btnBackChoice = $('btn-study-back-choice');
+    if (btnBackChoice) {
+        btnBackChoice.innerHTML = '<i class="fas fa-arrow-left"></i> <span>Çalışma Seçimi</span>';
+        btnBackChoice.setAttribute('title', 'Çalışma seçimine geri dön');
+        btnBackChoice.onclick = () => {
+            state.studyMode = 'free';
+            state.returnToSummary = false;
+            saveState();
+            backStep('choice');
+        };
+    }
+    const btnTogglePlan = $('btn-study-toggle-plan');
+    if (btnTogglePlan) btnTogglePlan.onclick = () => toggleStudyPlan();
+
+    const btnJumpPractice = $('btn-study-jump-practice');
+    if (btnJumpPractice) {
+        btnJumpPractice.onclick = async () => {
+            const activeRev = getActiveContentRevision();
+            if (loadedRevision !== activeRev) {
+                const ok = await loadData(activeRev);
+                if (!ok) return;
+            }
+            setupPracticeNewMode = true;
+            goToStep('practice');
+        };
+    }
+
+    const btnFullscreen = $('btn-study-fullscreen');
+    if (btnFullscreen) {
+        btnFullscreen.onclick = () => toggleStudyFullscreen();
+    }
+
+    const returnSummaryBox = $('study-return-to-summary-box');
+    if (returnSummaryBox) returnSummaryBox.style.display = 'none';
+
+    const studyView = $('exam-view-study');
+    const sceneEl = $('scene-yazili');
+    if (studyView) studyView.classList.add('comprehensive-active');
+    if (sceneEl) sceneEl.classList.add('comprehensive-study-mode');
+
+    // Sol Kazanım Menüsü + Mobil/Tablet Yapışkan Seçici
+    const cardnav = $('exam-cardnav');
+    if (cardnav) {
+        cardnav.innerHTML = `
+            <div class="study-plan-header comp-nav-header">
+                <h4><i class="fas fa-book-open"></i> Kapsamlı Hazırlık</h4>
+                <span class="study-plan-badge">S${scNum} · ${outcomes.length} Kazanım</span>
+            </div>
+
+            <div class="comp-mobile-sticky-picker">
+                <label class="exam-cardnav-label" for="comp-outcome-select"><i class="fas fa-compass"></i> Kazanım Seç (Senaryo ${scNum}):</label>
+                <select id="comp-outcome-select" class="exam-select">
+                    ${outcomes.map(o => `<option value="${esc(o.outcome_id)}" ${o.outcome_id === activeOutcome.outcome_id ? 'selected' : ''}>${esc(o.outcome_id)} · ${esc(o.short_title || o.title)}</option>`).join('')}
+                </select>
+                <div class="comp-mobile-pills" role="tablist" aria-label="Kazanım Hızlı Geçiş">
+                    ${outcomes.map(o => `
+                        <button type="button" class="comp-mobile-pill ${o.outcome_id === activeOutcome.outcome_id ? 'active' : ''}" data-comp-outcome="${esc(o.outcome_id)}" aria-selected="${o.outcome_id === activeOutcome.outcome_id}">
+                            ${esc(o.outcome_id)}
+                        </button>
+                    `).join('')}
+                </div>
+            </div>
+
+            <div class="comp-outcome-nav-list">
+                ${outcomes.map((o, idx) => {
+                    const isCurrent = o.outcome_id === activeOutcome.outcome_id;
+                    return `
+                        <button type="button" class="comp-outcome-nav-btn ${isCurrent ? 'active' : ''}" data-comp-outcome="${esc(o.outcome_id)}" aria-current="${isCurrent ? 'page' : 'false'}">
+                            <div class="comp-nav-top">
+                                <span class="study-outcome-tag">${esc(o.outcome_id)}</span>
+                                ${o.estimated_minutes ? `<span class="comp-nav-min">~${esc(o.estimated_minutes)} dk</span>` : ''}
+                            </div>
+                            <strong class="comp-nav-title">${idx + 1}. ${esc(o.short_title || o.title)}</strong>
+                            ${o.unit_title ? `<span class="comp-nav-unit">${esc(o.unit_title)}</span>` : ''}
+                        </button>
+                    `;
+                }).join('')}
+            </div>
+        `;
+
+        const sel = $('comp-outcome-select');
+        if (sel) {
+            sel.onchange = e => {
+                state.deepOutcomeId = e.target.value;
+                renderComprehensiveStudy();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+        }
+
+        cardnav.querySelectorAll('[data-comp-outcome]').forEach(btn => {
+            btn.onclick = () => {
+                state.deepOutcomeId = btn.dataset.compOutcome;
+                renderComprehensiveStudy();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+        });
+    }
+
+    // Sağ Dijital Ders Rehberi Okuma Alanı
+    const cardPanel = $('exam-card-article');
+    if (cardPanel) {
+        cardPanel.classList.remove('wide-table');
+        cardPanel.classList.add('comprehensive-mode');
+        const isFirst = activeIdx === 0;
+        const isLast = activeIdx === outcomes.length - 1;
+
+        cardPanel.innerHTML = `
+            <div class="comp-reading-container">
+                <div class="comp-scenario-banner">
+                    <span><i class="fas fa-layer-group"></i> 7. Sınıf 1. Dönem 1. Yazılı · <strong>${esc(formatScenarioTitle(activeScenario))}</strong> · Kazanım ${activeIdx + 1} / ${outcomes.length}</span>
+                </div>
+                ${renderComprehensiveOutcomeHtml(activeOutcome, { forPrint: false })}
+                <div class="exam-next-bar comp-bottom-nav">
+                    <button id="comp-outcome-prev" type="button" class="exam-btn-secondary" ${isFirst ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-left"></i> <span>Önceki Kazanım</span>
+                    </button>
+                    <button id="comp-outcome-next" type="button" class="exam-btn-primary">
+                        ${isLast
+                            ? '<span>Yazılı Provasına Geç</span> <i class="fas fa-arrow-right"></i>'
+                            : '<span>Sonraki Kazanım</span> <i class="fas fa-chevron-right"></i>'}
+                    </button>
+                </div>
+            </div>
+        `;
+
+        const prevBtn = $('comp-outcome-prev');
+        const nextBtn = $('comp-outcome-next');
+        if (prevBtn && !isFirst) {
+            prevBtn.onclick = () => {
+                state.deepOutcomeId = outcomes[activeIdx - 1].outcome_id;
+                renderComprehensiveStudy();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+        }
+        if (nextBtn) {
+            nextBtn.onclick = () => {
+                if (isLast) {
+                    setupPracticeNewMode = true;
+                    goToStep('practice');
+                } else {
+                    state.deepOutcomeId = outcomes[activeIdx + 1].outcome_id;
+                    renderComprehensiveStudy();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            };
+        }
+
+        // Sanal Laboratuvar Köprüsü tıklaması: tam ekrandan çıkıp doğrudan ilgili deneye geç
+        cardPanel.querySelectorAll('.comp-lab-bridge-btn').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const expId = link.dataset.labExp;
+                if (!expId) return;
+                e.preventDefault();
+                exitStudyFullscreen();
+                window.location.hash = `#lab-view/exp/${expId}`;
+            });
+        });
+    }
+
+    applyStudyPlanState();
+}
+
+export function openStudyPrintPreview(triggerEl = null) {
+    const printEl = $('exam-print-sheet');
+    const modalEl = $('exam-print-preview-modal');
+    if (!printEl || !modalEl) return;
+
+    const grade = getActiveGrade();
+    const scNum = getActiveScenarioNumber();
+    const isDeep = hasComprehensiveStudy() && state.studyDepth === 'deep';
+    const modeLabel = isDeep ? 'Kapsamlı Hazırlık' : 'Hızlı Tekrar';
+
+    lastPrintTriggerElement = triggerEl || $('btn-study-pdf-download');
+
+    let bodyHtml = '';
+    let outcomeCount = 0;
+
+    if (isDeep) {
+        const outcomes = getActiveComprehensiveOutcomes();
+        outcomeCount = outcomes.length;
+        bodyHtml = outcomes.map(o => renderComprehensiveOutcomeHtml(o, { forPrint: true })).join('');
+    } else {
+        // Hızlı Tekrar: Yalnızca seçili senaryonun kartlarını kazanımlara göre gruplayarak bas
+        const activeScenario = getActiveScenario();
+        const activeOutcomeIds = new Set((activeScenario?.allocation || []).map(a => a.outcome_id));
+        const isFullPoolGrade = loadedRevision === GRADE5_CONTENT_REVISION || loadedRevision === GRADE6_CONTENT_REVISION || grade === '5' || grade === '6';
+        const scenarioCards = (CARDS || []).filter(c => isFullPoolGrade || activeOutcomeIds.size === 0 || activeOutcomeIds.has(c.outcome_id));
+        const grouped = new Map();
+        scenarioCards.forEach(c => {
+            if (!grouped.has(c.outcome_id)) grouped.set(c.outcome_id, []);
+            grouped.get(c.outcome_id).push(c);
+        });
+        outcomeCount = grouped.size;
+        const allOutcomes = DATA?.allOutcomes || DATA?.outcomes || [];
+
+        bodyHtml = [...grouped.entries()].map(([oid, cards]) => {
+            const oMeta = allOutcomes.find(o => o.id === oid);
+            return `
+                <div class="study-print-outcome study-print-quick-group" data-outcome-id="${esc(oid)}">
+                    <div class="study-print-hero">
+                        <div class="study-print-hero-meta">
+                            <span class="study-print-badge">${esc(oid)}</span>
+                            <span class="study-print-meta-chip">${cards.length} Kart</span>
+                        </div>
+                        <h2 class="study-print-outcome-title">${esc(oMeta?.short_title || oMeta?.title || oid)}</h2>
+                        ${oMeta?.title && oMeta?.short_title ? `<p class="study-print-outcome-subtitle">${esc(oMeta.title)}</p>` : ''}
+                    </div>
+                    <div class="study-print-quick-cards">
+                        ${cards.map((c, idx) => {
+                            const visualSrc = c.visual?.asset ? (ASSET_BASE + c.visual.asset + '?v=' + CONTENT_V6_VERSION) : '';
+                            return `
+                                <article class="study-print-card">
+                                    <h3 class="study-print-card-title">${idx + 1}. ${esc(c.title)}</h3>
+                                    ${c.lead ? `<p class="study-print-sec-lead">${esc(c.lead)}</p>` : ''}
+                                    ${(c.body || []).map(p => `<p>${esc(p)}</p>`).join('')}
+                                    ${c.facts?.length ? `<dl class="study-print-facts">${c.facts.map(f => `<div><dt>${esc(f.label)}:</dt><dd>${esc(f.value)}</dd></div>`).join('')}</dl>` : ''}
+                                    ${c.topics?.length ? `<ul class="study-print-topics">${c.topics.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
+                                    ${c.table ? `<div class="study-print-table-wrap">${cardTableHtml(c.table)}</div>` : ''}
+                                    ${visualSrc ? `
+                                        <figure class="study-print-figure">
+                                            <div class="study-print-img-wrap">
+                                                <img src="${esc(visualSrc)}" alt="${esc(c.visual?.alt || c.title)}">
+                                            </div>
+                                            ${c.visual?.caption ? `<figcaption>${esc(c.visual.caption)}</figcaption>` : ''}
+                                        </figure>
+                                    ` : ''}
+                                    ${c.takeaway ? `<div class="study-print-takeaway"><strong>Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>` : ''}
+                                    ${c.misconception ? `<div class="study-print-misconception"><strong>Karıştırma:</strong> ${esc(c.misconception)}</div>` : ''}
+                                </article>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    printEl.classList.remove('is-answers-mode');
+    printEl.classList.add('study-print-mode');
+    printEl.dataset.studyPrintMode = isDeep ? 'deep' : 'quick';
+    printEl.dataset.studyPrintScenario = String(scNum);
+
+    printEl.innerHTML = `
+        <div class="print-header study-print-header">
+            <div class="print-brand-row">
+                <img src="fenupx-logo.png" alt="FenUp X Logo" class="print-logo" width="44" height="44">
+                <div class="print-title-group">
+                    <h1 class="print-school-title">FenUp X · ${esc(grade)}. Sınıf 1. Dönem 1. Yazılı · Senaryo ${esc(scNum)} · ${esc(modeLabel)}</h1>
+                    <h2 class="print-sub-title">Bilgi İstasyonu Çalışma Rehberi (${outcomeCount} Öğrenme Çıktısı)</h2>
+                </div>
+            </div>
+        </div>
+        <div class="study-print-body">
+            ${bodyHtml}
+        </div>
+        <div class="print-sheet-footer">
+            <span>fenupx.com · ${esc(grade)}. Sınıf 1. Dönem 1. Yazılı · Senaryo ${esc(scNum)} · ${esc(modeLabel)}</span>
+        </div>
+    `;
+
+    // Modal başlığı ve butonlarını Bilgi İstasyonu PDF moduna uyarla
+    modalEl.classList.add('study-print-mode');
+    const titleEl = $('print-modal-title');
+    if (titleEl) titleEl.innerHTML = `<i class="fas fa-file-pdf"></i> ${esc(modeLabel)} — PDF ve Yazdırma Önizlemesi`;
+    const subTitleEl = $('print-modal-subtitle');
+    if (subTitleEl) subTitleEl.textContent = `FenUp X · ${grade}. Sınıf 1. Dönem 1. Yazılı · Senaryo ${scNum} · ${outcomeCount} öğrenme çıktısı (A4 beyaz zemin).`;
+
+    const modeSwitch = modalEl.querySelector('.print-preview-mode-switch');
+    if (modeSwitch) modeSwitch.style.display = 'none';
+    const btnDownloadPdf = $('btn-print-preview-download-pdf');
+    if (btnDownloadPdf) btnDownloadPdf.style.display = 'none';
+    const btnSubmit = $('btn-print-preview-submit');
+    if (btnSubmit) {
+        btnSubmit.classList.remove('exam-btn-secondary');
+        btnSubmit.classList.add('exam-btn-primary');
+        btnSubmit.innerHTML = '<i class="fas fa-print"></i> <span>Yazdır / PDF Kaydet</span>';
+        btnSubmit.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            window.print();
+        };
+    }
+    const btnClose = $('btn-print-preview-close');
+    if (btnClose) {
+        btnClose.innerHTML = '<i class="fas fa-times"></i> <span>Kapat</span>';
+        btnClose.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closePrintPreview();
+        };
+    }
+
+    modalEl.classList.remove('is-hidden');
+    modalEl.classList.add('is-open', 'active');
+    modalEl.style.display = 'flex';
+    modalEl.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('exam-modal-open');
+
+    modalEl.onclick = (e) => {
+        if (e.target === modalEl) {
+            e.preventDefault();
+            closePrintPreview();
+        }
+    };
+
+    setTimeout(() => {
+        if (btnSubmit) btnSubmit.focus();
+        else modalEl.focus();
+    }, 50);
+}
+
 // 3a. AŞAMA: KONU ÇALIŞMA EKRANI (Veri Kartları, Çalışma Planı & İnteraktif Deneyler)
 function renderStudy(cardIndex) {
     stopAnimation();
+    syncStudyToolbarControls();
+
+    const studyView = $('exam-view-study');
+    const sceneEl = $('scene-yazili');
+    const cardPanelEl = $('exam-card-article');
+    if (hasComprehensiveStudy() && state.studyDepth === 'deep') {
+        renderComprehensiveStudy();
+        return;
+    }
+    if (studyView) studyView.classList.remove('comprehensive-active');
+    if (sceneEl) sceneEl.classList.remove('comprehensive-study-mode');
+    if (cardPanelEl) cardPanelEl.classList.remove('comprehensive-mode');
+
     if (!CARDS || CARDS.length === 0) return;
     if (cardIndex < 0) cardIndex = 0;
     if (cardIndex >= CARDS.length) cardIndex = CARDS.length - 1;
@@ -4712,6 +5586,26 @@ function openPrintPreview(triggerEl = null) {
     const modalEl = $('exam-print-preview-modal');
     if (!printEl || !modalEl) return;
 
+    // Bilgi İstasyonu PDF modundan çıkıp Yazılı Provası baskı modunu geri yükle
+    modalEl.classList.remove('study-print-mode');
+    printEl.classList.remove('study-print-mode');
+    delete printEl.dataset.studyPrintMode;
+    delete printEl.dataset.studyPrintScenario;
+    const modalTitleEl = $('print-modal-title');
+    if (modalTitleEl) modalTitleEl.innerHTML = '<i class="fas fa-file-pdf"></i> Soru Kâğıdı Baskı ve PDF Önizlemesi';
+    const modeSwitchEl = modalEl.querySelector('.print-preview-mode-switch');
+    if (modeSwitchEl) modeSwitchEl.style.display = '';
+    const btnDownloadPdfReset = $('btn-print-preview-download-pdf');
+    if (btnDownloadPdfReset) btnDownloadPdfReset.style.display = '';
+    const btnSubmitReset = $('btn-print-preview-submit');
+    if (btnSubmitReset) {
+        btnSubmitReset.classList.remove('exam-btn-primary');
+        btnSubmitReset.classList.add('exam-btn-secondary');
+        btnSubmitReset.innerHTML = '<i class="fas fa-print"></i> <span>Yazdır</span>';
+    }
+    const btnCloseReset = $('btn-print-preview-close');
+    if (btnCloseReset) btnCloseReset.innerHTML = '<i class="fas fa-times"></i> <span>Provaya Dön</span>';
+
     // GA4: pdf_onizleme_acildi etkinliği
     trackFenUpEvent('pdf_onizleme_acildi', {
         senaryo: `senaryo-${scNum}`
@@ -4915,11 +5809,15 @@ function openPrintPreview(triggerEl = null) {
 
 function closePrintPreview() {
     const modalEl = $('exam-print-preview-modal');
+    const printEl = $('exam-print-sheet');
     if (modalEl) {
-        modalEl.classList.remove('is-open', 'active');
+        modalEl.classList.remove('is-open', 'active', 'study-print-mode');
         modalEl.classList.add('is-hidden');
         modalEl.style.display = 'none';
         modalEl.setAttribute('aria-hidden', 'true');
+    }
+    if (printEl) {
+        printEl.classList.remove('study-print-mode');
     }
 
     // Arka plan kaydırma kilidini temizle
@@ -5953,6 +6851,10 @@ if (typeof window !== 'undefined') {
         renderAdminQuestionReview,
         refreshAdminQuestionCount,
         openPrintPreview,
+        openStudyPrintPreview,
+        setStudyDepth,
+        hasComprehensiveStudy,
+        getActiveComprehensiveOutcomes,
         closePrintPreview,
         downloadExamPdf,
         calculateQuestionPoints,
