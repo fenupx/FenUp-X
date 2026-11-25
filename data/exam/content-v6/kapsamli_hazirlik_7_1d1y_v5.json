@@ -1097,7 +1097,8 @@
             }
           ],
           "visual": {
-            "visual_type": "photo_gallery",
+            "visual_type": "diagram_gallery",
+            "fit": "contain",
             "items": [
               {
                 "asset": "assets/lift-hold-carry.png",

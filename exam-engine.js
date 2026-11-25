@@ -2260,14 +2260,15 @@ function renderComprehensiveVisualBlock(visual, options = {}) {
                 fallbackAsset: visual.fallback_asset || ''
             }));
         }
-    } else if (vt === 'photo_gallery' || vt === 'svg_gallery') {
+    } else if (vt === 'photo_gallery' || vt === 'svg_gallery' || vt === 'diagram_gallery') {
         const items = Array.isArray(visual.items) ? visual.items : [];
         if (items.length > 0) {
             const isSvgGal = vt === 'svg_gallery';
+            const isDiagramGal = vt === 'diagram_gallery' || visual.fit === 'contain';
             const colCount = items.length >= 4 ? 4 : Math.min(items.length, 3);
             const galleryCls = forPrint
-                ? `study-print-gallery ${isSvgGal ? 'study-print-gallery-svg' : `study-print-gallery-photo cols-${Math.min(items.length, 3)}`}`
-                : `comp-gallery ${isSvgGal ? 'comp-gallery-svg' : `comp-gallery-photo cols-${colCount}`}`;
+                ? `study-print-gallery ${isSvgGal ? 'study-print-gallery-svg' : (isDiagramGal ? 'study-print-gallery-diagram' : `study-print-gallery-photo cols-${Math.min(items.length, 3)}`)}`
+                : `comp-gallery ${isSvgGal ? 'comp-gallery-svg' : (isDiagramGal ? 'comp-gallery-diagram' : `comp-gallery-photo cols-${colCount}`)}`;
             parts.push(`
                 <div class="${galleryCls}">
                     ${items.map(it => renderComprehensiveFigureHtml(it.asset, it.caption, {

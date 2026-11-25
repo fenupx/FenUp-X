@@ -6465,6 +6465,54 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     display: block;
 }
 
+.comp-gallery.comp-gallery-diagram {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 16px;
+}
+
+.comp-gallery.comp-gallery-diagram .comp-figure .comp-img-frame {
+    aspect-ratio: auto !important;
+    height: auto !important;
+    width: 100%;
+    padding: 10px 12px;
+    background: #0f172a;
+    overflow: visible;
+}
+
+.comp-gallery.comp-gallery-diagram .comp-figure .comp-img-frame img {
+    width: 100%;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    display: block;
+}
+
+.study-print-gallery.study-print-gallery-diagram {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px;
+}
+
+.study-print-gallery.study-print-gallery-diagram .study-print-img-wrap {
+    aspect-ratio: auto !important;
+    height: auto !important;
+    width: 100%;
+    padding: 8px 10px;
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    overflow: visible;
+}
+
+.study-print-gallery.study-print-gallery-diagram .study-print-img-wrap img {
+    width: auto !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 175px !important;
+    margin: 0 auto;
+    object-fit: contain !important;
+    display: block;
+}
+
 /* Özel Eğitsel Vektörel SVG Diyagramlar + Hafif Mikro-Animasyon */
 .comp-svg-box {
     width: 100%;
