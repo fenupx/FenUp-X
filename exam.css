@@ -6380,9 +6380,38 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.comp-gallery .comp-figure:not(.comp-figure-illustration) .comp-img-frame img {
-    height: 200px;
+.comp-gallery.comp-gallery-photo .comp-figure .comp-img-frame {
+    aspect-ratio: 16 / 10;
+    width: 100%;
+    overflow: hidden;
+}
+
+.comp-gallery.comp-gallery-photo .comp-figure .comp-img-frame img {
+    width: 100%;
+    height: 100%;
+    max-height: none;
     object-fit: cover;
+    display: block;
+}
+
+.comp-gallery .comp-figure img.crop-portrait-top,
+.study-print-gallery .study-print-figure img.crop-portrait-top {
+    object-fit: cover !important;
+    object-position: center 18% !important;
+}
+
+.study-print-gallery .study-print-img-wrap {
+    aspect-ratio: 16 / 10;
+    width: 100%;
+    overflow: hidden;
+}
+
+.study-print-gallery .study-print-img-wrap img {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: cover;
+    display: block;
 }
 
 .comp-gallery.comp-gallery-svg .comp-figure .comp-img-frame img {
@@ -7252,6 +7281,30 @@ body:has(#scene-yazili.study-active) .cookie-banner {
 #exam-print-sheet.study-print-mode .comp-svg-ring-inner {
     fill: #fef3c7 !important;
     stroke: #b45309 !important;
+}
+
+.comp-custom-svg-print .comp-svg-label-pill,
+#exam-print-sheet.study-print-mode .comp-svg-label-pill {
+    fill: #ffffff !important;
+}
+
+.comp-custom-svg-print .comp-svg-pill-title,
+#exam-print-sheet.study-print-mode .comp-svg-pill-title {
+    fill: #0f172a !important;
+}
+
+.comp-custom-svg-print .comp-svg-lane-top,
+#exam-print-sheet.study-print-mode .comp-svg-lane-top {
+    fill: #f0f9ff !important;
+    fill-opacity: 1 !important;
+    stroke: #0284c7 !important;
+}
+
+.comp-custom-svg-print .comp-svg-lane-bot,
+#exam-print-sheet.study-print-mode .comp-svg-lane-bot {
+    fill: #fff7ed !important;
+    fill-opacity: 1 !important;
+    stroke: #ea580c !important;
 }
 
 .comp-custom-svg-print .comp-svg-orbit,

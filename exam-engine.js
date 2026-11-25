@@ -969,7 +969,10 @@ async function loadData(revision = getActiveContentRevision(), showError = true,
                     } catch (_) {}
 
                     try {
-                        let compRes = await fetch(base + 'kapsamli_hazirlik_7_1d1y_v4.json?v=' + CONTENT_V6_VERSION);
+                        let compRes = await fetch(base + 'kapsamli_hazirlik_7_1d1y_v5.json?v=' + CONTENT_V6_VERSION);
+                        if (!compRes.ok) {
+                            compRes = await fetch(base + 'kapsamli_hazirlik_7_1d1y_v4.json?v=' + CONTENT_V6_VERSION);
+                        }
                         if (!compRes.ok) {
                             compRes = await fetch(base + 'kapsamli_hazirlik_7_1d1y_v3.json?v=' + CONTENT_V6_VERSION);
                         }
@@ -1902,124 +1905,191 @@ function renderComprehensiveSvgDiagram(svgId, forPrint = false) {
     }
 
     if (svgId === 'svg-star-lifecycle-dual') {
+        const sfx = forPrint ? 'p' : 's';
         return `
             <div class="comp-svg-box${pCls}" data-svg-id="svg-star-lifecycle-dual">
-                <svg class="comp-custom-svg" viewBox="0 0 880 390" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Yıldızların yaşam döngüsü: Bulutsudan küçük ve büyük kütleli yıldızların iki ayrı yolu">
+                <svg class="comp-custom-svg" viewBox="0 0 920 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Yıldızların yaşam döngüsü infografik şeması: Bulutsudan küçük ve büyük kütleli yıldızların iki ayrı yolu">
                     <defs>
-                        <marker id="comp-arr-star-${forPrint ? 'p' : 's'}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
-                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#94a3b8"/>
+                        <linearGradient id="sl-bg-${sfx}" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#070d1f"/>
+                            <stop offset="50%" stop-color="#0f172a"/>
+                            <stop offset="100%" stop-color="#131032"/>
+                        </linearGradient>
+                        <radialGradient id="sl-neb-${sfx}" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#f0abfc"/>
+                            <stop offset="55%" stop-color="#a855f7" stop-opacity="0.8"/>
+                            <stop offset="100%" stop-color="#581c87" stop-opacity="0"/>
+                        </radialGradient>
+                        <radialGradient id="sl-proto-${sfx}" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#fef9c3"/>
+                            <stop offset="50%" stop-color="#f59e0b"/>
+                            <stop offset="100%" stop-color="#b45309" stop-opacity="0"/>
+                        </radialGradient>
+                        <radialGradient id="sl-sun-${sfx}" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#ffffff"/>
+                            <stop offset="45%" stop-color="#fde047"/>
+                            <stop offset="100%" stop-color="#ea580c"/>
+                        </radialGradient>
+                        <radialGradient id="sl-giant-${sfx}" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#fed7aa"/>
+                            <stop offset="55%" stop-color="#ea580c"/>
+                            <stop offset="100%" stop-color="#9a3412"/>
+                        </radialGradient>
+                        <radialGradient id="sl-blue-${sfx}" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#ffffff"/>
+                            <stop offset="45%" stop-color="#60a5fa"/>
+                            <stop offset="100%" stop-color="#1d4ed8"/>
+                        </radialGradient>
+                        <radialGradient id="sl-super-${sfx}" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#fca5a5"/>
+                            <stop offset="55%" stop-color="#dc2626"/>
+                            <stop offset="100%" stop-color="#7f1d1d"/>
+                        </radialGradient>
+                        <radialGradient id="sl-wd-${sfx}" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" stop-color="#ffffff"/>
+                            <stop offset="60%" stop-color="#bae6fd"/>
+                            <stop offset="100%" stop-color="#0284c7" stop-opacity="0"/>
+                        </radialGradient>
+                        <marker id="sl-arr-gold-${sfx}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8"/>
+                        </marker>
+                        <marker id="sl-arr-org-${sfx}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#fb923c"/>
+                        </marker>
+                        <marker id="sl-arr-purp-${sfx}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+                            <path d="M 0 1 L 10 5 L 0 9 z" fill="#c084fc"/>
                         </marker>
                     </defs>
-                    <rect class="comp-svg-bg" x="4" y="4" width="872" height="382" rx="18" fill="#0b132b" stroke="#334155" stroke-width="1.5"/>
-                    <text class="comp-svg-title" x="440" y="32" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="700">Yıldızların Yaşam Döngüsü: Başlangıç Kütlesine Göre İki Farklı Yol</text>
 
-                    <!-- Ortak Başlangıç: Bulutsu -> Önyıldız -->
-                    <g transform="translate(22,150)">
-                        <rect class="comp-svg-card" x="0" y="0" width="114" height="84" rx="14" fill="#1e293b" stroke="#a855f7" stroke-width="2"/>
-                        <circle class="comp-svg-pulse" cx="57" cy="30" r="15" fill="#a855f7" opacity="0.45"/>
-                        <circle cx="57" cy="30" r="8" fill="#e879f9"/>
-                        <text class="comp-svg-text" x="57" y="61" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="700">Bulutsu</text>
-                        <text class="comp-svg-muted" x="57" y="76" text-anchor="middle" fill="#cbd5e1" font-size="10">(Nebula)</text>
+                    <rect class="comp-svg-bg" x="4" y="4" width="912" height="422" rx="20" fill="url(#sl-bg-${sfx})" stroke="#334155" stroke-width="1.6"/>
+                    <!-- Arka plan yıldız tozu -->
+                    <g opacity="0.45" fill="#e2e8f0">
+                        <circle cx="48" cy="54" r="1.2"/><circle cx="155" cy="76" r="1"/><circle cx="295" cy="48" r="1.3"/>
+                        <circle cx="870" cy="58" r="1.2"/><circle cx="820" cy="390" r="1.1"/><circle cx="90" cy="365" r="1.2"/>
+                        <circle cx="215" cy="340" r="1"/><circle cx="445" cy="195" r="1.1"/><circle cx="670" cy="196" r="1.2"/>
                     </g>
 
-                    <line x1="138" y1="192" x2="162" y2="192" stroke="#94a3b8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+                    <text class="comp-svg-title" x="460" y="34" text-anchor="middle" fill="#f8fafc" font-size="16.5" font-weight="800">Yıldızların Yaşam Döngüsü: Başlangıç Kütlesine Göre İki Farklı Yol</text>
 
-                    <g transform="translate(166,150)">
-                        <rect class="comp-svg-card" x="0" y="0" width="108" height="84" rx="14" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
-                        <circle class="comp-svg-pulse" cx="54" cy="30" r="14" fill="#f59e0b" opacity="0.4"/>
-                        <circle cx="54" cy="30" r="8" fill="#fde047"/>
-                        <text class="comp-svg-text" x="54" y="61" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="700">Önyıldız</text>
-                        <text class="comp-svg-muted" x="54" y="76" text-anchor="middle" fill="#cbd5e1" font-size="10">Sıkışan çekirdek</text>
+                    <!-- ÜST KOL ŞERİDİ ARKA PLANI -->
+                    <rect class="comp-svg-lane-top" x="328" y="54" width="566" height="142" rx="16" fill="#0c2540" fill-opacity="0.52" stroke="#38bdf8" stroke-opacity="0.35" stroke-width="1.2"/>
+                    <rect class="comp-svg-pill-top" x="342" y="64" width="388" height="24" rx="12" fill="#0369a1" fill-opacity="0.75"/>
+                    <text x="536" y="80" text-anchor="middle" fill="#e0f2fe" font-size="11.5" font-weight="800">ÜST KOL · Küçük Kütleli Yıldız (Güneş Benzeri · Daha Uzun Ömür)</text>
+
+                    <!-- ALT KOL ŞERİDİ ARKA PLANI -->
+                    <rect class="comp-svg-lane-bot" x="328" y="212" width="566" height="170" rx="16" fill="#2c142c" fill-opacity="0.48" stroke="#f97316" stroke-opacity="0.38" stroke-width="1.2"/>
+                    <rect class="comp-svg-pill-bot" x="342" y="222" width="406" height="24" rx="12" fill="#c2410c" fill-opacity="0.78"/>
+                    <text x="545" y="238" text-anchor="middle" fill="#ffedd5" font-size="11.5" font-weight="800">ALT KOL · Büyük Kütleli Yıldız (Hızlı Yakıt Tüketimi · Kısa Ömür)</text>
+
+                    <!-- ORTAK BAŞLANGIÇ: BULUTSU -> ÖNYILDIZ -->
+                    <g transform="translate(24,162)">
+                        <rect class="comp-svg-card" x="0" y="0" width="118" height="104" rx="16" fill="#172038" stroke="#a855f7" stroke-width="2"/>
+                        <circle class="comp-svg-pulse" cx="59" cy="38" r="24" fill="url(#sl-neb-${sfx})"/>
+                        <ellipse cx="59" cy="38" rx="18" ry="10" transform="rotate(-24 59 38)" fill="none" stroke="#e879f9" stroke-width="1.4" opacity="0.8"/>
+                        <circle cx="59" cy="38" r="6" fill="#f5d0fe"/>
+                        <text class="comp-svg-text" x="59" y="76" text-anchor="middle" fill="#f8fafc" font-size="12.5" font-weight="800">Bulutsu</text>
+                        <text class="comp-svg-muted" x="59" y="92" text-anchor="middle" fill="#cbd5e1" font-size="10.5">Gaz ve Toz</text>
                     </g>
 
-                    <!-- İki Kola Ayrılma -->
-                    <path d="M 276 178 C 298 178, 298 106, 322 106" fill="none" stroke="#38bdf8" stroke-width="2.4" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
-                    <path d="M 276 206 C 298 206, 298 282, 322 282" fill="none" stroke="#f97316" stroke-width="2.4" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+                    <line x1="144" y1="214" x2="170" y2="214" stroke="#38bdf8" stroke-width="2.4" marker-end="url(#sl-arr-gold-${sfx})"/>
 
-                    <!-- Üst Kol Etiketi -->
-                    <text x="326" y="60" fill="#38bdf8" font-size="12" font-weight="800">ÜST KOL: Küçük Kütleli Yıldız (Güneş Benzeri · Daha Uzun Ömür)</text>
-
-                    <!-- Üst Kol Adımları -->
-                    <g transform="translate(326,70)">
-                        <rect class="comp-svg-card" x="0" y="0" width="114" height="72" rx="11" fill="#1e293b" stroke="#facc15" stroke-width="1.8"/>
-                        <circle cx="57" cy="24" r="11" fill="#facc15"/>
-                        <text class="comp-svg-text" x="57" y="50" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="700">Küçük Kütleli</text>
-                        <text class="comp-svg-muted" x="57" y="64" text-anchor="middle" fill="#cbd5e1" font-size="10">Yıldız (Güneş)</text>
-                    </g>
-                    <line x1="442" y1="106" x2="462" y2="106" stroke="#94a3b8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
-
-                    <g transform="translate(466,70)">
-                        <rect class="comp-svg-card" x="0" y="0" width="114" height="72" rx="11" fill="#1e293b" stroke="#f97316" stroke-width="1.8"/>
-                        <circle cx="57" cy="24" r="14" fill="#ea580c"/>
-                        <text class="comp-svg-text" x="57" y="52" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="700">Kırmızı Dev</text>
-                        <text class="comp-svg-muted" x="57" y="65" text-anchor="middle" fill="#cbd5e1" font-size="10">Genişler</text>
-                    </g>
-                    <line x1="582" y1="106" x2="602" y2="106" stroke="#94a3b8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
-
-                    <g transform="translate(606,70)">
-                        <rect class="comp-svg-card" x="0" y="0" width="120" height="72" rx="11" fill="#1e293b" stroke="#2dd4bf" stroke-width="1.8"/>
-                        <circle cx="60" cy="24" r="13" fill="none" stroke="#2dd4bf" stroke-width="3" stroke-dasharray="4 2"/>
-                        <circle cx="60" cy="24" r="4" fill="#ffffff"/>
-                        <text class="comp-svg-text" x="60" y="51" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="700">Gezegenimsi</text>
-                        <text class="comp-svg-muted" x="60" y="64" text-anchor="middle" fill="#cbd5e1" font-size="10">Bulutsu</text>
-                    </g>
-                    <line x1="728" y1="106" x2="748" y2="106" stroke="#94a3b8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
-
-                    <g transform="translate(752,70)">
-                        <rect class="comp-svg-card" x="0" y="0" width="106" height="72" rx="11" fill="#1e293b" stroke="#e2e8f0" stroke-width="2"/>
-                        <circle cx="53" cy="24" r="8" fill="#ffffff" stroke="#93c5fd" stroke-width="3"/>
-                        <text class="comp-svg-text" x="53" y="52" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="700">Beyaz Cüce</text>
-                        <text class="comp-svg-muted" x="53" y="65" text-anchor="middle" fill="#cbd5e1" font-size="10">Son kalıntı</text>
+                    <g transform="translate(174,162)">
+                        <rect class="comp-svg-card" x="0" y="0" width="116" height="104" rx="16" fill="#172038" stroke="#f59e0b" stroke-width="2"/>
+                        <circle class="comp-svg-pulse" cx="58" cy="38" r="22" fill="url(#sl-proto-${sfx})"/>
+                        <ellipse cx="58" cy="38" rx="22" ry="6" transform="rotate(-15 58 38)" fill="none" stroke="#fde047" stroke-width="1.6"/>
+                        <circle cx="58" cy="38" r="7.5" fill="#fef08a"/>
+                        <text class="comp-svg-text" x="58" y="76" text-anchor="middle" fill="#f8fafc" font-size="12.5" font-weight="800">Önyıldız</text>
+                        <text class="comp-svg-muted" x="58" y="92" text-anchor="middle" fill="#cbd5e1" font-size="10.5">Sıkışan Çekirdek</text>
                     </g>
 
-                    <!-- Alt Kol Etiketi -->
-                    <text x="326" y="218" fill="#fb923c" font-size="12" font-weight="800">ALT KOL: Büyük Kütleli Yıldız (Yakıtı Hızlı Tüketir · Daha Kısa Ömür)</text>
+                    <!-- İki Kola Akıcı Dallanma -->
+                    <path d="M 292 198 C 314 198, 310 140, 338 140" fill="none" stroke="#38bdf8" stroke-width="2.6" marker-end="url(#sl-arr-gold-${sfx})"/>
+                    <path d="M 292 230 C 314 230, 310 308, 338 308" fill="none" stroke="#fb923c" stroke-width="2.6" marker-end="url(#sl-arr-org-${sfx})"/>
 
-                    <!-- Alt Kol Adımları -->
-                    <g transform="translate(326,232)">
-                        <rect class="comp-svg-card" x="0" y="0" width="114" height="96" rx="11" fill="#1e293b" stroke="#60a5fa" stroke-width="1.8"/>
-                        <circle cx="57" cy="30" r="15" fill="#3b82f6"/>
-                        <text class="comp-svg-text" x="57" y="64" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="700">Büyük Kütleli</text>
-                        <text class="comp-svg-muted" x="57" y="79" text-anchor="middle" fill="#cbd5e1" font-size="10">Mavi-Beyaz Yıldız</text>
+                    <!-- ÜST KOL ADIMLARI -->
+                    <g transform="translate(342,98)">
+                        <rect class="comp-svg-card" x="0" y="0" width="118" height="86" rx="13" fill="#13223b" stroke="#facc15" stroke-width="1.8"/>
+                        <circle cx="59" cy="30" r="14" fill="url(#sl-sun-${sfx})"/>
+                        <text class="comp-svg-text" x="59" y="60" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="800">Küçük Kütleli</text>
+                        <text class="comp-svg-muted" x="59" y="75" text-anchor="middle" fill="#cbd5e1" font-size="10">Yıldız (Güneş)</text>
                     </g>
-                    <line x1="442" y1="280" x2="462" y2="280" stroke="#94a3b8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+                    <line x1="462" y1="141" x2="482" y2="141" stroke="#38bdf8" stroke-width="2.2" marker-end="url(#sl-arr-gold-${sfx})"/>
 
-                    <g transform="translate(466,232)">
-                        <rect class="comp-svg-card" x="0" y="0" width="114" height="96" rx="11" fill="#1e293b" stroke="#ef4444" stroke-width="1.8"/>
-                        <circle cx="57" cy="30" r="18" fill="#dc2626"/>
-                        <text class="comp-svg-text" x="57" y="64" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="700">Kırmızı</text>
-                        <text class="comp-svg-muted" x="57" y="79" text-anchor="middle" fill="#cbd5e1" font-size="10.5">Süperdev</text>
+                    <g transform="translate(486,98)">
+                        <rect class="comp-svg-card" x="0" y="0" width="116" height="86" rx="13" fill="#13223b" stroke="#f97316" stroke-width="1.8"/>
+                        <circle cx="58" cy="30" r="18" fill="url(#sl-giant-${sfx})"/>
+                        <text class="comp-svg-text" x="58" y="61" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="800">Kırmızı Dev</text>
+                        <text class="comp-svg-muted" x="58" y="75" text-anchor="middle" fill="#cbd5e1" font-size="10">Genişler</text>
                     </g>
-                    <line x1="582" y1="280" x2="602" y2="280" stroke="#94a3b8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
+                    <line x1="604" y1="141" x2="624" y2="141" stroke="#38bdf8" stroke-width="2.2" marker-end="url(#sl-arr-gold-${sfx})"/>
 
-                    <g transform="translate(606,232)">
-                        <rect class="comp-svg-card" x="0" y="0" width="110" height="96" rx="11" fill="#1e293b" stroke="#f59e0b" stroke-width="2"/>
-                        <polygon class="comp-svg-pulse" points="55,10 61,24 76,20 65,31 74,44 59,37 55,51 50,37 36,44 45,31 34,20 49,24" fill="#fbbf24"/>
-                        <text class="comp-svg-text" x="55" y="66" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="700">Süpernova</text>
-                        <text class="comp-svg-muted" x="55" y="81" text-anchor="middle" fill="#cbd5e1" font-size="10">Şiddetli patlama</text>
+                    <g transform="translate(628,98)">
+                        <rect class="comp-svg-card" x="0" y="0" width="122" height="86" rx="13" fill="#13223b" stroke="#2dd4bf" stroke-width="1.8"/>
+                        <circle cx="61" cy="30" r="17" fill="none" stroke="#2dd4bf" stroke-width="3.5" stroke-dasharray="5 2.5"/>
+                        <circle cx="61" cy="30" r="11" fill="none" stroke="#f472b6" stroke-width="1.8" opacity="0.8"/>
+                        <circle cx="61" cy="30" r="4" fill="#ffffff"/>
+                        <text class="comp-svg-text" x="61" y="61" text-anchor="middle" fill="#f8fafc" font-size="11.2" font-weight="800">Gezegenimsi</text>
+                        <text class="comp-svg-muted" x="61" y="75" text-anchor="middle" fill="#cbd5e1" font-size="10">Bulutsu</text>
+                    </g>
+                    <line x1="752" y1="141" x2="770" y2="141" stroke="#38bdf8" stroke-width="2.2" marker-end="url(#sl-arr-gold-${sfx})"/>
+
+                    <g transform="translate(774,98)">
+                        <rect class="comp-svg-card" x="0" y="0" width="108" height="86" rx="13" fill="#13223b" stroke="#bae6fd" stroke-width="2"/>
+                        <circle cx="54" cy="30" r="16" fill="url(#sl-wd-${sfx})"/>
+                        <circle cx="54" cy="30" r="7" fill="#ffffff" stroke="#38bdf8" stroke-width="1.5"/>
+                        <text class="comp-svg-text" x="54" y="61" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="800">Beyaz Cüce</text>
+                        <text class="comp-svg-muted" x="54" y="75" text-anchor="middle" fill="#cbd5e1" font-size="10">Son Kalıntı</text>
+                    </g>
+
+                    <!-- ALT KOL ADIMLARI -->
+                    <g transform="translate(342,258)">
+                        <rect class="comp-svg-card" x="0" y="0" width="118" height="106" rx="13" fill="#1c1836" stroke="#60a5fa" stroke-width="1.8"/>
+                        <circle cx="59" cy="36" r="17" fill="url(#sl-blue-${sfx})"/>
+                        <text class="comp-svg-text" x="59" y="72" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="800">Büyük Kütleli</text>
+                        <text class="comp-svg-muted" x="59" y="88" text-anchor="middle" fill="#cbd5e1" font-size="10">Mavi-Beyaz Yıldız</text>
+                    </g>
+                    <line x1="462" y1="311" x2="482" y2="311" stroke="#fb923c" stroke-width="2.2" marker-end="url(#sl-arr-org-${sfx})"/>
+
+                    <g transform="translate(486,258)">
+                        <rect class="comp-svg-card" x="0" y="0" width="116" height="106" rx="13" fill="#1c1836" stroke="#ef4444" stroke-width="1.8"/>
+                        <circle cx="58" cy="36" r="21" fill="url(#sl-super-${sfx})"/>
+                        <text class="comp-svg-text" x="58" y="72" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="800">Kırmızı</text>
+                        <text class="comp-svg-muted" x="58" y="88" text-anchor="middle" fill="#cbd5e1" font-size="10.5">Süperdev</text>
+                    </g>
+                    <line x1="604" y1="311" x2="624" y2="311" stroke="#fb923c" stroke-width="2.2" marker-end="url(#sl-arr-org-${sfx})"/>
+
+                    <g transform="translate(628,258)">
+                        <rect class="comp-svg-card" x="0" y="0" width="106" height="106" rx="13" fill="#1c1836" stroke="#f59e0b" stroke-width="2"/>
+                        <polygon class="comp-svg-pulse" points="53,12 59,28 76,22 64,35 74,50 58,42 53,58 48,42 32,50 42,35 30,22 47,28" fill="#fbbf24"/>
+                        <circle cx="53" cy="35" r="7" fill="#ffffff"/>
+                        <text class="comp-svg-text" x="53" y="74" text-anchor="middle" fill="#f8fafc" font-size="11.5" font-weight="800">Süpernova</text>
+                        <text class="comp-svg-muted" x="53" y="89" text-anchor="middle" fill="#cbd5e1" font-size="10">Şiddetli Patlama</text>
                     </g>
 
                     <!-- Alternatif Dallanma: Nötron Yıldızı VEYA Kara Delik -->
-                    <path d="M 718 264 L 748 250" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
-                    <path d="M 718 296 L 748 312" fill="none" stroke="#c084fc" stroke-width="2" marker-end="url(#comp-arr-star-${forPrint ? 'p' : 's'})"/>
-                    <rect x="719" y="272" width="32" height="16" rx="6" fill="#f59e0b"/>
-                    <text x="735" y="283" text-anchor="middle" fill="#0f172a" font-size="9" font-weight="800">VEYA</text>
+                    <path d="M 736 294 L 770 278" fill="none" stroke="#38bdf8" stroke-width="2.2" marker-end="url(#sl-arr-gold-${sfx})"/>
+                    <path d="M 736 328 L 770 344" fill="none" stroke="#c084fc" stroke-width="2.2" marker-end="url(#sl-arr-purp-${sfx})"/>
+                    <rect x="735" y="302" width="36" height="18" rx="7" fill="#f59e0b"/>
+                    <text x="753" y="314" text-anchor="middle" fill="#0f172a" font-size="9.5" font-weight="900">VEYA</text>
 
-                    <g transform="translate(752,222)">
-                        <rect class="comp-svg-card" x="0" y="0" width="106" height="52" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="1.8"/>
-                        <circle cx="20" cy="26" r="8" fill="#38bdf8"/>
-                        <text class="comp-svg-text" x="64" y="23" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="700">Nötron</text>
-                        <text class="comp-svg-muted" x="64" y="38" text-anchor="middle" fill="#cbd5e1" font-size="10.5">Yıldızı</text>
+                    <g transform="translate(774,252)">
+                        <rect class="comp-svg-card" x="0" y="0" width="110" height="54" rx="11" fill="#1c1836" stroke="#38bdf8" stroke-width="1.8"/>
+                        <line x1="12" y1="42" x2="32" y2="12" stroke="#7dd3fc" stroke-width="2.2" opacity="0.85"/>
+                        <circle cx="22" cy="27" r="7.5" fill="#38bdf8"/>
+                        <circle cx="22" cy="27" r="3" fill="#ffffff"/>
+                        <text class="comp-svg-text" x="70" y="24" text-anchor="middle" fill="#f8fafc" font-size="11.2" font-weight="800">Nötron</text>
+                        <text class="comp-svg-muted" x="70" y="39" text-anchor="middle" fill="#cbd5e1" font-size="10.5">Yıldızı</text>
                     </g>
 
-                    <g transform="translate(752,286)">
-                        <rect class="comp-svg-card" x="0" y="0" width="106" height="52" rx="10" fill="#1e293b" stroke="#c084fc" stroke-width="1.8"/>
-                        <circle cx="20" cy="26" r="9" fill="#020617" stroke="#f59e0b" stroke-width="2.5"/>
-                        <text class="comp-svg-text" x="64" y="23" text-anchor="middle" fill="#f8fafc" font-size="11" font-weight="700">Kara</text>
-                        <text class="comp-svg-muted" x="64" y="38" text-anchor="middle" fill="#cbd5e1" font-size="10.5">Delik</text>
+                    <g transform="translate(774,316)">
+                        <rect class="comp-svg-card" x="0" y="0" width="110" height="54" rx="11" fill="#1c1836" stroke="#c084fc" stroke-width="1.8"/>
+                        <ellipse cx="22" cy="27" rx="16" ry="5.5" transform="rotate(-20 22 27)" fill="none" stroke="#f59e0b" stroke-width="2.2"/>
+                        <circle cx="22" cy="27" r="7.5" fill="#020617" stroke="#c084fc" stroke-width="1.5"/>
+                        <text class="comp-svg-text" x="70" y="24" text-anchor="middle" fill="#f8fafc" font-size="11.2" font-weight="800">Kara</text>
+                        <text class="comp-svg-muted" x="70" y="39" text-anchor="middle" fill="#cbd5e1" font-size="10.5">Delik</text>
                     </g>
 
-                    <text class="comp-svg-muted" x="440" y="368" text-anchor="middle" fill="#94a3b8" font-size="11">Not: Nötron yıldızı ve kara delik peş peşe değil, kütleye göre oluşan alternatif sonlardır.</text>
+                    <text class="comp-svg-muted" x="460" y="408" text-anchor="middle" fill="#cbd5e1" font-size="11.5" font-weight="600">Not: Nötron yıldızı ve kara delik peş peşe değil, çekirdek kütlesine göre oluşan alternatif sonlardır.</text>
                 </svg>
             </div>
         `;
@@ -2028,34 +2098,37 @@ function renderComprehensiveSvgDiagram(svgId, forPrint = false) {
     if (svgId === 'svg-cosmic-address') {
         return `
             <div class="comp-svg-box${pCls}" data-svg-id="svg-cosmic-address">
-                <svg class="comp-custom-svg" viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kozmik adres iç içe kapsama halkaları: Dünya, Güneş Sistemi, Samanyolu Avcı Kolu ve Evren">
-                    <rect class="comp-svg-bg" x="4" y="4" width="752" height="352" rx="18" fill="#0b132b" stroke="#334155" stroke-width="1.5"/>
-                    <text class="comp-svg-title" x="380" y="32" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="700">Dünya’nın Kozmik Adresi (İç İçe Kapsama Düzeni)</text>
+                <svg class="comp-custom-svg" viewBox="0 0 800 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kozmik adres iç içe kapsama halkaları: Dünya, Güneş Sistemi, Samanyolu Avcı Kolu ve Evren">
+                    <rect class="comp-svg-bg" x="4" y="4" width="792" height="422" rx="20" fill="#0b132b" stroke="#334155" stroke-width="1.6"/>
+                    <text class="comp-svg-title" x="400" y="34" text-anchor="middle" fill="#f8fafc" font-size="16.5" font-weight="800">Dünya’nın Kozmik Adresi (İç İçe Kapsama Düzeni)</text>
 
-                    <!-- Evren (En Dış Halka) -->
-                    <ellipse class="comp-svg-ring-outer" cx="380" cy="196" rx="344" ry="140" fill="#1e1b4b" fill-opacity="0.7" stroke="#818cf8" stroke-width="2.2"/>
-                    <text x="380" y="79" text-anchor="middle" fill="#c7d2fe" font-size="13.5" font-weight="800">EVREN</text>
-                    <text class="comp-svg-muted" x="380" y="96" text-anchor="middle" fill="#a5b4fc" font-size="11">Milyarlarca galaksi, tüm madde, enerji ve uzay</text>
+                    <!-- 1. En Dış Halka: EVREN -->
+                    <ellipse class="comp-svg-ring-outer" cx="400" cy="224" rx="366" ry="164" fill="#1e1b4b" fill-opacity="0.68" stroke="#818cf8" stroke-width="2.4"/>
+                    <rect class="comp-svg-label-pill" x="218" y="68" width="364" height="36" rx="18" fill="#0f172a" stroke="#818cf8" stroke-width="1.5"/>
+                    <text class="comp-svg-pill-title" x="400" y="84" text-anchor="middle" fill="#c7d2fe" font-size="12.5" font-weight="800">EVREN</text>
+                    <text class="comp-svg-muted" x="400" y="98" text-anchor="middle" fill="#a5b4fc" font-size="10.2">Milyarlarca galaksi, tüm madde, enerji ve uzay</text>
 
-                    <!-- Samanyolu Galaksisi -->
-                    <ellipse class="comp-svg-ring-mid" cx="380" cy="212" rx="258" ry="102" fill="#172554" fill-opacity="0.82" stroke="#38bdf8" stroke-width="2.2"/>
-                    <text x="380" y="133" text-anchor="middle" fill="#7dd3fc" font-size="13" font-weight="800">SAMANYOLU GALAKSİSİ (Avcı / Orion Kolu)</text>
-                    <text class="comp-svg-muted" x="380" y="149" text-anchor="middle" fill="#bae6fd" font-size="10.5">Sarmal yapılı gök ada · Milyarlarca yıldız</text>
+                    <!-- 2. Halka: SAMANYOLU GALAKSİSİ -->
+                    <ellipse class="comp-svg-ring-mid" cx="400" cy="248" rx="284" ry="124" fill="#172554" fill-opacity="0.82" stroke="#38bdf8" stroke-width="2.4"/>
+                    <rect class="comp-svg-label-pill" x="224" y="134" width="352" height="36" rx="18" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+                    <text class="comp-svg-pill-title" x="400" y="150" text-anchor="middle" fill="#7dd3fc" font-size="12.5" font-weight="800">SAMANYOLU GALAKSİSİ (Avcı / Orion Kolu)</text>
+                    <text class="comp-svg-muted" x="400" y="164" text-anchor="middle" fill="#bae6fd" font-size="10.2">Sarmal yapılı gök ada · Milyarlarca yıldız</text>
 
-                    <!-- Güneş Sistemi -->
-                    <ellipse class="comp-svg-ring-inner" cx="380" cy="228" rx="166" ry="64" fill="#0f172a" fill-opacity="0.9" stroke="#f59e0b" stroke-width="2.2"/>
-                    <text x="380" y="185" text-anchor="middle" fill="#fde047" font-size="12.5" font-weight="800">GÜNEŞ SİSTEMİ</text>
-                    <text class="comp-svg-muted" x="380" y="200" text-anchor="middle" fill="#fef08a" font-size="10.5">Güneş + 8 Gezegen + Uydular</text>
+                    <!-- 3. Halka: GÜNEŞ SİSTEMİ -->
+                    <ellipse class="comp-svg-ring-inner" cx="400" cy="276" rx="194" ry="82" fill="#0f172a" fill-opacity="0.92" stroke="#f59e0b" stroke-width="2.4"/>
+                    <rect class="comp-svg-label-pill" x="282" y="206" width="236" height="34" rx="17" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+                    <text class="comp-svg-pill-title" x="400" y="221" text-anchor="middle" fill="#fde047" font-size="12" font-weight="800">GÜNEŞ SİSTEMİ</text>
+                    <text class="comp-svg-muted" x="400" y="234" text-anchor="middle" fill="#fef08a" font-size="10">Güneş + 8 Gezegen + Uydular</text>
 
-                    <!-- Dünya -->
-                    <g transform="translate(380,242)">
-                        <circle class="comp-svg-pulse" cx="0" cy="0" r="32" fill="#2563eb" opacity="0.35"/>
-                        <circle cx="0" cy="0" r="24" fill="#1d4ed8" stroke="#60a5fa" stroke-width="2"/>
-                        <path d="M -11 -7 C -4 -14, 7 -11, 10 -2 C 5 4, 11 9, 4 13 C -4 12, -13 6, -11 -7 Z" fill="#10b981"/>
-                        <text x="0" y="4" text-anchor="middle" fill="#ffffff" font-size="11.5" font-weight="800">DÜNYA</text>
+                    <!-- 4. Merkez: DÜNYA -->
+                    <g transform="translate(400,296)">
+                        <circle class="comp-svg-pulse" cx="0" cy="0" r="38" fill="#2563eb" opacity="0.32"/>
+                        <circle cx="0" cy="0" r="28" fill="#1d4ed8" stroke="#60a5fa" stroke-width="2.2"/>
+                        <path d="M -13 -8 C -5 -16, 8 -13, 12 -2 C 6 5, 13 10, 5 15 C -5 14, -15 7, -13 -8 Z" fill="#10b981"/>
+                        <text x="0" y="4" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="800">DÜNYA</text>
                     </g>
 
-                    <text class="comp-svg-muted" x="380" y="346" text-anchor="middle" fill="#cbd5e1" font-size="11.5" font-weight="600">Kapsama Sırası: Dünya ⊂ Güneş Sistemi ⊂ Samanyolu Galaksisi ⊂ Evren</text>
+                    <text class="comp-svg-muted" x="400" y="410" text-anchor="middle" fill="#cbd5e1" font-size="12" font-weight="700">Kapsama Sırası: Dünya ⊂ Güneş Sistemi ⊂ Samanyolu Galaksisi (Avcı Kolu) ⊂ Evren</text>
                 </svg>
             </div>
         `;
@@ -2129,10 +2202,12 @@ function renderComprehensiveFigureHtml(assetPath, captionOrVisual, options = {})
         ? renderComprehensivePanelCaptionsHtml(captionOrVisual, forPrint)
         : (captionText ? `<figcaption>${esc(captionText)}</figcaption>` : '');
 
+    const cropCls = options.crop ? ` class="crop-${esc(options.crop)}"` : '';
+
     return `
         <figure class="${figCls}">
             <div class="${forPrint ? 'study-print-img-wrap' : 'comp-img-frame'}"${lbAttrs}>
-                <img src="${esc(fullSrc)}" alt="${esc(captionText || 'Eğitsel görsel')}" loading="eager"${fbAttrs}>
+                <img${cropCls} src="${esc(fullSrc)}" alt="${esc(captionText || 'Eğitsel görsel')}" loading="eager"${fbAttrs}>
                 ${!forPrint ? '<span class="comp-zoom-pill"><i class="fas fa-search-plus"></i> Büyüt</span>' : ''}
             </div>
             ${captionHtml}
@@ -2192,7 +2267,8 @@ function renderComprehensiveVisualBlock(visual, options = {}) {
                     ${items.map(it => renderComprehensiveFigureHtml(it.asset, it.caption, {
                         forPrint,
                         isIllustration: false,
-                        fallbackAsset: it.fallback_asset || ''
+                        fallbackAsset: it.fallback_asset || '',
+                        crop: it.crop || ''
                     })).join('')}
                 </div>
             `);
@@ -2475,21 +2551,21 @@ function renderComprehensiveStudy() {
     if (studyView) studyView.classList.add('comprehensive-active');
     if (sceneEl) sceneEl.classList.add('comprehensive-study-mode');
 
-    // Sol Kazanım Menüsü + Mobil/Tablet Yapışkan Seçici
+    // Sol Öğrenme Çıktısı Menüsü + Mobil/Tablet Yapışkan Seçici
     const cardnav = $('exam-cardnav');
     if (cardnav) {
         cardnav.innerHTML = `
             <div class="study-plan-header comp-nav-header">
                 <h4><i class="fas fa-book-open"></i> Kapsamlı Hazırlık</h4>
-                <span class="study-plan-badge">S${scNum} · ${outcomes.length} Kazanım</span>
+                <span class="study-plan-badge">S${scNum} · ${outcomes.length} Öğrenme Çıktısı</span>
             </div>
 
             <div class="comp-mobile-sticky-picker">
-                <label class="exam-cardnav-label" for="comp-outcome-select"><i class="fas fa-compass"></i> Kazanım Seç (Senaryo ${scNum}):</label>
+                <label class="exam-cardnav-label" for="comp-outcome-select"><i class="fas fa-compass"></i> Öğrenme Çıktısı Seç (Senaryo ${scNum}):</label>
                 <select id="comp-outcome-select" class="exam-select">
                     ${outcomes.map(o => `<option value="${esc(o.outcome_id)}" ${o.outcome_id === activeOutcome.outcome_id ? 'selected' : ''}>${esc(o.outcome_id)} · ${esc(o.short_title || o.title)}</option>`).join('')}
                 </select>
-                <div class="comp-mobile-pills" role="tablist" aria-label="Kazanım Hızlı Geçiş">
+                <div class="comp-mobile-pills" role="tablist" aria-label="Öğrenme Çıktısı Hızlı Geçiş">
                     ${outcomes.map(o => `
                         <button type="button" class="comp-mobile-pill ${o.outcome_id === activeOutcome.outcome_id ? 'active' : ''}" data-comp-outcome="${esc(o.outcome_id)}" aria-selected="${o.outcome_id === activeOutcome.outcome_id}">
                             ${esc(o.outcome_id)}
@@ -2544,17 +2620,17 @@ function renderComprehensiveStudy() {
         cardPanel.innerHTML = `
             <div class="comp-reading-container">
                 <div class="comp-scenario-banner">
-                    <span><i class="fas fa-layer-group"></i> 7. Sınıf 1. Dönem 1. Yazılı · <strong>${esc(formatScenarioTitle(activeScenario))}</strong> · Kazanım ${activeIdx + 1} / ${outcomes.length}</span>
+                    <span><i class="fas fa-layer-group"></i> 7. Sınıf 1. Dönem 1. Yazılı · <strong>${esc(formatScenarioTitle(activeScenario))}</strong> · Öğrenme Çıktısı ${activeIdx + 1} / ${outcomes.length}</span>
                 </div>
                 ${renderComprehensiveOutcomeHtml(activeOutcome, { forPrint: false })}
                 <div class="exam-next-bar comp-bottom-nav">
                     <button id="comp-outcome-prev" type="button" class="exam-btn-secondary" ${isFirst ? 'disabled' : ''}>
-                        <i class="fas fa-chevron-left"></i> <span>Önceki Kazanım</span>
+                        <i class="fas fa-chevron-left"></i> <span>Önceki Öğrenme Çıktısı</span>
                     </button>
                     <button id="comp-outcome-next" type="button" class="exam-btn-primary">
                         ${isLast
                             ? '<span>Yazılı Provasına Geç</span> <i class="fas fa-arrow-right"></i>'
-                            : '<span>Sonraki Kazanım</span> <i class="fas fa-chevron-right"></i>'}
+                            : '<span>Sonraki Öğrenme Çıktısı</span> <i class="fas fa-chevron-right"></i>'}
                     </button>
                 </div>
             </div>
@@ -2816,7 +2892,7 @@ function renderStudyModeChooser() {
                 <p>Sınav öncesi hızlı gözden geçirme için özet bilgi kartları, kilit kavramlar ve temel hatırlatıcılar.</p>
                 <ul class="study-chooser-list">
                     <li><i class="fas fa-check"></i> Adım adım kompakt konu kartları</li>
-                    <li><i class="fas fa-check"></i> Senaryo ${scNum} kazanımlarına filtrelenmiş özet</li>
+                    <li><i class="fas fa-check"></i> Senaryo ${scNum} öğrenme çıktılarına filtrelenmiş özet</li>
                     <li><i class="fas fa-check"></i> Tek tıkla A4 PDF / Yazdır desteği</li>
                 </ul>
                 <button type="button" id="btn-chooser-quick" class="exam-btn-secondary study-chooser-cta" data-depth="quick">
@@ -2827,7 +2903,7 @@ function renderStudyModeChooser() {
             <div class="study-chooser-card featured" data-chooser-card="deep">
                 <div class="study-chooser-card-top">
                     <span class="study-chooser-icon deep"><i class="fas fa-book-open"></i></span>
-                    <span class="study-chooser-pill featured-pill">Önerilen · ${deepOutcomes.length} Kazanım · ~25 dk</span>
+                    <span class="study-chooser-pill featured-pill">Önerilen · ${deepOutcomes.length} Öğrenme Çıktısı · ~25 dk</span>
                 </div>
                 <h3>Kapsamlı Hazırlık</h3>
                 <p>Konuyu sıfırdan ve derinlemesine öğrenmek için görsel bilgi kartları, yol haritası, 8 eğitsel illüstrasyon, karşılaştırma tabloları ve deney köprüleri.</p>
