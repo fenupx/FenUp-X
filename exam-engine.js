@@ -12,9 +12,20 @@ const CONTENT_REVISION = '6.0.1';
 const GRADE5_CONTENT_REVISION = 'grade5-1d1y';
 const GRADE6_CONTENT_REVISION = 'grade6-1d1y';
 const ADMIN_POOL_REVISIONS = [GRADE5_CONTENT_REVISION, GRADE6_CONTENT_REVISION, CONTENT_REVISION];
-export const CONTENT_V6_VERSION = '8.9.25';
-if (typeof window !== 'undefined') {
+export const CONTENT_V6_VERSION = (typeof window !== 'undefined' && window.__FENUPX_CONTENT_V6_VERSION__)
+    ? String(window.__FENUPX_CONTENT_V6_VERSION__)
+    : '8.9.51';
+if (typeof window !== 'undefined' && !window.__FENUPX_CONTENT_V6_VERSION__) {
     window.__FENUPX_CONTENT_V6_VERSION__ = CONTENT_V6_VERSION;
+}
+
+function appendAssetVersion(url) {
+    if (!url) return '';
+    const v = (typeof window !== 'undefined' && window.__FENUPX_CONTENT_V6_VERSION__)
+        ? String(window.__FENUPX_CONTENT_V6_VERSION__)
+        : CONTENT_V6_VERSION;
+    if (/[?&]v=/.test(url)) return url;
+    return url + (url.includes('?') ? '&' : '?') + 'v=' + encodeURIComponent(v);
 }
 
 /**
@@ -2739,7 +2750,7 @@ export function openStudyPrintPreview(triggerEl = null) {
                     </div>
                     <div class="study-print-quick-cards">
                         ${cards.map((c, idx) => {
-                            const visualSrc = c.visual?.asset ? (ASSET_BASE + c.visual.asset + '?v=' + CONTENT_V6_VERSION) : '';
+                            const visualSrc = c.visual?.asset ? appendAssetVersion(ASSET_BASE + c.visual.asset) : '';
                             return `
                                 <article class="study-print-card">
                                     <h3 class="study-print-card-title">${idx + 1}. ${esc(c.title)}</h3>
@@ -3294,7 +3305,7 @@ function renderStudy(cardIndex) {
     // Sağ Panel (Aktif Konu Kartı - Profesyonel Eğitim Portalı Görünümü)
     const cardPanel = $('exam-card-article');
     if (cardPanel) {
-        const visualAssetPath = c.visual?.asset ? (ASSET_BASE + c.visual.asset + '?v=' + CONTENT_V6_VERSION) : '';
+        const visualAssetPath = c.visual?.asset ? appendAssetVersion(ASSET_BASE + c.visual.asset) : '';
         const outcome = (DATA.allOutcomes || DATA.outcomes || []).find(o => o.id === c.outcome_id);
         const outcomeCards = CARDS.filter(x => x.outcome_id === c.outcome_id);
         const idxInOutcome = outcomeCards.findIndex(x => x.id === c.id);

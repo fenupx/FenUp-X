@@ -8315,5 +8315,133 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     }
 }
 
+/* ==========================================================================
+   V8.9.51 — HIZLI TEKRAR TAM EKRAN (FULLSCREEN) GÖRSEL & TİPOGRAFİ BÜYÜTME
+   (#exam-view-study tam ekranda body'ye portal edildiğinden bağımsız hedeflenir)
+   ========================================================================== */
+@media screen and (min-width: 1025px) {
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-cards-layout.plan-collapsed {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 0 !important;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .study-card-content-area {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        padding: 16px 32px 12px 32px !important;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .study-card-top-meta {
+        margin-bottom: 8px !important;
+        padding-bottom: 8px !important;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-visualbox {
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        cursor: zoom-in;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-visualbox img,
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-visualbox svg {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        object-fit: contain !important;
+        object-position: center !important;
+        display: block !important;
+    }
+}
+
+/* Masaüstü Tam Ekran (1025px–1399px, 1366×768 hedefi) */
+@media screen and (min-width: 1025px) and (max-width: 1399px) {
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) #exam-card-article:not(.wide-table) .exam-contentgrid:not(.exam-text-only) {
+        grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.05fr) !important;
+        gap: 28px !important;
+        align-items: center !important;
+        margin-bottom: 8px !important;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-card-title {
+        font-size: 30px !important;
+        line-height: 1.22 !important;
+        margin-bottom: 14px !important;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-lead {
+        font-size: 19px !important;
+        line-height: 1.5 !important;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-body-p,
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .topics li,
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .facts dd,
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-takeaway,
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-warning {
+        font-size: 18px !important;
+        line-height: 1.55 !important;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-visualbox {
+        min-height: 340px !important;
+        max-height: 54vh !important;
+        padding: 16px !important;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-visualbox img,
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-visualbox svg {
+        max-height: calc(54vh - 54px) !important;
+    }
+}
+
+/* ETAP Akıllı Tahta Tam Ekran (>= 1400px, 1920×1080 hedefi) */
+@media screen and (min-width: 1400px) {
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) #exam-card-article:not(.wide-table) .exam-contentgrid:not(.exam-text-only) {
+        grid-template-columns: minmax(0, 0.74fr) minmax(0, 1.08fr) !important;
+        gap: 36px !important;
+        align-items: center !important;
+        margin-bottom: 12px !important;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-card-title {
+        font-size: 36px !important;
+        line-height: 1.22 !important;
+        margin-bottom: 18px !important;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-lead {
+        font-size: 24px !important;
+        line-height: 1.5 !important;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-body-p,
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .topics li,
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .facts dd,
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-takeaway,
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-warning {
+        font-size: 22.5px !important;
+        line-height: 1.58 !important;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-visualbox {
+        min-height: 440px !important;
+        max-height: 60vh !important;
+        padding: 20px !important;
+    }
+
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-visualbox img,
+    #exam-view-study#exam-view-study.fullscreen-study-active:not(.comprehensive-active) .exam-visualbox svg {
+        max-height: calc(60vh - 64px) !important;
+    }
+}
+
 
 

@@ -248,7 +248,7 @@ test.describe('V8.9.49 — 5. Sınıf Hızlı Tekrar Konu Kartları 4 Ekran Öl�
         gap: +(tb.y - maxShapeBottom).toFixed(1),
       };
     });
-    expect(moonGap.gap, `diagram-moon-lit-half.svg sarı yazı ile alt Ay arasında >= 12px boşluk olmalı (ölçülen: ${JSON.stringify(moonGap)})`).toBeGreaterThanOrEqual(12);
+    expect(moonGap.gap, `diagram-moon-lit-half.svg sarı yazı ile alt Ay arasında >= 22px boşluk olmalı (ölçülen: ${JSON.stringify(moonGap)})`).toBeGreaterThanOrEqual(22);
 
     // B) Canlı 5. sınıf Bilgi İstasyonu kontrolleri
     await enterGrade5Study(page, 1);
@@ -307,5 +307,57 @@ test.describe('V8.9.49 — 5. Sınıf Hızlı Tekrar Konu Kartları 4 Ekran Öl�
       collapsedMetrics.ratio,
       `Konular kapatılınca kart genişliği ekranın >= %75'ini kaplamalı (ölçülen: ${JSON.stringify(collapsedMetrics)})`
     ).toBeGreaterThanOrEqual(0.75);
+  });
+
+  test('4. V8.9.51 — Görsel URL ?v= cache-bust ve Tam Ekran (Fullscreen) modunda görsel + gövde metni normal ekrandan >= büyük (0 dikey kaydırma)', async ({ page }) => {
+    await enterGrade5Study(page, 1);
+
+    // diagram-moon-lit-half.svg kartına git ve ?v= cache-bust kontrolü yap
+    const totalCards = await page.evaluate(() => document.querySelectorAll('#exam-cardnav [data-study-card]').length || 37);
+    let moonSrc = '';
+    for (let i = 0; i < totalCards; i++) {
+      const src = await page.evaluate(() => document.querySelector('#exam-visual img')?.getAttribute('src') || '');
+      if (src.includes('diagram-moon-lit-half.svg')) {
+        moonSrc = src;
+        break;
+      }
+      if (i < totalCards - 1) await page.click('#exam-card-next');
+    }
+    expect(moonSrc, 'diagram-moon-lit-half.svg URL içinde ?v= cache-bust bulunmalı').toMatch(/diagram-moon-lit-half\.svg\?v=8\.9\.51/);
+
+    const vp = page.viewportSize();
+    if (vp.width >= 1025) {
+      const normal = await page.evaluate(() => {
+        const vbox = document.querySelector('#exam-visual');
+        const bodyP = document.querySelector('.exam-body-p, .exam-lead');
+        return {
+          boxH: Math.round(vbox.getBoundingClientRect().height),
+          fontSize: parseFloat(getComputedStyle(bodyP).fontSize),
+        };
+      });
+
+      await page.click('#btn-study-fullscreen');
+      await expect(page.locator('#exam-view-study')).toHaveClass(/fullscreen-study-active/);
+      await page.waitForTimeout(200);
+
+      const fsMetrics = await page.evaluate(() => {
+        const vbox = document.querySelector('#exam-visual');
+        const bodyP = document.querySelector('.exam-body-p, .exam-lead');
+        const area = document.querySelector('.study-card-content-area');
+        return {
+          boxH: Math.round(vbox.getBoundingClientRect().height),
+          fontSize: parseFloat(getComputedStyle(bodyP).fontSize),
+          vScrollOverflow: area ? Math.max(0, area.scrollHeight - area.clientHeight) : 0,
+        };
+      });
+
+      expect(fsMetrics.boxH, `Tam ekran görsel kutusu normal ekrandan >= büyük olmalı (normal=${normal.boxH}, fs=${fsMetrics.boxH})`).toBeGreaterThanOrEqual(normal.boxH);
+      expect(fsMetrics.fontSize, `Tam ekran gövde metni normal ekrandan >= büyük olmalı (normal=${normal.fontSize}, fs=${fsMetrics.fontSize})`).toBeGreaterThanOrEqual(normal.fontSize);
+      expect(fsMetrics.vScrollOverflow, 'Tam ekranda dikey kaydırma oluşmamalı').toBeLessThanOrEqual(2);
+
+      // Tam ekrandan temiz çıkış
+      await page.click('#btn-study-fullscreen');
+      await expect(page.locator('#exam-view-study')).not.toHaveClass(/fullscreen-study-active/);
+    }
   });
 });
