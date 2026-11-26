@@ -323,7 +323,7 @@ test.describe('V8.9.49 — 5. Sınıf Hızlı Tekrar Konu Kartları 4 Ekran Öl�
       }
       if (i < totalCards - 1) await page.click('#exam-card-next');
     }
-    expect(moonSrc, 'diagram-moon-lit-half.svg URL içinde ?v= cache-bust bulunmalı').toMatch(/diagram-moon-lit-half\.svg\?v=8\.9\.51/);
+    expect(moonSrc, 'diagram-moon-lit-half.svg URL içinde ?v= cache-bust bulunmalı').toMatch(/diagram-moon-lit-half\.svg\?v=8\.9\.\d+/);
 
     const vp = page.viewportSize();
     if (vp.width >= 1025) {

@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 175" width="720" height="175" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif">
+<svg preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 175" width="720" height="175" font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif">
   <defs>
     <radialGradient id="g-sun" cx="38%" cy="35%" r="65%">
       <stop offset="0%" stop-color="#fef08a"/><stop offset="45%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#c2410c"/>
@@ -42,15 +42,15 @@
   <rect x="16" y="12" width="330" height="150" rx="12" fill="#f59e0b" fill-opacity="0.1" stroke="#fbbf24" stroke-width="1.8"/>
   <text x="181" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#fbbf24">Karasal (İç) Gezegenler</text>
   <text x="181" y="64" text-anchor="middle" font-size="13" font-weight="700" fill="#e2e8f0">Merkür · Venüs · Dünya · Mars</text>
-  <text x="181" y="92" text-anchor="middle" font-size="12" fill="#cbd5e1">• Katı ve kayalık yapıdadır</text>
-  <text x="181" y="114" text-anchor="middle" font-size="12" fill="#cbd5e1">• Halkaları yoktur</text>
-  <text x="181" y="136" text-anchor="middle" font-size="12" fill="#cbd5e1">• Asteroit kuşağının iç tarafındadır</text>
+  <text x="181" y="92" text-anchor="middle" font-size="13" fill="#cbd5e1">• Katı ve kayalık yapıdadır</text>
+  <text x="181" y="114" text-anchor="middle" font-size="13" fill="#cbd5e1">• Halkaları yoktur</text>
+  <text x="181" y="136" text-anchor="middle" font-size="13" fill="#cbd5e1">• Asteroit kuşağının iç tarafındadır</text>
 
   <rect x="374" y="12" width="330" height="150" rx="12" fill="#0284c7" fill-opacity="0.12" stroke="#38bdf8" stroke-width="1.8"/>
   <text x="539" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#38bdf8">Gazsal (Dış) Gezegenler</text>
   <text x="539" y="64" text-anchor="middle" font-size="13" font-weight="700" fill="#e2e8f0">Jüpiter · Satürn · Uranüs · Neptün</text>
-  <text x="539" y="92" text-anchor="middle" font-size="12" fill="#cbd5e1">• Gazsal yapıdadır</text>
-  <text x="539" y="114" text-anchor="middle" font-size="12" fill="#cbd5e1">• Tamamının uyduları ve halkaları vardır</text>
-  <text x="539" y="136" text-anchor="middle" font-size="12" fill="#cbd5e1">• Karasal gezegenlerden daha büyüktür</text>
+  <text x="539" y="92" text-anchor="middle" font-size="13" fill="#cbd5e1">• Gazsal yapıdadır</text>
+  <text x="539" y="114" text-anchor="middle" font-size="13" fill="#cbd5e1">• Tamamının uyduları ve halkaları vardır</text>
+  <text x="539" y="136" text-anchor="middle" font-size="13" fill="#cbd5e1">• Karasal gezegenlerden daha büyüktür</text>
 
 </svg>

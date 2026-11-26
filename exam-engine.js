@@ -14,9 +14,14 @@ const GRADE6_CONTENT_REVISION = 'grade6-1d1y';
 const ADMIN_POOL_REVISIONS = [GRADE5_CONTENT_REVISION, GRADE6_CONTENT_REVISION, CONTENT_REVISION];
 export const CONTENT_V6_VERSION = (typeof window !== 'undefined' && window.__FENUPX_CONTENT_V6_VERSION__)
     ? String(window.__FENUPX_CONTENT_V6_VERSION__)
-    : '8.9.51';
+    : '8.9.52';
 if (typeof window !== 'undefined' && !window.__FENUPX_CONTENT_V6_VERSION__) {
     window.__FENUPX_CONTENT_V6_VERSION__ = CONTENT_V6_VERSION;
+}
+
+const PRELOADED_STUDY_IMAGES = new Set();
+if (typeof window !== 'undefined') {
+    window.__FENUPX_PRELOADED_IMAGES__ = PRELOADED_STUDY_IMAGES;
 }
 
 function appendAssetVersion(url) {
@@ -26,6 +31,31 @@ function appendAssetVersion(url) {
         : CONTENT_V6_VERSION;
     if (/[?&]v=/.test(url)) return url;
     return url + (url.includes('?') ? '&' : '?') + 'v=' + encodeURIComponent(v);
+}
+
+function preloadStudyCardImages(activeIndex) {
+    if (typeof Image === 'undefined' || !Array.isArray(CARDS) || !CARDS.length) return;
+    const targets = new Set([activeIndex - 1, activeIndex + 1, activeIndex + 2, activeIndex + 3]);
+    if (activeIndex === 0) {
+        targets.add(0);
+        targets.add(1);
+        targets.add(2);
+        targets.add(3);
+    }
+    for (const idx of targets) {
+        if (idx < 0 || idx >= CARDS.length) continue;
+        const card = CARDS[idx];
+        const asset = card?.visual?.asset;
+        if (!asset) continue;
+        const url = appendAssetVersion(ASSET_BASE + asset);
+        if (PRELOADED_STUDY_IMAGES.has(url)) continue;
+        PRELOADED_STUDY_IMAGES.add(url);
+        try {
+            const img = new Image();
+            img.decoding = 'async';
+            img.src = url;
+        } catch (e) {}
+    }
 }
 
 /**
@@ -3364,8 +3394,8 @@ function renderStudy(cardIndex) {
                         ${loadedRevision === '1' ? `<div class="exam-takeaway"><strong>📌 Aklında Kalsın:</strong> ${esc(c.takeaway)}</div>
                         ${c.misconception ? `<p class="exam-warning"><strong>⚠️ Karıştırma:</strong> ${esc(c.misconception)}</p>` : ''}` : ''}
                     </div>
-                    <div class="exam-visualbox ${!c.visual && !c.table ? 'is-hidden' : ''} ${c.visual?.theme === 'dark' ? 'theme-dark diagram' : ''}" id="exam-visual" ${visualAssetPath ? `data-lightbox-src="${esc(visualAssetPath)}" data-lightbox-caption="${esc(c.visual?.caption || '')}" title="Büyütmek için tıklayın"` : ''}>
-                        ${visualAssetPath ? `<img src="${esc(visualAssetPath)}" alt="${esc(c.visual?.alt || '')}"><span class="exam-zoom-hint"><i class="fas fa-search-plus"></i> Büyüt</span>` : ''}
+                    <div class="exam-visualbox ${!c.visual && !c.table ? 'is-hidden' : ''} ${c.visual?.theme === 'dark' ? 'theme-dark diagram' : ''} ${visualAssetPath ? 'is-loading' : ''}" id="exam-visual" ${visualAssetPath ? `data-lightbox-src="${esc(visualAssetPath)}" data-lightbox-caption="${esc(c.visual?.caption || '')}" title="Büyütmek için tıklayın"` : ''}>
+                        ${visualAssetPath ? `<img class="exam-visual-img" src="${esc(visualAssetPath)}" alt="${esc(c.visual?.alt || '')}" fetchpriority="high" loading="eager" decoding="async"><span class="exam-zoom-hint"><i class="fas fa-search-plus"></i> Büyüt</span>` : ''}
                         ${c.table ? cardTableHtml(c.table) : ''}
                         ${c.visual?.caption ? `<p class="exam-caption">${esc(c.visual.caption)}</p>` : (loadedRevision !== '3.0.0' && loadedRevision !== '6.0.0' ? '<p class="exam-caption">Şematik öğretim modeli; ölçekli değildir.</p>' : '')}
                     </div>
@@ -3436,6 +3466,23 @@ function renderStudy(cardIndex) {
                 }
             };
         }
+
+        // Görsel yükleme geçişi ve sessiz akıllı ön-yükleme (V8.9.52)
+        const vBox = cardPanel.querySelector('#exam-visual');
+        const vImg = vBox?.querySelector('img.exam-visual-img');
+        if (vBox && vImg) {
+            const markLoaded = () => {
+                vBox.classList.remove('is-loading');
+                vBox.classList.add('is-loaded');
+            };
+            if (vImg.complete && vImg.naturalWidth > 0) {
+                markLoaded();
+            } else {
+                vImg.addEventListener('load', markLoaded, { once: true });
+                vImg.addEventListener('error', markLoaded, { once: true });
+            }
+        }
+        preloadStudyCardImages(cardIndex);
 
         // İnteraktif bileşenler
         const interId = c.visual?.interactive_id;
