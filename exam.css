@@ -8091,4 +8091,209 @@ body:has(#scene-yazili.study-active) .cookie-banner {
     background: #f8fafc;
 }
 
+/* ==========================================================================
+   V8.9.49 — HIZLI TEKRAR KONU KARTLARI 4 EKRAN DUYARLI GÖRSEL/TİPOGRAFİ ÖLÇEKLEME
+   (Kapsamlı Hazırlık ve @media print düzenine dokunmadan yalnızca ekran görünümü)
+   ========================================================================== */
+@media screen {
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox {
+        cursor: zoom-in;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox img,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox svg {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        object-fit: contain;
+        object-position: center;
+        display: block;
+    }
+}
+
+/* 1. MASAÜSTÜ (1025px–1399px, 1366×768 hedefi) */
+@media screen and (min-width: 1025px) and (max-width: 1399px) {
+    #scene-yazili.study-active:not(.comprehensive-study-mode) {
+        max-width: 1320px;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-cards-layout {
+        grid-template-columns: minmax(240px, 270px) minmax(0, 1fr) !important;
+        gap: 18px !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) #exam-card-article:not(.wide-table) .exam-contentgrid:not(.exam-text-only) {
+        grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr) !important;
+        gap: 24px !important;
+        align-items: start;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-cards-layout.plan-collapsed #exam-card-article:not(.wide-table) .exam-contentgrid:not(.exam-text-only) {
+        grid-template-columns: minmax(0, 0.92fr) minmax(480px, 1.15fr) !important;
+        gap: 32px !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox {
+        min-height: 280px !important;
+        max-height: 390px !important;
+        padding: 14px !important;
+        width: 100% !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox img,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox svg {
+        max-height: 340px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        object-fit: contain !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-lead {
+        font-size: 17px !important;
+        line-height: 1.55 !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-body-p,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .topics li,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .facts dd,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-takeaway,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-warning {
+        font-size: 16px !important;
+        line-height: 1.6 !important;
+    }
+}
+
+/* 2. ETAP AKILLI TAHTA / BÜYÜK EKRAN (>= 1400px, 1920×1080 hedefi) */
+@media screen and (min-width: 1400px) {
+    #scene-yazili.study-active:not(.comprehensive-study-mode) {
+        max-width: 1480px !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-cards-layout {
+        grid-template-columns: minmax(270px, 310px) minmax(0, 1fr) !important;
+        gap: 24px !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) #exam-card-article:not(.wide-table) .exam-contentgrid:not(.exam-text-only) {
+        grid-template-columns: minmax(0, 0.78fr) minmax(540px, 1.12fr) !important;
+        gap: 28px !important;
+        align-items: start;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-cards-layout.plan-collapsed #exam-card-article:not(.wide-table) .exam-contentgrid:not(.exam-text-only) {
+        grid-template-columns: minmax(0, 0.76fr) minmax(620px, 1.18fr) !important;
+        gap: 36px !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox {
+        min-height: 360px !important;
+        max-height: 500px !important;
+        padding: 18px !important;
+        width: 100% !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox img,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox svg {
+        max-height: 440px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        object-fit: contain !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-lead {
+        font-size: 21px !important;
+        line-height: 1.55 !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-body-p,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .topics li,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .facts dd,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-takeaway,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-warning {
+        font-size: 19.5px !important;
+        line-height: 1.65 !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-study-toolbar button,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-next-bar button,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-cardnav-btn,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .study-plan-outcome-head {
+        min-height: 48px !important;
+        min-width: 48px !important;
+    }
+}
+
+/* 3. TABLET (601px–1024px, 768×1024 iPad hedefi) */
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-contentgrid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox {
+        width: 100% !important;
+        min-height: 260px !important;
+        max-height: 360px !important;
+        padding: 14px !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox img,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox svg {
+        width: 100% !important;
+        max-width: 100% !important;
+        max-height: 320px !important;
+        height: auto !important;
+        object-fit: contain !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-lead,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-body-p,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .topics li,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-takeaway,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-warning {
+        font-size: 16px !important;
+        line-height: 1.58 !important;
+    }
+}
+
+/* 4. MOBİL (<= 600px, 390×844 iPhone hedefi) */
+@media screen and (max-width: 600px) {
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox {
+        width: 100% !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding: 10px !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox img,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox svg {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        max-height: 280px !important;
+        object-fit: contain !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-lead {
+        font-size: 16.5px !important;
+        line-height: 1.5 !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-body-p,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .topics li,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .facts dd,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-takeaway,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-warning {
+        font-size: 16px !important;
+        line-height: 1.55 !important;
+    }
+}
+
+
 
