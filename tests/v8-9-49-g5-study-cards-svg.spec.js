@@ -228,4 +228,84 @@ test.describe('V8.9.49 — 5. Sınıf Hızlı Tekrar Konu Kartları 4 Ekran Öl�
     expect(seenAssets.size, '31 benzersiz görsel (30 SVG + gunes_only.png) görülmeli').toBe(31);
     expect(pageErrors, 'Sayfa hatası olmamalı').toEqual([]);
   });
+
+  test('3. V8.9.50 — Konular kapatılınca kart >=%75 genişlik, #btn-study-fullscreen üzerinde 0 Büyüt çakışması ve diagram-moon-lit-half.svg >=12px şekil-yazı boşluğu', async ({ page }) => {
+    // A) diagram-moon-lit-half.svg içinde sarı açıklama <text> üst sınırı, en alttaki Ay <circle>/<image> alt sınırından >= 12px aşağıda olmalı
+    const moonLitSvg = fs.readFileSync(path.join(G5_ASSETS_DIR, 'diagram-moon-lit-half.svg'), 'utf8');
+    await page.setContent(`<!DOCTYPE html><html><head><style>body{margin:0;padding:16px;background:#0f172a;}</style></head><body>${moonLitSvg}</body></html>`);
+    const moonGap = await page.evaluate(() => {
+      const svg = document.querySelector('svg');
+      const shapes = Array.from(svg.querySelectorAll('circle, image'));
+      const maxShapeBottom = Math.max(...shapes.map(el => {
+        const b = el.getBBox();
+        return b.y + b.height;
+      }));
+      const yellowText = Array.from(svg.querySelectorAll('text')).find(t => (t.textContent || '').includes('Aydınlık yarısının'));
+      const tb = yellowText.getBBox();
+      return {
+        maxShapeBottom: +maxShapeBottom.toFixed(1),
+        textTop: +tb.y.toFixed(1),
+        gap: +(tb.y - maxShapeBottom).toFixed(1),
+      };
+    });
+    expect(moonGap.gap, `diagram-moon-lit-half.svg sarı yazı ile alt Ay arasında >= 12px boşluk olmalı (ölçülen: ${JSON.stringify(moonGap)})`).toBeGreaterThanOrEqual(12);
+
+    // B) Canlı 5. sınıf Bilgi İstasyonu kontrolleri
+    await enterGrade5Study(page, 1);
+
+    // #btn-study-fullscreen üzerinde .exam-zoom-hint veya başka bir öğenin çakışması olmamalı
+    const fsOverlap = await page.evaluate(() => {
+      const fsBtn = document.querySelector('#btn-study-fullscreen');
+      const zoomHint = document.querySelector('.exam-zoom-hint');
+      const vbox = document.querySelector('#exam-visual');
+      if (!fsBtn) return { ok: false, reason: 'missing #btn-study-fullscreen' };
+      const fr = fsBtn.getBoundingClientRect();
+      let zoomOverlapsFs = false;
+      let zoomInsideVbox = true;
+      if (zoomHint) {
+        const zr = zoomHint.getBoundingClientRect();
+        zoomOverlapsFs = !(zr.right <= fr.left + 1 || fr.right <= zr.left + 1 || zr.bottom <= fr.top + 1 || fr.bottom <= zr.top + 1);
+        if (vbox) {
+          const vr = vbox.getBoundingClientRect();
+          zoomInsideVbox = zr.left >= vr.left - 2 && zr.right <= vr.right + 2 && zr.top >= vr.top - 2 && zr.bottom <= vr.bottom + 2;
+        }
+      }
+      // Ayrıca tam ekran düğmesinin merkez noktasındaki elementin kendisi (veya içindeki ikon) olduğunu doğrula
+      const cx = fr.left + fr.width / 2;
+      const cy = fr.top + fr.height / 2;
+      const topEl = document.elementFromPoint(cx, cy);
+      const hitSelf = !!(topEl && (topEl === fsBtn || fsBtn.contains(topEl)));
+      return { ok: true, zoomOverlapsFs, zoomInsideVbox, hitSelf };
+    });
+    expect(fsOverlap.ok).toBe(true);
+    expect(fsOverlap.zoomOverlapsFs, '.exam-zoom-hint tam ekran düğmesinin üstüne binmemeli').toBe(false);
+    expect(fsOverlap.zoomInsideVbox, '.exam-zoom-hint görsel kutusu (.exam-visualbox) içinde kalmalı').toBe(true);
+    expect(fsOverlap.hitSelf, '#btn-study-fullscreen engelsiz tıklanabilir olmalı').toBe(true);
+
+    // C) Konular (#btn-study-toggle-plan) tıklandığında sol menü kapanır ve kart genişliği ekran genişliğinin >= %75'ini kaplar
+    const toggleBtn = page.locator('#btn-study-toggle-plan');
+    await expect(toggleBtn).toBeVisible();
+    const wasExpanded = await toggleBtn.getAttribute('aria-expanded');
+    if (wasExpanded === 'true') {
+      await toggleBtn.click();
+    } else {
+      await toggleBtn.click();
+      await toggleBtn.click();
+    }
+    await expect(page.locator('.exam-cards-layout')).toHaveClass(/plan-collapsed/);
+
+    const collapsedMetrics = await page.evaluate(() => {
+      const card = document.querySelector('#exam-card-article');
+      const rect = card.getBoundingClientRect();
+      return {
+        cardWidth: Math.round(rect.width),
+        viewportWidth: window.innerWidth,
+        ratio: +(rect.width / window.innerWidth).toFixed(3),
+      };
+    });
+    expect(
+      collapsedMetrics.ratio,
+      `Konular kapatılınca kart genişliği ekranın >= %75'ini kaplamalı (ölçülen: ${JSON.stringify(collapsedMetrics)})`
+    ).toBeGreaterThanOrEqual(0.75);
+  });
 });

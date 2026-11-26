@@ -1399,6 +1399,7 @@ body:has(#scene-yazili:not(.is-hidden)) {
 }
 
 .exam-visualbox {
+    position: relative;
     background: #0f172a;
     border: 1px solid rgba(148, 163, 184, 0.25);
     border-radius: 18px;
@@ -8097,6 +8098,7 @@ body:has(#scene-yazili.study-active) .cookie-banner {
    ========================================================================== */
 @media screen {
     #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox {
+        position: relative !important;
         cursor: zoom-in;
         display: flex;
         flex-direction: column;
@@ -8105,6 +8107,12 @@ body:has(#scene-yazili.study-active) .cookie-banner {
         gap: 8px;
         min-width: 0;
         box-sizing: border-box;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-cards-layout.plan-collapsed,
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study.plan-collapsed .exam-cards-layout {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 0 !important;
     }
 
     #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-visualbox img,
@@ -8124,9 +8132,14 @@ body:has(#scene-yazili.study-active) .cookie-banner {
         max-width: 1320px;
     }
 
-    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-cards-layout {
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-cards-layout:not(.plan-collapsed) {
         grid-template-columns: minmax(240px, 270px) minmax(0, 1fr) !important;
         gap: 18px !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-cards-layout.plan-collapsed {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 0 !important;
     }
 
     #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) #exam-card-article:not(.wide-table) .exam-contentgrid:not(.exam-text-only) {
@@ -8174,11 +8187,18 @@ body:has(#scene-yazili.study-active) .cookie-banner {
 @media screen and (min-width: 1400px) {
     #scene-yazili.study-active:not(.comprehensive-study-mode) {
         max-width: 1480px !important;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
     }
 
-    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-cards-layout {
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-cards-layout:not(.plan-collapsed) {
         grid-template-columns: minmax(270px, 310px) minmax(0, 1fr) !important;
         gap: 24px !important;
+    }
+
+    #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) .exam-cards-layout.plan-collapsed {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 0 !important;
     }
 
     #scene-yazili.study-active:not(.comprehensive-study-mode) #exam-view-study:not(.comprehensive-active) #exam-card-article:not(.wide-table) .exam-contentgrid:not(.exam-text-only) {
